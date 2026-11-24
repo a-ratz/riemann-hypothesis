@@ -175,7 +175,7 @@ theorem standard_hermitian_apply (x : Ad F) : H1 F x = phi1 F (homeomorphMixedSp
 
 theorem cosetIndicator_one_of_mem {z : Af F} (h : z ∈ idealFiniteAdeles (1 : (FractionalIdeal (𝓞 F)⁰ F)ˣ)) :
     cosetIndicator 1 0 z = 1 := by
-  rw [cosetIndicator_apply, sub_zero, if_pos h]
+  rw [cosetIndicator_apply, sub_zero, ite_eq_left h]
 
 theorem cosetIndicator_real (z : Af F) : ∃ r : ℝ, 0 ≤ r ∧ cosetIndicator (1 : (FractionalIdeal (𝓞 F)⁰ F)ˣ) 0 z = (r : ℂ) := by
   rw [cosetIndicator_apply]
@@ -260,7 +260,7 @@ theorem exists_m {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 0}.
   refine ⟨δ * p, mul_ne_zero hδ0 hp0, fun w => ?_⟩
   have hδv : w.intValuation δ ≤ exp (-dd w) := by
     have h := intValuation_le_of_mem_ideal w (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F)) hδmem
-    rw [FractionalIdeal.count_coe F w (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F))] at h
+    rw [FractionalIdeal.count_coeIdeal F w (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 F))] at h
     exact h
   have hpv : w.intValuation p ≤ exp (-(c w : ℤ)) := by
     refine (w.intValuation_le_pow_iff_mem p (c w)).2 ?_
@@ -298,7 +298,7 @@ theorem isClosed_le_exp (w : HeightOneSpectrum (𝓞 F)) (n : ℤ) :
   have heq : {z : w.adicCompletion F | Valued.v z ≤ exp n} =
       (fun z => u * z) ⁻¹' {z : w.adicCompletion F | Valued.v z ≤ 1} := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, map_mul, hu, exp_neg_mul_le_one_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, map_mul, hu, exp_neg_mul_le_one_iff]
   rw [heq]
   exact (Valued.isClopen_integer (w.adicCompletion F)).isClosed.preimage (continuous_const.mul continuous_id)
 
@@ -308,7 +308,7 @@ theorem continuous_pInf_apply (v : InfinitePlace F) : Continuous fun x : Ad F =>
 
 theorem isClosed_cond {X : Type*} [TopologicalSpace X] {f : X → Ad F} (hf : Continuous f) (n : HeightOneSpectrum (𝓞 F) → ℤ) :
     IsClosed {p | ∀ w, Valued.v (pLoc F w (pFin F (f p))) ≤ exp (n w)} := by
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   refine isClosed_iInter fun w => (isClosed_le_exp w (n w)).preimage ?_
   exact (RestrictedProduct.continuous_eval w).comp (continuous_snd.comp hf)
 
@@ -325,7 +325,7 @@ theorem measurable_kernF_comp {X : Type*} [TopologicalSpace X] [MeasurableSpace 
       Complex.continuous_ofReal.comp ((continuous_pInf_apply v).comp hZ)
     exact (h1.add h2).mul (Complex.continuous_exp.comp (continuous_const.mul ((h1.pow 2).add (h2.pow 2))))
   · refine ((isClosed_cond hA fun w => -(c w : ℤ)).inter (isClosed_cond hZ fun w => (c w : ℤ) + dd w)).measurableSet
-  · exact continuous_subtype_val.comp (continuous_finiteAdelicChar.comp (continuous_snd.comp hZ))
+  · exact continuous_subtypeVal.comp (continuous_finiteAdelicChar.comp (continuous_snd.comp hZ))
 
 end UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein.VanishingLemma
 
@@ -361,12 +361,12 @@ theorem measurability_holds : P5meas := by
   refine Measurable.tsum fun a => ?_
   have hτ : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => tau p.1 p.2 * diagonal F a :=
     (((continuous_moduleSection (w0 F)).comp continuous_fst).mul
-      (continuous_subtype_val.comp continuous_snd)).mul continuous_const
+      (continuous_subtypeVal.comp continuous_snd)).mul continuous_const
   simp only [kern, hκ]
   refine Measurable.mul (Continuous.measurable ?_) (measurable_const.mul ?_)
   · have hm : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F =>
         ((IdeleGroup.ideleModule F (tau p.1 p.2 * diagonal F a) : {r : ℝ // 0 < r}) : ℝ) :=
-      continuous_subtype_val.comp ((IdeleGroup.continuous_ideleModule (K := F)).comp hτ)
+      continuous_subtypeVal.comp ((IdeleGroup.continuous_ideleModule (K := F)).comp hτ)
     exact (Complex.continuous_ofReal.comp hm).inv₀ fun p => Complex.ofReal_ne_zero.2 (IdeleGroup.ideleModule F _).2.ne'
   · refine measurable_kernF_comp c ?_ ?_
     · exact (Units.continuous_val.comp hτ).mul continuous_const
@@ -426,7 +426,7 @@ theorem theta_growth {G : Ad F → ℂ} (hG : G ∈ schwartzBruhat F) (hpos : �
       theta G (moduleSection (w0 F) t * a) ≤ M * (t : ℝ)⁻¹ := by
   obtain ⟨u, hu, hb⟩ := exists_decay_bound (w0 F) (adelicFourier_mem_schwartzBruhat hG) hC.inv 0
   have hcont : Continuous fun a : IdeleGroup F => ((ideleModule F a : ℝ))⁻¹ :=
-    (continuous_subtype_val.comp (continuous_ideleModule (K := F))).inv₀ fun a => (ideleModule F a).2.ne'
+    (continuous_subtypeVal.comp (continuous_ideleModule (K := F))).inv₀ fun a => (ideleModule F a).2.ne'
   obtain ⟨B, hB⟩ := hC.exists_bound_of_continuousOn hcont.continuousOn
   refine ⟨B * (‖adelicFourier F G 0‖ + ∑' ξ : F, |u ξ|), fun a ha t ht => ?_⟩
   set b := moduleSection (w0 F) t * a with hbdef
@@ -483,8 +483,8 @@ theorem ideleModule_tau (t : {r : ℝ // 0 < r}) (u : normOneSubgroup F) : (idel
   simp only [tau, map_mul, ideleModule_moduleSection, hu, mul_one]
 
 theorem measurable_gB : Measurable gB :=
-  Measurable.ite (measurableSet_le measurable_const measurable_subtype_coe) measurable_subtype_coe.inv
-    measurable_subtype_coe
+  Measurable.ite (measurableSet_le measurable_const measurable_subtypeVal) measurable_subtypeVal.inv
+    measurable_subtypeVal
 
 theorem integrable_exp_neg_abs : Integrable fun x : ℝ => Real.exp (-|x|) := by
   have h1 : IntegrableOn (fun x : ℝ => Real.exp (-|x|)) (Set.Iic 0) :=
@@ -505,8 +505,8 @@ theorem integrable_gB_pos : Integrable gB posRealMeasure := by
   have he : ((expPos x : {r : ℝ // 0 < r}) : ℝ) = Real.exp x := rfl
   simp only [Function.comp_apply, gB, he]
   by_cases h : 0 ≤ x
-  · rw [if_pos (Real.one_le_exp h), abs_of_nonneg h, Real.exp_neg]
-  · rw [if_neg (by rw [Real.one_le_exp_iff]; exact h), abs_of_neg (not_le.1 h), neg_neg]
+  · rw [ite_eq_left (Real.one_le_exp h), abs_of_nonneg h, Real.exp_neg]
+  · rw [ite_eq_right (by rw [Real.one_le_exp_iff]; exact h), abs_of_neg (not_le.1 h), neg_neg]
 
 theorem integrable_gB : Integrable (fun p : {r : ℝ // 0 < r} × normOneSubgroup F => gB p.1) (muE F) := by
   have : IsFiniteMeasure ((normOneMeasure F).restrict (normOneFundamentalDomain F)) :=
@@ -531,9 +531,9 @@ theorem theta_prod_le (hH : H1 F ∈ schwartzBruhat F) (hpos : ∀ x, H1 F x = (
   set C2 : Set (IdeleGroup F) :=
     (fun u : normOneSubgroup F => μ * (u : IdeleGroup F)⁻¹) '' closure (normOneFundamentalDomain F)
   have hC1 : IsCompact C1 :=
-    (isCompact_closure_normOneFundamentalDomain F).image (continuous_subtype_val.mul continuous_const)
+    (isCompact_closure_normOneFundamentalDomain F).image (continuous_subtypeVal.mul continuous_const)
   have hC2 : IsCompact C2 :=
-    (isCompact_closure_normOneFundamentalDomain F).image (continuous_const.mul continuous_subtype_val.inv)
+    (isCompact_closure_normOneFundamentalDomain F).image (continuous_const.mul continuous_subtypeVal.inv)
   obtain ⟨A1, hA1⟩ := theta_decay hH hC1 2
   obtain ⟨B1, hB1⟩ := theta_growth hH hpos hC1
   obtain ⟨A2, hA2⟩ := theta_decay hH hC2 2
@@ -558,7 +558,7 @@ theorem theta_prod_le (hH : H1 F ∈ schwartzBruhat F) (hpos : ∀ x, H1 F x = (
   · have d1 := hA1 _ hu1 t h1
     have g2 := hB2 _ hu2 t⁻¹ (by rw [hinv]; exact inv_le_one_of_one_le₀ h1)
     rw [hinv, inv_inv] at g2
-    have hg : gB t = (t : ℝ)⁻¹ := if_pos h1
+    have hg : gB t = (t : ℝ)⁻¹ := ite_eq_left h1
     rw [hg]
     calc θ1 * θ2 ≤ (A1 * ((t : ℝ) ^ 2)⁻¹) * (B2 * t) := mul_le_mul d1 g2 n2 (n1.trans d1)
       _ = (A1 * B2) * (t : ℝ)⁻¹ := by field_simp
@@ -567,7 +567,7 @@ theorem theta_prod_le (hH : H1 F ∈ schwartzBruhat F) (hpos : ∀ x, H1 F x = (
     have g1 := hB1 _ hu1 t h1.le
     have d2 := hA2 _ hu2 t⁻¹ (by rw [hinv]; exact (one_le_inv₀ ht).2 h1.le)
     rw [hinv] at d2
-    have hg : gB t = (t : ℝ) := if_neg (not_le.2 h1)
+    have hg : gB t = (t : ℝ) := ite_eq_right (not_le.2 h1)
     rw [hg]
     calc θ1 * θ2 ≤ (B1 * (t : ℝ)⁻¹) * (A2 * (((t : ℝ)⁻¹) ^ 2)⁻¹) := mul_le_mul g1 d2 n2 (n1.trans g1)
       _ = (B1 * A2) * (t : ℝ) := by field_simp
@@ -685,7 +685,7 @@ theorem sAbs_of (hdom : P5dom) (hmu : P5mu) (hmeas : P5meas) : SFin → SKern �
         ∑' ξ : Fˣ, ‖coefK c (Yid : Ad F) (tau p.1 p.2) ξ‖ :=
       Measurable.tsum fun ξ : Fˣ => (hmc (ξ : F)).norm
     have h2 : Measurable fun p : {r : ℝ // 0 < r} × normOneSubgroup F => (p.1 : ℝ) :=
-      measurable_subtype_coe.comp measurable_fst
+      measurable_subtypeVal.comp measurable_fst
     exact h1.mul h2
   refine Integrable.mono' ((integrable_gB (F := F)).const_mul (‖κ‖ * M)) hmeasS.aestronglyMeasurable ?_
   filter_upwards [ae_mem_E (F := F)] with p hp
@@ -904,7 +904,7 @@ def phiA (a : Fˣ) (p : {r : ℝ // 0 < r} × normOneSubgroup F) : IdeleGroup F 
 
 theorem continuous_phiA (a : Fˣ) : Continuous (phiA (F := F) a) :=
   (continuous_const.mul ((continuous_moduleSection (w0 F)).comp continuous_fst)).mul
-    (continuous_subtype_val.comp continuous_snd)
+    (continuous_subtypeVal.comp continuous_snd)
 
 theorem measurePreserving_phiA (a : Fˣ) :
     MeasurePreserving (phiA (F := F) a) (posRealMeasure.prod (normOneMeasure F)) (ideleMeasure F) := by
@@ -957,8 +957,8 @@ theorem integrable_unfold {G : IdeleGroup F → ℂ} (hG : Integrable G (ideleMe
     refine ⟨(Measurable.tsum fun a => hG'm.measurable.comp (continuous_phiA a).measurable).aestronglyMeasurable, ?_⟩
     unfold HasFiniteIntegral
     calc ∫⁻ p, ‖∑' a : Fˣ, G' (phiA a p)‖ₑ ∂(muE F)
-        ≤ ∫⁻ p, ∑' a : Fˣ, ‖G' (phiA a p)‖ₑ ∂(muE F) := lintegral_mono fun p => enorm_tsum_le_tsum_enorm
-      _ = ∫⁻ x, ‖G' x‖ₑ ∂ideleMeasure F := lintegral_unfold hG'm.measurable.enorm
+        ≤ ∫⁻ p, ∑' a : Fˣ, ‖G' (phiA a p)‖ₑ ∂(muE F) := lintegral_mono fun p => eNorm_tsum_le_tsum_eNorm
+      _ = ∫⁻ x, ‖G' x‖ₑ ∂ideleMeasure F := lintegral_unfold hG'm.measurable.eNorm
       _ = ∫⁻ x, ‖G x‖ₑ ∂ideleMeasure F := lintegral_congr_ae (hGG'.fun_comp _).symm
       _ < ∞ := hG.2
   refine hP'.congr ?_
@@ -1030,7 +1030,7 @@ theorem integral_arch_one (a y : ℝ) :
     rw [this]
     ring
   have hce : Continuous fun t : ℝ => ((𝐞 (-(t * y)) : Circle) : ℂ) :=
-    continuous_subtype_val.comp (Real.continuous_fourierChar.comp (by fun_prop))
+    continuous_subtypeVal.comp (Real.continuous_fourierChar.comp (by fun_prop))
   have hg : Continuous realGaussian := by unfold realGaussian; fun_prop
   have hgo : Continuous realGaussianOdd := by unfold realGaussianOdd; fun_prop
   have hi1 : Integrable fun t : ℝ => ((𝐞 (-(t * y)) : Circle) : ℂ) * realGaussian t :=
@@ -1059,7 +1059,7 @@ theorem mixedFourier_archSchwartz (a : InfinitePlace F → ℝ) (Z : Ad F) :
     mixedFourier F (archSchwartz a) (homeomorphMixedSpace F Z.1) =
       ∏ v, (((a v : ℝ) : ℂ) + ((UpperTheory.V.TR.pInf F Z v : ℝ) : ℂ)) *
         Complex.exp (-(π : ℂ) * (((a v : ℝ) : ℂ) ^ 2 + ((UpperTheory.V.TR.pInf F Z v : ℝ) : ℂ) ^ 2)) := by
-  haveI := isEmpty_complex (F := F)
+  have := isEmpty_complex (F := F)
   set m := homeomorphMixedSpace F Z.1
   set A : ∀ w : {w : InfinitePlace F // IsReal w}, ℝ → ℂ := fun w t => ((𝐞 (-(t * m.1 w)) : Circle) : ℂ) *
     ((((a w.1 : ℝ) : ℂ) + Complex.I * (t : ℂ)) * Complex.exp (-(π : ℂ) * (((a w.1 : ℝ) : ℂ) ^ 2 + (t : ℂ) ^ 2)))
@@ -1134,7 +1134,7 @@ theorem kernel_expansion_holds : SKern := by
   refine mul_ne_zero (inv_ne_zero ?_) (inv_ne_zero ?_)
   · rw [Rat.cast_ne_zero, Ne, FractionalIdeal.absNorm_eq_zero_iff]
     exact (levelIdeal c).ne_zero
-  · rw [NNReal.coe_ne_zero, Ne, NNReal.sqrt_eq_zero, nnnorm_eq_zero]
+  · rw [NNReal.coe_ne_zero, Ne, NNReal.sqrt_eq_zero, nnNorm_eq_zero]
     exact_mod_cast NumberField.discr_ne_zero F
 
 end UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein
@@ -1262,7 +1262,7 @@ theorem char_xAd (ξ : F) (x : UpperTheory.V.TR.Rinf F) :
       (((algebraMap F (Ad F) ξ).1 * UpperTheory.V.TR.infEq F x) w)).re) = _
     refine Finset.sum_congr rfl fun w _ => ?_
     have hm : (w.mult : ℝ) = 1 := by
-      rw [InfinitePlace.mult, if_pos (IsTotallyReal.isReal w)]; simp
+      rw [InfinitePlace.mult, ite_eq_left (IsTotallyReal.isReal w)]; simp
     have h1 : InfinitePlace.Completion.extensionEmbedding w
         (((algebraMap F (Ad F) ξ).1 * UpperTheory.V.TR.infEq F x) w) = (w.embedding ξ) * ((x w : ℝ) : ℂ) := by
       show InfinitePlace.Completion.extensionEmbedding w ((algebraMap F (Ad F) ξ).1 w * UpperTheory.V.TR.infEq F x w) = _
@@ -1323,8 +1323,8 @@ theorem fin_le (c : HeightOneSpectrum (𝓞 F) → ℕ) (A Z : Ad F) (P Q : Prop
       rw [WithZero.exp_le_exp]
       have : (0 : ℤ) ≤ dd w := by unfold dd; positivity
       omega
-    rw [if_pos h, if_pos hq]
-  · rw [if_neg h, norm_zero]
+    rw [ite_eq_left h, ite_eq_left hq]
+  · rw [ite_eq_right h, norm_zero]
     exact norm_nonneg _
 
 theorem kernF_le (c : HeightOneSpectrum (𝓞 F) → ℕ) (A Z : Ad F) :
@@ -1557,12 +1557,12 @@ theorem norm_wt {ω : HChar F} (hfin : IsOfFinOrder ω) (t : {r : ℝ // 0 < r})
 theorem continuous_wt (ω : HChar F) : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => wt ω p.1 p.2 := by
   have hω : Continuous ω.1 := ω.2.1
   have ht : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => tau p.1 p.2 :=
-    ((continuous_moduleSection (w0 F)).comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    ((continuous_moduleSection (w0 F)).comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   have h1 : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => ((ω.1 (tau p.1 p.2) : ℂˣ) : ℂ)⁻¹ := by
     have : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => (((ω.1 (tau p.1 p.2))⁻¹ : ℂˣ) : ℂ) :=
       Units.continuous_val.comp ((hω.comp ht).inv)
     simpa using this
-  exact h1.mul (Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst))
+  exact h1.mul (Complex.continuous_ofReal.comp (continuous_subtypeVal.comp continuous_fst))
 
 theorem norm_infEq (r : UpperTheory.V.TR.Rinf F) (w : InfinitePlace F) : ‖UpperTheory.V.TR.infEq F r w‖ = |r w| := by
   have hv := IsTotallyReal.isReal w
@@ -1743,7 +1743,7 @@ theorem sExp_assembly (hPt : SPoint) (hZ : SZero) (hNl : SNull) (hA : SAbs) (hU 
   have hout : ∀ ξ ∉ Set.range e, (fun ξ : Fˣ => ∫ p, Sf ξ p ∂(muE F)) ξ = 0 := by
     intro ξ hξ
     simp only [hcoef]
-    rw [if_neg, mul_zero, mul_zero]
+    rw [ite_eq_right, mul_zero, mul_zero]
     intro hpos
     exact hξ ⟨⟨ξ, hpos⟩, Units.ext rfl⟩
   have h2 := (he.hasSum_iff hout).2 hSint

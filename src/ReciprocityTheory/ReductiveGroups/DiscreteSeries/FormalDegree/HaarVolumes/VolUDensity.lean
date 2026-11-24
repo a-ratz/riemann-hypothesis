@@ -543,7 +543,7 @@ theorem exists_row_mem_span_of_det_eq_zero {n : ℕ} (Z : Fin (n + 1) → Fin (n
     ∃ i : Fin (n + 1), Z i ∈ Submodule.span ℂ (Set.range fun j : Fin n => Z (i.succAbove j)) := by
   have hli : ¬ LinearIndependent ℂ Z := by
     intro h
-    have hu : IsUnit (Matrix.of Z) := Matrix.linearIndependent_rows_iff_isUnit.mp h
+    have hu : IsUnit (Matrix.of Z) := linearIndependent_row_iff_isUnit.mp h
     exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero hZ
   have hex : ∃ i, Z i ∈ Submodule.span ℂ (Z '' (Set.univ \ {i})) := by
     by_contra hno
@@ -556,7 +556,7 @@ theorem exists_row_mem_span_of_det_eq_zero {n : ℕ} (Z : Fin (n + 1) → Fin (n
   refine ⟨i, ?_⟩
   have himg : Z '' (Set.univ \ {i}) = Set.range fun j : Fin n => Z (i.succAbove j) := by
     rw [show (fun j : Fin n => Z (i.succAbove j)) = Z ∘ i.succAbove from rfl, Set.range_comp,
-      Fin.range_succAbove, Set.compl_eq_univ_diff]
+      Fin.range_succAbove, Set.compl_eq_univ_sdiff]
   rw [himg] at hi
   exact hi
 
@@ -608,11 +608,11 @@ open ReciprocityTheory.ChartRestriction.DS.S7
 variable {N : ℕ}
 
 theorem matrix_space_volume_isAddHaar (N : ℕ) : (volume : Measure (Fin N → Fin N → ℂ)).IsAddHaarMeasure := by
-  haveI hC : (volume : Measure ℂ).IsAddHaarMeasure := by infer_instance
-  haveI hS : SigmaFinite (volume : Measure ℂ) := by infer_instance
-  haveI h1 : (volume : Measure (Fin N → ℂ)).IsAddHaarMeasure := by
+  have hC : (volume : Measure ℂ).IsAddHaarMeasure := by infer_instance
+  have hS : SigmaFinite (volume : Measure ℂ) := by infer_instance
+  have h1 : (volume : Measure (Fin N → ℂ)).IsAddHaarMeasure := by
     rw [volume_pi]; exact Measure.pi.isAddHaarMeasure _
-  haveI hS1 : SigmaFinite (volume : Measure (Fin N → ℂ)) := by infer_instance
+  have hS1 : SigmaFinite (volume : Measure (Fin N → ℂ)) := by infer_instance
   rw [volume_pi]; exact Measure.pi.isAddHaarMeasure _
 
 def leftMulLinearMap (g : Matrix (Fin N) (Fin N) ℂ) :
@@ -676,7 +676,7 @@ theorem map_volume_of_det_eq_pow (f : (Fin N → Fin N → ℂ) →ₗ[ℂ] (Fin
   have hdet := real_det_restrictScalars f d hf
   have hne : LinearMap.det (f.restrictScalars ℝ) ≠ 0 := by
     rw [hdet]; exact pow_ne_zero _ (pow_ne_zero _ (norm_ne_zero_iff.mpr hd))
-  haveI := matrix_space_volume_isAddHaar N
+  have := matrix_space_volume_isAddHaar N
   rw [Measure.map_linearMap_addHaar_eq_smul_addHaar _ hne, hdet, zpow_neg_two_mul_eq_inv_sq_pow,
     abs_of_nonneg (inv_nonneg.mpr (pow_nonneg (sq_nonneg _) _))]
 
@@ -912,8 +912,8 @@ scoped instance : Group (TG N) where
 
 theorem continuous_tg_mul : Continuous fun p : TG N × TG N => p.1 * p.2 :=
   Continuous.subtype_mk (continuous_triCoOf.comp
-    ((continuous_upMat.comp (continuous_subtype_val.comp continuous_snd)).matrix_mul
-      (continuous_upMat.comp (continuous_subtype_val.comp continuous_fst)))) _
+    ((continuous_upMat.comp (continuous_subtypeVal.comp continuous_snd)).matrix_mul
+      (continuous_upMat.comp (continuous_subtypeVal.comp continuous_fst)))) _
 
 theorem continuous_tg_inv : Continuous fun a : TG N => a⁻¹ := by
   refine Continuous.subtype_mk (continuous_triCoOf.comp ?_) _
@@ -923,7 +923,7 @@ theorem continuous_tg_inv : Continuous fun a : TG N => a⁻¹ := by
   have hinv : ContinuousAt Ring.inverse (upMat a.1).det := by
     rw [Ring.inverse_eq_inv']; exact continuousAt_inv₀ hd
   exact (continuousAt_matrix_inv (upMat a.1) hinv).comp (f := fun x : TG N => upMat x.1)
-    (continuous_upMat.comp continuous_subtype_val).continuousAt
+    (continuous_upMat.comp continuous_subtypeVal).continuousAt
 
 scoped instance : IsTopologicalGroup (TG N) where
   continuous_mul := continuous_tg_mul
@@ -940,8 +940,8 @@ theorem lift_inv (κ : Measure (TriCo N)) (hκ0 : κ (triPos N)ᶜ = 0)
   constructor
   intro g
   ext A hA
-  rw [Measure.map_apply (measurable_const_mul g) hA, comap_subtype_coe_apply ms_triPos,
-    comap_subtype_coe_apply ms_triPos]
+  rw [Measure.map_apply (measurable_const_mul g) hA, comap_subtypeVal_apply ms_triPos,
+    comap_subtypeVal_apply ms_triPos]
   have key : Subtype.val '' ((fun x : TG N => g * x) ⁻¹' A) =
       (fun t : TriCo N => triCoOf (upMat t * upMat g.1)) ⁻¹' (Subtype.val '' A) ∩ triPos N := by
     ext t
@@ -960,12 +960,12 @@ theorem lift_fin (κ : Measure (TriCo N))
     (hfin : ∀ K : Set (TriCo N), IsCompact K → K ⊆ triPos N → κ K < ⊤) :
     IsFiniteMeasureOnCompacts (κ.comap Subtype.val : Measure (TG N)) :=
   ⟨fun K hK => by
-    rw [comap_subtype_coe_apply ms_triPos]
-    exact hfin _ (hK.image continuous_subtype_val) (by rintro _ ⟨x, -, rfl⟩; exact x.2)⟩
+    rw [comap_subtypeVal_apply ms_triPos]
+    exact hfin _ (hK.image continuous_subtypeVal) (by rintro _ ⟨x, -, rfl⟩; exact x.2)⟩
 
 theorem restore (κ : Measure (TriCo N)) (hκ0 : κ (triPos N)ᶜ = 0) :
     (κ.comap Subtype.val : Measure (TG N)).map Subtype.val = κ := by
-  rw [map_comap_subtype_coe ms_triPos]
+  rw [map_comap_subtypeVal ms_triPos]
   exact Measure.restrict_eq_self_of_ae_mem (ae_iff.mpr hκ0)
 
 theorem triMeas_compl : triMeas N (triPos N)ᶜ = 0 := by
@@ -1018,7 +1018,7 @@ theorem triMeas_unique (κ : Measure (TriCo N)) (hκ0 : κ (triPos N)ᶜ = 0)
     ⟨_, Measure.isMulLeftInvariant_eq_smul _ _⟩
   set η : Measure (TriCo N) := (Measure.haar : Measure (TG N)).map Subtype.val
   have hval : AEMeasurable (Subtype.val : TG N → TriCo N) Measure.haar :=
-    measurable_subtype_coe.aemeasurable
+    measurable_subtypeVal.aemeasurable
   have hk : κ = (a : ENNReal) • η := by
     rw [← restore κ hκ0, h1, ENNReal.smul_def, Measure.map_smul _ hval]
   have ht : triMeas N = (b : ENNReal) • η := by
@@ -1082,12 +1082,12 @@ theorem range_qrW : Set.range (qrW (N := N)) = glSet N := by
   exact qrMap_image
 
 theorem measurableEmbedding_qrW : MeasurableEmbedding (qrW (N := N)) := by
-  refine ⟨?_, measurable_qrMap.comp measurable_subtype_coe, ?_⟩
+  refine ⟨?_, measurable_qrMap.comp measurable_subtypeVal, ?_⟩
   · intro p q h
     exact Subtype.ext (qrMap_injOn p.2 q.2 h)
   · intro s hs
     have h1 : MeasurableSet (Subtype.val '' s : Set (UNgrp N × TriCo N)) :=
-      (MeasurableEmbedding.subtype_coe measurableSet_qrDom).measurableSet_image' hs
+      (MeasurableEmbedding.subtypeVal measurableSet_qrDom).measurableSet_image' hs
     have h2 : qrW '' s = qrMap '' (Subtype.val '' s) := by
       rw [Set.image_image]; rfl
     rw [h2]
@@ -1103,12 +1103,12 @@ theorem map_qrW_nuW : (nuW N).map qrW = (gmMeas N).restrict (glSet N) := by
   rw [nuW, measurableEmbedding_qrW.map_comap, range_qrW]
 
 theorem map_qrMap_nuQR : (nuQR N).map qrMap = (gmMeas N).restrict (glSet N) := by
-  rw [nuQR, Measure.map_map measurable_qrMap measurable_subtype_coe]
+  rw [nuQR, Measure.map_map measurable_qrMap measurable_subtypeVal]
   exact map_qrW_nuW
 
 theorem nuQR_apply (s : Set (UNgrp N × TriCo N)) (hs : MeasurableSet s) :
     nuQR N s = gmMeas N (qrW '' (Subtype.val ⁻¹' s)) := by
-  rw [nuQR, Measure.map_apply measurable_subtype_coe hs, nuW, measurableEmbedding_qrW.comap_apply]
+  rw [nuQR, Measure.map_apply measurable_subtypeVal hs, nuW, measurableEmbedding_qrW.comap_apply]
 
 theorem nuQR_map_eq (φ : UNgrp N × TriCo N → UNgrp N × TriCo N) (hφ : Measurable φ)
     (hφW : ∀ p ∈ qrDom N, φ p ∈ qrDom N) (ψ : (Fin N → Fin N → ℂ) → (Fin N → Fin N → ℂ))
@@ -1116,7 +1116,7 @@ theorem nuQR_map_eq (φ : UNgrp N × TriCo N → UNgrp N × TriCo N) (hφ : Meas
     (hcomm : ∀ p ∈ qrDom N, qrMap (φ p) = ψ (qrMap p)) :
     (nuQR N).map φ = nuQR N := by
   let φW : qrDom N → qrDom N := fun p => ⟨φ p.1, hφW p.1 p.2⟩
-  have hφWm : Measurable φW := (hφ.comp measurable_subtype_coe).subtype_mk
+  have hφWm : Measurable φW := (hφ.comp measurable_subtypeVal).subtype_mk
   have key : (nuW N).map φW = nuW N := by
     have h1 : ((nuW N).map φW).map qrW = (nuW N).map qrW := by
       rw [Measure.map_map measurableEmbedding_qrW.measurable hφWm]
@@ -1128,9 +1128,9 @@ theorem nuQR_map_eq (φ : UNgrp N × TriCo N → UNgrp N × TriCo N) (hφ : Meas
     have h2 := congrArg (fun m => m.comap qrW) h1
     simp only [measurableEmbedding_qrW.comap_map] at h2
     exact h2
-  rw [nuQR, Measure.map_map hφ measurable_subtype_coe]
+  rw [nuQR, Measure.map_map hφ measurable_subtypeVal]
   have : φ ∘ Subtype.val = Subtype.val ∘ φW := rfl
-  rw [this, ← Measure.map_map measurable_subtype_coe hφWm, key]
+  rw [this, ← Measure.map_map measurable_subtypeVal hφWm, key]
 
 theorem det_toM_ne_zero (k : UNgrp N) : (toM k).det ≠ 0 :=
   ((Matrix.isUnit_iff_isUnit_det _).mp (k : (Matrix (Fin N) (Fin N) ℂ)ˣ).isUnit).ne_zero
@@ -1361,17 +1361,17 @@ variable {N : ℕ}
 theorem qr_lintegral (μ : Measure (UNgrp N)) [μ.IsHaarMeasure] [IsProbabilityMeasure μ] :
     ∃ C : ℝ, 0 < C ∧ ∀ f : (Fin N → Fin N → ℂ) → ENNReal, Measurable f →
       ∫⁻ Z, f Z = ENNReal.ofReal C * ∫⁻ k, (∫⁻ t in triPos N, f (qrMap (k, t)) * ENNReal.ofReal (qrWt t)) ∂μ := by
-  haveI hcpt : CompactSpace (UNgrp N) := by
+  have hcpt : CompactSpace (UNgrp N) := by
     by_contra hnc
     rw [not_compactSpace_iff] at hnc
     have h1 := MeasureTheory.measure_univ_of_isMulLeftInvariant μ
     rw [measure_univ] at h1
     exact ENNReal.one_ne_top h1
   obtain ⟨c, hct, hkap⟩ := kap_eq (N := N)
-  haveI : SigmaFinite (triMeas N) := by
+  have : SigmaFinite (triMeas N) := by
     unfold triMeas triDens
     infer_instance
-  haveI : SigmaFinite (kap N) := by
+  have : SigmaFinite (kap N) := by
     rw [hkap]
     lift c to NNReal using hct
     show SigmaFinite (c • triMeas N)

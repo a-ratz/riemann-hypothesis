@@ -73,7 +73,7 @@ theorem UpperTheory.V.Loc.v00 :
     intro h
     apply hvA
     apply Finset.mem_union_right
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_le,
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_le,
       Set.singleton_subset_iff]
     exact h
   have hdvd : ∀ k : ℕ, normV v ∣ k → (k : 𝓞 F) ∈ v.asIdeal := by

@@ -82,8 +82,8 @@ theorem finsum_block {L L' : Type} [Field L] [NumberField L] [Field L'] [NumberF
 
 theorem lineHt_invariant_base_change_scaling : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (A : HermLine ι) (L : Type) [Field L] [NumberField L] (L' : Type) [Field L'] [NumberField L'] (e : L →+* L') (w : (Σ k, ι k) → L) (c : K → L'), (∀ k, ∃ i, w ⟨k, i⟩ ≠ 0) → (∀ k, c k ≠ 0) → lineHt A L' (fun p => c p.1 * e (w p)) = lineHt A L w := by
   intro K _ ι _ A L _ _ L' _ _ e w c hw hc
-  letI : Algebra L L' := e.toAlgebra
-  haveI : IsScalarTower ℚ L L' := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  let : Algebra L L' := e.toAlgebra
+  have : IsScalarTower ℚ L L' := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
   have hyk : ∀ k, (fun i => w ⟨k, i⟩) ≠ 0 := by
     intro k h
     obtain ⟨i, hi⟩ := hw k

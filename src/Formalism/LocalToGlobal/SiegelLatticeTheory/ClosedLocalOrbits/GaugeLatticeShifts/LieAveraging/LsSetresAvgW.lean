@@ -107,9 +107,9 @@ theorem exists_fd (R Γ : Subgroup G) (hR : IsClosed (R : Set G)) (hΓR : Γ ≤
   obtain ⟨g0, hg0⟩ := MeasureTheory.exists_measurableEmbedding_real (ℕ → Bool)
 
   let f : G → ℝ := fun x => g0 (e0 x : ℕ → Bool)
-  have hfm : Measurable f := hg0.measurable.comp (measurable_subtype_coe.comp e0.measurable)
+  have hfm : Measurable f := hg0.measurable.comp (measurable_subtypeVal.comp e0.measurable)
   have hfi : Function.Injective f := fun x y hxy => e0.injective (Subtype.ext (hg0.injective hxy))
-  have hΓc : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discrete
+  have hΓc : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discreteTopology
 
   have hfin : ∀ r : G, {t : G | t ∈ Γ ∧ t * r ∈ K}.Finite := by
     intro r
@@ -126,7 +126,7 @@ theorem exists_fd (R Γ : Subgroup G) (hR : IsClosed (R : Set G)) (hΓR : Γ ≤
     have e : {x : G | ∀ s ∈ Γ, s * x ∈ K → f x ≤ f (s * x)} =
         ⋂ s : Γ, ({x : G | (s : G) * x ∈ K}ᶜ ∪ {x | f x ≤ f ((s : G) * x)}) := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_union, Set.mem_compl_iff]
+      simp only [mem_ofPred_eq, Set.mem_iInter, Set.mem_union, Set.mem_compl_iff]
       constructor
       · intro h s
         by_cases hk : (s : G) * x ∈ K
@@ -204,12 +204,12 @@ theorem avg_core (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G
   have : SecondCountableTopology R := TopologicalSpace.Subtype.secondCountableTopology (R : Set G)
   have : MeasurableSMul Γ G :=
     { measurable_const_smul := fun c => measurable_const_mul (c : G)
-      measurable_smul_const := fun x => measurable_subtype_coe.mul_const x }
+      measurable_smul_const := fun x => measurable_subtypeVal.mul_const x }
 
   set νR : Measure R := Measure.haar with hνR
   set ν : Measure G := νR.map Subtype.val with hν
   have hνapp : ∀ A : Set G, MeasurableSet A → ν A = νR (Subtype.val ⁻¹' A) := fun A hA =>
-    Measure.map_apply measurable_subtype_coe hA
+    Measure.map_apply measurable_subtypeVal hA
   have hνRc : ν (R : Set G)ᶜ = 0 := by
     rw [hνapp _ hR.isOpen_compl.measurableSet]
     have : (Subtype.val ⁻¹' (R : Set G)ᶜ : Set R) = ∅ := by ext x; simp
@@ -224,18 +224,18 @@ theorem avg_core (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G
     exact (hR.isClosedEmbedding_subtypeVal.isCompact_preimage hC).measure_lt_top
   have hleft : ∀ r ∈ R, Measure.map (fun x => r * x) ν = ν := by
     intro r hr
-    rw [hν, Measure.map_map (measurable_const_mul r) measurable_subtype_coe]
+    rw [hν, Measure.map_map (measurable_const_mul r) measurable_subtypeVal]
     have : (fun x => r * x) ∘ (Subtype.val : R → G) = Subtype.val ∘ (fun y : R => (⟨r, hr⟩ : R) * y) := rfl
-    rw [this, ← Measure.map_map measurable_subtype_coe (measurable_const_mul _), map_mul_left_eq_self]
+    rw [this, ← Measure.map_map measurable_subtypeVal (measurable_const_mul _), map_mul_left_eq_self]
   have hright0 : ∀ r ∈ R, ∃ c : NNReal, Measure.map (fun x => x * r) ν = c • ν := by
     intro r hr
     have := Measure.isHaarMeasure_map_mul_right νR (⟨r, hr⟩ : R)
     refine ⟨(Measure.map (fun y : R => y * ⟨r, hr⟩) νR).haarScalarFactor νR, ?_⟩
-    rw [hν, Measure.map_map (measurable_mul_const r) measurable_subtype_coe]
+    rw [hν, Measure.map_map (measurable_mul_const r) measurable_subtypeVal]
     have : (fun x => x * r) ∘ (Subtype.val : R → G) = Subtype.val ∘ (fun y : R => y * (⟨r, hr⟩ : R)) := rfl
-    rw [this, ← Measure.map_map measurable_subtype_coe (measurable_mul_const _),
+    rw [this, ← Measure.map_map measurable_subtypeVal (measurable_mul_const _),
       ← Measure.map_smul, ← Measure.isMulLeftInvariant_eq_smul]
-    exact measurable_subtype_coe.aemeasurable
+    exact measurable_subtypeVal.aemeasurable
   have : SMulInvariantMeasure Γ G ν := ⟨fun c A hA => by
     have := congrArg (fun m : Measure G => m A) (hleft c (hΓR c.2))
     rw [Measure.map_apply (measurable_const_mul _) hA] at this
@@ -264,7 +264,7 @@ theorem avg_core (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G
     intro r hr
     obtain ⟨c, hc⟩ := hright0 r⁻¹⁻¹ (R.inv_mem (R.inv_mem hr))
     have h1 : ν ((fun x => x * r⁻¹⁻¹) ⁻¹' D) = ν D := (hTfd r⁻¹ (R.inv_mem hr)).measure_eq hDfd
-    rw [← Measure.map_apply (measurable_mul_const _) hDm, hc, Measure.smul_apply] at h1
+    rw [← Measure.map_apply (measurable_mul_const _) hDm, hc, smul_apply] at h1
     have h1' : (c : ℝ≥0∞) * ν D = ν D := by
       rw [ENNReal.smul_def, smul_eq_mul] at h1; exact h1
     have hc1 : (c : ℝ≥0∞) = 1 := by

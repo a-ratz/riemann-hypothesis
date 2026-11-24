@@ -82,7 +82,7 @@ private theorem isWeaklyRegular_mvPolynomial_X (k : Type) [Field k] (d : ℕ) :
     rw [smul_eq_mul, Ideal.mul_top, Ideal.ofList]
     congr 1
     ext p
-    simp only [Set.mem_setOf_eq, Set.mem_image, List.mem_take_iff_getElem, List.getElem_ofFn,
+    simp only [Set.mem_ofPred_eq, Set.mem_image, List.mem_take_iff_getElem, List.getElem_ofFn,
       List.length_ofFn]
     constructor
     · rintro ⟨j, hj, rfl⟩
@@ -152,7 +152,7 @@ private theorem mem_span_image_lt_of_mul_mem_of_weaklyRegular {S : Type} [CommRi
     rw [smul_eq_mul, Ideal.mul_top, Ideal.ofList]
     congr 1
     ext p
-    simp only [Set.mem_setOf_eq, Set.mem_image, List.mem_take_iff_getElem, List.getElem_ofFn,
+    simp only [Set.mem_ofPred_eq, Set.mem_image, List.mem_take_iff_getElem, List.getElem_ofFn,
       List.length_ofFn]
     constructor
     · rintro ⟨j, hj, rfl⟩
@@ -176,7 +176,7 @@ private theorem exists_integral_coeffs_of_algebraMap_mul_eq_sum {R0 L : Type} [C
       ∑ j ∈ Finset.univ.filter (· < i), algebraMap R0 L (τ0 j) * c j) :
     ∃ b : Fin d → L, (∀ j, b j ∈ integralClosure R0 L) ∧
       a = ∑ j ∈ Finset.univ.filter (· < i), algebraMap R0 L (τ0 j) * b j := by
-  haveI : Module.Flat R0 (integralClosure R0 L) := Module.Flat.of_projective
+  have : Module.Flat R0 (integralClosure R0 L) := Module.Flat.of_projective
   have r1 := r0.of_flat (S := integralClosure R0 L)
   rw [List.map_ofFn] at r1
   let τ : Fin d → integralClosure R0 L := fun j => algebraMap R0 (integralClosure R0 L) (τ0 j)
@@ -311,7 +311,7 @@ theorem UpperTheory.Gal.productCup_of_system.locReg_of :
     · by_cases hj : j = j0
       · subst hj
         simpa using ha
-      · simp only [Pi.single_apply, hj, if_false]
+      · simp only [Pi.single_apply, hj, ite_false]
         exact Subalgebra.zero_mem _
     · rw [Finset.sum_eq_single j0]
       · simp only [Pi.single_eq_same]

@@ -97,7 +97,7 @@ theorem duU_det_Gh (A B : Matrix (Fin (r + 1)) (Fin (r + 1)) F) (T T' : F) (hA :
     (h : A.det * B.det - T * T' * ((A.submatrix Fin.castSucc Fin.castSucc).det *
       (B.submatrix Fin.castSucc Fin.castSucc).det) ≠ 0) :
     (duU_Gh r A B T T').det ≠ 0 := by
-  haveI : Invertible A := Matrix.invertibleOfIsUnitDet A (isUnit_iff_ne_zero.2 hA)
+  have : Invertible A := Matrix.invertibleOfIsUnitDet A (isUnit_iff_ne_zero.2 hA)
   have hS : duU_Gh r A B T T' * Matrix.fromBlocks 0 1 1 0 =
       Matrix.fromBlocks A (Matrix.of fun a b => cor r a b (-T)) (Matrix.of fun a b => cor r a b (-T')) B.transpose := by
     simp [duU_Gh, Matrix.fromBlocks_multiply]

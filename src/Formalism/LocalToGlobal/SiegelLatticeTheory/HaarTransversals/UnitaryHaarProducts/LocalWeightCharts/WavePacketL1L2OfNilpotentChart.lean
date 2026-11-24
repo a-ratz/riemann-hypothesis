@@ -171,13 +171,13 @@ theorem integrable_and_integral_smul_B0_eq (z : Fin (2 * r + k + 1) → ℂ) (c 
     rw [← sigma_mul hσ hq.2.2 (gr_mul hx hq.1)]
 
   have hlin : ∫⁻ q, ‖F q‖ₑ ∂(μG.prod (μW.prod μN)) < ⊤ := by
-    rw [lintegral_prod _ hFm.enorm]
+    rw [lintegral_prod _ hFm.eNorm]
     calc ∫⁻ g, ∫⁻ p, ‖F (g, p)‖ₑ ∂(μW.prod μN) ∂μG
         = ∫⁻ g, ‖β (Matrix.of g)‖ₑ *
             ∫⁻ p, ‖bInt z c σ π w' ξ (σ (x * Matrix.of g) w) p‖ₑ ∂(μW.prod μN) ∂μG := by
           refine lintegral_congr fun g => ?_
-          simp only [hFdef, enorm_smul]
-          exact lintegral_const_mul' _ _ enorm_ne_top
+          simp only [hFdef, eNorm_smul]
+          exact lintegral_const_mul' _ _ eNorm_ne_top
       _ ≤ ∫⁻ g, ENNReal.ofReal (C * opn x ^ N1H k r) *
             (‖β (Matrix.of g)‖ₑ * ENNReal.ofReal (opn (Matrix.of g) ^ N1H k r)) ∂μG := by
           apply lintegral_mono_ae
@@ -317,7 +317,7 @@ theorem smul_int {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Co
           (‖β (Matrix.of g)‖ₑ * ENNReal.ofReal (opn (Matrix.of g) ^ N1H k r)) ∂μG := by
         apply lintegral_mono_ae
         filter_upwards [hGae] with g hg
-        rw [enorm_smul, ← ofReal_norm (σ _ w), hσ.2.1 _ hg, hw1, ENNReal.ofReal_one, mul_one]
+        rw [eNorm_smul, ← ofReal_norm (σ _ w), hσ.2.1 _ hg, hw1, ENNReal.ofReal_one, mul_one]
         calc ‖β (Matrix.of g)‖ₑ = ‖β (Matrix.of g)‖ₑ * ENNReal.ofReal 1 := by simp
           _ ≤ ‖β (Matrix.of g)‖ₑ *
               ENNReal.ofReal (opn (Hpk k r) ^ N1H k r * opn (Matrix.of g) ^ N1H k r) := by
@@ -366,7 +366,7 @@ theorem aKind_of (hSG : SigmaG) (hS : SGrp) (hAB : ABound) (hD : Decay)
   have hnorm : ∀ g : Mt k r, ‖eFun μG σ w (Matrix.of g)‖ₑ = ‖(d : ℂ)‖ₑ * ‖⟪w, σ (Matrix.of g) w⟫_ℂ‖ₑ := by
     intro g
     unfold eFun
-    rw [hfd, enorm_mul, ← ofReal_norm (star _), norm_star, ofReal_norm]
+    rw [hfd, eNorm_mul, ← ofReal_norm (star _), norm_star, ofReal_norm]
   have hβw : ∫⁻ g, ‖eFun μG σ w (Matrix.of g)‖ₑ * ENNReal.ofReal (opn (Matrix.of g) ^ N1H k r) ∂μG < ⊤ := by
     calc ∫⁻ g, ‖eFun μG σ w (Matrix.of g)‖ₑ * ENNReal.ofReal (opn (Matrix.of g) ^ N1H k r) ∂μG
         = ∫⁻ g, ‖(d : ℂ)‖ₑ * (‖⟪w, σ (Matrix.of g) w⟫_ℂ‖ₑ *
@@ -375,8 +375,8 @@ theorem aKind_of (hSG : SigmaG) (hS : SGrp) (hAB : ABound) (hD : Decay)
           rw [hnorm, mul_assoc]
       _ = ‖(d : ℂ)‖ₑ * ∫⁻ g, ‖⟪w, σ (Matrix.of g) w⟫_ℂ‖ₑ *
             ENNReal.ofReal (opn (Matrix.of g) ^ N1H k r) ∂μG :=
-          lintegral_const_mul' _ _ enorm_ne_top
-      _ < ⊤ := ENNReal.mul_lt_top enorm_lt_top hdec
+          lintegral_const_mul' _ _ eNorm_ne_top
+      _ < ⊤ := ENNReal.mul_lt_top eNorm_lt_top hdec
   have hβi := smul_int hσ hμG.2.2.1 hw1 hβm hβw
   have hβr : ∫ g, eFun μG σ w (Matrix.of g) • σ (Matrix.of g) w ∂μG = w := by
     apply ext_inner_left ℂ
@@ -407,7 +407,7 @@ theorem aReprod_of (hSG : SigmaG) (hS : SGrp) (hAB : ABound) (hRG : ReprodG) :
         ≤ ∫⁻ g, ENNReal.ofReal (max K 0 ^ N1H k r) * ‖α (Matrix.of g) • σ (Matrix.of g) w‖ₑ ∂μG := by
           apply lintegral_mono_ae
           filter_upwards [hGae] with g hg
-          rw [enorm_smul, ← ofReal_norm (σ _ w), hσ.2.1 _ hg, hw1, ENNReal.ofReal_one, mul_one]
+          rw [eNorm_smul, ← ofReal_norm (σ _ w), hσ.2.1 _ hg, hw1, ENNReal.ofReal_one, mul_one]
           by_cases h0 : α (Matrix.of g) = 0
           · simp [h0]
           · exact (mul_comm _ _).trans_le (mul_le_mul' (ENNReal.ofReal_le_ofReal
@@ -457,7 +457,7 @@ theorem haarG_pos {μG : Measure (Formalism.QuantumDeterminants.Mt k r)} (hμ : 
       Set (WlocSk.HM.Grp (Gr k r) WlocSk.HM.uh_clsub)).Nonempty :=
     ⟨WlocSk.HM.Grp.mk x hxG, hxU⟩
   have hpos := hO.measure_pos (Measure.haar : Measure (WlocSk.HM.Grp (Gr k r) WlocSk.HM.uh_clsub)) hne
-  rw [hμeq, Measure.smul_apply, smul_eq_mul, WlocSk.HM.hmeas, Measure.map_apply hvt.measurable hVm]
+  rw [hμeq, smul_apply, smul_eq_mul, WlocSk.HM.hmeas, Measure.map_apply hvt.measurable hVm]
   refine ENNReal.mul_pos hc0 (ne_of_gt (lt_of_lt_of_le hpos (measure_mono ?_)))
   intro a ha
   exact ⟨ha, WlocSk.HM.Grp.mem a⟩
@@ -563,7 +563,7 @@ theorem aNonzero_of (hSG : SGrp) (hPU : PiUnit) (hSP : SProd) (hAE : AEquiv) (hA
     · rw [Set.indicator_of_mem hxP]
       have hb : ENNReal.ofReal ε ≤ (‖A (Matrix.of x)‖₊ : ℝ≥0∞) := by
         refine ENNReal.ofReal_le_of_le_toReal ?_
-        rw [ENNReal.coe_toReal, coe_nnnorm]
+        rw [ENNReal.coe_toReal, coe_nnNorm]
         exact (key x hxG hxP).le
       gcongr
     · rw [Set.indicator_of_notMem hxP]
@@ -575,7 +575,7 @@ theorem aNonzero_of (hSG : SGrp) (hPU : PiUnit) (hSP : SProd) (hAE : AEquiv) (hA
   rw [lintegral_indicator_const hPm, hz'] at hmono
   have hne0 : ENNReal.ofReal ε ^ 2 * ν P ≠ 0 :=
     mul_ne_zero (pow_ne_zero _ (ENNReal.ofReal_pos.mpr hε).ne') hPpos
-  exact hne0 (le_zero_iff.mp hmono)
+  exact hne0 (nonpos_iff_eq_zero.mp hmono)
 
 end WlocSk.ANz
 end -- clump:auto
@@ -617,7 +617,7 @@ lemma l2SG_const_smul (ν : Measure (Formalism.QuantumDeterminants.Mt k r)) (A :
   rw [← lintegral_const_mul' _ _ (by simp)]
   congr 1
   funext x
-  rw [nnnorm_smul, ENNReal.coe_mul, mul_pow]
+  rw [nnNorm_smul, ENNReal.coe_mul, mul_pow]
 
 lemma l2SG_Wf_eq_one (ν : Measure (Formalism.QuantumDeterminants.Mt k r)) (A : Mat k r → Vp) (h0 : l2SG ν A ≠ 0)
     (h1 : l2SG ν A < ⊤) : l2SG ν (Wf ν A) = 1 := by
@@ -631,16 +631,16 @@ lemma l2SG_Wf_eq_one (ν : Measure (Formalism.QuantumDeterminants.Mt k r)) (A : 
     rw [ENNReal.ofReal, ← ENNReal.coe_pow]
     congr 1
     apply NNReal.coe_injective
-    rw [NNReal.coe_pow, coe_nnnorm, Real.coe_toNNReal _ (inv_nonneg.mpr ht.le), Complex.norm_real,
+    rw [NNReal.coe_pow, coe_nnNorm, Real.coe_toNNReal _ (inv_nonneg.mpr ht.le), Complex.norm_real,
       Real.norm_eq_abs, sq_abs, inv_pow, Real.sq_sqrt ht.le]
   rw [hn, hA, ← ENNReal.ofReal_mul (inv_nonneg.mpr ht.le), inv_mul_cancel₀ ht.ne', ENNReal.ofReal_one]
 
 lemma lint_smul (ν : Measure (Formalism.QuantumDeterminants.Mt k r)) (A : Mat k r → Vp) (cc : ℂ) (f : Formalism.QuantumDeterminants.Mt k r → ℝ≥0∞)
     (h : ∫⁻ x, ‖A (Matrix.of x)‖ₑ * f x ∂ν < ⊤) :
     ∫⁻ x, ‖(fun g => cc • A g) (Matrix.of x)‖ₑ * f x ∂ν < ⊤ := by
-  simp_rw [enorm_smul, mul_assoc]
-  rw [lintegral_const_mul' _ _ enorm_ne_top]
-  exact ENNReal.mul_lt_top enorm_lt_top h
+  simp_rw [eNorm_smul, mul_assoc]
+  rw [lintegral_const_mul' _ _ eNorm_ne_top]
+  exact ENNReal.mul_lt_top eNorm_lt_top h
 
 end Scale
 
@@ -807,7 +807,7 @@ lemma smul_cancel {a b : ℝ≥0} (h : a • (Measure.haar : Measure (GN k r)) =
   have hK0 : (Measure.haar : Measure (GN k r)) K ≠ 0 := (Measure.measure_pos_of_mem_nhds _ hKn).ne'
   have hKt : (Measure.haar : Measure (GN k r)) K ≠ ∞ := hK.measure_lt_top.ne
   have e := congrArg (fun ν : Measure (GN k r) => ν K) h
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
   exact ENNReal.coe_injective ((ENNReal.mul_left_inj hK0 hKt).mp e)
 
 lemma map_rmul (g : GN k r) :
@@ -850,7 +850,7 @@ lemma mod_bound : ∃ K : Set (GN k r), K ∈ 𝓝 (1 : GN k r) ∧ ∃ B : ℝ�
   refine ⟨K, hKn, ((Measure.haar : Measure (GN k r)) (K * K⁻¹)).toNNReal /
     ((Measure.haar : Measure (GN k r)) K).toNNReal, fun g hg => ?_⟩
   have e := congrArg (fun ν : Measure (GN k r) => ν K) (map_rmul g)
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
   rw [Measure.map_apply (measurable_mul_const g) hK.isClosed.measurableSet] at e
   have hsub : (· * g) ⁻¹' K ⊆ K * K⁻¹ := by
     intro x hx
@@ -984,7 +984,7 @@ lemma dE_tendsto (hB : NWtUpper) (g : GN k r) : Tendsto (fun n => dE k r n g) at
     · subst h
       simp only [sub_self, zpow_zero, Complex.ofReal_one, mul_one, Matrix.one_apply_eq]
       exact tendsto_const_nhds
-    · simp only [if_neg h, zero_mul, Matrix.one_apply_ne h]
+    · simp only [ite_eq_right h, zero_mul, Matrix.one_apply_ne h]
       exact tendsto_const_nhds
   · have h : i ≠ j := by
       intro e; subst e; exact hw le_rfl
@@ -1088,7 +1088,7 @@ theorem haar_conj (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hT : 0 < 
     (lt_of_lt_of_le (Measure.measure_pos_of_mem_nhds _ hKn) (measure_mono hKK)).ne'
   have hKt : (Measure.haar : Measure (GN k r)) K' ≠ ∞ := hK'.measure_lt_top.ne
   have ev := congrArg (fun ν : Measure (GN k r) => ν K') hEq
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at ev
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at ev
   rw [Measure.map_apply he.measurable hK'.isClosed.measurableSet, hpre] at ev
   have hs1 : s = 1 := by
     have h2 : (s : ℝ≥0∞) * (Measure.haar : Measure (GN k r)) K' = 1 * (Measure.haar : Measure (GN k r)) K' := by
@@ -1255,7 +1255,7 @@ theorem haar_right_compact {G : Type*} [Group G] [TopologicalSpace G] [IsTopolog
   have htop : μ Set.univ ≠ ∞ := measure_ne_top μ _
   have hc : ((Measure.haarScalarFactor ν μ : ℝ≥0) : ℝ≥0∞) = 1 := by
     have e := hmass
-    rw [hν, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+    rw [hν, smul_apply, ENNReal.smul_def, smul_eq_mul] at e
     have e2 : ((Measure.haarScalarFactor ν μ : ℝ≥0) : ℝ≥0∞) * μ Set.univ = 1 * μ Set.univ := by
       rw [one_mul]; exact e
     exact (ENNReal.mul_left_inj h0 htop).mp e2
@@ -1511,7 +1511,7 @@ theorem A_bound (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hyp : Hyp k r z c u
   show ‖∫ p, bInt z c σ π (σ x₀ w) ξ (σ (Matrix.of x) w) p ∂(μW.prod μN)‖ₑ * ENNReal.ofReal q ≤ _
   calc ‖∫ p, bInt z c σ π (σ x₀ w) ξ (σ (Matrix.of x) w) p ∂(μW.prod μN)‖ₑ * ENNReal.ofReal q
       ≤ (∫⁻ p, ‖bInt z c σ π (σ x₀ w) ξ (σ (Matrix.of x) w) p‖ₑ ∂(μW.prod μN)) * ENNReal.ofReal q := by
-        gcongr; exact enorm_integral_le_lintegral_enorm _
+        gcongr; exact eNorm_integral_le_lintegral_eNorm _
     _ = ∫⁻ p, ‖bInt z c σ π (σ x₀ w) ξ (σ (Matrix.of x) w) p‖ₑ * ENNReal.ofReal q ∂(μW.prod μN) :=
         (lintegral_mul_const' _ _ ENNReal.ofReal_ne_top).symm
     _ ≤ ∫⁻ p, ‖ξ‖ₑ * wcoef σ (σ x₀ w) w e (fun i j => (Matrix.of (mulP p) * Matrix.of x) i j)
@@ -1530,7 +1530,7 @@ theorem A_bound (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hyp : Hyp k r z c u
         · exact le_rfl
         · exact hqle _ ⟨_, h1, _, h2, rfl⟩
     _ = ‖ξ‖ₑ * ∫⁻ p, wcoef σ (σ x₀ w) w e (fun i j => (Matrix.of (mulP p) * Matrix.of x) i j)
-        ∂(μW.prod μN) := lintegral_const_mul' _ _ enorm_ne_top
+        ∂(μW.prod μN) := lintegral_const_mul' _ _ eNorm_ne_top
 
 theorem nu_bound (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hSP : SProd)
     (hyp : Hyp k r z c u v b σ π w μG μS ν μW μN) (x₀ : Mat k r) (ξ : Vp) (e : ℝ) (he : 0 ≤ e)
@@ -1548,8 +1548,8 @@ theorem nu_bound (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hSP : SProd)
         filter_upwards [hae] with x hx
         exact A_bound hSG hPU hSig hyp x₀ ξ x hx e (q x) (hqle x hx)
     _ = ‖ξ‖ₑ * (cS * ∫⁻ y, wcoef σ (σ x₀ w) w e y ∂μG) := by
-        rw [lintegral_const_mul' _ _ enorm_ne_top, hU _ (wcoef_meas hσ _ _ he)]
-    _ < ⊤ := ENNReal.mul_lt_top enorm_lt_top (ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hcS) hfin)
+        rw [lintegral_const_mul' _ _ eNorm_ne_top, hU _ (wcoef_meas hσ _ _ he)]
+    _ < ⊤ := ENNReal.mul_lt_top eNorm_lt_top (ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hcS) hfin)
 
 theorem wave_packet_l1_finite (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hSP : SProd) (hDec : Decay)
     (hCW : CoefWeightedLoc) (hyp : Hyp k r z c u v b σ π w μG μS ν μW μN)
@@ -1672,7 +1672,7 @@ theorem aF_eq (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hyp : Hyp k r z c u v
   have hWc := ae_fst (μN := μN) hW.2.2.1
   have hNc := ae_snd (μW := μW) hN.2.2.1
   unfold aF
-  rw [← lintegral_const_mul' _ _ enorm_ne_top]
+  rw [← lintegral_const_mul' _ _ eNorm_ne_top]
   apply lintegral_congr_ae
   filter_upwards [hWc, hNc] with p h1 h2
   have hpG : Matrix.of p.1 * Matrix.of p.2 ∈ Gr k r := Grp.mul_mem (hWG h1) (hNG h2)
@@ -1723,7 +1723,7 @@ theorem wave_packet_l2_finite (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hSP :
       exact hf₀m.comp this.measurable
     calc (‖Af z c σ π μW μN w x₀ ξ (Matrix.of x)‖₊ : ℝ≥0∞) ^ 2
         = ‖Af z c σ π μW μN w x₀ ξ (Matrix.of x)‖ₑ * ‖Af z c σ π μW μN w x₀ ξ (Matrix.of x)‖ₑ := by
-          rw [sq, enorm_eq_nnnorm]
+          rw [sq, eNorm_eq_nnNorm]
       _ ≤ (‖ξ‖ₑ * aF σ (σ x₀ w) w μW μN (Matrix.of x)) * (‖ξ‖ₑ * aF σ (σ x₀ w) w μW μN (Matrix.of x)) :=
           mul_le_mul' h1' h1'
       _ = ‖ξ‖ₑ * ∫⁻ p, wcoef σ (σ x₀ w) w 0 (fun i j => (Matrix.of (mulP p) * Matrix.of x) i j) *
@@ -1761,13 +1761,13 @@ theorem wave_packet_l2_finite (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hSP :
         filter_upwards [hae] with x hx
         exact hpt x hx
     _ = ‖ξ‖ₑ * (cS * ∫⁻ y, Fq σ (σ x₀ w) w μW μN ξ y ∂μG) := by
-        rw [lintegral_const_mul' _ _ enorm_ne_top, hU _ hFm]
+        rw [lintegral_const_mul' _ _ eNorm_ne_top, hU _ hFm]
     _ ≤ ‖ξ‖ₑ * (cS * ∫⁻ y, ENNReal.ofReal C * wcoef σ (σ x₀ w) w (N1H k r) y ∂μG) := by
         gcongr ‖ξ‖ₑ * (cS * ?_)
         exact lintegral_mono_ae hFb
     _ < ⊤ := by
         rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
-        exact ENNReal.mul_lt_top enorm_lt_top (ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hcS)
+        exact ENNReal.mul_lt_top eNorm_lt_top (ENNReal.mul_lt_top (lt_top_iff_ne_top.mpr hcS)
           (ENNReal.mul_lt_top ENNReal.ofReal_lt_top hGfin))
 
 theorem wave_packet_l1_l2_of_hypotheses (hSG : SGrp) (hPU : PiUnit) (hSig : SigmaG) (hSP : SProd) (hDec : Decay)

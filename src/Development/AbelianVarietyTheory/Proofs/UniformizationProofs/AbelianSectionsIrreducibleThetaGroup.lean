@@ -63,11 +63,11 @@ theorem irreducible_of_ringEquiv (F : Type) [Field F] [IsAlgClosed F] (R : Type)
     (hmul : ∀ a b, ∃ c : Rˣ, ∀ v, Φ (a * b) v = (c : R) • Φ a (Φ b v))
     (hcomm : ∀ a b v, Φ a (Φ b v) = (e a b : R) • Φ b (Φ a v)) (hnd : ∀ a, (∀ b, e a b = 1) → a = 1)
     (U : Submodule F E) (hU : ∀ a v, j v ∈ U → j (Φ a v) ∈ U) : U = ⊥ ∨ U = ⊤ := by
-  letI := (MulEquiv.isField (Field.toIsField F) σ.symm.toMulEquiv).toField
-  haveI : IsAlgClosed R := IsAlgClosed.of_ringEquiv F R σ
+  let := (MulEquiv.isField (Field.toIsField F) σ.symm.toMulEquiv).toField
+  have : IsAlgClosed R := IsAlgClosed.of_ringEquiv F R σ
   have h0 : Nat.card A ≠ 0 := fun h => hcard (by rw [h, Nat.cast_zero])
-  haveI : Finite A := Nat.finite_of_card_ne_zero h0
-  haveI : Module.Finite R V := Module.finite_of_finrank_pos
+  have : Finite A := Nat.finite_of_card_ne_zero h0
+  have : Module.Finite R V := Module.finite_of_finrank_pos
     (Nat.pos_of_ne_zero fun h => h0 (by rw [← hdim, h]; rfl))
   have hc : (Nat.card A : R) ≠ 0 := fun h => hcard (σ.injective (by rw [map_natCast, h, map_zero]))
   let W : Submodule R V :=

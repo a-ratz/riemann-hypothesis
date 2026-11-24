@@ -187,7 +187,7 @@ theorem component_map_eq_zero {F' E' : Type} [Field F'] [NumberField F'] [Field 
     by_cases hQ : Q = P
     · subst hQ
       rw [h0, mul_zero, map_zero]
-      exact zero_le'
+      exact zero_le
     · rw [h1 Q hQ, mul_one, Formalism.UG.P.levelaf_valued_algebraMap, map_inv₀, GlobalTheory.NormOneUnit.val_eq_one (hsQ Q hQ), inv_one]
   have hεs : ε = ((s : E) ⊗ₜ[F] 1) * (((s : E)⁻¹ ⊗ₜ[F] 1) * ε) := by
     rw [← mul_assoc, Algebra.TensorProduct.tmul_mul_tmul, mul_inv_cancel₀ hs0, one_mul, ← Algebra.TensorProduct.one_def, one_mul]
@@ -411,11 +411,11 @@ theorem value_part (hPr : Pr.Ok) (hsel : IsSel X sel) (hS : ∀ i, Pr.g i ∈ S)
       obtain ⟨i, hi⟩ := g_mem_of_vGs hPr hP
       refine g_notMem_of_goodPl hPr hS (by_contra fun hg => ?_) i hi
       exact (GlobalTheory.Mem.ReadTwist.mem_qprime_iff hξ _).2 ⟨P.1, rfl, hn⟩ (Subgroup.mem_iInf.1 (Subgroup.mem_iInf.1 mu.2.2 _) hg)
-    rw [if_pos hP, locK_unr hu (hk P), Units.val_one, mul_one, hμ.atg ⟨P.1, hP⟩ _ (b P) (hun P).unit rfl (hr P), chiP, dite_eq_left hP,
+    rw [ite_eq_left hP, locK_unr hu (hk P), Units.val_one, mul_one, hμ.atg ⟨P.1, hP⟩ _ (b P) (hun P).unit rfl (hr P), chiP, dite_eq_left hP,
       chiAt, extChi, dite_eq_left j.2]
     rfl
   · have hQ := (Finset.mem_union.1 P.2).resolve_left hP
-    rw [if_neg hP, locK_unr (hμ.unr P.1 (g_notMem_of_goodPl hPr hS (mem_QE mu hsel hQ).2)) (hk P), Units.val_one, one_mul,
+    rw [ite_eq_right hP, locK_unr (hμ.unr P.1 (g_notMem_of_goodPl hPr hS (mem_QE mu hsel hQ).2)) (hk P), Units.val_one, one_mul,
       resChar_eq hξ hξt P.1 (hun P).unit (b P) (Units.mk0 _ (h0 P)) rfl (hr P).symm]
 
 end Columns
@@ -428,7 +428,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem star_eq_conj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
 
@@ -498,7 +498,7 @@ theorem valued_lt_of_intAtA {P : HeightOneSpectrum (𝓞 X.E)} {z : AfE X.F X.E}
   have h1 : Valued.v (evP X.F P (((r : X.E) ⊗ₜ[X.F] 1) * (((q : X.E)⁻¹ ⊗ₜ[X.F] 1) * z))) ≤ 1 :=
     (mem_rInt_iff _ _ _).1 ((hint _).1 (e ▸ hm)) P
   rw [map_mul, map_mul, map_mul, map_mul, component_tmul_one, component_tmul_one, Formalism.UG.P.levelaf_valued_algebraMap, Formalism.UG.P.levelaf_valued_algebraMap,
-    GlobalTheory.NormOneUnit.val_eq_one hr', one_mul, map_inv₀, inv_mul_le_one₀ (zero_lt_iff.2 (by simpa using hq0))] at h1
+    GlobalTheory.NormOneUnit.val_eq_one hr', one_mul, map_inv₀, inv_mul_le_one₀ (pos_iff_ne_zero.2 (by simpa using hq0))] at h1
   refine lt_of_le_of_lt h1 ?_
   rw [← map_natCast (algebraMap (𝓞 X.E) X.E)]
   exact (HeightOneSpectrum.valuation_lt_one_iff_mem _ _).2 hqP
@@ -545,7 +545,7 @@ theorem GlobalTheory.LevMuDet.muOf_det_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX
       muOf t u μ dtU (i + 1) (Matrix.GeneralLinearGroup.det κ.1) * t.seam.σ₀ (∏ P, rhoS t.Ch t.sel (t.tup μ) i P (e P)) = 1 ∧
       muOf t u μ dtU (i + 1) (Matrix.GeneralLinearGroup.det κ.1) = t.seam.σ₀ (∏ P, rhoT t.Ch t.sel (t.tup μ) i P (e P))) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a hP _ hMu i hi j hj β κ e he
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨h1, ⟨-, h2⟩, -, h4, -⟩ := hMu i hi
   set d := Matrix.GeneralLinearGroup.det κ.1 with hd
   have hdU : d ∈ U1 (sigD D) := by
@@ -604,7 +604,7 @@ theorem GlobalTheory.LevMuDet.muOf_det_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX
     · rw [(hP.ref hμ).2, (hP.ref hμ).1]
       simp
     · obtain ⟨ξ, hξ, hmt⟩ := hP.tw μ hμ rfl
-      rw [hmt u, twMt, if_pos ⟨by omega, by omega⟩, MonoidHom.mul_apply, Units.val_mul, hξ x]
+      rw [hmt u, twMt, ite_eq_left ⟨by omega, by omega⟩, MonoidHom.mul_apply, Units.val_mul, hξ x]
       rfl
   refine ⟨?_, hT2⟩
   rw [hT2, ← map_mul, ← Finset.prod_mul_distrib, Finset.prod_eq_one fun P _ => rhoT_mul_rhoS (t.tup μ) i P (hun P), map_one]

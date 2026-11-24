@@ -56,7 +56,7 @@ def pC (P : Ideal (MRing ι)) : Ideal (MRingOver ℂ ι) :=
 theorem mcPts_eq_pC (P : Ideal (MRing ι)) :
     mcPts P = {z | (∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) ∧ ∀ f ∈ pC P, eval z f = 0} := by
   ext z
-  simp only [mcPts, Set.mem_setOf_eq]
+  simp only [mcPts, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨h1, h2⟩
     refine ⟨h1, fun f hf => ?_⟩

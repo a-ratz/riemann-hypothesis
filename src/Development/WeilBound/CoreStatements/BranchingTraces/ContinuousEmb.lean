@@ -179,7 +179,7 @@ def embU (hF : Fits ε ε' e) (h : UJ ε') : UJ ε :=
 theorem um_inv {m : ℕ} {ε : Fin m → Bool} (g : UJ ε) : um g⁻¹ = (um g)⁻¹ := Matrix.coe_units_inv g.1
 
 theorem continuous_emb : Continuous fun h : UJ ε' => emb e (um h) := by
-  have hu : Continuous fun h : UJ ε' => um h := Units.continuous_val.comp continuous_subtype_val
+  have hu : Continuous fun h : UJ ε' => um h := Units.continuous_val.comp continuous_subtypeVal
   refine continuous_matrix fun i j => ?_
   simp only [emb, Matrix.reindex_apply, Matrix.submatrix_apply]
   generalize e.symm i = p
@@ -268,7 +268,7 @@ theorem fdeg_shift {m : ℕ} {lam : Fin m → ℝ} (s : Fin m) (h : Formalism.Qu
                     split_ifs <;> nlinarith
             _ = 2 ^ (2 * m) := by
                 simp only [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
-                  Finset.prod_pow, hc, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+                  Finset.prod_pow, hc, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
                 ring
   · refine Finset.prod_nonneg fun a _ => Finset.prod_nonneg fun b hb => ?_
     exact sub_nonneg.mpr (Nat.cast_le.mpr (le_of_lt (Finset.mem_filter.mp hb).2))

@@ -378,8 +378,8 @@ theorem card_jumps_letter : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : 
   intro l _ P AI hT H K LL hA V _ _ _ _ _ ρ U hC hU i
   classical
   obtain ⟨T⟩ := hT
-  haveI := LL.2
-  haveI := (P.PD K).finK
+  have := LL.2
+  have := (P.PD K).finK
   have e : K0 K = K.1 := inf_eq_left.2 hA.1
   let eK : ↥K.1 ≃ₐ[ℚ_[l]] ↥(K0 K) := IntermediateField.equivOfEq e.symm
   let τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1 := ((H.W K 1 LL hA.2.2).emb i).comp eK.toAlgHom
@@ -393,8 +393,8 @@ theorem card_jumps_letter : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : 
     exact (IntermediateField.equivOfEq e).toLinearEquiv.finrank_eq
   have hdim := (GlobalTheory.Per.LetterDim.tied_letter_component_finrank l P AI T K LL V ρ).2 hc
     (GlobalTheory.TopSteps.CrysRules.isDR T K LL ρ hC) τ
-  haveI := (GlobalTheory.Per.FontaineBound.ddR_finite_le (P.PD K) (GlobalTheory.RegularRing.isField_of_tied T) ρ).1
-  haveI : FiniteDimensional ↥LL.1 ↥(DdRE (P.PD K) ρ τ) :=
+  have := (GlobalTheory.Per.FontaineBound.ddR_finite_le (P.PD K) (GlobalTheory.RegularRing.isField_of_tied T) ρ).1
+  have : FiniteDimensional ↥LL.1 ↥(DdRE (P.PD K) ρ τ) :=
     Submodule.finiteDimensional_of_le (S₂ := DdR (P.PD K) ρ) inf_le_left
   obtain ⟨lo, hlo⟩ := Formalism.MainNotions.N.Pv.LocalLengthBound.rk_fildR_lo (P.PD K) ρ τ
   obtain ⟨hi, hhi⟩ := Formalism.MainNotions.N.Pv.LocalLengthBound.rk_fildR_hi (P.PD K) ρ τ
@@ -615,7 +615,7 @@ theorem nonempty_equiv_of_free {O K : Type} [CommRing O] [IsDomain O] [Field K] 
     (T : Submodule O K) [Module.Free O T] (hT : T ≠ ⊥) :
     Nonempty (O ≃ₗ[O] T) := by
   let b := Module.Free.chooseBasis O T
-  haveI hsub : Subsingleton (Module.Free.ChooseBasisIndex O T) := by
+  have hsub : Subsingleton (Module.Free.ChooseBasisIndex O T) := by
     constructor
     intro i j
     by_contra hij
@@ -641,7 +641,7 @@ theorem nonempty_equiv_of_free {O K : Type} [CommRing O] [IsDomain O] [Field K] 
       fin_cases k <;> rfl
     have h2 := LinearIndependent.pair_iff.1 hli d (-a) hrel
     exact hd0 h2.1
-  haveI hne : Nonempty (Module.Free.ChooseBasisIndex O T) := by
+  have hne : Nonempty (Module.Free.ChooseBasisIndex O T) := by
     by_contra h
     rw [not_nonempty_iff] at h
     apply hT
@@ -649,7 +649,7 @@ theorem nonempty_equiv_of_free {O K : Type} [CommRing O] [IsDomain O] [Field K] 
     intro x hx
     have h0 : (⟨x, hx⟩ : T) = 0 := b.repr.injective (Subsingleton.elim _ _)
     simpa using congrArg Subtype.val h0
-  haveI : Unique (Module.Free.ChooseBasisIndex O T) := uniqueOfSubsingleton (Classical.arbitrary _)
+  have : Unique (Module.Free.ChooseBasisIndex O T) := uniqueOfSubsingleton (Classical.arbitrary _)
   exact ⟨(LinearEquiv.funUnique (Module.Free.ChooseBasisIndex O T) O O).symm.trans b.equivFun.symm⟩
 
 end GlobalTheory.CharLat
@@ -662,10 +662,10 @@ theorem exists_equiv_charLattice : ∀ {l : ℕ} [Fact l.Prime] (LL : FinExt l) 
     (θ : G →* (↥(OL LL))ˣ) (Lc : Lattice (O := ↥(OL LL)) (charRep (tableLineDegreeTwo.charL (LL := ↥LL.1) θ))),
     ∃ e : ↥(OL LL) ≃ₗ[↥(OL LL)] ↥Lc.T, ∀ g a, e (Formalism.GaloisCohomology.scalRep (↥(OL LL)) θ g a) = latRep Lc g (e a) := by
   intro l _ LL G _ _ θ Lc
-  haveI := LL.2
-  haveI hF : IsFractionRing (↥(OL LL)) (↥LL.1) :=
+  have := LL.2
+  have hF : IsFractionRing (↥(OL LL)) (↥LL.1) :=
     integralClosure.isFractionRing_of_finite_extension (A := ℤ_[l]) (K := ℚ_[l]) (L := ↥LL.1)
-  haveI := Lc.free
+  have := Lc.free
   have hT : Lc.T ≠ ⊥ := by
     intro h
     have hs := Lc.span
@@ -1022,7 +1022,7 @@ theorem exists_topData_galData : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (
   have hp : (P.PD K).p = l := P.PD_p K
   have hS : Standing P K LL (H.W K 1 LL hA.2.2).emb lam :=
     (GlobalTheory.SenCompare.standing_iff P H lam).2 ⟨hp ▸ h5, hA, hlam⟩
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨GlobalTheory.IndefiniteRowSideFullHecke.InvariantsVanishing.letters_ne_zero hS⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨GlobalTheory.IndefiniteRowSideFullHecke.InvariantsVanishing.letters_ne_zero hS⟩
   obtain ⟨ht, hposition, -, hcrys, hmult, hchi⟩ := hyp
   rw [hp] at hposition
   obtain ⟨D, hDt, hD, t1, t2, t3⟩ := GlobalTheory.TopWindow.exists_topData_of_positionHyps l _ t _ h w η typ U

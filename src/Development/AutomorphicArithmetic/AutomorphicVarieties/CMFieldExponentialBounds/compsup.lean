@@ -62,7 +62,7 @@ private theorem coprime_of {K : Type} [Field K] {N : ℕ} [NeZero N] {ζ : K} (h
 private theorem sqrt_iff {K : Type} [Field K] [CharZero K] {N : ℕ} [NeZero N] {ζ : K} (hζ : IsPrimitiveRoot ζ N)
     (σ : K →+* K) {a : ℕ} (hσ : σ ζ = ζ ^ a) {q : ℕ} (hq : q.Prime) (h4 : q % 4 = 3) (hd : q ∣ N)
     {α : K} (hα : α ^ 2 = -(q : K)) : σ α = α ↔ jacobiSym (a : ℤ) q = 1 := by
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   obtain ⟨k, hk⟩ := hd
   have hω : IsPrimitiveRoot (ζ ^ k) q := hζ.pow (NeZero.pos N) (by rw [hk, mul_comm])
   obtain ⟨G, hG, hs⟩ := HostParam.SlopeTestRemainingChoices.GaussRoot.exists_gauss h4 hω
@@ -109,20 +109,20 @@ private theorem ker_congr (A : AbF) {a b : ℕ} (h : a ≡ b [MOD A.m]) (hb : A.
 
 private theorem range_le {M L : Type} [Field M] [Field L] [Algebra ℚ M] [Algebra ℚ L] [Normal ℚ M]
     (g₁ g₂ : M →ₐ[ℚ] L) (x : M) : ∃ y : M, g₂ y = g₁ x := by
-  letI : Algebra M L := g₂.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ M L := IsScalarTower.of_algebraMap_eq fun r => (g₂.commutes r).symm
+  let : Algebra M L := g₂.toRingHom.toAlgebra
+  have : IsScalarTower ℚ M L := IsScalarTower.of_algebraMap_eq fun r => (g₂.commutes r).symm
   exact ⟨g₁.restrictNormal M x, g₁.restrictNormal_commutes M x⟩
 
 private theorem exists_lift {K L : Type} [Field K] [Field L] [Algebra ℚ K] [Algebra ℚ L] [Normal ℚ L]
     (f : K →ₐ[ℚ] L) (τ : K ≃ₐ[ℚ] K) : ∃ σ : L ≃ₐ[ℚ] L, ∀ x : K, σ (f x) = f (τ x) := by
-  letI : Algebra K L := f.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
+  let : Algebra K L := f.toRingHom.toAlgebra
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
   exact ⟨τ.liftNormal L, fun x => τ.liftNormal_commutes L x⟩
 
 private theorem exists_res {K L : Type} [Field K] [Field L] [Algebra ℚ K] [Algebra ℚ L] [Normal ℚ K]
     (f : K →ₐ[ℚ] L) (σ : L ≃ₐ[ℚ] L) : ∃ τ : K ≃ₐ[ℚ] K, ∀ x : K, σ (f x) = f (τ x) := by
-  letI : Algebra K L := f.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
+  let : Algebra K L := f.toRingHom.toAlgebra
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
   exact ⟨σ.restrictNormal K, fun x => (σ.restrictNormal_commutes K x).symm⟩
 
 private theorem indep (A : AbF) {M : Type} [Field M] [NumberField M] (hM : IsAbField A M) {N : ℕ} [NeZero N]
@@ -130,13 +130,13 @@ private theorem indep (A : AbF) {M : Type} [Field M] [NumberField M] (hM : IsAbF
     (τ : CyclotomicField N ℚ ≃ₐ[ℚ] CyclotomicField N ℚ) (a : ℕ) (hτ : τ ζ = ζ ^ a) :
     (∀ x : M, τ (i x) = i x) ↔ A.ker a := by
   obtain ⟨N', hN', j, ζ', hm', hζ', H⟩ := hM
-  haveI : NeZero A.m := ⟨A.pos.ne'⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
-  haveI : IsCyclotomicExtension {N'} ℚ (CyclotomicField N' ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
-  haveI : IsAbelianGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isAbelianGalois {N} ℚ _
-  haveI : IsAbelianGalois ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.isAbelianGalois {N'} ℚ _
-  haveI : IsAbelianGalois ℚ M := IsAbelianGalois.of_algHom j
-  haveI : Normal ℚ (AlgebraicClosure ℚ) := by
+  have : NeZero A.m := ⟨A.pos.ne'⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
+  have : IsCyclotomicExtension {N'} ℚ (CyclotomicField N' ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
+  have : IsAbelianGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isAbelianGalois {N} ℚ _
+  have : IsAbelianGalois ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.isAbelianGalois {N'} ℚ _
+  have : IsAbelianGalois ℚ M := IsAbelianGalois.of_algHom j
+  have : Normal ℚ (AlgebraicClosure ℚ) := by
     first
       | exact @IsAlgClosure.normal ℚ (AlgebraicClosure ℚ) _ _ (AlgebraicClosure.instAlgebra ℚ) _
       | convert @IsAlgClosure.normal ℚ (AlgebraicClosure ℚ) _ _ (AlgebraicClosure.instAlgebra ℚ) _
@@ -194,7 +194,7 @@ private theorem core (A : AbF) {M : Type} [Field M] [NumberField M] (hM : IsAbFi
     τ ∈ (IntermediateField.adjoin ℚ {α, β, η + η⁻¹} ⊔ i.fieldRange).fixingSubgroup ↔
       (a ≡ 1 [MOD 2 ^ (e + 2)] ∨ a + 1 ≡ 0 [MOD 2 ^ (e + 2)]) ∧ A.ker a ∧
           jacobiSym (a : ℤ) q = 1 ∧ jacobiSym (a : ℤ) d = 1 := by
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
   have hτ' : (τ : CyclotomicField N ℚ →+* CyclotomicField N ℚ) ζ = ζ ^ a := hτ
   have e1 : τ α = α ↔ jacobiSym (a : ℤ) q = 1 := sqrt_iff hζ _ hτ' hq hq4 hqN hα
   have e2 : τ β = β ↔ jacobiSym (a : ℤ) d = 1 := sqrt_iff hζ _ hτ' hd hd4 hdN hβ
@@ -204,7 +204,7 @@ private theorem core (A : AbF) {M : Type} [Field M] [NumberField M] (hM : IsAbFi
     exact trace_iff (pow_ne_zero _ two_ne_zero) hη a
   have e4 : τ ∈ (IntermediateField.adjoin ℚ {α, β, η + η⁻¹}).fixingSubgroup ↔
       τ α = α ∧ τ β = β ∧ τ (η + η⁻¹) = η + η⁻¹ := by
-    rw [← Subgroup.zpowers_le, ← IntermediateField.le_iff_le, IntermediateField.adjoin_le_iff]
+    rw [← Subgroup.zpowers_le, ← IntermediateField.le_fixedField_iff_le_fixingSubgroup, IntermediateField.adjoin_le_iff]
     have hm : ∀ x : CyclotomicField N ℚ, x ∈ IntermediateField.fixedField (Subgroup.zpowers τ) ↔ τ x = x := by
       intro x
       rw [IntermediateField.mem_fixedField_iff]

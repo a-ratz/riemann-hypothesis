@@ -68,25 +68,25 @@ theorem discHF_setting {D : D7} (X : HidaSetting D) : DiscreteTopology (HFinIn (
 
 theorem fdExistsH_holds : FDExistsH := by
   intro D X u
-  haveI : FiniteDimensional X.B.I.F X.B.I.E :=
+  have : FiniteDimensional X.B.I.F X.B.I.E :=
     Module.finite_of_finrank_pos (by rw [X.B.I.cm.deg2]; norm_num)
-  haveI i1 : SecondCountableTopology (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) := inferInstance
-  haveI i2 := discHF_setting X
-  haveI i3 : SecondCountableTopology (Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) :=
+  have i1 : SecondCountableTopology (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) := inferInstance
+  have i2 := discHF_setting X
+  have i3 : SecondCountableTopology (Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   let f : ratOf (K := Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) →
       HFinIn (AF X.B.I.F) X.B.I.cm.sig X.B.I.J := fun x =>
     ⟨((x : Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) : HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J),
       Subgroup.mem_comap.1 x.2⟩
   have hf : Continuous f :=
-    ((continuous_subtype_val.comp continuous_subtype_val :
+    ((continuous_subtypeVal.comp continuous_subtypeVal :
       Continuous fun x : ratOf (K := Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) =>
         ((x : Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)) : HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J))).subtype_mk _
   have hinj : Function.Injective f := by
     intro x y hxy
     have e := congrArg Subtype.val hxy
     exact Subtype.ext (Subtype.ext e)
-  haveI : DiscreteTopology (ratOf (K := Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) :=
+  have : DiscreteTopology (ratOf (K := Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) :=
     DiscreteTopology.of_continuous_injective hf hinj
   obtain ⟨𝓕, -, h𝓕⟩ := PI.VolSemiDirect.W.exists_fd (G := Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))
     (ratOf (K := Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)))

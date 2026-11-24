@@ -67,10 +67,10 @@ theorem UpperTheory.V.Ws.fibTrdeg :
             (∀ (p : K[X]) (x : K), p.Monic → (∀ n, p.coeff n ∈ E) → p.IsRoot x → x ∈ E) → ∀ y, j y ∈ E) →
           Algebra.trdeg D C ≤ (T.card : Cardinal) := by
   intro D C K _ _ _ _ _ j T hj hD hE
-  letI : Algebra D K := (j.comp (algebraMap D C)).toAlgebra
-  haveI : FaithfulSMul D C := (faithfulSMul_iff_algebraMap_injective D C).mpr hD
-  haveI : FaithfulSMul D K := (faithfulSMul_iff_algebraMap_injective D K).mpr (hj.comp hD)
-  haveI : IsDomain C := Function.Injective.isDomain j hj
+  let : Algebra D K := (j.comp (algebraMap D C)).toAlgebra
+  have : FaithfulSMul D C := (faithfulSMul_iff_algebraMap_injective D C).mpr hD
+  have : FaithfulSMul D K := (faithfulSMul_iff_algebraMap_injective D K).mpr (hj.comp hD)
+  have : IsDomain C := Function.Injective.isDomain j hj
   set M := AlgebraicIndependent.matroid D K with hM
   obtain ⟨S, hS, hSalg⟩ :=
     AlgebraicIndependent.matroid_isFlat_iff.mp (Matroid.isFlat_closure (M := M) (T : Set K))

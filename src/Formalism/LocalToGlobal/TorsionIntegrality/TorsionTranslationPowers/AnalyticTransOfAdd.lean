@@ -87,7 +87,7 @@ theorem exp_altE_pow (L : PeriodPair) (N : ℕ) (x y : ℂ)
   rw [altE_nat_mul] at hk
   have hk' : ((N : ℂ)) ^ 2 * (altE L x y : ℂ) = (k : ℂ) := by
     exact_mod_cast congrArg (fun r : ℝ => (r : ℂ)) hk
-  rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+  rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
   refine ⟨-k, ?_⟩
   push_cast
   rw [← hk']

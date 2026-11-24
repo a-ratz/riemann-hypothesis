@@ -143,8 +143,8 @@ theorem alternatingSignDiagonal_conj_mem_genericLevel (ψ : ∀ PP : Pl E, AddCh
 
 theorem genericLevelCharacter_alternatingSign_conj_inv (ψ : ∀ PP : Pl E, AddChar (kP PP) ℂ) {x : G0 Pg r} (hx : x ∈ (P0 Pg r ψ).H) :
     (P0 Pg r ψ).chi ⟨alternatingSignDiagonalLevelGroup Pg r * x * (alternatingSignDiagonalLevelGroup Pg r)⁻¹, alternatingSignDiagonal_conj_mem_genericLevel ψ hx⟩ = ((P0 Pg r ψ).chi ⟨x, hx⟩)⁻¹ := by
-  letI : IsOneApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ => rfl⟩
-  letI : IsMulApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ => rfl⟩
+  let : IsMulApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ _ _ => rfl⟩
   show (∏ PP : ↥Pg, (addCharHom (ψ PP.1) (supHom (kP PP.1) r)).comp (LevelP.prj (fun PP => unip (kP PP.1) r) PP))
       ⟨alternatingSignDiagonalLevelGroup Pg r * x * (alternatingSignDiagonalLevelGroup Pg r)⁻¹, alternatingSignDiagonal_conj_mem_genericLevel ψ hx⟩ =
     ((∏ PP : ↥Pg, (addCharHom (ψ PP.1) (supHom (kP PP.1) r)).comp (LevelP.prj (fun PP => unip (kP PP.1) r) PP)) ⟨x, hx⟩)⁻¹
@@ -195,10 +195,10 @@ theorem goodGenericCharacter_of_seriesTypes : ∀ {D : D7} {G : Type} [Group G] 
   have hOk2 : A3.A.fam.Ok s := hOk.ok2
   have hprod : ∀ χ ∈ A3.A.X, GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.IsProdCuspChar D.what₂.embLL R.Pg D.R.r fun g => χ (R.eG.symm g) :=
     GlobalTheory.T.goodCharacter_placewise_cuspidal_parabolic_product D G Pl0 T A3.A Ks R.toRealDat hG.record hser (fun χ hχ => hOk2.irr χ hχ)
-  letI : Fintype F.P0 := Fintype.ofFinite _
+  let : Fintype F.P0 := Fintype.ofFinite _
   have hsum : ∀ χ ∈ A3.A.X, ∑ h : F.P0, χ (h : G) * (((F.ψ0 h)⁻¹ : D.what₂.LLˣ) : D.what₂.LL) = (Fintype.card F.P0 : D.what₂.LL) :=
     fun χ hχ => by
-      letI : Fintype F.lv2.P0 := (inferInstance : Fintype F.P0)
+      let : Fintype F.lv2.P0 := (inferInstance : Fintype F.P0)
       exact GlobalTheory.RealOneVector.typeSum_base_eq_card D G Pl0 T A3.A Ks R.toRealDat F.lv2 hG.levels hprod χ hχ
   have hone : ∀ χ ∈ A3.A.X, χ 1 ≠ 0 := fun χ hχ h =>
     GlobalTheory.FinGL.LeviChar.irrChar_one_ne_zero

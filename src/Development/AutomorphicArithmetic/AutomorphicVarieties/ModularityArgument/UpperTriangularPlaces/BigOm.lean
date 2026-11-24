@@ -203,7 +203,7 @@ theorem UpperTheory.V.Keep.loc2 {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosu
   intro A hA
   right
   have hD : D.Good := hC.1
-  haveI := T.nF
+  have := T.nF
   obtain ⟨j, hj⟩ := X.kap.pow
   obtain ⟨g, hgA, hom, hPs, hκ, hξ⟩ := UpperTheory.V.Keep.bigOm D hC X.κ j hj A hA
   have hsq : ∀ u : ℤˣ, u ^ 2 = 1 := fun u => by
@@ -250,7 +250,7 @@ theorem UpperTheory.V.Keep.loc3 {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosu
       ∃ g ∈ Dec (F := T.F) A, Raw.bar D.om (resQ T.F g) = 1 ∧ T.rb wPs g = 1 ∧ T.rb wAl g ≠ 1 := by
   intro A hA
   left
-  haveI := T.nF
+  have := T.nF
   have hw : IsOmT c D.om := ⟨hD.om_pow, fun σ => Ideal.Quotient.eq.mp (hD.om_bar σ)⟩
   have key := ((omT Ω l c).2 D.om hw).2.2.2.2.2.2.1 A hA 2
   by_contra hne

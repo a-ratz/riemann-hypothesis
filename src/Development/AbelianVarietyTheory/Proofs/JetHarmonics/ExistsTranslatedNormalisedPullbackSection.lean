@@ -102,7 +102,7 @@ end TransPullEx
 
 theorem exists_isTransPull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (F : Type) [Field F] [IsAlgClosed F] (xF : Sp F ⟶ Xo.X) (α : 𝓞 E) (N : ℕ), Odd N → α * star α = (N : 𝓞 E) → ∀ (s : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L 1 (ptO Xo xF))) (b : ptO Xo xF ⟶ Xo.univ.t.G), b ^ N = 1 → ∃ hh, IsTransPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act α) N s b hh := by
   intro E _ _ _ H Dw l Xo c F _ _ xF α N hN hα s b hb
-  letI := H.starRing
+  let := H.starRing
   have hLaw : Laws := firstFiveLaws.1
   have := UnivPol.isLocallyNoetherian Xo
   have := Xo.univ.t.act.hom α

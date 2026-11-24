@@ -339,7 +339,7 @@ theorem generic_transport {A B : Scheme.{0}} (e : A ≅ B) {t : SAB H A} {t' : S
     rw [hyy]
     exact hy
   have ha := hg hy'
-  simp only [abLocus, Set.mem_setOf_eq] at ha ⊢
+  simp only [abLocus, Set.mem_ofPred_eq] at ha ⊢
   intro K _ _ u hu
   have hp : IsProper (pullback.snd t.G.hom (u ≫ e.inv)) := by
     apply ha K (u ≫ e.inv)
@@ -713,7 +713,7 @@ theorem mem_wchart {X : Scheme.{0}} (L : LB X) (J : Fin 1 → L.ι) (x : X) :
 theorem gs_zero' {X Y : Scheme.{0}} (r : Y ⟶ X) (z : Y) (U : X.Opens) : gs r z U 0 = 0 := by
   by_cases h : r z ∈ U
   · rw [gs_eq r z U h, map_zero, map_zero]
-  · exact dif_neg h
+  · exact dite_eq_right h
 
 theorem Part.exists_local [IsOpenImmersion f] (h : Part f A C e) {d : ℕ} (s : H0 A d) (J : Fin 1 → C.ι) :
     ∃ t : Γ(Z, LB.wchart C (fun _ : Fin 1 => 𝟙 Z) J),
@@ -728,7 +728,7 @@ theorem Part.exists_local [IsOpenImmersion f] (h : Part f A C e) {d : ℕ} (s : 
       obtain ⟨y, rfl⟩ := h.sub i x hx'
       exact ⟨y, (mem_wchart A _ y).2 ((h.mem i y).1 hx'), rfl⟩
     refine ⟨(Z.presheaf.map (homOfLE le).op).hom ((f.appIso _).inv.hom (s.f fun _ => i)), fun i' y hi' hy => ?_,
-      fun x hx => dif_neg fun hx' => hx ?_⟩
+      fun x hx => dite_eq_right fun hx' => hx ?_⟩
     · obtain rfl : i' = i := h.inj (hi'.trans hi.symm)
       have hm : f y ∈ LB.wchart C (fun _ : Fin 1 => 𝟙 Z) J :=
         (mem_wchart C J _).2 (hi ▸ (h.mem i' y).2 hy)
@@ -917,17 +917,17 @@ theorem _root_.GlobalTheory.ProjSpace.isQProjOver_of_isCompl : ∀ (R : Type) [C
     apply coprod.hom_ext
     · rw [coprod.inl_map_assoc, coprod.inl_desc, ← Category.assoc, he₁, e₁]
     · rw [coprod.inr_map_assoc, coprod.inr_desc, ← Category.assoc, he₂, e₂]
-  haveI := isImmersion_coprod_map i₁ i₂
-  haveI := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R M
-  haveI := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N₁
-  haveI := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N₂
-  haveI : CompactSpace X₁ := (quasiCompact_iff_compactSpace (f₁ ≫ s)).mp (by rw [← e₁]; infer_instance)
-  haveI : CompactSpace X₂ := (quasiCompact_iff_compactSpace (f₂ ≫ s)).mp (by rw [← e₂]; infer_instance)
-  haveI : CompactSpace X := ⟨by
+  have := isImmersion_coprod_map i₁ i₂
+  have := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R M
+  have := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N₁
+  have := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N₂
+  have : CompactSpace X₁ := (quasiCompact_iff_compactSpace (f₁ ≫ s)).mp (by rw [← e₁]; infer_instance)
+  have : CompactSpace X₂ := (quasiCompact_iff_compactSpace (f₂ ≫ s)).mp (by rw [← e₂]; infer_instance)
+  have : CompactSpace X := ⟨by
     rw [← Set.top_eq_univ, ← hc.sup_eq_top]
     exact (isCompact_range f₁.continuous).union (isCompact_range f₂.continuous)⟩
-  haveI : QuasiCompact s := (quasiCompact_iff_compactSpace s).mpr inferInstance
-  haveI : QuasiCompact ((e.inv ≫ coprod.map i₁ i₂ ≫ j) ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.PSpace.str R M) := by
+  have : QuasiCompact s := (quasiCompact_iff_compactSpace s).mpr inferInstance
+  have : QuasiCompact ((e.inv ≫ coprod.map i₁ i₂ ≫ j) ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.PSpace.str R M) := by
     rw [hcomp]; infer_instance
   exact ⟨M, e.inv ≫ coprod.map i₁ i₂ ≫ j, inferInstance,
     QuasiCompact.of_comp _ (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.PSpace.str R M), hcomp⟩
@@ -1165,8 +1165,8 @@ theorem isOpenImmersion_desc {X Y Z : Scheme.{0}} (f : X ⟶ Z) (g : Y ⟶ Z) [I
   have e : (coprodIsoSigma X Y).inv ≫ coprod.desc f g = Sigma.desc α := by
     refine Sigma.hom_ext _ _ ?_
     rintro ⟨_ | _⟩
-    · rw [← Category.assoc, ι_left_coprodIsoSigma_inv, coprod.inl_desc, Sigma.ι_desc]
-    · rw [← Category.assoc, ι_right_coprodIsoSigma_inv, coprod.inr_desc, Sigma.ι_desc]
+    · rw [← Category.assoc, ι_left_coprodIsoSigma_inv, coprod.inl_desc, Sigma.ι_comp_desc]
+    · rw [← Category.assoc, ι_right_coprodIsoSigma_inv, coprod.inr_desc, Sigma.ι_comp_desc]
   rw [(Iso.inv_comp_eq _).1 e]
   infer_instance
 

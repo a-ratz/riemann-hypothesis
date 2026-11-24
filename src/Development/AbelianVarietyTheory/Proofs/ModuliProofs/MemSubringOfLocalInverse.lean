@@ -74,7 +74,7 @@ theorem mem_subring_of_local_inverse {W V : Y.Opens} (hW : IsAffineOpen W) (hV :
     obtain ⟨h, hle, hyh⟩ := hW.exists_basicOpen_le (V := O) ⟨y, hyO⟩ hy
     refine ⟨h, hyh, ?_⟩
     have hhW : Y.basicOpen h ≤ W := Y.basicOpen_le h
-    haveI := hW.isLocalization_basicOpen h
+    have := hW.isLocalization_basicOpen h
     obtain ⟨l, a₀, ha₀⟩ := IsLocalization.Away.surj h (resG Y hle t)
     have ha₀' : resG Y hle t * resG Y hhW h ^ l = resG Y hhW a₀ := ha₀
     have g₀ : ∀ z ∈ Y.basicOpen h, gs (𝟙 Y) z _ t * gs (𝟙 Y) z _ h ^ l = gs (𝟙 Y) z _ a₀ := fun z hz => by
@@ -91,7 +91,7 @@ theorem mem_subring_of_local_inverse {W V : Y.Opens} (hW : IsAffineOpen W) (hV :
       exact (IsUnit.of_mul_eq_one_right _ (h2 z hz (hle hzh))).mul
         (((isUnit_gs_iff (𝟙 Y) z _ (hhW hzh) h).2 hzh).pow l)
     have hcW : Y.basicOpen (h * a₀) ≤ W := Y.basicOpen_le _
-    haveI := hW.isLocalization_basicOpen (h * a₀)
+    have := hW.isLocalization_basicOpen (h * a₀)
     obtain ⟨m, a, ha⟩ := IsLocalization.Away.surj (h * a₀) (resG Y hc b)
     have ha' : resG Y hc b * resG Y hcW (h * a₀) ^ m = resG Y hcW a := ha
     obtain ⟨k, hk⟩ := exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen Y hV
@@ -113,7 +113,7 @@ theorem mem_subring_of_local_inverse {W V : Y.Opens} (hW : IsAffineOpen W) (hV :
       rw [pow_add]; linear_combination hk
     rw [this]
     exact S.mul_mem (S.pow_mem (hS h) k) (S.mul_mem (hS a) (S.pow_mem hu m))
-  letI : Algebra Γ(Y, W) Γ(Y, V) := (resG Y le).toAlgebra
+  let : Algebra Γ(Y, W) Γ(Y, V) := (resG Y le).toAlgebra
   let N : Submodule Γ(Y, W) Γ(Y, V) :=
     { carrier := S
       add_mem' := S.add_mem

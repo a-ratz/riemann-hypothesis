@@ -103,7 +103,7 @@ theorem sym_family_eq_sigma_product (Cs : ∀ j, ColSys C0 CE1 CE2 X O w mu β L
       monomial (∑ a, multMk X β a • aMk C0 CE1 CE2 X a) 1 := (mono_sum _ _ _).symm
   have hmono : (monomial Std (1 : KK O) : RHH O X) = monomial (rig L (fun j => (Cs j).a0) j0) 1 *
       ((∏ j, monomial (∑ a, (Cs j).pl a) 1) * monomial (∑ a, multMk X β a • aMk C0 CE1 CE2 X a) 1) := by
-    rw [← monomial_sum_one, monomial_mul, monomial_mul, one_mul, one_mul, ← stdEq]
+    rw [← monomial_sum_one, monomial_mul_monomial, monomial_mul_monomial, one_mul, one_mul, ← stdEq]
   rw [sym_family_word_eq_head_mul_monomial L G Std hStd, hmono, hMprod]
   simp only [word_head_formula, column_product_eq_monomial_mul_ioD, Finset.prod_mul_distrib]
   unfold l2sR
@@ -211,7 +211,7 @@ theorem cleaned_product_order_family_eq (g' : Matrix (Fin (X.m + 1)) (Fin (X.m +
   have hrig : (monomial (rig L (fun j => (Cs j).a0) j0) (1 : KK O) : RHH O X) =
       monomial (rig0 L (fun j => (Cs j).a0) j0) 1 * MvPolynomial.X ((topStart X j0, true), 0) ^ X.c := by
     unfold rig
-    rw [X_pow_eq_monomial, monomial_mul, one_mul]
+    rw [X_pow_eq_monomial, monomial_mul_monomial, one_mul]
   have hloc : locR O X j0 ^ X.c = MvPolynomial.X ((topStart X j0, true), 0) ^ X.c * ∏ c : Fin X.m, locC O X c.succ ^ X.c := by
     unfold locR
     rw [mul_pow, Finset.prod_pow]
@@ -491,7 +491,7 @@ theorem level_degree_covector_zero (j : Fin (numSeg X.TT)) (i : Fin (BDk C0 CE1 
 
 theorem monomial_mem_support (M : MonH X) : M ∈ (monomial M (1 : KK O) : RHH O X).support := by
   classical
-  rw [support_monomial, if_neg one_ne_zero]
+  rw [support_monomial, ite_eq_right one_ne_zero]
   exact Finset.mem_singleton_self _
 
 def lemmaRData (S : UniformizedDVR X.p O) (hS : S.SqP) (hD : D1num X) (h2 : 2 ≤ numSeg X.TT) (hGle : ∀ j, segG X.TT j ≤ X.G')

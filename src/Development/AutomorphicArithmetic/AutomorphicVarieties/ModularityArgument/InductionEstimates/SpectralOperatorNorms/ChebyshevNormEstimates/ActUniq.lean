@@ -94,18 +94,18 @@ private theorem actTest (u : ℝ →₀ (V →L[ℂ] V)) (κ : ℝ → V →L[�
     exact (h1.smul hk.1).integrable_of_hasCompactSupport (hk.2.smul_left (f := fun t : ℝ => Complex.exp (z * t)))
   filter_upwards [hs, sumAe u.support u x, (convSpec κ hk x).1,
     Lp.coeFn_add (u.sum fun t c => c.compLpL 2 volume (sh V t x) : L V) (conv κ x)] with y h1 h2 h3 h4 hy
-  rw [h4, Pi.add_apply, h3, ContinuousLinearMap.add_apply, smul_add]
+  rw [h4, Pi.add_apply, h3, add_apply, smul_add]
   congr 1
-  · rw [Finsupp.sum, h2, Finsupp.sum, ContinuousLinearMap.sum_apply, Finset.smul_sum]
+  · rw [Finsupp.sum, h2, Finsupp.sum, sum_apply, Finset.smul_sum]
     refine Finset.sum_congr rfl fun t ht => ?_
-    rw [h1 t ht (hmem t (Or.inl ht) y hy), map_smul, ContinuousLinearMap.smul_apply, smul_smul, ← Complex.exp_add]
+    rw [h1 t ht (hmem t (Or.inl ht) y hy), map_smul, smul_apply, smul_smul, ← Complex.exp_add]
     push_cast
     rw [mul_add]
   · rw [symb, ContinuousLinearMap.integral_apply hint, ← integral_smul]
     refine integral_congr_ae ?_
     filter_upwards [(measurePreserving_add_left volume y).quasiMeasurePreserving.ae hx] with t ht
     by_cases h : t ∈ tsupport κ
-    · rw [ht (hmem t (Or.inr h) y hy), map_smul, ContinuousLinearMap.smul_apply, smul_smul, ← Complex.exp_add]
+    · rw [ht (hmem t (Or.inr h) y hy), map_smul, smul_apply, smul_smul, ← Complex.exp_add]
       push_cast
       rw [mul_add]
     · simp [image_eq_zero_of_notMem_tsupport h]

@@ -91,7 +91,7 @@ private theorem not_stable {L : Type} [Field L] [NumberField L] [IsCMField L] {w
 private theorem two {L : Type} [Field L] [NumberField L] [IsCMField L] {u w : Plc L}
     (hu : u.under (𝓞 (Lp L)) = w.under (𝓞 (Lp L))) :
     u = w ∨ ∀ x, x ∈ u.asIdeal ↔ IsCMField.ringOfIntegersComplexConj L x ∈ w.asIdeal := by
-  haveI := w.isPrime
+  have := w.isPrime
   have h : (u.asIdeal : Set (𝓞 L)) ⊆ w.asIdeal ∪ w.asIdeal.comap (IsCMField.ringOfIntegersComplexConj L) :=
     fun x hx => norm_mem hu hx
   rcases Ideal.subset_union.1 h with h | h

@@ -107,8 +107,8 @@ theorem exists_etale_subset_range_of_isPrime {A : Type} [CommRing A] (q : Ideal 
   let As := Localization.Away s
   let ρ : As →+* k := IsLocalization.Away.lift s (Ne.isUnit hs)
   have hρ : ∀ a : A, ρ (algebraMap A As a) = algebraMap A k a := IsLocalization.Away.lift_eq s _
-  letI : Algebra As k := ρ.toAlgebra
-  letI : Algebra As K := ((algebraMap k K).comp ρ).toAlgebra
+  let : Algebra As k := ρ.toAlgebra
+  let : Algebra As K := ((algebraMap k K).comp ρ).toAlgebra
   have : IsScalarTower As k K := .of_algebraMap_eq' rfl
   have : IsScalarTower A As K := .of_algebraMap_eq fun a => by
     change algebraMap A K a = algebraMap k K (ρ (algebraMap A As a))
@@ -147,7 +147,7 @@ theorem exists_etale_subset_range_of_isPrime {A : Type} [CommRing A] (q : Ideal 
     exact fun h => (Algebra.IsSeparable.isSeparable k θ).aeval_derivative_ne_zero
       (minpoly.aeval k θ) (Subtype.ext h)
   let ε₀ : P.Ring →ₐ[As] K := P.lift _ hP
-  letI : Algebra A P.Ring := ((algebraMap As P.Ring).comp (algebraMap A As)).toAlgebra
+  let : Algebra A P.Ring := ((algebraMap As P.Ring).comp (algebraMap A As)).toAlgebra
   have : IsScalarTower A As P.Ring := .of_algebraMap_eq' rfl
   refine ⟨P.Ring, inferInstance, inferInstance, Algebra.Etale.comp A As P.Ring,
     ε₀.restrictScalars A, fun i => ?_⟩
@@ -165,7 +165,7 @@ theorem exists_etale_prime_of_smooth {A C : Type} [CommRing A] [CommRing C] [Alg
       (P : Ideal W), P.IsPrime ∧ P.comap (algebraMap A W) = p.comap (algebraMap A C) := by
   set q := p.comap (algebraMap A C) with hq
   let K := SeparableClosure q.ResidueField
-  letI : Algebra A K := ((algebraMap q.ResidueField K).comp (algebraMap A q.ResidueField)).toAlgebra
+  let : Algebra A K := ((algebraMap q.ResidueField K).comp (algebraMap A q.ResidueField)).toAlgebra
   have : IsScalarTower A q.ResidueField K := .of_algebraMap_eq' rfl
   have hker : RingHom.ker (algebraMap A K) = q := by
     rw [IsScalarTower.algebraMap_eq A q.ResidueField K, ← RingHom.comap_ker,
@@ -185,10 +185,10 @@ theorem exists_etale_prime_of_smooth {A C : Type} [CommRing A] [CommRing C] [Alg
   have hχ : ε.comp (MvPolynomial.aeval c) = χ := by
     refine MvPolynomial.algHom_ext fun i => ?_
     exact (congrArg ε (MvPolynomial.aeval_X (R := A) c i)).trans (hc i)
-  letI := (MvPolynomial.aeval (R := A) c).toAlgebra
+  let := (MvPolynomial.aeval (R := A) c).toAlgebra
   have : IsScalarTower A P E := .of_algebraMap_eq fun r => ((MvPolynomial.aeval (R := A) c).commutes r).symm
-  letI := χ.toAlgebra
-  letI := ε.toAlgebra
+  let := χ.toAlgebra
+  let := ε.toAlgebra
   have : IsScalarTower A E K := .of_algebraMap_eq fun r => (ε.commutes r).symm
   have : IsScalarTower P E K := .of_algebraMap_eq fun r => congr($hχ r).symm
   let φ'' : S →ₐ[P] K := ⟨φ', fun r => rfl⟩
@@ -261,7 +261,7 @@ theorem smooth_surjective_loc_sections : ∀ {Y X : Scheme.{0}} (f : Y ⟶ X) [S
     obtain ⟨w, hw1, hw2⟩ := Scheme.Pullback.exists_preimage_pullback v u hv
     let W := pullback (s ≫ f) y
     obtain ⟨z, hz⟩ := W.affineCover.covers w
-    haveI := hE
+    have := hE
     have hEt : Etale (pullback.snd (s ≫ f) y) := inferInstance
     refine ⟨_, W.affineCover.f (W.affineCover.idx w) ≫ pullback.snd (s ≫ f) y, inferInstance, inferInstance, ⟨z, ?_⟩, ?_⟩
     · simp [hz, hw2]
@@ -302,7 +302,7 @@ namespace GlobalTheory.EtC
 
 theorem smooth_surjective_cech_descent_cohomology : A2 := by
   intro R _ Y X f _ _ F n
-  haveI : QuasiIso ((chains R).map (cechAug f)) := _root_.GlobalTheory.EtC.chains_cechAug_quasiIso_of_smooth R f
+  have : QuasiIso ((chains R).map (cechAug f)) := _root_.GlobalTheory.EtC.chains_cechAug_quasiIso_of_smooth R f
   exact GlobalTheory.T.quasiIso_hypercohomology_bijective R ((chains R).map (cechAug f)) F n
 
 end GlobalTheory.EtC

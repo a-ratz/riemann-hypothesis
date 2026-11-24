@@ -68,8 +68,8 @@ theorem trace_clm (A : Matrix (Ix n lam) (Ix n lam) ℂ) :
 
 theorem trace_cj (hu : IsUnit (sqQ lam)) (A : Matrix (Ix n lam) (Ix n lam) ℂ) :
     LinearMap.trace ℂ (EV n lam) ((cjL lam A : EV n lam →L[ℂ] EV n lam) : EV n lam →ₗ[ℂ] EV n lam) = A.trace := by
-  rw [cjL_apply, ContinuousLinearMap.coe_mul, ContinuousLinearMap.coe_mul, LinearMap.trace_mul_comm, ← mul_assoc,
-    ← ContinuousLinearMap.coe_mul, ← ContinuousLinearMap.coe_mul, Ring.inverse_mul_cancel _ hu, one_mul, trace_clm]
+  rw [cjL_apply, ContinuousLinearMap.toLinearMap_mul, ContinuousLinearMap.toLinearMap_mul, LinearMap.trace_mul_comm, ← mul_assoc,
+    ← ContinuousLinearMap.toLinearMap_mul, ← ContinuousLinearMap.toLinearMap_mul, Ring.inverse_mul_cancel _ hu, one_mul, trace_clm]
 
 theorem weylChar_conj (u : Fin n → ℂ) : weylChar lam (fun a => conj (u a)) = conj (weylChar lam u) := by
   unfold weylChar

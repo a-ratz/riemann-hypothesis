@@ -77,7 +77,7 @@ theorem valued_algebraMap' {K : Type*} [Field K] [NumberField K] (v : HeightOneS
 
 theorem mem_O_iff (v : Pl) (x : Qv v) : x ∈ 𝒪[Qv v] ↔ x ∈ v.adicCompletionIntegers ℚ := by
   rw [HeightOneSpectrum.mem_adicCompletionIntegers]
-  haveI : (Valued.v : Valuation (v.adicCompletion ℚ) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion ℚ) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (Qv v))
     (Valued.v : Valuation (v.adicCompletion ℚ) (WithZero (Multiplicative ℤ)))).le_one_iff_le_one
@@ -153,7 +153,7 @@ theorem exists_level_idele (N : ℕ) [NeZero N] (u : FiniteAdelicGL ℚ 2) (hu :
   let e : ∀ v : Pl, (v.adicCompletionIntegers ℚ)ˣ := fun v =>
     if h : pOf v ∣ N then (unit_entry hu v h).choose else 1
   refine ⟨IdeleGroup.toFinite ℚ (IdeleGroup.ofIntegerUnits 1 e), fun v => ord_int_unit v (e v), fun v hv => ?_⟩
-  have h : e v = (unit_entry hu v hv).choose := dif_pos hv
+  have h : e v = (unit_entry hu v hv).choose := dite_eq_left hv
   have h2 := (unit_entry hu v hv).choose_spec
   rw [← h] at h2
   exact h2
@@ -243,7 +243,7 @@ theorem cusp_decay (k : ℤ) (N : ℕ) [NeZero N] (f : CuspForm (CongruenceSubgr
       ‖archLift k (f : UpperHalfPlane → ℂ) (toReal γ * borelGL z)‖ ≤ C * (z.im⁻¹) ^ M := by
   have hD : 0 < (toReal γ).det.val := by
     rw [det_toReal]; exact_mod_cast hγ
-  haveI hA : (ConjAct.toConjAct (toReal γ)⁻¹ • (CongruenceSubgroup.Gamma1 N : Subgroup (GL (Fin 2) ℝ))).IsArithmetic := by
+  have hA : (ConjAct.toConjAct (toReal γ)⁻¹ • (CongruenceSubgroup.Gamma1 N : Subgroup (GL (Fin 2) ℝ))).IsArithmetic := by
     have h := Subgroup.IsArithmetic.conj (CongruenceSubgroup.Gamma1 N : Subgroup (GL (Fin 2) ℝ)) γ⁻¹
     have e : (γ⁻¹).map (Rat.castHom ℝ) = (toReal γ)⁻¹ := map_inv toReal γ
     rwa [e] at h

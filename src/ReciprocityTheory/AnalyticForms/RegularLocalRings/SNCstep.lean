@@ -135,7 +135,7 @@ theorem prod_reindex_option {e rc : ℕ} (J : Finset (Fin e)) (σ : Fin e → Op
     | none =>
       simp only [Option.elim]
       refine (Finset.prod_eq_one fun l _ => ?_).symm
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hl
       rw [← hσ', h] at hl
       cases hl
@@ -147,9 +147,9 @@ theorem prod_reindex_option {e rc : ℕ} (J : Finset (Fin e)) (σ : Fin e → Op
         cases hl0
       simp only [Option.elim]
       rw [Finset.prod_eq_single l0]
-      · rw [if_pos hl0]
+      · rw [ite_eq_left hl0]
       · intro l _ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hl
         rw [← hσ', h] at hl
         exact hne (Option.some_injective _ hl).symm
@@ -168,7 +168,7 @@ theorem AlgRes.isOpen_nonvan {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} {e : 
   have hc : Continuous fun y : R.src i => R.coord i y := (R.isEmbedding i).continuous
   have ho : IsOpen ((fun y : R.src i => R.coord i y) ⁻¹' {v | eval v g ≠ 0}) :=
     (isOpen_ne_fun (MvPolynomial.continuous_eval g) continuous_const).preimage hc
-  have h2 := (R.isOpen_alt_bis i).isOpenMap_subtype_val _ ho
+  have h2 := (R.isOpen_alt_bis i).isOpenMap_subtypeVal _ ho
   convert h2 using 1
   ext y
   simp [and_comm]
@@ -212,12 +212,12 @@ theorem AlgRes.isSNC_pullback {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} {e :
     intro k l
     by_cases h : ∃ l, d.σ l = some k
     · have hc0 := Classical.choose_spec h
-      simp only [σ', dif_pos h, Option.some.injEq]
+      simp only [σ', dite_eq_left h, Option.some.injEq]
       constructor
       · rintro rfl; exact hc0
       · intro hl
         exact d.σ_injOn (hJ _ _ hc0) (hJ _ _ hl) (by rw [hc0, hl])
-    · simp only [σ', dif_neg h]
+    · simp only [σ', dite_eq_right h]
       constructor
       · intro h'; cases h'
       · intro hl; exact absurd ⟨l, hl⟩ h

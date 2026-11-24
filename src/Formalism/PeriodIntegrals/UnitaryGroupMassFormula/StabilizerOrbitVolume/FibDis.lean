@@ -62,10 +62,10 @@ variable {V : Type} [TopologicalSpace V] [T2Space V] [LocallyCompactSpace V]
 
 theorem cover (U : Set V) (hU : IsOpen U) : ∃ W : ℕ → Set V,
     (∀ n, IsOpen (W n) ∧ IsCompact (closure (W n)) ∧ closure (W n) ⊆ U) ∧ ⋃ n, W n = U := by
-  haveI : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
   let E := CompactExhaustion.choice U
   have h : ∀ n, ∃ W, IsOpen W ∧ Subtype.val '' E n ⊆ W ∧ closure W ⊆ U ∧ IsCompact (closure W) :=
-    fun n => exists_open_between_and_isCompact_closure ((E.isCompact n).image continuous_subtype_val)
+    fun n => exists_open_between_and_isCompact_closure ((E.isCompact n).image continuous_subtypeVal)
       hU (by rintro _ ⟨u, -, rfl⟩; exact u.2)
   choose W hW1 hW2 hW3 hW4 using h
   refine ⟨W, fun n => ⟨hW1 n, hW4 n, hW3 n⟩,
@@ -78,12 +78,12 @@ theorem approx (O : Set V) (hO : IsOpen O) : ∃ φ : ℕ → V → ℝ,
     (∀ k, Continuous (φ k) ∧ HasCompactSupport (φ k) ∧ tsupport (φ k) ⊆ O) ∧
     (∀ k x, 0 ≤ φ k x ∧ φ k x ≤ 1) ∧ (∀ x, Monotone fun k => φ k x) ∧
     ∀ x, ⨆ k, ENNReal.ofReal (φ k x) = O.indicator 1 x := by
-  haveI : LocallyCompactSpace O := hO.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace O := hO.isOpenEmbedding_subtypeVal.locallyCompactSpace
   let E := CompactExhaustion.choice O
   have h : ∀ k, ∃ g : C(V, ℝ), EqOn g 1 (Subtype.val '' E k) ∧ IsCompact (tsupport g) ∧
       tsupport g ⊆ Subtype.val '' interior (E (k + 1)) ∧ ∀ x, g x ∈ Icc (0 : ℝ) 1 := fun k =>
-    exists_continuousMap_one_of_isCompact_subset_isOpen ((E.isCompact k).image continuous_subtype_val)
-      (hO.isOpenMap_subtype_val _ isOpen_interior) (image_mono (E.subset_interior_succ k))
+    exists_continuousMap_one_of_isCompact_subset_isOpen ((E.isCompact k).image continuous_subtypeVal)
+      (hO.isOpenMap_subtypeVal _ isOpen_interior) (image_mono (E.subset_interior_succ k))
   choose g hg1 hgc hgs hg01 using h
   have hsubO : ∀ k, tsupport (g k) ⊆ O :=
     fun k => (hgs k).trans (by rintro _ ⟨u, -, rfl⟩; exact u.2)
@@ -213,11 +213,11 @@ theorem meas_fib : ∀ A, MeasurableSet A → Measurable fun b => fib b A := by
     · intro t htm IH
       have e : ∀ b, fib b (tᶜ ∩ W n) = fib b (W n) - fib b (t ∩ W n) := by
         intro b
-        rw [← measure_diff inter_subset_right (htm.inter (hW n).1.measurableSet).nullMeasurableSet
+        rw [← measure_sdiff inter_subset_right (htm.inter (hW n).1.measurableSet).nullMeasurableSet
           ((measure_mono inter_subset_right).trans_lt (lt_top_iff_ne_top.2 (hfin b n))).ne]
         congr 1
         ext x
-        simp only [mem_inter_iff, mem_compl_iff, mem_diff]
+        simp only [mem_inter_iff, mem_compl_iff, Set.mem_sdiff]
         tauto
       simp_rw [e]
       exact (open_case hf hι hr hU h0 h2 h3 (W n) (hW n).1 (hWsub n)).1.sub IH
@@ -233,7 +233,7 @@ theorem meas_fib : ∀ A, MeasurableSet A → Measurable fun b => fib b A := by
     MeasurableSet.disjointed fun n => (hW n).1.measurableSet
   have e : ∀ b, fib b A = ∑' n, fib b (A ∩ disjointed W n) := by
     intro b
-    rw [← measure_inter_add_diff A hU.measurableSet,
+    rw [← measure_inter_add_sdiff A hU.measurableSet,
       measure_mono_null (show A \ U ⊆ Uᶜ from fun x hx => hx.2) (null_compl hf hι hr hU h0 h2 h3 b),
       add_zero,
       ← hWU, ← iUnion_disjointed, inter_iUnion,
@@ -262,7 +262,7 @@ theorem disintStep_holds : DisintStep := by
         (open_case hf hι hr hU h0 h2 h3 (s ∩ U) (hs.inter hU) inter_subset_right).2]
       congr 1
       funext b
-      rw [← measure_inter_add_diff s hU.measurableSet,
+      rw [← measure_inter_add_sdiff s hU.measurableSet,
         measure_mono_null (show s \ U ⊆ Uᶜ from fun x hx => hx.2)
           (null_compl hf hι hr hU h0 h2 h3 b), add_zero]
   rw [hρ, Measure.lintegral_bind hmf.aemeasurable hφ.aemeasurable]

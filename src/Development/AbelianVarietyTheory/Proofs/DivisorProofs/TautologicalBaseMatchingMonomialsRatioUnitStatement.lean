@@ -78,9 +78,9 @@ theorem exists_good_closed {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] 
     ∃ J : ((TK V).left ⟶ D.P.A.left) → D.P.L.ι, Good D.P.L z J ∧
       ∀ e : Sp V ⟶ D.P.A.left, e (closedPoint V) ∈ D.P.L.U (J ((TK V).hom ≫ e)) := by
   classical
-  haveI : IsDominant (jK V) := ReciprocityTheory.ChartRestriction.G.DVR.isDominant_jK
-  haveI : IsProper D.P.A.hom := D.P.isAb.proper
-  haveI : D.P.A.left.IsSeparated := by
+  have : IsDominant (jK V) := ReciprocityTheory.ChartRestriction.G.DVR.isDominant_jK
+  have : IsProper D.P.A.hom := D.P.isAb.proper
+  have : D.P.A.left.IsSeparated := by
     rw [Scheme.isSeparated_iff, ← terminal.comp_from D.P.A.hom]; infer_instance
   have hinj : ∀ e e' : Sp V ⟶ D.P.A.left, (TK V).hom ≫ e = (TK V).hom ≫ e' → e = e' :=
     fun e e' h => ext_of_isDominant (jK V) h
@@ -91,15 +91,15 @@ theorem exists_good_closed {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] 
   refine ⟨fun ψ => if h : ∃ e : Sp V ⟶ D.P.A.left, (TK V).hom ≫ e = ψ then pick (h.choose (closedPoint V))
     else pick (ψ z), fun ψ => ?_, fun e => ?_⟩
   · by_cases h : ∃ e : Sp V ⟶ D.P.A.left, (TK V).hom ≫ e = ψ
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       have e1 : ψ z = ((TK V).hom ≫ h.choose) z :=
         (congrArg (fun q : (TK V).left ⟶ D.P.A.left => q z) h.choose_spec).symm
       rw [e1]
       exact hsp _ _ _ (hpick _)
-    · simp only [dif_neg h]
+    · simp only [dite_eq_right h]
       exact hpick _
   · have h : ∃ e' : Sp V ⟶ D.P.A.left, (TK V).hom ≫ e' = (TK V).hom ≫ e := ⟨e, rfl⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     rw [hinj _ _ h.choose_spec]
     exact hpick _
 
@@ -179,7 +179,7 @@ theorem monomial_ratio_unit : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLoca
     exact key
   have inj := GlobalTheory.DefectHom.gm_unitOn_inj z E
   have hc := congrArg (fun x : (FractionRing V)ˣ => (x : FractionRing V)) inj
-  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe] at hc
+  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass] at hc
   have hk₁' : (k₁ : FractionRing V) = ∏ i, algebraMap V (FractionRing V) (s₁ i) ^ ((n : ℤ) * ε i (e₁ y) (e₁ y')) := by
     have h' : (k₁ : FractionRing V) = ∏ i, algebraMap V (FractionRing V) (s₁ i) ^ ((n : ℤ) * ε i (e₁ y) (e₁ (φ.symm (φ y')))) := by
       exact hk₁

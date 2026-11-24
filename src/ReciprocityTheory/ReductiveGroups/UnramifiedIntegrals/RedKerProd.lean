@@ -399,14 +399,14 @@ theorem prime_choice_class (d : ℕ) (hsq : Squarefree d) (hd4 : d % 4 = 3) (h3 
     rintro rfl
     obtain ⟨t, ht⟩ := hqd
     omega
-  haveI := Fact.mk hq
+  have := Fact.mk hq
   obtain ⟨c, hc⟩ := FiniteField.exists_nonsquare (F := ZMod q) (by rw [ZMod.ringChar_zmod_n]; exact hq2)
   obtain ⟨d'', rfl⟩ := hqd
   have hd''0 : d'' ≠ 0 := by
     rintro rfl
     simp at hd4
-  haveI : NeZero d'' := ⟨hd''0⟩
-  haveI : NeZero q := ⟨hq.ne_zero⟩
+  have : NeZero d'' := ⟨hd''0⟩
+  have : NeZero q := ⟨hq.ne_zero⟩
   have hcop1 : Nat.Coprime q d'' := by
     refine (Nat.Prime.coprime_iff_not_dvd hq).mpr ?_
     rintro ⟨e, rfl⟩
@@ -489,7 +489,7 @@ theorem prime_choice (d b : ℕ) (hsq : Squarefree d) (hd4 : d % 4 = 3) (h3 : 3 
     ∃ p r : ℕ, p.Prime ∧ b < p ∧ d < p ∧ p % 3 = 2 ∧ Even r ∧ p ∣ r ^ 2 + d ∧ ¬ p ^ 2 ∣ r ^ 2 + d := by
   obtain ⟨a, ha3, ha⟩ := prime_choice_class d hsq hd4 h3 hd3
   have hd0 : d ≠ 0 := by omega
-  haveI : NeZero d := ⟨hd0⟩
+  have : NeZero d := ⟨hd0⟩
   have hunit : IsUnit (a : ZMod d) := by
     rw [ZMod.isUnit_iff_coprime]
     by_contra hnc
@@ -504,7 +504,7 @@ theorem prime_choice (d b : ℕ) (hsq : Squarefree d) (hd4 : d % 4 = 3) (h3 : 3 
   have hmod : (p : ℤ) % (d : ℤ) = (a : ℤ) % (d : ℤ) := by exact_mod_cast hpd
   have hJ : J(-(d : ℤ) | p) = 1 := by
     rw [prime_choice_recip d p hd4 hpodd, jacobiSym.mod_left, hmod, ← jacobiSym.mod_left, ha]
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hne : (((-(d : ℤ)) : ℤ) : ZMod p) ≠ 0 := by
     intro h0
     have h1 : (d : ZMod p) = 0 := by

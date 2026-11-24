@@ -161,7 +161,7 @@ theorem exists_sub_osc (hNA : HasCOSub V) {φ : V → ℝ} (hc : Continuous φ)
       have h2 := hLN (i : V) (show x + z - (i : V) ∈ L (i : V) by
         have := (L (i : V)).add_mem hxi (hz' i hi)
         rwa [show x - (i : V) + z = x + z - (i : V) by abel] at this)
-      simp only [mem_setOf_eq, add_sub_cancel] at h1 h2
+      simp only [mem_ofPred_eq, add_sub_cancel] at h1 h2
       calc |φ (x + z) - φ x| ≤ |φ (x + z) - φ i| + |φ x - φ i| := by
             rw [abs_sub_comm (φ x)]; exact abs_sub_le _ _ _
         _ < ε / 2 + ε / 2 := add_lt_add h2 h1

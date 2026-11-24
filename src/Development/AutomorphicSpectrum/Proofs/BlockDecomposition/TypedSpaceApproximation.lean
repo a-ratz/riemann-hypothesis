@@ -146,7 +146,7 @@ theorem continuous_sm_of_ker : ∀ (K : Type) [Field K] [NumberField K] (n : ℕ
   have hb : ‖∫ y in tsupport β, (F (x, y) - F (x₀, y)) ∂ν‖ ≤ δ * ν.real (tsupport β) := by
     refine norm_setIntegral_le_of_norm_le_const hs.measure_lt_top fun y hy => ?_
     have := huv (Set.mk_mem_prod hx (hsv hy))
-    simp only [Set.mem_setOf_eq, dist_eq_norm] at this
+    simp only [Set.mem_ofPred_eq, dist_eq_norm] at this
     exact this.le
   refine lt_of_le_of_lt hb ?_
   rw [hδdef, div_mul_eq_mul_div, div_lt_iff₀ (by linarith)]
@@ -173,7 +173,7 @@ theorem exists_level : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFi
   ∃ U : Subgroup (AdelicGLn.integralFiniteGL E N), IsOpen (U : Set (AdelicGLn.integralFiniteGL E N)) ∧ ∀ u : U, ∃ k ∈ L,
     finEmb E N ((u : AdelicGLn.integralFiniteGL E N) : AdelicGLn.FiniteAdelicGL E N) = finGL E N k := by
   intro E _ _ _ N L hL
-  refine ⟨L.subgroupOf (AdelicGLn.integralFiniteGL E N), hL.preimage continuous_subtype_val, ?_⟩
+  refine ⟨L.subgroupOf (AdelicGLn.integralFiniteGL E N), hL.preimage continuous_subtypeVal, ?_⟩
   intro u
   exact ⟨_, Subgroup.mem_subgroupOf.1 u.2, GlobalTheory.CompanionTheory.AutLevel.finEmb_eq_finGL E N _⟩
 
@@ -254,8 +254,8 @@ theorem sq_lintegral_le (μ : Measure G) [μ.IsMulLeftInvariant] (Γ : Subgroup 
     (hk : {γ : G | γ ∈ Γ ∧ ∃ a ∈ tsupport α, ∃ b ∈ tsupport α, γ = x * a * b⁻¹ * x⁻¹}.encard ≤ k) :
     (∫⁻ y, ‖α y‖ₑ * ‖ψ (x * y)‖ₑ ∂μ) ^ 2 ≤ k * ∫⁻ y, ‖α y‖ₑ ^ 2 ∂μ := by
   set a : G → ℝ≥0∞ := fun w => ‖α (x⁻¹ * w)‖ₑ with ha
-  have ham : Measurable a := (hα.comp (continuous_const.mul continuous_id)).enorm.measurable
-  have hψm : Measurable fun w => ‖ψ w‖ₑ := hψ.enorm.measurable
+  have ham : Measurable a := (hα.comp (continuous_const.mul continuous_id)).eNorm.measurable
+  have hψm : Measurable fun w => ‖ψ w‖ₑ := hψ.eNorm.measurable
   have htr : ∀ γ : Γ, Measurable fun w => a ((γ : G) * w) :=
     fun γ => ham.comp (measurable_const_mul _)
   have e1 : ∫⁻ y, ‖α y‖ₑ * ‖ψ (x * y)‖ₑ ∂μ = ∫⁻ w in F, (∑' γ : Γ, a ((γ : G) * w)) * ‖ψ w‖ₑ ∂μ := by
@@ -282,7 +282,7 @@ theorem sq_lintegral_le (μ : Measure G) [μ.IsMulLeftInvariant] (Γ : Subgroup 
   rw [hn, mul_one]
   refine lintegral_mono fun w => ?_
   have := sq_tsum_le (fun γ : Γ => ‖α (x⁻¹ * ((γ : G) * w))‖₊) k (encard_support_le Γ α x w k hk)
-  simpa [ha, enorm_eq_nnnorm] using this
+  simpa [ha, eNorm_eq_nnNorm] using this
 
 theorem pointwise (μ : Measure G) [μ.IsMulLeftInvariant] [IsFiniteMeasureOnCompacts μ] (Γ : Subgroup G) [Countable Γ]
     {α : G → ℂ} {δ : ℝ} {F : Set G} (hα : Continuous α) (hc : HasCompactSupport α) (hδ : 0 < δ)
@@ -298,15 +298,15 @@ theorem pointwise (μ : Measure G) [μ.IsMulLeftInvariant] [IsFiniteMeasureOnCom
     have hi : Integrable ((fun z : ℂ => ‖z‖ ^ 2) ∘ α) μ :=
       Continuous.integrable_of_hasCompactSupport ((continuous_norm.pow 2).comp hα) hc2
     have := hi.2.ne
-    simpa [HasFiniteIntegral, enorm_pow] using this
+    simpa [HasFiniteIntegral, eNorm_pow] using this
   have h1 : ‖s‖ₑ * ‖ψ x‖ₑ ≤ ∫⁻ y, ‖α y‖ₑ * ‖ψ (x * y)‖ₑ ∂μ := by
-    rw [← enorm_mul, ← hrep x]
-    exact (enorm_integral_le_lintegral_enorm _).trans (le_of_eq (by simp only [enorm_mul]))
+    rw [← eNorm_mul, ← hrep x]
+    exact (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq (by simp only [eNorm_mul]))
   have h3 : (‖s‖ₑ * ‖ψ x‖ₑ) ^ 2 ≤ k * ∫⁻ y, ‖α y‖ₑ ^ 2 ∂μ :=
     (pow_le_pow_left' h1 2).trans (sq_lintegral_le μ _ hF hα hψ hinv hn x k hk)
   have h4 : (‖s‖ * ‖ψ x‖) ^ 2 ≤ k * (∫⁻ y, ‖α y‖ₑ ^ 2 ∂μ).toReal := by
     have := ENNReal.toReal_mono (ENNReal.mul_ne_top (ENNReal.natCast_ne_top k) hA) h3
-    simpa [ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_enorm] using this
+    simpa [ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_eNorm] using this
   have hδ2 : 0 < δ ^ 2 := by positivity
   have h5 : δ ^ 2 * ‖ψ x‖ ^ 2 ≤ (‖s‖ * ‖ψ x‖) ^ 2 := by
     rw [mul_pow]
@@ -325,7 +325,7 @@ theorem GlobalTheory.CompanionTheory.Conc.besselPt : ∀ (E : Type) [Field E] [N
   ∀ (x : GA E N) (k : ℕ), {γ : GA E N | γ ∈ latticeGL E N ∧ ∃ a ∈ tsupport α, ∃ b ∈ tsupport α, γ = x * a * b⁻¹ * x⁻¹}.encard ≤ k →
     ‖ψ x‖ ^ 2 ≤ C₀ * k := by
   intro E _ _ _ N _ _ μ _ α δ F hα hc hδ hF
-  haveI : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
+  have : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
   exact pointwise μ (latticeGL E N) hα hc hδ hF
 end -- clump:auto
 end -- clump:auto
@@ -347,7 +347,7 @@ theorem _root_.GlobalTheory.T.kernel_eigenfunction_bound : ∀ (E : Type) [Field
   ∀ (x : GA E N) (k : ℕ), {γ : GA E N | γ ∈ latticeGL E N ∧ ∃ a ∈ tsupport α, ∃ b ∈ tsupport α, γ = x * a * b⁻¹ * x⁻¹}.encard ≤ k →
     ‖ψ x‖ ^ 2 ≤ C₀ * k := by
   intro E _ _ _ N _ _ μ _ α δ F hα hc hδ hF
-  haveI : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
+  have : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
   exact GlobalTheory.CompanionTheory.Conc.BesselPt.pointwise μ (latticeGL E N) hα hc hδ hF
 end -- clump:auto
 end -- clump:auto
@@ -485,9 +485,9 @@ theorem enorm_translate_sub_le (μ : Measure G) [μ.IsHaarMeasure] {α ψ : G �
   have h3 : s * (ψ (x * y) - ψ x) = ∫ w, (α (y⁻¹ * w) - α w) * ψ (x * w) ∂μ := by
     rw [mul_sub, h1, ← hrep x, ← integral_sub hi1 hi2]
     exact integral_congr_ae (ae_of_all _ fun w => by ring)
-  rw [← enorm_mul, h3]
-  refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
-  exact lintegral_congr fun w => enorm_mul _ _
+  rw [← eNorm_mul, h3]
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
+  exact lintegral_congr fun w => eNorm_mul _ _
 
 theorem lintegral_right_translate (μ : Measure G) [μ.IsHaarMeasure] [μ.IsMulRightInvariant]
     (Γ : Subgroup G) [Countable Γ] {F : Set G} (hF : IsFundamentalDomain Γ F μ) {ψ : G → ℂ}
@@ -535,7 +535,7 @@ theorem sq_mean_translate_le (μ : Measure G) [μ.IsHaarMeasure] [μ.IsMulRightI
     _ = (∫⁻ w, a w ∂μ) * ∫⁻ w, a w ∂μ := by
         congr 1
         refine lintegral_congr fun w => ?_
-        rw [lintegral_const_mul' _ _ enorm_ne_top, lintegral_right_translate μ Γ hF hl w, hn, mul_one]
+        rw [lintegral_const_mul' _ _ eNorm_ne_top, lintegral_right_translate μ Γ hF hl w, hn, mul_one]
     _ = (∫⁻ w, a w ∂μ) ^ 2 := (sq _).symm
 
 theorem exists_nhds_sq_mean_le (μ : Measure G) [μ.IsHaarMeasure] [μ.IsMulRightInvariant]
@@ -559,7 +559,7 @@ theorem exists_nhds_sq_mean_le (μ : Measure G) [μ.IsHaarMeasure] [μ.IsMulRigh
   have hA : ∫⁻ w, ‖α (y⁻¹ * w) - α w‖ₑ ∂μ ≠ ∞ := (hy'.trans hε1).trans_lt ENNReal.one_lt_top |>.ne
   have hb := sq_mean_translate_le μ Γ hF hα hs hψ hl hrep hn y hA
   have hds : d ≤ ‖s‖ₑ := by
-    rw [hd, ← ofReal_norm_eq_enorm]
+    rw [hd, ← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal hsδ
   have hεε : ε ^ 2 ≤ η * d ^ 2 := by
     calc ε ^ 2 = ε * ε := sq ε
@@ -582,8 +582,8 @@ theorem GlobalTheory.CompanionTheory.Conc.translate_sq_mean_close : ∀ (E : Typ
   (∀ γ ∈ latticeGL E N, ∀ g, ψ (γ * g) = ψ g) → (∃ s : ℂ, δ ≤ ‖s‖ ∧ ∀ x, ∫ y, α y * ψ (x * y) ∂μ = s * ψ x) →
   (∫⁻ x in F, ‖ψ x‖ₑ ^ 2 ∂μ) = 1 → ∀ y ∈ U, ∫⁻ x in F, ‖ψ (x * y) - ψ x‖ₑ ^ 2 ∂μ ≤ η := by
   intro E _ _ _ N _ _ μ _ α δ F hα hs hδ hF η hη
-  haveI : μ.IsMulRightInvariant := _root_.GlobalTheory.CompanionTheory.GAUnimod.isMulRightInvariant_haar_GA E N μ
-  haveI : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
+  have : μ.IsMulRightInvariant := _root_.GlobalTheory.CompanionTheory.GAUnimod.isMulRightInvariant_haar_GA E N μ
+  have : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
   set_option synthInstance.maxHeartbeats 200000 in
     exact GlobalTheory.CompanionTheory.Conc.WeightedCauchySchwarzLintegral.exists_nhds_sq_mean_le μ (latticeGL E N) hα hs hδ hF hη
 end -- clump:auto
@@ -731,15 +731,15 @@ theorem enorm_sub_sm_sq_le (E : Type) [Field E] [NumberField E] (N : ℕ)
     rw [integral_sub hi2 hi1, hmass]
     rfl
   have hgm : Measurable fun y => ‖f (x * infEmb E N y) - f x‖ₑ :=
-    (continuous_enorm.comp (hc1.sub continuous_const)).measurable
+    (continuous_eNorm.comp (hc1.sub continuous_const)).measurable
   have hle : ‖f x - sm ν β f x‖ₑ ≤ ∫⁻ y, ‖f (x * infEmb E N y) - f x‖ₑ
       ∂(ν.withDensity fun y => ENNReal.ofReal (β y)) := by
     rw [heq, lintegral_withDensity_eq_lintegral_mul ν hwm hgm]
-    refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
     refine lintegral_congr fun y => ?_
     have hb : ‖(β y : ℂ)‖ₑ = ENNReal.ofReal (β y) := by
       rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg (hk.nonneg y)]
-    rw [enorm_mul, hb, enorm_sub_rev]
+    rw [eNorm_mul, hb, eNorm_sub_rev]
     rfl
   exact (pow_le_pow_left' hle 2).trans (lintegral_sq_le _ _ hgm.aemeasurable)
 
@@ -772,7 +772,7 @@ theorem GlobalTheory.CompanionTheory.Conc.smNear : ∀ (E : Type) [Field E] [Num
       ← ofReal_integral_eq_lintegral_ofReal (hk.cont.integrable_of_hasCompactSupport hk.cpt)
         (Eventually.of_forall hk.nonneg), hk.mass, ENNReal.ofReal_one]
   have hG : Continuous fun p : GA E N × archGroup E N => ‖f (p.1 * infEmb E N p.2) - f p.1‖ₑ ^ 2 :=
-    (ENNReal.continuous_pow 2).comp (continuous_enorm.comp
+    (ENNReal.continuous_pow 2).comp (continuous_eNorm.comp
       ((hf.comp (continuous_fst.mul (continuous_infEmb.comp continuous_snd))).sub
         (hf.comp continuous_fst)))
   have hae : ∀ᵐ y ∂P, y ∈ tsupport β := by
@@ -817,7 +817,7 @@ theorem lintegral_sq_le_of_average {G Y : Type*} [Group G] [TopologicalSpace G] 
     (hs : ∀ x, ‖s x‖ₑ ≤ ∫⁻ y, b y * ‖f (x * k y)‖ₑ ∂ν) :
     ∫⁻ x in F, ‖s x‖ₑ ^ 2 ∂μ ≤ ∫⁻ x in F, ‖f x‖ₑ ^ 2 ∂μ := by
   set p := ν.withDensity b with hp
-  haveI : IsProbabilityMeasure p := ⟨by rw [hp, withDensity_apply _ MeasurableSet.univ]; simpa using hmass⟩
+  have : IsProbabilityMeasure p := ⟨by rw [hp, withDensity_apply _ MeasurableSet.univ]; simpa using hmass⟩
   have hm : ∀ x, Continuous fun y => f (x * k y) := fun x => hf.comp (continuous_const.mul hk)
   have hsq : ∀ {X : Type _} [MeasurableSpace X] (m : Measure X) (g : X → ℂ) (hg : AEStronglyMeasurable g m),
       eLpNorm g 2 m ^ 2 = ∫⁻ x, ‖g x‖ₑ ^ 2 ∂m := by
@@ -828,7 +828,7 @@ theorem lintegral_sq_le_of_average {G Y : Type*} [Group G] [TopologicalSpace G] 
   have hpt : ∀ x, ‖s x‖ₑ ^ 2 ≤ ∫⁻ y, ‖f (x * k y)‖ₑ ^ 2 ∂p := by
     intro x
     have h1 : ∫⁻ y, b y * ‖f (x * k y)‖ₑ ∂ν = ∫⁻ y, ‖f (x * k y)‖ₑ ∂p := by
-      rw [hp, lintegral_withDensity_eq_lintegral_mul ν hb (hm x).measurable.enorm]
+      rw [hp, lintegral_withDensity_eq_lintegral_mul ν hb (hm x).measurable.eNorm]
       rfl
     have h2 : eLpNorm (fun y => f (x * k y)) 1 p ≤ eLpNorm (fun y => f (x * k y)) 2 p :=
       eLpNorm_le_eLpNorm_of_exponent_le (by norm_num)
@@ -849,7 +849,7 @@ theorem lintegral_sq_le_of_average {G Y : Type*} [Group G] [TopologicalSpace G] 
     rw [e1]
     exact hF'.setLIntegral_eq hF _ hΓ
   have hjoint : Measurable (Function.uncurry fun (x : G) (y : Y) => ‖f (x * k y)‖ₑ ^ 2) :=
-    ((hf.comp (continuous_fst.mul (hk.comp continuous_snd))).measurable.enorm).pow_const 2
+    ((hf.comp (continuous_fst.mul (hk.comp continuous_snd))).measurable.eNorm).pow_const 2
   calc ∫⁻ x in F, ‖s x‖ₑ ^ 2 ∂μ ≤ ∫⁻ x in F, ∫⁻ y, ‖f (x * k y)‖ₑ ^ 2 ∂p ∂μ := lintegral_mono hpt
     _ = ∫⁻ y, ∫⁻ x in F, ‖f (x * k y)‖ₑ ^ 2 ∂μ ∂p := lintegral_lintegral_swap hjoint.aemeasurable
     _ = ∫⁻ _y, ∫⁻ x in F, ‖f x‖ₑ ^ 2 ∂μ ∂p := lintegral_congr fun y => htr (k y)
@@ -859,20 +859,20 @@ theorem sm_sq_mass_le : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
   ∀ f : GA E N → ℂ, Continuous f → (∀ γ ∈ latticeGL E N, ∀ g, f (γ * g) = f g) →
   ∫⁻ x in F, ‖sm ν β f x‖ₑ ^ 2 ∂μ ≤ ∫⁻ x in F, ‖f x‖ₑ ^ 2 ∂μ := by
   intro E _ _ _ N _ _ μ _ _ _ ν _ F β hF hβ f hf hinv
-  haveI : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
-  haveI : SecondCountableTopology (GA E N) := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E N
-  haveI : LocallyCompactSpace (GA E N) := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E N
-  haveI : μ.IsMulRightInvariant := _root_.GlobalTheory.CompanionTheory.GAUnimod.isMulRightInvariant_haar_GA E N μ
+  have : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
+  have : SecondCountableTopology (GA E N) := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E N
+  have : LocallyCompactSpace (GA E N) := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E N
+  have : μ.IsMulRightInvariant := _root_.GlobalTheory.CompanionTheory.GAUnimod.isMulRightInvariant_haar_GA E N μ
   refine lintegral_sq_le_of_average μ (latticeGL E N) F hF ν (fun y => ENNReal.ofReal (β y))
     hβ.cont.measurable.ennreal_ofReal ?_ (infEmb E N) continuous_infEmb f hf hinv (sm ν β f) ?_
   · rw [← ofReal_integral_eq_lintegral_ofReal
       (hβ.cont.integrable_of_hasCompactSupport hβ.cpt) (Eventually.of_forall hβ.nonneg), hβ.mass]
     simp
   · intro x
-    refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq (lintegral_congr fun y => ?_))
-    rw [enorm_mul]
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq (lintegral_congr fun y => ?_))
+    rw [eNorm_mul]
     congr 1
-    rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg (hβ.nonneg y)]
+    rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg (hβ.nonneg y)]
 
 end GlobalTheory.CompanionTheory.Conc
 
@@ -905,7 +905,7 @@ theorem sm_lip_of_sq_zero : ∀ (K : Type) [Field K] [NumberField K] (n : ℕ) [
   have hec : Continuous e :=
     (isExpLieAlgebra K n).continuous_expG.comp (continuous_id.subtype_mk _)
   have hT₀ : IsCompact (tsupport β) := hβ.cpt
-  haveI : ProperSpace (ArchMatrix K n) := FiniteDimensional.proper ℝ _
+  have : ProperSpace (ArchMatrix K n) := FiniteDimensional.proper ℝ _
   have hB : IsCompact (e '' Metric.closedBall 0 R) := (isCompact_closedBall 0 R).image hec
   set T : Set (archGroup K n) := tsupport β ∪ (e '' Metric.closedBall 0 R) * tsupport β with hTdef
   have hT : IsCompact T := hT₀.union (hB.mul hT₀)
@@ -1071,7 +1071,7 @@ theorem diffStepU (K : Type) [Field K] [NumberField K] (n : ℕ) (ι : Type)
   have hdiff : f₁ i g - An.ctn r (f₁ i) g =
       ∫ X in scaledUnipFD K n r M, (f₁ i g - f₁ i (unipGL X * g)) ∂unipMeasure K n r := by
     have hconst : IntegrableOn (fun _ => f₁ i g) (scaledUnipFD K n r M) (unipMeasure K n r) :=
-      integrableOn_const hfin.ne enorm_ne_top
+      integrableOn_const hfin.ne eNorm_ne_top
     rw [hct, integral_sub hconst hint, setIntegral_const, measureReal_def, hD1,
       ENNReal.toReal_one, one_smul]
   change ‖f₁ i g - An.ctn r (f₁ i) g‖ ≤ _
@@ -1213,9 +1213,9 @@ theorem tail_lib (K : Type) [Field K] [NumberField K] (n : ℕ) (μ : Measure (A
           _ = W := by
               show _ = max C 0 * Real.exp E * Real.exp S
               rw [Real.exp_add]; ring
-      rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+      rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
       exact ENNReal.ofReal_le_ofReal (pow_le_pow_left₀ (norm_nonneg _) h3 2)
-    have hmeas : Measurable fun g => ‖f i g‖ₑ ^ 2 := ((hf i).measurable.enorm).pow_const 2
+    have hmeas : Measurable fun g => ‖f i g‖ₑ ^ 2 := ((hf i).measurable.eNorm).pow_const 2
     have hexp : W ^ 2 * (Cv * Real.exp (-∑ r ∈ Finset.range n, 2 * rho K n r * sr (X s) r))
         = D * ∏ j, Real.exp (a j * s j) := by
       have e1 : ∑ r ∈ Finset.range n, κ r * sr (X s) r
@@ -1237,7 +1237,7 @@ theorem tail_lib (K : Type) [Field K] [NumberField K] (n : ℕ) (μ : Measure (A
         ring
       have e4 : Real.exp S ^ 2 * Real.exp (-∑ r ∈ Finset.range n, 2 * rho K n r * sr (X s) r)
           = Real.exp (-t₀ * ∑ j, a j) * ∏ j, Real.exp (a j * s j) := by
-        rw [← Real.exp_sum, ← Real.exp_add, ← e3, ← Real.exp_nat_mul, ← Real.exp_add]
+        rw [← Real.exp_sum, ← Real.exp_add, ← e3, ← Real.exp_natCast_mul, ← Real.exp_add]
         congr 1
       show (max C 0 * Real.exp E * Real.exp S) ^ 2 * _ = (max C 0 * Real.exp E) ^ 2 * Cv * Real.exp (-t₀ * ∑ j, a j) * _
       calc _ = (max C 0 * Real.exp E) ^ 2 * Cv * (Real.exp S ^ 2 *
@@ -1428,10 +1428,10 @@ theorem ubnd_mono {ι : Type*} {f : ι → AdelicGLn.AdelicGL K n → ℂ} {m m'
     apply Finset.sum_le_sum
     intro r _
     by_cases hr : 0 < r ∧ r < n
-    · rw [if_pos hr]
+    · rw [ite_eq_left hr]
       have := mul_le_mul_of_nonneg_left (hx r) (sub_nonneg.2 (hm r hr.1 hr.2))
       nlinarith
-    · rw [if_neg hr, GlobalTheory.CompanionTheory.AnBoot.sr_eq_zero x hr]
+    · rw [ite_eq_right hr, GlobalTheory.CompanionTheory.AnBoot.sr_eq_zero x hr]
       simp
   calc ‖f i (b * An.tor K x * q)‖ ≤ C * Real.exp (∑ r ∈ Finset.range n, m r * An.sr x r) := h1
     _ ≤ max C 0 * Real.exp (∑ r ∈ Finset.range n, m r * An.sr x r) :=
@@ -1554,7 +1554,7 @@ theorem iterU {ι : Type} {f : ι → AdelicGLn.AdelicGL K n → ℂ} {M : ℝ} 
       have hna : a ∉ s := ha
       by_cases hr : r = a
       · subst hr
-        simp only [Function.update_self, Finset.mem_insert, true_or, if_true, hna, if_false]
+        simp only [Function.update_self, Finset.mem_insert, true_or, ite_true, hna, ite_false]
         exact max_le (by linarith) le_rfl
       · simp [Function.update_of_ne hr, Finset.mem_insert, hr]
   obtain ⟨k, hk⟩ := key (Finset.Ioo 0 n) (fun r hr => Finset.mem_Ioo.1 hr)
@@ -1610,7 +1610,7 @@ theorem initU (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotally
       _ = _ := by ring
   rw [hsum]
   have e : Real.exp (M / 2 * S) ^ 2 = Real.exp (M * S) := by
-    rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
   have hA : 0 ≤ |C₀| * (|C| + c) := by positivity
   refine abs_le_of_sq_le_sq' ?_ ?_ |>.2
   · rw [mul_pow, Real.sq_sqrt hA, e]; exact hsq
@@ -1622,7 +1622,7 @@ theorem enorm_sq_le (a b : ℂ) : ‖a‖ₑ ^ 2 ≤ 2 * ‖a - b‖ₑ ^ 2 + 2 
     have h2 := norm_nonneg a
     nlinarith [sq_nonneg (‖a - b‖ - ‖b‖)]
   have e : ∀ z : ℂ, ‖z‖ₑ ^ 2 = ENNReal.ofReal (‖z‖ ^ 2) := fun z => by
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
   rw [e, e, e]
   calc ENNReal.ofReal (‖a‖ ^ 2) ≤ ENNReal.ofReal (2 * ‖a - b‖ ^ 2 + 2 * ‖b‖ ^ 2) := ENNReal.ofReal_le_ofReal h
     _ = _ := by
@@ -1705,7 +1705,7 @@ theorem approxU [MeasurableSpace (GA E N)] [BorelSpace (GA E N)] (μ : Measure (
           ring
         rwa [e1] at h
       have hm1 : Measurable fun x => 2 * ‖ψ x - sm ν β ψ x‖ₑ ^ 2 :=
-        (((hc.sub hS1).enorm.measurable).pow_const 2).const_mul 2
+        (((hc.sub hS1).eNorm.measurable).pow_const 2).const_mul 2
       calc ∫⁻ x in F, ‖ψ x - (sm ν β)^[j + 1] ψ x‖ₑ ^ 2 ∂μ
           ≤ ∫⁻ x in F, (2 * ‖ψ x - sm ν β ψ x‖ₑ ^ 2 + 2 * ‖sm ν β (fun x => ψ x - (sm ν β)^[j] ψ x) x‖ₑ ^ 2) ∂μ :=
             lintegral_mono hpt
@@ -1752,8 +1752,8 @@ theorem half_of_cover {F Ω Sl : Set (G)} (hF : IsFundamentalDomain (Γ) F μ) (
       refine ⟨γ' * γ⁻¹, ?_⟩
       simpa [Subgroup.smul_def, mul_assoc] using h
   have hΩT : Ω ⊆ T := fun x hx => (hmem x).2 ⟨1, by simpa using hx⟩
-  have hmψ : Measurable fun x => ‖ψ x‖ₑ ^ 2 := (hψ.enorm.measurable).pow_const 2
-  have hmf : Measurable fun x => ‖f x‖ₑ ^ 2 := (hf.enorm.measurable).pow_const 2
+  have hmψ : Measurable fun x => ‖ψ x‖ₑ ^ 2 := (hψ.eNorm.measurable).pow_const 2
+  have hmf : Measurable fun x => ‖f x‖ₑ ^ 2 := (hf.eNorm.measurable).pow_const 2
   set u : G → ℝ≥0∞ := T.indicator fun x => ‖ψ x‖ₑ ^ 2 with hu
   set w : G → ℝ≥0∞ := Tᶜ.indicator fun x => ‖ψ x‖ₑ ^ 2 with hw
   set v : G → ℝ≥0∞ := Tᶜ.indicator fun x => ‖f x‖ₑ ^ 2 with hv
@@ -1810,7 +1810,7 @@ theorem half_of_cover {F Ω Sl : Set (G)} (hF : IsFundamentalDomain (Γ) F μ) (
         exact enorm_sq_le _ _
       · simp only [hw, Set.indicator_of_notMem hx]
         exact zero_le
-    have hm1 : Measurable fun x => 2 * ‖ψ x - f x‖ₑ ^ 2 := (((hψ.sub hf).enorm.measurable).pow_const 2).const_mul 2
+    have hm1 : Measurable fun x => 2 * ‖ψ x - f x‖ₑ ^ 2 := (((hψ.sub hf).eNorm.measurable).pow_const 2).const_mul 2
     calc ∫⁻ x in F, w x ∂μ ≤ ∫⁻ x in F, (2 * ‖ψ x - f x‖ₑ ^ 2 + 2 * v x) ∂μ := lintegral_mono hpt
       _ = 2 * ∫⁻ x in F, ‖ψ x - f x‖ₑ ^ 2 ∂μ + 2 * ∫⁻ x in F, v x ∂μ := by
           rw [lintegral_add_left hm1, lintegral_const_mul' _ _ (by norm_num), lintegral_const_mul' _ _ (by norm_num)]
@@ -1855,9 +1855,9 @@ theorem conc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (N : ℕ) 
     (∃ s : ℂ, δ ≤ ‖s‖ ∧ ∀ x, ∫ y, α y * ψ.1 (x * y) ∂μ = s * ψ.1 x) →
     (∫⁻ x in F, ‖ψ.1 x‖ₑ ^ 2 ∂μ) = 1 → 1 ≤ 2 * ∫⁻ x in Ω, ‖ψ.1 x‖ₑ ^ 2 ∂μ := by
   intro E _ _ _ N _ _ μ _ K W R ε δ α F hK hW hε hα hαc hδ hF
-  letI : MeasurableSpace (archGroup E N) := borel _
-  haveI : BorelSpace (archGroup E N) := ⟨rfl⟩
-  haveI : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
+  let : MeasurableSpace (archGroup E N) := borel _
+  have : BorelSpace (archGroup E N) := ⟨rfl⟩
+  have : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
   let ν : Measure (archGroup E N) := Measure.haar
   let P : Sm E N → Prop := fun ψ => ∃ V : Submodule ℂ (Sm E N), IsDiscrete V ∧ ψ ∈ V ∧ TypeB K W ψ ∧ InfBdd R V ∧
     (∀ r, 0 < r → r < N → ∀ c ∈ ExpV r V, pE E N r c ≤ -ε * (r * ((N : ℝ) - r))) ∧

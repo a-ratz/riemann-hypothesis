@@ -115,7 +115,7 @@ theorem sumK_map (e : κ ≃+* κ') (b : Bool) (s k : ℕ) (u : Fin r → Fin r 
 
 theorem mem_unip_iff (u : GL (Fin r) κ) :
     u ∈ unip κ r ↔ (∀ a, u.val a a = 1) ∧ ∀ a c, c < a → u.val a c = 0 := by
-  simp only [unip, blockTri, Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq,
+  simp only [unip, blockTri, Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_ofPred_eq,
     Matrix.BlockTriangular]
   constructor
   · rintro ⟨hb, hd⟩
@@ -129,13 +129,13 @@ theorem mem_unip_memK (s k : ℕ) (u : GL (Fin r) κ) : u ∈ unip κ r ↔ MemK
 
 theorem mem_unipSym_memK (s k : ℕ) (u : GL (Fin r) κ) : u ∈ unipSym κ r s k ↔ MemK true s k u.val := by
   unfold unipSym unipCol
-  simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq, mem_unip_iff, MemK]
+  simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_ofPred_eq, mem_unip_iff, MemK]
   simp
 
 theorem edgeSum_sup (s k : ℕ) (u : GL (Fin r) κ) : edgeSum supEdge u = sumK false s k u.val := by
   unfold edgeSum supEdge sumK EdK
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun c _ => ?_
-  simp only [Bool.false_eq_true, if_false]
+  simp only [Bool.false_eq_true, ite_false]
   split_ifs <;> simp_all
 
 theorem edgeSum_sym (s k : ℕ) (hk : 0 < k) (u : GL (Fin r) κ) : edgeSum (symEdge s k) u = sumK true s k u.val := by

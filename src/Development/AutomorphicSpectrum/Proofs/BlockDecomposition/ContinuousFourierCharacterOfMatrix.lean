@@ -53,6 +53,6 @@ theorem continuous_chiT : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have htr : Continuous (Algebra.trace (AF F) (AF F ⊗[F] E)) := GlobalTheory.CompanionTheory.SW.TopK.continuous_trace (AF F)
   unfold chiT
   refine hψ.1.comp (Continuous.neg (continuous_const.mul (htr.comp ?_)))
-  exact (continuous_const.matrix_mul continuous_subtype_val).matrix_trace
+  exact (continuous_const.matrix_mul continuous_subtypeVal).matrix_trace
 
 end GlobalTheory.CompanionTheory.SiegelND.Coef

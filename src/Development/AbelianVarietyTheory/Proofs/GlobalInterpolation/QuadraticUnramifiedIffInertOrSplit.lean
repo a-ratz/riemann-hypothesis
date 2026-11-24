@@ -67,7 +67,7 @@ theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type)
       ((v.asIdeal.map (algebraMap (𝓞 F) (𝓞 E))).IsPrime ∨
         (v.asIdeal.primesOver (𝓞 E)).ncard = 2)) := by
   classical
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
+  have : v.asIdeal.IsMaximal := v.isMaximal
   set I := v.asIdeal.map (algebraMap (𝓞 F) (𝓞 E)) with hIdef
   set M := UniqueFactorizationMonoid.normalizedFactors I with hMdef
   set s := IsDedekindDomain.primesOverFinset v.asIdeal (𝓞 E) with hsdef
@@ -80,20 +80,20 @@ theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type)
     fun P => Ideal.mem_primesOver_iff_mem_normalizedFactors (𝓞 E) hv
   have hcount : ∀ P ∈ v.asIdeal.primesOver (𝓞 E), P.ramificationIdx (𝓞 F) = M.count P := by
     intro P hP
-    haveI : P.LiesOver v.asIdeal := hP.2
+    have : P.LiesOver v.asIdeal := hP.2
     exact Ideal.IsDedekindDomain.ramificationIdx_eq_normalizedFactors_count v.asIdeal P hI
   have hsum : ∑ P ∈ s, P.ramificationIdx (𝓞 F) * v.asIdeal.inertiaDeg' P = 2 := by
     rw [← h2, ← Ideal.sum_ramification_inertia (𝓞 E) F E hv]
     refine Finset.sum_congr rfl fun P hP => ?_
     have hP' := (hs P).1 hP
-    haveI : P.IsPrime := hP'.1
-    haveI : P.LiesOver v.asIdeal := hP'.2
-    rw [Ideal.ramificationIdx_eq_ramificationIdx' v.asIdeal P hv]
+    have : P.IsPrime := hP'.1
+    have : P.LiesOver v.asIdeal := hP'.2
+    rw [Ideal.ramificationIdx'_eq_ramificationIdx v.asIdeal P hv]
   have hterm : ∀ P ∈ s, 1 ≤ P.ramificationIdx (𝓞 F) * v.asIdeal.inertiaDeg' P := by
     intro P hP
     have hP' := (hs P).1 hP
-    haveI : P.IsPrime := hP'.1
-    haveI : P.LiesOver v.asIdeal := hP'.2
+    have : P.IsPrime := hP'.1
+    have : P.LiesOver v.asIdeal := hP'.2
     have h1 : 0 < P.ramificationIdx (𝓞 F) := Ideal.ramificationIdx_pos (R := 𝓞 F) P
     have h2 : 0 < v.asIdeal.inertiaDeg' P := Ideal.inertiaDeg'_pos v.asIdeal P
     exact Nat.one_le_iff_ne_zero.mpr (Nat.mul_ne_zero h1.ne' h2.ne')
@@ -110,8 +110,8 @@ theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type)
     constructor
     · intro h P hP
       have hP' := (hs P).1 hP
-      haveI : P.IsPrime := hP'.1
-      haveI : P.LiesOver v.asIdeal := hP'.2
+      have : P.IsPrime := hP'.1
+      have : P.LiesOver v.asIdeal := hP'.2
       have hPb : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot hv P
       exact Algebra.isUnramifiedAt_iff_of_isDedekindDomain.1 (h ⟨P, hP'.1, hPb⟩ hP'.2)
     · intro h w hw
@@ -156,8 +156,8 @@ theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type)
     · intro P hP
       by_contra hne
       have hP' := (hs P).1 hP
-      haveI : P.IsPrime := hP'.1
-      haveI : P.LiesOver v.asIdeal := hP'.2
+      have : P.IsPrime := hP'.1
+      have : P.LiesOver v.asIdeal := hP'.2
       have he : 0 < P.ramificationIdx (𝓞 F) := Ideal.ramificationIdx_pos (R := 𝓞 F) P
       have hf : 0 < v.asIdeal.inertiaDeg' P := Ideal.inertiaDeg'_pos v.asIdeal P
       have hge : 2 * 1 ≤ P.ramificationIdx (𝓞 F) * v.asIdeal.inertiaDeg' P :=

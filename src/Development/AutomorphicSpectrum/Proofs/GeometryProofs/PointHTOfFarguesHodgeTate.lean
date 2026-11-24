@@ -103,14 +103,14 @@ def ordTower (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [Char
 theorem pointHT (hF : FarguesHodgeTate) : PointHT := by
   intro p _ C _ _ _ v O _ _ _ hv hp hO E _ _ c hc S _ G _ _ hG y La _ _ EF N u hu X L _ _ M act ρL hmon hact hind
     hrank ζ hζ hζp hpair κ hκ
-  haveI : Module.Free ℤ La := hu.free
-  haveI : Module.Finite ℤ La := hu.finite
-  haveI : IsLocalRing O := (_root_.GlobalTheory.CompanionTheory.Ar.HT.padicComplete_integers_structure p C v O hv hp hO).2.1.toIsLocalRing
+  have : Module.Free ℤ La := hu.free
+  have : Module.Finite ℤ La := hu.finite
+  have : IsLocalRing O := (_root_.GlobalTheory.CompanionTheory.Ar.HT.padicComplete_integers_structure p C v O hv hp hO).2.1.toIsLocalRing
   obtain ⟨hLf, hLfin⟩ := lie_free_finite S G hG.smooth O y L M
   let T := ordTower p C v O hv hp hO S G hG y La X L M
   have hacts : ∀ a : 𝓞 E, T.Acts (DistribSMul.toAddMonoidHom La a) (ρL a) := by
     intro a n f g hfg
-    haveI := hmon a
+    have := hmon a
     exact (GlobalTheory.T.semiabelian_adic_torsion_four p C v O hv hp hO S G hG y La X L M).2 (act a) _ (ρL a) (hind a) (hact a) n f g hfg
   have hpe : T.PairingExtends EF ζ := fun n =>
     _root_.GlobalTheory.CompanionTheory.Ar.HT.pairingRegular_mem_prodSpan p C v O hv hp hO S G hG y La X EF ζ (fun n => (hζ n).pow_eq_one) hpair n

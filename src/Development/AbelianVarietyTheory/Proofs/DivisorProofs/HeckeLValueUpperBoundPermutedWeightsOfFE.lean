@@ -170,7 +170,7 @@ theorem levQ_le (P : Places L) :
   have hle := Nat.le_of_dvd (pow_pos hM0 _) hdvd
   calc levQ P = ∏ v ∈ P.S0, Ideal.absNorm v.asIdeal ^ condExp P v := rfl
     _ ≤ ∏ v ∈ P.S0, Ideal.absNorm v.asIdeal ^ 2 := by
-      refine Finset.prod_le_prod' fun v _ => Nat.pow_le_pow_right ?_ ?_
+      refine Finset.prod_le_prod fun v _ => Nat.pow_le_pow_right ?_ ?_
       · exact Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.2 v.ne_bot)
       · unfold condExp; split_ifs <;> norm_num
     _ = (∏ v ∈ P.S0, Ideal.absNorm v.asIdeal) ^ 2 := Finset.prod_pow _ _ _

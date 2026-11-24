@@ -86,13 +86,13 @@ theorem nontrivial_finiteAdeles : Nontrivial (AFplus L) := by
   exact zero_ne_one this
 
 theorem nontrivial_adeles : Nontrivial (AL L) := by
-  haveI := nontrivial_finiteAdeles L
+  have := nontrivial_finiteAdeles L
   exact Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_flat_left _ _ _
     (algebraMap (L⁺) (AFplus L)).injective
 
 theorem includeLeft_injective :
     Function.Injective (Algebra.TensorProduct.includeLeftRingHom : L →+* AL L) := by
-  haveI := nontrivial_adeles L
+  have := nontrivial_adeles L
   exact (Algebra.TensorProduct.includeLeftRingHom : L →+* AL L).injective
 
 variable {L n}
@@ -240,8 +240,8 @@ theorem isDual_dualWt (a : NG.AlgWt L n) : a.IsDual (dualWt a) := by
     rw [Representation.inv_self_apply]
 
 theorem isDual_iff_iso (a b b' : NG.AlgWt L n) (hab : a.IsDual b) : a.IsDual b' ↔ b.Iso b' := by
-  haveI := a.alg.1; haveI := b.alg.1; haveI := b'.alg.1
-  haveI := a.irr; haveI := b.irr; haveI := b'.irr
+  have := a.alg.1; have := b.alg.1; have := b'.alg.1
+  have := a.irr; have := b.irr; have := b'.irr
   constructor
   · rintro ⟨C, hC0, hC⟩
     obtain ⟨B, hB0, hB⟩ := hab

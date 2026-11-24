@@ -162,7 +162,7 @@ private theorem dep_extend {ι α : Type*} {β : α → Type*} (w : ι → α) (
     rw [e]
     intro hs
     rfl
-  · exact dif_neg hv
+  · exact dite_eq_right hv
 
 section Loc
 variable {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure]
@@ -227,7 +227,7 @@ private theorem list_prj (hco : ∀ w, CO (J w) ∧ IsChr (J w) (χ w)) (L : Lis
     have hc : Commute (prj (eigL μ v (J v) (χ v))) (prj (GA μ J χ (A ∪ {v | v ∈ L}))) :=
       (hcm _ fun x _ => (GA_commute μ hco hv x).symm).symm
     have hs : A ∪ {u | u ∈ v :: L} = insert v (A ∪ {v | v ∈ L}) := by
-      ext u; simp only [Set.mem_union, Set.mem_setOf_eq, List.mem_cons, Set.mem_insert_iff]; tauto
+      ext u; simp only [Set.mem_union, Set.mem_ofPred_eq, List.mem_cons, Set.mem_insert_iff]; tauto
     have hG : GA μ J χ (insert v (A ∪ {v | v ∈ L})) = eigL μ v (J v) (χ v) ⊓ GA μ J χ (A ∪ {v | v ∈ L}) := by
       simp only [GA]; rw [iInf_insert]
     rw [List.map_cons, List.prod_cons, hs, hG, ← prj_comp_of_commute hcl (GA_closed μ hco _) hc, ← h1]
@@ -245,11 +245,11 @@ private theorem haar_right {G : Type} [Group G] [TopologicalSpace G] [IsTopologi
     ext x
     simp only [Set.mem_preimage, Set.mem_image]
     exact ⟨fun h => ⟨_, h, by simp⟩, by rintro ⟨y, hy, rfl⟩; simpa using hy⟩
-  haveI : (Measure.map (· * u) m).IsMulLeftInvariant := ⟨fun g => by
+  have : (Measure.map (· * u) m).IsMulLeftInvariant := ⟨fun g => by
     rw [Measure.map_map (measurable_const_mul g) (measurable_mul_const u)]
     have : (g * ·) ∘ (· * u) = (· * u) ∘ (g * ·) := by ext; simp [mul_assoc]
     rw [this, ← Measure.map_map (measurable_mul_const u) (measurable_const_mul g), map_mul_left_eq_self]⟩
-  haveI : IsFiniteMeasureOnCompacts (Measure.map (· * u) m) := ⟨fun C hC => by
+  have : IsFiniteMeasureOnCompacts (Measure.map (· * u) m) := ⟨fun C hC => by
     rw [Measure.map_apply (measurable_mul_const u) hC.measurableSet, hpre]
     exact (hC.image (continuous_mul_const _)).measure_lt_top⟩
   have e := Measure.isMulLeftInvariant_eq_smul (Measure.map (· * u) m) m
@@ -262,7 +262,7 @@ private theorem haar_right {G : Type} [Group G] [TopologicalSpace G] [IsTopologi
   have h2 : m J = a * m J := by
     have := congrArg (· (J : Set G)) e
     simp only [Measure.map_apply (measurable_mul_const u) hJm, h1] at this
-    simpa [Measure.smul_apply] using this
+    simpa [smul_apply] using this
   have h3 : m (J : Set G) ≠ 0 := (hJ.2.measure_pos m ⟨1, J.one_mem⟩).ne'
   have h4 : m (J : Set G) ≠ ⊤ := hJ.1.measure_lt_top.ne
   have ha : (a : ENNReal) = 1 := by
@@ -295,7 +295,7 @@ private theorem oloc_scale (v : Pl K) [MeasurableSpace (Gw n v)] [BorelSpace (Gw
   have ha : (a • m).real (J : Set (Gw n v)) = a := by
     simp [Measure.real, hJ]
   intro x y
-  rw [ha, ContinuousLinearMap.smul_apply, inner_smul_right, hT, integral_smul_nnreal_measure]
+  rw [ha, smul_apply, inner_smul_right, hT, integral_smul_nnreal_measure]
   rfl
 
 private theorem oloc_right (v : Pl K) [MeasurableSpace (Gw n v)] [BorelSpace (Gw n v)] (m : Measure (Gw n v))
@@ -365,7 +365,7 @@ private theorem mem_levOn (P : Finset (Pl K)) (h : AdelicGLn.FiniteAdelicGL K n)
       · rw [Subgroup.mem_bot] at h1; rw [h1]; exact one_mem _
       · exact h1
     · have h1 := H v
-      rw [if_pos hv] at h1
+      rw [ite_eq_left hv] at h1
       exact Subgroup.mem_bot.1 h1
   · rintro ⟨H1, H2⟩ v
     split_ifs with hv
@@ -386,7 +386,7 @@ private theorem sph_eq {J : ∀ w : Pl K, Subgroup (Gw n w)} {χ : ∀ w : Pl K,
     (hco : ∀ w, CO (J w) ∧ IsChr (J w) (χ w)) (W : Finset (Pl K))
     (hW : ∀ v ∉ W, J v = GLnLocal.integralGL (v.adicCompletion K) n ∧ χ v = 1) :
     sphOff μ W = GA μ J χ {v | v ∉ W} := by
-  simp only [sphOff, GA, Set.mem_setOf_eq]
+  simp only [sphOff, GA, Set.mem_ofPred_eq]
   refine iInf_congr fun v => iInf_congr fun hv => ?_
   obtain ⟨h1, h2⟩ := hW v hv
   have e := (eigBasic K n μ v (J v) (χ v) (hco v).1 (hco v).2).2.1
@@ -405,12 +405,12 @@ private theorem test_ind {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
 
 private theorem finprod_split {ι α : Type*} [Fintype ι] (w : ι → α) (hw : Function.Injective w) (F : α → ℂ)
     (hF : (Function.mulSupport F).Finite) : ∏ᶠ v, F v = (∏ i, F (w i)) * ∏ᶠ (u) (_ : u ∉ Set.range w), F u := by
-  have h := finprod_mem_inter_mul_diff' (f := F) (s := Set.univ) (Set.range w) (hF.subset Set.inter_subset_right)
+  have h := finprod_mem_inter_mul_sdiff' (f := F) (s := Set.univ) (Set.range w) (hF.subset Set.inter_subset_right)
   rw [Set.univ_inter, finprod_mem_range hw, finprod_eq_prod_of_fintype, finprod_mem_univ] at h
   rw [← h]
   congr 1
   refine finprod_congr fun u => ?_
-  simp [Set.mem_diff]
+  simp [Set.mem_sdiff]
 
 end SlopeTestRemainingChoices
 
@@ -421,8 +421,8 @@ theorem UpperTheory.ConvolutionTheory.L1.tensFactor :
     UpperTheory.ConvolutionTheory.L1.TensFactor := by
   intro K _ _ n hn μ _ ν _ J χ hco hcof
   classical
-  letI bm : ∀ v : Pl K, MeasurableSpace (Gw n v) := fun v => borel _
-  haveI bs : ∀ v : Pl K, BorelSpace (Gw n v) := fun v => ⟨rfl⟩
+  let bm : ∀ v : Pl K, MeasurableSpace (Gw n v) := fun v => borel _
+  have bs : ∀ v : Pl K, BorelSpace (Gw n v) := fun v => ⟨rfl⟩
   have hOc : ∀ v : Pl K, IsCompact ((GLnLocal.integralGL (v.adicCompletion K) n : Subgroup (Gw n v)) : Set (Gw n v)) :=
     fun v => GLnLocal.isCompact_integralGL _ n
   have hOo : ∀ v : Pl K, IsOpen ((GLnLocal.integralGL (v.adicCompletion K) n : Subgroup (Gw n v)) : Set (Gw n v)) :=
@@ -433,8 +433,8 @@ theorem UpperTheory.ConvolutionTheory.L1.tensFactor :
     ⟨⟨_, (hco v).1.1⟩, ⟨1, mem_interior_iff_mem_nhds.2 ((hco v).1.2.mem_nhds (one_mem _))⟩⟩
   let mO : ∀ v : Pl K, Measure (Gw n v) := fun v => Measure.haarMeasure (KO v)
   let mJ : ∀ v : Pl K, Measure (Gw n v) := fun v => Measure.haarMeasure (KJ v)
-  haveI hOH : ∀ v, (mO v).IsHaarMeasure := fun v => by dsimp only [mO]; infer_instance
-  haveI hJH : ∀ v, (mJ v).IsHaarMeasure := fun v => by dsimp only [mJ]; infer_instance
+  have hOH : ∀ v, (mO v).IsHaarMeasure := fun v => by dsimp only [mO]; infer_instance
+  have hJH : ∀ v, (mJ v).IsHaarMeasure := fun v => by dsimp only [mJ]; infer_instance
   have hmO : ∀ v : Pl K, mO v (GLnLocal.integralGL (v.adicCompletion K) n : Subgroup (Gw n v)) = 1 :=
     fun v => Measure.haarMeasure_self (K₀ := KO v)
   have hmJ : ∀ v : Pl K, mJ v (J v) = 1 := fun v => Measure.haarMeasure_self (K₀ := KJ v)
@@ -453,7 +453,7 @@ theorem UpperTheory.ConvolutionTheory.L1.tensFactor :
       (AdelicGLn.isCompact_integralFiniteGL K n).measure_lt_top.ne) (Finset.prod_pos fun v _ => hc0 v), ?_⟩
   intro β r w hw inst bor mm hmm ψ T hT e he
   obtain rfl : inst = fun i => bm (w i) := funext fun i => (bor i).measurable_eq
-  haveI hmI : ∀ i, (mm i).IsHaarMeasure := fun i => (hmm i).1
+  have hmI : ∀ i, (mm i).IsHaarMeasure := fun i => (hmm i).1
 
   let B0 : Finset (Pl K) := hBad.toFinset.filter (· ∉ Set.range w)
   let b : Fin B0.card → Pl K := fun j => (B0.equivFin.symm j).1

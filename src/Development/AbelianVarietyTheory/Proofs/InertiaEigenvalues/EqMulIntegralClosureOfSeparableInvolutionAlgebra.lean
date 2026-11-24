@@ -180,19 +180,19 @@ theorem isPrincipalIdealRing_integralClosure {O E A : Type} [CommRing O] [IsDoma
     [IsScalarTower O E A] [Module.Finite E A] [IsReduced A] :
     IsPrincipalIdealRing (integralClosure O A) := by
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite E A
+  have : IsArtinianRing A := IsArtinianRing.of_finite E A
   let ψ : A ≃ₐ[O] (∀ I : MaximalSpectrum A, A ⧸ I.asIdeal) :=
     (IsArtinianRing.equivPi A).restrictScalars O
-  haveI hpir : ∀ I : MaximalSpectrum A, IsPrincipalIdealRing (integralClosure O (A ⧸ I.asIdeal)) := by
+  have hpir : ∀ I : MaximalSpectrum A, IsPrincipalIdealRing (integralClosure O (A ⧸ I.asIdeal)) := by
     intro I
-    haveI := I.isMaximal
-    letI : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
-    haveI : FiniteDimensional E (A ⧸ I.asIdeal) :=
+    have := I.isMaximal
+    let : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
+    have : FiniteDimensional E (A ⧸ I.asIdeal) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ E I.asIdeal).toLinearMap
         Ideal.Quotient.mk_surjective
-    haveI := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure O E (A ⧸ I.asIdeal)
+    have := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure O E (A ⧸ I.asIdeal)
     infer_instance
-  haveI : Finite (MaximalSpectrum A) := inferInstance
+  have : Finite (MaximalSpectrum A) := inferInstance
   let G : (∀ I : MaximalSpectrum A, integralClosure O (A ⧸ I.asIdeal)) →ₐ[O]
       (∀ I : MaximalSpectrum A, A ⧸ I.asIdeal) :=
     Pi.algHom O _ fun I => (integralClosure O (A ⧸ I.asIdeal)).val.comp (Pi.evalAlgHom O _ I)
@@ -210,8 +210,8 @@ theorem eq_mulLat_integralClosure : ∀ (K : UQ) (B : InvAlg K), B.P.Separable �
     ∀ J : Submodule K.O B.A, IsLat K.O K.E J → (∀ a ∈ integralClosure K.O B.A, ∀ y ∈ J, a * y ∈ J) →
     ∃ a : B.Aˣ, J = mulLat K.O (a : B.A) (Subalgebra.toSubmodule (integralClosure K.O B.A)) := by
   intro K B hsep J hJ hst
-  haveI : IsReduced B.A := ⟨fun a ha => Centraliser.eq_zero_of_isNilpotent B hsep a ha⟩
-  haveI := isPrincipalIdealRing_integralClosure (O := K.O) (E := K.E) (A := B.A)
+  have : IsReduced B.A := ⟨fun a ha => Centraliser.eq_zero_of_isNilpotent B hsep a ha⟩
+  have := isPrincipalIdealRing_integralClosure (O := K.O) (E := K.E) (A := B.A)
   exact eq_mulLat_of_isPrincipalIdealRing J hJ hst
 
 end GlobalTheory.UnitLemma.PrincipalLat

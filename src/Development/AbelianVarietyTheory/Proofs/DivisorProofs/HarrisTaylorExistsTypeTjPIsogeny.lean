@@ -86,7 +86,7 @@ variable {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing R] {b : Bas
 theorem charZero_of_base (b : Base D R) (hp : IsUnit ((p : ℕ) : R)) {k : Type} [Field k] (s : Sp k ⟶ Sp R) :
     CharZero k := by
   let β : R →+* k := (Spec.preimage s).hom
-  haveI := ringChar.charP k
+  have := ringChar.charP k
   rcases CharP.char_is_prime_or_zero k (ringChar k) with hl | hl
   · exfalso
     have h0 : ((ringChar k : ℕ) : k) = 0 := CharP.cast_eq_zero k _
@@ -97,7 +97,7 @@ theorem charZero_of_base (b : Base D R) (hp : IsUnit ((p : ℕ) : R)) {k : Type}
     have := hu.map β
     rw [map_natCast, h0] at this
     exact not_isUnit_zero this
-  · haveI : CharP k 0 := hl ▸ ringChar.charP k
+  · have : CharP k 0 := hl ▸ ringChar.charP k
     exact CharP.charP_to_charZero k
 
 attribute [local instance] ptModuleWvs
@@ -155,7 +155,7 @@ theorem exists_sub (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ) (hw : w.IsMaxima
     rw [he g g' hg hg']
     exact ⟨fun h => (hinj (hone.trans h)).symm, fun h => by rw [h]; exact hone.symm⟩
   let M := torsSub o (𝟙_ (Over (Sp k))) c
-  haveI : Finite M := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+  have : Finite M := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
   have hM0 : ∀ x : M, x = 0 ↔ x.1.toMul = 1 := fun x => ⟨fun h => by rw [h]; rfl, fun h => Subtype.ext h⟩
   have hkill : ∀ (v : Ideal (𝓞 D.F)) (x : M), (∀ a ∈ v, a • x = 0) ↔ KilledBy o v x.1.toMul :=
     fun v x => forall₂_congr fun a _ => hM0 (a • x)
@@ -164,7 +164,7 @@ theorem exists_sub (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ) (hw : w.IsMaxima
   have hle : Ideal.absNorm w ^ j ≤ Nat.card {x : M // ∀ a ∈ w, a • x = 0} := by
     rcases Nat.eq_zero_or_pos j with rfl | hj0
     · rw [pow_zero]
-      haveI : Nonempty {x : M // ∀ a ∈ w, a • x = 0} := ⟨⟨0, fun a _ => smul_zero a⟩⟩
+      have : Nonempty {x : M // ∀ a ∈ w, a • x = 0} := ⟨⟨0, fun a _ => smul_zero a⟩⟩
       exact Nat.card_pos
     · have hrk : Nat.card {g : 𝟙_ (Over (Sp k)) ⟶ o.A // KilledBy o w g} = Ideal.absNorm w ^ (D.m * D.n) :=
         _root_.GlobalTheory.UPel.HT.ES.CharZeroCount.card_killedBy_charZero p D R b N (Sp k) s o w hwne k (𝟙 _)
@@ -220,20 +220,20 @@ theorem exists_sub (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ) (hw : w.IsMaxima
 
 theorem exists_isPIsog_isTj : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → IsUnit ((p : ℕ) : R) → ∀ (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ), w.IsMaximal → uIdeal D r ≤ w → j ≤ D.n → (∃ e : ℕ, c = p ^ e ∧ (0 < j → 0 < e)) → D.m = 1 → ∀ (k : Type) [Field k] [IsAlgClosed k] (s : Sp k ⟶ Sp R) (o : Obj b N s), ∃ (o' : Obj b N s) (ψ : o.A ⟶ o'.A), IsPIsog c o o' ψ ∧ IsTj r w j o o' ψ := by
   intro p _ D R _ _ b N _ _ hp r w j c hw hu hj hc hm k _ _ s o
-  haveI := charZero_of_base b hp s
+  have := charZero_of_base b hp s
   obtain ⟨H, stab, hpow, hiso, hmax, hU, hcard⟩ := exists_sub r w j c hw hu hj hc hm o
   obtain ⟨ex, hce, -⟩ := hc
   have hck : (c : k) ≠ 0 := by
     rw [hce, Nat.cast_pow]
     exact pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
   have hfin : Finite H := by
-    haveI := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+    have := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
     exact Finite.of_injective (fun h : H => (⟨h.1, hpow h.1 h.2⟩ : {g : 𝟙_ (Over (Sp k)) ⟶ o.A // g ^ c = 1}))
       fun a a' h => Subtype.ext (Subtype.mk.inj h)
   have hinj : ∀ (κ : Type) [Field κ] (x : Sp κ ⟶ Sp k) (h h' : 𝟙_ (Over (Sp k)) ⟶ o.A),
       toUnit (Over.mk x) ≫ h = toUnit (Over.mk x) ≫ h' → h = h' := fun κ _ x h h' e => by
-    haveI : Nonempty (Over.mk x).left := inferInstanceAs (Nonempty (PrimeSpectrum κ))
-    haveI := GlobalTheory.PointQuot.epi_toUnit (Over.mk x)
+    have : Nonempty (Over.mk x).left := inferInstanceAs (Nonempty (PrimeSpectrum κ))
+    have := GlobalTheory.PointQuot.epi_toUnit (Over.mk x)
     exact (cancel_epi _).1 e
   have hfree : ∀ (κ : Type) [Field κ] (x : Sp κ ⟶ Sp k) (h : 𝟙_ (Over (Sp k)) ⟶ o.A),
       toUnit (Over.mk x) ≫ h = 1 ↔ h = 1 := fun κ _ x h =>

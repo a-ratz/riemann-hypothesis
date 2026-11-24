@@ -227,7 +227,7 @@ theorem exists_open_cong : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L
     pFin L ((((k : UA L n) : GlobalTheory.CuspRep.GA L n) : Matrix (Fin n) (Fin n) (Ad L)) s t) -
       pFin L ((1 : Matrix (Fin n) (Fin n) (Ad L)) s t)
   have hm : Continuous (fun k : finU (E := L) (n := n) ↦ (((k : UA L n) : GlobalTheory.CuspRep.GA L n) : Matrix (Fin n) (Fin n) (Ad L))) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hp : Continuous (pFin L) := continuous_snd
   have hf : ∀ s t, Continuous (f s t) := fun s t ↦
     (hp.comp (hm.matrix_elem s t)).sub continuous_const
@@ -392,7 +392,7 @@ theorem continuous_fpt : Continuous (fpt : UA L n → UA L n) := by
     exact continuous_const.add (Continuous.matrix_map continuous_id hs)
   have h2 : Continuous (GeneralLinearGroup.map (pFin L) : GL (Fin n) (Ad L) →* GL (Fin n) (Af L)) :=
     Continuous.units_map _ (Continuous.matrix_map continuous_id continuous_snd)
-  exact (h1.comp (h2.comp continuous_subtype_val)).subtype_mk _
+  exact (h1.comp (h2.comp continuous_subtypeVal)).subtype_mk _
 
 theorem j_injective (F : FinIso L n) : Function.Injective F.j := by
   intro x x' h
@@ -683,7 +683,7 @@ end Main
 theorem exists_dict : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (F : FinIso L n) (π : NG.AutRep L n),
     ∃ U, Dict F π U := by
   intro L _ _ _ n F π
-  haveI : FiniteDimensional ℂ π.W := π.alg.1
+  have : FiniteDimensional ℂ π.W := π.alg.1
   obtain ⟨R, hfin, hrat, hcont⟩ := GlobalTheory.T.exists_adelic_extension_of_algebraicWeight_definiteUnitary L n π.toAlgWt
   exact ⟨_, dict_span F π.ρ R π.irr π.S π.irrS hfin hrat hcont⟩
 

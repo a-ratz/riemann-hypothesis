@@ -187,7 +187,7 @@ theorem cong_factor {m : ℕ} {η : Type} [Fintype η] (H : EuclideanSpace ℝ �
     exact hmLm.aemeasurable
   have hball := lhs.symm.trans rhs
   have hv := congrArg (fun μ : Measure (EuclideanSpace ℝ (Fin m × Fin m × Bool)) => μ (Metric.ball 0 1)) hball
-  simp only [Measure.smul_apply, smul_eq_mul] at hv
+  simp only [smul_apply, smul_eq_mul] at hv
   have hpos : (volume : Measure (EuclideanSpace ℝ (Fin m × Fin m × Bool))) (Metric.ball 0 1) ≠ 0 :=
     (Metric.measure_ball_pos _ _ one_pos).ne'
   have hfin : (volume : Measure (EuclideanSpace ℝ (Fin m × Fin m × Bool))) (Metric.ball 0 1) ≠ ⊤ :=

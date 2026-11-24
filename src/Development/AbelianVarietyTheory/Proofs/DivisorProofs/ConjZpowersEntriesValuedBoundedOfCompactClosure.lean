@@ -96,7 +96,7 @@ theorem GlobalTheory.BCT.powers_entries_bdd : ∀ (E : Type) [Field E] [NumberFi
       have h1 : Continuous fun y : UL n w => (g⁻¹ * y * g : UL n w) :=
         (continuous_const.mul continuous_id).mul continuous_const
       have h2 : Continuous fun y : UL n w => (((g⁻¹ * y * g : UL n w) : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)) :=
-        Units.continuous_val.comp (continuous_subtype_val.comp h1)
+        Units.continuous_val.comp (continuous_subtypeVal.comp h1)
       exact (continuous_apply j).comp ((continuous_apply i).comp h2)
     obtain ⟨B, hB⟩ := exists_bound_of_isCompact w (hc.image hf)
     refine ⟨B, fun k => hB _ ⟨t ^ k, subset_closure (Subgroup.zpow_mem_zpowers t k), rfl⟩⟩

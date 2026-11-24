@@ -100,7 +100,7 @@ include m in
 theorem pointIdeal_eq_map [Algebra A Ω] [Algebra O Ω] [IsScalarTower A O Ω] :
     pointIdeal O y = (pointIdeal A y : Ideal (MRing ι A)).map (MvPolynomial.map (algebraMap A O)) := by
   refine le_antisymm (fun g hg => ?_) (Ideal.map_le_iff_le_comap.2 fun f hf => Ideal.mem_comap.2 (map_mem_iff.2 hf))
-  haveI : IsLocalization (m.primeCompl.map (C : A →+* MRing ι A)) (MRing ι O) :=
+  have : IsLocalization (m.primeCompl.map (C : A →+* MRing ι A)) (MRing ι O) :=
     MvPolynomial.isLocalization _ _
   obtain ⟨⟨f, s⟩, hs⟩ := IsLocalization.surj (m.primeCompl.map (C : A →+* MRing ι A)) g
   have hs' : g * MvPolynomial.map (algebraMap A O) (s : MRing ι A) =
@@ -114,7 +114,7 @@ theorem pointIdeal_eq_map [Algebra A Ω] [Algebra O Ω] [IsScalarTower A O Ω] :
 
 include m in
 theorem isAlgebraic_int [IsDomain A] [Module.Finite ℤ A] : Algebra.IsAlgebraic ℤ O := by
-  haveI : Algebra.IsAlgebraic A O := IsLocalization.isAlgebraic O m.primeCompl
+  have : Algebra.IsAlgebraic A O := IsLocalization.isAlgebraic O m.primeCompl
   exact Algebra.IsAlgebraic.trans ℤ A O
 
 end Place
@@ -124,8 +124,8 @@ theorem trdeg_eq {O : Type} [CommRing O] [IsDomain O] [Algebra.IsAlgebraic ℤ O
     (hQP : Q.comap (MvPolynomial.map (Int.castRingHom O)) = P)
     (hCP : P.comap (C : ℤ →+* MRing ι ℤ) = ⊥) (hCQ : Q.comap (C : O →+* MRing ι O) = ⊥) :
     Algebra.trdeg O (MRing ι O ⧸ Q) = Algebra.trdeg ℤ (MRing ι ℤ ⧸ P) := by
-  haveI := hP
-  haveI := hQ
+  have := hP
+  have := hQ
   let φ : (MRing ι ℤ ⧸ P) →+* (MRing ι O ⧸ Q) :=
     Ideal.quotientMap Q (MvPolynomial.map (Int.castRingHom O)) hQP.ge
   have hφ : Function.Injective φ := Ideal.quotientMap_injective' hQP.le
@@ -293,6 +293,6 @@ end GlobalTheory.CompanionTheory.Ar.Num.PlaceModel
 
 theorem GlobalTheory.CompanionTheory.Ar.Num.pl_model : ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) [∀ k, Fintype (ι k)] (Ω : Type) [Field Ω] (y : (Σ k, ι k) → Ω) (A : Type) [CommRing A] [Algebra A Ω] [IsDedekindDomain A] [Module.Finite ℤ A], Function.Injective (algebraMap A Ω) → HasConstants ℤ A y → ∀ D : ℕ, IsArithVar (mCoordIdeal y) (D + 1) → ∀ (m : Ideal A) [m.IsPrime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], pointIdeal O y = (pointIdeal A y).map (MvPolynomial.map (algebraMap A O)) ∧ IsModelOver (pointIdeal O y) D ∧ ∀ (ϖ : O), Irreducible ϖ → ∀ (σ : Type) (S : Finset Nat.Primes) (T : LocPair ι ℤ σ), T.IsVertOff (mCoordIdeal y) S → (T.map (Int.castRingHom O)).IsVert (pointIdeal O y) ϖ := by
   intro K _ _ ι _ Ω _ y A _ _ _ _ hinj _ D h m _ O _ _ _ _ _ _ _
-  haveI : Algebra.IsAlgebraic ℤ O := PlaceModel.isAlgebraic_int m
+  have : Algebra.IsAlgebraic ℤ O := PlaceModel.isAlgebraic_int m
   exact ⟨PlaceModel.pointIdeal_eq_map m, PlaceModel.isModelOver_pointIdeal
     (PlaceModel.injective_toField m hinj) h, fun ϖ hϖ σ S T hT => PlaceModel.isVert_map h hϖ hT⟩

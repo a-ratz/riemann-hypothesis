@@ -64,7 +64,7 @@ theorem holo_etale_iff_holo_chart : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y
     have hev : ∀ w : U, e w = z w := fun w => by rw [← hez]
     obtain ⟨W, hW, hWe⟩ := isOpen_induced_iff.1 e.open_source
     have hO : IsOpen (e.target ∩ e.symm ⁻¹' (Subtype.val ⁻¹' Ω)) :=
-      e.isOpen_inter_preimage_symm (hΩ.preimage continuous_subtype_val)
+      e.isOpen_inter_preimage_symm (hΩ.preimage continuous_subtypeVal)
     have hmem : z ((A.chart i).symm v) ∈ e.target ∩ e.symm ⁻¹' (Subtype.val ⁻¹' Ω) := by
       have h1 := hev ⟨(A.chart i).symm v, hvU⟩
       simp only at h1

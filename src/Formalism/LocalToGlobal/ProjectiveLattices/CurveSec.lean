@@ -196,9 +196,9 @@ theorem inCurveSec (G : GlobalFamilyData (xplus X E hM) ka wL wF) (la : HeightOn
   intro y hs g0 hMod _
   obtain ⟨M⟩ := hMod
   refine ⟨?_, ?_, M.isGen⟩
-  · haveI : FiniteDimensional (Kp (xplus X E hM) la G.N) (↥M.A' ⧸ M.JA) := M.fin
+  · have : FiniteDimensional (Kp (xplus X E hM) la G.N) (↥M.A' ⧸ M.JA) := M.fin
     exact LinearEquiv.finiteDimensional M.quotEquiv.toLinearEquiv
-  · haveI : IsReduced (↥M.A' ⧸ M.JA) := M.red
+  · have : IsReduced (↥M.A' ⧸ M.JA) := M.red
     exact isReduced_of_injective M.quotEquiv.symm.toRingHom M.quotEquiv.symm.injective
 
 end Formalism.L2.Pj

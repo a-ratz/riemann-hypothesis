@@ -375,7 +375,7 @@ private theorem wt_matFix (K : FinExt l) {d : ℕ} (M M' : Matrix (Fin d) (Fin d
     (hM' : ∀ i j, M' i j ∈ wtS l) (hA : IsUnit A.det)
     (h : M.map (PP l).φB = M * A.map (algebraMap ↥(K0 K) (Bcr l))) :
     ∀ g ∈ Iq l, M.map ((PP l).actQ g) = M := by
-  haveI := ((PP l).PD K).finK₀
+  have := ((PP l).PD K).finK₀
   let s : ↥(K0 K) ≃ₐ[ℚ_[l]] ↥(K0 K) := AlgEquiv.ofBijective ((PP l).PD K).σ ((PP l).PD K).σ_bij
   have hf : 0 < orderOf s := orderOf_pos s
   have hσ : ∀ x : ↥(K0 K), (((PP l).PD K).σ)^[orderOf s] x = x := fun x => by
@@ -435,7 +435,7 @@ private theorem wt_matFix (K : FinExt l) {d : ℕ} (M M' : Matrix (Fin d) (Fin d
   rw [Polynomial.map_map, hPF, Matrix.map_zero _ (map_zero _), Matrix.mul_zero] at h4
   intro g hg
   ext i j
-  refine UpperTheory.inertia_fixes_of_frobenius_annihilated_mem_fil_zero (expand ℤ_[l] f P) (hP.expand hf) (by rwa [coeff_expand hf, if_pos (dvd_zero _), Nat.zero_div])
+  refine UpperTheory.inertia_fixes_of_frobenius_annihilated_mem_fil_zero (expand ℤ_[l] f P) (hP.expand hf) (by rwa [coeff_expand hf, ite_eq_left (dvd_zero _), Nat.zero_div])
     (M i j) ?_ (fun k => hS M (F k) k hM (hMF k) i j) g hg
   have e : ((PP l).φB.toLinearMap : Module.End ℚ_[l] (Bcr l)) ^ f = ((PP l).φB ^ f).toLinearMap := by
     ext x
@@ -497,7 +497,7 @@ theorem UpperTheory.V.Loc.crWt0 :
   rw [he', wt_matFix K M M' A' hMM hM hM' hA hφM _ hg] at h2
   have h3 := congrArg (· * M') h2
   simp only [Matrix.mul_assoc, hMM, Matrix.mul_one] at h3
-  haveI : Nontrivial (Bcr l) := ⟨⟨1, 0, fun h => ((PP l).PD K).not_mem_filtration_two (by
+  have : Nontrivial (Bcr l) := ⟨⟨1, 0, fun h => ((PP l).PD K).not_mem_filtration_two (by
     rw [← mul_one ((PP l).PD K).t, h, mul_zero, map_zero]; exact Submodule.zero_mem _)⟩⟩
   have h4 : LinearMap.toMatrix b b (ρ' (e g)) = 1 := by
     apply Matrix.map_injective (algebraMap ℚ_[l] (Bcr l)).injective

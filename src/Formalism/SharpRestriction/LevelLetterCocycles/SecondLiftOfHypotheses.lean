@@ -376,7 +376,7 @@ theorem filtration_quotient_finiteDimensional [NeZero n] (hD : Sh.FilDim W) {d :
   have hτ : Formalism.MainNotions.LiftingTheory.Over W τ i := hτ'
   obtain ⟨-, hdiff⟩ := hD hA T₂ hcr i τ hτ
   obtain ⟨hfinE, -, hFR⟩ := (hDq hA.1 T₂.V T₂.ρ hcr).2 τ
-  haveI := hfinE
+  have := hfinE
 
   have hle : ∀ a : ℤ, Formalism.MainNotions.WachCoordinates.FilLev W T₂ i 0 a ≤ DdRE PD T₂.ρ τ := by
     intro a
@@ -390,8 +390,8 @@ theorem filtration_quotient_finiteDimensional [NeZero n] (hD : Sh.FilDim W) {d :
     exact inf_le_left
   have hfin : ∀ a : ℤ, FiniteDimensional LL (Formalism.MainNotions.WachCoordinates.FilLev W T₂ i 0 a) := fun a =>
     Module.Finite.of_injective (Submodule.inclusion (hle a)) (Submodule.inclusion_injective (hle a))
-  haveI := hfin (-(η : ℤ))
-  haveI := hfin 0
+  have := hfin (-(η : ℤ))
+  have := hfin 0
   have h0E : Formalism.MainNotions.WachCoordinates.FilLev W T₂ i 0 0 ≤ Formalism.MainNotions.WachCoordinates.FilLev W T₂ i 0 (-(η : ℤ)) :=
     filtrationLevel_antitone W T₂ i (by omega)
   let g := (Formalism.MainNotions.WachCoordinates.FilLev W T₂ i 0 0).mkQ ∘ₗ (Formalism.MainNotions.WachCoordinates.FilLev W T₂ i 0 (-(η : ℤ))).subtype
@@ -430,8 +430,8 @@ theorem level_q_pow_ne_zero [NeZero n] (hR : Sh.ExpRing W) (hA : Formalism.MainN
 private lemma exists_finset_card_le_span_eq_top_of_fg {O₁ L₁ : Type} [CommRing O₁] [IsDomain O₁] [IsPrincipalIdealRing O₁]
     [Field L₁] [Algebra O₁ L₁] [IsFractionRing O₁ L₁] {r : ℕ} (Q : Submodule O₁ (Fin r → L₁))
     (hQ : Q.FG) : ∃ s : Finset Q, s.card ≤ r ∧ Submodule.span O₁ (↑s : Set Q) = ⊤ := by
-  haveI : Module.Finite O₁ Q := Module.Finite.iff_fg.mpr hQ
-  haveI : Module.Free O₁ Q := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O₁ Q := Module.Finite.iff_fg.mpr hQ
+  have : Module.Free O₁ Q := Module.free_of_finite_type_torsion_free'
   let bQ := Module.finBasis O₁ Q
   refine ⟨Finset.univ.image bQ, ?_, ?_⟩
   · refine Finset.card_image_le.trans ?_
@@ -483,7 +483,7 @@ theorem passage_to_quotient [NeZero n] (hK : Sh.LemK W) (hD : Sh.FilDim W) (hR :
     obtain ⟨hfinQ, hrk⟩ := filtration_quotient_finiteDimensional W hD hDq hS (c + 1)
     let Mq := (Formalism.MainNotions.WachCoordinates.FilLev W T₂ (c + 1) 0 (-(η : ℤ))).map
       (Formalism.MainNotions.WachCoordinates.FilLev W T₂ (c + 1) 0 0).mkQ
-    haveI hfinQ' : FiniteDimensional LL ↥Mq := hfinQ
+    have hfinQ' : FiniteDimensional LL ↥Mq := hfinQ
     let bas := Module.finBasis LL ↥Mq
     let φ0 : ↥F₁ → ↥Mq := fun f =>
       ⟨(Formalism.MainNotions.WachCoordinates.FilLev W T₂ (c + 1) 0 0).mkQ (D f 0), Submodule.mem_map_of_mem (hLK f).1⟩
@@ -539,7 +539,7 @@ theorem passage_to_quotient [NeZero n] (hK : Sh.LemK W) (hD : Sh.FilDim W) (hR :
       let C : Submodule O FF := Fl k ⊓ (LinearMap.ker ψ).map F₁.subtype
       have hnew : PStep lenO m cc (Fl k) C True := by
         let ob0 : ↥(Fl k) →ₗ[O] (Fin r → LL) := ψ ∘ₗ Submodule.inclusion hFl
-        haveI : Module.Finite O ↥(Fl k) := Module.Finite.iff_fg.mpr (IsNoetherian.noetherian (Fl k))
+        have : Module.Finite O ↥(Fl k) := Module.Finite.iff_fg.mpr (IsNoetherian.noetherian (Fl k))
         have hfg : (LinearMap.range ob0).FG := by
           rw [LinearMap.range_eq_map]
           exact (Module.finite_def.mp inferInstance).map ob0
@@ -569,26 +569,26 @@ theorem passage_to_quotient [NeZero n] (hK : Sh.LemK W) (hD : Sh.FilDim W) (hR :
       refine ⟨k + 1, fun j => if j ≤ k then Fl j else C, by simp only [List.length_cons]; omega,
         ?_, ?_, ?_, ?_, ?_⟩
       · show (if 0 ≤ k then Fl 0 else C) = F₁
-        rw [if_pos (Nat.zero_le k)]
+        rw [ite_eq_left (Nat.zero_le k)]
         exact h0
       · show (if k + 1 ≤ k then Fl (k + 1) else C) ≤ F₁
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         exact inf_le_left.trans hFl
       · intro i hi
         show PStep lenO m cc (if i ≤ k then Fl i else C) (if i + 1 ≤ k then Fl (i + 1) else C) True
         by_cases hik : i < k
-        · rw [if_pos hik.le, if_pos (show i + 1 ≤ k by omega)]
+        · rw [ite_eq_left hik.le, ite_eq_left (show i + 1 ≤ k by omega)]
           exact hstep i hik
         · have hik' : i = k := by omega
-          rw [if_pos (by omega), if_neg (by omega), hik']
+          rw [ite_eq_left (by omega), ite_eq_right (by omega), hik']
           exact hnew
       · intro h0m
         show (if k + 1 ≤ k then Fl (k + 1) else C) = F₁
-        rw [if_neg (by omega), hC h0m, hm0 h0m]
+        rw [ite_eq_right (by omega), hC h0m, hm0 h0m]
       · intro c hc f hf
         have hf' : (f : FF) ∈ C := by
           have h : (f : FF) ∈ (if k + 1 ≤ k then Fl (k + 1) else C) := hf
-          rwa [if_neg (by omega)] at h
+          rwa [ite_eq_right (by omega)] at h
         rcases List.mem_cons.mp hc with hca | hc'
         · obtain ⟨g, hg0, hgf⟩ := Submodule.mem_map.mp (Submodule.mem_inf.mp hf').2
           have hgeq : g = f := Subtype.ext hgf
@@ -791,7 +791,7 @@ theorem second_lift_at_situation [NeZero n] (W : LocWach PD LL O v n) (hZ : TToo
     exact (W.N T₂).smul_mem _ this
   have hMi : ∀ c ∈ evens n d, MiW d b S η c = b c + S := fun c hc => by simp [MiW, hev c hc]
   have hMiU : ∀ c ∈ evens n d, MiW d b S η (c + 1) = η := fun c hc => by
-    simp only [MiW]; rw [if_neg (succ_not_mem_evens hn hc)]
+    simp only [MiW]; rw [ite_eq_right (succ_not_mem_evens hn hc)]
   have hhi : ∀ c ∈ evens n d, hiW d b S η c = η := fun c hc => by simp [hiW, hev c hc]
 
   obtain ⟨hX1, hX2⟩ := hX

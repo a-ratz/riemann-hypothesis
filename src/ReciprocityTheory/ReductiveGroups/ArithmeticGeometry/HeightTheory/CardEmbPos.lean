@@ -70,7 +70,7 @@ namespace Data
 variable (d : Data K ι Ω WT A)
 
 theorem card_emb_pos : (0 : ℝ) < Fintype.card (K →+* ℂ) := by
-  haveI : Nonempty (K →+* ℂ) := ⟨(IsAlgClosed.lift : K →ₐ[ℚ] ℂ).toRingHom⟩
+  have : Nonempty (K →+* ℂ) := ⟨(IsAlgClosed.lift : K →ₐ[ℚ] ℂ).toRingHom⟩
   exact_mod_cast Fintype.card_pos
 
 theorem meanK_le (F G H : (K →+* ℂ) → ℝ) (C r : ℝ) (hle : ∀ sg, F sg ≤ G sg + C + r * H sg) :
@@ -107,7 +107,7 @@ theorem ordMM_fin (hd : d.AxH 𝒜) (c : ι) (f : A c) (hf : f ∈ 𝒜 c d.wL) 
   refine (hA.union (Set.finite_iUnion hB)).subset ?_
   rintro v ⟨hv, hne⟩
   by_contra hnot
-  simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion, not_or, not_exists, not_and,
+  simp only [Set.mem_union, Set.mem_ofPred_eq, Set.mem_iUnion, not_or, not_exists, not_and,
     not_not] at hnot
   obtain ⟨h1, h2⟩ := hnot
   apply hne
@@ -156,7 +156,7 @@ theorem la_part (hd : d.AxH 𝒜) (h : d.S1) (hH1 : d.FinitePlaceHyp) (f : ∀ c
   have key : ∑ᶠ la, d.NlaG h d.wL f la * logNorm la ≤
       ∑ᶠ la, (d.NlaMM h f la * logNorm la + d.del * (d.nu la * logNorm la) +
         d.cc / d.i * (d.NlaG h (d.n1 • d.wde) d.et la * logNorm la)) := by
-    refine finsum_le_finsum' finL (finAll.subset fun x hx => ?_) fun la => ?_
+    refine finsum_le_finsum finL (finAll.subset fun x hx => ?_) fun la => ?_
     · by_contra hn
       simp only [Set.mem_union, Function.mem_support, not_or, not_not] at hn
       apply hx

@@ -140,10 +140,10 @@ theorem coeff_aeval_one_add_X_pow_sub_one_ne_zero :
   simp only [map_pow, MvPolynomial.aeval_X, ← pow_mul, Finset.prod_pow_eq_pow_sum]
   have hsum : ∑ q, l ^ e q * n q = ∑ q, n q * l ^ e q :=
     Finset.sum_congr rfl fun q _ => mul_comm _ _
-  rw [hsum, Polynomial.coeff_mul_X_pow', if_pos le_rfl, Nat.sub_self, coeff_zero_aeval_of_coeff_zero_eq_zero _ _ u]
+  rw [hsum, Polynomial.coeff_mul_X_pow', ite_eq_left le_rfl, Nat.sub_self, coeff_zero_aeval_of_coeff_zero_eq_zero _ _ u]
   · exact hu
   · intro q
-    rw [Polynomial.coeff_X_pow, if_neg (pow_pos hl _).ne]
+    rw [Polynomial.coeff_X_pow, ite_eq_right (pow_pos hl _).ne]
 
 end GlobalTheory
 end -- clump:auto
@@ -190,12 +190,12 @@ theorem _root_.GlobalTheory.exists_exponent_strictly_least_weight :
     rcases lt_trichotomy i k with h | h | h
     · simp [h, h.ne]
     · subst h
-      simp only [if_true, lt_irrefl, if_false, add_zero]
+      simp only [ite_true, lt_irrefl, ite_false, add_zero]
       nlinarith
     · simp [h.ne', not_lt.2 h.le, hgt i h]
   have hsum := Finset.sum_le_sum fun i (_ : i ∈ Finset.univ) => key i
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq', ← Finset.sum_filter] at hsum
-  simp only [Finset.mem_univ, if_true] at hsum
+  simp only [Finset.mem_univ, ite_true] at hsum
   have hI : Finset.univ.filter (fun i => i < k) = Finset.Iio k := by ext; simp
   rw [hI] at hsum
   have := hc k
@@ -349,7 +349,7 @@ private theorem C_dvd_one_add_X_pow_prime_pow_sub_one_sub_X_pow {O : Type} [Comm
   by_cases hN' : i = l ^ e
   · subst hN'
     simp [h0, hl.ne_zero]
-  · simp only [h0, hN', if_false, sub_zero]
+  · simp only [h0, hN', ite_false, sub_zero]
     exact h.trans (Nat.cast_dvd_cast (hl.dvd_choose_pow h0 hN'))
 
 
@@ -390,14 +390,14 @@ theorem _root_.GlobalTheory.not_dvd_coeff_aeval_oneAddX_pow_sub_one :
     · exact dvd_mul_of_dvd_left (hoth m hne hw) _
     by_cases hd : m.degree ≤ W
     · have h1 := hcong m
-      rw [if_neg (by omega), sub_zero] at h1
+      rw [ite_eq_right (by omega), sub_zero] at h1
       rw [pow_succ]
       exact mul_dvd_mul (hlow m hd) h1
     · rw [hvanish m (by omega), mul_zero]
       exact dvd_zero _
   have hmain : ϖ ^ (μ + 1) ∣ F.coeff m₀ * c m₀ - F.coeff m₀ := by
     have h1 := hcong m₀
-    rw [if_pos rfl] at h1
+    rw [ite_eq_left rfl] at h1
     rw [← mul_sub_one, pow_succ]
     exact mul_dvd_mul (hlow m₀ (hdeg m₀)) h1
   have hmem : m₀ ∈ F.support := by
@@ -619,7 +619,7 @@ theorem nval_mul_pow (l : ℕ) {x y : R} (hx : x ≠ 0) (hy : y ≠ 0) (n : ℕ)
   have : addVal R (x * y ^ n) = ((s + n * t : ℕ) : ℕ∞) := by
     rw [(addVal R).map_mul, (addVal R).map_pow, ← hs, ← ht]; simp
   rw [this, ← hs, ← ht]
-  simp only [ENat.toNat_coe]
+  simp only [ENat.toNat_natCast]
   push_cast
   ring
 
@@ -629,7 +629,7 @@ theorem addVal_lt_of_nval_lt (l : ℕ) {x y : R} (hx : x ≠ 0) (hy : y ≠ 0)
   obtain ⟨s, hs⟩ := ENat.ne_top_iff_exists.mp (addVal_ne_top hx)
   obtain ⟨t, ht⟩ := ENat.ne_top_iff_exists.mp (addVal_ne_top hy)
   rw [← hs, ← ht] at h ⊢
-  simp only [ENat.toNat_coe] at h
+  simp only [ENat.toNat_natCast] at h
   have : (s : ℝ) < t := lt_of_not_ge fun hge =>
     absurd h (not_lt.mpr (div_le_div_of_nonneg_right hge (Nat.cast_nonneg _)))
   exact_mod_cast this
@@ -729,7 +729,7 @@ theorem addVal_le_iff_not_dvd {O : Type} [CommRing O] [IsDomain O] [IsDiscreteVa
   rw [← IsDiscreteValuationRing.addVal_le_iff_dvd, IsDiscreteValuationRing.addVal_pow,
     IsDiscreteValuationRing.addVal_uniformizer hϖ, not_le]
   simp only [nsmul_eq_mul, mul_one, Nat.cast_add, Nat.cast_one]
-  exact (ENat.lt_add_one_iff (ENat.coe_ne_top n)).symm
+  exact (ENat.lt_add_one_iff (ENat.natCast_ne_top n)).symm
 
 theorem degree_le_weight {σ : Type} [Fintype σ] {l : ℕ} (hl : 0 < l) (e : σ → ℕ) (m : σ →₀ ℕ) :
     m.degree ≤ ∑ q, m q * l ^ e q := by
@@ -866,7 +866,7 @@ theorem pow_sub_one_mem_lowIdeal {O : Type} [CommRing O] (ϖ : O) (l : ℕ) (hl 
   rw [Polynomial.coeff_sub, Polynomial.coeff_one_add_X_pow, Polynomial.coeff_one]
   rcases Nat.eq_zero_or_pos i with rfl | h0
   · simp
-  · rw [if_neg h0.ne', sub_zero]
+  · rw [ite_eq_right h0.ne', sub_zero]
     have h1 : T + 1 < l ^ (T + 1) := Nat.lt_pow_self hl.one_lt
     have h2 := _root_.GlobalTheory.pow_sub_dvd_choose_prime_pow_of_lt l a T i hl h0 (by omega)
     have h3 : l ^ n ∣ (l ^ a).choose i := (pow_dvd_pow l (by omega)).trans h2
@@ -925,11 +925,11 @@ theorem exists_low_coeff_of_factor (O : Type) [CommRing O] [IsDomain O]
       simp only [hS, map_sub, map_pow, map_add (f := _), map_one, MvPolynomial.aeval_X, add_sub_cancel]
       rw [← pow_mul, ← pow_add]
       exact pow_sub_one_mem_lowIdeal ϖ l hl hd _ _ _ (by omega)
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hl0 : (l : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
     exact fun h => hϖ.not_isUnit (isUnit_of_dvd_unit hd h)
-  haveI : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hl).2 hl0
+  have : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hl).2 hl0
   have hw : ∑ q, Sum.elim n (fun _ => 0) q * l ^ e q ≤ m₀ := by
     rw [Fintype.sum_sum_type]
     simp only [Sum.elim_inl, Sum.elim_inr, zero_mul, Finset.sum_const_zero, add_zero]
@@ -969,12 +969,12 @@ theorem exists_levels (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationR
               (v y : ℝ) / ((IsDiscreteValuationRing.addVal O (l : O)).toNat : ℝ)
                 + W / (Nat.totient (l ^ k) : ℝ) := by
   classical
-  haveI := Fintype.ofFinite J
+  have := Fintype.ofFinite J
   refine ⟨∑ y, (W + v y), fun h hh => ?_⟩
   choose w hw hd using hh
   have hne : ∀ y, (h y).coeff (w y) ≠ 0 := fun y h1 => hd y (by rw [h1]; exact dvd_zero _)
   have hval : ∀ y, (IsDiscreteValuationRing.addVal O ((h y).coeff (w y))).toNat ≤ v y :=
-    fun y => ENat.toNat_le_of_le_coe ((addVal_le_iff_not_dvd hϖ _ _).2 (hd y))
+    fun y => ENat.toNat_le_of_le_natCast ((addVal_le_iff_not_dvd hϖ _ _).2 (hd y))
   choose BB c hc hB using fun y => _root_.GlobalTheory.PolyCycloValue.value_at_root_sub_one O l hl h0 hu (h y) (w y) (hne y)
   refine ⟨Finset.univ.biUnion BB, Finset.card_biUnion_le.trans (Finset.sum_le_sum fun y _ =>
     (hc y).trans (Nat.add_le_add (hw y) (hval y))), ?_⟩
@@ -1073,9 +1073,9 @@ theorem order_eval : ∀ (O₀ : Type) [CommRing O₀] [IsDomain O₀] [IsDiscre
   intro O' _ _ _ _ _ hinj ζ hζ
   constructor
   · intro x
-    letI : Algebra O₀ O' := ((algebraMap O O').comp (algebraMap O₀ O)).toAlgebra
-    haveI : IsScalarTower O₀ O O' := IsScalarTower.of_algebraMap_eq' rfl
-    haveI : IsLocalHom (algebraMap O₀ O') :=
+    let : Algebra O₀ O' := ((algebraMap O O').comp (algebraMap O₀ O)).toAlgebra
+    have : IsScalarTower O₀ O O' := IsScalarTower.of_algebraMap_eq' rfl
+    have : IsLocalHom (algebraMap O₀ O') :=
       RingHom.isLocalHom_comp (algebraMap O O') (algebraMap O₀ O)
     have h := hb₁ k hk1 hkB.1 O' (hinj.comp hinj₀) ζ hζ x
     rw [aeval_subst] at h
@@ -1174,7 +1174,7 @@ theorem conjCl_of_isQ {ι : Type} {P : ι → PlE D.host} {Q : Finset (PlE D.hos
 theorem l_ne_zero_Ok (i : X.Tw) (k : ℕ) : ((X.l i : ℕ) : X.Ok i k) ≠ 0 ∧ ((X.l i : ℕ) : X.O i) ≠ 0 ∧
     ((X.l i : ℕ) : X.O0 i) ≠ 0 := by
   have hl : (X.l i).Prime := (X.lPrime i).out
-  haveI : NeZero (X.l i ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (X.l i ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have h1 : ((X.l i ^ 1 : ℕ) : X.Ok i 1) ≠ 0 := (IsPrimitiveRoot.neZero' (X.zk_prim i 1)).out
   rw [pow_one] at h1
   have h2 : ((X.l i : ℕ) : X.O i) ≠ 0 := fun h => h1 (by
@@ -1183,14 +1183,14 @@ theorem l_ne_zero_Ok (i : X.Tw) (k : ℕ) : ((X.l i : ℕ) : X.Ok i k) ≠ 0 ∧
     rw [← map_natCast (algebraMap (X.O0 i) (X.O i)), h, map_zero])⟩
 
 theorem isLocalHom_Ok (i : X.Tw) (k : ℕ) : IsLocalHom (algebraMap (X.O i) (X.Ok i k)) := by
-  haveI := X.Ok_fin i k
-  haveI : FaithfulSMul (X.O i) (X.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i k)
+  have := X.Ok_fin i k
+  have : FaithfulSMul (X.O i) (X.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i k)
   infer_instance
 
 theorem l_not_unit (i : X.Tw) (k : ℕ) : ¬ IsUnit ((X.l i : ℕ) : X.Ok i k) ∧ ¬ IsUnit ((X.l i : ℕ) : X.O i) ∧
     ¬ IsUnit ((X.l i : ℕ) : X.O0 i) := by
   have h2 : ¬ IsUnit ((X.l i : ℕ) : X.O i) := X.O_l i
-  haveI := isLocalHom_Ok i k
+  have := isLocalHom_Ok i k
   refine ⟨fun h => h2 (isUnit_of_map_unit (algebraMap (X.O i) (X.Ok i k)) _ (by rwa [map_natCast])), h2,
     fun h => h2 ?_⟩
   rw [← map_natCast (algebraMap (X.O0 i) (X.O i))]
@@ -1228,7 +1228,7 @@ theorem e_pos (h0 : (l : S) ≠ 0) (h1 : ¬ IsUnit (l : S)) :
 theorem addVal_l_pow (h0 : (l : S) ≠ 0) (n : ℕ) :
     IsDiscreteValuationRing.addVal S ((l : S) ^ n) = ((n * (IsDiscreteValuationRing.addVal S (l : S)).toNat : ℕ) : ℕ∞) := by
   rw [IsDiscreteValuationRing.addVal_pow, nsmul_eq_mul, Nat.cast_mul,
-    ENat.coe_toNat (by simpa [IsDiscreteValuationRing.addVal_eq_top_iff] using h0)]
+    ENat.natCast_toNat (by simpa [IsDiscreteValuationRing.addVal_eq_top_iff] using h0)]
 
 theorem nval_nonneg (x : S) : 0 ≤ nval S l x := by
   unfold nval
@@ -1247,7 +1247,7 @@ theorem valE_eq (h0 : (l : S) ≠ 0) (h1 : ¬ IsUnit (l : S)) {x : S} (hx : x �
 theorem nval_l_pow (h0 : (l : S) ≠ 0) (h1 : ¬ IsUnit (l : S)) (n : ℕ) : nval S l ((l : S) ^ n) = n := by
   have he := e_pos h0 h1
   unfold nval
-  rw [IsDiscreteValuationRing.addVal_pow, nsmul_eq_mul, ENat.toNat_mul, ENat.toNat_coe, Nat.cast_mul,
+  rw [IsDiscreteValuationRing.addVal_pow, nsmul_eq_mul, ENat.toNat_mul, ENat.toNat_natCast, Nat.cast_mul,
     mul_div_assoc, div_self (by exact_mod_cast he.ne'), mul_one]
 
 end Val
@@ -1294,7 +1294,7 @@ theorem exists_ine {i : X.Tw} {M : ℕ} (hM : 1 ≤ M) {A0 : Finset (PlE D.host)
   have hl : (X.l i).Prime := (X.lPrime i).out
   obtain ⟨σ, hσ, h1⟩ := (h.2.2 q).2.2.2.2 v hv A hA (Multiplicative.ofAdd 1)
   refine ⟨σ, hσ, ?_⟩
-  haveI : Fact (1 < X.l i ^ M) := ⟨Nat.one_lt_pow (by omega) hl.one_lt⟩
+  have : Fact (1 < X.l i ^ M) := ⟨Nat.one_lt_pow (by omega) hl.one_lt⟩
   rw [hψ, Finset.prod_eq_single q, h1, toAdd_ofAdd, ZMod.val_one, pow_one]
   · intro q' _ hq'
     rw [(h.2.2 q').2.2.2.1 v (fun hv' => hq' (h.2.1 q' q (over_of_over hv' hv))) A hA σ hσ]
@@ -1312,7 +1312,7 @@ theorem exists_factor (Y : NExp D.R D.host D.what₂ D.LL0 N X) (i : X.Tw) (M : 
     (hQ : ∀ v ∈ Q, v ∉ X.S0 i) :
     ∃ f : X.RCG i Q →* Multiplicative (DelQM D.host (X.l i) Q M), f.comp (X.art i Q) = Y.delU i Q M := by
   have hl : (X.l i).Prime := (X.lPrime i).out
-  haveI : NeZero (X.l i ^ M) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (X.l i ^ M) := ⟨pow_ne_zero _ hl.ne_zero⟩
   refine X.art_univ i Q (fun v hv h => hQ v hv (X.twistExcludedPlaces_contains_residueChar i h)) _ (fun x => ⟨M, ?_⟩) _ (Y.delU_open i Q M)
     (Y.delU_anti i Q M) (Y.delU_unr i Q M)
   apply Multiplicative.toAdd.injective
@@ -1385,18 +1385,18 @@ theorem exists_level (i : X.Tw) (R Dd nmax M₀ : ℕ) (I J : Type) [Finite I] [
             (v y : ℝ) / ((IsDiscreteValuationRing.addVal (X.O i) (X.l i : X.O i)).toNat : ℝ) + ε := by
   classical
   have hl : (X.l i).Prime := (X.lPrime i).out
-  haveI := X.twistBaseCoefficientRing_residueField_finite i
-  haveI := isLocalHom_O i
+  have := X.twistBaseCoefficientRing_residueField_finite i
+  have := isLocalHom_O i
   choose D1 g hDg using hf
   obtain ⟨M, k, e, hM, hk, hkM, he, H⟩ := _root_.GlobalTheory.OrderEval.order_eval (X.O0 i) (X.O i) (X.O_inj i) (X.l i) hl (l_ne_zero_Ok i 0).2.2
     (l_not_unit i 0).2.2 R Dd nmax M₀ I J (fun _ => μ) v (fun M x => if h : M₀ ≤ M then F M h x else 0)
     (fun M x => if h : M₀ ≤ M then f M h x else 0) (fun M x => if h : M₀ ≤ M then D1 M h x else 0)
     (fun M x => if h : M₀ ≤ M then g M h x else 0)
-    (fun M h x => by simp only [dif_pos h]; exact hF M h x) (fun M h y => by simp only [dif_pos h]; exact hDg M h y) ε hε
+    (fun M h x => by simp only [dite_eq_left h]; exact hF M h x) (fun M h y => by simp only [dite_eq_left h]; exact hDg M h y) ε hε
   refine ⟨M, hM, k, e, hk, hkM, he, fun ζ hζ => ?_⟩
-  haveI := isLocalHom_Ok i k
+  have := isLocalHom_Ok i k
   have := H (X.Ok i k) (X.Ok_inj i k) ζ hζ
-  simp only [dif_pos hM, MvPolynomial.aeval_def, MvPolynomial.eval₂_map] at this
+  simp only [dite_eq_left hM, MvPolynomial.aeval_def, MvPolynomial.eval₂_map] at this
   simp only [Units.val_pow_eq_pow_val, MvPolynomial.aeval_def]
   exact this
 

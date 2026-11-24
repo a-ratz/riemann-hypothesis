@@ -157,8 +157,8 @@ private theorem gMainV (hLit : GlobalTheory.Mem.LiteralAutomorphy.LitLoc) (gi : 
       exact ⟨v', hu, hdim.trans (hv b).2.1, he⟩
     choose v' hu hdim he using hv'
     choose Xs instA instM σ hs hi hsph hrc using fun b => sphOfUnrV H (d b) (v' b) (hu b) (hdim b)
-    letI := instA
-    letI := instM
+    let := instA
+    let := instM
     have hs' : ∀ b, IsSmooth (twist (σ b) (detChar (Fin (d b)) (η b))) :=
       fun b => isSmooth_twist (hs b) (hη b).detChar
     have hi' : ∀ b, (twist (σ b) (detChar (Fin (d b)) (η b))).IsIrreducible := fun b => isIrreducible_twist (hi b) _
@@ -185,8 +185,8 @@ private theorem gMainV (hLit : GlobalTheory.Mem.LiteralAutomorphy.LitLoc) (gi : 
     obtain ⟨e⟩ := IrrGL.of_eq_of.1 e2
     exact ⟨Xs, instA, instM, fun b => twist (σ b) (detChar (Fin (d b)) (η b)), hs', hi', hdet, ⟨e.symm⟩⟩
   · rintro ⟨Xs, instA, instM, σ, hs, hi, hdet, ⟨e⟩⟩
-    letI := instA
-    letI := instM
+    let := instA
+    let := instM
     have hI : (multiProd (stdBlocks d hd) σ).IsIrreducible := GlobalTheory.Parabolic.isIrreducible_of_equiv e x.2.rep.irr
     have hx : x = IrrGL.of (multiProd (stdBlocks d hd) σ) (isSmooth_parInd _ _) hI :=
       (IrrGL.of_rep x).symm.trans (IrrGL.of_eq_of.2 ⟨e⟩)

@@ -798,9 +798,9 @@ theorem exists_bezout {K : Type} [Field K] [NumberField K] (x : K) :
     rw [hSdef, FractionalIdeal.sup_eq_add, FractionalIdeal.sup_eq_add, add_mul]
   have h1 : (1 : K) ∈ S * S⁻¹ := by
     rw [mul_inv_cancel₀ hS]; exact FractionalIdeal.one_mem_one _
-  rw [hsplit S⁻¹, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_sup, Submodule.mem_sup] at h1
+  rw [hsplit S⁻¹, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_sup, Submodule.mem_sup] at h1
   obtain ⟨u, hu, v, hv, huv⟩ := h1
-  rw [FractionalIdeal.mem_coe, FractionalIdeal.mem_singleton_mul] at hu hv
+  rw [FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_singleton_mul] at hu hv
   obtain ⟨u', hu', rfl⟩ := hu
   obtain ⟨v', hv', rfl⟩ := hv
   obtain ⟨a, ha, ha'⟩ := hden u' hu'
@@ -870,8 +870,8 @@ theorem exists_extend {K : Type} [Field K] [NumberField K] {m : ℕ}
   have hs' : ⊤ ≤ Submodule.span K (L : Set (Fin m → K)) := hs.ge
   obtain ⟨ι, b, hb⟩ : ∃ (ι : Type) (b : Module.Basis ι K (Fin m → K)), ∀ i, b i ∈ L :=
     ⟨_, Module.Basis.ofSpan hs', fun i => Module.Basis.ofSpan_subset hs' ⟨i, rfl⟩⟩
-  haveI := Module.Finite.finite_basis b
-  haveI := Fintype.ofFinite ι
+  have := Module.Finite.finite_basis b
+  have := Fintype.ofFinite ι
   let G : (Fin m → K) →ₗ[K] K := b.constr K (fun i => algebraMap (𝓞 K) K (φ ⟨b i, hb i⟩))
   have hGb : ∀ i, G (b i) = algebraMap (𝓞 K) K (φ ⟨b i, hb i⟩) := fun i => b.constr_basis _ _ _
   refine ⟨G, fun x => ?_⟩
@@ -911,10 +911,10 @@ theorem mem_of_dot_integral : ∀ (K : Type) [Field K] [NumberField K] (m : ℕ)
       a ⬝ᵥ v ∈ (1 : Submodule (𝓞 K) K)) → v ∈ L := by
   intro K _ _ m L hL v hv
   obtain ⟨hfg, hspan⟩ := hL
-  haveI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.IsTorsionFree (𝓞 K) L := inferInstance
-  haveI : Module.FinitePresentation (𝓞 K) L := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 K) L := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hfg
+  have : Module.IsTorsionFree (𝓞 K) L := inferInstance
+  have : Module.FinitePresentation (𝓞 K) L := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 K) L := Module.Flat.projective_of_finitePresentation
   obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' (𝓞 K) L
   obtain ⟨s, hs⟩ := Module.projective_lifting_property f LinearMap.id hf
   let φ : Fin n → L →ₗ[𝓞 K] 𝓞 K := fun i => (LinearMap.proj i).comp s
@@ -1578,7 +1578,7 @@ theorem fibre_bound (c : Matrix (Fin m) (Fin m) E) (b : (Fin m → E) ⧸ lam c)
   have hidx' : delta c = (H.addSubgroupOf Kg).index := hidx
   have hcard : Nat.card (Kg ⧸ H.addSubgroupOf Kg) = delta c := by
     rw [hidx']; rfl
-  haveI : Finite (Kg ⧸ H.addSubgroupOf Kg) :=
+  have : Finite (Kg ⧸ H.addSubgroupOf Kg) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact hne)
   have hw : (Submodule.Quotient.mk (Quotient.out b) : (Fin m → E) ⧸ lam c) = b :=
     Quotient.out_eq' b
@@ -1719,8 +1719,8 @@ theorem summable_delta_rpow : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   induction n with
   | zero =>
     intro s _
-    haveI : Subsingleton (hermE σ 0) := ⟨fun a b => Subtype.ext (Matrix.ext fun i => i.elim0)⟩
-    haveI : Subsingleton (hermE σ 0 ⧸ hermO σ 0) := QuotientAddGroup.mk_surjective.subsingleton
+    have : Subsingleton (hermE σ 0) := ⟨fun a b => Subtype.ext (Matrix.ext fun i => i.elim0)⟩
+    have : Subsingleton (hermE σ 0 ⧸ hermO σ 0) := QuotientAddGroup.mk_surjective.subsingleton
     exact Summable.of_finite
   | succ n ih =>
     intro s hs

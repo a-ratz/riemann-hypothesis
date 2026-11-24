@@ -72,7 +72,7 @@ theorem um_eq_smul_of_sigmaCompact [SigmaCompactSpace G] (μ' μ : Measure G) [I
     measure_isMulInvariant_eq_smul_of_isCompact_closure_of_measurableSet μ' μ
       (hs.inter (isCompact_compactCovering G n).isClosed.measurableSet)
       ((isCompact_compactCovering G n).closure_of_subset inter_subset_right)
-  rw [← hU, hmono.measure_iUnion, Measure.smul_apply, hmono.measure_iUnion]
+  rw [← hU, hmono.measure_iUnion, smul_apply, hmono.measure_iUnion]
   simp only [key, ENNReal.smul_def, smul_eq_mul]
   rw [ENNReal.mul_iSup]
 
@@ -212,7 +212,7 @@ theorem um_rightInv (Γ : Subgroup G) [Countable Γ] (μ : Measure G) [IsHaarMea
   have hm : μ ((· * g) ⁻¹' 𝓕) = c * μ 𝓕 := by
     have : μ ((· * g) ⁻¹' 𝓕) = map (· * g) μ 𝓕 :=
       ((MeasurableEquiv.mulRight g).map_apply 𝓕).symm
-    rw [this, hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [this, hc, smul_apply, ENNReal.smul_def, smul_eq_mul]
   have hcoe : (c : ℝ≥0∞) = 1 := by
     have := h𝓕'.measure_eq h𝓕
     rw [hm] at this

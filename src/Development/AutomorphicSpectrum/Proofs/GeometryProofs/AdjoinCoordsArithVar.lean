@@ -148,7 +148,7 @@ namespace GlobalTheory.CompanionTheory.Ar.TupleCoords
 private theorem valR_eq_valMap {A : Type} [CommRing A] {X : Scheme} (x : Sp A ⟶ X)
     (U : X.Opens) (h : ⊤ ≤ (TopologicalSpace.Opens.map x.base).obj U) (f : X.presheaf.obj (op U)) :
     valR x U f = (GlobalTheory.Points.valMap x U h).hom f := by
-  simp only [valR, dif_pos h, GlobalTheory.Points.valMap, CommRingCat.hom_comp, RingHom.comp_apply]
+  simp only [valR, dite_eq_left h, GlobalTheory.Points.valMap, CommRingCat.hom_comp, RingHom.comp_apply]
 
 theorem exists_tuple_eq_point : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (r : ℕ) (p : Sp Ω ⟶ PSpace ℚ r),
     ∃ (x' : Fin (r + 1) → Ω) (hx' : x' ≠ 0), p = point ℚ x' hx' := by
@@ -213,7 +213,7 @@ theorem isReduced_image_of_quasiCompact {X Y : Scheme.{0}} [IsReduced X] (f : X 
     have : _root_.IsReduced Γ(f.image, f.imageι ⁻¹ᵁ U) :=
       isReduced_of_injective (f.toImage.app (f.imageι ⁻¹ᵁ U)).hom
         (f.toImage_app_injective ⟨U, hU⟩)
-    letI := f.image.presheaf.algebra_section_stalk (⟨x, hx'⟩ : f.imageι ⁻¹ᵁ U)
+    let := f.image.presheaf.algebra_section_stalk (⟨x, hx'⟩ : f.imageι ⁻¹ᵁ U)
     have := hV.isLocalization_stalk ⟨x, hx'⟩
     exact isReduced_localizationPreserves (hV.primeIdealOf ⟨x, hx'⟩).asIdeal.primeCompl _ ‹_›
   exact isReduced_of_isReduced_stalk f.image
@@ -257,10 +257,10 @@ namespace GlobalTheory.CompanionTheory.Ar.SncRes.ProdChart
 theorem isAffineOpen_fst_inf_snd {S X Y : Scheme.{0}} [IsAffine S] (f : X ⟶ S) (g : Y ⟶ S) {U : X.Opens}
     {V : Y.Opens} (hU : IsAffineOpen U) (hV : IsAffineOpen V) :
     IsAffineOpen (pullback.fst f g ⁻¹ᵁ U ⊓ pullback.snd f g ⁻¹ᵁ V) := by
-  haveI : IsAffine U.toScheme := hU
-  haveI : IsAffine V.toScheme := hV
+  have : IsAffine U.toScheme := hU
+  have : IsAffine V.toScheme := hV
   let m := pullback.map (U.ι ≫ f) (V.ι ≫ g) f g U.ι V.ι (𝟙 S) (by simp) (by simp)
-  haveI : IsOpenImmersion m :=
+  have : IsOpenImmersion m :=
     inferInstance
   have e : m.opensRange = pullback.fst f g ⁻¹ᵁ U ⊓ pullback.snd f g ⁻¹ᵁ V := by
     ext1
@@ -410,7 +410,7 @@ noncomputable section
 namespace GlobalTheory.CompanionTheory.Ar.SncRes
 
 theorem hom_to_spQ_ext {X : Scheme.{0}} (a b : X ⟶ Sp ℚ) : a = b := by
-  haveI : IsAffine (Sp ℚ) := inferInstanceAs (IsAffine (Spec (CommRingCat.of ℚ)))
+  have : IsAffine (Sp ℚ) := inferInstanceAs (IsAffine (Spec (CommRingCat.of ℚ)))
   apply ext_of_isAffine
   apply (cancel_epi (Scheme.ΓSpecIso (CommRingCat.of ℚ)).inv).mp
   apply CommRingCat.hom_ext
@@ -438,12 +438,12 @@ def valEquiv {Ω : Type} [Field Ω] [CharZero Ω] {Z : Scheme.{0}} (ζ : Sp Ω �
 
 theorem smoothOfRelativeDimension_basicOpen_of_away : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (Z : Scheme.{0}) (ζ : Sp Ω ⟶ Z) [IsDominant ζ] [IsReduced Z] (g : Z ⟶ Sp ℚ) (e : ℕ) (W : Z.Opens) (hW : IsAffineOpen W) (h : ⊤ ≤ ζ ⁻¹ᵁ W) (A : Subalgebra ℚ Ω) (hA : Set.range (valMap ζ W h).hom = A) (σ : Γ(Z, W)) (g₀ : A) (hg : (g₀ : Ω) = valR ζ W σ) [Algebra.IsStandardSmoothOfRelativeDimension e ℚ (Localization.Away g₀)], SmoothOfRelativeDimension e ((Z.basicOpen σ).ι ≫ g) := by
   intro Ω _ _ Z ζ _ _ g e W hW h A hA σ g₀ hg _
-  haveI := hW.isLocalization_basicOpen σ
+  have := hW.isLocalization_basicOpen σ
   have hE : valEquiv ζ W h A hA σ = g₀ := by
     apply Subtype.ext
     rw [hg]
     show (valMap ζ W h).hom σ = valR ζ W σ
-    simp only [valR, valMap, dif_pos h]
+    simp only [valR, valMap, dite_eq_left h]
     rfl
   let ψ : Γ(Z, Z.basicOpen σ) ≃+* Localization.Away g₀ :=
     IsLocalization.ringEquivOfRingEquiv (M := Submonoid.powers σ) (T := Submonoid.powers g₀) _ _ (valEquiv ζ W h A hA)
@@ -453,12 +453,12 @@ theorem smoothOfRelativeDimension_basicOpen_of_away : ∀ (Ω : Type) [Field Ω]
       by ext x; simp, by ext x; simp⟩⟩
   let f2 : Spec Γ(Z, Z.basicOpen σ) ⟶ Sp (Localization.Away g₀) :=
     Spec.map (CommRingCat.ofHom (ψ.symm : Localization.Away g₀ →+* Γ(Z, Z.basicOpen σ)))
-  haveI : IsIso f2 := by dsimp only [f2]; infer_instance
+  have : IsIso f2 := by dsimp only [f2]; infer_instance
   have key : (Z.basicOpen σ).ι ≫ g =
       ((hW.basicOpen σ).isoSpec.hom ≫ f2) ≫ spMap (algebraMap ℚ (Localization.Away g₀)) :=
     hom_to_spQ_ext _ _
   rw [key]
-  haveI := smoothOfRelativeDimension_spMap (Localization.Away g₀) e
+  have := smoothOfRelativeDimension_spMap (Localization.Away g₀) e
   have := smoothOfRelativeDimension_comp 0 e ((hW.basicOpen σ).isoSpec.hom ≫ f2)
     (spMap (algebraMap ℚ (Localization.Away g₀)))
   rwa [zero_add] at this

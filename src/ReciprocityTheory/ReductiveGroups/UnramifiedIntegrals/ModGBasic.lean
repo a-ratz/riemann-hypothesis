@@ -57,7 +57,7 @@ namespace ReciprocityTheory.ChartRestriction.L1
 
 theorem mem_Aio {d l : ℕ} [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (x : Om d) : x ∈ Aio d l ι ↔ ‖ι (x : ℂ)‖ ≤ 1 := by
   rw [Aio, ValuationSubring.mem_comap, Valuation.mem_valuationSubring_iff, NormedField.valuation_apply,
-    ← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+    ← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
   try exact Iff.rfl
 
 theorem mem_nonunits_Aio {d l : ℕ} [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (x : Om d) :

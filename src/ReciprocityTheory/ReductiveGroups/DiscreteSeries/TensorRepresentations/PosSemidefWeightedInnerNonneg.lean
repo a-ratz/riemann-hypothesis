@@ -182,7 +182,7 @@ theorem psi_twist_k_mul (dual : Bool) {ε : Fin n → Bool} {Λ : Fin n → ℝ}
     ob2B dual Ψ (S7.toMK k * E) ζ = ob2TauF dual T k (ob2B dual Ψ E ζ) := by
   funext c
 
-  simp only [ob2B, LinearMap.coe_mk, AddHom.coe_mk, ob2TauF, hΨ, tensor_phi_k_mul, ContinuousLinearMap.mul_apply,
+  simp only [ob2B, LinearMap.coe_mk, AddHom.coe_mk, ob2TauF, hΨ, tensor_phi_k_mul, mul_apply_eq_comp,
   map_sum, map_smul, Finset.smul_sum, Finset.sum_smul, smul_smul]
   rw [Finset.sum_comm]
 
@@ -277,7 +277,7 @@ theorem psi_pairing_nonneg (dual : Bool) {ε : Fin n → Bool} {lam lam' : Fin n
   have step : ∀ j, ob2SI (ob2B dual Ψ (S7.toMK k * E) (ι₀ (b j))) (ι₀ (Ψ' (S7.toMK k * E) (b j))) =
       ob2SI (ob2B dual Ψ E (ι₀ (b j))) (ι₀ (Ψ' E (b j))) := by
     intro j
-    rw [psi_twist_k_mul dual T Ψ k E hΨ, hΨ', ContinuousLinearMap.mul_apply, hK, k_twist_vector_inner_preserved]
+    rw [psi_twist_k_mul dual T Ψ k E hΨ, hΨ', mul_apply_eq_comp, hK, k_twist_vector_inner_preserved]
   rw [Finset.sum_congr rfl fun j _ => step j]
   have hQ := (hpos' Y hY).toLinearMap
   have hs := hQ.isSymmetric

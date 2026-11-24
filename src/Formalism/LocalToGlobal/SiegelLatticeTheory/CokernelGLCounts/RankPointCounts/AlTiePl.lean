@@ -217,7 +217,7 @@ def tensFrom : (mapPl j v).adicCompletion F' ⊗[F'] E' →+* v.adicCompletion F
 
 theorem tensTo_tmul (a : v.adicCompletion F) (e : E) :
     tensTo j k hjk v (a ⊗ₜ e) = compEquiv j v a ⊗ₜ k e := by
-  letI : Algebra F ((mapPl j v).adicCompletion F' ⊗[F'] E') :=
+  let : Algebra F ((mapPl j v).adicCompletion F' ⊗[F'] E') :=
     ((algebraMap F' ((mapPl j v).adicCompletion F' ⊗[F'] E')).comp j.toRingHom).toAlgebra
   unfold tensTo
   erw [Algebra.TensorProduct.productMap_apply_tmul]
@@ -226,7 +226,7 @@ theorem tensTo_tmul (a : v.adicCompletion F) (e : E) :
 
 theorem tensFrom_tmul (b : (mapPl j v).adicCompletion F') (e : E') :
     tensFrom j k hjk v (b ⊗ₜ e) = (compEquiv j v).symm b ⊗ₜ k.symm e := by
-  letI : Algebra F' (v.adicCompletion F ⊗[F] E) :=
+  let : Algebra F' (v.adicCompletion F ⊗[F] E) :=
     ((algebraMap F (v.adicCompletion F ⊗[F] E)).comp j.symm.toRingHom).toAlgebra
   unfold tensFrom
   erw [Algebra.TensorProduct.productMap_apply_tmul]

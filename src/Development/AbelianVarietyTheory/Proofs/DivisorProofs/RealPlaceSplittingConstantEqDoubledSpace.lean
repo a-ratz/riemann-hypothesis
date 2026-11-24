@@ -94,7 +94,7 @@ theorem continuous_blkGL [TopologicalSpace E] : Continuous (blkGL (β := β) (E 
   · exact Continuous.matrix_fromBlocks Units.continuous_coe_inv continuous_const continuous_const continuous_const
 
 theorem continuous_dblIncl [TopologicalSpace E] (JB : Matrix β β E) : Continuous (dblIncl c JB) :=
-  Continuous.subtype_mk (continuous_blkGL.comp continuous_subtype_val) _
+  Continuous.subtype_mk (continuous_blkGL.comp continuous_subtypeVal) _
 
 end Emb
 
@@ -227,7 +227,7 @@ theorem weight_single (P Q R S : ℕ) (c : InfinitePlace F → ℂ) (w₀ w : In
       (1 : Formalism.BasicNotions.TH.Pol P Q R S) := by
   by_cases hw : w = w₀
   · subst hw
-    simp only [if_true, LinearMap.add_apply, LinearMap.smul_apply, Module.End.one_apply]
+    simp only [ite_true, LinearMap.add_apply, LinearMap.smul_apply, Module.End.one_apply]
     rw [Matrix.smul_one_eq_diagonal, hvac, sum_signed_scalar, Matrix.trace_diagonal, add_smul]
     congr 2
     simp only [Finset.sum_const, Finset.card_univ, Fintype.card_sum, Fintype.card_fin, nsmul_eq_mul]
@@ -244,7 +244,7 @@ theorem weight_dbl (P Q R S : ℕ) (cd : InfinitePlace F → ℂ) (w₀ w : Infi
   congr 1
   by_cases hw : w = w₀
   · subst hw
-    simp only [if_true]
+    simp only [ite_true]
     rw [sum_signed_first, trace_first]
   · simp [hw]
 
@@ -310,7 +310,7 @@ theorem compare_of (hcen : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     (fun w => weight_single hvac P Q R S c w₀ w)
   have hsumd := sumPl_tprod (fun w => fockAct2 P Q (R + S) (S + R) (genDbl R S w₀ w) +
       (cd w * (genDbl R S w₀ w).trace) • 1) 1 _ (fun w => weight_dbl hvac P Q R S cd w₀ w)
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true] at hsum hsumd
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true] at hsum hsumd
   have hA := hact γ hγ _ hgen (PiTensorProduct.tprod ℂ fun _ => 1)
   rw [hsum, map_smul] at hA
   have hB := hactd _ hγd _ hgd (PiTensorProduct.tprod ℂ fun _ => 1)
@@ -358,11 +358,11 @@ theorem compare_of (hcen : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hB'' := (hA'.mul_const (φ₂ x₁)).const_mul z0
   have heq := hB''.unique hB'
   have v1 : pureA F (⇑(lam • f₁)) g₀ x₁ = lam * f₁ y := by
-    rw [hx₁, pureA_ptAt, hg₀0, SchwartzMap.smul_apply, smul_eq_mul, mul_one]
+    rw [hx₁, pureA_ptAt, hg₀0, smul_apply, smul_eq_mul, mul_one]
   have v2 : φ₂ x₁ = star (f₁ y) := by
     rw [hφ₂def, hx₁, pureA_ptAt, hg₀0, conjS_apply, mul_one]
   have v3 : pureA F (⇑(lamd • fd)) G xd = lamd * (z0 * f₁ y * star (f₁ y)) := by
-    rw [hxd, pureA_ptAt, SchwartzMap.smul_apply, smul_eq_mul, hfddef, hfd]
+    rw [hxd, pureA_ptAt, smul_apply, smul_eq_mul, hfddef, hfd]
     have hG0 : G 0 = 1 := by
       simp only [hGdef]
       rw [show ((0 : κ ⊕ κ → Af F) ∘ Sum.inl) = 0 from rfl, show ((0 : κ ⊕ κ → Af F) ∘ Sum.inr) = 0 from rfl, hg₀0, mul_one]

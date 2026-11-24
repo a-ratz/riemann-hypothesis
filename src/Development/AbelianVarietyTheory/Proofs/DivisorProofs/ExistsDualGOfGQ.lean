@@ -255,7 +255,7 @@ theorem mt_dualG_inv (g : GA D (dualSp S Λ hΛ)) :
     Formalism.L2.Theta.mt S (dualG S Λ hΛ g)⁻¹ = (Formalism.L2.Theta.mt (dualSp S Λ hΛ) g)ᵀ := rfl
 
 theorem continuous_dualG : Continuous (dualG S Λ hΛ) :=
-  (continuous_invT.comp continuous_subtype_val).subtype_mk _
+  (continuous_invT.comp continuous_subtypeVal).subtype_mk _
 
 theorem dualG_mem_GfC {g : GA D (dualSp S Λ hΛ)} (hg : g ∈ GfC (dualSp S Λ hΛ)) : dualG S Λ hΛ g ∈ GfC S := by
   have h : infHom S (dualG S Λ hΛ g) = invT (infHom (dualSp S Λ hΛ) g) := Units.ext rfl

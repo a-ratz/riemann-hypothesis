@@ -61,7 +61,7 @@ theorem maMeasure_thm : MaMeasureStatement := by
     fun hgi => (maMeasure_forward A Φ hΦ hPsh hg hgi).2⟩⟩
 
   rw [maMeasure_eq_sum A Φ hne]
-  haveI : ∀ j, IsFiniteMeasure (chartMeasure A hne.some Φ j) := fun j =>
+  have : ∀ j, IsFiniteMeasure (chartMeasure A hne.some Φ j) := fun j =>
     chartMeasure_finite A hne.some Φ hΦ hPsh j
   infer_instance
 theorem maMeasureMono : MaMeasureMonoStatement := by

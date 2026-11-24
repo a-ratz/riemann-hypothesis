@@ -89,7 +89,7 @@ private theorem cyc_ine (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
   show cyclotomicCharacter Ω l σ.toRingEquiv = 1
   refine Units.ext (PadicInt.ext_of_toZModPow.mp fun n => ?_)
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have hN0 : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
   have : NeZero (l ^ n) := ⟨hN0⟩
   have hspec := cyclotomicCharacter.spec (L := Ω) l σ.toRingEquiv ζ hζ.pow_eq_one
@@ -506,8 +506,8 @@ theorem UpperTheory.automorphic_forms_descent_to_smaller_level :
   obtain ⟨E, hE, hEr⟩ := GlobalTheory.CompactRepField.exists_finiteDimensional_entries_mem l Γ 4 P.r.toHomUnits
     fun i j => hc.matrix_elem i j
   let s : Set (PadicAlgCl l) := Set.range fun p : ι × Fin 4 × Fin 4 => P.n p.1 p.2.1 p.2.2
-  haveI : Finite s := (Set.finite_range _).to_subtype
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] s) :=
+  have : Finite s := (Set.finite_range _).to_subtype
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] s) :=
     IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
   obtain ⟨c₁, hcc, h₁⟩ := (UpperTheory.integrality_of_norm_coefficients l).1 c (IntermediateField.adjoin ℚ_[l] s ⊔ E) inferInstance
@@ -571,7 +571,7 @@ private theorem fin_v (w : ℤ × ℤ) (h : w ∉ nP) : w ∉ vV := by
 theorem UpperTheory.induced_final_statement_alt :
     _root_.UpperTheory.V.Sd.S2.Final_s := by
   intro Ω _ _ _ l _ c D T ι P hG hL hS
-  haveI : IsGalois T.F Ω := IsAlgClosure.isGalois T.F Ω
+  have : IsGalois T.F Ω := IsAlgClosure.isGalois T.F Ω
   obtain ⟨c₁, h, Q, hQ, hc⟩ := (UpperTheory.automorphic_forms_descent_to_smaller_level l c).2 T.ι (G T.F Ω) P hG.cont hG.int fun v => (hL.low v).2.1
   subst hQ
   have hinj : Function.Injective (algebraMap c₁.O (Qbar l)) := Subtype.val_injective
@@ -729,9 +729,9 @@ private theorem indEx (hP : MixOfP) :
       rw [MonoidHom.comp_apply, MonoidHom.div_apply, Units.val_div_eq_div_val, Units.val_one, sub_div, div_self this]
     rw [Cong, e, norm_div, hμ1, div_one]
     exact hmu g
-  haveI : FaithfulSMul k₀ Ω := (faithfulSMul_iff_algebraMap_injective k₀ Ω).2 (algebraMap k₀ Ω).injective
-  haveI : Module.IsTorsionFree k₀ Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure k₀ Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have : FaithfulSMul k₀ Ω := (faithfulSMul_iff_algebraMap_injective k₀ Ω).2 (algebraMap k₀ Ω).injective
+  have : Module.IsTorsionFree k₀ Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure k₀ Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
   refine ⟨k₀, ‹_›, ‹_›, φ, k, t, r, α, _, R, δ, ⟨hyp, hc, dat, rib, ns, hR,
     UpperTheory.continuous_mix_family l _ _ _ _ _ _ r R hR hemb dat.cont, hgsp, hαc, ?_, hδc, fun g => ?_, hδ1⟩, prIso k₀ Ω l ι 2 r₀ r iso hrw⟩
   · have e0 := congrArg Units.val (hc.mul 0 (resQ T.F T.g0))

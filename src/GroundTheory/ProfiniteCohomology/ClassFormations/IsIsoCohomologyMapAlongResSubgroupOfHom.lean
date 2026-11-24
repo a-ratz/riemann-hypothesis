@@ -154,13 +154,13 @@ variable {U V : Subgroup G} (h : V ≤ U)
 
 omit [IsTopologicalGroup G] in
 theorem continuous_subgroupOfEquivOfLe : Continuous (Subgroup.subgroupOfEquivOfLe h).toMonoidHom :=
-  (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+  (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
 
 
 omit [IsTopologicalGroup G] in
 theorem continuous_subgroupOfEquivOfLe_symm :
     Continuous (Subgroup.subgroupOfEquivOfLe h).symm.toMonoidHom :=
-  (continuous_subtype_val.subtype_mk _).subtype_mk _
+  (continuous_subtypeVal.subtype_mk _).subtype_mk _
 
 variable (A : Rep.{u} k G)
 

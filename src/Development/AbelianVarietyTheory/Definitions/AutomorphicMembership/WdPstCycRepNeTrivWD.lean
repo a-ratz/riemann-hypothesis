@@ -69,7 +69,7 @@ variable {LL} {V : Type} [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V]
 theorem apply_eq_of_nilpotent {W : Type} [AddCommGroup W] [Module ℂ W] (hd : finrank ℂ W = 1) {v : W}
     (hv : v ≠ 0) (u : End ℂ W) (hu : IsNilpotent (u - 1)) : u v = v := by
   obtain ⟨k, hk⟩ := hu
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' v hv).mp hd ((u - 1) v)
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' v hv).mp hd ((u - 1) v)
   have hp : ∀ n : ℕ, ((u - 1) ^ n) v = c ^ n • v := by
     intro n
     induction n with

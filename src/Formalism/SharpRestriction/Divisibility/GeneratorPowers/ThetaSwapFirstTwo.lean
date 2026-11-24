@@ -178,7 +178,7 @@ theorem cc_psTrunc {κ : Type} [Fintype κ] [DecidableEq κ] (m : ℕ) (f : MvPo
   rw [map_sum]
   simp only [MvPolynomial.constantCoeff_monomial]
   rw [Finset.sum_ite_eq']
-  rw [if_pos]
+  rw [ite_eq_left]
   · first
       | exact MvPowerSeries.coeff_zero_eq_constantCoeff_apply f
       | simp

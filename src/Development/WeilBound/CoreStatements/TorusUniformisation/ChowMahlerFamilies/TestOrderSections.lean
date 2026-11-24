@@ -230,8 +230,8 @@ open PositivityTheory.Xgn.FunctionFamilyIdempotent in
 theorem bt_mul [IsNoetherianRing (CR O y c')] [IsIntegrallyClosed (CR O y c')] [IsFractionRing (CR O y c') Ω]
     [Finite (TorsT E (D.p + D.q) p)] (P : ChartPack G O c') (a : 𝓞 E) :
     ∀ f ∈ P.Γ₁.btOrder ⊤, (fun t => f (mulT _ p a t)) ∈ P.Γ₁.btOrder ⊤ := by
-  haveI := 𝔐.t.act.hom a
-  haveI := frac_epi (CR O y c')
+  have := 𝔐.t.act.hom a
+  have := frac_epi (CR O y c')
   refine (_root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ _ 𝔐.t.G P.x p P.i₁ P.tors₁
     𝔐.t.semi.smooth).2.2.2.1 (𝔐.t.act.act a) (mulT _ p a) ?_
   intro t
@@ -293,12 +293,12 @@ theorem PositivityTheory.Xgn.test_order_sections : ∀ (E : Type) [Field E] [Num
     t₀ Sg _ e φ' F _ _ _ pq sc w σ hO hsec G c' hc' P i _ _ C _ _ _ _ RC hT χ _ _ _ _
   obtain ⟨hch, hno, hic, hfr, -⟩ := PositivityTheory.Xgn.torsion_packing_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hV p hpS A m hpm O c' hc'
   obtain ⟨halg, ⟨v, hv, hvp⟩, -, hR⟩ := hT
-  haveI : CharZero C := charZero_of_injective_algebraMap (algebraMap Ω C).injective
+  have : CharZero C := charZero_of_injective_algebraMap (algebraMap Ω C).injective
   have hvI : v.Integers RC :=
     ⟨Subtype.val_injective, fun x => (hv x).1 x.2, fun r hr => ⟨⟨r, (hv r).2 hr⟩, rfl⟩⟩
-  haveI : ValuationRing RC := ValuationRing.of_integers v hvI
-  haveI : IsFractionRing RC C := hvI.isFractionRing
-  haveI := finite_tors (E := E) (D.p + D.q) (p_ne_zero pq sc hsec)
+  have : ValuationRing RC := ValuationRing.of_integers v hvI
+  have : IsFractionRing RC C := hvI.isFractionRing
+  have := finite_tors (E := E) (D.p + D.q) (p_ne_zero pq sc hsec)
   obtain ⟨AA, hAA⟩ := ord_hopf P RC hR
   have hret := ord_ret P RC hsec
   rw [← hAA] at hret

@@ -67,7 +67,7 @@ theorem IsDiscreteRep.res {φ : H →* G} (hφ : Continuous φ) (A : Rep.{u} k G
     exact (GroundTheory.ProfCoh.isOpen_stabilizer A a).preimage hφ⟩
 
 theorem continuous_subgroup_subtype (S : Subgroup G) : Continuous S.subtype :=
-  continuous_subtype_val
+  continuous_subtypeVal
 
 theorem continuous_quotientGroup_mk' (N : Subgroup G) [N.Normal] :
     Continuous (QuotientGroup.mk' N) :=

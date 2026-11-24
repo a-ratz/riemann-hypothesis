@@ -60,8 +60,8 @@ open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.Genus
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n : ℕ} {v : Pl F}
 
 theorem unramAt {B : Base F E} (hB : B.IsGood σ) (v : Pl F) : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryLatticeOrthogonal.UnramAt F E v := fun w hw => by
-  haveI := hB.unram
-  haveI := w.isPrime
+  have := hB.unram
+  have := w.isPrime
   exact w.asIdeal.ramificationIdx_eq_one (𝓞 F)
 
 omit [NumberField F] [NumberField E] in

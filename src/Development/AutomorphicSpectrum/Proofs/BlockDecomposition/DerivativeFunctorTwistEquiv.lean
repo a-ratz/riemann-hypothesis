@@ -65,7 +65,7 @@ theorem twKer_twist {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
   unfold twKer
   congr 1
   ext w
-  simp only [Set.mem_setOf_eq, twist_apply, h, Units.val_one, one_smul]
+  simp only [Set.mem_ofPred_eq, twist_apply, h, Units.val_one, one_smul]
 
 theorem det_glEmbMat (n : ℕ) (A : Matrix (Fin n) (Fin n) k) : (glEmbMat k n A).det = A.det := by
   rw [Matrix.det_succ_row _ (Fin.last n), Fin.sum_univ_castSucc]
@@ -82,7 +82,7 @@ theorem det_unip (n : ℕ) (v : Multiplicative (Fin n → k)) :
     ((unip k n v : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k).det = 1 := by
   have e : ((unip k n v : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) =
       1 + colMat k n v.toAdd := rfl
-  rw [e, Matrix.det_of_upperTriangular]
+  rw [e, det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     induction i using Fin.lastCases with
     | last => simp [colMat]

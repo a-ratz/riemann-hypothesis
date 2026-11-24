@@ -131,7 +131,7 @@ theorem exists_coercive [FiniteDimensional ℝ E] (B : E →L[ℝ] E →L[ℝ] �
       have h1 : B u u ≤ B x0 x0 := hmax hun
       have h2 : B x x = ‖x‖ ^ 2 * B u u := by
         conv_lhs => rw [hxu]
-        simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]; ring
+        simp only [map_smul, smul_apply, smul_eq_mul]; ring
       rw [h2]
       nlinarith [sq_nonneg ‖x‖]
 

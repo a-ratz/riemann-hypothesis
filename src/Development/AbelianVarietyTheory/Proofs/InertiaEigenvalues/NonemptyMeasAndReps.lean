@@ -136,17 +136,17 @@ theorem exists_isHaarMeasure_units_div_module : ∀ (R : Type) [CommRing R] [Top
   set f : Rˣ → NNReal := fun u => distribHaarChar R u⁻¹ with hf
   have hfc : Continuous f := hc.comp continuous_inv
   have hνa : ∀ s : Set Rˣ, ν s = μ (Units.val '' s) := fun s => hme.comap_apply μ s
-  haveI : IsLocallyFiniteMeasure ν := by
+  have : IsLocallyFiniteMeasure ν := by
     refine ⟨fun x => ?_⟩
     obtain ⟨s, hs, hs'⟩ := μ.finiteAt_nhds (x : R)
     refine ⟨Units.val ⁻¹' s, hoe.continuous.continuousAt.preimage_mem_nhds hs, ?_⟩
     rw [hνa]
     exact (measure_mono (Set.image_preimage_subset _ _)).trans_lt hs'
-  haveI : ν.IsOpenPosMeasure := by
+  have : ν.IsOpenPosMeasure := by
     refine ⟨fun U hU hn => ?_⟩
     rw [hνa]
     exact (hoe.isOpenMap U hU).measure_ne_zero μ (hn.image _)
-  haveI := IsLocallyFiniteMeasure.withDensity_coe (μ := ν) hfc
+  have := IsLocallyFiniteMeasure.withDensity_coe (μ := ν) hfc
   have hpos : (ν.withDensity fun x => (f x : ENNReal)).IsOpenPosMeasure := by
     refine (withDensity_absolutelyContinuous' (μ := ν)
       (hfc.measurable.coe_nnreal_ennreal.aemeasurable) ?_).isOpenPosMeasure
@@ -158,7 +158,7 @@ theorem exists_isHaarMeasure_units_div_module : ∀ (R : Type) [CommRing R] [Top
       (Homeomorph.mulLeft a).measurableEmbedding
     have hmap : Measure.map (fun x : Rˣ => a * x) ν = (f a : ENNReal) • ν := by
       ext s hs
-      rw [hma.map_apply, Measure.smul_apply, hνa, hνa, smul_eq_mul, hf,
+      rw [hma.map_apply, smul_apply, hνa, hνa, smul_eq_mul, hf,
         distribHaarChar_mul μ a⁻¹]
       congr 1
       ext y
@@ -288,7 +288,7 @@ theorem top_facts (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F] [
     IsTopologicalAddGroup V ∧ T2Space V ∧ LocallyCompactSpace V ∧ SecondCountableTopology V ∧
       ∃ S : Set V, IsOpen S ∧ IsCompact S ∧ S.Nonempty := by
   have : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
-  have : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup F V
+  have : IsTopologicalAddGroup V := IsModuleTopology.isTopologicalAddGroup F V
   let b := Module.finBasis F V
   have : T2Space V := .of_injective_continuous b.equivFun.injective
     (IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap)

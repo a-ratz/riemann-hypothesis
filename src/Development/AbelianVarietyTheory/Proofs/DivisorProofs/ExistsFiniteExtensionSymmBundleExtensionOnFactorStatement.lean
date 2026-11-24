@@ -369,11 +369,11 @@ namespace GlobalTheory.SquareNear
 theorem stalk_props : ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'], AdmBase R' (maximalIdeal R') → ∀ (G₁ : Over (Sp R')) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ x : G₁.left, IsDomain (G₁.left.presheaf.stalk x) ∧ IsNoetherianRing (G₁.left.presheaf.stalk x) ∧ IsIntegrallyClosed (G₁.left.presheaf.stalk x) := by
   intro R' _ _ _ hA G₁ _ _ hG x
   obtain ⟨_, -, _, -⟩ := hA
-  haveI := hG.smooth
+  have := hG.smooth
   have hS : GlobalTheory.IsNormalScheme (Sp R') := inferInstance
   have h := GlobalTheory.forall_isDomain_and_isIntegrallyClosed_stalk_of_smooth G₁.hom
     ((GlobalTheory.isNormalScheme_iff _).mp hS) x
-  haveI : IsLocallyNoetherian G₁.left := LocallyOfFiniteType.isLocallyNoetherian G₁.hom
+  have : IsLocallyNoetherian G₁.left := LocallyOfFiniteType.isLocallyNoetherian G₁.hom
   exact ⟨h.1, inferInstance, h.2⟩
 
 end GlobalTheory.SquareNear
@@ -513,7 +513,7 @@ theorem exists_mul_of_dvd [IsIntegral X] (W : X.Opens) (a b : Γ(X, W)) (hb : �
       gs (𝟙 X) y W a = gs (𝟙 X) y V w * gs (𝟙 X) y W b := by
     intro x
     obtain ⟨c, hc⟩ := h x.1 x.2
-    obtain ⟨V, hV, w, rfl⟩ := X.presheaf.germ_exist c
+    obtain ⟨V, hV, w, rfl⟩ := X.presheaf.exists_germ_eq c
     have hx : x.1 ∈ V ⊓ W := ⟨hV, x.2⟩
     refine ⟨V ⊓ W, hx, inf_le_right, (X.presheaf.map (homOfLE inf_le_left).op).hom w, fun y hy => ?_⟩
     have e : (X.presheaf.map (homOfLE (inf_le_right : V ⊓ W ≤ W)).op).hom a =
@@ -660,16 +660,16 @@ end Generic
 
 theorem exists_sec_sq_of_double : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → Function.Surjective (pullback.snd G.hom (jK R)).appTop.hom → ∀ (Lθ : LB (pullback G.hom (jK R))) (hθ : Lθ.IsLB) (θ : Lθ.Sec), (∃ i, θ.f i ≠ 0) → ∀ (L2 : LB G.left) (h2 : L2.IsLB), 2 • GlobalTheory.CechPic.cls Lθ hθ = GlobalTheory.CechPic.pull (pullback.fst G.hom (jK R)) (GlobalTheory.CechPic.cls L2 h2) → ∀ φ : pullback G.hom (jK R) ⟶ pullback G.hom (jK R), φ ≫ pullback.fst G.hom (jK R) = pullback.fst G.hom (jK R) ≫ ((𝟙 G) ^ 2 : G ⟶ G).left → GlobalTheory.CechPic.pull φ (GlobalTheory.CechPic.cls Lθ hθ) = 4 • GlobalTheory.CechPic.cls Lθ hθ → ∃ h : L2.Sec, (∀ j i, ∃ w : Γ(pullback G.hom (jK R), pullback.fst G.hom (jK R) ⁻¹ᵁ L2.U j ⊓ Lθ.U i)ˣ, ((pullback G.hom (jK R)).presheaf.map (homOfLE inf_le_right).op).hom (θ.f i) ^ 2 = (w : Γ(pullback G.hom (jK R), pullback.fst G.hom (jK R) ⁻¹ᵁ L2.U j ⊓ Lθ.U i)) * ((pullback G.hom (jK R)).presheaf.map (homOfLE inf_le_left).op).hom (((pullback.fst G.hom (jK R)).app (L2.U j)).hom (h.f j))) ∧ (∀ (x' : G.left) (k : L2.ι), ((𝟙 G) ^ 2 : G ⟶ G).left x' ∈ L2.U k → gs ((𝟙 G) ^ 2 : G ⟶ G).left x' (L2.U k) (h.f k) ≠ 0 ∧ ∃ (u : (G.left.presheaf.stalk x')ˣ) (g : G.left.presheaf.stalk x'), gs ((𝟙 G) ^ 2 : G ⟶ G).left x' (L2.U k) (h.f k) = u * g ^ 2) := by
   intro R _ _ _ hA G _ _ hG hK Lθ hθ θ hne L2 h2 e2 φ hφ e4
-  haveI : IsIntegrallyClosed R := hA.2.2.1
-  haveI : IsNoetherianRing R := hA.1
-  haveI : Smooth G.hom := hG.smooth
-  haveI : IsSeparated G.hom := hG.separated
-  haveI : QuasiCompact G.hom := hG.quasiCompact
-  haveI : GeometricallyConnected G.hom := hG.geomConnected
-  haveI : GeometricallyIntegral G.hom := GlobalTheory.geometricallyIntegral_of_smooth G.hom
-  haveI : IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
-  haveI : IsIntegral (pullback G.hom (jK R)) := GlobalTheory.isIntegral_pullback_of_smooth G.hom (jK R)
-  haveI : Flat (jK R) := (HasRingHomProperty.Spec_iff (P := @Flat)).2
+  have : IsIntegrallyClosed R := hA.2.2.1
+  have : IsNoetherianRing R := hA.1
+  have : Smooth G.hom := hG.smooth
+  have : IsSeparated G.hom := hG.separated
+  have : QuasiCompact G.hom := hG.quasiCompact
+  have : GeometricallyConnected G.hom := hG.geomConnected
+  have : GeometricallyIntegral G.hom := GlobalTheory.geometricallyIntegral_of_smooth G.hom
+  have : IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
+  have : IsIntegral (pullback G.hom (jK R)) := GlobalTheory.isIntegral_pullback_of_smooth G.hom (jK R)
+  have : Flat (jK R) := (HasRingHomProperty.Spec_iff (P := @Flat)).2
     (RingHom.flat_algebraMap_iff.2 (IsLocalization.flat _ (nonZeroDivisors R)))
   have hfl := (GlobalTheory.SemiAbMulFlat.flat_and_locallyQuasiFinite_pow _ G hG 2 two_ne_zero).1
   generalize ((𝟙 G) ^ 2 : G ⟶ G) = f at hφ hfl ⊢
@@ -857,7 +857,7 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
           V k ⊓ V l ⊓ V m ≤ V k ⊓ V m)).op).hom (hc k m)
     simp only [map_mul, rs_rs] at e1 e2 e3
     apply cancel_nzd (ha m (V k ⊓ V l ⊓ V m) inf_le_right)
-    simp only [res, Units.coe_map, MonoidHom.coe_coe, Units.val_mul]
+    simp only [res, Units.coe_map, MonoidHom.coe_ofClass, Units.val_mul]
     rw [_root_.mul_assoc, ← e2, ← e1, e3]
   have Y1 : ∀ k l i i',
       res (inf_inf_le_inf_left (j ⁻¹ᵁ V k) (j ⁻¹ᵁ V l) (L.U i) (L.U i')) (w k i) =
@@ -1075,7 +1075,7 @@ theorem GlobalTheory.Mum.unit_mul_sq_spread : ∀ (X : Scheme.{0}) (L2 : LB X) (
     have e6 := congrArg (X.presheaf.map (homOfLE (inf_le_left : W₄ ⊓ W₅ ⊓ L2.U j ≤ W₄ ⊓ W₅)).op).hom e₅'
     rw [map_mul, map_pow, hH, res_res_hom, res_res_hom, res_res_hom] at e6
     rw [Units.val_mul, Units.coe_map, res, Units.coe_map]
-    simp only [MonoidHom.coe_coe, hA, res_res_hom] at e6 ⊢
+    simp only [MonoidHom.coe_ofClass, hA, res_res_hom] at e6 ⊢
     rw [c, e6, _root_.mul_assoc]
     congr 2
     exact (res_res_hom lV3 _ U').symm
@@ -1098,13 +1098,13 @@ namespace GlobalTheory.Mum.LocalInj
 
 theorem base_to_stalk_injective : ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'], AdmBase R' (maximalIdeal R') → ∀ (G₁ : Over (Sp R')) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ x : G₁.left, Function.Injective ((G₁.left.presheaf.germ ⊤ x trivial).hom.comp ((G₁.hom.appTop).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R')).inv.hom)) := by
   intro R' _ _ _ _ G₁ _ _ hG x
-  haveI : Smooth G₁.hom := hG.smooth
-  haveI : Flat G₁.hom := inferInstance
+  have : Smooth G₁.hom := hG.smooth
+  have : Flat G₁.hom := inferInstance
 
   have hst : Function.Injective (G₁.hom.stalkMap x).hom := by
     have h := Flat.stalkMap G₁.hom x
-    letI := (G₁.hom.stalkMap x).hom.toAlgebra
-    haveI : Module.Flat ((Sp R').presheaf.stalk (G₁.hom x)) (G₁.left.presheaf.stalk x) := h
+    let := (G₁.hom.stalkMap x).hom.toAlgebra
+    have : Module.Flat ((Sp R').presheaf.stalk (G₁.hom x)) (G₁.left.presheaf.stalk x) := h
     have : IsLocalHom (algebraMap ((Sp R').presheaf.stalk (G₁.hom x)) (G₁.left.presheaf.stalk x)) :=
       inferInstanceAs (IsLocalHom (G₁.hom.stalkMap x).hom)
     have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := (Sp R').presheaf.stalk (G₁.hom x))
@@ -1115,7 +1115,7 @@ theorem base_to_stalk_injective : ∀ (R' : Type) [CommRing R'] [IsDomain R'] [I
     have hU := isAffineOpen_top (Sp R')
     let _ := (Sp R').presheaf.algebra_section_stalk (U := ⊤) ⟨G₁.hom x, trivial⟩
     have := hU.isLocalization_stalk ⟨G₁.hom x, trivial⟩
-    haveI : IsDomain Γ(Sp R', ⊤) :=
+    have : IsDomain Γ(Sp R', ⊤) :=
       (Scheme.ΓSpecIso (CommRingCat.of R')).commRingCatIsoToRingEquiv.toMulEquiv.isDomain_iff.mpr inferInstance
     exact IsLocalization.injective (M := (hU.primeIdealOf ⟨G₁.hom x, trivial⟩).asIdeal.primeCompl)
       (S := (Sp R').presheaf.stalk ((⟨G₁.hom x, trivial⟩ : (⊤ : (Sp R').Opens)) : Sp R'))
@@ -1165,7 +1165,7 @@ theorem ideal_map_stalk_isPrime_of_closedPoint : ∀ (R' : Type) [CommRing R'] [
     rw [← TopCat.Presheaf.germ_res G₁.left.presheaf (homOfLE le_top : U ⟶ ⊤) x hxU]
     rfl
   rw [hφ, ← Ideal.map_map]
-  letI : Algebra R' A := ψ.toAlgebra
+  let : Algebra R' A := ψ.toAlgebra
 
   have hnu : ∀ r ∈ q, ¬ IsUnit ((G₁.left.presheaf.germ U x hxU).hom (ψ r)) := by
     intro r hr hu
@@ -1178,19 +1178,19 @@ theorem ideal_map_stalk_isPrime_of_closedPoint : ∀ (R' : Type) [CommRing R'] [
     rw [hx] at hu
     exact hu (IsLocalRing.le_maximalIdeal hq.ne_top hr)
   set P := hU.primeIdealOf ⟨x, hxU⟩
-  letI : Algebra A (G₁.left.presheaf.stalk x) := TopCat.Presheaf.algebra_section_stalk G₁.left.presheaf ⟨x, hxU⟩
-  haveI := hU.isLocalization_stalk ⟨x, hxU⟩
+  let : Algebra A (G₁.left.presheaf.stalk x) := TopCat.Presheaf.algebra_section_stalk G₁.left.presheaf ⟨x, hxU⟩
+  have := hU.isLocalization_stalk ⟨x, hxU⟩
   have hle : Ideal.map ψ q ≤ P.asIdeal := by
     rw [Ideal.map_le_iff_le_comap]
     intro r hr
     rw [Ideal.mem_comap, ← IsLocalization.AtPrime.to_map_mem_maximal_iff (G₁.left.presheaf.stalk x) P.asIdeal]
     exact hnu r hr
   have hI : (Ideal.map ψ q).IsPrime := by
-    haveI := hq
+    have := hq
     have hne : Ideal.map ψ q ≠ ⊤ := fun h => P.isPrime.ne_top (top_le_iff.mp (h ▸ hle))
     let e := Algebra.TensorProduct.quotIdealMapEquivTensorQuot (A := R') A q
-    haveI : Nontrivial (A ⧸ Ideal.map (algebraMap R' A) q) := Ideal.Quotient.nontrivial_iff.mpr hne
-    haveI : Nontrivial (TensorProduct R' A (R' ⧸ q)) := e.symm.toEquiv.nontrivial
+    have : Nontrivial (A ⧸ Ideal.map (algebraMap R' A) q) := Ideal.Quotient.nontrivial_iff.mpr hne
+    have : Nontrivial (TensorProduct R' A (R' ⧸ q)) := e.symm.toEquiv.nontrivial
     have eSp : Spec.map (CommRingCat.ofHom (algebraMap R' A)) = hU.fromSpec ≫ G₁.hom := by
       apply ext_of_isAffine
       have h1 := Scheme.ΓSpecIso_naturality (CommRingCat.ofHom (algebraMap R' A))
@@ -1202,17 +1202,17 @@ theorem ideal_map_stalk_isPrime_of_closedPoint : ∀ (R' : Type) [CommRing R'] [
       erw [CategoryTheory.Functor.map_id, Category.comp_id]
       ext r
       simp [ψ, RingHom.algebraMap_toAlgebra]
-    haveI : IsIntegral (Spec (CommRingCat.of (R' ⧸ q))) :=
+    have : IsIntegral (Spec (CommRingCat.of (R' ⧸ q))) :=
       (affine_isIntegral_iff _).mpr (inferInstanceAs (IsDomain (R' ⧸ q)))
-    haveI : IsIntegral (pullback G₁.hom (Spec.map (CommRingCat.ofHom (algebraMap R' (R' ⧸ q))))) :=
+    have : IsIntegral (pullback G₁.hom (Spec.map (CommRingCat.ofHom (algebraMap R' (R' ⧸ q))))) :=
       GlobalTheory.isIntegral_pullback_of_smooth _ _
     let j := (pullbackSpecIso R' A (R' ⧸ q)).inv ≫ (pullback.congrHom eSp rfl).hom ≫
       (pullbackRightPullbackFstIso G₁.hom _ hU.fromSpec).inv ≫ pullback.snd _ _
-    haveI : Nonempty (Spec (CommRingCat.of (TensorProduct R' A (R' ⧸ q)))) :=
+    have : Nonempty (Spec (CommRingCat.of (TensorProduct R' A (R' ⧸ q)))) :=
       inferInstanceAs (Nonempty (PrimeSpectrum _))
-    haveI := isIntegral_of_isOpenImmersion j
-    haveI hdom := (affine_isIntegral_iff _).mp this
-    haveI : IsDomain (A ⧸ Ideal.map (algebraMap R' A) q) := MulEquiv.isDomain _ e.toRingEquiv.toMulEquiv
+    have := isIntegral_of_isOpenImmersion j
+    have hdom := (affine_isIntegral_iff _).mp this
+    have : IsDomain (A ⧸ Ideal.map (algebraMap R' A) q) := MulEquiv.isDomain _ e.toRingEquiv.toMulEquiv
     exact (Ideal.Quotient.isDomain_iff_prime _).mp this
   exact IsLocalization.isPrime_of_isPrime_disjoint P.asIdeal.primeCompl _ _ hI
     (Set.disjoint_left.mpr fun a ha h => ha (hle h))
@@ -1313,10 +1313,10 @@ end GlobalTheory.SqGlue
 open GlobalTheory.SqGlue in
 theorem GlobalTheory.SqGlue.main : ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'], AdmBase R' (maximalIdeal R') → ∀ (G₁ : Over (Sp R')) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ (L2 : LB G₁.left), L2.IsLB → ∀ (h : L2.Sec) (Lθ : LB (pullback G₁.hom (jK R'))) (θ : Lθ.Sec), (∀ j i, ∃ w : Γ(pullback G₁.hom (jK R'), pullback.fst G₁.hom (jK R') ⁻¹ᵁ L2.U j ⊓ Lθ.U i)ˣ, ((pullback G₁.hom (jK R')).presheaf.map (homOfLE inf_le_right).op).hom (θ.f i) ^ 2 = (w : Γ(pullback G₁.hom (jK R'), pullback.fst G₁.hom (jK R') ⁻¹ᵁ L2.U j ⊓ Lθ.U i)) * ((pullback G₁.hom (jK R')).presheaf.map (homOfLE inf_le_left).op).hom (((pullback.fst G₁.hom (jK R')).app (L2.U j)).hom (h.f j))) → ∀ (Ix : Type) (V : Ix → G₁.left.Opens) (a : ∀ k, Γ(G₁.left, V k)), (∀ k, a k ≠ 0) → (∀ k j, ∃ u : Γ(G₁.left, V k ⊓ L2.U j)ˣ, (G₁.left.presheaf.map (homOfLE inf_le_right).op).hom (h.f j) = (u : Γ(G₁.left, V k ⊓ L2.U j)) * (G₁.left.presheaf.map (homOfLE inf_le_left).op).hom (a k) ^ 2) → (∀ k l, ∃ c : Γ(G₁.left, V k ⊓ V l)ˣ, (G₁.left.presheaf.map (homOfLE inf_le_left).op).hom (a k) ^ 2 = (c : Γ(G₁.left, V k ⊓ V l)) * (G₁.left.presheaf.map (homOfLE inf_le_right).op).hom (a l) ^ 2) ∧ (∀ k i, ∃ w : Γ(pullback G₁.hom (jK R'), pullback.fst G₁.hom (jK R') ⁻¹ᵁ V k ⊓ Lθ.U i)ˣ, ((pullback G₁.hom (jK R')).presheaf.map (homOfLE inf_le_right).op).hom (θ.f i) ^ 2 = (w : Γ(pullback G₁.hom (jK R'), pullback.fst G₁.hom (jK R') ⁻¹ᵁ V k ⊓ Lθ.U i)) * ((pullback G₁.hom (jK R')).presheaf.map (homOfLE inf_le_left).op).hom (((pullback.fst G₁.hom (jK R')).app (V k)).hom (a k)) ^ 2) := by
   intro R' _ _ _ _ G₁ _ _ hsemi L2 hL h Lθ θ hθ Ix V a hne hu
-  haveI : Smooth G₁.hom := hsemi.smooth
-  haveI : GeometricallyConnected G₁.hom := hsemi.geomConnected
-  haveI : IsIntegral G₁.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G₁
-  haveI : IsIntegral (pullback G₁.hom (jK R')) := GlobalTheory.isIntegral_pullback_of_smooth G₁.hom (jK R')
+  have : Smooth G₁.hom := hsemi.smooth
+  have : GeometricallyConnected G₁.hom := hsemi.geomConnected
+  have : IsIntegral G₁.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G₁
+  have : IsIntegral (pullback G₁.hom (jK R')) := GlobalTheory.isIntegral_pullback_of_smooth G₁.hom (jK R')
   have hcov : ∀ x : G₁.left, ∃ j, x ∈ L2.U j := fun x => by
     have : x ∈ (⊤ : G₁.left.Opens) := trivial
     rw [← hL.cover] at this
@@ -1427,7 +1427,7 @@ theorem exists_of_stalk {X Y : Scheme.{0}} (f : Y ⟶ X) (x : X) (q : Spec (X.pr
     rw [Scheme.Hom.germ_stalkMap, Scheme.fromSpecStalk_app hx]
     simp only [Category.assoc, TopCat.Presheaf.germ_res]
     rfl
-  letI : Algebra (X.presheaf.stalk x) ((Spec (X.presheaf.stalk x)).presheaf.stalk q) :=
+  let : Algebra (X.presheaf.stalk x) ((Spec (X.presheaf.stalk x)).presheaf.stalk q) :=
     (StructureSheaf.toStalk (X.presheaf.stalk x) q).hom.toAlgebra
   have hl : IsLocalization.AtPrime ((Spec (X.presheaf.stalk x)).presheaf.stalk q) q.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk (X.presheaf.stalk x) q
@@ -1733,14 +1733,14 @@ theorem extends_near (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (hA : 
     exists_open_unit_mul_sq R hA G hG L2 h2 h Lθ hθ θ hc hs x.1 x.2
   choose V hxV a ha hu using hY
   obtain ⟨hsq, hθa⟩ := GlobalTheory.SqGlue.main R hA G hG L2 h2 h _ θ hc _ V a ha hu
-  haveI : IsIntegrallyClosed R := hA.2.2.1
-  haveI : IsNoetherianRing R := hA.1
-  haveI : Smooth G.hom := hG.smooth
-  haveI : GeometricallyConnected G.hom := hG.geomConnected
-  haveI : IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
-  haveI : GlobalTheory.IsNormalScheme G.left := GlobalTheory.isNormalScheme_of_smooth G.hom
-  haveI : IsIntegral (pullback G.hom (jK R)) := GlobalTheory.isIntegral_pullback_of_smooth G.hom (jK R)
-  haveI : GlobalTheory.IsNormalScheme (pullback G.hom (jK R)) := GlobalTheory.isNormalScheme_of_smooth (pullback.snd G.hom (jK R))
+  have : IsIntegrallyClosed R := hA.2.2.1
+  have : IsNoetherianRing R := hA.1
+  have : Smooth G.hom := hG.smooth
+  have : GeometricallyConnected G.hom := hG.geomConnected
+  have : IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
+  have : GlobalTheory.IsNormalScheme G.left := GlobalTheory.isNormalScheme_of_smooth G.hom
+  have : IsIntegral (pullback G.hom (jK R)) := GlobalTheory.isIntegral_pullback_of_smooth G.hom (jK R)
+  have : GlobalTheory.IsNormalScheme (pullback G.hom (jK R)) := GlobalTheory.isNormalScheme_of_smooth (pullback.snd G.hom (jK R))
   have hgen : ∀ k, ((pullback.fst G.hom (jK R)).app (V k)).hom (a k) ≠ 0 := fun k h0 =>
     ha k (GlobalTheory.ExpInt.generic_app_injective G (V k) (h0.trans (map_zero _).symm))
   obtain ⟨O, N, hO, hN, hiso⟩ := GlobalTheory.LocalEqGlue.exists_lb_of_localEq G.left _ (pullback.fst G.hom (jK R)) Lθ θ _ V a
@@ -1767,15 +1767,15 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase
   have hL : (A.L.pull gen.hom.left).IsLB := LB.isLB_pull A.isLB _
   have hP : (PP.pull (lift (𝟙 G) (𝟙 G) : G ⟶ G2 G).left).IsLB := LB.isLB_pull hext.1 _
   obtain ⟨h2c, φ, hφ, h4c⟩ := GlobalTheory.T.two_smul_polarisation_class_generic_diagonal_doubling R G A gen hgen PP hext _ _ hL hP rfl rfl
-  haveI : Smooth G.hom := hG.smooth
-  haveI : GeometricallyConnected G.hom := hG.geomConnected
-  haveI : IsIntegral (pullback G.hom (jK R)) := GlobalTheory.isIntegral_pullback_of_smooth G.hom (jK R)
-  haveI : IsIso gen.hom.left := inferInstanceAs (IsIso ((Over.forget _).map gen.hom))
+  have : Smooth G.hom := hG.smooth
+  have : GeometricallyConnected G.hom := hG.geomConnected
+  have : IsIntegral (pullback G.hom (jK R)) := GlobalTheory.isIntegral_pullback_of_smooth G.hom (jK R)
+  have : IsIso gen.hom.left := inferInstanceAs (IsIso ((Over.forget _).map gen.hom))
   have hamp : GlobalTheory.IsAmpleLB (X := pullback G.hom (jK R)) (A.L.pull gen.hom.left) :=
     (GlobalTheory.isAmpleLB_of_relAmple_of_isAffine A.A A.isLB A.ample).pull_of_isAffineHom gen.hom.left
   have hK : Function.Surjective (pullback.snd G.hom (jK R)).appTop.hom := by
     have e : pullback.snd G.hom (jK R) = gen.hom.left ≫ A.A.hom := (Over.w gen.hom).symm
-    haveI : IsIso gen.hom.left.appTop := inferInstanceAs (IsIso (gen.hom.left.app ⊤))
+    have : IsIso gen.hom.left.appTop := inferInstanceAs (IsIso (gen.hom.left.app ⊤))
     rw [e, Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.coe_comp]
     exact (ConcreteCategory.bijective_of_isIso gen.hom.left.appTop).2.comp (GlobalTheory.ExpansionTotal.globalFns _ A.A A.isAb).2
   obtain ⟨t, θ, hθ⟩ := exists_odd_sec hamp
@@ -1846,7 +1846,7 @@ theorem exists_finExt_lbExt_of_factor : ∀ (R : Type) [CommRing R] [IsDomain R]
   have hL : (A.L.pull gen.hom.left).IsLB := LB.isLB_pull A.isLB _
   refine ⟨R, inferInstance, inferInstance, inferInstance, RingHom.id R, G, inferInstance, inferInstance, 𝟙 _, 𝟙 _, L₁,
     ⟨hR.1, Function.injective_id, RingHom.Finite.id R⟩, ?_, by simp, hL₁, ?_⟩
-  · haveI : IsMonHom (Iso.refl G).hom := (inferInstance : IsMonHom (𝟙 G))
+  · have : IsMonHom (Iso.refl G).hom := (inferInstance : IsMonHom (𝟙 G))
     exact (isGrpPullback_of_iso (Iso.refl G)).congr hsp.symm rfl
   · exact LBIso.trans (LB.isLB_pull hL₁ _) hL (LB.isLB_pull hL _) hiso₁ (GlobalTheory.TInj.GenPull.pull_id_iso hL)
 

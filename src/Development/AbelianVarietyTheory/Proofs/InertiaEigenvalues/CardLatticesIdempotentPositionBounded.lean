@@ -104,13 +104,13 @@ theorem finite_quotient_span_pow {a : K.O} (ha : a ≠ 0) (N : ℕ) :
 theorem sandwich_finite (hR : (Subalgebra.toSubmodule (integralClosure K.O B.A)).FG) {a : K.O} (ha : a ≠ 0)
     (N : ℕ) : (Sandwich K B a N).Finite := by
   set R := Subalgebra.toSubmodule (integralClosure K.O B.A) with hRdef
-  haveI : Module.Finite K.O R := Module.Finite.iff_fg.mpr hR
+  have : Module.Finite K.O R := Module.Finite.iff_fg.mpr hR
   set I : Ideal K.O := Ideal.span {a ^ N}
-  haveI := finite_quotient_span_pow K ha N
+  have := finite_quotient_span_pow K ha N
   set P : Submodule K.O R := I • (⊤ : Submodule K.O R)
-  haveI : Module.Finite (K.O ⧸ I) (R ⧸ P) := Module.Finite.of_restrictScalars_finite K.O _ _
-  haveI : Finite (R ⧸ P) := Module.finite_of_finite (K.O ⧸ I)
-  haveI : Finite (Submodule K.O (R ⧸ P)) :=
+  have : Module.Finite (K.O ⧸ I) (R ⧸ P) := Module.Finite.of_restrictScalars_finite K.O _ _
+  have : Finite (R ⧸ P) := Module.finite_of_finite (K.O ⧸ I)
+  have : Finite (Submodule K.O (R ⧸ P)) :=
     Finite.of_injective (fun Q : Submodule K.O (R ⧸ P) => (Q : Set (R ⧸ P))) SetLike.coe_injective
   let Φ : Submodule K.O B.A → Submodule K.O (R ⧸ P) := fun M => (M.comap R.subtype).map P.mkQ
   have key : ∀ M ∈ Sandwich K B a N, M = ((Φ M).comap P.mkQ).map R.subtype := by
@@ -132,7 +132,7 @@ theorem card_pos_le : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] (e π
     {M : Submodule K.O B.A | Pos B a e N M p}.Finite ∧ {M : Submodule K.O B.A | Pos B a e N M p}.ncard ≤ C := by
   intro K B ι _ e π S a hP ha hF N
   have he : CompleteOrthogonalIdempotents e := hF.1.1
-  haveI : Algebra.Etale K.E B.A := GlobalTheory.etale_of_separable_charpoly_mulLeft K.E B.A B.g hP
+  have : Algebra.Etale K.E B.A := GlobalTheory.etale_of_separable_charpoly_mulLeft K.E B.A B.g hP
   have hR := GlobalTheory.IntegralClosureFG.integralClosure_fg K.O K.E B.A
   have hfin := sandwich_finite K B hR ha.1 N
   refine ⟨(Sandwich K B a N).ncard, fun p => ?_⟩

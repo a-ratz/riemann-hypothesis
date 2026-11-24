@@ -243,7 +243,7 @@ theorem casimirScalar_stableSumSpace : BuildY := by
   have hW0 : ∀ (k : Matrix (Fin n) (Fin n) ℂ) (hk : k ∈ Kset ε), ∀ y ∈ Y0, wK hD hk y ∈ Y0 :=
     fun k hk y hy => ⟨wK_tensFock hD hk (fun x hx => hLK k hk x hx) hy.1, wK_physSub hD hk hy.2⟩
   have hfd0 : FiniteDimensional ℂ Y0 := by
-    haveI := tensorFock_finiteDimensional (n := n) hLf
+    have := tensorFock_finiteDimensional (n := n) hLf
     exact Submodule.finiteDimensional_of_le inf_le_left
   refine ⟨Y0 ⊔ Y0.map Dop, inferInstance, le_sup_left, sup_le inf_le_right ?_, ?_, ?_, ?_⟩
   · rintro _ ⟨y, hy, rfl⟩
@@ -451,7 +451,7 @@ namespace GlobalTheory.PsCo.PcEF
 
 theorem eq_discreteSeries_of_lowestKType_casimir : DatumEquiv := by
   intro n ε lam hgap H _ _ _ σ hσ hirr V hV hV0 hc X _ _ D hD
-  haveI : CompleteSpace X := hD.1
+  have : CompleteSpace X := hD.1
   have hσD : IsURepOn (UJset ε) D := hD.2.2.1
   have hVK : ∀ k ∈ Kset ε, ∀ v ∈ V, ∃ w ∈ V, (w : H) = σ k v :=
     kStable_of_isKStableSub hσ (isDerivedOn_smE hσ) V hV.1 hV.2.1
@@ -681,7 +681,7 @@ theorem highestWeightKernel_lowestType : AlgDatum := by
   have hyS : y ∈ S := hzS s
   set V := kLowSpan ε E y with hV
   have hVS : V ≤ S := kLowSpan_le hSk hyS
-  haveI : FiniteDimensional ℂ S := hSfd
+  have : FiniteDimensional ℂ S := hSfd
   have hVfd : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le hVS
   have hVirr : IsKIrrHW ε E (lowK ε lam - phSum Ph) V := kLowSpan_kIrrHW hE hU hy hy0 hVfd
 
@@ -794,19 +794,19 @@ theorem intertwiner_preserves_highestWeight : HWVec := by
     by_cases hca : c = a
     · subst hca
       have hcb : ¬ b = c := fun h => (ne_of_lt hab) h.symm
-      simp only [if_neg hcb, sub_zero, Pi.add_apply, root, Pi.sub_apply, Pi.single_eq_same, ↓reduceIte]
+      simp only [ite_eq_right hcb, sub_zero, Pi.add_apply, root, Pi.sub_apply, Pi.single_eq_same, ↓reduceIte]
       rw [Pi.single_eq_of_ne (ne_of_lt hab)]
       simp only [sub_zero, Complex.ofReal_add, Complex.ofReal_one, add_smul, one_smul]
       rfl
     · by_cases hcb : b = c
       · subst hcb
-        simp only [if_neg hca, zero_sub, Pi.add_apply, root, Pi.sub_apply, Pi.single_eq_same,
+        simp only [ite_eq_right hca, zero_sub, Pi.add_apply, root, Pi.sub_apply, Pi.single_eq_same,
           LinearMap.neg_apply, ↓reduceIte]
         rw [Pi.single_eq_of_ne hca]
         simp only [zero_sub, Complex.ofReal_add, Complex.ofReal_neg, Complex.ofReal_one, add_smul, neg_smul,
           one_smul]
         rfl
-      · simp only [if_neg hca, if_neg hcb, sub_zero, LinearMap.zero_apply, add_zero, Pi.add_apply, root,
+      · simp only [ite_eq_right hca, ite_eq_right hcb, sub_zero, LinearMap.zero_apply, add_zero, Pi.add_apply, root,
           Pi.sub_apply]
         rw [Pi.single_eq_of_ne hca, Pi.single_eq_of_ne (Ne.symm hcb)]
         simp
@@ -853,7 +853,7 @@ lemma offdiag {ε : Fin n → Bool} {k : Mat n} (hk : k ∈ Formalism.REAL.Kset 
     k a b = 0 := by
   have h := congrFun (congrFun hk.2 a) b
   simp only [Formalism.REAL.Jm, mul_diagonal, diagonal_mul] at h
-  cases ha : ε a <;> cases hb : ε b <;> simp only [ha, hb, Bool.false_eq_true, if_false, if_true] at h hab
+  cases ha : ε a <;> cases hb : ε b <;> simp only [ha, hb, Bool.false_eq_true, ite_false, ite_true] at h hab
   · exact absurd rfl hab
   · linear_combination (1 / 2 : ℂ) * h
   · linear_combination (-1 / 2 : ℂ) * h
@@ -1043,10 +1043,10 @@ lemma entry {ε : Fin n → Bool} {k : Mat n} (hk : k ∈ Formalism.REAL.Kset ε
     · simp
   rw [Finset.sum_congr rfl (fun j _ => h1 j)]
   simp only [mul_sub, Finset.sum_sub_distrib, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true]
+    ite_true]
   by_cases had : a = d
   · subst had
-    simp only [if_true, K_unit hk]
+    simp only [ite_true, K_unit hk]
     by_cases hil : i = l
     · subst hil; simp
     · simp [hil]
@@ -1128,7 +1128,7 @@ theorem integral_conj_trace_mul_trace (hD : IsUnitaryRep D) (hi : IsTopIrreducib
   have := hi.1
   have : Nontrivial (Subrepresentation ρ) :=
     ⟨⊥, ⊤, fun h => bot_ne_top (α := Submodule ℂ V) (congrArg Subrepresentation.toSubmodule h)⟩
-  have : ρ.IsIrreducible := ⟨fun S => (hi.2 S.toSubmodule ⟨S.toSubmodule.closed_of_finiteDimensional,
+  have : ρ.IsIrreducible := ⟨fun S => (hi.2 S.toSubmodule ⟨S.toSubmodule.isClosed_of_finiteDimensional,
     fun g v hv => S.apply_mem_toSubmodule g hv⟩).imp (fun h => Subrepresentation.toSubmodule_injective h)
       fun h => Subrepresentation.toSubmodule_injective h⟩
   have h := integral_conj_character_mul_character_self (haarProb H) ρ hD.continuous_apply hD.norm_apply
@@ -1151,7 +1151,7 @@ theorem integral_inner_smul_eq_zero [CompleteSpace V] [CompleteSpace U] (hD : Is
   have hT : LinearMap.toContinuousLinearMap T ∈ AutMult.homIn D π ⊤ := AutMult.mem_homIn_top.2 fun g x => by
     change ∫ k, ⟪D k e, D g x⟫_ℂ • π k v ∂μ = π g (∫ k, ⟪D k e, x⟫_ℂ • π k v ∂μ)
     rw [← integral_mul_left_eq_self _ g, ← (π g).integral_comp_comm (hI x)]
-    simp only [map_mul, ContinuousLinearMap.mul_apply, AutMult.inner_map_map hD, map_smul]
+    simp only [map_mul, mul_apply_eq_comp, AutMult.inner_map_map hD, map_smul]
   have h0 : AutMult.homIn D π ⊤ = ⊥ := AutMult.multIn_eq_zero_iff.1 (by_contra fun h =>
     hne (AutMult.uEquiv_of_multIn_ne_zero ⟨‹_›, hD, hi⟩ ⟨‹_›, hπ, hi'⟩ h).symm)
   rw [h0, Submodule.mem_bot] at hT
@@ -1195,7 +1195,7 @@ theorem isCharFn_and_isPseudoCoeff_of_compact [T2Space H] [SecondCountableTopolo
     simp only [div_mul_eq_mul_div, integral_div, integral_conj_trace_mul_trace hD hi, div_self h0]
   · rw [repOp_conj_trace_eq_zero hD hi hπ hirr hne]
     exact ⟨isTraceClass_zero, trace_zero⟩
-  · haveI : CompactSpace (cent s) := isCompact_iff_compactSpace.1 hT
+  · have : CompactSpace (cent s) := isCompact_iff_compactSpace.1 hT
     convert hasOrbInt_of_finite (dh := μ) (dt := dt)
       (f := fun g => conj (LinearMap.trace ℂ V (D g : V →ₗ[ℂ] V)) / μ.real univ)
       ((hf.comp (f := fun x => x⁻¹ * s * x) (by fun_prop)).integrable_of_hasCompactSupport
@@ -1437,7 +1437,7 @@ theorem supertrace_carriedBy_diracKernel : StrKer := by
   classical
   let Z : Submodule ℂ (TensorProduct ℂ D (Fock n)) := Y ⊓ LinearMap.ker (dD ε E)
   have hZY : Z ≤ Y := inf_le_left
-  haveI hZf : FiniteDimensional ℂ Z := Submodule.finiteDimensional_of_le hZY
+  have hZf : FiniteDimensional ℂ Z := Submodule.finiteDimensional_of_le hZY
   have hZK : ∀ (k : Mat n) (hk : k ∈ Kset ε), ∀ y ∈ Z, wK hD hk y ∈ Z := by
     intro k hk y hy
     refine ⟨hK k hk y hy.1, ?_⟩

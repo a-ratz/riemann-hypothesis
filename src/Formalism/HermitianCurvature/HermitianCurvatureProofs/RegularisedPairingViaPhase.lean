@@ -78,7 +78,7 @@ section basics
 variable {k r : ℕ}
 
 theorem haar_sigmaFinite {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
   infer_instance
 
 theorem haar_ae {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) :
@@ -119,25 +119,25 @@ private theorem star_aDil_entry_mul_aDil_entry_eq_one {k r : ℕ} (t : ℝ) (ht 
   · have e1 : ¬ j.val < r := by omega
     have e2 : ¬ j.val ≤ r + k := by omega
     have e3 : j.val - (r + k) = r - i.val := by omega
-    rw [if_pos hA.1, if_neg e1, if_neg e2, e3]
+    rw [ite_eq_left hA.1, ite_eq_right e1, ite_eq_right e2, e3]
     rw [show star ((t ^ (r - i.val) : ℝ) : ℂ) = ((t ^ (r - i.val) : ℝ) : ℂ) from Complex.conj_ofReal _]
     rw [← Complex.ofReal_mul, mul_inv_cancel₀ (pow_ne_zero _ ht), Complex.ofReal_one]
   by_cases hB : j.val < r ∧ i.val + j.val = 2 * r + k
   · have e1 : ¬ i.val < r := by omega
     have e2 : ¬ i.val ≤ r + k := by omega
     have e3 : i.val - (r + k) = r - j.val := by omega
-    rw [if_neg e1, if_neg e2, if_pos hB.1, e3]
+    rw [ite_eq_right e1, ite_eq_right e2, ite_eq_left hB.1, e3]
     rw [show star (((t ^ (r - j.val))⁻¹ : ℝ) : ℂ) = (((t ^ (r - j.val))⁻¹ : ℝ) : ℂ) from
       Complex.conj_ofReal _]
     rw [← Complex.ofReal_mul, inv_mul_cancel₀ (pow_ne_zero _ ht), Complex.ofReal_one]
   by_cases hC : r ≤ i.val ∧ i.val ≤ r + k ∧ i = j
   · obtain ⟨hC1, hC2, rfl⟩ := hC
-    rw [if_neg (not_lt.2 hC1), if_pos hC2]
+    rw [ite_eq_right (not_lt.2 hC1), ite_eq_left hC2]
     simp
   · exfalso
     apply h
     unfold Hpk
-    rw [if_neg hA, if_neg hB, if_neg hC]
+    rw [ite_eq_right hA, ite_eq_right hB, ite_eq_right hC]
 
 private theorem aDil_mem_gv {k r : ℕ} (t : ℝ) (ht : t ≠ 0) : aDil k r t ∈ GV k r := by
   show (aDil k r t)ᴴ * Hpk k r * aDil k r t = Hpk k r
@@ -185,7 +185,7 @@ theorem dil_mem_N (t : ℝ) (ht : t ≠ 0) {n : Mat k r} (hn : n ∈ Nset k r) :
   rw [aDil_inv k r t ht, hA, hA']
   unfold QuantumDeterminants.Nset at hn ⊢
   obtain ⟨hU, hcol, hmid⟩ := hn
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨mul_mem_uh (mul_mem_uh m1 hU) m2, ?_, ?_⟩
   · intro a i hai
     rw [Matrix.mul_diagonal, Matrix.diagonal_mul, hcol a i hai]
@@ -210,9 +210,9 @@ variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
   [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq]
 
 theorem ae_inSS (D : RealPlaceData k r Wp Wq) : ∀ᵐ p ∂D.μSS, D.inSS p := by
-  haveI := haar_sigmaFinite D.haarW
-  haveI := haar_sigmaFinite D.haarN
-  haveI := haar_sigmaFinite D.haarW'
+  have := haar_sigmaFinite D.haarW
+  have := haar_sigmaFinite D.haarN
+  have := haar_sigmaFinite D.haarW'
   have h1 := haar_ae D.haarW
   have h2 := haar_ae D.haarN
   have h3 := haar_ae D.haarW'
@@ -414,7 +414,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.phase_function_bound : Formalism.Four
     have e1 := hs_norm_le (rho D p F (Matrix.of g)) (F' (Matrix.of g))
     have e2 := rho_norm_le D hp F (Matrix.of g)
     rw [sgs_eq] at e2
-    rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (norm_nonneg _),
+    rw [← ofReal_norm, ← ofReal_norm, ← ENNReal.ofReal_mul (norm_nonneg _),
       ← ENNReal.ofReal_mul hK]
     apply ENNReal.ofReal_le_ofReal
     exact e1.trans (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right e2 (norm_nonneg _)) hK)
@@ -466,12 +466,12 @@ private theorem hpk_apply_of_mid_index {k r : ℕ} (i b : Fin (2 * r + k + 1)) (
     Hpk k r i b = if b = i then (if i.val = r + k then -1 else 1) else 0 := by
   have e1 : ¬ (i.val < r ∧ i.val + b.val = 2 * r + k) := by omega
   have e2 : ¬ (b.val < r ∧ i.val + b.val = 2 * r + k) := by omega
-  simp only [Hpk, if_neg e1, if_neg e2]
+  simp only [Hpk, ite_eq_right e1, ite_eq_right e2]
   by_cases hb : b = i
   · subst hb
     simp [hi.1, hi.2]
   · have e3 : ¬ (r ≤ i.val ∧ i.val ≤ r + k ∧ i = b) := fun h => hb h.2.2.symm
-    rw [if_neg e3, if_neg hb]
+    rw [ite_eq_right e3, ite_eq_right hb]
 
 private theorem hpk_apply_of_not_mid_index {k r : ℕ} (i b : Fin (2 * r + k + 1)) (hi : ¬(r ≤ i.val ∧ i.val ≤ r + k)) :
     Hpk k r i b = if b.val = 2 * r + k - i.val then 1 else 0 := by
@@ -479,17 +479,17 @@ private theorem hpk_apply_of_not_mid_index {k r : ℕ} (i b : Fin (2 * r + k + 1
   have hb1 := b.isLt
   have e3 : ¬ (r ≤ i.val ∧ i.val ≤ r + k ∧ i = b) := fun h => hi ⟨h.1, h.2.1⟩
   by_cases hb : b.val = 2 * r + k - i.val
-  · rw [if_pos hb]
+  · rw [ite_eq_left hb]
     by_cases h1 : i.val < r
     · have e1 : i.val < r ∧ i.val + b.val = 2 * r + k := ⟨h1, by omega⟩
-      simp only [Hpk, if_pos e1]
+      simp only [Hpk, ite_eq_left e1]
     · have e1 : ¬ (i.val < r ∧ i.val + b.val = 2 * r + k) := fun h => h1 h.1
       have e2 : b.val < r ∧ i.val + b.val = 2 * r + k := by omega
-      simp only [Hpk, if_neg e1, if_pos e2]
-  · rw [if_neg hb]
+      simp only [Hpk, ite_eq_right e1, ite_eq_left e2]
+  · rw [ite_eq_right hb]
     have e1 : ¬ (i.val < r ∧ i.val + b.val = 2 * r + k) := by omega
     have e2 : ¬ (b.val < r ∧ i.val + b.val = 2 * r + k) := by omega
-    simp only [Hpk, if_neg e1, if_neg e2, if_neg e3]
+    simp only [Hpk, ite_eq_right e1, ite_eq_right e2, ite_eq_right e3]
 
 private theorem hpk_mul_self' {k r : ℕ} : Hpk k r * Hpk k r = 1 := by
   ext i j
@@ -497,14 +497,14 @@ private theorem hpk_mul_self' {k r : ℕ} : Hpk k r * Hpk k r = 1 := by
   have hi1 := i.isLt
   by_cases hi : r ≤ i.val ∧ i.val ≤ r + k
   · rw [Finset.sum_eq_single i]
-    · rw [hpk_apply_of_mid_index i i hi, hpk_apply_of_mid_index i j hi, if_pos rfl]
+    · rw [hpk_apply_of_mid_index i i hi, hpk_apply_of_mid_index i j hi, ite_eq_left rfl]
       by_cases hij : i = j
       · subst hij
-        rw [if_pos rfl, if_pos rfl]
+        rw [ite_eq_left rfl, ite_eq_left rfl]
         split_ifs <;> norm_num
-      · rw [if_neg (Ne.symm hij), if_neg hij, mul_zero]
+      · rw [ite_eq_right (Ne.symm hij), ite_eq_right hij, mul_zero]
     · intro b _ hb
-      rw [hpk_apply_of_mid_index i b hi, if_neg hb, zero_mul]
+      rw [hpk_apply_of_mid_index i b hi, ite_eq_right hb, zero_mul]
     · intro h
       exact absurd (Finset.mem_univ i) h
   · have hn : 2 * r + k - i.val < 2 * r + k + 1 := by omega
@@ -516,14 +516,14 @@ private theorem hpk_mul_self' {k r : ℕ} : Hpk k r * Hpk k r = 1 := by
       show 2 * r + k - (2 * r + k - i.val) = i.val
       omega
     rw [Finset.sum_eq_single ⟨2 * r + k - i.val, hn⟩]
-    · rw [hpk_apply_of_not_mid_index i _ hi, hpk_apply_of_not_mid_index _ j hσ, if_pos rfl, one_mul, hσσ]
+    · rw [hpk_apply_of_not_mid_index i _ hi, hpk_apply_of_not_mid_index _ j hσ, ite_eq_left rfl, one_mul, hσσ]
       by_cases hij : i = j
       · subst hij
         simp
-      · rw [if_neg hij, if_neg (fun h => hij (Fin.ext h.symm))]
+      · rw [ite_eq_right hij, ite_eq_right (fun h => hij (Fin.ext h.symm))]
     · intro b _ hb
       have hb' : ¬ b.val = 2 * r + k - i.val := fun h => hb (Fin.ext h)
-      rw [hpk_apply_of_not_mid_index i b hi, if_neg hb', zero_mul]
+      rw [hpk_apply_of_not_mid_index i b hi, ite_eq_right hb', zero_mul]
     · intro h
       exact absurd (Finset.mem_univ _) h
 
@@ -729,7 +729,7 @@ theorem ibp (D : RealPlaceData k r Wp Wq) {X : Mat k r} (hX : inLie k r X) {f1 f
     (i2 : Integrable (fun g : Mt k r => hsInner (f1 (Matrix.of g)) (RdV X f2 (Matrix.of g))) D.μG) :
     (∫ g : Mt k r, hsInner (RdV X f1 (Matrix.of g)) (f2 (Matrix.of g)) ∂D.μG) =
       -∫ g : Mt k r, hsInner (f1 (Matrix.of g)) (RdV X f2 (Matrix.of g)) ∂D.μG := by
-  haveI := haar_sigmaFinite D.haarG
+  have := haar_sigmaFinite D.haarG
   set h : Mat k r → ℂ := fun g => hsInner (f1 g) (f2 g) with hh
   have hR : ∀ g ∈ GV k r, RdV X h g = hsInner (RdV X f1 g) (f2 g) + hsInner (f1 g) (RdV X f2 g) := by
     intro g hg
@@ -777,7 +777,7 @@ theorem word_adj (D : RealPlaceData k r Wp Wq) (w : List (Mat k r)) (hw : ∀ X 
     have hX : inLie k r w[j] := hw _ (List.getElem_mem hjl)
     have hd : w.drop j = w[j] :: w.drop (j + 1) := List.drop_eq_getElem_cons hjl
     have ht : (w.take (j + 1)).reverse = w[j] :: (w.take j).reverse := by
-      rw [List.take_succ, List.getElem?_eq_getElem hjl]
+      rw [List.take_add_one, List.getElem?_eq_getElem hjl]
       simp
     have hwd : ∀ Y ∈ w.drop (j + 1), inLie k r Y := fun Y hY => hw Y (List.mem_of_mem_drop hY)
     have hwt : ∀ Y ∈ (w.take j).reverse, inLie k r Y :=

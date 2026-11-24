@@ -230,11 +230,11 @@ theorem rank_algD_le_aleph0 : ∀ {F E : Type} [Field F] [NumberField F] [Field 
     Module.rank ℂ (GlobalTheory.SquareAgree.algD M ψ emb) ≤ Cardinal.aleph0 := by
   intro F E _ _ _ _ _ σ n d X W M ψ emb hM hPol hSB
   classical
-  haveI := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
-  haveI : Countable (Module.Basis.ofVectorSpaceIndex ℂ (M.Pol ψ emb)) := by
+  have := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
+  have : Countable (Module.Basis.ofVectorSpaceIndex ℂ (M.Pol ψ emb)) := by
     rw [← Cardinal.mk_le_aleph0_iff, (Module.Basis.ofVectorSpace ℂ _).mk_eq_rank'']
     exact hPol
-  haveI : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F),
+  have : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F),
       Countable (Module.Basis.ofVectorSpaceIndex ℂ (GlobalTheory.WeilM.SB (Fin n × Fin d → Fv F v))) := fun v => by
     rw [← Cardinal.mk_le_aleph0_iff, (Module.Basis.ofVectorSpace ℂ _).mk_eq_rank'']
     exact hSB v

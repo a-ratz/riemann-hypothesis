@@ -68,7 +68,7 @@ open Classical in
 theorem intInd_apply {n d : ℕ} (M : Matrix (Fin n) (Fin d) k) :
     intInd k n d M = if ∀ i j, M i j ∈ 𝒪[k] then 1 else 0 := by
   classical
-  simp only [intInd, Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+  simp only [intInd, Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply]
 
 theorem sub_inv_mul_out_mem_iff {ϖ : kˣ} (hϖ : SplitFlip.IsUnif ϖ) (y : k)
     (t : SplitFlip.Res (k := k) 1) :
@@ -115,7 +115,7 @@ theorem intInd_diagAt_eq_sum : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
   · obtain ⟨hQ, hRR⟩ := hQR
     let T0 : Fin d → SplitFlip.Res (k := k) 1 := fun j => Ideal.Quotient.mk _ ⟨_, hRR j⟩
     have hl : intInd k n d ((diagAt ϖ i0).valᵀ * Y) = 1 := by
-      rw [intInd_apply, if_pos]
+      rw [intInd_apply, ite_eq_left]
       intro i j
       rw [hL]
       split_ifs with h
@@ -125,38 +125,38 @@ theorem intInd_diagAt_eq_sum : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
       intro T
       rw [intInd_apply]
       by_cases hT : T = T0
-      · rw [if_pos hT, if_pos]
+      · rw [ite_eq_left hT, ite_eq_left]
         intro i j
         rw [hR]
         split_ifs with h
         · subst h; exact (sub_inv_mul_out_mem_iff hϖ _ _).2 ⟨hRR j, by rw [hT]⟩
         · exact hQ i j h
-      · rw [if_neg hT, if_neg]
+      · rw [ite_eq_right hT, ite_eq_right]
         intro hm
         apply hT
         funext j
         have := hm i0 j
-        rw [hR, if_pos rfl] at this
+        rw [hR, ite_eq_left rfl] at this
         obtain ⟨_, e⟩ := (sub_inv_mul_out_mem_iff hϖ _ _).1 this
         exact e
     rw [hl, Finset.sum_congr rfl (fun T _ => hs T), Finset.sum_ite_eq']
     simp
   · have hl : intInd k n d ((diagAt ϖ i0).valᵀ * Y) = 0 := by
-      rw [intInd_apply, if_neg]
+      rw [intInd_apply, ite_eq_right]
       intro hm
       refine hQR ⟨fun i j h => ?_, fun j => ?_⟩
-      · have := hm i j; rwa [hL, if_neg h, one_mul] at this
-      · have := hm i0 j; rwa [hL, if_pos rfl] at this
+      · have := hm i j; rwa [hL, ite_eq_right h, one_mul] at this
+      · have := hm i0 j; rwa [hL, ite_eq_left rfl] at this
     rw [hl]
     symm
     apply Finset.sum_eq_zero
     intro T _
-    rw [intInd_apply, if_neg]
+    rw [intInd_apply, ite_eq_right]
     intro hm
     refine hQR ⟨fun i j h => ?_, fun j => ?_⟩
-    · have := hm i j; rwa [hR, if_neg h] at this
+    · have := hm i j; rwa [hR, ite_eq_right h] at this
     · have := hm i0 j
-      rw [hR, if_pos rfl] at this
+      rw [hR, ite_eq_left rfl] at this
       exact ((sub_inv_mul_out_mem_iff hϖ _ _).1 this).1
 
 end GlobalTheory.HeisUnit
@@ -203,14 +203,14 @@ theorem normSq_unif_mul_resCard_pow_eq_one : ∀ {k : Type} [Field k] [Valuative
     simp only [Pi.smul_apply, Finset.sum_apply, smul_eq_mul, (hTr _ φ0 hφ0).2, hι0]
     rw [intInd_diagAt_eq_sum ϖ hϖ]
 
-  letI : MeasurableSpace (Fin n × Fin d → k) := borel _
-  haveI : BorelSpace (Fin n × Fin d → k) := ⟨rfl⟩
+  let : MeasurableSpace (Fin n × Fin d → k) := borel _
+  have : BorelSpace (Fin n × Fin d → k) := ⟨rfl⟩
   let μ : Measure (Fin n × Fin d → k) := Measure.addHaar
   have hμ : μ.IsAddHaarMeasure := inferInstance
   have hiso := hSiso (diagAt ϖ i0) φ0 hφ0 μ hμ
   rw [hSg] at hiso
-  simp only [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow] at hiso
-  rw [lintegral_const_mul' _ _ (by simp [enorm_eq_nnnorm])] at hiso
+  simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow] at hiso
+  rw [lintegral_const_mul' _ _ (by simp [eNorm_eq_nnNorm])] at hiso
   obtain ⟨hFtop, hFint, -, hFi⟩ := _root_.GlobalTheory.SBNorm.schwartzBruhat_memL2_inner_self μ hμ F hFSB
   obtain ⟨h0top, h0int, h0ne, -⟩ := _root_.GlobalTheory.SBNorm.schwartzBruhat_memL2_inner_self μ hμ φ0 hφ0
   have hN0 : (∫⁻ y, ‖φ0 y‖ₑ ^ 2 ∂μ).toReal ≠ 0 := ENNReal.toReal_ne_zero.2 ⟨h0ne hne, h0top⟩
@@ -236,7 +236,7 @@ theorem normSq_unif_mul_resCard_pow_eq_one : ∀ {k : Type} [Field k] [Valuative
       (Fintype.card (Fin d → SplitFlip.Res k 1) : ℝ) * (∫⁻ y, ‖φ0 y‖ₑ ^ 2 ∂μ).toReal := by
     exact_mod_cast hsum
   have hiso' := congrArg ENNReal.toReal hiso
-  rw [ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_enorm, hLF] at hiso'
+  rw [ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_eNorm, hLF] at hiso'
   have hcard : (Fintype.card (Fin d → SplitFlip.Res k 1) : ℝ) = (GlobalTheory.SplitWeil.resCard k : ℝ) ^ d := by
     rw [Fintype.card_fun, Fintype.card_fin, Fintype.card_eq_nat_card]
     have : Nat.card (SplitFlip.Res k 1) = GlobalTheory.SplitWeil.resCard k :=

@@ -216,7 +216,7 @@ def posSet : Set (Y.pts σ) := {y | 0 < m.h (eqn Δ y) y}
 variable {m} in
 theorem mem_posSet_iff (hg : y ∈ eqnSet σ Δ g) : y ∈ m.posSet ↔ 0 < m.h g y := by
   have := tv_ne_zero (mem_eqnSet Δ y) hg
-  rw [posSet, mem_setOf_eq, m.trans _ g y (mem_eqnSet Δ y) hg, mul_pos_iff_of_pos_left (by positivity)]
+  rw [posSet, mem_ofPred_eq, m.trans _ g y (mem_eqnSet Δ y) hg, mul_pos_iff_of_pos_left (by positivity)]
 
 
 
@@ -348,12 +348,12 @@ theorem mPow_h (hg : y ∈ eqnSet σ Δ g) (k : ℕ) : (mPow Y σ Δ k m).h (g ^
     (fun i j y hi hj => by rw [m.trans _ _ y hi hj, tv_pow hi hj, norm_pow]; ring) hg
 
 theorem fsMet_h {κ : Type} [Fintype κ] {e : κ → Y.FnC σ} (he : ∀ k, SecReg Δ (e k) y) (g : Y.Fnˣ) :
-    (fsMet Y σ Δ e).h g y = (∑ k, ‖fval g (e k) y‖ ^ 2)⁻¹ := if_pos he
+    (fsMet Y σ Δ e).h g y = (∑ k, ‖fval g (e k) y‖ ^ 2)⁻¹ := ite_eq_left he
 
 theorem mem_posSet_fsMet {κ : Type} [Fintype κ] {e : κ → Y.FnC σ} : y ∈ (fsMet Y σ Δ e).posSet ↔
     (∀ k, SecReg Δ (e k) y) ∧ ∃ k, ¬ SecZero Δ (e k) y := by
   by_cases he : ∀ k, SecReg Δ (e k) y
-  · simp only [posSet, mem_setOf_eq, fsMet_h he, inv_pos, secZero_iff (mem_eqnSet Δ y), he,
+  · simp only [posSet, mem_ofPred_eq, fsMet_h he, inv_pos, secZero_iff (mem_eqnSet Δ y), he,
       implies_true, true_and]
     rw [Finset.sum_pos_iff_of_nonneg fun _ _ => sq_nonneg _]
     simp [sq_pos_iff]

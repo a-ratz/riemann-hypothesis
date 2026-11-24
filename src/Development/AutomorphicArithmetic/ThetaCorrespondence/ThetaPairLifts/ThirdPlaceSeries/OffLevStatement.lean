@@ -652,7 +652,7 @@ theorem chi_eq_mu {D : D7} {T : Type} (L : LevCh D T) {μ0 : T} (hL : L.Is μ0) 
     (c : ℕ) (hc : c < D.R.m) (μ : kˣ →* ℂˣ) (hμ : (ofSplit q).IsComp (Lift.chrStep L.mu0 L.eta (c + 1)).1⁻¹ μ) (ht : IsTame μ)
     (s : Formalism.L2.Herm.intAf D.host.F D.host.E) (y : (kP PP)ˣ) (x : kˣ) (hy : (y : kP PP) = resS D.host.F PP s)
     (hx : (x : k) = π s) : L.chi (c + 1) PP y = μ x := by
-  haveI : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
+  have : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
   obtain ⟨z, hz⟩ := Ideal.Quotient.mk_surjective (y : kP PP)
   have hzP : z ∉ PP.asIdeal := fun hm => y.ne_zero (hz.symm.trans (Ideal.Quotient.eq_zero_iff_mem.2 hm))
   have hz0 : (z : D.host.E) ≠ 0 := RingOfIntegers.coe_ne_zero_iff.2 (by rintro rfl; exact hzP (zero_mem _))

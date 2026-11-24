@@ -138,11 +138,11 @@ namespace GlobalTheory.KerBaseChange
 theorem mem_span_of_sum_mul {F : Type} [Field F] (σ : F →+* ℂ) {κ J : Type} [Fintype κ]
     (α : κ → J → F) (z : κ → ℂ) (hz : ∀ j, ∑ k, z k * σ (α k j) = 0) :
     z ∈ Submodule.span ℂ ((fun c : κ → F => fun k => σ (c k)) '' {c | ∀ j, ∑ k, c k * α k j = 0}) := by
-  letI : Algebra F ℂ := σ.toAlgebra
+  let : Algebra F ℂ := σ.toAlgebra
   have hsm : ∀ (a : F) (x : ℂ), a • x = σ a * x := fun a x => by rw [Algebra.smul_def]; rfl
   let W : Submodule F ℂ := Submodule.span F (Set.range z)
   have hzW : ∀ k, z k ∈ W := fun k => Submodule.subset_span ⟨k, rfl⟩
-  haveI : FiniteDimensional F W := FiniteDimensional.span_of_finite F (Set.finite_range z)
+  have : FiniteDimensional F W := FiniteDimensional.span_of_finite F (Set.finite_range z)
   let ζ := Module.finBasis F W
   let β : κ → Fin (Module.finrank F W) → F := fun k m => ζ.repr ⟨z k, hzW k⟩ m
   have hzexp : ∀ k, z k = ∑ m, σ (β k m) * (ζ m : ℂ) := by
@@ -180,7 +180,7 @@ theorem mem_span_of_sum_smul {F V Y : Type} [Field F] [AddCommGroup V] [Module F
   let V' : Submodule F V := Submodule.span F (Set.range fun p : κ × ι => A p.1 p.2)
   have hAV : ∀ k i, A k i ∈ V' := fun k i => Submodule.subset_span ⟨(k, i), rfl⟩
   have hV'S : V' ≤ S := Submodule.span_le.2 (by rintro _ ⟨p, rfl⟩; exact hA p.1 p.2)
-  haveI : FiniteDimensional F V' := FiniteDimensional.span_of_finite F (Set.finite_range _)
+  have : FiniteDimensional F V' := FiniteDimensional.span_of_finite F (Set.finite_range _)
   let b := Module.finBasis F V'
   let bv : Fin (Module.finrank F V') → V := fun m => (b m : V)
   have hbS : ∀ m, bv m ∈ S := fun m => hV'S (b m).2
@@ -322,7 +322,7 @@ theorem exists_evalAt_ne_zero {K : Type} [Field K] (pts : ∀ (S : Type) [CommRi
     {S : Type} [CommRing S] [Nontrivial S] [Algebra K S] (y : pts S) (h : FromTest pts mapR y) :
     ∃ i, evalAt pts mapR (t i) y ≠ 0 := by
   unfold evalAt
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   obtain ⟨s, hs⟩ := (Submodule.mem_span_range_iff_exists_fun _).1
     ((hunit h.choose h.choose_spec.choose_spec.choose).symm ▸ Submodule.mem_top (x := (1 : h.choose.R)))
   by_contra hall
@@ -337,13 +337,13 @@ theorem exists_rdU_t_ne_zero : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Fo
     (∀ (p : TRing T.Q.c.F) (y : FrPt (T.Q.Xo j) T.Q.c p.R), Ideal.span (Set.range fun i => t i p y) = ⊤) →
     ∀ k x, x ∈ ((T.U j σ).X k).dom → ∃ i, rdU (T.U j σ) (t i) k x ≠ 0 := by
   intro D T hT j hj σ hσ N t hunit k x hx
-  haveI : Nontrivial (CAt σ) := inferInstanceAs (Nontrivial ℂ)
+  have : Nontrivial (CAt σ) := inferInstanceAs (Nontrivial ℂ)
   obtain ⟨i, hi⟩ := exists_evalAt_ne_zero (K := T.Q.c.F) (fun S _ _ => FrPt (T.Q.Xo j) T.Q.c S)
     (fun φ y z => FrMap φ y z) t hunit _ (hT.unTest j hj σ hσ k ⟨x, hx⟩)
   refine ⟨i, ?_⟩
   have e : rdU (T.U j σ) (t i) k x = toC (evR (T.Q.Xo j) T.Q.c (t i) ((T.U j σ).un k ⟨x, hx⟩)) := by
     classical
-    exact dif_pos hx
+    exact dite_eq_left hx
   rw [e]
   exact hi
 
@@ -520,7 +520,7 @@ theorem exists_finite_subfamily {E : Type} [Field E] [NumberField E] [IsCMField 
       Ideal.span (Set.range fun i => (evR Xo c (f i) ((P p.1).y p.2.1 p.2.2) : (P p.1).R p.2.1)) = ⊤ := by
     rintro ⟨j, e, he⟩
     by_contra hne
-    haveI := (P j).sm e he
+    have := (P j).sm e he
     obtain ⟨ψ, hψ⟩ := exists_complex_zero σ _ hne
     obtain ⟨z, hz⟩ := hE.bc _ (CAt σ) ψ ((P j).y e he)
     obtain ⟨i, hi⟩ := hnz z
@@ -529,7 +529,7 @@ theorem exists_finite_subfamily {E : Type} [Field E] [NumberField E] [IsCMField 
     exact hψ _ (Ideal.subset_span ⟨i, rfl⟩)
   choose s hs using fun p => exists_finset_span_eq_top _ (htop p)
   refine ⟨⋃ p, (s p : Set ι), Set.finite_iUnion fun p => (s p).finite_toSet, fun y => ?_⟩
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   obtain ⟨j, e, he, ψ, z, t, -, hz, hb⟩ := hC (CAt σ) ⊤ (fun _ => trivial) y
   by_contra hcon
   push Not at hcon
@@ -643,7 +643,7 @@ theorem exists_scalar_ne_zero
     obtain ⟨Q, hQ, hQx⟩ := exists_holSub0_of_SS V (laU V 0 n) k
       (GlobalTheory.BoundedCusp.mem_SS_of_definite _ _ τ0 hdef _ ⟨hs, bounded_of_definite _ hdef _ _ hs⟩)
     refine ⟨n, hn, he, Q, hQ, ?_⟩
-    have e : rdU V f k x = toC (evR Xo c f (V.un k ⟨x, hx⟩)) := dif_pos hx
+    have e : rdU V f k x = toC (evR Xo c f (V.un k ⟨x, hx⟩)) := dite_eq_left hx
     rw [hQx x hx, e]
     exact hne
   · have hle := (V.X k).p0_le
@@ -706,7 +706,7 @@ theorem exists_weight_of_pointwise
   set B : ℕ := 4 * (Module.finrank ℚ D.host.E * D.R.r) + 4 with hB
   have hU := h.unf j hj σ hσ
   have hrd : ∀ (f : T.R j) k (x : ((T.U j σ).X k).dom),
-      rdU (T.U j σ) f k x.1 = toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un k x)) := fun f k x => dif_pos x.2
+      rdU (T.U j σ) f k x.1 = toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un k x)) := fun f k x => dite_eq_left x.2
 
   have hpt : ∀ k (x : ((T.U j σ).X k).dom), ∃ n, Even n ∧ B ≤ n ∧ ∃ f ∈ T.cuspA j (fun _ => 1) n,
       rdU (T.U j σ) f k x.1 ≠ 0 := by
@@ -741,7 +741,7 @@ theorem exists_weight_of_pointwise
   obtain ⟨la⟩ : Nonempty (HeightOneSpectrum (𝓞 T.Q.c.F)) := by
     obtain ⟨M, hM⟩ := Ideal.exists_maximal (𝓞 T.Q.c.F)
     exact ⟨⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField _)⟩⟩
-  haveI : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
+  have : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
   obtain ⟨s, hs, hsz⟩ := exists_finite_subfamily la (hM la) σ (ι := Σ k, ((T.U j σ).X k).dom)
     (fun _ _ => 1) (fun p => n p.1 p.2) (fun p => f p.1 p.2) (fun p => hsec p.1 p.2) (fun z => by
       obtain ⟨k, x, t, ht⟩ := hU.2.2.1 z
@@ -855,7 +855,7 @@ theorem evR_of_frMap {D : D7} (T : CoreJ D) (h : LawsJ T) {j : ℕ} (hj : Formal
   have hT : FromTest (K := T.Q.c.F) (fun S _ _ => FrPt (T.Q.Xo j) T.Q.c S) (fun φ y z => FrMap φ y z) z :=
     ⟨p, ψ, y, hz⟩
   unfold evR evalAt
-  rw [dif_pos hT]
+  rw [dite_eq_left hT]
   exact h.evalWD j hj f hf S _ p _ ψ _ y z hT.choose_spec.choose_spec.choose_spec hz
 
 
@@ -864,8 +864,8 @@ set_option maxHeartbeats 1000000 in
 theorem exists_family : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism.L2.Pj.InR D j → ∀ σ : T.Q.c.F →+* ℂ, GoodEmb T.Q.c σ → ∀ (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n : ℕ), Dom a n → ∃ (b : (D.host.E →+* ℂ) × ℕ → ℕ) (m N : ℕ) (t : Fin N → Rul (T.Q.Xo j) T.Q.c), Dom b m ∧ (∀ i, t i ∈ sec (T.Q.Xo j) T.Q.c b m) ∧ (∀ (p : TRing T.Q.c.F) (y : FrPt (T.Q.Xo j) T.Q.c p.R), Ideal.span (Set.range fun i => t i p y) = ⊤) ∧ ∀ P ∈ holSub0 (T.U j σ).X (laU (T.U j σ) a n), ∀ i, P * rdU (T.U j σ) (t i) ∈ Submodule.span ℂ (rdU (T.U j σ) '' (sec (T.Q.Xo j) T.Q.c (a + b) (n + m) : Set (Rul (T.Q.Xo j) T.Q.c))) := by
   intro D T h j hj σ hσ a n hdom
   obtain ⟨b, m, hbm, hlast, hm, hnz⟩ := _root_.GlobalTheory.BpfUniform.exists_weight_noCommonZero D T h j hj σ hσ
-  haveI : FiniteDimensional T.Q.c.F (T.cuspA j b m) := h.cuspFD j hj b m hbm
-  haveI : Module.Free T.Q.c.F (T.cuspA j b m) := Module.Free.of_divisionRing _ _
+  have : FiniteDimensional T.Q.c.F (T.cuspA j b m) := h.cuspFD j hj b m hbm
+  have : Module.Free T.Q.c.F (T.cuspA j b m) := Module.Free.of_divisionRing _ _
   let B := Module.finBasis T.Q.c.F (T.cuspA j b m)
   have hsec : ∀ i, (B i : T.R j) ∈ sec (T.Q.Xo j) T.Q.c b m := fun i => cusp_le_sec _ _ _ _ _ (B i).2
   refine ⟨b, m, _, fun i => (B i : T.R j), hbm, hsec, ?_, ?_⟩
@@ -877,7 +877,7 @@ theorem exists_family : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism
     have hz0 : ∀ i, evR (T.Q.Xo j) T.Q.c (B i : T.R j) z = 0 := fun i => by
       rw [evR_of_frMap T h hj _ (hsec i).1 p ψ y z hz]
       exact hψ _ (Ideal.subset_span ⟨i, rfl⟩)
-    haveI : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
+    have : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
     obtain ⟨k, x, t, ht⟩ := (h.unf j hj σ hσ).2.2.1 z
     have hx0 : ∀ i, rdU (T.U j σ) (B i : T.R j) k x.1 = 0 := fun i => by
       have hw := GlobalTheory.ArcQ.evR_frBor_of_isDomain hL (hsec i) t _ z ht
@@ -885,7 +885,7 @@ theorem exists_family : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism
       have hu : wchar (ex (T.Q.Dw j) b m) t ≠ 0 :=
         Finset.prod_ne_zero_iff.2 fun c _ => pow_ne_zero _ (t c).ne_zero
       have h0 := (mul_eq_zero.1 hw.symm).resolve_left hu
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos x.2]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left x.2]
       exact congrArg toC h0
     let ev : FDSec (T.U j σ).X →ₗ[ℂ] ℂ :=
       { toFun := fun P => P k x.1, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
@@ -974,8 +974,8 @@ namespace GlobalTheory.ConjSpan
 
 theorem exists_ringEquiv_fix_ne (K : Type) [Field K] [NumberField K] (σ : K →+* ℂ) (z : ℂ)
     (hz : Transcendental ℚ z) : ∃ τ : ℂ ≃+* ℂ, (∀ x, τ (σ x) = σ x) ∧ τ z ≠ z := by
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI : IsScalarTower ℚ K ℂ := IsScalarTower.of_algebraMap_eq (fun q => by simp)
+  let : Algebra K ℂ := σ.toAlgebra
+  have : IsScalarTower ℚ K ℂ := IsScalarTower.of_algebraMap_eq (fun q => by simp)
   have hzK : Transcendental K z := fun h => hz (h.restrictScalars ℚ)
   have hind : AlgebraicIndepOn K id ({z} : Set ℂ) := by
     rw [AlgebraicIndepOn, algebraicIndependent_unique_type_iff]
@@ -1025,12 +1025,12 @@ theorem span_conj_eq_top : ∀ (K : Type) [Field K] [NumberField K] (σ : K →+
     { carrier := {z | ∀ φ : ℂ ≃+* ℂ, (∀ x, φ (σ x) = σ x) → ∑ i, z i * φ (e i) = 0}
       add_mem' := by
         intro a b ha hb φ hφ
-        simp only [Set.mem_setOf_eq, Pi.add_apply, add_mul, Finset.sum_add_distrib, ha φ hφ,
+        simp only [Set.mem_ofPred_eq, Pi.add_apply, add_mul, Finset.sum_add_distrib, ha φ hφ,
           hb φ hφ, add_zero]
       zero_mem' := by intro φ hφ; simp
       smul_mem' := by
         intro c a ha φ hφ
-        simp only [Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, mul_assoc, ← Finset.mul_sum,
+        simp only [Set.mem_ofPred_eq, Pi.smul_apply, smul_eq_mul, mul_assoc, ← Finset.mul_sum,
           ha φ hφ, mul_zero] }
   have hRmem : ∀ z, z ∈ R ↔ ∀ φ : ℂ ≃+* ℂ, (∀ x, φ (σ x) = σ x) → ∑ i, z i * φ (e i) = 0 :=
     fun z => Iff.rfl
@@ -1127,11 +1127,11 @@ theorem exists_indep_comb {K R V : Type} [Field K] [AddCommGroup R] [Module K R]
       (∀ c : Fin m → K, ∑ i, σ (c i) * e i = 0 → c = 0) ∧ P = ∑ i, e i • ρ (f i) := by
   obtain ⟨n, z, v, hv⟩ := Submodule.mem_span_set'.1 hP
   choose g hg hgv using fun k => (v k).2
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   have hsm : ∀ (a : K) (x : ℂ), a • x = σ a * x := fun a x => by rw [Algebra.smul_def]; rfl
   let W : Submodule K ℂ := Submodule.span K (Set.range z)
   have hzW : ∀ k, z k ∈ W := fun k => Submodule.subset_span ⟨k, rfl⟩
-  haveI : FiniteDimensional K W := FiniteDimensional.span_of_finite K (Set.finite_range z)
+  have : FiniteDimensional K W := FiniteDimensional.span_of_finite K (Set.finite_range z)
   let ζ := Module.finBasis K W
   let β : Fin n → Fin (Module.finrank K W) → K := fun k m => ζ.repr ⟨z k, hzW k⟩ m
   have hzexp : ∀ k, z k = ∑ m, σ (β k m) * (ζ m : ℂ) := by
@@ -1233,8 +1233,8 @@ theorem descent (hf : 1 < Module.finrank ℚ E / 2) {σ : c.F →+* ℂ} (U : Un
     have := isSec_comb (U.X k) (laU U a n k) (fun i => φ (e i)) (fun i => rdU U (f i) k)
       (fun i => hU.2.2.2.2.1 a n hd _ (hfs i) k)
     simpa only [Finset.sum_apply, Pi.smul_apply] using this
-  haveI := c.fin
-  haveI : NumberField c.F := {}
+  have := c.fin
+  have : NumberField c.F := {}
   have htop := _root_.GlobalTheory.ConjSpan.span_conj_eq_top c.F σ (Fin m) e he
   let L : (Fin m → ℂ) →ₗ[ℂ] FDSec U.X := Fintype.linearCombination ℂ fun i => rdU U (f i)
   have hle : (⊤ : Submodule ℂ (Fin m → ℂ)) ≤ (holSub0 U.X (laU U a n)).comap L := by

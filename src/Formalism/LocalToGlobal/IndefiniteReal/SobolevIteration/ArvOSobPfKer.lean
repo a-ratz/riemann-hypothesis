@@ -108,7 +108,7 @@ private theorem mem_ball_one_of_qr_lt_sq {r : ℝ} (hr : 0 < r) (k : Fin n → F
 private theorem integrable_of_continuous_of_isHaarK {G s : Matrix (Fin n) (Fin n) ℂ} (hs : IsCartanInv G s)
     {μ : Measure (Fin n → Fin n → ℂ)} (hμ : IsHaarK G s μ) {f : (Fin n → Fin n → ℂ) → ℝ}
     (hf : Continuous f) : Integrable f μ := by
-  haveI := hμ.1
+  have := hμ.1
   have hae : ∀ᵐ k ∂μ, k ∈ {k : Fin n → Fin n → ℂ | Matrix.of k ∈ KAt G s} := hμ.2.1
   have hK : IsCompact {k : Fin n → Fin n → ℂ | Matrix.of k ∈ KAt G s} := isCompact_KAt hs
   have h := hf.continuousOn.integrableOn_compact (μ := μ) hK
@@ -116,7 +116,7 @@ private theorem integrable_of_continuous_of_isHaarK {G s : Matrix (Fin n) (Fin n
 
 theorem polyKernel_holds : PolyKernel := by
   intro n G s hs μ hμ U hU η hη
-  haveI := hμ.1
+  have := hμ.1
   have hKae : ∀ᵐ k ∂μ, Matrix.of k ∈ KAt G s := hμ.2.1
   have hK : IsCompact {k : Fin n → Fin n → ℂ | Matrix.of k ∈ KAt G s} := isCompact_KAt hs
   obtain ⟨M, hM⟩ := hK.bddAbove_image (continuous_qr (n := n)).continuousOn

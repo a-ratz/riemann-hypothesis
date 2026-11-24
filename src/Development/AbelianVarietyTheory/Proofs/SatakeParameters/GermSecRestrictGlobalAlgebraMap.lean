@@ -55,7 +55,7 @@ def germSec {V : X.Opens} (hη : genericPoint X ∈ V) : Sec s V →+* X.functio
 
 theorem semiHom_germSec {V : X.Opens} (hη : genericPoint X ∈ V) :
     letI := ffAlg s; SemiHom (RingHom.id k) (germSec s hη) := by
-  letI := ffAlg s
+  let := ffAlg s
   intro r b
   rw [Algebra.smul_def, Algebra.smul_def, map_mul, RingHom.id_apply]
   congr 1
@@ -70,7 +70,7 @@ theorem semiHom_germSec {V : X.Opens} (hη : genericPoint X ∈ V) :
 theorem germSec_restrictGlobal_algebraMap {V : X.Opens} (hη : genericPoint X ∈ V) (r : k) :
     letI := algΓ s; letI := ffAlg s
     germSec s hη (restrictGlobal X V (algebraMap k Γ(X, ⊤) r)) = algebraMap k X.functionField r := by
-  letI := algΓ s; letI := ffAlg s
+  let := algΓ s; let := ffAlg s
   change (X.presheaf.germ V (genericPoint X) hη).hom ((X.presheaf.map (homOfLE le_top).op).hom _) = _
   rw [← CommRingCat.comp_apply, TopCat.Presheaf.germ_res]
   rfl

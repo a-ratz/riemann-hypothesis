@@ -89,8 +89,8 @@ theorem fibreDim_closedPoint (O M : Type) [CommRing O] [IsLocalRing O] [AddCommG
   let φ : IsLocalRing.ResidueField O →+* q.asIdeal.ResidueField :=
     Ideal.Quotient.lift _ (algebraMap O q.asIdeal.ResidueField) fun a ha => by
       rw [← RingHom.mem_ker, Ideal.ker_algebraMap_residueField]; exact ha
-  letI : Algebra (IsLocalRing.ResidueField O) q.asIdeal.ResidueField := φ.toAlgebra
-  haveI : IsScalarTower O (IsLocalRing.ResidueField O) q.asIdeal.ResidueField :=
+  let : Algebra (IsLocalRing.ResidueField O) q.asIdeal.ResidueField := φ.toAlgebra
+  have : IsScalarTower O (IsLocalRing.ResidueField O) q.asIdeal.ResidueField :=
     IsScalarTower.of_algebraMap_eq fun a => (Ideal.Quotient.lift_mk _ _ _).symm
   exact finrank_tensor_tower O _ _ M
 
@@ -149,7 +149,7 @@ theorem projective_and_rankAtStalk_of_fibreDim :
       Module.Projective O M ∧ ∀ q : PrimeSpectrum O, Module.rankAtStalk M q = n := by
   intro O _ _ _ M _ _ _ n h
   obtain ⟨e⟩ := nonempty_equiv_fin O M n h
-  haveI : Module.Free O M := Module.Free.of_equiv e.symm
+  have : Module.Free O M := Module.Free.of_equiv e.symm
   refine ⟨inferInstance, fun q => ?_⟩
   rw [Module.rankAtStalk_eq]
   exact h q
@@ -310,9 +310,9 @@ theorem exists_quotPDivGroup : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing
       Ideal.ext fun _ => Ideal.Quotient.eq_zero_iff_mem⟩
   have hex := fun m => existsHopfQuotient O (τ.B m) (p ^ m)
   choose D iR iH iC q hq hk using hex
-  letI := iR
-  letI := iH
-  letI := iC
+  let := iR
+  let := iH
+  let := iC
   have hB1 : ∀ m (x : PrimeSpectrum O),
       fibreDim (τ.B m ⧸ torsionIdeal (R := O) (A := τ.B m) (p ^ m)) x = p ^ (m * G.height) := by
     intro m x
@@ -325,7 +325,7 @@ theorem exists_quotPDivGroup : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing
     have h := GlobalTheory.T.torsion_fibreDim_quotient_pDivGroupLevel p O G 2 m (by norm_num) (τ.B (m + 1))
     rw [show 2 + m = m + 1 + 1 by omega] at h
     exact h (τ.j (m + 1)) (τ.ρ (m + 1)) (τ.ρ_j (m + 1)) (τ.tors_le (m + 1)) x
-  haveI hfin : ∀ m, Module.Finite O (D m) := fun m =>
+  have hfin : ∀ m, Module.Finite O (D m) := fun m =>
     Module.Finite.of_surjective (q m : τ.B m →ₗ[O] D m) (hq m)
   have hD : ∀ m (x : PrimeSpectrum O), fibreDim (D m) x = p ^ (m * G.height) := by
     intro m x
@@ -335,7 +335,7 @@ theorem exists_quotPDivGroup : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing
     rw [← hB1 m x]
     exact (fibreDim_congr e x).symm
   have hPR := fun m => _root_.GlobalTheory.ConstFibreFree.projective_and_rankAtStalk_of_fibreDim O (D m) (p ^ (m * G.height)) (hD m)
-  haveI hproj : ∀ m, Module.Projective O (D m) := fun m => (hPR m).1
+  have hproj : ∀ m, Module.Projective O (D m) := fun m => (hPR m).1
   have hle : ∀ m, RingHom.ker (q (m + 1)) ≤ RingHom.ker ((q m).comp (τ.r m)) := by
     intro m b hb
     rw [hk] at hb
@@ -574,10 +574,10 @@ theorem GlobalTheory.HTPair.exists_quot_field : ∀ (p : ℕ) [Fact p.Prime] (k 
     hπ.comp (levelRes_surjective G m)
   choose B iR iH iC iF j hinj hker huniv using
     fun m => _root_.GlobalTheory.HopfQuot.exists_quotient k (G.A (m + 1)) C (π.comp (levelRes G m)) (hsurj m)
-  letI := iR
-  letI := iH
-  letI := iC
-  letI := iF
+  let := iR
+  let := iH
+  let := iC
+  let := iF
   have hρ : ∀ m, ∃ ρ : G.A (m + 1) →ₗ[k] B m, ∀ b, ρ (j m b) = b := fun m => by
     obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective
       ((j m : B m →ₐ[k] G.A (m + 1)).toLinearMap) (LinearMap.ker_eq_bot.2 (hinj m))

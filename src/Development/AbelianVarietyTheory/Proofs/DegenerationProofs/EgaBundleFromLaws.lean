@@ -241,7 +241,7 @@ theorem exists_veryAmple_h1Zero_pull : ∀ (A : Type) [CommRing A] (X : Over (Sp
   have hH := isLB_pw hL (d₀ : ℤ)
   have hH₀ := LB.isLB_pull hH π
   let s' := fun j => GlobalTheory.Cartier.secPull (s₀ j) π
-  haveI : IsClosedImmersion (pullback.lift π f₀ hπ.w) := by
+  have : IsClosedImmersion (pullback.lift π f₀ hπ.w) := by
     have e : pullback.lift π f₀ hπ.w = hπ.isoPullback.hom := by
       apply pullback.hom_ext
       · exact (pullback.lift_fst _ _ _).trans hπ.isoPullback_hom_fst.symm
@@ -249,7 +249,7 @@ theorem exists_veryAmple_h1Zero_pull : ∀ (A : Type) [CommRing A] (X : Over (Sp
     rw [e]
     infer_instance
   have hva : VeryAmpleBy f₀ _ s' := by
-    haveI : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) hπ.flip inferInstance
+    have : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) hπ.flip inferInstance
     have loc (i : Fin (n₀ + 1)) : nonzeroLocus (s' i) = π ⁻¹ᵁ nonzeroLocus (s₀ i) :=
       GlobalTheory.Cartier.nonzeroLocus_secPull (s₀ i) π
     have restrict_app {U : X.left.Opens} {V W : X₀.Opens}
@@ -563,7 +563,7 @@ theorem algebraisation : Laws → Laws2 → ∀ (R : Type) [CommRing R] [IsDomai
   have hS : Smooth B.hom := GlobalTheory.T.smooth_of_smooth_thickenings' R I hI B (AbLaw.isProper_of_isProjBy R B.left B.hom hP) Y b hb hY
   have hF : Flat B.hom := inferInstance
   obtain ⟨M, hM, hNM⟩ := GlobalTheory.LBAlgLocal.exists_lineBundle_of_thickenings R I hI hc Y β hβ B b hP hF hb hbβ N v hN
-  haveI : Nontrivial (R ⧸ I ^ (0 + 1)) := g₀.domain_nontrivial
+  have : Nontrivial (R ⧸ I ^ (0 + 1)) := g₀.domain_nontrivial
   exact ⟨B, M, b, hP, hS, hM, GlobalTheory.T.relAmple_of_ample_on_closed_subscheme_localBase R B M hF hP hM _ _ Ideal.Quotient.mk_surjective (Y 0) (b 0) (hb 0)
     (N 0) (hN 0).1 (hNM 0) hA, hb, hbβ, hNM⟩
 
@@ -710,7 +710,7 @@ theorem correction {V σ : Type} [CommRing V] [IsNoetherianRing V] {M J₁ : Ide
     refine ⟨0, zero_mem _, ?_⟩
     rw [sub_zero]
     exact mem_vanIdeal_of_isIso _ hH₁ h' hF (c₁ ▸ hF0)
-  obtain ⟨a, ha₁, ha⟩ := SetLike.not_le_iff_exists.1 hle
+  obtain ⟨a, ha₁, ha⟩ := IsConcreteLE.not_le_iff_exists.1 hle
   have haJ : a ∈ J ⊔ Ideal.span {a} := Ideal.mem_sup_right (Ideal.mem_span_singleton_self a)
   have l₁ : J ≤ J ⊔ Ideal.span {a} := le_sup_left
   have l₂ : J ⊔ Ideal.span {a} ≤ J₁ := sup_le h₁ ((Ideal.span_singleton_le_iff_mem _).2 ha₁)
@@ -790,8 +790,8 @@ theorem exists_form_limit {R σ : Type} [CommRing R] [Finite σ] (I : Ideal R) [
     (e : ℕ) (F : MvPolynomial σ R) (hF : F.IsHomogeneous t) (h : F ∈ K e) :
     ∃ F₁ : MvPolynomial σ R, F₁.IsHomogeneous t ∧ (∀ e', F₁ ∈ K e') ∧
       map (Ideal.Quotient.mk (I ^ (e + 1))) F₁ = map (Ideal.Quotient.mk (I ^ (e + 1))) F := by
-  haveI : Module.Finite R (homogeneousSubmodule σ R t) := Module.Finite.iff_fg.mpr (homogeneousSubmodule_fg _ _ _)
-  haveI := GlobalTheory.isPrecomplete_of_finite I (homogeneousSubmodule σ R t)
+  have : Module.Finite R (homogeneousSubmodule σ R t) := Module.Finite.iff_fg.mpr (homogeneousSubmodule_fg _ _ _)
+  have := GlobalTheory.isPrecomplete_of_finite I (homogeneousSubmodule σ R t)
   obtain ⟨x', hx', hy⟩ := exists_limit I
     (fun e => ((K e).restrictScalars R).comap (homogeneousSubmodule σ R t).subtype)
     (fun e x hx => h₁ e x.1 x.2 hx)

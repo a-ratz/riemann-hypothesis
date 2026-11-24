@@ -313,11 +313,11 @@ theorem eq_zero : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGr
   push_neg at hne
   let Z : ι → Set G := fun i => {x | ∀ (m : ℕ) (φ : SB G), φ.1 =
     Set.indicator {g : G | ∃ a ∈ K i m, ∃ b ∈ K i m, g = a * x * b} (fun _ => (1 : ℂ)) → D φ = 0}
-  haveI : LocallyCompactSpace (Oᶜ : Set G) := hO.isClosed_compl.locallyCompactSpace
-  haveI : Nonempty (Oᶜ : Set G) := ⟨⟨hne.choose, hne.choose_spec⟩⟩
+  have : LocallyCompactSpace (Oᶜ : Set G) := hO.isClosed_compl.locallyCompactSpace
+  have : Nonempty (Oᶜ : Set G) := ⟨⟨hne.choose, hne.choose_spec⟩⟩
   obtain ⟨i, y, hy⟩ := nonempty_interior_of_iUnion_of_closed (X := (Oᶜ : Set G))
     (f := fun i => Subtype.val ⁻¹' closure (Z i))
-    (fun i => isClosed_closure.preimage continuous_subtype_val)
+    (fun i => isClosed_closure.preimage continuous_subtypeVal)
     (Set.eq_univ_of_forall fun x => by
       obtain ⟨i, hi⟩ := hD x.1
       exact Set.mem_iUnion.2 ⟨i, subset_closure hi⟩)

@@ -90,7 +90,7 @@ lemma exists_far_point (z : Fin D → ℂ) {s : ℝ} (hs : 0 < s) :
     intro i
     by_cases h : z i = 0
     · simp [u, h]
-    · simp only [u, if_neg h, norm_div, Complex.norm_real, norm_norm]
+    · simp only [u, ite_eq_right h, norm_div, Complex.norm_real, norm_norm]
       exact div_self (norm_ne_zero_iff.mpr h)
   let w : Fin D → ℂ := fun i => (s : ℂ) * u i
   have hw : ‖w‖ ≤ s := by
@@ -104,7 +104,7 @@ lemma exists_far_point (z : Fin D → ℂ) {s : ℝ} (hs : 0 < s) :
     · have hzi : 0 < ‖z i‖ := norm_pos_iff.mpr h
       have hc : (‖z i‖ : ℂ) ≠ 0 := by exact_mod_cast hzi.ne'
       have e : (z + w) i = ((‖z i‖ + s) / ‖z i‖ : ℝ) * z i := by
-        simp only [Pi.add_apply, w, u, if_neg h]
+        simp only [Pi.add_apply, w, u, ite_eq_right h]
         push_cast
         field_simp
       rw [e, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by positivity),
@@ -120,7 +120,7 @@ lemma not_mem_coordDiv_of {S : Finset (Fin D)} {x : Fin D → ℂ} {s : ℝ} (hs
 
 lemma smul_mem_coordDiv_iff {S : Finset (Fin D)} {c : ℝ} (hc : c ≠ 0) (x : Fin D → ℂ) :
     c • x ∈ coordDiv S ↔ x ∈ coordDiv S := by
-  simp only [coordDiv, Set.mem_setOf_eq, Pi.smul_apply, smul_eq_zero, hc, false_or]
+  simp only [coordDiv, mem_ofPred_eq, Pi.smul_apply, smul_eq_zero, hc, false_or]
 
 lemma mem_ball_smul_iff {R : ℝ} (hR : 0 < R) (y : Fin D → ℂ) :
     R • y ∈ ball (0 : Fin D → ℂ) R ↔ y ∈ ball (0 : Fin D → ℂ) 1 := by
@@ -144,7 +144,7 @@ lemma mem_closure_off (S : Finset (Fin D)) {R : ℝ} {y : Fin D → ℂ} (hy : y
       show -(y i).re = t
       linarith
     exact (Set.finite_range _).subset hsub
-  obtain ⟨t, ⟨ht0, htm⟩, htbad⟩ := ((Set.Ioo_infinite hm0).diff hfin).nonempty
+  obtain ⟨t, ⟨ht0, htm⟩, htbad⟩ := ((Set.Ioo_infinite hm0).sdiff hfin).nonempty
   have hc : ‖fun _ : Fin D => (t : ℂ)‖ ≤ t :=
     (pi_norm_le_iff_of_nonneg ht0.le).mpr fun i => by simp [abs_of_pos ht0]
   refine ⟨y + fun _ => (t : ℂ), ⟨?_, ?_⟩, ?_⟩
@@ -176,7 +176,7 @@ lemma ext_exists (S : Finset (Fin D)) {R : ℝ} (hR : 0 < R) {u : (Fin D → ℂ
   have hmemR : ∀ y : Fin D → ℂ, R • y ∈ ball (0 : Fin D → ℂ) R \ coordDiv S ↔
       y ∈ ball (0 : Fin D → ℂ) 1 \ coordDiv S := by
     intro y
-    rw [Set.mem_diff, Set.mem_diff, mem_ball_smul_iff hR, smul_mem_coordDiv_iff hR.ne']
+    rw [Set.mem_sdiff, Set.mem_sdiff, mem_ball_smul_iff hR, smul_mem_coordDiv_iff hR.ne']
   have hset : {y : Fin D → ℂ | R • y ∈ ball (0 : Fin D → ℂ) R \ coordDiv S} =
       ball (0 : Fin D → ℂ) 1 \ coordDiv S := by
     ext y
@@ -210,7 +210,7 @@ lemma ext_exists (S : Finset (Fin D)) {R : ℝ} (hR : 0 < R) {u : (Fin D → ℂ
   · have h4 := isPsh_scale hext R⁻¹
     have hset2 : {x : Fin D → ℂ | R⁻¹ • x ∈ ball (0 : Fin D → ℂ) 1} = ball 0 R := by
       ext x
-      simp only [Set.mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       rw [← mem_ball_smul_iff hR, smul_inv_smul₀ hR.ne']
     rw [hset2] at h4
     exact h4
@@ -218,7 +218,7 @@ lemma ext_exists (S : Finset (Fin D)) {R : ℝ} (hR : 0 < R) {u : (Fin D → ℂ
     have hx' : R⁻¹ • x ∉ coordDiv S := by
       rw [smul_mem_coordDiv_iff (inv_ne_zero hR.ne')]
       exact hx.2
-    simp only [extT, limsupExt, if_neg hx', smul_inv_smul₀ hR.ne']
+    simp only [extT, limsupExt, ite_eq_right hx', smul_inv_smul₀ hR.ne']
   · intro x hx δ hδ
     by_cases hxA : x ∈ coordDiv S
     · set x' := R⁻¹ • x with hx'
@@ -230,8 +230,8 @@ lemma ext_exists (S : Finset (Fin D)) {R : ℝ} (hR : 0 < R) {u : (Fin D → ℂ
       set F : (Fin D → ℂ) → ℝ := fun y => max (u (R • y)) (-κ) with hF
       have hw : extT S R u κ x = limsup F (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x') := by
         simp only [extT, limsupExt]
-        rw [if_pos ((smul_mem_coordDiv_iff (inv_ne_zero hR.ne') x).mpr hxA)]
-      haveI : (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x').NeBot :=
+        rw [ite_eq_left ((smul_mem_coordDiv_iff (inv_ne_zero hR.ne') x).mpr hxA)]
+      have : (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x').NeBot :=
         mem_closure_iff_nhdsWithin_neBot.mp (mem_closure_off S hx'U)
       have hcob : IsCoboundedUnder (· ≤ ·) (𝓝[ball (0 : Fin D → ℂ) 1 \ coordDiv S] x') F :=
         isCoboundedUnder_le_of_le _ (fun y => le_max_right _ _)
@@ -254,7 +254,7 @@ lemma ext_exists (S : Finset (Fin D)) {R : ℝ} (hR : 0 < R) {u : (Fin D → ℂ
         rw [smul_mem_coordDiv_iff (inv_ne_zero hR.ne')]
         exact hxA
       have hwx : extT S R u κ x = max (u x) (-κ) := by
-        simp only [extT, limsupExt, if_neg hx', smul_inv_smul₀ hR.ne']
+        simp only [extT, limsupExt, ite_eq_right hx', smul_inv_smul₀ hR.ne']
       exact ⟨x, ⟨hx, hxA⟩, by simp [hδ], by linarith⟩
 
 end

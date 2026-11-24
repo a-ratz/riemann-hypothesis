@@ -88,8 +88,8 @@ theorem adeleMap_mem_intAd_iff (x : 𝔸[F]) : adeleMap F E x ∈ intAd E ↔ x 
       finEval w (adeleMap F E x) ∈ w.adicCompletionIntegers E ↔
         finEval (below F w) x ∈ (below F w).adicCompletionIntegers F := by
     intro w
-    haveI := liesOver_below (K := F) w
-    haveI := w.isPrime
+    have := liesOver_below (K := F) w
+    have := w.isPrime
     have h1 : finEval w (adeleMap F E x) =
         SemiLocal.completionMap (below F w) w (finEval (below F w) x) :=
       finiteAdeleMap_apply x.2 w
@@ -407,7 +407,7 @@ theorem exists_finIdele {d : F} (hd0 : d ≠ 0) :
       exact (valued_alg v d⁻¹).symm.le.trans this
     have : v.valuation F d = 1 := by
       rw [map_inv₀] at b'
-      exact le_antisymm a' ((inv_le_one₀ (zero_lt_iff.2 (by simpa using hd0))).1 b')
+      exact le_antisymm a' ((inv_le_one₀ (pos_iff_ne_zero.2 (by simpa using hd0))).1 b')
     simp [n, this]
   let f : ℤ → ∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletion F := fun s v =>
     (algebraMap F (v.adicCompletion F) (π v)) ^ (s * n v)
@@ -682,14 +682,14 @@ theorem jmir : StdGood → GrpTop → BdetLaw → ExtLaw → ParLaw → JTop →
       A.uH ε Set.univ (j x) = A.lg (bdet (Sum.inl '' (Set.univ : Set ι)) ((j x : A.U ε ι) : GL (ι ⊕ ι) R)) := by
     intro x hx
     obtain ⟨-, -, -, hT2U, -, -, hKc⟩ := hGT E R A hA ι ε
-    haveI := hT2U
+    have := hT2U
     obtain ⟨-, hmulS, hcontS, hratS, hkS, -⟩ := hBd E R A hGL (ι ⊕ ι) (Sum.inl '' (Set.univ : Set ι))
     have h := (hExt (A.U ε ι) (A.uΓ ε ι) (A.uK ε ι) (A.uQ ε Set.univ)
       (fun p => A.lg (bdet (Sum.inl '' (Set.univ : Set ι)) (p : GL (ι ⊕ ι) R))) hKc hparU.closed hIwa
       (fun p hp q hq => by
         show A.lg (bdet _ ((p * q : A.U ε ι) : GL (ι ⊕ ι) R)) = _
         rw [Subgroup.coe_mul, hmulS _ (Subgroup.mem_subgroupOf.1 hp) _ (Subgroup.mem_subgroupOf.1 hq), hGL.lgmul])
-      (hGL.lgcont.comp_continuousOn (hcontS.comp continuous_subtype_val.continuousOn
+      (hGL.lgcont.comp_continuousOn (hcontS.comp continuous_subtypeVal.continuousOn
         (fun p hp => Subgroup.mem_subgroupOf.1 hp)))
       (fun p hp hk => hkS _ (Subgroup.mem_subgroupOf.1 hp) (Subgroup.mem_subgroupOf.1 hk))
       (fun p hp hg => by
@@ -706,7 +706,7 @@ theorem jmir : StdGood → GrpTop → BdetLaw → ExtLaw → ParLaw → JTop →
   · refine ContinuousMonoidHom.ext fun x => ?_
     obtain ⟨y, rfl⟩ := QuotientGroup.mk_surjective x
     exact hωsq y
-  · exact continuous_snd.comp continuous_subtype_val
+  · exact continuous_snd.comp continuous_subtypeVal
   · intro κ hκ
     obtain ⟨κ', hκ', hEq⟩ := Subgroup.mem_map.1 (Subgroup.mem_comap.1 (Subgroup.mem_inf.1 hκ).2)
     refine ⟨κ', hκ', ?_⟩
@@ -801,8 +801,8 @@ theorem jCh : StdGood → BdetLaw → JTop → JCh := by
     funext x
     apply Units.ext
     rfl
-  have hprj : Continuous (prj A ν ι) := continuous_snd.comp continuous_subtype_val
-  have hfst : Continuous fun x : cover A ν ι => x.1.1 := continuous_fst.comp continuous_subtype_val
+  have hprj : Continuous (prj A ν ι) := continuous_snd.comp continuous_subtypeVal
+  have hfst : Continuous fun x : cover A ν ι => x.1.1 := continuous_fst.comp continuous_subtypeVal
   have hadd : ∀ p g : cover A ν ι, ld (p * g) = ld p + ld g := by
     intro p g
     simp only [ld, map_mul]
@@ -829,7 +829,7 @@ theorem jCh : StdGood → BdetLaw → JTop → JCh := by
     have hx' : Units.map A.i.toMonoidHom x = γ.1.1 := hx
     rw [← hx', this]
     simp
-  · exact (continuous_subtype_val.comp (hG.toGoodL.χcont.comp hfst)).continuousOn
+  · exact (continuous_subtypeVal.comp (hG.toGoodL.χcont.comp hfst)).continuousOn
   · intro p _ g
     exact hadd p g
   · intro g k hk'
@@ -1011,7 +1011,7 @@ theorem jcpt : StdGood → GrpTop → JTop → JCpt := by
     fun p => ((p.1.1 * (M p.2)⁻¹ : GL (ι ⊕ ι) R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R) (Sum.inl i) (Sum.inl i)
   let ψ : A.U ε ι × GL (ι ⊕ ι) (NumberField.AdeleRing (NumberField.RingOfIntegers F) F) → R :=
     fun p => ((M p.2 * (p.1.1)⁻¹ : GL (ι ⊕ ι) R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R) (Sum.inl i) (Sum.inl i)
-  have hval : Continuous (Subtype.val : A.U ε ι → GL (ι ⊕ ι) R) := continuous_subtype_val
+  have hval : Continuous (Subtype.val : A.U ε ι → GL (ι ⊕ ι) R) := continuous_subtypeVal
   have hφ : Continuous φ := by
     have : Continuous fun p : A.U ε ι × GL (ι ⊕ ι) (NumberField.AdeleRing (NumberField.RingOfIntegers F) F) =>
         (p.1.1 * (M p.2)⁻¹ : GL (ι ⊕ ι) R) :=
@@ -1076,7 +1076,7 @@ theorem jcpt : StdGood → GrpTop → JTop → JCpt := by
   have hemb := hcl.isClosedEmbedding_subtypeVal
   have hP : IsCompact ((Subtype.val : cover A ν ι → _) ⁻¹' (B ×ˢ C₂)) :=
     hemb.isCompact_preimage (hBc.prod hC₂)
-  have hprj : Continuous (prj A ν ι) := continuous_snd.comp continuous_subtype_val
+  have hprj : Continuous (prj A ν ι) := continuous_snd.comp continuous_subtypeVal
   have hclK : IsClosed (cK α j : Set (cover A ν ι)) := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact (hUK.isClosed.preimage hj).inter (hC₂.isClosed.preimage hprj)
@@ -1117,9 +1117,9 @@ theorem jtop : JTop := by
       funext x; rw [hJ x]; rfl
     rw [e]
     have h1 : Continuous fun x : cover A ν ι => (x.1.1 : R) :=
-      Units.continuous_val.comp (continuous_fst.comp continuous_subtype_val)
+      Units.continuous_val.comp (continuous_fst.comp continuous_subtypeVal)
     have h2 : Continuous fun x : cover A ν ι => (x.1.2 : Matrix (ι ⊕ ι) (ι ⊕ ι) 𝔸[F]) :=
-      Units.continuous_val.comp (continuous_snd.comp continuous_subtype_val)
+      Units.continuous_val.comp (continuous_snd.comp continuous_subtypeVal)
     exact h1.smul ((continuous_const.matrix_mul (h2.matrix_map hcv)).matrix_mul continuous_const)
   have hjGL : Continuous fun x : cover A ν ι => ((j x).1 : GL (ι ⊕ ι) R) := by
     refine Units.continuous_iff.2 ⟨hval, ?_⟩
@@ -1133,13 +1133,13 @@ theorem jtop : JTop := by
     exact Units.continuous_iff.2 ⟨hφ.comp Units.continuous_val, hφ.comp (Units.continuous_val.comp continuous_inv)⟩
   have hdet : Continuous (Matrix.GeneralLinearGroup.det : GL (ι ⊕ ι) 𝔸[F] → 𝔸[F]ˣ) :=
     Units.continuous_iff.2 ⟨Units.continuous_val.matrix_det, (Units.continuous_val.comp continuous_inv).matrix_det⟩
-  haveI : SecondCountableTopology Rᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : SecondCountableTopology (Matrix (ι ⊕ ι) (ι ⊕ ι) 𝔸[F]) := inferInstanceAs (SecondCountableTopology (ι ⊕ ι → ι ⊕ ι → 𝔸[F]))
-  haveI : SecondCountableTopology (Matrix (ι ⊕ ι) (ι ⊕ ι) 𝔸[F])ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : SecondCountableTopology Rˣ := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : SecondCountableTopology (GL (ι ⊕ ι) 𝔸[F]) := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : LocallyCompactSpace Rˣ := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : LocallyCompactSpace (GL (ι ⊕ ι) 𝔸[F]) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology Rᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : SecondCountableTopology (Matrix (ι ⊕ ι) (ι ⊕ ι) 𝔸[F]) := inferInstanceAs (SecondCountableTopology (ι ⊕ ι → ι ⊕ ι → 𝔸[F]))
+  have : SecondCountableTopology (Matrix (ι ⊕ ι) (ι ⊕ ι) 𝔸[F])ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : SecondCountableTopology Rˣ := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : SecondCountableTopology (GL (ι ⊕ ι) 𝔸[F]) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : LocallyCompactSpace Rˣ := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : LocallyCompactSpace (GL (ι ⊕ ι) 𝔸[F]) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
   have hf : Continuous fun x : Rˣ × GL (ι ⊕ ι) 𝔸[F] =>
       x.1 * Units.map A.σ.toMonoidHom x.1 * Units.map ν.toMonoidHom (Matrix.GeneralLinearGroup.det x.2) :=
     (continuous_fst.mul ((hum A.σ hA.σcont).comp continuous_fst)).mul ((hum ν hcv).comp (hdet.comp continuous_snd))
@@ -1148,7 +1148,7 @@ theorem jtop : JTop := by
         x.1 * Units.map A.σ.toMonoidHom x.1 * Units.map ν.toMonoidHom (Matrix.GeneralLinearGroup.det x.2)) ⁻¹' {1} :=
       Set.ext fun x => Iff.rfl
     rw [e]; exact isClosed_singleton.preimage hf
-  haveI : SecondCountableTopology (Rˣ × GL (ι ⊕ ι) 𝔸[F]) := inferInstance
+  have : SecondCountableTopology (Rˣ × GL (ι ⊕ ι) 𝔸[F]) := inferInstance
   exact ⟨hjGL.subtype_mk _, inferInstance, hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace,
     Topology.IsEmbedding.subtypeVal.secondCountableTopology⟩
 
@@ -1180,7 +1180,7 @@ theorem dg_mem_stab (s : Set (ι ⊕ ι)) (x : Rˣ) : dg ι x ∈ stab R s := by
   exact ⟨Matrix.diagonal_apply_ne _ hne, Matrix.diagonal_apply_ne _ hne⟩
 
 theorem det_dg {i : ι} (hi : ∀ y, y = i) (x : Rˣ) : Matrix.GeneralLinearGroup.det (dg ι x) = x := by
-  haveI : Unique ι := ⟨⟨i⟩, hi⟩
+  have : Unique ι := ⟨⟨i⟩, hi⟩
   ext
   rw [Matrix.GeneralLinearGroup.val_det_apply]
   show (Matrix.diagonal _).det = _
@@ -1445,7 +1445,7 @@ theorem sig_entries (A : Ad E R) (ε : ℤˣ) (t : Rˣ) (ht : A.σ t = -(((ε : 
     ((Matrix.GeneralLinearGroup.det g : Rˣ) : R) *
       A.σ (((dg ι t * g * (dg ι t)⁻¹ : GL (ι ⊕ ι) R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R) m n) =
       ((dg ι t * g * (dg ι t)⁻¹ : GL (ι ⊕ ι) R) : Matrix (ι ⊕ ι) (ι ⊕ ι) R) m n := by
-  haveI : Unique ι := ⟨⟨i⟩, hi⟩
+  have : Unique ι := ⟨⟨i⟩, hi⟩
   have hd : (default : ι) = i := hi _
   have hg' : (g : Matrix (ι ⊕ ι) (ι ⊕ ι) R)ᵀ * Ad.J R ε ι * (g : Matrix (ι ⊕ ι) (ι ⊕ ι) R).map A.σ = Ad.J R ε ι := hg
   rw [conj_apply, Matrix.GeneralLinearGroup.val_det_apply, det_two i hi]
@@ -1701,7 +1701,7 @@ theorem mem_stab_line {i : ι} (hi : ∀ x, x = i) (s : Set (ι ⊕ ι)) (hs : s
 
 theorem det_tri {i : ι} (hi : ∀ x, x = i) (h : Matrix (ι ⊕ ι) (ι ⊕ ι) S) (h0 : h (Sum.inr i) (Sum.inl i) = 0) :
     h.det = h (Sum.inl i) (Sum.inl i) * h (Sum.inr i) (Sum.inr i) := by
-  haveI : Unique ι := ⟨⟨i⟩, hi⟩
+  have : Unique ι := ⟨⟨i⟩, hi⟩
   have e : h = Matrix.fromBlocks h.toBlocks₁₁ h.toBlocks₁₂ 0 h.toBlocks₂₂ := by
     ext r c
     rcases r with y | y <;> rcases c with z | z

@@ -85,16 +85,16 @@ private theorem ch_low (hF : LocalFiniteness) (hT : LocalTateDuality) (hE : Loca
     [TopologicalSpace M] [DiscreteTopology M] (ρ : Representation k (G F Ω) M) (hρ : ContAction ρ) (hK : ∀ g ∈ K, ρ g = 1) :
     Nat.card (H0 (ρ.comp (Dec (F := F) A).subtype)) ≤
       Nat.card (H1ur (ρ.comp (Dec (F := F) A).subtype) ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A))) := by
-  haveI : Module.Finite k M := Module.Finite.of_finite
+  have : Module.Finite k M := Module.Finite.of_finite
   let σ : Representation k (Dec (F := F) A) M := ρ.comp (Dec (F := F) A).subtype
   obtain ⟨f1, -, -, e1, -⟩ := locEuler hF hT hE F Ω l v A hA k M σ
-    (Continuous.comp hρ ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd))
+    (Continuous.comp hρ ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd))
   obtain ⟨f2, e2⟩ := tameEq hF hT hE F Ω l v A hA hv K ho hi k M ρ hρ fun g hg => hK g hg.2
   let i : (Ine (F := F) A ⊓ K : Subgroup (G F Ω)) → Dec (F := F) A := fun j => ⟨j.1, Ine_le_Dec A j.2.1⟩
   have hi' : ∀ j m, σ (i j) m = m := fun j m => LinearMap.congr_fun (hK _ j.2.2) m
   let r : Z1 σ →ₗ[k] eqHom ρ (Dec (F := F) A) (Ine (F := F) A ⊓ K) :=
     { toFun := fun z => ⟨fun j => z.1 (i j),
-        (IsLocallyConstant.iff_continuous _).2 (z.2.1.comp (continuous_subtype_val.subtype_mk _)),
+        (IsLocallyConstant.iff_continuous _).2 (z.2.1.comp (continuous_subtypeVal.subtype_mk _)),
         fun a b => (z.2.2 (i a) (i b)).trans (by rw [hi']), fun d hd j j' h => by
           have e : i j' * ⟨d, hd⟩ = ⟨d, hd⟩ * i j := Subtype.ext (by
             show j'.1 * d = d * j.1
@@ -133,17 +133,17 @@ private theorem ch_cup {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
     (y : Z1 ((twDual μ ρ).comp φ)) (hy : ∀ g : Dec (F := F) A, g.1 ∈ Ine (F := F) A ⊓ K → y.1 g = 0)
     (x : H1 (ρ.comp φ)) (hx : x ∈ H1ur (ρ.comp φ) ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A))) :
     cupH1H1TwistedDual μ ρ φ hρ (Submodule.Quotient.mk y) x = 0 := by
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
   replace hx := (ch_ur _ ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A))
     (fun j hj m => LinearMap.congr_fun (hK j hj.2).1 m) x).1 hx
   obtain ⟨γ, -, h1, h2⟩ := decZhat F Ω v A hA
-  haveI : ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A)).Normal :=
+  have : ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A)).Normal :=
     ⟨fun n hn g => ⟨conj_mem_Ine g.2 hn.1, Subgroup.Normal.conj_mem _ hn.2 _⟩⟩
   obtain ⟨b, hb1, -, hb2⟩ := H2_unramified_inflation l (Dec (F := F) A) k k ((charRep μ).comp φ) hμ
     ((Ine (F := F) A).subgroupOf (Dec (F := F) A)) ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A)) γ
-    (fun g hg => hg.1) (((isClosed_Ine A).inter (K.isClosed_of_isOpen ho)).preimage continuous_subtype_val)
+    (fun g hg => hg.1) (((isClosed_Ine A).inter (K.isClosed_of_isOpen ho)).preimage continuous_subtypeVal)
     (by
       rw [Subgroup.relIndex_subgroupOf (Ine_le_Dec A), Subgroup.inf_relIndex_left]
       exact fun h => hi (h.trans (Subgroup.relIndex_dvd_index_of_normal _ _)))
@@ -174,15 +174,15 @@ theorem UpperTheory.V.GC.gwTame (P : Hypotheses₂) {F Ω : Type} [Field F] [Num
       Nat.card {y : H1 ρ // ∃ z : Z1 ρ, Submodule.Quotient.mk z = y ∧
         ∀ v : S', ∀ g ∈ Ine (F := F) (A v) ⊓ K, z.1 (toGS Ω _ g) = 0} * Nat.card (H0 (twDual μ ρ)) *
       (∏ v : S', if v.1 ∈ S then Nat.card (H0 (ρ.comp (locFam S' A v))) else 1) * archH0Card S' ρ c := by
-  haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
-  haveI : CharP (ZMod (l ^ 1)) l := CharP.congr (l ^ 1) (pow_one l)
+  have : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
+  have : CharP (ZMod (l ^ 1)) l := CharP.congr (l ^ 1) (pow_one l)
   let L : LocCond ρ (locFam S' A) := fun v => if v.1 ∈ S then ⊥ else
     H1ur (ρ.comp (locFam S' A v)) ((Ine (F := F) (A v) ⊓ K).subgroupOf (Dec (F := F) (A v)))
   have hc' : ∀ v, ContAction (ρ.comp (locFam S' A v)) := fun v => hρ.comp' (continuous_locFam S' A v)
   have gw := P.gw F Ω l 1 M S' ρ one_pos hl hS' hρ μ hμ A hA c (fun w _ => hc w) L
   obtain ⟨-, f1, -⟩ := P.gf F Ω l 1 M S' ρ one_pos hS' hρ
   have f2 : ∀ v, Finite (H1 (ρ.comp (locFam S' A v))) := fun v => (P.lf F Ω l 1 M (A v) _ v.1 one_pos (hA v) (hc' v)).2.1
-  haveI : Finite (TDual (ZMod (l ^ 1)) M) := (DFunLike.finite _ : Finite (M →ₗ[ZMod (l ^ 1)] ZMod (l ^ 1)))
+  have : Finite (TDual (ZMod (l ^ 1)) M) := (DFunLike.finite _ : Finite (M →ₗ[ZMod (l ^ 1)] ZMod (l ^ 1)))
   have ha : 0 < archH0Card S' ρ c := by
     refine Nat.mul_pos (Finset.prod_pos fun w _ => ?_) (Nat.pow_pos Nat.card_pos)
     haveI : Nonempty {m : M // ρ (toGS Ω _ (c w)) m = m} := ⟨⟨0, map_zero _⟩⟩
@@ -195,16 +195,16 @@ theorem UpperTheory.V.GC.gwTame (P : Hypotheses₂) {F Ω : Type} [Field F] [Num
     rw [mem_perpCond]
     intro y hy
     by_cases hv : v.1 ∈ S
-    · simp only [L, if_pos hv, Submodule.mem_bot] at hy
+    · simp only [L, ite_eq_left hv, Submodule.mem_bot] at hy
       rw [hy, map_zero]
-    · simp only [L, if_neg hv] at hy
+    · simp only [L, ite_eq_right hv] at hy
       exact ch_cup l v.1 (A v) (hA v) K ho hi (ZMod (l ^ 1)) M μ ρ (locFam S' A v) (hc' v)
         ((GlobalTheory.Published.PoitouTate.contAction_charRep hμ).comp' (continuous_locFam S' A v)) (fun g hg => hK g.1 hg)
         (restrictCocycles1 _ _ (continuous_locFam S' A v) (f x)) (fun g hg => hf' x v hv g.1 hg) y hy
   have hpos : 0 < Nat.card (Sel ρ (locFam S' A) (continuous_locFam S' A) L) * Nat.card (H0 (twDual μ ρ)) *
       (∏ v : S', Nat.card (H0 (ρ.comp (locFam S' A v)))) * archH0Card S' ρ c :=
     Nat.mul_pos (Nat.mul_pos (Nat.mul_pos Nat.card_pos Nat.card_pos) (Finset.prod_pos fun v _ => Nat.card_pos)) ha
-  haveI : Finite (Sel (twDual μ ρ) (locFam S' A) (continuous_locFam S' A) (perpCond μ ρ (locFam S' A) hc' L)) := by
+  have : Finite (Sel (twDual μ ρ) (locFam S' A) (continuous_locFam S' A) (perpCond μ ρ (locFam S' A) hc' L)) := by
     refine Nat.finite_of_card_ne_zero fun h => ?_
     rw [gw, h, zero_mul, zero_mul] at hpos
     exact lt_irrefl _ hpos
@@ -214,11 +214,11 @@ theorem UpperTheory.V.GC.gwTame (P : Hypotheses₂) {F Ω : Type} [Field F] [Num
   have h1 : (∏ v : S', Nat.card (H0 (ρ.comp (locFam S' A v)))) ≤
       (∏ v : S', if v.1 ∈ S then Nat.card (H0 (ρ.comp (locFam S' A v))) else 1) * ∏ v : S', Nat.card (L v) := by
     rw [← Finset.prod_mul_distrib]
-    refine Finset.prod_le_prod' fun v _ => ?_
+    refine Finset.prod_le_prod fun v _ => ?_
     by_cases hv : v.1 ∈ S
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       exact Nat.le_mul_of_pos_right _ Nat.card_pos
-    · simp only [L, if_neg hv, one_mul]
+    · simp only [L, ite_eq_right hv, one_mul]
       exact ch_low P.lf P.lt P.le l v.1 (A v) (hA v) (fun h => hv (hS _ h)) K ho hi (ZMod (l ^ 1)) M (ρ.comp (toGS Ω _))
         (hρ.comp' (continuous_toGS Ω _)) fun g hg => (hK g hg).1
   have h2 : Nat.card (Sel ρ (locFam S' A) (continuous_locFam S' A) L) ≤
@@ -232,10 +232,10 @@ theorem UpperTheory.V.GC.gwTame (P : Hypotheses₂) {F Ω : Type} [Field F] [Num
         H1ur (ρ.comp (locFam S' A v)) ((Ine (F := F) (A v) ⊓ K).subgroupOf (Dec (F := F) (A v))) := by
       have := (mem_Sel _ _ _ _ _).1 hy v
       by_cases hv : v.1 ∈ S
-      · simp only [L, if_pos hv, Submodule.mem_bot] at this
+      · simp only [L, ite_eq_left hv, Submodule.mem_bot] at this
         rw [this]
         exact zero_mem _
-      · simpa only [L, if_neg hv] using this
+      · simpa only [L, ite_eq_right hv] using this
     exact (ch_ur _ ((Ine (F := F) (A v) ⊓ K).subgroupOf (Dec (F := F) (A v)))
       (fun j hj m => LinearMap.congr_fun (hK j.1 hj.2).1 m) (restrictCocycles1 ρ _ (continuous_locFam S' A v) z)).1 h3
       ⟨g, Ine_le_Dec _ hg.1⟩ hg
@@ -273,7 +273,7 @@ private theorem ch_idx {H : Type} [Group H] (l : ℕ) [hl : Fact l.Prime] (K : S
   rw [← Subgroup.relIndex_mul_index (inf_le_left : K ⊓ χ.ker ≤ K), Subgroup.inf_relIndex_left, hl.out.dvd_mul] at h
   refine h.elim (fun h => ?_) hK
   replace h := h.trans (Subgroup.relIndex_dvd_index_of_normal _ _)
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   rw [Subgroup.index_ker] at h
   have h2 := h.trans (Subgroup.card_subgroup_dvd_card χ.range)
   rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient, pow_one, Nat.totient_prime hl.out] at h2
@@ -302,14 +302,14 @@ private theorem chZero_normal {H k : Type} [Group H] [Field k] (K : Subgroup H) 
 
 private theorem ch_card {k V : Type} [Field k] [Finite k] [AddCommGroup V] [Module k V] {n : ℕ} (h : Module.rank k V ≤ n) :
     Finite V ∧ Nat.card V ≤ Nat.card k ^ n := by
-  haveI : Module.Finite k V := Module.rank_lt_aleph0_iff.1 (h.trans_lt Cardinal.natCast_lt_aleph0)
+  have : Module.Finite k V := Module.rank_lt_aleph0_iff.1 (h.trans_lt Cardinal.natCast_lt_aleph0)
   refine ⟨Module.finite_of_finite k, ?_⟩
   rw [Module.natCard_eq_pow_finrank (K := k) (V := V)]
   exact Nat.pow_le_pow_right Nat.card_pos (Module.finrank_le_of_rank_le h)
 
 private theorem ch_rank {k V : Type} [Field k] [Finite k] [AddCommGroup V] [Module k V] [Finite V] {n : ℕ}
     (h : Nat.card V ≤ Nat.card k ^ n) : Module.rank k V ≤ n := by
-  haveI : Module.Finite k V := Module.Finite.of_finite
+  have : Module.Finite k V := Module.Finite.of_finite
   rw [Module.natCard_eq_pow_finrank (K := k) (V := V)] at h
   rw [← Module.finrank_eq_rank]
   exact Nat.cast_le.2 ((Nat.pow_le_pow_iff_right Finite.one_lt_card).1 h)
@@ -322,13 +322,13 @@ private theorem ch_unr {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
     (h4 : ∀ a b m, (∀ g, f a g - f b g = χ g * m - m) → a = b) : Nat.card Y ≤ Nat.card k ^ C₀ := by
   let N : Subgroup (G F Ω) := Subgroup.normalClosure (⋃ A : ValuationSubring Ω, (Ine (F := F) A ⊓ K : Subgroup (G F Ω)))
   have hN : ∀ y, N ≤ chZero K χ (f y) (h2 y) := fun y => by
-    haveI := chZero_normal K χ hχ (f y) (h2 y)
+    have := chZero_normal K χ hχ (f y) (h2 y)
     exact Subgroup.normalClosure_le_normal (Set.iUnion_subset fun A g hg => ⟨hg.2, h3 y A g hg⟩)
   have hNK : N ≤ K := Subgroup.normalClosure_le_normal (Set.iUnion_subset fun A g hg => hg.2)
   let κ : G F Ω ⧸ N →* kˣ := QuotientGroup.lift N χ fun g hg => hχ g (hNK hg)
   let loc : ∀ _ : Empty, G F Ω ⧸ N →* G F Ω ⧸ N := fun _ => MonoidHom.id _
   have hr := strGen F Ω l k ⊤ K le_top ho (by rwa [Subgroup.relIndex_top_right]) (G F Ω ⧸ N)
-    ((QuotientGroup.mk' N).comp (⊤ : Subgroup (G F Ω)).subtype) (QuotientGroup.continuous_mk.comp continuous_subtype_val)
+    ((QuotientGroup.mk' N).comp (⊤ : Subgroup (G F Ω)).subtype) (QuotientGroup.continuous_mk.comp continuous_subtypeVal)
     ((QuotientGroup.mk'_surjective N).comp fun g => ⟨⟨g, trivial⟩, rfl⟩) Empty (fun _ => G F Ω ⧸ N) loc κ
     (fun u hu => hχ u.1 hu) (fun A u ha hb => Or.inl ((QuotientGroup.eq_one_iff _).2
       (Subgroup.subset_normalClosure (Set.mem_iUnion.2 ⟨A, ha, hb⟩))))
@@ -350,8 +350,8 @@ private theorem ch_unr {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
 
 private theorem ch_trace (R k : Type) [Field R] [Field k] [Finite k] [Algebra R k] :
     ∃ τ : k ≃+ TDual R k, ∀ a m, τ a m = Algebra.trace R k (a * m) := by
-  haveI : Finite R := Finite.of_injective _ (algebraMap R k).injective
-  haveI : Module.Finite R k := Module.Finite.of_finite
+  have : Finite R := Finite.of_injective _ (algebraMap R k).injective
+  have : Module.Finite R k := Module.Finite.of_finite
   exact ⟨((Algebra.traceForm R k).toDual (traceForm_nondegenerate R k)).toAddEquiv, fun a m => rfl⟩
 
 open scoped Classical in
@@ -364,7 +364,7 @@ private theorem ch_fix {k I T : Type} [Field k] [Finite k] (u : I → kˣ) (e : 
     have h0 : ∀ t, e t = 0 := fun t => by
       by_contra h'
       exact hi (Units.ext (mul_right_cancel₀ h' ((h t i).trans (one_mul _).symm)))
-    haveI : Subsingleton T := ⟨fun a b => he ((h0 a).trans (h0 b).symm)⟩
+    have : Subsingleton T := ⟨fun a b => he ((h0 a).trans (h0 b).symm)⟩
     rw [pow_zero]
     exact Finite.card_le_one_iff_subsingleton.2 inferInstance
 
@@ -381,11 +381,11 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
   have hS' : ContainsAbove S' l := fun v hv => hSS (h.above v hv)
   obtain ⟨μ, hμ⟩ := GlobalTheory.Published.PoitouTate.exists_lift_cycMod (Ω := Ω) (r := 1) hS'
   have hμ' : ∀ g, μ (toGS Ω _ g) = cycMod F Ω l 1 g := fun g => DFunLike.congr_fun hμ g
-  haveI := h.normal
-  haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact hl.out⟩
-  letI : Algebra (ZMod (l ^ 1)) k := @ZMod.algebra k _ (l ^ 1) (by rwa [pow_one])
-  letI : TopologicalSpace k := ⊥
-  haveI : DiscreteTopology k := ⟨rfl⟩
+  have := h.normal
+  have : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact hl.out⟩
+  let : Algebra (ZMod (l ^ 1)) k := @ZMod.algebra k _ (l ^ 1) (by rwa [pow_one])
+  let : TopologicalSpace k := ⊥
+  have : DiscreteTopology k := ⟨rfl⟩
   have ho : IsOpen ((K ⊓ (cycMod F Ω l 1).ker : Subgroup (G F Ω)) : Set (G F Ω)) :=
     h.isOpen.inter ((isOpen_discrete {1}).preimage GlobalTheory.Published.PoitouTate.continuous_cycMod)
   have hi := ch_idx l K h.idx (cycMod F Ω l 1)
@@ -428,9 +428,9 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
   let A' : S' → ValuationSubring Ω := fun v => if hv : v.1 ∈ S then A ⟨v.1, hv⟩ else placeOf Ω v.1
   have hA' : ∀ v, IsPlaceOver (A' v) v.1 := fun v => by
     by_cases hv : v.1 ∈ S
-    · simp only [A', dif_pos hv]
+    · simp only [A', dite_eq_left hv]
       exact hA ⟨v.1, hv⟩
-    · simp only [A', dif_neg hv]
+    · simp only [A', dite_eq_right hv]
       exact isPlaceOver_placeOf Ω v.1
   choose s hs using Submodule.Quotient.mk_surjective
     ((continuousCoboundaries1 (chRep κ) fun _ : V => (⊤ : Submodule k k)).comap (Z1C loc (chRep κ) fun _ => ⊤).subtype)
@@ -499,7 +499,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
     · rw [← hτe, τ.apply_symm_apply]
       exact t.2 g
     · split_ifs with h1
-      · haveI : Nonempty {_u : Unit // κ = 1} := ⟨⟨(), MonoidHom.ext fun g => by
+      · have : Nonempty {_u : Unit // κ = 1} := ⟨⟨(), MonoidHom.ext fun g => by
           obtain ⟨g, rfl⟩ := hps g
           exact h1 g⟩⟩
         exact Nat.card_pos
@@ -510,31 +510,31 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
     have h1 : Nat.card {v // Q v} ≤ Nat.card {v : S // ∀ g ∈ Dec (F := F) (A v), κ (π g) = cycF F Ω l k g} :=
       Nat.card_le_card_of_injective (fun v => ⟨⟨v.1.1, v.2.1⟩, by
         have := v.2.2
-        simp only [A', dif_pos v.2.1] at this
+        simp only [A', dite_eq_left v.2.1] at this
         exact this⟩) fun a b hab => Subtype.ext (Subtype.ext (Subtype.mk.inj (Subtype.mk.inj hab)))
     refine le_trans ?_ (Nat.pow_le_pow_right Nat.card_pos h1)
     rw [Nat.card_eq_fintype_card (α := {v // Q v}), Fintype.card_subtype, Finset.card_filter,
       ← Finset.prod_pow_eq_pow_sum]
-    refine Finset.prod_le_prod' fun v _ => ?_
+    refine Finset.prod_le_prod fun v _ => ?_
     by_cases hv : v.1 ∈ S
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       refine (ch_fix (fun g : Dec (F := F) (A' v) => κ' (toGS Ω _ g.1)) (fun t : H0 (ρ.comp (locFam S' A' v)) => t.1)
         Subtype.val_injective fun t g => t.2 g).trans (Nat.pow_le_pow_right Nat.card_pos ?_)
       split_ifs with h2 h3
       · exact le_rfl
       · exact (h3 ⟨hv, fun g hg => inv_mul_eq_one.1 ((hκ' g).symm.trans (h2 ⟨g, hg⟩))⟩).elim
       all_goals exact Nat.zero_le _
-    · rw [if_neg hv]
+    · rw [ite_eq_right hv]
       exact Nat.one_le_pow _ _ Nat.card_pos
   have b4 : archH0Card S' ρ c ≤ Nat.card k ^ Nat.card {w // ¬ κ (π (c w)) = 1} := by
     rw [archH0Card, IsTotallyReal.nrComplexPlaces_eq_zero, pow_zero, mul_one, Nat.card_eq_fintype_card (α := {w // ¬ κ (π (c w)) = 1}),
       Fintype.card_subtype, Finset.card_filter, ← Finset.prod_pow_eq_pow_sum,
       Finset.filter_true_of_mem fun w _ => hF.isReal w]
-    refine Finset.prod_le_prod' fun w _ => ?_
+    refine Finset.prod_le_prod fun w _ => ?_
     refine (ch_fix (fun _ : Unit => κ' (toGS Ω _ (c w))) (fun t : {m : k // ρ (toGS Ω _ (c w)) m = m} => t.1)
       Subtype.val_injective fun t _ => t.2).trans (Nat.pow_le_pow_right Nat.card_pos ?_)
     by_cases h2 : ∀ _ : Unit, κ' (toGS Ω _ (c w)) = 1
-    · rw [if_pos h2, if_pos]
+    · rw [ite_eq_left h2, ite_eq_left]
       intro h3
       obtain ⟨j, hj, -⟩ := hc w
       have h4 : cycZ F Ω l (c w) = -1 := IsConjOm.cyc (E := F) (show IsConjOm (c w).toRingEquiv from ⟨j, hj⟩)
@@ -547,7 +547,7 @@ theorem UpperTheory.V.GC.character_H1_galois_quotient :
         push_cast
         linear_combination -h6
       exact h.odd ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).1 ((@CharP.cast_eq_zero_iff k _ l hch 2).1 h7))
-    · rw [if_neg h2]
+    · rw [ite_eq_right h2]
       exact Nat.zero_le _
   have b5 : Nat.card {w // ¬ κ (π (c w)) = 1} + Nat.card {w // κ (π (c w)) = 1} = finrank ℚ F := by
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card, Fintype.card_subtype_compl,
@@ -603,7 +603,7 @@ theorem UpperTheory.V.GC.h1 :
     rw [hL.loc_eq, hcyc, ← hv _ (by rw [← hL.loc.range]; exact ⟨s, rfl⟩)]
     rfl
   have e1 : Nat.card {w : InfinitePlace F // (1 : Φ.Γ →* kˣ) (π (c (e.symm w))) = 1} = finrank ℚ F := by
-    haveI := hL.real
+    have := hL.real
     rw [Nat.card_congr (Equiv.subtypeUnivEquiv fun _ => MonoidHom.one_apply _), Nat.card_eq_fintype_card,
       InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces, IsTotallyReal.nrComplexPlaces_eq_zero, IsTotallyReal.finrank, add_zero]
   have e2 : Nat.card {_u : Unit // (1 : Φ.Γ →* kˣ) = 1} = 1 := by

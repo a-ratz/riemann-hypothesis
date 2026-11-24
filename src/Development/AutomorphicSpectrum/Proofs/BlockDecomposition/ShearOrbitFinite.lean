@@ -110,13 +110,13 @@ theorem continuous_shearGL (n : ℕ) {r : kˣ} (hr : valuation k (r : k) < 1) :
       vecMulVec (GlobalTheory.BZMir.eLast k n) b.1 :=
     continuous_matrix fun i j => by
       simp only [vecMulVec_apply]
-      exact continuous_const.mul ((continuous_apply j).comp continuous_subtype_val)
+      exact continuous_const.mul ((continuous_apply j).comp continuous_subtypeVal)
   rw [Units.continuous_iff]
   constructor
   · exact (continuous_const.add hv).congr fun b => (GlobalTheory.CompanionTheory.MirPair.ShearOrbit.shearGL_val n b.1 (hne b)).symm
   · have hinv : Continuous fun b : (GlobalTheory.CompanionTheory.BZOnto.PerpSmall.box (n + 1) r : Set (Fin (n + 1) → k)) =>
         (1 + b.1 (Fin.last n))⁻¹ :=
-      (continuous_const.add ((continuous_apply _).comp continuous_subtype_val)).inv₀ hne
+      (continuous_const.add ((continuous_apply _).comp continuous_subtypeVal)).inv₀ hne
     exact (continuous_const.sub (hinv.smul hv)).congr fun b => (GlobalTheory.CompanionTheory.MirPair.ShearOrbit.shearGL_inv_val n b.1 (hne b)).symm
 
 
@@ -157,7 +157,7 @@ theorem shear_orbit_finite {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (T : Representation ℂ (Mir k (n + 1)) V) (hT : IsSmooth T) (v : V) (r : kˣ)
     (hr : valuation k (r : k) < 1) :
     ((fun b => T (levi k (n + 1) (shearGL n b)) v) '' (box (n + 1) r : Set (Fin (n + 1) → k))).Finite := by
-  haveI : CompactSpace (GlobalTheory.CompanionTheory.BZOnto.PerpSmall.box (n + 1) r : Set (Fin (n + 1) → k)) :=
+  have : CompactSpace (GlobalTheory.CompanionTheory.BZOnto.PerpSmall.box (n + 1) r : Set (Fin (n + 1) → k)) :=
     isCompact_iff_compactSpace.mp (GlobalTheory.CompanionTheory.BZOnto.PerpSmall.isCompact_box (n + 1) r)
   have hc : Continuous fun b : (GlobalTheory.CompanionTheory.BZOnto.PerpSmall.box (n + 1) r : Set (Fin (n + 1) → k)) =>
       GlobalTheory.BZMir.levi k (n + 1) (GlobalTheory.CompanionTheory.MirPair.shearGL n b.1) :=

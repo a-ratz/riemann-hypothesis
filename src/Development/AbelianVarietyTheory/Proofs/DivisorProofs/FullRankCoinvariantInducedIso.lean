@@ -242,7 +242,7 @@ theorem exists_minor_det_ne_zero {K : Type} [Field K] {n d : ℕ} (Y : Matrix (F
     have : (fun i => (Y.submatrix id f)ᵀ i) = ((fun j => Yᵀ j) ∘ a) ∘ e.symm := by
       funext i r; rfl
     rw [this]; exact hli.comp _ e.symm.injective
-  have hu := Matrix.linearIndependent_cols_iff_isUnit.mp hli'
+  have hu := Matrix.linearIndependent_col_iff_isUnit.mp hli'
   exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
 
 theorem submatrix_mul_left {K : Type} [Field K] {n d : ℕ} (B : Matrix (Fin n) (Fin n) K)
@@ -255,13 +255,13 @@ theorem exists_GL_mul_mem_unitMinorSet (k : Type) [Field k] [ValuativeRel k] [To
     ∃ E : GL (Fin n) k, E.val * Y ∈ unitMinorSet k n d := by
   classical
   obtain ⟨f0, hf0⟩ := exists_minor_det_ne_zero Y hY
-  haveI : Nonempty (Fin n ↪ Fin d) := ⟨f0⟩
+  have : Nonempty (Fin n ↪ Fin d) := ⟨f0⟩
   obtain ⟨f, hf⟩ := Finite.exists_max (fun g : Fin n ↪ Fin d => valuation k (Y.submatrix id g).det)
   have hAdet : (Y.submatrix id f).det ≠ 0 := by
     intro h0
     have h1 := hf f0
     simp only [h0, map_zero] at h1
-    exact hf0 ((map_eq_zero _).mp (le_antisymm h1 zero_le'))
+    exact hf0 ((map_eq_zero _).mp (le_antisymm h1 zero_le))
   have hAu : IsUnit (Y.submatrix id f).det := isUnit_iff_ne_zero.mpr hAdet
   let E : GL (Fin n) k := Matrix.GeneralLinearGroup.mkOfDetNeZero (Y.submatrix id f)⁻¹
     (by rw [Matrix.det_nonsing_inv, Ring.inverse_eq_inv']; exact inv_ne_zero hAdet)
@@ -272,7 +272,7 @@ theorem exists_GL_mul_mem_unitMinorSet (k : Type) [Field k] [ValuativeRel k] [To
   have hZg : ∀ g : Fin n ↪ Fin d, valuation k (Z.submatrix id g).det ≤ 1 := by
     intro g
     rw [hZ, submatrix_mul_left, hEv, Matrix.det_mul, Matrix.det_nonsing_inv, Ring.inverse_eq_inv',
-      map_mul, map_inv₀, inv_mul_le_one₀ (zero_lt_iff.mpr (by simpa using hAdet))]
+      map_mul, map_inv₀, inv_mul_le_one₀ (pos_iff_ne_zero.mpr (by simpa using hAdet))]
     exact hf g
   refine ⟨E, fun i j => ?_, f, by rw [hZf, Matrix.det_one, map_one]⟩
   rw [Valuation.mem_integer_iff]
@@ -465,16 +465,16 @@ theorem isClopen_setOf_valuation_eq_one (k : Type) [Field k] [ValuativeRel k] [T
   constructor
   · rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
     intro y hy
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hy
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hy
     rw [IsValuativeTopology.mem_nhds_iff']
     by_cases h0 : y = 0
     · subst h0
       refine ⟨1, fun z hz ↦ ?_⟩
-      simp only [Set.mem_ofPred_eq, Units.val_one, sub_zero, Set.mem_compl_iff, Set.mem_setOf_eq] at hz ⊢
+      simp only [Set.mem_ofPred_eq, Units.val_one, sub_zero, Set.mem_compl_iff, Set.mem_ofPred_eq] at hz ⊢
       exact hz.ne
     · have hv : valuation k y ≠ 0 := by simpa using h0
       refine ⟨Units.mk0 _ hv, fun z hz ↦ ?_⟩
-      simp only [Set.mem_ofPred_eq, Units.val_mk0, Set.mem_compl_iff, Set.mem_setOf_eq] at hz ⊢
+      simp only [Set.mem_ofPred_eq, Units.val_mk0, Set.mem_compl_iff, Set.mem_ofPred_eq] at hz ⊢
       have : z = y + (z - y) := by ring
       rw [this, (valuation k).map_add_eq_of_lt_left hz]
       exact hy
@@ -482,7 +482,7 @@ theorem isClopen_setOf_valuation_eq_one (k : Type) [Field k] [ValuativeRel k] [T
     intro y hy
     rw [IsValuativeTopology.mem_nhds_iff']
     refine ⟨1, fun z hz ↦ ?_⟩
-    simp only [Set.mem_ofPred_eq, Units.val_one, Set.mem_setOf_eq] at hz hy ⊢
+    simp only [Set.mem_ofPred_eq, Units.val_one, Set.mem_ofPred_eq] at hz hy ⊢
     have : z = y + (z - y) := by ring
     rw [this, (valuation k).map_add_eq_of_lt_left (by rw [hy]; exact hz), hy]
 
@@ -721,7 +721,7 @@ theorem mem_augRk_of_smallF_eq_zero : ∀ (k : Type) [Field k] [ValuativeRel k] 
     simpa using hy x
   have hfin : (F '' K).Finite := by
     have : CompactSpace K := isCompact_iff_compactSpace.1 (isCompact_KO (k := k) (n := Fin n))
-    have h := (hlc.comp_continuous (continuous_subtype_val (p := fun g => g ∈ K))).range_finite
+    have h := (hlc.comp_continuous (continuous_subtypeVal (p := fun g => g ∈ K))).range_finite
     refine h.subset ?_
     rintro _ ⟨g, hg, rfl⟩
     exact ⟨⟨g, hg⟩, rfl⟩
@@ -934,7 +934,7 @@ theorem mul_Y0_apply_lt {β : Type*} [Fintype β] (A : Matrix β (Fin n) k) (i :
   simp only [GlobalTheory.FullRankCoinv.Y0, Matrix.mul_apply, Matrix.of_apply]
   refine Finset.sum_eq_zero fun l _ => ?_
   simp only [mul_ite, mul_one, mul_zero]
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 theorem Y0_mul_transpose (hnd : n ≤ d) : Yo * (Yo)ᵀ = 1 := by
   ext i j
@@ -942,7 +942,7 @@ theorem Y0_mul_transpose (hnd : n ≤ d) : Yo * (Yo)ᵀ = 1 := by
   simp only [GlobalTheory.FullRankCoinv.Y0, Matrix.of_apply, Matrix.one_apply, Fin.ext_iff]
   by_cases h : (i : ℕ) = j
   · simp [h]
-  · rw [if_neg (by omega), if_neg h]
+  · rw [ite_eq_right (by omega), ite_eq_right h]
 
 def blkEquiv (hnd : n ≤ d) : Fin (d - n) ⊕ Fin n ≃ Fin d :=
   finSumFinEquiv.trans (finCongr (Nat.sub_add_cancel hnd))
@@ -1034,7 +1034,7 @@ variable {ν : kˣ →* ℂˣ} {f : GL (Fin d) k → ℂ}
 theorem psi_Y0_mul (hf : f ∈ GlobalTheory.FullRankCoinv.indSp k n d ν) {κ : GL (Fin d) k} (hκ : κ ∈ KO k (Fin d)) :
     psi f (Yo * κ.val) = f κ := by
   have hex : ∃ κ' ∈ KO k (Fin d), Yo * κ.val = Yo * κ'.val := ⟨κ, hκ, rfl⟩
-  rw [psi, dif_pos hex]
+  rw [psi, dite_eq_left hex]
   have e := hex.choose_spec.2
   set κ' := hex.choose
   have hb : Yo * (κ' * κ⁻¹).val = (1 : GL (Fin n) k).val * Yo := by
@@ -1112,7 +1112,7 @@ theorem continuous_rowsMat (hnd : n ≤ d) : Continuous (rowsMat (k := k) hnd) :
 theorem Y0_mul_rowsMat (hnd : n ≤ d) (Z : Matrix (Fin n) (Fin d) k) : Yo * rowsMat hnd Z = Z := by
   ext i j
   rw [Y0_mul_apply hnd]
-  simp only [rowsMat, Matrix.of_apply, dif_pos (show d - n ≤ d - n + (i : ℕ) by omega)]
+  simp only [rowsMat, Matrix.of_apply, dite_eq_left (show d - n ≤ d - n + (i : ℕ) by omega)]
   congr 1; ext; simp
 
 theorem rowsMat_Y0 (hnd : n ≤ d) : rowsMat hnd (Yo) = 1 := by
@@ -1263,8 +1263,8 @@ theorem fibre_coinvariants : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
       ∀ Ψ ∈ GlobalTheory.FullRankCoinv.fullRk k n d, ∀ h₀ : GL (Fin d) k,
         Z (fun Y => Ψ (Y * h₀.1)) = fun h => Z Ψ (h * h₀) := by
   intro k _ _ _ _ n d ν hnd hν
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   let Z₀ : fullRk k n d →ₗ[ℂ] (GL (Fin d) k → ℂ) :=
     { toFun := fun Ψ h => smallF (haarVol (GlobalTheory.SplitWeil.KO k (Fin n))) ν Ψ.1 (Y0 k n d * h.val)
       map_add' := fun Ψ Φ => by

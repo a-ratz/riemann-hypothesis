@@ -97,8 +97,8 @@ private lemma pres_iterate_zero {G V : Type} [Group G] [TopologicalSpace G] [IsT
     (hv : v ∈ S.toSubmodule) : ∃ u ∈ fixed ρ H, u ∈ S.toSubmodule ∧ f u = f v := by
 
   obtain ⟨U, -, hU, hUv⟩ := GlobalTheory.LocGL.exists_normal_fix hρ hH v
-  haveI : U.FiniteIndex := hU
-  letI : Fintype (H ⧸ U) := Subgroup.fintypeQuotientOfFiniteIndex
+  have : U.FiniteIndex := hU
+  let : Fintype (H ⧸ U) := Subgroup.fintypeQuotientOfFiniteIndex
   refine ⟨GlobalTheory.LocGL.idem hρ hH v, GlobalTheory.LocGL.idem_mem hρ hH v, ?_, ?_⟩
   · rw [GlobalTheory.LocGL.idem_eq_cosetSum hρ hH U hUv]
     exact S.toSubmodule.smul_mem _ (S.toSubmodule.sum_mem fun q _ => S.apply_mem_toSubmodule _ hv)
@@ -141,7 +141,7 @@ theorem jhMult_onFixed {G V : Type} [Group G] [TopologicalSpace G] [IsTopologica
 variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem isCompact_unitsO : IsCompact {x : kˣ | valuation k (x : k) = 1} := by
-  haveI : T1Space k := IsTopologicalAddGroup.t1Space k (by
+  have : T1Space k := IsTopologicalAddGroup.t1Space k (by
     first
       | exact isClosed_singleton
       | (convert (Valuation.isClosed_sphere (v := valuation k) 0) using 1
@@ -152,13 +152,13 @@ theorem isCompact_unitsO : IsCompact {x : kˣ | valuation k (x : k) = 1} := by
   convert Submonoid.units_isCompact hS using 1
   ext x
   have h0 : valuation k (x : k) ≠ 0 := by simp
-  simp only [Set.mem_setOf_eq, SetLike.mem_coe, Submonoid.mem_units_iff, Subring.mem_toSubmonoid,
+  simp only [Set.mem_ofPred_eq, SetLike.mem_coe, Submonoid.mem_units_iff, Subring.mem_toSubmonoid,
     Valuation.mem_integer_iff, Units.val_inv_eq_inv_val, map_inv₀]
   constructor
   · intro hx
     simp [hx]
   · rintro ⟨h1, h2⟩
-    rw [inv_le_one₀ (zero_lt_iff.2 h0)] at h2
+    rw [inv_le_one₀ (pos_iff_ne_zero.2 h0)] at h2
     exact le_antisymm h1 h2
 
 theorem isCompact_torusO (n : Type) : IsCompact (torusO k n : Set (n → kˣ)) :=

@@ -97,7 +97,7 @@ theorem algHom_quot_eq_of_etaleLow : ∀ (A R C : Type) [CommRing A] [IsDomain A
       (∀ c : C, f c - f' c ∈ Ideal.span {Ideal.Quotient.mk (Ideal.span {t} ^ n) t}) → f = f' := by
   intro A R C _ _ _ _ _ _ ρ hρ t hker ht hE n f f' hff
   set P₀ : Ideal R := RingHom.ker ρ with hP₀
-  haveI hP : P₀.IsPrime := RingHom.ker_isPrime ρ
+  have hP : P₀.IsPrime := RingHom.ker_isPrime ρ
   have hρa : ∀ a : A, ρ (algebraMap A R a) = a := fun a => by
     have := congrArg (fun g => g a) hρ
     simpa using this
@@ -107,12 +107,12 @@ theorem algHom_quot_eq_of_etaleLow : ∀ (A R C : Type) [CommRing A] [IsDomain A
   have hht : (P₀.comap (algebraMap A R)).height ≤ 1 := by
     rw [hcomap, Ideal.height_bot]; exact zero_le_one
   set Rp := Localization.AtPrime P₀
-  haveI : Algebra.Etale Rp (Rp ⊗[R] C) := hE P₀ hht
-  haveI : Algebra.FormallyUnramified R Rp := Algebra.FormallyUnramified.of_isLocalization P₀.primeCompl
-  haveI : Algebra.FormallyUnramified R (Rp ⊗[R] C) := Algebra.FormallyUnramified.comp R Rp (Rp ⊗[R] C)
+  have : Algebra.Etale Rp (Rp ⊗[R] C) := hE P₀ hht
+  have : Algebra.FormallyUnramified R Rp := Algebra.FormallyUnramified.of_isLocalization P₀.primeCompl
+  have : Algebra.FormallyUnramified R (Rp ⊗[R] C) := Algebra.FormallyUnramified.comp R Rp (Rp ⊗[R] C)
   set Q := R ⧸ Ideal.span {t} ^ n
   set B := Localization (Algebra.algebraMapSubmonoid Q P₀.primeCompl)
-  letI : Algebra Rp B := localizationAlgebra P₀.primeCompl Q
+  let : Algebra Rp B := localizationAlgebra P₀.primeCompl Q
 
   have hle : Algebra.algebraMapSubmonoid Q P₀.primeCompl ≤ nonZeroDivisors Q := by
     rintro _ ⟨s, hs, rfl⟩
@@ -324,12 +324,12 @@ theorem lift_of_etaleAt (R C B : Type) [CommRing R] [CommRing C] [Algebra R C] [
     (∀ φ : C →ₐ[R] B ⧸ I, ∃ φ' : C →ₐ[R] B, (Ideal.Quotient.mkₐ R I).comp φ' = φ) ∧
     (∀ φ₁ φ₂ : C →ₐ[R] B, (Ideal.Quotient.mkₐ R I).comp φ₁ = (Ideal.Quotient.mkₐ R I).comp φ₂ →
       φ₁ = φ₂) := by
-  haveI := hE
-  haveI : Algebra.FormallyEtale R (Localization.AtPrime P) :=
+  have := hE
+  have : Algebra.FormallyEtale R (Localization.AtPrime P) :=
     Algebra.FormallyEtale.of_isLocalization P.primeCompl
-  haveI : Algebra.FormallySmooth R (Localization.AtPrime P ⊗[R] C) :=
+  have : Algebra.FormallySmooth R (Localization.AtPrime P ⊗[R] C) :=
     Algebra.FormallySmooth.comp R (Localization.AtPrime P) _
-  haveI : Algebra.FormallyUnramified R (Localization.AtPrime P ⊗[R] C) :=
+  have : Algebra.FormallyUnramified R (Localization.AtPrime P ⊗[R] C) :=
     Algebra.FormallyUnramified.comp R (Localization.AtPrime P) _
   let e : Localization.AtPrime P →ₐ[R] B :=
     IsLocalization.liftAlgHom (M := P.primeCompl) (f := Algebra.ofId R B) (fun y => hu y)
@@ -397,7 +397,7 @@ theorem local_lift (A R C : Type) [CommRing A] [CommRing R] [Algebra A R] [CommR
   set L := Localization (Algebra.algebraMapSubmonoid (R ⧸ Ideal.span {t} ^ n)
         (p.primeCompl.map (algebraMap A R)))
   let P := p.comap ρ
-  haveI : P.IsPrime := Ideal.comap_isPrime ρ p
+  have : P.IsPrime := Ideal.comap_isPrime ρ p
   have hPc : P.comap (algebraMap A R) = p := by
     simp only [P, Ideal.comap_comap, hρ, Ideal.comap_id]
   have hE := hEt P (by rw [hPc]; exact hp)
@@ -417,7 +417,7 @@ theorem local_lift (A R C : Type) [CommRing A] [CommRing R] [Algebra A R] [CommR
       commutes' := fun r => by
         have h1 : g (algebraMap R C r) = ρ r := by simpa using congrArg (fun f => f r) hg
         simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe,
-          MonoidHom.coe_coe, RingHom.coe_comp, Function.comp_apply, h1]
+          MonoidHom.coe_ofClass, RingHom.coe_comp, Function.comp_apply, h1]
         rw [← Ideal.Quotient.mk_algebraMap, Ideal.Quotient.eq, Ideal.mem_span_singleton, ← map_sub]
         exact map_dvd _ (dvd_sub_comm.1 (sub_retract_dvd A R ρ hρ t hker r)) }
   have key : ∀ φ : C →ₐ[R] L, (∀ c, algebraMap R L t ∣ φ c - algebraMap R L (algebraMap A R (g c))) →
@@ -507,7 +507,7 @@ theorem exists_algHom_quot_pow : ∀ (A R C : Type) [CommRing A] [IsDomain A] [I
     rw [hxm] at hspec
     obtain ⟨_, ⟨a, ha, rfl⟩, hm⟩ := m.2
     obtain ⟨x', hx'⟩ := hHart a (hne a ha) x (fun p hp hh => by
-      haveI := hp
+      have := hp
       obtain ⟨⟨φp, hφp⟩, -⟩ := local_lift A R C ρ hρ t hker hEt g hg n p hh
       have hle : Algebra.algebraMapSubmonoid B (p.primeCompl.map (algebraMap A R)) ≤ M0 := by
         rintro _ ⟨_, ⟨u, hu, rfl⟩, rfl⟩
@@ -677,13 +677,13 @@ theorem etale_localization_of_etaleLow : ∀ (A R C O : Type) [CommRing A] [Comm
     Algebra.Etale (Localization.AtPrime Q) (Localization.AtPrime Q ⊗[R] C) := by
   intro A R C O _ _ _ _ _ _ _ Q _ hE hh
   have h := hE (Q.comap (algebraMap R O)) hh
-  letI : Algebra (Localization.AtPrime (Q.comap (algebraMap R O))) (Localization.AtPrime Q) :=
+  let : Algebra (Localization.AtPrime (Q.comap (algebraMap R O))) (Localization.AtPrime Q) :=
     (Localization.localRingHom _ Q (algebraMap R O) rfl).toAlgebra
-  haveI : IsScalarTower R (Localization.AtPrime (Q.comap (algebraMap R O))) (Localization.AtPrime Q) := by
+  have : IsScalarTower R (Localization.AtPrime (Q.comap (algebraMap R O))) (Localization.AtPrime Q) := by
     refine IsScalarTower.of_algebraMap_eq (fun a => ?_)
     simp [RingHom.algebraMap_toAlgebra, Localization.localRingHom_to_map,
       IsScalarTower.algebraMap_apply R O (Localization.AtPrime Q)]
-  haveI := Algebra.Etale.baseChange (R := Localization.AtPrime (Q.comap (algebraMap R O)))
+  have := Algebra.Etale.baseChange (R := Localization.AtPrime (Q.comap (algebraMap R O)))
     (B := Localization.AtPrime Q) (A := Localization.AtPrime (Q.comap (algebraMap R O)) ⊗[R] C)
   exact Algebra.Etale.of_equiv (Algebra.TensorProduct.cancelBaseChange R
     (Localization.AtPrime (Q.comap (algebraMap R O))) (Localization.AtPrime Q) (Localization.AtPrime Q) C)
@@ -727,7 +727,7 @@ theorem exists_smul_dvd_of_localization_atPrime_tensor :
     ∃ s ∉ Q, ∃ m' : O ⊗[R] C, s • m = algebraMap R O b • m' := by
   intro R C O _ _ _ _ _ Q _ b m ⟨m', hm'⟩
   let f := AlgebraTensorModule.rTensor R C (Algebra.linearMap O (Localization.AtPrime Q))
-  haveI : IsLocalizedModule Q.primeCompl f := inferInstance
+  have : IsLocalizedModule Q.primeCompl f := inferInstance
   have hf : ∀ x, (IsScalarTower.toAlgHom R O (Localization.AtPrime Q)).toLinearMap.rTensor C x = f x := by
     intro x
     induction x using TensorProduct.induction_on with
@@ -807,8 +807,8 @@ theorem finite_of_trace_relation (A R C : Type) [CommRing A] [CommRing R] [Algeb
     have : b • c = b • d := by simpa [f] using congrArg Subtype.val hcd
     have h0 : b • (c - d) = 0 := by rw [smul_sub, this, sub_self]
     exact sub_eq_zero.mp (htf a ha _ h0)
-  haveI : Module.Finite R S := Module.Finite.span_of_finite R (Set.finite_range x)
-  haveI : IsNoetherian R S := isNoetherian_of_isNoetherianRing_of_finite R S
+  have : Module.Finite R S := Module.Finite.span_of_finite R (Set.finite_range x)
+  have : IsNoetherian R S := isNoetherian_of_isNoetherianRing_of_finite R S
   exact Module.Finite.of_injective f hf
 
 end GlobalTheory.GoodEtaleFinite
@@ -980,7 +980,7 @@ theorem galElt_dvd_of_unramified : ∀ (R C O : Type) [CommRing R] [CommRing C] 
 
   simp_rw [hterm, ← Finset.sum_mul, ← map_sum, ← map_mul, ← map_sum]
   have h1 := hxy 1
-  simp only [map_one, AlgEquiv.one_apply, if_true] at h1
+  simp only [map_one, AlgEquiv.one_apply, ite_true] at h1
   rw [h1, AlgHom.commutes, Algebra.smul_def]
 
 end GlobalTheory.GoodEtale
@@ -1189,16 +1189,16 @@ theorem descent_finiteEtale : ∀ (A R C O : Type) [CommRing A] [IsDomain A] [Is
   intro A R C O _ _ _ _ _ _ _ _ _ _ _ G _ _ _ act T hT a ha n x y hxy hTF hH hE hσ
   obtain ⟨σ⟩ := hσ
   refine ⟨GlobalTheory.T.finite_of_galois_trace_relation A R C G act T hT a ha n x y hxy hTF, ?_⟩
-  letI : Algebra A O := ((algebraMap R O).comp (algebraMap A R)).toAlgebra
-  haveI : IsScalarTower A R O := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra A O := ((algebraMap R O).comp (algebraMap A R)).toAlgebra
+  have : IsScalarTower A R O := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hHO : Hart A O (O ⊗[R] C) := GlobalTheory.T.hart_baseChange_of_flat A R C O hH
   set b := algebraMap A R a with hb
   have hdiv : ∀ h : G, ∃ m' : O ⊗[R] C, galElt act σ x y h = algebraMap R O b • m' := by
     intro h
     refine hart_of_local A O (O ⊗[R] C) hHO a ha (galElt act σ x y h) ?_
     intro Q hQ hht
-    haveI := hQ
-    haveI : Algebra.Etale (Localization.AtPrime Q) (Localization.AtPrime Q ⊗[R] C) :=
+    have := hQ
+    have : Algebra.Etale (Localization.AtPrime Q) (Localization.AtPrime Q ⊗[R] C) :=
       GlobalTheory.T.etale_localizationAtPrime_tensor_of_low_height A R C O Q hE (by first | exact hht | (rw [Ideal.comap_comap]; exact hht))
     let σQ : C →ₐ[R] Localization.AtPrime Q := (IsScalarTower.toAlgHom R O _).comp σ
     have hinj := GlobalTheory.T.galoisComparisonMap_injective_of_flat A R C (Localization.AtPrime Q) G act T hT a ha n x y hxy hTF σQ
@@ -1233,7 +1233,7 @@ theorem descent_finiteEtale : ∀ (A R C O : Type) [CommRing A] [IsDomain A] [Is
     simp [Finset.sum_apply, Pi.single_apply]
   let e := AlgEquiv.ofBijective (galMap act σ)
     ⟨GlobalTheory.T.galoisComparisonMap_injective_of_flat A R C O G act T hT a ha n x y hxy hTF σ, hsurj⟩
-  haveI : Algebra.Etale O (O ⊗[R] C) := Algebra.Etale.of_equiv e.symm
+  have : Algebra.Etale O (O ⊗[R] C) := Algebra.Etale.of_equiv e.symm
   exact Algebra.Etale.of_etale_tensorProduct_of_faithfullyFlat O
 
 end GlobalTheory.GoodEtale
@@ -1288,16 +1288,16 @@ theorem flat_noetherian_nzd_intClosed : ∀ (A : Type) [CommRing A] [IsDomain A]
         ∃ r : Localization.AtPrime QA, algebraMap _ (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) r = f := by
   intro A _ _ _ _ _ _ EA _ _ _ _ _ QA _ _ ρ _ _
   set R := Localization.AtPrime QA
-  haveI : Algebra.Smooth A (Polynomial A) := Algebra.Smooth.mk
-  haveI : Algebra.Smooth A EA := Algebra.Smooth.comp A (Polynomial A) EA
-  haveI : Module.Flat EA R := IsLocalization.flat R QA.primeCompl
-  haveI : Module.Flat A EA := Algebra.Smooth.flat A EA
-  haveI : Module.Flat (Polynomial A) EA := Algebra.Smooth.flat (Polynomial A) EA
+  have : Algebra.Smooth A (Polynomial A) := Algebra.Smooth.mk
+  have : Algebra.Smooth A EA := Algebra.Smooth.comp A (Polynomial A) EA
+  have : Module.Flat EA R := IsLocalization.flat R QA.primeCompl
+  have : Module.Flat A EA := Algebra.Smooth.flat A EA
+  have : Module.Flat (Polynomial A) EA := Algebra.Smooth.flat (Polynomial A) EA
   have hflat : Module.Flat A R := Module.Flat.trans A EA R
   refine ⟨hflat, ?_, ?_, ?_⟩
-  · haveI : IsNoetherianRing EA := Algebra.FiniteType.isNoetherianRing (Polynomial A) EA
+  · have : IsNoetherianRing EA := Algebra.FiniteType.isNoetherianRing (Polynomial A) EA
     exact IsLocalization.isNoetherianRing QA.primeCompl R inferInstance
-  · haveI : Module.Flat (Polynomial A) R := Module.Flat.trans (Polynomial A) EA R
+  · have : Module.Flat (Polynomial A) R := Module.Flat.trans (Polynomial A) EA R
     have hX : (Polynomial.X : Polynomial A) ∈ nonZeroDivisors (Polynomial A) :=
       Polynomial.monic_X.mem_nonZeroDivisors
     have hreg := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := R) hX
@@ -1309,9 +1309,9 @@ theorem flat_noetherian_nzd_intClosed : ∀ (A : Type) [CommRing A] [IsDomain A]
     exact ⟨h1, fun z hz => h1 z (by rw [mul_comm]; exact hz)⟩
   · intro f hf
     set K := FractionRing A
-    letI : Algebra K (R ⊗[A] K) := Algebra.TensorProduct.rightAlgebra
-    haveI : IsScalarTower A K (R ⊗[A] K) := inferInstance
-    haveI hloc : IsLocalization (Algebra.algebraMapSubmonoid R (nonZeroDivisors A)) (R ⊗[A] K) :=
+    let : Algebra K (R ⊗[A] K) := Algebra.TensorProduct.rightAlgebra
+    have : IsScalarTower A K (R ⊗[A] K) := inferInstance
+    have hloc : IsLocalization (Algebra.algebraMapSubmonoid R (nonZeroDivisors A)) (R ⊗[A] K) :=
       (Algebra.isLocalization_iff_isPushout (nonZeroDivisors A) K).2 inferInstance
     let e : GlobalTheory.LocAcyc.GenFib A R ≃ₐ[R] R ⊗[A] K :=
       IsLocalization.algEquiv (Algebra.algebraMapSubmonoid R (nonZeroDivisors A)) _ _
@@ -1591,8 +1591,8 @@ theorem baseHom_apply (r : R) :
 
 theorem map_mem (σ : D →ₐ[GenFib A R] D) {d : D} (hd : d ∈ closure A R D) :
     σ d ∈ closure A R D := by
-  letI := (baseHom A R D).toAlgebra
-  haveI : IsScalarTower R (GenFib A R) D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let := (baseHom A R D).toAlgebra
+  have : IsScalarTower R (GenFib A R) D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   exact IsIntegral.map (σ.restrictScalars R) (show IsIntegral R d from hd)
 
 def restr (σ : D ≃ₐ[GenFib A R] D) :
@@ -1620,8 +1620,8 @@ theorem trace_mem (hIC : ∀ f : GenFib A R, IsIntegral R f → ∃ r : R, algeb
     (hτ : ∀ d, algebraMap _ D (τ d) = ∑ g, act g d) {c : D} (hc : c ∈ closure A R D) :
     ∃ r : R, algebraMap R (GenFib A R) r = τ c := by
   apply hIC
-  letI := (baseHom A R D).toAlgebra
-  haveI : IsScalarTower R (GenFib A R) D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let := (baseHom A R D).toAlgebra
+  have : IsScalarTower R (GenFib A R) D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   rw [← isIntegral_algHom_iff (IsScalarTower.toAlgHom R (GenFib A R) D) hinj]
   show IsIntegral R (algebraMap (GenFib A R) D (τ c))
   rw [hτ]
@@ -1630,7 +1630,7 @@ theorem trace_mem (hIC : ∀ f : GenFib A R, IsIntegral R f → ∃ r : R, algeb
 theorem smul_coe (r : R) (c : closure A R D) :
     ((letI := closureAlg A R D; r • c : closure A R D) : D) =
       algebraMap R (GenFib A R) r • (c : D) := by
-  letI := closureAlg A R D
+  let := closureAlg A R D
   rw [Algebra.smul_def, Algebra.smul_def]; rfl
 
 end
@@ -1654,12 +1654,12 @@ theorem closureData : ∀ (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
       Nontrivial (GlobalTheory.KeyOriginNoeth.closure A R D) := by
   intro A R _ _ _ _ _ _ _ _ hHart hIC q _ D _ _ act hT
   classical
-  letI := closureAlg A R D
+  let := closureAlg A R D
   obtain ⟨hinj, ⟨τ, hτ⟩, n, x, y, hxy⟩ := GlobalTheory.TorsorTrace.injective_trace_galoisData _ D q act hT
   have hRinj := genFib_injective A R
   have htr : ∀ c ∈ closure A R D, ∃ r : R, algebraMap R (GenFib A R) r = τ c :=
     fun c hc => trace_mem hIC hinj τ q act hτ hc
-  haveI : Module.Finite (GenFib A R) D := hT.1
+  have : Module.Finite (GenFib A R) D := hT.1
   obtain ⟨a, ha, hmem⟩ := GlobalTheory.T.exists_mul_mem_integralClosureOverGenericFibre A R D (Finset.univ.image x ∪ Finset.univ.image y)
   set b := baseHom A R D (algebraMap A R a) with hbdef
   have hb : ∀ g, act g b = b := fun g => (act g).commutes _
@@ -1706,10 +1706,10 @@ theorem closureData : ∀ (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
     apply Subtype.ext
     split_ifs with hg
     · simp only [AddSubmonoidClass.coe_finsetSum, Subring.coe_mul, hact']
-      rw [h1, if_pos hg, hbb]
+      rw [h1, ite_eq_left hg, hbb]
       rfl
     · simp only [AddSubmonoidClass.coe_finsetSum, Subring.coe_mul, hact']
-      rw [h1, if_neg hg]
+      rw [h1, ite_eq_right hg]
       rfl
   · intro a' ha' c hc
     apply Subtype.ext
@@ -1722,7 +1722,7 @@ theorem closureData : ∀ (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
       rw [Finset.sum_comm]
       simp_rw [← mul_assoc, ← Finset.sum_mul, h1]
       simp [hbb]
-    letI : Algebra R D := (baseHom A R D).toAlgebra
+    let : Algebra R D := (baseHom A R D).toAlgebra
     have hτmul (f : GenFib A R) (d : D) :
         τ (algebraMap (GenFib A R) D f * d) = f * τ d := by
       rw [← Algebra.smul_def, τ.map_smul, smul_eq_mul]
@@ -1814,11 +1814,11 @@ theorem closureData : ∀ (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
     dsimp [ξ]
     rw [← mul_assoc, ← map_mul, ← hu, Units.mul_inv, map_one, one_mul]
   · refine ⟨fun c => ?_⟩
-    letI := (baseHom A R D).toAlgebra
+    let := (baseHom A R D).toAlgebra
     let f : closure A R D →ₐ[R] D := { (closure A R D).subtype with commutes' := fun _ => rfl }
     exact (isIntegral_algHom_iff f Subtype.val_injective).mp c.2
-  · haveI : Nontrivial (GenFib A R) := hRinj.nontrivial
-    haveI : Nontrivial D := hinj.nontrivial
+  · have : Nontrivial (GenFib A R) := hRinj.nontrivial
+    have : Nontrivial D := hinj.nontrivial
     exact ⟨⟨0, 1, fun h => zero_ne_one (α := D) (by simpa using congrArg Subtype.val h)⟩⟩
 
 end GlobalTheory.ClosureData
@@ -1880,14 +1880,14 @@ theorem GlobalTheory.GoodEtale.closure_finiteEtale : ∀ (A : Type) [CommRing A]
       GlobalTheory.KeyOriginNoeth.Good A (Localization.AtPrime QA) DA ρ →
       GlobalTheory.KeyOriginNoeth.ClosureFiniteEtale A (Localization.AtPrime QA) DA := by
   intro A _ _ _ _ _ _ EA _ _ _ _ _ QA _ hQA ρ hρ hker q hq hqu DA _ _ actA htor hgood
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   obtain ⟨hflat, hnoeth, ht, hic⟩ := GlobalTheory.T.genericFibreBase_flat_noetherian_intClosed A EA QA hQA ρ hρ hker
-  haveI := hflat
-  haveI := hnoeth
+  have := hflat
+  have := hnoeth
   have hHR := GlobalTheory.T.hasHartogsPropertyHeightOnePrimes_of_flat A (Localization.AtPrime QA)
   obtain ⟨act', T, hT, ⟨a, ha, n, x, y, hxy⟩, htf, hHC, hint, hnt⟩ :=
     GlobalTheory.T.integralClosure_zmodTorsor_genericFibre_data A (Localization.AtPrime QA) hHR hic q DA actA htor
-  letI := GlobalTheory.KeyOriginNoeth.closureAlg A (Localization.AtPrime QA) DA
+  let := GlobalTheory.KeyOriginNoeth.closureAlg A (Localization.AtPrime QA) DA
   obtain ⟨hEt, s, hs⟩ := hgood
   obtain ⟨O, _, _, hO, hσ⟩ := GlobalTheory.T.exists_faithfullyFlat_algHom_etale_height_one A (Localization.AtPrime QA) (GlobalTheory.KeyOriginNoeth.closure A _ DA)
     ρ hρ _ hker ht hint (fun P _ h => hEt P h) ⟨s, hs⟩

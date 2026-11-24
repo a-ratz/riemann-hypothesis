@@ -97,7 +97,7 @@ theorem densCos_of_filt (hP1 : HenselCount) (hP2 : CosDens) {V X Y : Type} [AddC
     have : G ⁻¹' {z | z - h ∈ H n} ∩ Q =
         (fun X => -y + X) ⁻¹' {Z | Z ∈ Λ 0 ∧ G (y + Z) - h ∈ H n} := by
       ext X
-      simp only [mem_inter_iff, mem_preimage, mem_setOf_eq, hQ, neg_add_eq_sub]
+      simp only [mem_inter_iff, mem_preimage, mem_ofPred_eq, hQ, neg_add_eq_sub]
       rw [add_sub_cancel]
       exact and_comm
     rw [this, measure_preimage_add]
@@ -124,7 +124,7 @@ theorem densCos_of_filt (hP1 : HenselCount) (hP2 : CosDens) {V X Y : Type} [AddC
     rw [hm, Measure.map_apply hGm hCo.measurableSet.compl, Measure.restrict_apply (hGm hCo.measurableSet.compl)]
     have : G ⁻¹' Cᶜ ∩ Q = ∅ := by
       ext X
-      simp only [mem_inter_iff, mem_preimage, mem_compl_iff, hC, hQ, mem_setOf_eq,
+      simp only [mem_inter_iff, mem_preimage, mem_compl_iff, hC, hQ, mem_ofPred_eq,
         mem_empty_iff_false, iff_false, not_and]
       intro hn hX
       have e1 := hyp 0 0 (Λ 0).zero_mem (X - y) hX
@@ -210,7 +210,7 @@ theorem densVLat_of (hP1 : HenselCount) (hP2 : CosDens) (hT : TensAll) (hF : Gra
   have : T2Space (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
     inferInstanceAs (T2Space (Fin a → Fin a → Fv F v ⊗[F] E))
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   intro d b x hx
   obtain ⟨N, hN, hd⟩ := hF F E σ hσ M J hJ.1 hJ.2 a h1 (by omega) v d b x hx
   refine ⟨N, hN, fun y hy Λ0 hB _ _ hsub => ?_⟩

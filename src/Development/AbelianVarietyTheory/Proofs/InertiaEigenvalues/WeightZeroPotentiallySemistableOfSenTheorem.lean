@@ -153,7 +153,7 @@ theorem approx_step
     (hE : ∀ g, Dv p N (A g * act ρ g Q - Q)) :
     ∃ Q' : Matrix n n (WittVector p R), Dv p N (Q - Q') ∧ (∀ᶠ g in 𝓝ˢ (Jset p ρ), act ρ g Q' = Q') ∧
       ∀ g, Dv p (N + 1) (A g * act ρ g Q' - Q') := by
-  have hp0 : (p : WittVector p R) ^ N ≠ 0 := pow_ne_zero _ (WittVector.p_nonzero p R)
+  have hp0 : (p : WittVector p R) ^ N ≠ 0 := pow_ne_zero _ (WittVector.p_ne_zero p R)
   have cc0 : ∀ x : WittVector p R, (p : WittVector p R) ∣ x → x.coeff 0 = 0 := fun x hx =>
     (WittVector.mem_span_p_iff_coeff_zero_eq_zero x).1 (Ideal.mem_span_singleton.2 hx)
   have ccA : ∀ g (Y : Matrix n n (WittVector p R)) i j, ((A g * Y) i j).coeff 0 = (Y i j).coeff 0 := by
@@ -375,10 +375,10 @@ theorem exists_period_unramified : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l)
     ∃ Q : GL n P.R.B, ∀ g : ↥(GK K), (ρ g : Matrix n n ↥(MaximalUnramifiedExtension l)).map (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B) *
       (Q : Matrix n n P.R.B).map (P.actQ (g : GQ l)) = Q := by
   intro l _ P AI T n _ _ K r ρ hρ hI hn
-  haveI := compactSpace_GK K
+  have := compactSpace_GK K
   let σ : ↥(GK K) →* (OCb l ≃+* OCb l) := AI.actT.comp (GK K).subtype
   have hopen : ∀ (y : OCb l) (m : ℕ), 0 < m → y ^ l ^ m = y → ∀ᶠ g in 𝓝 (1 : ↥(GK K)), σ g y = y :=
-    fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq AI y m hm hy)
 
   let M : ↥(GK K) → Matrix n n ↥(MaximalUnramifiedExtension l) := fun g => (ρ g : Matrix n n ↥(MaximalUnramifiedExtension l)) - 1
@@ -451,7 +451,7 @@ theorem exists_period_unramified : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l)
       intro g hg
       have hgI : g ∈ IK K := Subgroup.subset_closure fun x hx =>
         norm_sub_lt_one_of_fix AI g (fun m hm y hy => hg m hm y hy) x hx
-      simp only [U, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [U, Set.mem_iInter, Set.mem_ofPred_eq]
       intro i j
       have : M g = 0 := by simp [M, hI g hgI]
       rw [this]
@@ -459,7 +459,7 @@ theorem exists_period_unramified : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l)
       have : (0 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).pos
       positivity
     filter_upwards [hU.mem_nhdsSet.2 hJU] with g hg
-    simp only [U, Set.mem_iInter, Set.mem_setOf_eq] at hg
+    simp only [U, Set.mem_iInter, Set.mem_ofPred_eq] at hg
     exact hdiv g N fun i j => (hg i j).le
   obtain ⟨Q₀, hQdet, hQ⟩ := exists_solution σ hopen A hA h1 hJ
   have hQu : IsUnit (AI.ιA.mapMatrix Q₀) := by
@@ -572,7 +572,7 @@ theorem unrStep_holds : UnrStep := by
   obtain ⟨K', hK, hI, hc⟩ := _root_.GlobalTheory.PMon.unr_of_finite_inertia l n K r ρ hρ hfin
   let ι : ↥(GK K') →* ↥(GK K) := Subgroup.inclusion (GK_le hK)
   let ρ' : ↥(GK K') →* GL n ↥(MaximalUnramifiedExtension l) := ρ.comp ι
-  have hι : Continuous ι := continuous_subtype_val.subtype_mk _
+  have hι : Continuous ι := continuous_subtypeVal.subtype_mk _
   have hρ' : IsRat r ρ' :=
     { pos := hρ.pos
       le := fun c hc => hK (hρ.le c hc)
@@ -782,7 +782,7 @@ noncomputable def padicClampInt (l : ℕ) [Fact l.Prime] (x : ℚ_[l]) : ℤ_[l]
 theorem padicClampInt_coe (l : ℕ) [Fact l.Prime] {x : ℚ_[l]} (h : ‖x‖ ≤ 1) :
     ((padicClampInt l x : ℤ_[l]) : ℚ_[l]) = x := by
   show (if ‖x‖ ≤ 1 then x else 0) = x
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem congrFiltration_detectingCharacters_coboundary : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype n] [DecidableEq n] (K : FinExt l) (ρ : ↥(GK K) →* GL n ℚ_[l]) (M : GL n ℂ_[l]), (∀ g : ↥(GK K), (ρ g : Matrix n n ℚ_[l]).map (algebraMap ℚ_[l] ℂ_[l]) * (M : Matrix n n ℂ_[l]).map (Formalism.Per.σC (g : GQ l)) = M) → ∀ N : ℕ → Subgroup ↥(GK K), (∀ k g, g ∈ N k ↔ ∀ i j, ‖((ρ g : Matrix n n ℚ_[l]) - 1) i j‖ ≤ (l : ℝ) ^ (-((k : ℤ) + 2))) → ∀ r : ℕ, ∃ k₀ : ℕ, ∀ k ≥ k₀, ∃ (ι : Type) (_ : Finite ι) (x : ι → ℂ_[l]) (a : ι → ↥(GK K) → ℤ_[l]), (∀ i, ∀ σ ∈ N k, ‖Formalism.Per.σC (σ : GQ l) (x i) - x i - algebraMap ℚ_[l] ℂ_[l] (a i σ : ℚ_[l])‖ ≤ ((l : ℝ)⁻¹) ^ r) ∧ ∀ σ ∈ N k, (∀ i, (l : ℤ_[l]) ^ r ∣ a i σ) → σ ∈ N (k + r) := by
   intro l _ n _ _ K ρ M hM N hN r
@@ -870,7 +870,7 @@ theorem matrix_inv_near_one : ∀ (E : Type) [NormedField E] [IsUltrametricDist 
   have key : Z - 1 = -((X - 1) + (Z - 1) * (X - 1)) := by
     have h : (Z - 1) * (X - 1) = Z * X - Z - X + 1 := by noncomm_ring
     rw [h, hZX]; abel
-  haveI : Nonempty (n × n) := ⟨(i, j)⟩
+  have : Nonempty (n × n) := ⟨(i, j)⟩
   obtain ⟨⟨i0, j0⟩, hmax⟩ := Finite.exists_max (fun p : n × n => ‖(Z - 1) p.1 p.2‖)
   set s := ‖(Z - 1) i0 j0‖ with hs
   have hbound : ∀ a b, ‖(Z - 1) a b‖ ≤ max t (s * t) := by
@@ -934,11 +934,11 @@ theorem congruenceSubgroups_GL_padic : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [
       simpa using (ht k).1
     mul_mem' := by
       intro X Y hX hY
-      simp only [Set.mem_setOf_eq, Units.val_mul] at *
+      simp only [Set.mem_ofPred_eq, Units.val_mul] at *
       exact norm_mul_sub_one_le_of_norm_sub_one_le _ _ _ (ht k).1 (ht k).2.le hX hY
     inv_mem' := by
       intro X hX
-      simp only [Set.mem_setOf_eq] at *
+      simp only [Set.mem_ofPred_eq] at *
       exact _root_.GlobalTheory.matrix_inv_near_one ℚ_[l] n (X : Matrix n n ℚ_[l]) ((X⁻¹ : GL n ℚ_[l]) : Matrix n n ℚ_[l]) _
         (ht k).1 (ht k).2 (Units.inv_mul X) hX }, fun k X => Iff.rfl⟩
 
@@ -974,7 +974,7 @@ theorem matrix_near_one_pow_prime_deep : ∀ (l : ℕ) [Fact l.Prime] (n : Type)
     rw [← hz]; congr 1
   rw [e4]
   set Y := X - 1 with hY
-  haveI : Nonempty (n × n) := ⟨(i, j)⟩
+  have : Nonempty (n × n) := ⟨(i, j)⟩
   obtain ⟨⟨i0, j0⟩, hmax⟩ := Finite.exists_max (fun p : n × n => ‖Y p.1 p.2‖)
   set t := ‖Y i0 j0‖ with ht
   have hall : ∀ a b, ‖Y a b‖ ≤ t := fun a b => hmax (a, b)
@@ -1134,7 +1134,7 @@ open scoped Formalism.Per
 namespace GlobalTheory.OpenFiniteIndex
 
 theorem compactSpace_fixing (l : ℕ) [Fact l.Prime] (K : FinExt l) : CompactSpace ↥(GK K) := by
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
   have hc : IsClosed ((K.1.fixingSubgroup : Subgroup (GQ l)) : Set (GQ l)) :=
     IntermediateField.fixingSubgroup_isClosed K.1
   exact isCompact_iff_compactSpace.mp hc.isCompact
@@ -1142,8 +1142,8 @@ theorem compactSpace_fixing (l : ℕ) [Fact l.Prime] (K : FinExt l) : CompactSpa
 theorem finiteIndex_of_isOpen : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (H : Subgroup ↥(GK K)),
     IsOpen (H : Set ↥(GK K)) → H.FiniteIndex := by
   intro l _ K H hH
-  haveI := compactSpace_fixing l K
-  haveI : Finite (↥(GK K) ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  have := compactSpace_fixing l K
+  have : Finite (↥(GK K) ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
   exact Subgroup.finiteIndex_of_finite_quotient
 
 end GlobalTheory.OpenFiniteIndex
@@ -1161,8 +1161,8 @@ namespace GlobalTheory
 theorem image_finite_of_trivial_on_inf_finiteIndex : ∀ (G Q : Type) [Group G] [Group Q] (ρ : G →* Q) (J H : Subgroup G), H.FiniteIndex → (∀ g ∈ J, g ∈ H → ρ g = 1) → (ρ '' (J : Set G)).Finite := by
   intro G Q _ _ ρ J H hH hρ
   classical
-  haveI := hH
-  haveI : Finite (G ⧸ H) := Subgroup.finite_quotient_of_finiteIndex
+  have := hH
+  have : Finite (G ⧸ H) := Subgroup.finite_quotient_of_finiteIndex
   apply (Set.finite_range (fun q : G ⧸ H =>
     if h : ∃ g ∈ J, (g : G ⧸ H) = q then ρ h.choose else 1)).subset
   rintro _ ⟨g, hg, rfl⟩
@@ -1196,7 +1196,7 @@ theorem GK.finite_image_of_trivial_on_open :
       (J H : Subgroup ↥(GK K)), IsOpen (H : Set ↥(GK K)) → (∀ g ∈ J, g ∈ H → ρ g = 1) →
       (ρ '' (J : Set ↥(GK K))).Finite := by
   intro l _ K Q _ ρ J H hH hρ
-  haveI := _root_.GlobalTheory.OpenFiniteIndex.finiteIndex_of_isOpen l K H hH
+  have := _root_.GlobalTheory.OpenFiniteIndex.finiteIndex_of_isOpen l K H hH
   exact _root_.GlobalTheory.image_finite_of_trivial_on_inf_finiteIndex _ Q ρ J H inferInstance hρ
 
 end GlobalTheory
@@ -1279,7 +1279,7 @@ theorem weilRes_of_basis (hE : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r →
     exact this
   set S : Submodule ℚ_[l] (Om l) := Submodule.span ℚ_[l] (Set.range v)
   let bS : Module.Basis (Fin r) ℚ_[l] S := Module.Basis.span hv
-  haveI : FiniteDimensional ℚ_[l] S := Module.Finite.of_basis bS
+  have : FiniteDimensional ℚ_[l] S := Module.Finite.of_basis bS
   have coe_sum : ∀ a : Fin r → ℚ_[l], (((∑ k, a k • ω k : ↥(MaximalUnramifiedExtension l))) : Om l) = ∑ k, a k • v k := by
     intro a
     simp [hvdef]
@@ -1325,7 +1325,7 @@ theorem weilRes_of_basis (hE : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r →
     obtain ⟨j, k⟩ := y
     simp only [pm, D, M, W, Matrix.mul_apply, Fintype.sum_prod_type, Finset.sum_ite_irrel, Matrix.kroneckerMap_apply, Matrix.one_apply,
       Matrix.blockDiagonal_apply, Matrix.map_apply, Matrix.of_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_const_zero]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.sum_const_zero]
 
     rw [← map_mul, ← hco g i j k, map_sum]
     refine Finset.sum_congr rfl fun k' _ => ?_

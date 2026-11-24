@@ -164,11 +164,11 @@ theorem mulVec_mem {l : ℕ} [Fact l.Prime] (c : Coef l) {M : Matrix (Fin 2) (Fi
   exact sum_mem fun j _ => mul_mem (hM i j) (hx j)
 
 theorem prime_normV (v : Pl) : (normV v).Prime := by
-  haveI := v.isPrime
-  haveI := v.isMaximal
-  haveI : Finite (𝓞 ℚ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
+  have := v.isPrime
+  have := v.isMaximal
+  have : Finite (𝓞 ℚ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   have hp : (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := CharP.char_is_prime (𝓞 ℚ ⧸ v.asIdeal) _
-  haveI : Fact (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := ⟨hp⟩
+  have : Fact (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := ⟨hp⟩
   have hs : Function.Surjective (ZMod.castHom (dvd_refl (ringChar (𝓞 ℚ ⧸ v.asIdeal))) (𝓞 ℚ ⧸ v.asIdeal)) := by
     intro y
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -271,7 +271,7 @@ end Ker
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (c : Coef l) (n : ℕ) (S : Finset Pl) (W : R2 Ω l) (y : G ℚ Ω → Fin 2 → Qbar l) (w : Pl) (ψ : G ℚ Ω →* Multiplicative (ZMod (l ^ n))), Continuous W → (∀ s i j, mat W s i j ∈ c.O) → ContainsAbove S l → (∀ v, v ∉ S → ∀ B : ValuationSubring Ω, IsPlaceOver B v → Ine (F := ℚ) B ≤ W.ker) → (∀ s i, y s i ∈ c.O) → KillsMu (normV w) ψ → w ∉ S → Tame c W y n w ψ → ∃ (P un : Qbar l) (d : G ℚ Ω → Fin 2 → Qbar l), P ∈ c.O ∧ ‖un‖ = 1 ∧ (∀ (B : ValuationSubring Ω) (σ : G ℚ Ω), IsPlaceOver B w → IsFrob B (normV w) σ → Cg n P (un * (mat W σ - 1).det)) ∧ Continuous d ∧ (∀ s i, d s i ∈ c.O) ∧ (∀ s t, Cv n (d (s * t)) (d s + mat W s *ᵥ d t + ((((ψ s).toAdd.val : ℕ) : Qbar l) * P) • (mat W s *ᵥ y t))) ∧ (∀ a ∈ (toGS Ω (insert w (S : Set Pl))).ker, Cv n (d a) 0) ∧ ∀ q ∈ S, ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal → ∃ B : ValuationSubring Ω, IsPlaceOver B q ∧ Cob1 c n W (Ine (F := ℚ) B) d := by
   intro l _ Ω _ _ _ c n S W y w ψ hWc hWO hSl hWun hyO hψ hwS hT
   obtain ⟨Y, P, u, b, hYc, hYO, hPO, hu, hbO, hYcoc, hYsum, hfrob, hloc⟩ := hT
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hp := prime_normV w
   have hker : IsOpen (ψ.ker : Set (G ℚ Ω)) := isOpen_ker_of_killsMu hp.one_lt.le hψ
   set L : Qbar l := ((l : ℕ) : Qbar l) ^ n with hL
@@ -337,7 +337,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ 
   ·
     intro g hg
     rw [toGS, QuotientGroup.ker_mk'] at hg
-    haveI := normal_kerSub hYcoc
+    have := normal_kerSub hYcoc
     have hNS : NS Ω (insert w (S : Set Pl)) ≤ kerSub W ψ Y hYcoc := by
       refine Subgroup.topologicalClosure_minimal _ ?_ (isClosed_kerSub hYcoc hWc hker hYc)
       refine Subgroup.normalClosure_le_normal ?_

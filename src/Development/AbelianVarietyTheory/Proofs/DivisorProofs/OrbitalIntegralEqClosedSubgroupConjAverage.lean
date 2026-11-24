@@ -60,7 +60,7 @@ theorem avg_const {H : Type} [Group H] (c : ℂ) : avg (fun _ : H => c) = c := b
   unfold avg
   simp only
   rw [hR, Subgroup.index_top]
-  haveI : Unique (H ⧸ (⊤ : Subgroup H)) :=
+  have : Unique (H ⧸ (⊤ : Subgroup H)) :=
     ⟨⟨QuotientGroup.mk 1⟩, fun a => QuotientGroup.induction_on a fun x => QuotientGroup.eq.2 (Subgroup.mem_top _)⟩
   rw [finsum_unique]
   simp

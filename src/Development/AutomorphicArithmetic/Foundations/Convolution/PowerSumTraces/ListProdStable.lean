@@ -171,7 +171,7 @@ theorem UpperTheory.exists_pos_const_prod_localHeckeOperators :
           exact one_mem _
         · exact this
       · have := H (w i)
-        rw [if_pos (by simp)] at this
+        rw [ite_eq_left (by simp)] at this
         exact Subgroup.mem_bot.1 this
     · rintro ⟨H1, H2⟩ v
       split_ifs with hv
@@ -216,7 +216,7 @@ theorem UpperTheory.finiteDimensional_eigenspace_inf_fixed_compactOpen :
       intro j e
       obtain rfl := hw e
       rfl
-    simp only [U', dif_pos h]
+    simp only [U', dite_eq_left h]
     exact key _ _
   have hCO' : ∀ v ∈ Finset.univ.image w, CO (U' v) := by
     intro v hv
@@ -244,7 +244,7 @@ theorem UpperTheory.finiteDimensional_eigenspace_inf_fixed_compactOpen :
       obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hv
       rw [hU']
       exact hf' i
-  haveI := hfin
+  have := hfin
   exact Submodule.finiteDimensional_of_le hle
 end -- clump:auto
 end -- clump:auto
@@ -263,7 +263,7 @@ theorem UpperTheory.localHeckeOperator_mem_of_closed_invariant :
         (φ : Gw n w → ℂ) (T : LL μ →L[ℂ] LL μ) (Z : Submodule ℂ (LL μ)), IsClosed (Z : Set (LL μ)) →
         (∀ (g : Gw n w), ∀ v ∈ Z, rhoL μ w g v ∈ Z) → IsOloc μ w m φ T → ∀ v ∈ Z, T v ∈ Z := by
   intro K _ _ n μ _ w _ m φ T Z hZ hst hT v hv
-  haveI : CompleteSpace Z := hZ.completeSpace_coe
+  have : CompleteSpace Z := hZ.completeSpace_coe
   rw [← Submodule.orthogonal_orthogonal Z, Submodule.mem_orthogonal]
   intro u hu
   rw [hT u v]
@@ -296,9 +296,9 @@ private theorem iw_scale {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Me
   obtain ⟨d, hd⟩ : ∃ d, d = (m (GLnLocal.iwahori (w.adicCompletion K) n : Set (Gw n w)))⁻¹ := ⟨_, rfl⟩
   have hd0 : d ≠ 0 := hd ▸ ENNReal.inv_ne_zero.2 ht
   have hdt : d ≠ ⊤ := hd ▸ ENNReal.inv_ne_top.2 h0
-  haveI : (d • m).IsHaarMeasure := Measure.IsHaarMeasure.smul m hd0 hdt
+  have : (d • m).IsHaarMeasure := Measure.IsHaarMeasure.smul m hd0 hdt
   have h1 : (d • m) (GLnLocal.iwahori (w.adicCompletion K) n : Set (Gw n w)) = 1 := by
-    rw [Measure.smul_apply, hd, smul_eq_mul, ENNReal.inv_mul_cancel h0 ht]
+    rw [smul_apply, hd, smul_eq_mul, ENNReal.inv_mul_cancel h0 ht]
   have hop := UpperTheory.ConvolutionTheory.C.hopOloc K n μ w (d • m) (GLnLocal.iwahori (w.adicCompletion K) n)
     (Cartan.diagPow (w.adicCompletion K) n ν) hCO h1
   have hc : (m (GLnLocal.iwahori (w.adicCompletion K) n : Set (Gw n w))).toReal ≠ 0 :=
@@ -311,7 +311,7 @@ private theorem iw_scale {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Me
     have := hop u v
     rw [integral_smul_measure] at this
     exact this
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right, e1, hT u v, hdc, Complex.real_smul, ← mul_assoc,
+  rw [smul_apply, inner_smul_right, e1, hT u v, hdc, Complex.real_smul, ← mul_assoc,
     Complex.ofReal_inv, mul_inv_cancel₀ (Complex.ofReal_ne_zero.2 hc), one_mul]
 
 theorem UpperTheory.Uiw_pow_comp_eq_of_antitone :
@@ -327,7 +327,7 @@ theorem UpperTheory.Uiw_pow_comp_eq_of_antitone :
   have h1 := UpperTheory.ConvolutionTheory.C.uiwPow K n μ w e he j
   rw [iw_scale μ w m 0 T hT, iw_scale μ w m _ T' hT', ← h0, ← h1]
   ext1 v
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, map_smul]
+  simp only [ContinuousLinearMap.comp_apply, smul_apply, map_smul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.TwistedTraces.UiwPowCompEqOfAntitone =====
@@ -390,7 +390,7 @@ private theorem amp_A_eq {K : Type} [Field K] [NumberField K] {n : ℕ} {μ : Me
 theorem UpperTheory.ConvolutionTheory.C.termF :
     UpperTheory.ConvolutionTheory.C.TermF := by
   intro F E _ _ _ _ _ _ σ n l hn μ _ ν _ _ _ m hm
-  haveI hmH : ∀ v, (m v).IsHaarMeasure := fun v => (hm v).1
+  have hmH : ∀ v, (m v).IsHaarMeasure := fun v => (hm v).1
   obtain ⟨κ, hκ, hR⟩ := UpperTheory.exists_pos_const_prod_localHeckeOperators F n hn μ ν
   refine ⟨κ, hκ, ?_⟩
   intro a q w₀ S V τ x hV hx hocc
@@ -511,7 +511,7 @@ theorem UpperTheory.ConvolutionTheory.C.termF :
     have hRg : Rop μ 𝔣.g v = (κ : ℂ) • ((x : ℂ) • (List.ofFn T).prod v) := by
       have h1 : Rop μ 𝔣.g = RR μ 𝔣.g := rfl
       rw [h1, hRR]
-      simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, prj_self _ hsph, hO]
+      simp only [smul_apply, ContinuousLinearMap.comp_apply, prj_self _ hsph, hO]
     have hc : (List.ofFn Tc).prod = T₀ * (List.ofFn fun i : Fin r => T i.succ).prod := by
       rw [List.ofFn_succ, List.prod_cons]
       rfl
@@ -521,7 +521,7 @@ theorem UpperTheory.ConvolutionTheory.C.termF :
     have hstep' : ∀ y, (𝔣.Uq 0 ^ j) (T 0 y) = T₀ y := fun y => by
       rw [hUq, ← hstep]
       rfl
-    simp only [ContinuousLinearMap.comp_apply, hid, hRg, map_smul, hc, hd, ContinuousLinearMap.mul_apply, hstep',
+    simp only [ContinuousLinearMap.comp_apply, hid, hRg, map_smul, hc, hd, mul_apply_eq_comp, hstep',
       smul_smul]
   rw [hW, UpperTheory.trOn_eq_mul_of_eq_smul_on_subspace _ _ _ _ _ hfin hB, hf, Fin.prod_univ_succ]
   have h1 : ∏ i : Fin r, sc i.succ = ∏ v ∈ S, s v := hprod s

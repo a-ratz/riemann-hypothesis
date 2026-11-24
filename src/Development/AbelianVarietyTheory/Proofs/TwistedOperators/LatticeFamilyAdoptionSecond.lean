@@ -591,7 +591,7 @@ theorem stage1 (ht : NChTie D c) (j : ℕ) (S : RatDat D.ntw) (hks : (S.A j).IsK
       (∀ (s : S.G) (x : S.WL j), e ((((S.A j).chi s)⁻¹ : D.what₂.LLˣ).val • (S.A j).ρ s x) =
         ext (D.ntw.O (c.twI w)) (FractionRing (c.Oe w))
           ((D.nexp.actG (c.twI w) j (c.sd w) (S.eG s)).toLinearMap) (e x)) := by
-  letI algK : Algebra S.Ks (FractionRing (D.ntw.O (c.twI w))) := (ιK S (c.twI w) (c.sd w)).toAlgebra
+  let algK : Algebra S.Ks (FractionRing (D.ntw.O (c.twI w))) := (ιK S (c.twI w) (c.sd w)).toAlgebra
   have hcomp : (c.embW w).comp (algebraMap S.Ks D.what₂.LL) =
       (algebraMap (FractionRing (D.ntw.O (c.twI w))) (FractionRing (c.Oe w))).comp
         (algebraMap S.Ks (FractionRing (D.ntw.O (c.twI w)))) :=
@@ -682,8 +682,8 @@ theorem stage2 (ht : NChTie D c) {Gp : Type} [Group Gp] [Fintype Gp] (I : Gp ≃
   classical
   obtain ⟨e, h1, h2, h3, h4⟩ := stage1 (w := w) ht j S (isKsForm_of_iso fi hks') rho chi eF hact
   refine ⟨e, h3, ?_⟩
-  letI : Fintype P0 := Fintype.ofFinite _
-  letI : Fintype (G0g D.nd) := Fintype.ofEquiv Gp I.toEquiv
+  let : Fintype P0 := Fintype.ofFinite _
+  let : Fintype (G0g D.nd) := Fintype.ofEquiv Gp I.toEquiv
   let Fh : G0g D.nd →* Module.End (FractionRing (D.ntw.O (c.twI w))) (D.nexp.Fm (c.twI w) j (c.sd w)) :=
     LinearEquiv.automorphismGroup.toLinearMapMonoidHom.comp (D.nexp.actG (c.twI w) j (c.sd w))
   let aF : Gp →* Module.End (FractionRing (D.ntw.O (c.twI w))) (D.nexp.Fm (c.twI w) j (c.sd w)) :=

@@ -270,12 +270,12 @@ theorem weyl_hasOp : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
     ∀ (κ : Type) [Fintype κ] [DecidableEq κ],
     HasOp ψ (Matrix.fromBlocks 0 1 (-1) 0 : Matrix (κ ⊕ κ) (κ ⊕ κ) F) := by
   intro F _ _ hTR ψ hψ κ _ _
-  letI mA : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
-  letI mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
-  haveI bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
+  let mA : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
+  let mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
+  have bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure (κ → AF F), μ.IsAddHaarMeasure := ⟨Measure.addHaar, inferInstance⟩
   obtain ⟨μi, hμi⟩ : ∃ μ : Measure (κ → mixedEmbedding.mixedSpace F), μ.IsAddHaarMeasure :=
     ⟨Measure.addHaar, inferInstance⟩
@@ -292,7 +292,7 @@ theorem weyl_hasOp : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
       ext x; simp [K]
     rw [e]
     exact Measure.addHaarMeasure_self
-  haveI := hμv
+  have := hμv
   obtain ⟨c₀, hc₀, hpure⟩ := _root_.GlobalTheory.AdelicHaarPure.integral_pure_haar F κ μ μi μv hμv1
   obtain ⟨ei', hei'bij, hei'⟩ := _root_.GlobalTheory.ArchFourier.exists_fourier_sInf F κ μi
   obtain ⟨c, hc, hθ⟩ := _root_.GlobalTheory.PoissonReindex.poisson_any F hTR ψ hψ κ μ
@@ -334,7 +334,7 @@ theorem weyl_hasOp : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
       rw [h3, finprod_congr h2]
   refine ⟨ftE ψ μ, c, c₀ • ei', ev, hc, fun g => ?_, hbij, fun v w φ hφ => ?_, hind, fun f φ hφ => ?_⟩
   · obtain ⟨h, hh⟩ := hei'bij.2 (c₀⁻¹ • g)
-    exact ⟨h, by rw [ContinuousLinearMap.smul_apply, hh, smul_smul, mul_inv_cancel₀ hc₀, one_smul]⟩
+    exact ⟨h, by rw [smul_apply, hh, smul_smul, mul_inv_cancel₀ hc₀, one_smul]⟩
   · rw [act_weyl, hev v _ (GlobalTheory.SchrSBFin.schr_mem_SB v _ (hψc v) w φ hφ), hev v φ hφ, ft_schr]
   · obtain ⟨hmem, hft⟩ := hpureE f φ hφ
     have he : ftE ψ μ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (c₀ • ei' f) (fun v => ev v (φ v)) :=

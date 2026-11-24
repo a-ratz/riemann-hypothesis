@@ -127,10 +127,10 @@ theorem UpperTheory.exists_idempotent_submonoid_isLocalization_away :
         (∀ r, jB (algebraMap R B r) = algebraMap L B' (algebraMap R L r)) →
         ∃ S : Submonoid B, (∀ s ∈ S, IsIdempotentElem s) ∧ @IsLocalization B _ S B' _ jB.toAlgebra := by
   intro R B L B' _ _ _ _ e he T hT _ _ _ _ _ _ jB hj
-  letI : Algebra R B' := ((algebraMap L B').comp (algebraMap R L)).toAlgebra
-  haveI : IsScalarTower R L B' := IsScalarTower.of_algebraMap_eq' rfl
-  letI : Algebra B B' := jB.toAlgebra
-  haveI : IsScalarTower R B B' := IsScalarTower.of_algebraMap_eq (fun r => (hj r).symm)
+  let : Algebra R B' := ((algebraMap L B').comp (algebraMap R L)).toAlgebra
+  have : IsScalarTower R L B' := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra B B' := jB.toAlgebra
+  have : IsScalarTower R B B' := IsScalarTower.of_algebraMap_eq (fun r => (hj r).symm)
   have hloc : IsLocalization (T ⊔ Submonoid.powers e) B' := by
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨x, hx⟩
@@ -195,7 +195,7 @@ theorem UpperTheory.integralClosure_range_isLocalization_idempotent :
         @IsLocalization B _ S B' _ jB.toAlgebra →
         mC.Flat ∧ Epi (CommRingCat.ofHom mC) := by
   intro A B B' C C' _ _ _ _ _ a jB t t' mC ht ht' hC hC' hcomm S hS hloc
-  letI := jB.toAlgebra
+  let := jB.toAlgebra
   have h1 : ∀ s ∈ S, jB s = 1 := by
     intro s hs
     have hu : IsUnit (jB s) := IsLocalization.map_units B' (⟨s, hs⟩ : S)
@@ -232,7 +232,7 @@ theorem UpperTheory.integralClosure_range_isLocalization_idempotent :
     obtain ⟨c0, hc0⟩ := hsb
     refine ⟨c0, ht' ?_⟩
     rw [← hcomm, hc0, map_mul, h1 _ hs', one_mul, hbs']
-  letI := mC.toAlgebra
+  let := mC.toAlgebra
   have hloc' : IsLocalization (S.comap t) C' := by
     rw [isLocalization_iff]
     refine ⟨?_, ?_, ?_⟩
@@ -345,10 +345,10 @@ theorem UpperTheory.mono_flat_of_affine_appLE_flat_epi :
     obtain ⟨-, hep⟩ := H U.1 U.2 le_rfl
     refine prop_restrict (MorphismProperty.monomorphisms Scheme) m _ (U.2.preimage f)
       (U.2.preimage (m ≫ f)) le_rfl ?_
-    haveI : Epi (m.appLE (f ⁻¹ᵁ U.1) (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) le_rfl) := hep
-    haveI := op_mono_of_epi (m.appLE (f ⁻¹ᵁ U.1) (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) le_rfl)
+    have : Epi (m.appLE (f ⁻¹ᵁ U.1) (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) le_rfl) := hep
+    have := op_mono_of_epi (m.appLE (f ⁻¹ᵁ U.1) (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) le_rfl)
     exact Functor.map_mono Scheme.Spec (m.appLE (f ⁻¹ᵁ U.1) (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) le_rfl).op
-  · haveI : IsZariskiLocalAtTarget @Flat.{0} :=
+  · have : IsZariskiLocalAtTarget @Flat.{0} :=
       HasRingHomProperty.instIsZariskiLocalAtTarget (P := @Flat.{0}) (Q := RingHom.Flat)
     rw [IsZariskiLocalAtTarget.iff_of_iSup_eq_top (P := @Flat) _ hcov]
     intro U
@@ -356,7 +356,7 @@ theorem UpperTheory.mono_flat_of_affine_appLE_flat_epi :
     have hV : IsAffineOpen (f ⁻¹ᵁ U.1) := U.2.preimage f
     have hW : IsAffineOpen (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) := U.2.preimage (m ≫ f)
     have e := restrict_comm m _ hV hW le_rfl
-    haveI : Flat (Spec.map (m.appLE (f ⁻¹ᵁ U.1) (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) le_rfl)) :=
+    have : Flat (Spec.map (m.appLE (f ⁻¹ᵁ U.1) (m ⁻¹ᵁ (f ⁻¹ᵁ U.1)) le_rfl)) :=
       HasRingHomProperty.Spec_iff.mpr hfl
     have e' : m ∣_ (f ⁻¹ᵁ U.1) =
         hW.isoSpec.hom ≫ Spec.map (m.appLE _ _ le_rfl) ≫ hV.isoSpec.inv := by
@@ -389,7 +389,7 @@ private theorem away_rho (R : Type) [CommRing R] (f : R) (V : (Spec (CommRingCat
   have h := (isAffineOpen_top (Spec (CommRingCat.of R))).isLocalization_of_eq_basicOpen
     ((Scheme.ΓSpecIso (CommRingCat.of R)).inv f) (homOfLE le_top : V ⟶ ⊤) hb
   let φ : R ≃+* Γ(Spec (CommRingCat.of R), ⊤) := (Scheme.ΓSpecIso (CommRingCat.of R)).symm.commRingCatIsoToRingEquiv
-  letI := ((Spec (CommRingCat.of R)).presheaf.map (homOfLE le_top : V ⟶ ⊤).op).hom.toAlgebra
+  let := ((Spec (CommRingCat.of R)).presheaf.map (homOfLE le_top : V ⟶ ⊤).op).hom.toAlgebra
   have h2 := (IsLocalization.isLocalization_iff_of_base_ringEquiv (Submonoid.powers ((Scheme.ΓSpecIso (CommRingCat.of R)).inv f)) Γ(Spec (CommRingCat.of R), V) φ.symm).1 h
   have hp : Submonoid.map φ.symm (Submonoid.powers ((Scheme.ΓSpecIso (CommRingCat.of R)).inv f)) = Submonoid.powers f := by
     rw [Submonoid.map_powers]
@@ -407,11 +407,11 @@ private theorem loc_part {W : Type} [CommRing W] (hW : ProdACF W) (q : PrimeSpec
   obtain ⟨e, he, hVe⟩ := UpperTheory.isCompact_open_eq_basicOpen_idempotent_of_prodACF hW V hV
   obtain ⟨T, hT, hTL⟩ := UpperTheory.exists_idempotent_submonoid_isLocalization_atPrime hW q
   let j := Spec.map (CommRingCat.ofHom (algebraMap W (Localization.AtPrime q.asIdeal)))
-  letI : Algebra W Γ(Spec (CommRingCat.of W), V) := (rho W V).toAlgebra
-  letI : Algebra (Localization.AtPrime q.asIdeal) Γ(Spec (CommRingCat.of (Localization.AtPrime q.asIdeal)), j ⁻¹ᵁ V) :=
+  let : Algebra W Γ(Spec (CommRingCat.of W), V) := (rho W V).toAlgebra
+  let : Algebra (Localization.AtPrime q.asIdeal) Γ(Spec (CommRingCat.of (Localization.AtPrime q.asIdeal)), j ⁻¹ᵁ V) :=
     (rho _ (j ⁻¹ᵁ V)).toAlgebra
-  haveI : IsLocalization.Away e Γ(Spec (CommRingCat.of W), V) := away_rho W e V hVe
-  haveI : IsLocalization.Away (algebraMap W (Localization.AtPrime q.asIdeal) e)
+  have : IsLocalization.Away e Γ(Spec (CommRingCat.of W), V) := away_rho W e V hVe
+  have : IsLocalization.Away (algebraMap W (Localization.AtPrime q.asIdeal) e)
       Γ(Spec (CommRingCat.of (Localization.AtPrime q.asIdeal)), j ⁻¹ᵁ V) := by
     refine away_rho (Localization.AtPrime q.asIdeal) (algebraMap W (Localization.AtPrime q.asIdeal) e) (j ⁻¹ᵁ V) ?_
     ext x
@@ -433,7 +433,7 @@ private theorem sec_part {X Y : Scheme.{0}} (f : X ⟶ Y) [QuasiCompact f] [Quas
     (hle : f ⁻¹ᵁ U ≤ f.toNormalization ⁻¹ᵁ (f.fromNormalization ⁻¹ᵁ U)) :
     Function.Injective (f.toNormalization.appLE _ _ hle).hom ∧
     ∀ b, b ∈ (f.toNormalization.appLE _ _ hle).hom.range ↔ (f.app U).hom.IsIntegralElem b := by
-  letI := (f.app U).hom.toAlgebra
+  let := (f.app U).hom.toAlgebra
   have h := f.normalizationObjIso_hom_val hU
   have h2 : f.toNormalization.appLE _ _ hle = _ := h.symm
   rw [h2]

@@ -59,20 +59,20 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 private theorem ext_cc {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (F : IntermediateField ℚ Ω)
     (φ : F →+* ℂ) :
     ∃ (σ : G ℚ Ω) (j : Ω →+* ℂ), (∀ x, j (σ x) = starRingEnd ℂ (j x)) ∧ ∀ x : F, j x = φ x := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) F
-  haveI : Module.IsTorsionFree F Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsGalois ℚ Ω := {}
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) F
+  have : Module.IsTorsionFree F Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsGalois ℚ Ω := {}
   obtain ⟨j, hj⟩ : ∃ j : Ω →+* ℂ, ∀ x : F, j x = φ x := by
-    letI : Algebra F ℂ := φ.toAlgebra
+    let : Algebra F ℂ := φ.toAlgebra
     let j : Ω →ₐ[F] ℂ := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
         @_root_.DivisionSemiring.to_moduleIsTorsionFree,
         @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
     exact ⟨j.toRingHom, fun x => j.commutes x⟩
-  letI : Algebra Ω ℂ := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.toRatAlgHom.commutes x).symm
+  let : Algebra Ω ℂ := j.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.toRatAlgHom.commutes x).symm
   let cj : Ω →ₐ[ℚ] ℂ := ((starRingEnd ℂ).comp j).toRatAlgHom
   exact ⟨cj.restrictNormal' Ω, j, fun x => AlgHom.restrictNormal_commutes cj Ω x, hj⟩
 
@@ -85,7 +85,7 @@ theorem UpperTheory.V.Ws.fixInf :
     refine InfinitePlace.isReal_iff.2 (RingHom.ext fun x => ?_)
     show starRingEnd ℂ (w.embedding x) = w.embedding x
     rw [← hj, ← hσ, hm x.1 x.2]
-  · haveI : IsTotallyComplex F := ⟨fun w => by
+  · have : IsTotallyComplex F := ⟨fun w => by
       rw [← InfinitePlace.not_isReal_iff_isComplex]
       intro hw
       obtain ⟨σ, j, hσ, hj⟩ := ext_cc F w.embedding
@@ -94,5 +94,5 @@ theorem UpperTheory.V.Ws.fixInf :
         RingHom.congr_fun (InfinitePlace.isReal_iff.1 hw) ⟨x, hx⟩
       rw [← hj] at e
       rw [hσ]; exact e⟩
-    haveI : Algebra.IsQuadraticExtension ℚ F := ⟨h2⟩
+    have : Algebra.IsQuadraticExtension ℚ F := ⟨h2⟩
     exact IsCMField.ofCMExtension ℚ F

@@ -174,7 +174,7 @@ theorem exists_cmLat (H : Host E) {r p q : ℕ} (Y : FD.Data E r) (x₀ : Y.dom)
         exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
     rw [h3]
     rcases hs j.isLeft with h | h <;> rw [h] <;> push_cast <;> ring
-  · haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  · have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
     let B := basisOfLinearIndependentOfCardEqFinrank hli (by simp)
     have hB : ∀ j, B j = lam j := fun j => by simp [B]
     let N : Submodule (𝓞 E) D.La := LinearMap.range (∑ j, f j ∘ₗ LinearMap.proj j)
@@ -213,6 +213,6 @@ theorem exists_cmLat_unfAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨h1, h2, -⟩ := hU
   refine exists_cmLat H (U.X k) x₀ Xx hX 𝔄 hr h𝔄 h1 (h2 k).1 (h2 k).2 hΛ _ W.per (W.φ k) (W.isom k)
     (fun j => (W.e j).2) (fun j hj => ?_) W.pm_eq La lam hl
-  exact (W.e j).2.2.trans_eq (if_neg hj)
+  exact (W.e j).2.2.trans_eq (ite_eq_right hj)
 
 end GlobalTheory.LamT.CMBasis

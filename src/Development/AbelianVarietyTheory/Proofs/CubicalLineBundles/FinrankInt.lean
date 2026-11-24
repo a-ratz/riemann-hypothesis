@@ -180,7 +180,7 @@ theorem exists_enum (H : Host E) : ∃ (g : ℕ) (ty : Fin g → (E →+* ℂ)),
   · rw [Nat.card_eq_one_iff_unique]
     exact ⟨⟨fun a b => Subtype.ext (e.injective (Subtype.ext (a.2.trans b.2.symm)))⟩,
       ⟨⟨e.symm ⟨τ, h⟩, by simp⟩⟩⟩
-  · haveI : IsEmpty {i // (e i).1 = τ} := ⟨fun a => h (a.2 ▸ (e a.1).2)⟩
+  · have : IsEmpty {i // (e i).1 = τ} := ⟨fun a => h (a.2 ▸ (e a.1).2)⟩
     simp
 
 theorem trace_eq (H : Host E) {g : ℕ} {ty : Fin g → (E →+* ℂ)} (hty : IsTypeFn H 1 0 ty) (a : E) :
@@ -275,7 +275,7 @@ theorem finrank_int (𝔄 : Submodule (𝓞 E) E) (hfg : 𝔄.FG) (hne : 𝔄 �
     apply Subtype.ext
     apply mul_left_cancel₀ hNE
     rw [← hψ, ← hψ, h]
-  haveI : Module.Finite ℤ 𝔄 := Module.Finite.of_injective (ψ.restrictScalars ℤ) hinj
+  have : Module.Finite ℤ 𝔄 := Module.Finite.of_injective (ψ.restrictScalars ℤ) hinj
   rw [← RingOfIntegers.rank]
   obtain ⟨x₀, hx₀, h0⟩ := (Submodule.ne_bot_iff _).1 hne
   refine le_antisymm (LinearMap.finrank_le_finrank_of_injective (f := ψ.restrictScalars ℤ) hinj)
@@ -348,7 +348,7 @@ theorem exists_datum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       simp only [hHm]
       fun_prop
     · ext ⟨_, x, rfl⟩
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_singleton_iff]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_singleton_iff]
       constructor
       · intro h
         by_contra h0

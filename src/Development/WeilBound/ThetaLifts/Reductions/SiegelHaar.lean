@@ -196,7 +196,7 @@ theorem map_mul_right_eq [LocallyCompactSpace G] [SecondCountableTopology G] [T2
   obtain ⟨K₀⟩ : Nonempty (PositiveCompacts G) := inferInstance
   have h1 := Measure.haarMeasure_unique μ K₀
   have a0 : μ K₀ ≠ 0 := fun h => hμ (by rw [h1, h, zero_smul])
-  haveI : IsFiniteMeasureOnCompacts (μ.map (fun x => x * k)) :=
+  have : IsFiniteMeasureOnCompacts (μ.map (fun x => x * k)) :=
     ⟨fun C hC => by
       rw [Measure.map_apply (measurable_mul_const k) hC.measurableSet]
       exact ((Homeomorph.mulRight k).isCompact_preimage.2 hC).measure_lt_top⟩
@@ -216,7 +216,7 @@ theorem map_mul_right_eq [LocallyCompactSpace G] [SecondCountableTopology G] [T2
   have h0 : μ ((K₀ : Set G) * (K : Set G)) ≠ 0 := fun h =>
     a0 (measure_mono_null (fun x hx => Set.mem_mul.2 ⟨x, hx, 1, K.one_mem, mul_one x⟩) h)
   have h2 := congrArg (fun m : Measure G => m ((K₀ : Set G) * (K : Set G))) hc
-  simp only [Measure.smul_apply, smul_eq_mul] at h2
+  simp only [smul_apply, smul_eq_mul] at h2
   rw [Measure.map_apply (measurable_mul_const k) hC.measurableSet, hpre] at h2
   have hc1 : c = 1 := by
     have := (ENNReal.mul_left_inj h0 hC.measure_lt_top.ne).1 ((one_mul _).trans h2)
@@ -226,7 +226,7 @@ theorem map_mul_right_eq [LocallyCompactSpace G] [SecondCountableTopology G] [T2
 def transl (M : Subgroup G) (η : Measure M) (x : G) : Measure G := η.map (fun m : M => x * m)
 
 theorem measurable_transl_fun (M : Subgroup G) (x : G) : Measurable (fun m : M => x * (m : G)) :=
-  measurable_subtype_coe.const_mul x
+  measurable_subtypeVal.const_mul x
 
 theorem transl_mul_mem (M : Subgroup G) (η : Measure M) [η.IsMulLeftInvariant] (x : G) {m : G} (hm : m ∈ M) :
     transl M η (x * m) = transl M η x := by
@@ -249,7 +249,7 @@ theorem isClosed_transl_le (M : Subgroup G) (η : Measure M) [η.Regular] {U : S
     IsClosed {x | transl M η x U ≤ t} := by
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   intro x hx
-  simp only [mem_compl_iff, mem_setOf_eq, not_le, transl] at hx
+  simp only [mem_compl_iff, mem_ofPred_eq, not_le, transl] at hx
   rw [Measure.map_apply (measurable_transl_fun M x) hU.measurableSet] at hx
   have hopen : IsOpen ((fun m : M => x * (m : G)) ⁻¹' U) := hU.preimage (by fun_prop)
   obtain ⟨C, hCU, hC, ht⟩ := hopen.exists_lt_isCompact hx
@@ -259,7 +259,7 @@ theorem isClosed_transl_le (M : Subgroup G) (η : Measure M) [η.Regular] {U : S
     have hcont : Continuous (fun z : G × M => z.1 * (z.2 : G)) := by fun_prop
     exact hcont.continuousAt.eventually_mem (hU.mem_nhds (hCU hm))
   filter_upwards [this] with y hy
-  simp only [mem_compl_iff, mem_setOf_eq, not_le, transl]
+  simp only [mem_compl_iff, mem_ofPred_eq, not_le, transl]
   rw [Measure.map_apply (measurable_transl_fun M y) hU.measurableSet]
   exact ht.trans_le (measure_mono hy)
 
@@ -271,14 +271,14 @@ theorem exists_lift [SecondCountableTopology G] [T2Space G] (μ : Measure G)
       ∀ φ : G → ℝ≥0∞, Measurable φ → (∀ x, ∀ k ∈ K, φ (x * k) = φ x) → ∫⁻ x, φ x ∂l = ∫⁻ x, φ x ∂μ := by
   set M : Subgroup G := P ⊓ K with hM
   have hMc : IsCompact (M : Set G) := hK.inter_left hP
-  haveI : CompactSpace M := isCompact_iff_compactSpace.1 hMc
+  have : CompactSpace M := isCompact_iff_compactSpace.1 hMc
   let η : Measure M := Measure.haarMeasure (⊤ : PositiveCompacts M)
-  haveI : IsProbabilityMeasure η := ⟨by
+  have : IsProbabilityMeasure η := ⟨by
     have := Measure.haarMeasure_self (K₀ := (⊤ : PositiveCompacts M))
     simpa using this⟩
   choose s hs r hr hsr using hPK
   let κ : G → Measure G := fun g => transl M η (s g)
-  haveI hκp : ∀ g, IsProbabilityMeasure (κ g) := fun g => by
+  have hκp : ∀ g, IsProbabilityMeasure (κ g) := fun g => by
     change IsProbabilityMeasure (η.map _)
     infer_instance
   have hκ : ∀ p ∈ P, ∀ k ∈ K, κ (p * k) = transl M η p := by
@@ -369,9 +369,9 @@ theorem exists_eq_smul_subgroup [LocallyCompactSpace G] [SecondCountableTopology
     (hν1 : ν (P : Set G)ᶜ = 0) (hν2 : ∀ p ∈ P, ν.map (fun x => p * x) = ν)
     (hν3 : ∀ s : Set G, IsCompact s → ν s ≠ ⊤) (hν4 : ν ≠ 0) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ μ = c • ν := by
-  have hemb : MeasurableEmbedding ((↑) : P → G) := MeasurableEmbedding.subtype_coe hP.measurableSet
-  haveI : LocallyCompactSpace P := hP.locallyCompactSpace
-  haveI : SecondCountableTopology P := inferInstanceAs (SecondCountableTopology (P : Set G))
+  have hemb : MeasurableEmbedding ((↑) : P → G) := MeasurableEmbedding.subtypeVal hP.measurableSet
+  have : LocallyCompactSpace P := hP.locallyCompactSpace
+  have : SecondCountableTopology P := inferInstanceAs (SecondCountableTopology (P : Set G))
   have key : ∀ μ : Measure G, μ (P : Set G)ᶜ = 0 → (∀ p ∈ P, μ.map (fun x => p * x) = μ) →
       (∀ s : Set G, IsCompact s → μ s ≠ ⊤) → μ ≠ 0 →
       ∃ μ' : Measure P, μ'.IsMulLeftInvariant ∧ IsFiniteMeasureOnCompacts μ' ∧ μ' ≠ 0 ∧
@@ -395,7 +395,7 @@ theorem exists_eq_smul_subgroup [LocallyCompactSpace G] [SecondCountableTopology
         simp only at hxy
         simp [hxy]
     · rw [hemb.comap_apply]
-      exact (h3 _ (hC.image continuous_subtype_val)).lt_top
+      exact (h3 _ (hC.image continuous_subtypeVal)).lt_top
   obtain ⟨μ', a1, a2, a3, a4⟩ := key μ hμ1 hμ2 hμ3 hμ4
   obtain ⟨ν', b1, b2, b3, b4⟩ := key ν hν1 hν2 hν3 hν4
   obtain ⟨c, c0, ct, hc⟩ := exists_eq_smul μ' ν' a3 b3
@@ -403,7 +403,7 @@ theorem exists_eq_smul_subgroup [LocallyCompactSpace G] [SecondCountableTopology
 
 theorem haarProductClosedCompact_holds : Formalism.D.haarProductClosedCompact := by
   intro G _ _ _ _ _ _ _ _ μ _ _ hμ P K hP hK hPK μP μK p1 p2 p3 p4 k1 k2 k3
-  haveI : IsProbabilityMeasure μK := ⟨k1⟩
+  have : IsProbabilityMeasure μK := ⟨k1⟩
   obtain ⟨l, l1, l2, l3, l4⟩ := exists_lift μ P K hP hK hPK
   have l0 : l ≠ 0 := by
     intro h
@@ -688,8 +688,8 @@ theorem lintegral_siegel_le (μ : Measure G) [μ.IsHaarMeasure] (P K : Subgroup 
   have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   let κ : Measure K := haarMeasure ⊤
   have hκ : κ univ = 1 := by simpa [κ] using haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts K))
-  have hmP : Measurable ((↑) : P → G) := measurable_subtype_coe
-  have hmK : Measurable ((↑) : K → G) := measurable_subtype_coe
+  have hmP : Measurable ((↑) : P → G) := measurable_subtypeVal
+  have hmK : Measurable ((↑) : K → G) := measurable_subtypeVal
   obtain ⟨c, -, hc', hΦ⟩ := GlobalTheory.CompanionTheory.HaarPK.haarProductClosedCompact_holds G μ inferInstance inferInstance
     (NeZero.ne μ) P K hP hK hPK ((haar : Measure P).map (↑)) (κ.map (↑))
     (by rw [Measure.map_apply hmP hP.measurableSet.compl]; simp [preimage])

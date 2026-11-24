@@ -54,7 +54,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem le_iff {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] [Normal k Ω] (F : IntermediateField k Ω)
     (hF : Normal k F) : (∀ a b : F ≃ₐ[k] F, a * b = b * a) ↔ ∀ a b : Ω ≃ₐ[k] Ω, a * b * a⁻¹ * b⁻¹ ∈ F.fixingSubgroup := by
-  haveI := hF
+  have := hF
   constructor
   · intro hcomm a b
     rw [IntermediateField.mem_fixingSubgroup_iff]
@@ -94,14 +94,14 @@ private theorem le_field {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
   refine ⟨F, hfix, @NumberField.mk _ _ inferInstance hfd, ⟨fun v => ?_⟩, ?_⟩
   · rw [NumberField.InfinitePlace.isReal_iff, NumberField.ComplexEmbedding.isReal_iff]
     set ψ := v.embedding
-    letI : Algebra F ℂ := ψ.toAlgebra
-    haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-    haveI : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) F
+    let : Algebra F ℂ := ψ.toAlgebra
+    have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) F
     set_option synthInstance.maxHeartbeats 200000 in
     let φ₀ : Ω →ₐ[F] ℂ := IsAlgClosed.lift (M := ℂ) (R := F) (S := Ω)
     let φ : Ω →+* ℂ := φ₀.toRingHom
-    letI : Algebra Ω ℂ := φ.toAlgebra
-    haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => by
+    let : Algebra Ω ℂ := φ.toAlgebra
+    have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => by
       rw [RingHom.algebraMap_toAlgebra, eq_ratCast (algebraMap ℚ Ω), eq_ratCast (algebraMap ℚ ℂ), map_ratCast]
     let σ : G ℚ Ω := (Complex.conjAe.restrictScalars ℚ).restrictNormal Ω
     have hσ : ∀ x, φ (σ x) = starRingEnd ℂ (φ x) := fun x =>
@@ -120,7 +120,7 @@ private theorem le_field {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
 
 private theorem le_pow {l : ℕ} [hl : Fact l.Prime] (u : ℤ_[l]ˣ) (m : ℕ) :
     (u ^ (l - 1)) ^ l ^ m ∈ KStar.TotallyRealRoots.princ l (m + 1) := by
-  haveI : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   show KStar.TotallyRealRoots.redPow l (m + 1) ((u ^ (l - 1)) ^ l ^ m) = 1
   rw [map_pow, map_pow, ← pow_mul, mul_comm]
   have ht : (l ^ (m + 1)).totient = l ^ m * (l - 1) := by
@@ -159,11 +159,11 @@ theorem UpperTheory.V.Ws.layerEx :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ T : Tower D, T.Fit → TameL l T.F → ∀ n : ℕ, ∃ (T' : Tower D) (m : ℕ), T.Le T' ∧ IsLayer l m T.F T'.F ∧ T'.Deep ∧ n ≤ T'.d := by
   intro Ω _ _ _ l _ c D hD T hfit htame n
   obtain ⟨ho, -⟩ := hfit
-  haveI := T.abF
-  haveI := T.nF
-  haveI := T.nK
-  haveI := T.cmK
-  haveI := T.realF
+  have := T.abF
+  have := T.nF
+  have := T.nK
+  have := T.cmK
+  have := T.realF
   have hl2 : l ≠ 2 := hD.l_odd
   have hlp : l.Prime := Fact.out
   have hl2le := hlp.two_le
@@ -277,9 +277,9 @@ theorem UpperTheory.V.Ws.layerEx :
       rw [hr, ← two_mul, pow_mul, h2, one_pow]
       exact one_mem _
   obtain ⟨F', hF'fix, hF'nf, hF'real, hF'ab⟩ := le_field Hm hopen hcomm hreal
-  haveI := hF'nf
-  haveI := hF'real
-  haveI := hF'ab
+  have := hF'nf
+  have := hF'real
+  have := hF'ab
   have hpowmem : ∀ g ∈ T.F.fixingSubgroup, g ^ l ^ m ∈ F'.fixingSubgroup := by
     intro g hg
     rw [hF'fix, hHm]
@@ -319,7 +319,7 @@ theorem UpperTheory.V.Ws.layerEx :
     exact hmemU
   · show n ≤ Module.finrank ℚ T'.F
     rw [hFF]
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
     rw [← AlgHom.card ℚ F' Ω]
     let emb : Fin n → (F' →ₐ[ℚ] Ω) := fun t => ((s ^ (t : ℕ) : G ℚ Ω) : Ω →ₐ[ℚ] Ω).comp F'.val
     have key : ∀ a b : ℕ, a < b → b < n →

@@ -162,7 +162,7 @@ theorem fd_B (N : ℕ) (lam : DomWeight N) : FiniteDimensional ℂ (nablaSq ℂ 
     rw [show MvPolynomial.monomial d (f.coeff d) = f.coeff d • MvPolynomial.monomial d (1 : ℂ) by
       rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨d, hdeg, rfl⟩)
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ ((fun d => (MvPolynomial.monomial d (1 : ℂ))) ''
+  have : FiniteDimensional ℂ (Submodule.span ℂ ((fun d => (MvPolynomial.monomial d (1 : ℂ))) ''
       {d : (Fin N × Fin N) →₀ ℕ | d.degree = ∑ s, lam.natW s})) :=
     FiniteDimensional.span_of_finite ℂ (hfin.image _)
   exact Submodule.finiteDimensional_of_le (hle.trans hsub)
@@ -217,10 +217,10 @@ theorem stableCompl_B : StableCompl := by
     exact hf.2 _ (hstab (gStarB g) w hw)
   · apply le_antisymm (sup_le hW hW'V)
     intro f hf
-    letI := coreB lam
-    letI : NormedAddCommGroup (nablaSq ℂ N lam) := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-    letI : InnerProductSpace ℂ (nablaSq ℂ N lam) := InnerProductSpace.ofCore (coreB lam).toCore
-    haveI : FiniteDimensional ℂ (nablaSq ℂ N lam) := fd_B N lam
+    let := coreB lam
+    let : NormedAddCommGroup (nablaSq ℂ N lam) := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+    let : InnerProductSpace ℂ (nablaSq ℂ N lam) := InnerProductSpace.ofCore (coreB lam).toCore
+    have : FiniteDimensional ℂ (nablaSq ℂ N lam) := fd_B N lam
     let K : Submodule ℂ (nablaSq ℂ N lam) := W.comap (nablaSq ℂ N lam).subtype
     have h1 := Submodule.finrank_sup_add_finrank_inf_eq K K.orthogonal
     rw [Submodule.inf_orthogonal_eq_bot, finrank_bot, add_zero, Submodule.finrank_add_finrank_orthogonal] at h1

@@ -504,7 +504,7 @@ theorem mem_of_prime {q : Ideal ((intRing R).comap φ)} (hq : q.IsPrime) (hq0 : 
       ENat.one_le_iff_ne_zero.2 fun h => hna (IsDiscreteValuationRing.addVal_eq_zero_iff.1 h)
     have hle : IsDiscreteValuationRing.addVal R (res R φ y) ≤
         IsDiscreteValuationRing.addVal R (res R φ (a ^ N)) := by
-      rw [map_pow, IsDiscreteValuationRing.addVal_pow, ← ENat.coe_toNat hfin, ← hN]
+      rw [map_pow, IsDiscreteValuationRing.addVal_pow, ← ENat.natCast_toNat hfin, ← hN]
       calc (N : ℕ∞) = N • (1 : ℕ∞) := by simp
         _ ≤ N • IsDiscreteValuationRing.addVal R (res R φ a) := nsmul_le_nsmul_right h1 N
     have hd := dvd_of_res_dvd R φ hy0 (IsDiscreteValuationRing.addVal_le_iff_dvd.1 hle)
@@ -601,7 +601,7 @@ theorem exists_of_dvr (A B C Ω : Type) [CommRing A] [IsDomain A] [CommRing B] [
     (IsFractionRing.injective R (FractionRing R)).comp (hj.comp hf)
   let φ : FractionRing A →+* FractionRing R := IsFractionRing.lift hg
   let V := (intRing R).comap φ
-  haveI : IsPrincipalIdealRing V := isPrincipalIdealRing_comap R φ
+  have : IsPrincipalIdealRing V := isPrincipalIdealRing_comap R φ
   have hmemA : ∀ a : A, algebraMap A (FractionRing A) a ∈ V := fun a => by
     rw [ValuationSubring.mem_comap, IsFractionRing.lift_algebraMap]
     exact ⟨j (f a), rfl⟩
@@ -636,7 +636,7 @@ namespace GlobalTheory.MBLow
 open GlobalTheory.MBLow.OrdRing in
 theorem exists_localRing_of_order : ∀ (A B C Ω : Type) [CommRing A] [IsDomain A] [CommRing B] [IsDomain B] [Field C] [Field Ω] (f : A →+* B) (ev : B →+* C) (t : B) (i : A →+* Ω), Function.Injective f → Function.Injective i → t ≠ 0 → (∀ b, ev b = 0 ↔ t ∣ b) → (∀ b : B, b ≠ 0 → ∃ n : ℕ, ¬ t ^ n ∣ b) → ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsNoetherianRing W) (_ : IsLocalRing W) (_ : IsIntegrallyClosed W) (g : A →+* W) (i₀ : W →+* Ω) (i₁ : W →+* C), Function.Injective i₀ ∧ i₀.comp g = i ∧ i₁.comp g = ev.comp f ∧ (∀ a, i₁ a ≠ 0 → IsUnit a) ∧ ∀ q : Ideal W, q.IsPrime → q = RingHom.ker i₀ ∨ q = RingHom.ker i₁ := by
   intro A B C Ω _ _ _ _ _ _ f ev t i hf hi ht hker hfin
-  haveI := isDVR ev t ht hker hfin
+  have := isDVR ev t ht hker hfin
   exact exists_of_dvr A B C Ω f ev i hf hi (Localization.AtPrime (RingHom.ker ev))
     (algebraMap B _) (IsLocalization.injective _ (RingHom.ker ev).primeCompl_le_nonZeroDivisors)
     (evLoc ev) (evLoc_algebraMap ev) (evLoc_eq_zero_iff ev t hker)
@@ -976,7 +976,7 @@ theorem ring_of_deformation : ∀ (C : Type) [NontriviallyNormedField C] [IsUltr
   let cA : o →+* A := (PowerSeries.C.comp o.subtype).codRestrict A
     (fun x => Subring.subset_closure (Or.inl ⟨x, rfl⟩))
   have hΦA : ∀ a, Φ a ∈ A := fun a => Subring.subset_closure (Or.inr ⟨a, rfl⟩)
-  haveI : CharZero W := RingHom.charZero i₁
+  have : CharZero W := RingHom.charZero i₁
   refine ⟨u, o, inferInstance, inferInstance, o.subtype,
     fun a => ⟨c a, Subfield.subset_closure ⟨a, rfl⟩⟩, hu0, hu, fun a => rfl,
     W, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
@@ -1157,7 +1157,7 @@ theorem exists_family_of_two_fibres : ∀ g n : ℕ, n.Prime → Odd n → ∃ j
   obtain ⟨t, -, ht⟩ := H j hj o b W β v hvd
   obtain ⟨φ₀, hp₀, hL₀, hpt₀, -⟩ := ht K₀ i₀ t₀ hS₀ hh₀
   obtain ⟨φ₁, hp₁, hL₁, hpt₁, -⟩ := ht K₁ i₁ t₁ hS₁ hh₁
-  haveI := t.ab.comm
+  have := t.ab.comm
   refine ⟨t.pol, t.lab, φ₀, φ₁, rfl, fun a => DenseBasis.linComb_pow_eq_one t.pt t.torsion _, hp₀, hp₁, hL₀, hL₁,
     fun a => ?_, fun a => ?_⟩
   · rw [← ofLevel_lab hk b (spMap i₀ ≫ spMap β) P₀ h₀ l₀ (unitS_spMap_comp β i₀ ζ).symm a]
@@ -1349,7 +1349,7 @@ theorem isGenSec_of_polAVSectionInverseImage {K : Type} [Field K] (x : KeyIn K)
     obtain ⟨i, rfl⟩ : ∃ i : x.P.L.ι, j = fun _ => i := ⟨j 0, funext fun k => congrArg j (Subsingleton.elim _ _)⟩
     exact (h i (TrSec.chart_le x.P _)).trans (TrSec.projectionPullbackSectionBaseProduct_isInverseImage x.P x.th i (TrSec.chart_le x.P _)).symm
   subst e
-  haveI : Subsingleton (Over.mk (𝟙 (Sp K))).left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Subsingleton (Over.mk (𝟙 (Sp K))).left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   refine (GenSecFibre.isGenSec_iff_fibres firstFiveLaws.2.1 (Sp K) x.P K (𝟙 _) _).2 fun p => ?_
   obtain ⟨z, -, hz⟩ := x.th_ne p
   exact ⟨_, Subsingleton.elim _ _, TrSec.nonzero_thSec x.P x.th z hz⟩
@@ -1428,7 +1428,7 @@ theorem isThetaPt_of_thJet : ∀ (K : Type) [Field K] (x : KeyIn K) (g : ℕ) (h
   have hmu : IsUnit (m : Γ(T.left, ⊤)) := by
     have := un m hK
     rwa [GlobalTheory.Ex.fnOf, map_natCast] at this
-  haveI : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   refine ThetaSeries.isThetaPt_of_data x.P hm hmu (Nat.cast_pow m 2) th s₁ α τ U s₂ w
     (un _ (div_ne_zero hq₀ (pow_ne_zero (m ^ 2) hr₀))).unit
     ⟨isGenSec_of_polAVSectionInverseImage x th hth, hα, hτ, hs₁, fun i => (hUT i).1, hs₂, hw, fun i => ?_⟩
@@ -1504,7 +1504,7 @@ theorem transfer_of_rule4 : ∀ κ : Rule, Rule4 κ → Transfer κ := by
     have := Nat.le_self_pow (show j ≠ 0 by omega) n
     omega
   obtain ⟨Θ, Γ, π, b, hπ, hb, hJ, ε, hε, hD'⟩ := hD
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
   let Φ : (Fin (2 * g) → ZMod ((n ^ j) ^ 2)) ⊕ (Fin (2 * g) → ZMod ((n ^ j) ^ 2)) × Fin g → PowerSeries C :=
     Sum.elim Θ (fun p => Γ p.1 p.2)
   let c : Fin 2 → C := ![(ζ : C), k]

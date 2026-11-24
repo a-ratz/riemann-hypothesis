@@ -104,21 +104,21 @@ theorem borel_Fv : BorelSpace (Fv F v) := by
 private theorem sigmaFinite_nnreal_smul {X : Type} [MeasurableSpace X] (ν : Measure X) [SigmaFinite ν]
     (c : ℝ≥0) : SigmaFinite ((c : ℝ≥0∞) • ν) := by
   refine ⟨⟨⟨spanningSets ν, fun _ => trivial, fun i => ?_, iUnion_spanningSets ν⟩⟩⟩
-  rw [Measure.smul_apply, smul_eq_mul]
+  rw [smul_apply, smul_eq_mul]
   exact ENNReal.mul_lt_top ENNReal.coe_lt_top (measure_spanningSets_lt_top ν i)
 
 theorem pi_const_smul (ι : Type) [Fintype ι] {X : Type} [MeasurableSpace X] (ν : Measure X) [SigmaFinite ν]
     (c : ℝ≥0) :
     Measure.pi (fun _ : ι => (c : ℝ≥0∞) • ν) = ((c : ℝ≥0∞) ^ Fintype.card ι) • Measure.pi (fun _ : ι => ν) := by
-  haveI := sigmaFinite_nnreal_smul ν c
+  have := sigmaFinite_nnreal_smul ν c
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul]
-  simp only [Measure.smul_apply, smul_eq_mul]
+  rw [smul_apply, Measure.pi_pi, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ]
 
 private theorem sigmaFinite_of_isStdV {lam : Measure (Fv F v)} (hstd : IsStdV v lam) :
     SigmaFinite lam := by
-  haveI := borel_Fv (F := F) (v := v)
+  have := borel_Fv (F := F) (v := v)
   obtain ⟨π, hπ⟩ := exists_unif v
   obtain ⟨-, hmap, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Vol.volumes_in_completion F v lam hstd
   have hm := hmap π hπ
@@ -145,7 +145,7 @@ private theorem sigmaFinite_of_isStdV {lam : Measure (Fv F v)} (hstd : IsStdV v 
       have hS : S (n + 1) = (fun t => π * t) ⁻¹' S n := by
         ext x
         simp only [S, Set.mem_preimage, pow_succ, mul_assoc]
-      rw [hS, ← Measure.map_apply (measurable_const_mul π) (hSmeas n), hm, Measure.smul_apply, ihn,
+      rw [hS, ← Measure.map_apply (measurable_const_mul π) (hSmeas n), hm, smul_apply, ihn,
         smul_eq_mul, pow_succ, mul_comm]
   refine ⟨⟨⟨S, fun _ => trivial, fun n => ?_, ?_⟩⟩⟩
   · rw [hSfin]
@@ -168,8 +168,8 @@ theorem pi_scale {lam : Measure (Fv F v)} (hstd : IsStdV v lam) {π : Fv F v}
     (hπ : Valued.v π = WithZero.exp (-1 : ℤ)) (T : Set (ι → Fv F v)) :
     (Measure.pi fun _ : ι => lam) {y | (fun i => π * y i) ∈ T} =
       (Ideal.absNorm v.asIdeal : ℝ≥0∞) ^ Fintype.card ι * (Measure.pi fun _ : ι => lam) T := by
-  haveI := borel_Fv (F := F) (v := v)
-  haveI := sigmaFinite_of_isStdV hstd
+  have := borel_Fv (F := F) (v := v)
+  have := sigmaFinite_of_isStdV hstd
   have hπ0 : π ≠ 0 := by
     intro h0
     rw [h0, map_zero] at hπ
@@ -181,20 +181,20 @@ theorem pi_scale {lam : Measure (Fv F v)} (hstd : IsStdV v lam) {π : Fv F v}
   let e : (ι → Fv F v) ≃ᵐ (ι → Fv F v) :=
     MeasurableEquiv.piCongrRight (fun _ : ι => MeasurableEquiv.mulLeft₀ π hπ0)
   have hpre : {y : ι → Fv F v | (fun i => π * y i) ∈ T} = e ⁻¹' T := rfl
-  haveI hsf : SigmaFinite (lam.map (fun t => π * t)) := by
+  have hsf : SigmaFinite (lam.map (fun t => π * t)) := by
     rw [hm, hN]; exact sigmaFinite_nnreal_smul lam _
   have hmapPi : (Measure.pi fun _ : ι => lam).map (fun x i => π * x i) =
       Measure.pi (fun _ : ι => lam.map (fun t => π * t)) :=
     Measure.pi_map_pi (fun _ => (measurable_const_mul π).aemeasurable)
   rw [hpre, ← MeasurableEquiv.map_apply]
   have he : (⇑e : (ι → Fv F v) → ι → Fv F v) = fun x i => π * x i := rfl
-  rw [he, hmapPi, hm, hN, pi_const_smul ι lam, Measure.smul_apply, smul_eq_mul]
+  rw [he, hmapPi, hm, hN, pi_const_smul ι lam, smul_apply, smul_eq_mul]
 
 theorem lam_scale {lam : Measure (Fv F v)} (hstd : IsStdV v lam) {π : Fv F v}
     (hπ : Valued.v π = WithZero.exp (-1 : ℤ)) {A : Set (Fv F v)} (hA : MeasurableSet A) :
     MeasurableSet {z | π * (π * z) ∈ A} ∧
     lam {z | π * (π * z) ∈ A} = (Ideal.absNorm v.asIdeal : ℝ≥0∞) ^ 2 * lam A := by
-  haveI := borel_Fv (F := F) (v := v)
+  have := borel_Fv (F := F) (v := v)
   have hmeas : Measurable (fun z : Fv F v => π * (π * z)) :=
     (measurable_const_mul π).comp (measurable_const_mul π)
   refine ⟨hmeas hA, ?_⟩
@@ -203,7 +203,7 @@ theorem lam_scale {lam : Measure (Fv F v)} (hstd : IsStdV v lam) {π : Fv F v}
   have h1 : (lam.map (fun t => π * t)).map (fun t => π * t) A = lam {z | π * (π * z) ∈ A} := by
     rw [Measure.map_map (measurable_const_mul π) (measurable_const_mul π), Measure.map_apply ((measurable_const_mul π).comp (measurable_const_mul π)) hA]
     rfl
-  rw [← h1, hm, Measure.map_smul _ (measurable_const_mul π).aemeasurable, hm, Measure.smul_apply, Measure.smul_apply, smul_eq_mul,
+  rw [← h1, hm, Measure.map_smul _ (measurable_const_mul π).aemeasurable, hm, smul_apply, smul_apply, smul_eq_mul,
     smul_eq_mul, ← mul_assoc, sq]
 
 theorem isOpen_unit_sphere : IsOpen {x : Fv F v | Valued.v x = 1} := by
@@ -217,7 +217,7 @@ theorem isOpen_unit_sphere : IsOpen {x : Fv F v | Valued.v x = 1} := by
   intro x hx
   refine ⟨(fun y => π⁻¹ * (y - x)) ⁻¹' {x : Fv F v | Valued.v x ≤ 1}, ?_, ?_, ?_⟩
   · intro y hy
-    simp only [Set.mem_preimage, Set.mem_setOf_eq] at hy hx ⊢
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hy hx ⊢
     have h1 : Valued.v (y - x) < Valued.v x := by
       have he : y - x = π * (π⁻¹ * (y - x)) := by
         rw [← mul_assoc, mul_inv_cancel₀ hπ0, one_mul]
@@ -230,11 +230,11 @@ theorem isOpen_unit_sphere : IsOpen {x : Fv F v | Valued.v x = 1} := by
     rw [← hx]
     exact Valuation.map_eq_of_sub_lt _ h1
   · exact hO.preimage (continuous_const.mul (continuous_id.sub continuous_const))
-  · simp only [Set.mem_preimage, Set.mem_setOf_eq, sub_self, mul_zero, map_zero]
+  · simp only [Set.mem_preimage, Set.mem_ofPred_eq, sub_self, mul_zero, map_zero]
     exact zero_le
 
 theorem meas_prim : MeasurableSet {x : ι → Fv F v | ∃ i, Valued.v (x i) = 1} := by
-  haveI := borel_Fv (F := F) (v := v)
+  have := borel_Fv (F := F) (v := v)
   have he : {x : ι → Fv F v | ∃ i, Valued.v (x i) = 1} =
       ⋃ i, (fun x : ι → Fv F v => x i) ⁻¹' {z | Valued.v z = 1} := by
     ext x; simp
@@ -338,7 +338,7 @@ theorem local_quadratic_density_bound_at_level {lam : Measure (Fv F v)} (hstd : 
         ∀ A : Set (Fv F v), MeasurableSet A → A ⊆ {z | Valued.v (z - s) < Valued.v s} →
           (Measure.pi fun _ : ι => lam) {x | (∀ i, x i ∈ v.adicCompletionIntegers F) ∧
             (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) ∈ A} = (D : ℝ≥0∞) * lam A := by
-  haveI := borel_Fv (F := F) (v := v)
+  have := borel_Fv (F := F) (v := v)
   induction n using Nat.strong_induction_on with
   | _ n ih =>
   intro s hs hs0 hsn
@@ -365,7 +365,7 @@ theorem local_quadratic_density_bound_at_level {lam : Measure (Fv F v)} (hstd : 
         (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) ∈ A} := by
     intro A
     ext x
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq]
     tauto
   have hsplit : ∀ A : Set (Fv F v),
       (Measure.pi fun _ : ι => lam)
@@ -376,7 +376,7 @@ theorem local_quadratic_density_bound_at_level {lam : Measure (Fv F v)} (hstd : 
       (Measure.pi fun _ : ι => lam)
         ({x : ι → Fv F v | (∀ i, x i ∈ v.adicCompletionIntegers F) ∧ (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) ∈ A} \
           {x | ∃ i, Valued.v (x i) = 1}) :=
-    fun A => (measure_inter_add_diff _ hmeasPrim).symm
+    fun A => (measure_inter_add_sdiff _ hmeasPrim).symm
   rcases le_or_gt (-1 : ℤ) (WithZero.log (Valued.v s)) with hbig | hsmall
   · refine ⟨Dp, ?_, fun A hA hA' => ?_⟩
     · have hpow : (Ideal.absNorm v.asIdeal : ℝ) ^ (M - 1) ≤ (Ideal.absNorm v.asIdeal : ℝ) ^ (2 * M - 1) :=
@@ -441,7 +441,7 @@ theorem local_quadratic_density_bound_at_level {lam : Measure (Fv F v)} (hstd : 
       have hA'sub : {z | π * (π * z) ∈ A} ⊆ {z | Valued.v (z - s') < Valued.v s'} := by
         intro z hz
         have h := hA' hz
-        simp only [Set.mem_setOf_eq] at h ⊢
+        simp only [Set.mem_ofPred_eq] at h ⊢
         have he : π * (π * z) - s = π * (π * (z - s')) := by rw [← hss]; ring
         rw [he, val_pp hπ, hrel] at h
         by_contra hcon
@@ -454,7 +454,7 @@ theorem local_quadratic_density_bound_at_level {lam : Measure (Fv F v)} (hstd : 
           {y | (∀ i, y i ∈ v.adicCompletionIntegers F) ∧
             (2 : Fv F v)⁻¹ * (y ⬝ᵥ (B *ᵥ y)) ∈ {z | π * (π * z) ∈ A}} := by
         ext y
-        simp only [Set.mem_setOf_eq, Set.mem_diff]
+        simp only [Set.mem_ofPred_eq, Set.mem_sdiff]
         constructor
         · rintro ⟨⟨hint, hQ⟩, hnp⟩
           refine ⟨fun i => ?_, ?_⟩

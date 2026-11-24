@@ -174,7 +174,7 @@ theorem GlobalTheory.UnitaryBC.exists_locUnitary_embedding : ∀ (E : Type) [Fie
     have h : cT s g.1.val * 1 * g.1.val = 1 := g.2
     rwa [Matrix.mul_one] at h
   refine ⟨((finGL E n).comp ((locGL E n w).comp (Formalism.UG.UJ s 1).subtype)).codRestrict (UA E n) hU,
-    Continuous.subtype_mk (((continuous_finGL' n).comp (CuspSub.continuous_locGL w)).comp continuous_subtype_val) _,
+    Continuous.subtype_mk (((continuous_finGL' n).comp (CuspSub.continuous_locGL w)).comp continuous_subtypeVal) _,
     fun g => ⟨Subgroup.mem_inf.2 ⟨MonoidHom.mem_ker.2 ?_, Subgroup.mem_iInf.2 fun u =>
       Subgroup.mem_iInf.2 fun hu => MonoidHom.mem_ker.2 ?_⟩, ?_⟩, fun x hx h1 => ?_, fun x g h1 => ?_⟩
   · change GeneralLinearGroup.map (pInf E) (finGL E n (locGL E n w g.1)) = 1

@@ -136,7 +136,7 @@ theorem tubeChart_of (μ : Measure G) [μ.IsHaarMeasure] (H : Subgroup G) (hH : 
     have hc : ContinuousOn (fun p : EuclideanSpace ℝ ι × EuclideanSpace ℝ η => κ p.1 * (χ p.2 : G))
         (ball 0 ρ ×ˢ ball 0 s) :=
       (hκc.comp continuousOn_fst fun p (hp : p ∈ ball 0 ρ ×ˢ _) => ball_subset_ball hρr hp.1).mul
-        (continuous_subtype_val.comp_continuousOn (hχc.comp continuousOn_snd fun p (hp : p ∈ _ ×ˢ ball 0 s) => ball_subset_ball hsr hp.2))
+        (continuous_subtypeVal.comp_continuousOn (hχc.comp continuousOn_snd fun p (hp : p ∈ _ ×ˢ ball 0 s) => ball_subset_ball hsr hp.2))
     exact (measurableSet_ball.prod measurableSet_ball).image_of_continuousOn_injOn hc (hΦinj.mono hsub)
   · intro ρ hρ hρr
     have : PolishSpace (H : Set G) := hH.polishSpace
@@ -152,7 +152,7 @@ theorem tubeChart_of (μ : Measure G) [μ.IsHaarMeasure] (H : Subgroup G) (hH : 
     rw [e1]
     have hc : ContinuousOn (fun p : EuclideanSpace ℝ ι × H => κ p.1 * (p.2 : G)) (ball 0 ρ ×ˢ univ) :=
       (hκc.comp continuousOn_fst fun p (hp : p ∈ ball 0 ρ ×ˢ _) => ball_subset_ball hρr hp.1).mul
-        (continuous_subtype_val.comp continuous_snd).continuousOn
+        (continuous_subtypeVal.comp continuous_snd).continuousOn
     have hi : InjOn (fun p : EuclideanSpace ℝ ι × H => κ p.1 * (p.2 : G)) (ball 0 ρ ×ˢ univ) := by
       intro p hp q hq he
       simp only at he

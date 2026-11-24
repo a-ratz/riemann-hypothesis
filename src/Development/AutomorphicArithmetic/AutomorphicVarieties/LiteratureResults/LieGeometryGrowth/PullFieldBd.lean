@@ -157,7 +157,7 @@ theorem fieldBd : FieldBd := by
     rwa [map_zero, add_zero, hP, pol_one] at h
   have h2 : HasDerivAt (fun r => W (x : GL (Fin a) (Af E) ⧸ U) (sand g (sand (c r) (hOne E a)))) (sand g (P y + Z)) 0 := by
     have h := (sand g).hasFDerivAt.comp_hasDerivAt (0 : ℝ) (hs.clm_apply hd)
-    simp only [h0, map_one, mul_one, ContinuousLinearMap.one_apply] at h
+    simp only [h0, map_one, mul_one, one_apply_eq_self] at h
     refine h.congr_of_eventuallyEq (Filter.Eventually.of_forall fun r => ?_)
     have e : infGL E a (g * c r) * finGL E a x = infGL E a g * finGL E a x * infGL E a (c r) := by
       rw [map_mul, mul_assoc, mul_assoc, infGL_comm]

@@ -122,7 +122,7 @@ theorem matrixGaussSum_mul_dual_eq_card_pow : ∀ (k : Type) [Field k] [Fintype 
     rw [Finset.sum_eq_single 1]
     · simp
     · intro x _ hx1
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro h
       apply hx1
       ext1

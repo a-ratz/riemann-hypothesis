@@ -62,10 +62,10 @@ theorem int_prod {α β : Type} [TopologicalSpace α] [TopologicalSpace β] [Mea
     (hfin : ∫⁻ l, (∫⁻ g, ‖θ (l, g)‖ₑ ∂ν) * ENNReal.ofReal (a l) ∂μ < ⊤) : Integrable (fun x => θ x * w x.1) (μ.prod ν) := by
   have hc : Continuous fun x : α × β => θ x * w x.1 := hθ.mul (hw.comp continuous_fst)
   refine ⟨hc.aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ hc.measurable.enorm.aemeasurable]
+  rw [hasFiniteIntegral_iff_eNorm, lintegral_prod _ hc.measurable.eNorm.aemeasurable]
   convert hfin using 3 with l
-  simp only [enorm_mul]
-  rw [lintegral_mul_const' _ _ (by simp), ← ha, ofReal_norm_eq_enorm]
+  simp only [eNorm_mul]
+  rw [lintegral_mul_const' _ _ (by simp), ← ha, ofReal_norm]
 
 section Core
 

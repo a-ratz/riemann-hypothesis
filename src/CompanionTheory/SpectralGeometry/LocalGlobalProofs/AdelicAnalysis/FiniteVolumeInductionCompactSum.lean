@@ -117,7 +117,7 @@ theorem mean_lt_top {G G₁ : Type} [Group G] [TopologicalSpace G] [IsTopologica
   obtain ⟨C', K, hC', hK, hcover⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.cover G μ ι.range (μ₁.map ι) hνinv hνpos C hC
   obtain ⟨𝓕', h𝓕', hunf⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.unfold_coset_sum_fundamentalDomain G μ Γ (Γ ⊓ ι.range) inf_le_left 𝓕 h𝓕 Q r hr hQ
   rw [hunf f hf]
-  haveI : Countable ↥(Γ ⊓ ι.range) :=
+  have : Countable ↥(Γ ⊓ ι.range) :=
     (Subgroup.inclusion_injective (inf_le_left : Γ ⊓ ι.range ≤ Γ)).countable
   have hae : ∀ᵐ p ∂(μ₁.map ι), ∃ γ ∈ Γ ⊓ ι.range, γ * p ∈ ι '' 𝓕₁ := by
     refine hme.ae_map_iff.2 (Filter.Eventually.of_forall fun u => ?_)
@@ -175,27 +175,27 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   intro F E _ _ _ _ _ σ hσ M J hJ hvol t ht μ 𝓕 hμ h𝓕 Ω hΩ
   have hJb : IsHermND σ (blockOne (algebraMap F E t) J) := (_root_.GlobalTheory.CompanionTheory.SW.BlockForm.blockForms_isHermND F E σ hσ M J hJ).2 t ht
   obtain ⟨⟨a1, a2, a3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := a1
-  haveI := a2
-  haveI := a3
-  haveI : T2Space (AF F ⊗[F] E) := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)).2.2.2.1
-  haveI : Nontrivial (AF F) := inferInstanceAs (Nontrivial (Ainf F × Af F))
-  haveI : Nontrivial (AF F ⊗[F] E) := inferInstance
+  have := a1
+  have := a2
+  have := a3
+  have : T2Space (AF F ⊗[F] E) := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)).2.2.2.1
+  have : Nontrivial (AF F) := inferInstanceAs (Nontrivial (Ainf F × Af F))
+  have : Nontrivial (AF F ⊗[F] E) := inferInstance
   obtain ⟨tg, lc, sc, t2, bs, hact⟩ :=
     _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ (M + 1) (blockOne (algebraMap F E t) J) hJb (AF F)
   obtain ⟨tg₁, lc₁, sc₁, t2₁, bs₁, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
-  haveI := tg
-  haveI := lc
-  haveI := sc
-  haveI := t2
-  haveI := bs
-  haveI := tg₁
-  haveI := lc₁
-  haveI := sc₁
-  haveI := t2₁
-  haveI := bs₁
+  have := tg
+  have := lc
+  have := sc
+  have := t2
+  have := bs
+  have := tg₁
+  have := lc₁
+  have := sc₁
+  have := t2₁
+  have := bs₁
   obtain ⟨hcont, -, hmul, hgram⟩ := hact 1
-  haveI : μ.IsHaarMeasure := hμ
+  have : μ.IsHaarMeasure := hμ
 
   let e0E : Fin 1 → Fin (M + 1) → E := fun _ => Fin.cons 1 (fun _ => 0)
   let e0 : Fin 1 → Fin (M + 1) → AF F ⊗[F] E := ratTup (AF F) e0E
@@ -296,7 +296,7 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
 
   let Γ : Subgroup (HA (AF F) σ (blockOne (algebraMap F E t) J)) := HFinIn (AF F) σ (blockOne (algebraMap F E t) J)
   let Γ₁ : Subgroup (HA (AF F) σ J) := HFinIn (AF F) σ J
-  haveI : Countable Γ := (GlobalTheory.CompanionTheory.SW.rational_countable_discrete F E σ hσ (M + 1) _ hJb).1
+  have : Countable Γ := (GlobalTheory.CompanionTheory.SW.rational_countable_discrete F E σ hσ (M + 1) _ hJb).1
   have hmemΓ : ∀ γ : HA (AF F) σ (blockOne (algebraMap F E t) J),
       γ ∈ Γ ↔ HA.mat (AF F) σ _ γ ∈ HFin (AF F) σ (blockOne (algebraMap F E t) J) := fun γ => Iff.rfl
   have hmemΓ₁ : ∀ γ : HA (AF F) σ J, γ ∈ Γ₁ ↔ HA.mat (AF F) σ _ γ ∈ HFin (AF F) σ J := fun γ => Iff.rfl
@@ -332,7 +332,7 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       exact Subtype.ext (hratinj h2).symm
 
   obtain ⟨⟨μ₁, hμ₁⟩, hall⟩ := hvol
-  haveI : μ₁.IsHaarMeasure := hμ₁
+  have : μ₁.IsHaarMeasure := hμ₁
   obtain ⟨𝓕₁, hm₁, hFD₁, hcov₁⟩ := ((_root_.GlobalTheory.CompanionTheory.SW.haar_fundamental_exist F E σ hσ M J hJ).2 μ₁ hμ₁).2.1
   have hfin : μ₁ 𝓕₁ < ⊤ := (hall μ₁ hμ₁).2 𝓕₁ hFD₁
   have key := mean_lt_top μ μ₁ ι hιc Γ Γ₁ hΓ 𝓕 h𝓕 𝓕₁ hm₁ hfin

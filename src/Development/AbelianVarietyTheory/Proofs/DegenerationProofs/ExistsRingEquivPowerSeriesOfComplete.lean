@@ -87,7 +87,7 @@ theorem exists_ringEquiv_powerSeries_of_complete {k O : Type*} [Field k] [CommRi
     intro a ha
     by_contra h0
     obtain ⟨n, u, rfl⟩ :=
-      IsDiscreteValuationRing.eq_unit_mul_pow_irreducible h0 (PowerSeries.X_irreducible (R := k))
+      IsDiscreteValuationRing.eq_unit_mul_pow_irreducible h0 (PowerSeries.irreducible_X (R := k))
     rw [map_mul, map_pow, (u.isUnit.map _).mul_right_eq_zero, hX] at ha
     exact hπ.ne_zero (eq_zero_of_pow_eq_zero ha)
   exact ⟨RingEquiv.ofBijective ψ ⟨hi, hs⟩, hC⟩
@@ -116,7 +116,7 @@ theorem surjective_residue_of_isAlgebraic {k V : Type*} [Field k] [IsAlgClosed k
     [FaithfulSMul k[X] V] (hX : algebraMap k[X] V X ∈ maximalIdeal V) :
     Function.Surjective ((residue V).comp ((algebraMap k[X] V).comp C)) := by
   classical
-  letI : Algebra k (ResidueField V) := ((residue V).comp ((algebraMap k[X] V).comp C)).toAlgebra
+  let : Algebra k (ResidueField V) := ((residue V).comp ((algebraMap k[X] V).comp C)).toAlgebra
   have hc : (algebraMap k (ResidueField V)).comp (constantCoeff : k[X] →+* k) =
       (residue V).comp (algebraMap k[X] V) := by
     refine Polynomial.ringHom_ext (fun a => ?_) ?_
@@ -143,14 +143,14 @@ theorem exists_injective_of_height_le_one {k B : Type*} [Field k] [IsAlgClosed k
     ∃ φ : B →ₐ[k] PowerSeries k, Function.Injective φ ∧
       ∀ b, b ∈ m ↔ PowerSeries.constantCoeff (φ b) = 0 := by
   rcases eq_or_ne m ⊥ with rfl | hne
-  · letI : Field B := (Ring.isField_iff_maximal_bot.mpr hm).toField
+  · let : Field B := (Ring.isField_iff_maximal_bot.mpr hm).toField
     have : Module.Finite k B := finite_of_finite_type_of_isJacobsonRing k B
     let e : k ≃ₐ[k] B :=
       .ofBijective (Algebra.ofId k B) IsAlgClosed.algebraMap_bijective_of_isIntegral
     refine ⟨(Algebra.ofId k (PowerSeries k)).comp e.symm, RingHom.injective _, fun b => ?_⟩
     simp [Algebra.ofId_apply]
   obtain ⟨t, htm, ht0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
-  letI : Algebra k[X] B := (aeval t : k[X] →ₐ[k] B).toRingHom.toAlgebra
+  let : Algebra k[X] B := (aeval t : k[X] →ₐ[k] B).toRingHom.toAlgebra
   have hal : ∀ p : k[X], algebraMap k[X] B p = aeval t p := fun _ => rfl
   have : IsScalarTower k k[X] B := .of_algebraMap_eq fun a => by simp [hal]
   have : Algebra.FiniteType k[X] B := .of_restrictScalars_finiteType k k[X] B
@@ -159,8 +159,8 @@ theorem exists_injective_of_height_le_one {k B : Type*} [Field k] [IsAlgClosed k
     exact m.eq_top_of_isUnit_mem htm (halg.isIntegral.isUnit ht0)
   obtain ⟨K', _, _, _, V, φ, hφ, hφi, hφm⟩ := exists_valuationSubring_of_height_le_one
     (O := k[X]) (K := FractionRing k[X]) hinj m h1 X X_ne_zero (by simpa [hal] using htm)
-  letI : Algebra k[X] V := (φ.comp (algebraMap k[X] B)).toAlgebra
-  letI : Algebra k[X] K' :=
+  let : Algebra k[X] V := (φ.comp (algebraMap k[X] B)).toAlgebra
+  let : Algebra k[X] K' :=
     ((algebraMap (FractionRing k[X]) K').comp (algebraMap k[X] (FractionRing k[X]))).toAlgebra
   have : IsScalarTower k[X] (FractionRing k[X]) K' := .of_algebraMap_eq fun _ => rfl
   have : IsScalarTower k[X] V K' := .of_algebraMap_eq fun a => (hφ a).symm

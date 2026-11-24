@@ -179,7 +179,7 @@ theorem UpperTheory.limit_compact_of_cofiltered_cartesian_affine_transition :
   have hOc : ∀ k : Over j, CompactSpace (O.obj k) := fun k =>
     isCompact_iff_compactSpace.mp (QuasiCompact.isCompact_preimage (f := DY.map k.hom) _ V.2 hV)
   have hOq : ∀ k : Over j, QuasiSeparatedSpace (O.obj k) := fun k => by
-    haveI : QuasiSeparatedSpace ((Over.forget j ⋙ DY).obj k) := hqY1 k.left
+    have : QuasiSeparatedSpace ((Over.forget j ⋙ DY).obj k) := hqY1 k.left
     exact quasiSeparatedSpace_of_quasiSeparated (ι.app k)
   have hrange : ∀ k : Over j, Set.range (α'.app k) ⊆ Set.range (ι.app k) := by
     intro k y hy
@@ -280,7 +280,7 @@ theorem UpperTheory.limit_of_cofiltered_affine_base_change_squares :
     MorphismProperty.of_isPullback (P := @IsAffineHom) (hZ f).flip inferInstance
   have hYa : ∀ {i j : I} (f : i ⟶ j), IsAffineHom (DY.map f) := fun f =>
     MorphismProperty.of_isPullback (P := @IsAffineHom) (hY f).flip inferInstance
-  haveI := Scheme.compactSpace_of_isLimit DZ cZ hcZ
+  have := Scheme.compactSpace_of_isLimit DZ cZ hcZ
   have hW : IsCompact (m.opensRange : Set cY.pt) := by
     rw [Scheme.Hom.coe_opensRange]
     exact isCompact_range m.continuous
@@ -323,10 +323,10 @@ def ringC (R1 : Subalgebra k Ω) : Cocone (ringF R1) where
   ι := { app := fun S => CommRingCat.ofHom (algebraMap S.1 Ω) }
 
 theorem ringC_isColimit (R1 : Subalgebra k Ω) (hR1 : R1.FG) : Nonempty (IsColimit (ringC R1)) := by
-  haveI := idx_directed R1
-  haveI : Nonempty (Idx R1) := ⟨⟨R1, le_rfl, hR1⟩⟩
-  haveI : IsFiltered (Idx R1) := inferInstance
-  haveI : ReflectsColimitsOfShape (Idx R1) (forget CommRingCat) := reflectsColimitsOfShape_of_reflectsIsomorphisms
+  have := idx_directed R1
+  have : Nonempty (Idx R1) := ⟨⟨R1, le_rfl, hR1⟩⟩
+  have : IsFiltered (Idx R1) := inferInstance
+  have : ReflectsColimitsOfShape (Idx R1) (forget CommRingCat) := reflectsColimitsOfShape_of_reflectsIsomorphisms
   refine ⟨isColimitOfReflects (forget CommRingCat) ?_⟩
   refine Types.FilteredColimit.isColimitOf _ _ ?_ ?_
   · intro x
@@ -405,11 +405,11 @@ def stageC {R R1 : Subalgebra k Ω} (h1 : R ≤ R1) {Y D : Scheme.{0}} {g : Y �
 
 theorem stageC_isLimit {R R1 : Subalgebra k Ω} (h1 : R ≤ R1) (hR1 : R1.FG) {Y D : Scheme.{0}} {g : Y ⟶ Sp Ω}
     {q : D ⟶ Sp R} {v : Y ⟶ D} (hp : IsPullback v g q (toR R)) : Nonempty (IsLimit (stageC h1 hp.w)) := by
-  haveI := idx_directed R1
-  haveI : Nonempty (Idx R1) := ⟨⟨R1, le_rfl, hR1⟩⟩
-  haveI : IsFiltered (Idx R1) := inferInstance
-  haveI : IsCofiltered (Idx R1)ᵒᵖ := inferInstance
-  haveI : IsConnected (Idx R1)ᵒᵖ := IsCofiltered.isConnected _
+  have := idx_directed R1
+  have : Nonempty (Idx R1) := ⟨⟨R1, le_rfl, hR1⟩⟩
+  have : IsFiltered (Idx R1) := inferInstance
+  have : IsCofiltered (Idx R1)ᵒᵖ := inferInstance
+  have : IsConnected (Idx R1)ᵒᵖ := IsCofiltered.isConnected _
   obtain ⟨hc⟩ := baseC_isLimit R1 hR1
   refine ⟨isLimitOfIsPullbackOfIsConnected (stageP h1 q) _ (baseC R1) ⟨g, ?_⟩ ?_ hc⟩
   · intro S
@@ -477,10 +477,10 @@ end UpperTheory.Cb.StagedBaseChange
 open UpperTheory.Cb.StagedBaseChange in
 theorem UpperTheory.Cb.isOpenImmersion_inclusion_of_piecewise : LateralTheory.E.LeafInclPiecePf.LeafInclOpen := by
   intro k _ Ω _ _ X f hf U W hWU R hR DU DW qU qW vU vW hqU hqW hU hW R1 h1 hR1 ψ hψ hc
-  haveI := idx_directed R1
-  haveI : Nonempty (Idx R1) := ⟨⟨R1, le_rfl, hR1⟩⟩
-  haveI : IsFiltered (Idx R1) := inferInstance
-  haveI : IsCofiltered (Idx R1)ᵒᵖ := inferInstance
+  have := idx_directed R1
+  have : Nonempty (Idx R1) := ⟨⟨R1, le_rfl, hR1⟩⟩
+  have : IsFiltered (Idx R1) := inferInstance
+  have : IsCofiltered (Idx R1)ᵒᵖ := inferInstance
   let i0 : (Idx R1)ᵒᵖ := op ⟨R1, le_rfl, hR1⟩
   obtain ⟨hcZ⟩ := stageC_isLimit h1 hR1 hW
   obtain ⟨hcY⟩ := stageC_isLimit h1 hR1 hU
@@ -505,18 +505,18 @@ theorem UpperTheory.Cb.isOpenImmersion_inclusion_of_piecewise : LateralTheory.E.
         reassoc_of% (bcLift_lvl h1 (h1.trans i.unop.2.1) i.unop.2.1 hW.w), reassoc_of% hc, bcLift_fst]
     · rw [Category.assoc, Category.assoc, descMap_snd, bcLift_snd, bcLift_snd]
       simp only [Category.assoc, Scheme.homOfLE_ι_assoc]
-  haveI : IsOpenImmersion (X.homOfLE hWU) := by
-    haveI : IsOpenImmersion (X.homOfLE hWU ≫ U.ι) := by
+  have : IsOpenImmersion (X.homOfLE hWU) := by
+    have : IsOpenImmersion (X.homOfLE hWU ≫ U.ι) := by
       rw [Scheme.homOfLE_ι]
       infer_instance
     exact IsOpenImmersion.of_comp _ U.ι
   let m : (stageC h1 hW.w).pt ⟶ (stageC h1 hU.w).pt := X.homOfLE hWU
-  haveI hmo : IsOpenImmersion m := ‹IsOpenImmersion (X.homOfLE hWU)›
+  have hmo : IsOpenImmersion m := ‹IsOpenImmersion (X.homOfLE hWU)›
   obtain ⟨j, e, V, hV, hα, hπ⟩ := UpperTheory.limit_of_cofiltered_affine_base_change_squares _ (baseD R1) (stageD h1 qW) (stageD h1 qU) (stageA h1 qU qW ψ hψ)
     (stageP h1 qW) (stageP h1 qU) (stageA_comp h1 qU qW ψ hψ) hZ hY _ hcZ _ hcY cZ qZ cY qY i0 m hm
   obtain ⟨l, e2, hl⟩ := UpperTheory.limit_compact_of_cofiltered_cartesian_affine_transition _ (baseD R1) (stageD h1 qW) (stageD h1 qU) (stageA h1 qU qW ψ hψ)
     (stageP h1 qW) (stageP h1 qU) (stageA_comp h1 qU qW ψ hψ) hZ hY _ hcZ _ hcY cZ qZ cY qY i0 (sZ i0).1
-    (by haveI := (sY i0).1; infer_instance) m hm j e V hV hα hπ
+    (by have := (sY i0).1; infer_instance) m hm j e V hV hα hπ
   refine ⟨l.unop.1, l.unop.2.1, l.unop.2.2, fun R'' h h1' hle => ?_⟩
   exact MorphismProperty.of_isPullback (P := @IsOpenImmersion)
     (descMap_isPullback h1 qU qW ψ hψ (h1.trans l.unop.2.1) h l.unop.2.1 h1' hle) hl

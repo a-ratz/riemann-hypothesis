@@ -884,7 +884,7 @@ theorem exists_rows {Ψ : Finset (E →+* ℂ)} (hΨ : IsType Ψ) (N : ℕ) :
   · refine ⟨(fromCols (0 : Matrix (Fin N) (Fin N) E) (1 : Matrix (Fin N) (Fin N) E)).submatrix id e,
       li_submatrix e ?_, ?_⟩
     · have : LinearIndependent E fun i : Fin N ⊕ Fin N => (1 : M2 E N) i :=
-        Matrix.linearIndependent_rows_iff_isUnit.2 isUnit_one
+        linearIndependent_row_iff_isUnit.2 isUnit_one
       convert this.comp Sum.inr Sum.inr_injective using 1
       ext i (j | j) <;> simp [Matrix.one_apply]
     · rw [iso]
@@ -1377,7 +1377,7 @@ theorem sub_mem {h : M2 E (N + 1)} (hh : h ∈ UU E (N + 1))
     have e := hU p (Sum.inl 0)
     rw [ccT_mul_J_mul_apply] at e
     simp only [hl, hr, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true] at e
+      Finset.mem_univ, ite_true] at e
     have e2 : Matrix.J (Fin (N + 1)) E p (Sum.inl 0) = (Pi.single (Sum.inr 0) 1 : _ → E) p := by
       rcases p with p | p <;> simp [Matrix.J, Matrix.one_apply, Pi.single_apply, eq_comm]
     rw [e2] at e
@@ -1755,8 +1755,8 @@ theorem tendsto_first {Ψ : Finset (E →+* ℂ)} (hΨ : IsType Ψ) (hn : Even n
     {Z : CM Ψ (N + 1) (N + 1)} (hZ : Z ∈ Hn Ψ (N + 1)) :
     Tendsto (fun t : ℝ => swd Ψ M φ (pushZ Ψ Z (Pi.single 0 1) t) 0 0) atTop (𝓝 0) := by
   have hsb := isSB_of_adm hΨ hn hφ
-  haveI : Finite (Cls E n M) := (finite_cls_and_stab E n M hφ.pos.1).1
-  letI : Fintype (Cls E n M) := Fintype.ofFinite _
+  have : Finite (Cls E n M) := (finite_cls_and_stab E n M hφ.pos.1).1
+  let : Fintype (Cls E n M) := Fintype.ofFinite _
   have hZ' : dropZ Ψ Z ∈ Hn Ψ N := ((_root_.GlobalTheory.SW.thH_siegel_operator E Ψ hΨ n N 0 isSB_zero).2 Z hZ).1
   rw [← hsw M R _ (admissibleLatticeFamily_restrictFirstColumnZero hφ) _ hZ']
   unfold swd classSum
@@ -1862,8 +1862,8 @@ theorem chiH_eq_one (hΨ : IsType Ψ) (R : ℕ) {y : Matrix (Fin N) (Fin N) E} (
 theorem exists_common_level {M R : ℕ} (hM : 0 < M) (hR : 0 < R) :
     ∃ R₀ : ℕ, 0 < R₀ ∧ ∀ φ : Fam E n N, admitted M R φ → ∀ c : Cls E n M,
       HasLevel R₀ (φ (Quot.out c).1) := by
-  haveI : Finite (Cls E n M) := (finite_cls_and_stab E n M hM).1
-  haveI := Fintype.ofFinite (Cls E n M)
+  have : Finite (Cls E n M) := (finite_cls_and_stab E n M hM).1
+  have := Fintype.ofFinite (Cls E n M)
   choose s hs _ h1 h2 using fun c : Cls E n M => (Quot.out c).2.2.2
   refine ⟨(∏ c, s c) * R, Nat.mul_pos (Finset.prod_pos fun c _ => hs c) hR, fun φ hφ c => ?_⟩
   obtain ⟨m, hm⟩ : s c ∣ ∏ c, s c := Finset.dvd_prod_of_mem _ (Finset.mem_univ c)
@@ -1901,8 +1901,8 @@ theorem bound_high (hΨ : IsType Ψ) (hn : Even n) (hN : 4 * (N + 1) < n) (hS : 
   swap
   · exact ⟨0, fun φ hφ => (hMR hφ.pos).elim⟩
   obtain ⟨hM, hR⟩ := hMR
-  haveI : Finite (Cls E n M) := (finite_cls_and_stab E n M hM).1
-  haveI := Fintype.ofFinite (Cls E n M)
+  have : Finite (Cls E n M) := (finite_cls_and_stab E n M hM).1
+  have := Fintype.ofFinite (Cls E n M)
   obtain ⟨R₀, hR₀, hL⟩ := exists_common_level (E := E) (n := n) (N := N + 1) hM hR
   obtain ⟨C₁, hC₁⟩ := _root_.GlobalTheory.SW.theta_eis_bounded E Ψ hΨ n (N + 1) hn hN R₀ (δ / 4) hR₀ (by positivity)
   obtain ⟨C₂, hC₂⟩ := _root_.GlobalTheory.SW.decay_of_vanishing_at_cusps E Ψ hΨ (N + 1) (2 * R₀ ^ 2) δ ((n : ℝ) / 2) (Nat.succ_pos N)

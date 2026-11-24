@@ -155,8 +155,8 @@ end Quot
 
 theorem mem_of_flat [IsLocalRing R] {ε : R} (hε : ε ≠ 0) {B : Type} [CommRing B] (c : R →+* B)
     (hf : c.Flat) (a : B) (ha : c ε * a = 0) : a ∈ (IsLocalRing.maximalIdeal R).map c := by
-  letI := c.toAlgebra
-  haveI : Module.Flat R B := hf
+  let := c.toAlgebra
+  have : Module.Flat R B := hf
   obtain ⟨l, d, y, hy, hc⟩ := Module.Flat.isTrivialRelation_of_sum_smul_eq_zero (R := R) (M := B)
     (f := fun _ : Unit => ε) (x := fun _ => a)
     (by rw [Fintype.sum_unique, Algebra.smul_def]; exact ha)

@@ -67,9 +67,9 @@ theorem UpperTheory.V.AlgebraTools.hkMul :
     ∀ (A G M : Type) [CommRing A] [Group G] [AddCommGroup M] [Module A M] (ρ : Representation A G M) (I : Subgroup G) (x y : G), HeckePair I → (∀ b ∈ I, ∃ a ∈ I, ∃ c ∈ I, x * b * y = a * (x * y) * c) → (MulAction.orbit I ((x * y : G) : G ⧸ I)).ncard = (MulAction.orbit I (x : G ⧸ I)).ncard * (MulAction.orbit I (y : G ⧸ I)).ncard → hk ρ I x * hk ρ I y = hk ρ I (x * y) := by
   intro A G M _ _ _ _ ρ I x y hI hb hc
   classical
-  haveI fx : Fintype (MulAction.orbit I (x : G ⧸ I)) := (hI x).fintype
-  haveI fy : Fintype (MulAction.orbit I (y : G ⧸ I)) := (hI y).fintype
-  haveI fxy : Fintype (MulAction.orbit I ((x * y : G) : G ⧸ I)) := (hI (x * y)).fintype
+  have fx : Fintype (MulAction.orbit I (x : G ⧸ I)) := (hI x).fintype
+  have fy : Fintype (MulAction.orbit I (y : G ⧸ I)) := (hI y).fintype
+  have fxy : Fintype (MulAction.orbit I ((x * y : G) : G ⧸ I)) := (hI (x * y)).fintype
   have hmem : ∀ (p : MulAction.orbit I (x : G ⧸ I)) (q : MulAction.orbit I (y : G ⧸ I)),
       (((p : G ⧸ I).out * (q : G ⧸ I).out : G) : G ⧸ I) ∈ MulAction.orbit I ((x * y : G) : G ⧸ I) := by
     rintro ⟨p, hp⟩ ⟨q, hq⟩

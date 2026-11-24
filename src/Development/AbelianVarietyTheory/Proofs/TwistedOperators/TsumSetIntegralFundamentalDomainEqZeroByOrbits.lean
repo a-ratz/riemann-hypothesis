@@ -185,7 +185,7 @@ theorem _root_.GlobalTheory.OrbitUnfold.tsum_setIntegral_eq_zero :
     have hint : IntegrableOn (Φ y₀)
         (⋃ a : MulAction.orbit Γ y₀, _root_.GlobalTheory.OrbitUnfold.pull 𝓕 (σ a : H)) ν := by
       refine ⟨(hmeas y₀).aestronglyMeasurable, ?_⟩
-      rw [hasFiniteIntegral_iff_enorm]
+      rw [hasFiniteIntegral_iff_eNorm]
       calc ∫⁻ h in ⋃ a : MulAction.orbit Γ y₀, _root_.GlobalTheory.OrbitUnfold.pull 𝓕 (σ a : H), ‖Φ y₀ h‖ₑ ∂ν
           ≤ ∑' a : MulAction.orbit Γ y₀, ∫⁻ h in _root_.GlobalTheory.OrbitUnfold.pull 𝓕 (σ a : H), ‖Φ y₀ h‖ₑ ∂ν :=
             lintegral_iUnion_le _ _
@@ -198,9 +198,9 @@ theorem _root_.GlobalTheory.OrbitUnfold.tsum_setIntegral_eq_zero :
     exact hzero y₀ _ hT hint
   have hsum : Summable fun y => ∫ h in 𝓕, Φ y h ∂ν := by
     refine Summable.of_norm_bounded (ENNReal.summable_toReal hfin) fun y => ?_
-    rw [← toReal_enorm]
+    rw [← toReal_eNorm]
     exact ENNReal.toReal_mono (ENNReal.ne_top_of_tsum_ne_top hfin y)
-      (enorm_integral_le_lintegral_enorm _)
+      (eNorm_integral_le_lintegral_eNorm _)
   have hs' := ((MulAction.selfEquivSigmaOrbits Γ Y).symm.summable_iff
     (f := fun y => ∫ h in 𝓕, Φ y h ∂ν)).2 hsum
   rw [← (MulAction.selfEquivSigmaOrbits Γ Y).symm.tsum_eq (fun y => ∫ h in 𝓕, Φ y h ∂ν)]

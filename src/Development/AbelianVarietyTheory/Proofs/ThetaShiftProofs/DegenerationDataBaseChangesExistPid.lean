@@ -120,7 +120,7 @@ theorem exists_witness (h : IsBC f a a' hD) (hf₀ : f₀ = g.comp f) (W : ArcWi
     ∃ W' : ArcWit Y a' I g u χ, W'.t = W.t ∧ HEq W'.m W.m ∧ HEq W'.P W.P ∧ HEq (W'.φ ≫ proj hD) W.φ ∧
       (∀ y, HEq (W'.e y) (W.e (hD.xe y))) ∧
       ∃ w : LB.Iso W'.P.D.toPre.P.L (a.D₀.P.L.pull (W'.φ ≫ proj hD)), HEq w W.w ∧ Tri hD.w W'.w w := by
-  letI := H.starRing
+  let := H.starRing
   subst hf₀
   obtain ⟨t, m, P, φ, he, w, e, s1, s2, s3, s4, s5, s6⟩ := W
   have gpD := pull_grp hD
@@ -154,7 +154,7 @@ theorem exists_witness (h : IsBC f a a' hD) (hf₀ : f₀ = g.comp f) (W : ArcWi
       exact (s4 x).trans (Category.assoc _ _ _)
     · rw [Category.assoc, Category.assoc, Over.w, hb, ← Category.assoc, Over.w]
   · obtain ⟨_, hK, -⟩ := h.etaA 0
-    letI : Algebra (FractionRing O') F :=
+    let : Algebra (FractionRing O') F :=
       ((algebraMap (FractionRing O'') F).comp (algebraMap (FractionRing O') (FractionRing O''))).toAlgebra
     have hF : Compat f F := fun x => congrArg (algebraMap (FractionRing O'') F) (hK x)
     obtain ⟨k₁, k₂⟩ := s6 F uF (fun x => (hF x).trans (ha (f x))) hu

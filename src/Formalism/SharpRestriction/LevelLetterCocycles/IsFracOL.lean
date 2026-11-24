@@ -75,8 +75,8 @@ def jO {LL LL' : FinExt l} (hLL : LL.1 ≤ LL'.1) : ↥(OL LL) →+* ↥(OL LL')
   map_add' a b := by ext; simp
 
 theorem isFrac_OL (LL : FinExt l) : IsFractionRing ↥(OL LL) ↥LL.1 := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : IsIntegralClosure ↥(OL LL) ℤ_[l] ↥LL.1 := integralClosure.isIntegralClosure ℤ_[l] ↥LL.1
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : IsIntegralClosure ↥(OL LL) ℤ_[l] ↥LL.1 := integralClosure.isIntegralClosure ℤ_[l] ↥LL.1
   exact IsIntegralClosure.isFractionRing_of_finite_extension ℤ_[l] ℚ_[l] ↥LL.1 ↥(OL LL)
 
 end Formalism.MainNotions.UnusedSlot80.BCF

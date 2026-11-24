@@ -104,7 +104,7 @@ theorem rowAdd_X_of_ne {t t' : T} (r : Fin p ⊕ Fin q) {r' r'' : Fin p ⊕ Fin 
   classical
   rw [rowAdd_eq_bind₁, bind₁_X_right, Finset.sum_eq_zero, add_zero]
   intro l _
-  rw [if_neg]
+  rw [ite_eq_right]
   intro e; simp only [Prod.mk.injEq] at e; exact h ⟨e.1, e.2.1⟩
 
 theorem rowAdd_X [DecidableEq T] (t t' : T) (r r' r'' : Fin p ⊕ Fin q) (s : R) (k : κ) :
@@ -276,7 +276,7 @@ theorem rowAdd_eq_self_of_forall_int [IsDomain R] [CharZero R] {t : T} {r r' : F
     refine Polynomial.eq_of_infinite_eval_eq _ _ (Set.infinite_of_injective_forall_mem
       (f := fun s : ℤ => (C (s : R) : Poly R T p q κ))
       ((C_injective _ _).comp Int.cast_injective) fun s => ?_)
-    rw [Set.mem_setOf_eq, hΦ, h, Polynomial.eval_C]
+    rw [Set.mem_ofPred_eq, hΦ, h, Polynomial.eval_C]
   rw [← hΦ, this, Polynomial.eval_C]
 
 end RowAdd

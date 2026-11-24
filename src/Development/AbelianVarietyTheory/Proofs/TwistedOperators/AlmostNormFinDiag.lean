@@ -59,9 +59,9 @@ theorem AlmostNorm.exists_basis_sq (K L : Type) [Field K] [CharZero K] [Field L]
     ∃ (δ : K) (b : Module.Basis (Fin 2) K L), ¬ IsSquare δ ∧ b 0 = 1 ∧
       b 1 * b 1 = algebraMap K L δ := by
   have hr : Module.finrank K L = 2 := Algebra.IsQuadraticExtension.finrank_eq_two K L
-  haveI : FiniteDimensional K L := Module.finite_of_finrank_eq_succ hr
+  have : FiniteDimensional K L := Module.finite_of_finrank_eq_succ hr
   have hc : Nat.card (L ≃ₐ[K] L) = 2 := (IsGalois.card_aut_eq_finrank K L).trans hr
-  haveI : Nontrivial (L ≃ₐ[K] L) := Finite.one_lt_card_iff_nontrivial.1 (by omega)
+  have : Nontrivial (L ≃ₐ[K] L) := Finite.one_lt_card_iff_nontrivial.1 (by omega)
   obtain ⟨σ, hσ⟩ := exists_ne (1 : L ≃ₐ[K] L)
   have h2 : σ * σ = 1 := by rw [← sq, ← hc]; exact pow_card_eq_one'
   obtain ⟨δ, b, h1, h0, -, h3⟩ := GlobalTheory.QuadNormBase.exists_basis K L (σ : L →ₐ[K] L) hr

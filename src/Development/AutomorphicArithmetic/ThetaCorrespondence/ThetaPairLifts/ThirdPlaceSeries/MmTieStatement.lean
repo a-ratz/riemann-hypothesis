@@ -128,7 +128,7 @@ private theorem selfDualE_full {E : Type} [Field E] [NumberField E] {n : ℕ}
     (L : Submodule (𝓞 E) (Fin n → E)) (hL : IsSelfDualE cE J L) :
     Submodule.IsFullLattice E L := by
   classical
-  haveI : Submodule.IsLattice E L := hL.1
+  have : Submodule.IsLattice E L := hL.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hL.1.fg
   apply eq_top_iff.mpr
@@ -262,7 +262,7 @@ private theorem selfDual_full {K : Type} [Field K] [NumberField K] [StarRing K]
     {n : ℕ} (G : Matrix (Fin n) (Fin n) K) (M : Submodule (𝓞 K) (Fin n → K))
     (hM : IsSelfDualK G M) : Submodule.IsFullLattice K M := by
   classical
-  letI := hM.1
+  let := hM.1
   refine ⟨?_⟩
   apply eq_top_iff.mpr
   intro x _
@@ -303,7 +303,7 @@ private theorem sumLat_full {K : Type} [Field K] [NumberField K]
     (hL : Submodule.IsLattice K (sumLat lam e T)) :
     Submodule.IsFullLattice K (sumLat lam e T) := by
   classical
-  letI := hL
+  let := hL
   refine ⟨?_⟩
   let f := SumLat.valEquiv (K := K) lam e
   let g : C → VV K lam →ₗ[K] (Fin N → K) := fun c =>
@@ -350,12 +350,12 @@ theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [Numb
   have hdel : ∀ c, Submodule.IsFullLattice K (delK lam (M c)) := fun c =>
     (_root_.GlobalTheory.TransLattice.nabDelLattice K ι n lam (M c) (hMfull c)).2
   obtain ⟨hlat, hN, hdual⟩ := _root_.GlobalTheory.TestLat.SumLat.sumLat_lattice_dual K ι n lam C N e (fun c => delK lam (M c)) (fun c => (hdel c).toIsLattice)
-  haveI : Finite C := by
+  have : Finite C := by
     let i₀ : VVIdx lam := (e ⟨0, hN⟩).2
     refine Finite.of_injective (fun c : C => e.symm (c, i₀)) ?_
     intro a b hab
     exact (Prod.ext_iff.1 (e.symm.injective hab)).1
-  letI : Fintype C := Fintype.ofFinite C
+  let : Fintype C := Fintype.ofFinite C
   obtain ⟨hval, hH, hHi, hGu⟩ := _root_.GlobalTheory.TestLat.sumGram_spec K ι n lam G hG C N e
   have hHu : IsUnit (sumGram lam e G).det := by
     have h1 := (hH.2.2 v₀.embedding).isUnit
@@ -433,7 +433,7 @@ private theorem selfDualK_full {K : Type} [Field K] [NumberField K] [StarRing K]
     {n : ℕ} (G : Matrix (Fin n) (Fin n) K) (M : Submodule (𝓞 K) (Fin n → K))
     (hM : IsSelfDualK G M) : Submodule.IsFullLattice K M := by
   classical
-  haveI : Submodule.IsLattice K M := hM.1
+  have : Submodule.IsLattice K M := hM.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hM.1.fg
   apply eq_top_iff.mpr
@@ -497,10 +497,10 @@ theorem testLatticeCondition_sumLat_nabK_and_delK : ∀ (K : Type) [Field K] [Nu
       (∀ c, T c ≤ nabK lam (M c)) → TestLatticeCondition N X (sumLat lam e T) (bound (Fintype.card ι) n R) := by
     intro T hT hle
     obtain ⟨hL, hN, -⟩ := _root_.GlobalTheory.TestLat.SumLat.sumLat_lattice_dual K ι n lam C N e T (fun c => (hT c).toIsLattice)
-    haveI : Finite C :=
+    have : Finite C :=
       Finite.of_injective (fun c => e.symm (c, (e ⟨0, hN⟩).2)) (fun a b h => by
         simpa using h)
-    letI : Fintype C := Fintype.ofFinite C
+    let : Fintype C := Fintype.ofFinite C
     obtain ⟨hval, hdef, -, hdet⟩ := _root_.GlobalTheory.TestLat.sumGram_spec K ι n lam G hG C N e
     have hne : sumLat lam e T ≠ ⊥ := by
       intro h

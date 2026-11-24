@@ -100,7 +100,7 @@ theorem me_approx_one_cpt {k r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedS
     ∃ y : Mat k r → E, CkOn (⊤ : ℕ∞) (GV k r) y ∧ (∀ (A'' : ℝ) (m' : ℕ), InCC A'' m' y) ∧
       (∀ g ∈ GV k r, y g ≠ 0 → ε / 4 ≤ Gf k r z z' g) ∧
       CCle A' m0 (fun g => pdPhi (R⁻¹ • g) • F g - y g) τ ∧ HasCompactSupport y := by
-  haveI : ProperSpace (Mat k r) := FiniteDimensional.proper_real _
+  have : ProperSpace (Mat k r) := FiniteDimensional.proper_real _
   obtain ⟨X, hXc, hXs, hXe, hXQ⟩ := extend mm F hF z z' ε hε hsupp R hR
   obtain ⟨Cb, hCb0, hCb⟩ := dlr_bound (k := k) (r := r) (E := E) m0
   obtain ⟨ρX, hρX⟩ : ∃ ρX : ℝ, ∀ g, X g ≠ 0 → ‖g‖ ≤ ρX := by
@@ -419,7 +419,7 @@ theorem third_polynomial_prime_combination : LeadingBlockSeveralPlacesBound := b
       (s * abelian₂ v) ^ (2 * K) ≤ m v ^ 2 := by
     intro v s hs hso hlt
     have ho : 0 < oAbs t t' v := lt_of_le_of_lt (by linarith [hLam v]) hlt
-    have hmv : m v = (2 * abelian₂ v / oAbs t t' v) ^ K := by rw [hm]; dsimp only; rw [minFac, if_pos hlt]
+    have hmv : m v = (2 * abelian₂ v / oAbs t t' v) ^ K := by rw [hm]; dsimp only; rw [minFac, ite_eq_left hlt]
     rw [hmv, ← pow_mul, mul_comm K 2]
     apply pow_le_pow_left₀ (mul_nonneg hs (hLam v))
     rw [le_div_iff₀ ho]; nlinarith [mul_le_mul_of_nonneg_right hso (hLam v)]
@@ -470,7 +470,7 @@ theorem third_polynomial_prime_combination : LeadingBlockSeveralPlacesBound := b
       by_cases hle : ‖t v‖ ≤ ‖t' v‖
       · exact Finset.mem_union_left _ (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hlt, hle⟩)
       · exact Finset.mem_union_right _ (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hlt, hle⟩)
-    rw [hm]; dsimp only; rw [minFac, if_neg hnot, one_pow]
+    rw [hm]; dsimp only; rw [minFac, ite_eq_right hnot, one_pow]
   have hM0 : 0 ≤ ∏ v, m v := Finset.prod_nonneg fun v _ => hm0 v
   have hgoal : ∏ v, minFac (2 * abelian₂ v) (oAbs t t' v) K = ∏ v, m v := by rw [hm]
   rw [hgoal]

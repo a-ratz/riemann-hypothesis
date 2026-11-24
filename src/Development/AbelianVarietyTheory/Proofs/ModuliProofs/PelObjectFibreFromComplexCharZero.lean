@@ -75,7 +75,7 @@ theorem fromC_of_isPEL : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [Nu
   obtain ⟨tx, htx⟩ := _root_.GlobalTheory.tObj_pull o g (N' ^ 2) J b S (Sp K) s (spMap β) x t hβ
   obtain ⟨τx, hτx⟩ := GlobalTheory.PELPull.isPEL_pull E H D g (N' ^ 2) J a bas o b ρ S (Sp K) s (spMap β) x t tx τ hβ htx hτ
   obtain ⟨K₀, β₀, t₀, hβ₀, hcount, -, ht₀⟩ := _root_.GlobalTheory.ThetaDescent.descends_to_fg_subfield o g (N' ^ 2) J b K β tx
-  haveI : Countable K₀ := hcount (countable_of_finiteType o hb.2.1)
+  have : Countable K₀ := hcount (countable_of_finiteType o hb.2.1)
   have hcomp : spMap β = spMap K₀.subtype ≫ spMap β₀ := by
     rw [← hβ₀, ← Spec.map_comp]; rfl
   obtain ⟨τ₀, hτ₀⟩ := _root_.GlobalTheory.PELDesc.isPEL_descends hL E H D g (N' ^ 2) J a bas o b ρ K₀ K K₀.subtype β₀ (spMap β) t₀ tx τx

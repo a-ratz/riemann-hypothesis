@@ -633,7 +633,7 @@ def phi (K : Type) [NormedField K] [NormedAlgebra ℚ_[2] K] : ℤ_[2] →+* K :
   (algebraMap ℚ_[2] K).comp PadicInt.Coe.ringHom
 
 theorem continuous_phi : Continuous (phi K) := by
-  exact (continuous_algebraMap ℚ_[2] K).comp continuous_subtype_val
+  exact (continuous_algebraMap ℚ_[2] K).comp continuous_subtypeVal
 
 theorem phi_mem_closure (x : ℤ_[2]) : phi K x ∈ closure (Set.range (fun n : ℤ => (n : K))) := by
   have hd : DenseRange (Int.cast : ℤ → ℤ_[2]) := PadicInt.denseRange_intCast

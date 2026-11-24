@@ -62,7 +62,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem iwf_exists_pow_lt {a γ : WithZero (Multiplicative ℤ)} (ha : a < 1) (hγ : γ ≠ 0) : ∃ n : ℕ, a ^ n < γ := by
   by_cases ha0 : a = 0
-  · exact ⟨1, by rw [ha0, pow_one]; exact zero_lt_iff.2 hγ⟩
+  · exact ⟨1, by rw [ha0, pow_one]; exact pos_iff_ne_zero.2 hγ⟩
   obtain ⟨k, rfl⟩ : ∃ k : ℤ, a = WithZero.exp k := ⟨WithZero.log a, (WithZero.exp_log ha0).symm⟩
   obtain ⟨m, rfl⟩ : ∃ m : ℤ, γ = WithZero.exp m := ⟨WithZero.log γ, (WithZero.exp_log hγ).symm⟩
   have hk : k < 0 := by rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at ha; exact ha
@@ -131,7 +131,7 @@ theorem iwf_le_one {w : Pl E} (σ : w.adicCompletion E →+* w.adicCompletion E)
     (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))).2 hσy) fun n => ?_
   have h : Valued.v (x ^ n * y) < 1 := by
     rw [map_mul, map_pow]
-    calc Valued.v x ^ n * Valued.v y ≤ 1 * Valued.v y := mul_le_mul' (pow_le_one₀ zero_le' hx) le_rfl
+    calc Valued.v x ^ n * Valued.v y ≤ 1 * Valued.v y := mul_le_mul' (pow_le_one₀ zero_le hx) le_rfl
       _ < 1 := by rwa [one_mul]
   have := iwf_lt_one σ hσ h
   rwa [map_mul, map_pow, map_mul, map_pow] at this
@@ -152,7 +152,7 @@ theorem iwf_theta_apply {K : Type} [Field K] (n : ℕ) (c : K →+* K) (g : GL (
   show (GlobalTheory.Tw.Phi n K * ((Matrix.GeneralLinearGroup.map c g)⁻¹ : GL (Fin n) K).valᵀ * (GlobalTheory.Tw.Phi n K)ᵀ) i j = _
   rw [hinv]
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, iwf_Phi_apply, ite_mul, zero_mul,
-    mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 theorem iwf_v_sign {w : Pl E} (i j : ℕ) (x : w.adicCompletion E) :
@@ -208,9 +208,9 @@ theorem iwf_isOpen_iwGL (w : Pl E) (n : ℕ) : IsOpen (iwGL n w : Set (GLw n w))
 
 theorem iwf_relIndex_ne_zero {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {H K : Subgroup G}
     (hH : IsOpen (H : Set G)) (hK : IsCompact (K : Set G)) : H.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  let U : OpenSubgroup K := ⟨H.subgroupOf K, hH.preimage continuous_subtype_val⟩
-  haveI : Finite (K ⧸ (U : Subgroup K)) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  let U : OpenSubgroup K := ⟨H.subgroupOf K, hH.preimage continuous_subtypeVal⟩
+  have : Finite (K ⧸ (U : Subgroup K)) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
   exact Subgroup.index_ne_zero_of_finite
 
 theorem iwf_isClosed_UL {w : Pl E} (hw : ¬ IsSplitAt w) (n : ℕ) : IsClosed (UL n w : Set (GLw n w)) := by
@@ -222,7 +222,7 @@ theorem iw_facts_pf (w : Pl E) (hw : ¬ IsSplitAt w) (a : ℕ) (t : GLw a w) :
     (∀ k ∈ GlobalTheory.LFun.KGL w (n := a), thL a w k ∈ GlobalTheory.LFun.KGL w (n := a)) ∧ IsLevel (thL a w) (GlobalTheory.LFun.KGL w (n := a)) (iwGL a w) ∧
     IsLevel (MonoidHom.id _) (GlobalTheory.LFun.KGL w (n := a)) (iwGL a w) ∧ (iwGL a w).relIndex (GlobalTheory.LFun.KGL w (n := a)) ≠ 0 ∧
     IsCompact {g : GLw a w | dcos a w t g ≠ 0} := by
-  have hθ : thL a w = GlobalTheory.CuspRep.thetaGL a (cj w) := if_neg hw
+  have hθ : thL a w = GlobalTheory.CuspRep.thetaGL a (cj w) := ite_eq_right hw
   have hKo := iwf_isOpen_KGL w a
   have hKc := iwf_isCompact_KGL w a
   have hIo := iwf_isOpen_iwGL w a
@@ -238,15 +238,15 @@ theorem iw_facts_pf (w : Pl E) (hw : ¬ IsSplitAt w) (a : ℕ) (t : GLw a w) :
       (hIc.prod hIc).image ((continuous_fst.mul continuous_const).mul continuous_snd)
     convert hS using 1
     ext g
-    simp only [Set.mem_setOf_eq, dcos, Set.mem_image, Set.mem_prod, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, dcos, Set.mem_image, Set.mem_prod, SetLike.mem_coe]
     constructor
     · intro h
       by_contra hn
-      refine h (if_neg ?_)
+      refine h (ite_eq_right ?_)
       rintro ⟨x, hx, z, hz, e⟩
       exact hn ⟨(x, z), ⟨hx, hz⟩, e.symm⟩
     · rintro ⟨⟨x, z⟩, ⟨hx, hz⟩, e⟩
-      rw [if_pos ⟨x, hx, z, hz, e.symm⟩]
+      rw [ite_eq_left ⟨x, hx, z, hz, e.symm⟩]
       exact one_ne_zero
 
 theorem iwU_facts_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw n w) (hb : IsWitt n w b)
@@ -258,10 +258,10 @@ theorem iwU_facts_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw n w) (h
   have hKc : IsCompact (KL n w : Set (UL n w)) :=
     (iwf_isClosed_UL hw n).isClosedEmbedding_subtypeVal.isCompact_preimage (iwf_isCompact_KGL w n)
   have hKo : IsOpen (KL n w : Set (UL n w)) :=
-    (iwf_isOpen_KGL w n).preimage (continuous_subtype_val (p := (· ∈ UL n w)))
+    (iwf_isOpen_KGL w n).preimage (continuous_subtypeVal (p := (· ∈ UL n w)))
   have hIo : IsOpen (iwU n w b : Set (UL n w)) := by
     have hcont : Continuous fun γ : UL n w => b⁻¹ * γ.1 * b :=
-      (continuous_const.mul continuous_subtype_val).mul continuous_const
+      (continuous_const.mul continuous_subtypeVal).mul continuous_const
     have e : (iwU n w b : Set (UL n w)) = (fun γ : UL n w => b⁻¹ * γ.1 * b) ⁻¹' (iwGL n w : Set (GLw n w)) := by
       ext γ
       exact GlobalTheory.CompanionTheory.UnitaryWitt.mem_iwU_iff n w b γ
@@ -278,21 +278,21 @@ theorem iwU_facts_pf (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw n w) (h
   have hI : IsCompact (iwU n w b : Set (UL n w)) := GlobalTheory.CompanionTheory.UnitaryWitt.isCompact_iwU hw n b hc
   have hS : IsCompact ((fun p : UL n w × UL n w => p.1.1 * t * p.2.1) ''
       ((iwU n w b : Set (UL n w)) ×ˢ (iwU n w b : Set (UL n w)))) :=
-    (hI.prod hI).image (((continuous_subtype_val.comp continuous_fst).mul continuous_const).mul
-      (continuous_subtype_val.comp continuous_snd))
+    (hI.prod hI).image (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).mul
+      (continuous_subtypeVal.comp continuous_snd))
   have e : {g : UL n w | fU n w b ϖ l g ≠ 0} = Subtype.val ⁻¹'
       ((fun p : UL n w × UL n w => p.1.1 * t * p.2.1) ''
         ((iwU n w b : Set (UL n w)) ×ˢ (iwU n w b : Set (UL n w)))) := by
     ext γ
-    simp only [Set.mem_setOf_eq, fU, Set.mem_preimage, Set.mem_image, Set.mem_prod, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, fU, Set.mem_preimage, Set.mem_image, Set.mem_prod, SetLike.mem_coe]
     constructor
     · intro h
       by_contra hn
-      refine h (if_neg ?_)
+      refine h (ite_eq_right ?_)
       rintro ⟨x, hx, z, hz, e⟩
       exact hn ⟨(x, z), ⟨hx, hz⟩, e.symm⟩
     · rintro ⟨⟨x, z⟩, ⟨hx, hz⟩, e⟩
-      rw [if_pos ⟨x, hx, z, hz, e.symm⟩]
+      rw [ite_eq_left ⟨x, hx, z, hz, e.symm⟩]
       exact one_ne_zero
   rw [e]
   exact (iwf_isClosed_UL hw n).isClosedEmbedding_subtypeVal.isCompact_preimage hS

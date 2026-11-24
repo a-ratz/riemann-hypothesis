@@ -72,7 +72,7 @@ namespace GlobalTheory.CompanionTheory.GrForm
 open FrameEx in
 theorem stFrame : StFrame := by
   intro O _ l s hb X q W d c u hu
-  letI := (strV q W).toAlgebra
+  let := (strV q W).toAlgebra
   obtain ⟨c', e, hTF, he1, het, hev⟩ := GlobalTheory.T.exists_chart_from_coordinates (O := O) (R := O) (I := ⊥) (dividedPowersBot O) l s hb q
     (Ideal.Quotient.mk ⊥) (fun a => rfl) c
   have good := GlobalTheory.T.chart_is_good c'

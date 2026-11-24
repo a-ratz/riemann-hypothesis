@@ -370,7 +370,7 @@ theorem sec_mul_neg (hη : η = 1 ∨ η = -1) {β : Fin k → ℂ} (h : nsq β 
     simp only [Matrix.mul_apply, Fin.sum_univ_castSucc, sec_cc, sec_cl, sec_lc, sec_ll, dd_neg, ← ha, ← hdd, Pi.neg_apply, map_neg, neg_mul_neg, e,
       Finset.sum_add_distrib, Finset.sum_sub_distrib, ← Finset.mul_sum]
     simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, Fin.castSucc_inj]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, Fin.castSucc_inj]
     generalize ∑ j, β j * conj (β j) = n at h3
     linear_combination (conj (β i) * β j) * ((-a ^ 2 * n) * h2 + (a ^ 2 * η) * h3 + (a * η * (1 - d) - 1) * h4 + (a * (1 - d)) * h2)
   · have e : ∀ l, ((1 : Matrix (Fin k) (Fin k) ℂ) i l - a * (conj (β i) * β l)) * (η * conj (β l)) =
@@ -379,7 +379,7 @@ theorem sec_mul_neg (hη : η = 1 ∨ η = -1) {β : Fin k → ℂ} (h : nsq β 
     simp only [Matrix.mul_apply, Fin.sum_univ_castSucc, sec_cc, sec_cl, sec_lc, sec_ll, dd_neg, ← ha, ← hdd, Pi.neg_apply, map_neg, neg_mul_neg, e,
       Finset.sum_sub_distrib, ← Finset.mul_sum]
     simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, Fin.castSucc_ne_last, if_false]
+      Finset.mem_univ, ite_true, Fin.castSucc_ne_last, ite_false]
     generalize ∑ j, β j * conj (β j) = n at h3
     linear_combination (conj (β i)) * ((-a) * h3 + (d - 1) * h4)
   · have e : ∀ l, β l * ((1 : Matrix (Fin k) (Fin k) ℂ) l j - a * (conj (β l) * β j)) =
@@ -388,7 +388,7 @@ theorem sec_mul_neg (hη : η = 1 ∨ η = -1) {β : Fin k → ℂ} (h : nsq β 
     simp only [Matrix.mul_apply, Fin.sum_univ_castSucc, sec_cc, sec_cl, sec_lc, sec_ll, dd_neg, ← ha, ← hdd, Pi.neg_apply, map_neg, neg_mul_neg, e,
       Finset.sum_sub_distrib, ← Finset.mul_sum]
     simp only [Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, (Fin.castSucc_ne_last _).symm, if_false]
+      Finset.mem_univ, ite_true, (Fin.castSucc_ne_last _).symm, ite_false]
     generalize ∑ j, β j * conj (β j) = n at h3
     linear_combination (β j) * ((a * n - (1 - d)) * h2 + (-a * η) * h3 + (η * (d - 1)) * h4)
   · have e : ∀ l, β l * (η * conj (β l)) = η * (β l * conj (β l)) := fun l => by ring
@@ -405,7 +405,7 @@ theorem sec_herm (hη : η = 1 ∨ η = -1) (β : Fin k → ℂ) : (sec η β)�
   unfold Hd
   refine blk_ext (fun i j => ?_) (fun i => ?_) (fun j => ?_) ?_ <;>
     simp only [Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.conjTranspose_apply, sec_cc, sec_cl, sec_lc, sec_ll,
-      dd_neg, Fin.castSucc_ne_last, if_false, if_true, Pi.neg_apply, map_neg]
+      dd_neg, Fin.castSucc_ne_last, ite_false, ite_true, Pi.neg_apply, map_neg]
   · simp [Matrix.one_apply, eq_comm, mul_comm]
   · simp [mul_comm]
   · simp only [star_mul', star_neg, Complex.star_def, Complex.conj_conj, Complex.conj_ofReal]; ring
@@ -439,7 +439,7 @@ theorem kap_mem_iff (hη : η = 1 ∨ η = -1) (A : Matrix (Fin k) (Fin k) ℂ) 
     refine blk_ext (fun i j => ?_) (fun i => ?_) (fun j => ?_) ?_ <;>
       rw [Matrix.mul_apply] <;>
       simp only [Matrix.mul_diagonal, Fin.sum_univ_castSucc, kap, Matrix.conjTranspose_apply, blk_cc, blk_cl, blk_lc, blk_ll,
-        Fin.castSucc_ne_last, if_false, if_true, Matrix.mul_one]
+        Fin.castSucc_ne_last, ite_false, ite_true, Matrix.mul_one]
     · simp [Matrix.mul_apply]
     · simp
     · simp
@@ -478,8 +478,8 @@ theorem col_id {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hd k
     ∑ i : Fin k, ‖g i.castSucc j‖ ^ 2 + η * ‖g (Fin.last k) j‖ ^ 2 = if j = Fin.last k then η else 1 := by
   have h := congrFun (congrFun (show gᴴ * Hd k η * g = Hd k η from hg) j) j
   rw [Matrix.mul_apply] at h
-  simp only [Hd, Matrix.mul_diagonal, Fin.sum_univ_castSucc, Matrix.conjTranspose_apply, Fin.castSucc_ne_last, if_false,
-    if_true, mul_one, Matrix.diagonal_apply_eq, Complex.star_def, Complex.conj_mul'] at h
+  simp only [Hd, Matrix.mul_diagonal, Fin.sum_univ_castSucc, Matrix.conjTranspose_apply, Fin.castSucc_ne_last, ite_false,
+    ite_true, mul_one, Matrix.diagonal_apply_eq, Complex.star_def, Complex.conj_mul'] at h
   have e : conj (g (Fin.last k) j) * η * g (Fin.last k) j = η * (‖g (Fin.last k) j‖ : ℂ) ^ 2 := by
     rw [← Complex.conj_mul']; ring
   rw [e] at h
@@ -502,7 +502,7 @@ theorem herm_mem (hη : η = 1 ∨ η = -1) {g : Matrix (Fin (k + 1)) (Fin (k + 
 theorem row_id (hη : η = 1 ∨ η = -1) {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hd k η)) :
     ‖g (Fin.last k) (Fin.last k)‖ ^ 2 = 1 - η * nsq (row g) := by
   have h := col_id (herm_mem hη hg) (Fin.last k)
-  simp only [Matrix.conjTranspose_apply, norm_star, if_true] at h
+  simp only [Matrix.conjTranspose_apply, norm_star, ite_true] at h
   have : nsq (row g) = ∑ i : Fin k, ‖g (Fin.last k) i.castSucc‖ ^ 2 := rfl
   rw [← this] at h
   rcases hη with h' | h' <;> rw [h'] at h ⊢ <;> linarith
@@ -556,7 +556,7 @@ theorem decomp (hη : η = 1 ∨ η = -1) {g : Matrix (Fin (k + 1)) (Fin (k + 1)
     simp only [Matrix.mul_apply, hrow, Finset.mul_sum, mul_assoc]
   have hc := col_id hm (Fin.last k)
   rw [hl] at hc
-  simp only [Matrix.one_apply_eq, mul_one, hp, one_pow, if_true, add_eq_right] at hc
+  simp only [Matrix.one_apply_eq, mul_one, hp, one_pow, ite_true, add_eq_right] at hc
   rw [Finset.sum_eq_zero_iff_of_nonneg (fun _ _ => by positivity)] at hc
   have e : g * sec η (-bet g) = kap (top η g) (ph g) := by
     refine blk_ext (fun i j => ?_) (fun i => ?_) (fun j => ?_) ?_
@@ -661,7 +661,7 @@ theorem prod_top (hη : η = 1 ∨ η = -1) {μ : Measure (PI.MtM (k + 1))} (hμ
   by_cases h0 : ν = 0
   · simp [h0]
   have hU := GlobalTheory.GramExp.isMatGroup_UH (1 : Matrix (Fin k) (Fin k) ℂ) (Matrix.one_mul _)
-  haveI : IsFiniteMeasure ν := ⟨hu ▸ hSf⟩
+  have : IsFiniteMeasure ν := ⟨hu ▸ hSf⟩
   have hH : PI.IsHaarOnM (UH (1 : Matrix (Fin k) (Fin k) ℂ)) ν := by
     refine ⟨inferInstance, h0, ?_, fun s hs => ?_⟩
     · have hc : IsClosed {x : PI.MtM k | Matrix.of x ∈ UH (1 : Matrix (Fin k) (Fin k) ℂ)} := hU.1
@@ -771,7 +771,7 @@ local instance factTwoPiPos : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
 def par (x : AddCircle (2 * Real.pi)) : ℂ := (AddCircle.toCircle x : Circle)
 
 theorem continuous_par : Continuous par :=
-  continuous_subtype_val.comp AddCircle.continuous_toCircle
+  continuous_subtypeVal.comp AddCircle.continuous_toCircle
 
 theorem par_injective : Function.Injective par := fun _ _ h =>
   AddCircle.injective_toCircle Real.two_pi_pos.ne' (Circle.ext h)
@@ -814,13 +814,13 @@ theorem measure_arc : ∀ (τ : Measure ℂ) (ρ : ℝ), τ Set.univ < ⊤ → �
     τ ((fun θ : ℝ => Complex.exp (θ * Complex.I)) '' Metric.ball 0 ρ) =
       τ Set.univ * ENNReal.ofReal (ρ / Real.pi) := by
   intro τ ρ hfin hsupp hinv hρ hρπ
-  haveI : IsFiniteMeasure τ := ⟨hfin⟩
+  have : IsFiniteMeasure τ := ⟨hfin⟩
   have hm : MeasurableEmbedding par :=
     (continuous_par.isClosedEmbedding par_injective).measurableEmbedding
   set ν : Measure (AddCircle (2 * Real.pi)) := τ.comap par with hν
   have hνa : ∀ S, ν S = τ (par '' S) := fun S => hm.comap_apply τ S
-  haveI : IsFiniteMeasure ν := ⟨by rw [hνa]; exact measure_lt_top _ _⟩
-  haveI : ν.IsAddLeftInvariant := by
+  have : IsFiniteMeasure ν := ⟨by rw [hνa]; exact measure_lt_top _ _⟩
+  have : ν.IsAddLeftInvariant := by
     constructor
     intro a
     ext S hS
@@ -846,12 +846,12 @@ theorem measure_arc : ∀ (τ : Measure ℂ) (ρ : ℝ), τ Set.univ < ⊤ → �
     ⟨_, Measure.isAddLeftInvariant_eq_smul ν volume⟩
   have hu : τ Set.univ = t * ENNReal.ofReal (2 * Real.pi) := by
     have h1 := hνa Set.univ
-    rw [ht, Measure.smul_apply, AddCircle.measure_univ, Set.image_univ, range_par,
+    rw [ht, smul_apply, AddCircle.measure_univ, Set.image_univ, range_par,
       ENNReal.smul_def, smul_eq_mul] at h1
     rw [h1]
     apply measure_congr
     exact (ae_eq_univ.2 hsupp).symm
-  rw [← image_ball, ← hνa, hu, ht, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul,
+  rw [← image_ball, ← hνa, hu, ht, smul_apply, ENNReal.smul_def, smul_eq_mul,
     ← measure_congr AddCircle.closedBall_ae_eq_ball, AddCircle.volume_closedBall,
     min_eq_right (by linarith), mul_assoc, ← ENNReal.ofReal_mul Real.two_pi_pos.le]
   congr 2
@@ -1038,7 +1038,7 @@ theorem Jet.matExp [FiniteDimensional ℝ E] {k : ℕ} (L : E →ₗ[ℝ] Matrix
     Jet (fun x => NormedSpace.exp (L x) i j) ((1 : Matrix (Fin k) (Fin k) ℂ) i j) (fun v => L v i j) := by
   let _ : NormedRing (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedRing
   let _ : NormedAlgebra ℝ (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedAlgebra
-  have _ : CompleteSpace (Matrix (Fin k) (Fin k) ℂ) := FiniteDimensional.complete ℝ _
+  have _ : CompleteSpace (Matrix (Fin k) (Fin k) ℂ) := FiniteDimensional.completeSpace ℝ _
   let Lc : E →L[ℝ] Matrix (Fin k) (Fin k) ℂ := LinearMap.toContinuousLinearMap L
   let P : Matrix (Fin k) (Fin k) ℂ →L[ℝ] ℂ :=
     (ContinuousLinearMap.proj j).comp (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Fin k => Fin k → ℂ) i)
@@ -1159,7 +1159,7 @@ theorem chart_hasStrictFDerivAt (k : ℕ) (η : ℝ) (i j : Fin (k + 1)) :
     refine Jet.congr (Jet.sum fun l => (jet_kap (k := k) i l).mul (jet_sec η l j))
       (fun x => by unfold chart; rw [Matrix.mul_apply]) rfl (fun v => ?_)
     simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_add_distrib, Finset.sum_ite_eq,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     unfold tang kap blk
     induction i using Fin.lastCases <;> induction j using Fin.lastCases <;> simp
   obtain ⟨D, hD, -, hd⟩ := h
@@ -1227,7 +1227,7 @@ theorem thin_tube : ∀ (k : ℕ) (η : ℝ), 1 ≤ k → (η = 1 ∨ η = -1) �
     have hρ' : ρ ^ 2 / 2 ≤ 1 := by nlinarith [hρ.1, hρ.2]
     have hA0 : Continuous fun X : lieE (UH (1 : Matrix (Fin k) (Fin k) ℂ)) =>
         (Matrix.of.symm (NormedSpace.exp (unrealify (X : EuclideanSpace ℝ _))) : PI.MtM k) :=
-      GlobalTheory.GramExp.exp_cont.comp (unrealify_cont.comp continuous_subtype_val)
+      GlobalTheory.GramExp.exp_cont.comp (unrealify_cont.comp continuous_subtypeVal)
     have hA : MeasurableSet (expSet (UH (1 : Matrix (Fin k) (Fin k) ℂ)) (Metric.ball 0 ρ)) :=
       GlobalTheory.GramExp.measurableSet_image_ball hA0 _ _
     have hB : MeasurableSet ((fun θ : ℝ => Complex.exp (θ * Complex.I)) '' Metric.ball 0 ρ) :=

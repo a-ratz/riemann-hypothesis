@@ -99,7 +99,7 @@ theorem psiExpP_apply {L₁ N₁ : ℕ} (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r)
   rw [Finsupp.sum_apply, Finsupp.sum_eq_single (x, a')]
   · rw [Finsupp.single_eq_same]
   · intro v _ hv
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     obtain ⟨e1, e2⟩ := plVar_inj hk hV hr hJ hnL h
     exact hv (Prod.ext e1 e2)
@@ -120,7 +120,7 @@ theorem levelAtPrime_character_mul {L₁ N₁ : ℕ} (hp : 0 < p) (hV : Fr.Valid
     levP Fr p hk nL (PsiP (O := O) Fr p hk nL H * monomial c 1) = monomial (plMon Fr p hk nL c) 1 * H := by
   induction H using MvPolynomial.induction_on' with
   | monomial a k =>
-    rw [PsiP_monomial, monomial_mul, T5.monomialSubstitution_monomial, plMon_psiExpP_add p hk hp hV hr hJ hnL, monomial_mul, mul_one,
+    rw [PsiP_monomial, monomial_mul_monomial, T5.monomialSubstitution_monomial, plMon_psiExpP_add p hk hp hV hr hJ hnL, monomial_mul_monomial, mul_one,
       one_mul]
   | add F G hF hG => rw [map_add (f := _), add_mul, T5.monomialSubstitution_add, hF, hG, mul_add]
 
@@ -168,7 +168,7 @@ theorem seg_PsiP (p : ℕ) {n' r K m : ℕ} [NeZero n'] [NeZero r] (O : Type) [C
   | mem x hx =>
     obtain ⟨⟨y, a⟩, hy, rfl⟩ := hx
     have hy' : y ∈ Fr.letters (segZ j) := hy
-    simp only [plEmb, phSeg, chi, rename_X, aeval_X, map_pow, map_X, if_pos hy']
+    simp only [plEmb, phSeg, chi, rename_X, aeval_X, map_pow, map_X, ite_eq_left hy']
     rcases hsp y hy' with ⟨l, rfl, hml⟩ | ⟨mm, rfl, hml⟩ | ⟨mm, rfl, hml⟩
     · rw [hml]
       simp only [SignedChainData.ph, PsiP, aeval_X]
@@ -235,7 +235,7 @@ theorem restTr : RestTr := by
         monomial (l.mapDomain (castV hk) + ga) 1 := by
       unfold zPl
       simp only [map_mul, map_prod, rename_monomial, map_monomial, map_one]
-      rw [mul_assoc, monomial_mul, one_mul, ← hJ, prod_range_zmod J]
+      rw [mul_assoc, monomial_mul_monomial, one_mul, ← hJ, prod_range_zmod J]
       congr 1
       exact Finset.prod_congr rfl (fun j _ => hseg j)
     rw [hz, Formalism.MainNotions.NormalSetCounting.levelAtPrime_character_mul p hk hp hV hr hJ hnL]
@@ -269,7 +269,7 @@ theorem restTr : RestTr := by
         rw [Nat.mod_eq_of_lt hlt', Int.toNat_of_nonneg hnn]
       have h2 : (2 : ℤ) ∣ n' := by exact_mod_cast (even_iff_two_dvd.mp hn')
       rw [Int.even_iff, ← Int.emod_emod_of_dvd _ h2, ← hv]
-      exact Int.even_iff.mp (Int.even_coe_nat _ |>.mpr hev)
+      exact Int.even_iff.mp (Int.even_natCast _ |>.mpr hev)
     show (l.mapDomain (castV hk) + ga) (plVar Fr hk Dt.nL (⟨j, Sum.inl ll⟩ : TL J Dt.nL r) a) /
       lowP Fr p (⟨j, Sum.inl ll⟩ : TL J Dt.nL r) = 0
     rw [Finsupp.add_apply, hgz, add_zero, hpv, Finsupp.mapDomain_apply_of_injective hinj]

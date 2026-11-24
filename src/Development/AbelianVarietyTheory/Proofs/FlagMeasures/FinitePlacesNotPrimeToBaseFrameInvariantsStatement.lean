@@ -85,7 +85,7 @@ theorem finite_resChar_eq (F : Type) [Field F] [NumberField F] (l : ℕ) (hl : l
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact hx
   refine (Ideal.finite_factors hI).subset ?_
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   unfold Formalism.MainNotions.S.Loc.resChar at hp
@@ -98,7 +98,7 @@ theorem split_finite : ∀ (D : D7) (Z : LocDat D), {p : PlF D | (Z.M p).split �
   have h1 := finite_resChar_eq D.host.F (D.host.g 1) (D.host.g_prime 1).ne_zero
   refine (h0.union h1).subset ?_
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp
+  simp only [Set.mem_ofPred_eq] at hp
   have hs : (D.s.atP p).split.isSome := by
     have ha := (Z.agree p).2.2.2.2.2
     revert ha
@@ -402,8 +402,8 @@ theorem GlobalTheory.PrimeAlmostAll.primeTo_finite : ∀ (D : D7) (Z : LocDat D)
       refine Finset.prod_congr rfl fun a _ => ?_
       have ha : a.val < D.R.rS + 1 := a.2
       by_cases h : a.val < D.R.rS
-      · rw [if_pos ha, if_pos h]
-      · rw [if_pos ha, if_neg h, hlast a h]
+      · rw [ite_eq_left ha, ite_eq_left h]
+      · rw [ite_eq_left ha, ite_eq_right h, hlast a h]
     set K := ∏ a : Fin (D.R.rS + 1), if a.val < D.R.rS then (Z.M p).L.cj (frFac Z.δ p a) * frFac Z.δ p a else 1 with hKdef
     have eG : (FP p).Gv = (FP p).Dm (D.R.rS + 1) * (Z.M p).L.cj ((FP p).Dm (D.R.rS + 1)) -
         algebraMap _ _ ((FP p).A.T * (FP p).B.T) * ((FP p).Dm D.R.rS * (Z.M p).L.cj ((FP p).Dm D.R.rS)) := rfl

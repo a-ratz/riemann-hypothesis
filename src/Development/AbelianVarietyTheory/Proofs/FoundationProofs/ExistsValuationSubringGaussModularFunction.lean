@@ -206,16 +206,16 @@ lemma redA_const (v : V) :
   funext r
   rw [redA_coeff, algS, HahnSeries.coeff_single]
   by_cases hr : r = 0
-  · rw [if_pos hr]
+  · rw [ite_eq_left hr]
     congr 1
     apply Subtype.ext
     show (e (algebraMap Ω K v)).coeff r = v
-    rw [coeff_const, if_pos hr]
-  · rw [if_neg hr]
+    rw [coeff_const, ite_eq_left hr]
+  · rw [ite_eq_right hr]
     have h0 : (⟨(e (algebraMap Ω K v)).coeff r, (mem_intA V e _).1 (const_mem V e v v.2) r⟩ : V) = 0 := by
       apply Subtype.ext
       show (e (algebraMap Ω K v)).coeff r = 0
-      rw [coeff_const, if_neg hr]
+      rw [coeff_const, ite_eq_right hr]
     rw [h0, map_zero]
 
 theorem exists_dom (j : K) (hj1 : (e j).coeff (-1) = 1) (hj2 : ∀ r : ℚ, r < -1 → (e j).coeff r = 0)
@@ -226,7 +226,7 @@ theorem exists_dom (j : K) (hj1 : (e j).coeff (-1) = 1) (hj2 : ∀ r : ℚ, r < 
       ∀ f : K, (∀ r, (e f).coeff r ∈ V) → (∀ r, r ≠ 0 → (e f).coeff r ∈ V.nonunits) →
         W.valuation (f - algebraMap Ω K ((e f).coeff 0)) < 1 := by
   classical
-  haveI : (RingHom.ker (redA V e)).IsPrime := RingHom.ker_isPrime _
+  have : (RingHom.ker (redA V e)).IsPrime := RingHom.ker_isPrime _
   obtain ⟨W, hA, hinv, hlt⟩ :=
     ReciprocityTheory.ChartRestriction.G.AR.Up.NOrd.exists_val_of_prime (intA V e) (RingHom.ker (redA V e))
   have hker : ∀ x : intA V e, x ∈ RingHom.ker (redA V e) ↔ ∀ r, (e x).coeff r ∈ V.nonunits :=
@@ -243,7 +243,7 @@ theorem exists_dom (j : K) (hj1 : (e j).coeff (-1) = 1) (hj2 : ∀ r : ℚ, r < 
     have h2 := (W.valuation_le_one_iff _).2 (hinv x hx)
     rw [map_inv₀] at h2
     have hv0 : W.valuation (x : K) ≠ 0 := by simpa using hx0
-    exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 hv0)).1 h2)
+    exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 hv0)).1 h2)
   refine ⟨W, ?_, ?_, ?_⟩
   · intro a
     constructor

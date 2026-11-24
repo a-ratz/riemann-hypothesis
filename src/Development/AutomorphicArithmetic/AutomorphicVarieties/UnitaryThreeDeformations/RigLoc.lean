@@ -166,7 +166,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_desc :
     fun M g => gg_range_iff M (r' g)
   have hKcl : ∀ m, IsClosed (K m : Set (PadicAlgCl l)) := fun m =>
     haveI : FiniteDimensional ℚ_[l] (K m).toSubalgebra.toSubmodule := hK m
-    Submodule.closed_of_finiteDimensional (K m).toSubalgebra.toSubmodule
+    Submodule.isClosed_of_finiteDimensional (K m).toSubalgebra.toSubmodule
   have hcl : ∀ m, IsClosed (S (K m) : Set Γ) := fun m => by
     have : (S (K m) : Set Γ) = ⋂ a, ⋂ b,
         ((fun g => ((r' g).mat a b).fst) ⁻¹' (K m) ∩ (fun g => ((r' g).mat a b).snd) ⁻¹' (K m)) := by
@@ -183,12 +183,12 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_desc :
   obtain ⟨m, x, hx⟩ := nonempty_interior_of_iUnion_of_closed hcl hun
   have hop : IsOpen (S (K m) : Set Γ) :=
     Subgroup.isOpen_of_mem_nhds _ (mem_interior_iff_mem_nhds.1 hx)
-  haveI : Finite (Γ ⧸ S (K m)) := Subgroup.quotient_finite_of_isOpen _ hop
+  have : Finite (Γ ⧸ S (K m)) := Subgroup.quotient_finite_of_isOpen _ hop
   obtain ⟨n, hn⟩ := hcov (ents (h : Matrix (Fin 3) (Fin 3) (DualNumber (PadicAlgCl l))) ∪
       ⋃ q : Γ ⧸ S (K m), ents (r' q.out).mat)
     ((ents_finite _).union (Set.finite_iUnion fun q => ents_finite _))
-  haveI := hK m
-  haveI := hK n
+  have := hK m
+  have := hK n
   have hmono : ∀ M M', M ≤ M' → S M ≤ S M' := fun M M' hM g hg =>
     (hS _ g).2 fun a b => ⟨hM ((hS _ g).1 hg a b).1, hM ((hS _ g).1 hg a b).2⟩
   have hall : ∀ g, g ∈ S (K n ⊔ K m) := fun g => by
@@ -263,15 +263,15 @@ private def diagCh {G R : Type} [Group G] [CommRing R] {m : ℕ} (r : G →* GL 
 theorem UpperTheory.V.UnitaryThreeInertia.rig_fin :
     UpperTheory.V.Loc.LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] (φ : Γ →* Formalism.BasicNotions.Loc.GQ l), Topology.IsOpenEmbedding φ → ∀ {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] [TopologicalSpace E] [IsModuleTopology ℚ_[l] E] [IsTopologicalRing E], ∀ (η : Γ →* ℤˣ), IsLocallyConstant η → ∀ (r : Γ →* GG (m := 3) (R := E)) (y : Γ → Matrix (Fin 3) (Fin 3) E) (r' : Γ →* GG (m := 3) (R := DualNumber E)) (h : GL (Fin 3) (DualNumber E)), HasMult η r → Continuous (mats r) → Continuous y → IsCoc r y → IsDeform ((GG.map (algebraMap E (DualNumber E))).comp r) (fun g => (y g).map (TrivSqZeroExt.inr : E → DualNumber E)) r' → ∀ (H : Subgroup Γ) [H.Normal], IsOpen (H : Set Γ) → H ≤ η.ker → Upper η (conjBy h⁻¹ r') → ∀ w : Fin 3 → ℤ, StrictAnti w → (∀ g ∈ H, φ g ∈ UpperTheory.V.Loc.Iq l → ∀ a, (conjBy h⁻¹ r' g).mat a a = ((UpperTheory.V.Loc.cycA l l (DualNumber E) (φ g) ^ w a : (DualNumber E)ˣ) : DualNumber E)) → (∀ i j : Fin 3, i < j → ∃ g ∈ H, ((conjBy h⁻¹ r' g).mat i i).fst ≠ ((conjBy h⁻¹ r' g).mat j j).fst * ((UpperTheory.V.Loc.cycA l l E (φ g) : Eˣ) : E)) → y ∈ UpperTheory.V.Loc.finiteCocycles φ (adRep r) := by
   intro P l _ Γ _ _ _ φ hφ E _ _ _ _ _ _ _ _ η hη r y r' h hm hr hy hc hd H _ hH hle hU w hw hdiag hne
-  haveI : IsModuleTopology ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
+  have : IsModuleTopology ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin 3 → Fin 3 → E))
-  haveI : FiniteDimensional ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
+  have : FiniteDimensional ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
     inferInstanceAs (FiniteDimensional ℚ_[l] (Fin 3 → Fin 3 → E))
   have h1 : ∀ g ∈ H, (r g).right = 1 := fun g hg => (hm g).trans (hle hg)
   have h1' : ∀ g ∈ H, (r' g).right = 1 := fun g hg => (hd g).1.trans (h1 g hg)
   have had : ∀ (g : H) X, adRep r g X = UpperTheory.V.Loc.adGL (glOn H r h1) g X := fun g X => by
     change (r g).adFun X = _
-    rw [GG.adFun, if_pos (h1 g g.2)]
+    rw [GG.adFun, ite_eq_left (h1 g g.2)]
     rfl
   have hcj : ∀ g : H, (UpperTheory.V.Loc.conjGL h⁻¹ (glOn H r' h1') g : Matrix (Fin 3) (Fin 3) (DualNumber E)) =
       (conjBy h⁻¹ r' g).mat := fun g => by
@@ -287,7 +287,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_fin :
   have hκ : ∀ i (g : H), ((diagCh _ hup i g : (DualNumber E)ˣ) : DualNumber E) = (conjBy h⁻¹ r' g).mat i i :=
     fun i g => by rw [← hcj]; rfl
   refine (UpperTheory.V.Loc.pr6 P φ hφ (adRep r) (contAd η hη r hm hr) y ⟨hy, hc⟩ H hH (glOn H r h1)
-    (hr.comp continuous_subtype_val) LinearMap.id LinearMap.id (fun _ => rfl) had (fun g X => (had g X).symm)
+    (hr.comp continuous_subtypeVal) LinearMap.id LinearMap.id (fun _ => rfl) had (fun g X => (had g X).symm)
     (glOn H r' h1') ?_ h⁻¹ (diagCh _ hup) w (fun g => ⟨hup g, fun _ => rfl⟩) hw
     (fun i g hg => Units.ext ((hκ i g).trans (hdiag g g.2 hg i))) ?_).2.2
   · intro g i j
@@ -338,8 +338,8 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_loc :
     UpperTheory.V.Loc.LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] (φ : Γ →* Formalism.BasicNotions.Loc.GQ l), Topology.IsOpenEmbedding φ → ∀ (η : Γ →* ℤˣ), IsLocallyConstant η → ∀ (r : Γ →* GG (m := 3) (R := PadicAlgCl l)) (y : Γ → Matrix (Fin 3) (Fin 3) (PadicAlgCl l)) (r' : Γ →* GG (m := 3) (R := DualNumber (PadicAlgCl l))) (h : GL (Fin 3) (DualNumber (PadicAlgCl l))), HasMult η r → Continuous (mats r) → Continuous y → IsCoc r y → IsDeform ((GG.map (algebraMap (PadicAlgCl l) (DualNumber (PadicAlgCl l)))).comp r) (fun g => (y g).map (TrivSqZeroExt.inr : (PadicAlgCl l) → DualNumber (PadicAlgCl l))) r' → ∀ (H : Subgroup Γ) [H.Normal], IsOpen (H : Set Γ) → H ≤ η.ker → Upper η (conjBy h⁻¹ r') → ∀ w : Fin 3 → ℤ, StrictAnti w → (∀ g ∈ H, φ g ∈ UpperTheory.V.Loc.Iq l → ∀ a, (conjBy h⁻¹ r' g).mat a a = ((UpperTheory.V.Loc.cycA l l (DualNumber (PadicAlgCl l)) (φ g) ^ w a : (DualNumber (PadicAlgCl l))ˣ) : DualNumber (PadicAlgCl l))) → (∀ i j : Fin 3, i < j → ∃ g ∈ H, ((conjBy h⁻¹ r' g).mat i i).fst ≠ ((conjBy h⁻¹ r' g).mat j j).fst * ((UpperTheory.V.Loc.cycA l l (PadicAlgCl l) (φ g) : (PadicAlgCl l)ˣ) : (PadicAlgCl l))) → y ∈ UpperTheory.V.Loc.finiteCocycles φ (adRep r) := by
   intro P l _ Γ _ _ _ φ hφ η hη r y r' h hm hr hy hcoc hdef H _ hH hHη hU w hw hκ hne
   have hc : IsClosed (φ.range : Set (Formalism.BasicNotions.Loc.GQ l)) := φ.range.isClosed_of_isOpen hφ.isOpen_range
-  haveI : CompactSpace Γ := (Topology.IsClosedEmbedding.mk hφ.isEmbedding hc).compactSpace
-  haveI : T2Space Γ := hφ.isEmbedding.t2Space
+  have : CompactSpace Γ := (Topology.IsClosedEmbedding.mk hφ.isEmbedding hc).compactSpace
+  have : T2Space Γ := hφ.isEmbedding.t2Space
   have hfst : ∀ g a b, ((r' g).mat a b).fst = (r g).mat a b := fun g a b => by
     rw [(hdef g).2]; exact (rigloc_mul (y g) (r g).mat a b).1
   have hsnd : ∀ g a b, ((r' g).mat a b).snd = (y g * (r g).mat) a b := fun g a b => by
@@ -347,8 +347,8 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_loc :
   obtain ⟨L, f, s', h₁, hf, hs', hh⟩ := rig_desc r' h
     (fun a b => by simp only [hfst]; exact hr.matrix_elem a b)
     (fun a b => by simp only [hsnd]; exact (hy.matrix_mul hr).matrix_elem a b)
-  haveI := L.2
-  haveI : IsModuleTopology ℚ_[l] ↥L.1 := isModuleTopologyOfFiniteDimensional
+  have := L.2
+  have : IsModuleTopology ℚ_[l] ↥L.1 := isModuleTopologyOfFiniteDimensional
   let ι : ↥L.1 →+* PadicAlgCl l := L.1.val.toRingHom
   have hι : Function.Injective ι := Subtype.val_injective
   have hιm : Function.Injective fun X : Matrix (Fin 3) (Fin 3) ↥L.1 => X.map ι := Matrix.map_injective hι
@@ -426,7 +426,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_loc :
       rw [e3] at e2
       exact e2
   have := UpperTheory.V.Loc.z1fCoef φ (adRep s) (adRep r) (L.1.val.toLinearMap.mapMatrix)
-    (continuous_matrix fun a b => continuous_subtype_val.comp (continuous_id.matrix_elem a b)) had z key
+    (continuous_matrix fun a b => continuous_subtypeVal.comp (continuous_id.matrix_elem a b)) had z key
   have e : y = fun g => (z g).map ι := funext fun g => (hz g).symm
   rw [e]
   exact this

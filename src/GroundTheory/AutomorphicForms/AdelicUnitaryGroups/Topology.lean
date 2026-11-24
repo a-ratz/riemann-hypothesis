@@ -378,7 +378,7 @@ theorem isEmbedding_coe_unitaryPoints (hH : IsUnit H.det) :
         (continuous_id.matrix_map (continuous_conjBase R)).matrix_transpose).matrix_mul
         continuous_const))
   have hf : Continuous (fun g : unitaryPoints K E H R => (unitaryMat g)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   refine IsEmbedding.of_comp hf hG ?_
   have hGf : G ∘ (fun g : unitaryPoints K E H R => (unitaryMat g)) =
       Units.embedProduct _ ∘ (Subtype.val : unitaryPoints K E H R → GL ι (R ⊗[K] E)) := by
@@ -390,7 +390,7 @@ theorem isEmbedding_coe_unitaryPoints (hH : IsUnit H.det) :
   exact Units.isEmbedding_embedProduct.comp IsEmbedding.subtypeVal
 
 theorem continuous_unitaryCoords : Continuous (unitaryCoords H R b) :=
-  (matrixCoordsHomeomorph R b).continuous.comp (Units.continuous_val.comp continuous_subtype_val)
+  (matrixCoordsHomeomorph R b).continuous.comp (Units.continuous_val.comp continuous_subtypeVal)
 
 theorem isEmbedding_unitaryCoords (hH : IsUnit H.det) : IsEmbedding (unitaryCoords H R b) :=
   (matrixCoordsHomeomorph R b).isEmbedding.comp (isEmbedding_coe_unitaryPoints H R hH)
@@ -454,7 +454,7 @@ theorem continuous_unitaryMap (f : R →ₐ[K] S) (hf : Continuous f) :
     continuous_id.matrix_map (continuous_tensorMap f hf)
   apply continuous_induced_rng.2
   rw [Units.continuous_iff]
-  refine ⟨hm.comp (Units.continuous_val.comp continuous_subtype_val), ?_⟩
+  refine ⟨hm.comp (Units.continuous_val.comp continuous_subtypeVal), ?_⟩
   have : (fun g : unitaryPoints K E H R =>
       (((Subtype.val ∘ unitaryMap K E H f) g)⁻¹ : GL ι (S ⊗[K] E)).val) =
       (fun M : Matrix ι ι (R ⊗[K] E) => M.map (tensorMap (E := E) f)) ∘
@@ -464,7 +464,7 @@ theorem continuous_unitaryMap (f : R →ₐ[K] S) (hf : Continuous f) :
     rw [← Subgroup.coe_inv, ← map_inv]
     rfl
   rw [this]
-  exact hm.comp (Units.continuous_val.comp (continuous_subtype_val.comp continuous_inv))
+  exact hm.comp (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_inv))
 
 variable (H)
 

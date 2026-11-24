@@ -112,7 +112,7 @@ theorem lintegral_inv_pow_lt_top (K : ℝ) :
   have hi2 := hi.const_mul (K ^ 2)
   have e : ∀ x : EuclideanSpace ℝ l, ‖K * ((1 + ‖x‖) ^ N)⁻¹‖ₑ ^ 2 = ‖K ^ 2 * (1 + ‖x‖) ^ (-(2 * N : ℝ))‖ₑ := by
     intro x
-    rw [← enorm_pow, mul_pow, inv_pow, ← pow_mul, Real.rpow_neg (by positivity),
+    rw [← eNorm_pow, mul_pow, inv_pow, ← pow_mul, Real.rpow_neg (by positivity),
       show (2 * (N : ℝ)) = ((N * 2 : ℕ) : ℝ) by push_cast; ring, Real.rpow_natCast]
   simp_rw [e]
   exact hi2.hasFiniteIntegral
@@ -153,7 +153,7 @@ theorem taylor_bound (w : l ⊕ l → ℝ) (f : Sch l) :
   ring
 
 theorem enorm_sub_sq_le (a b : ℂ) : ‖a - b‖ₑ ^ 2 ≤ 2 * ‖a‖ₑ ^ 2 + 2 * ‖b‖ₑ ^ 2 := by
-  simp only [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+  simp only [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
   rw [show (2 : ℝ≥0∞) = ENNReal.ofReal 2 by simp, ← ENNReal.ofReal_mul (by norm_num),
     ← ENNReal.ofReal_mul (by norm_num), ← ENNReal.ofReal_add (by positivity) (by positivity)]
   apply ENNReal.ofReal_le_ofReal
@@ -166,9 +166,9 @@ theorem lintegral_le_of_bound (φ : EuclideanSpace ℝ l → ℂ) (B : Euclidean
   refine lintegral_mono fun x => ?_
   rw [← mul_pow]
   gcongr
-  calc ‖φ x‖ₑ = ENNReal.ofReal ‖φ x‖ := (ofReal_norm_eq_enorm _).symm
+  calc ‖φ x‖ₑ = ENNReal.ofReal ‖φ x‖ := (ofReal_norm _).symm
     _ ≤ ENNReal.ofReal (c * B x) := ENNReal.ofReal_le_ofReal (h x)
-    _ = ENNReal.ofReal c * ‖B x‖ₑ := by rw [ENNReal.ofReal_mul hc, Real.enorm_eq_ofReal (hB x)]
+    _ = ENNReal.ofReal c * ‖B x‖ₑ := by rw [ENNReal.ofReal_mul hc, Real.eNorm_eq_ofReal (hB x)]
 
 theorem dRho_intertwine : ∀ (l : Type) [Fintype l] (L' : (l ⊕ l → ℝ) →ₗ[ℝ] (l ⊕ l → ℝ))
     (A' : GlobalTheory.RealWeil.Sch l →ₗ[ℂ] GlobalTheory.RealWeil.Sch l) (C : ℝ≥0∞), C ≠ ⊤ →
@@ -188,7 +188,7 @@ theorem dRho_intertwine : ∀ (l : Type) [Fintype l] (L' : (l ⊕ l → ℝ) →
     rw [hK]
     exact ENNReal.add_ne_top.2 ⟨ENNReal.mul_ne_top t2 t1, ENNReal.mul_ne_top t4 hB₂i.ne⟩
   have hmeas : ∀ g : Sch l, AEMeasurable (fun x => ‖g x‖ₑ ^ 2) volume := fun g =>
-    ((ENNReal.continuous_pow 2).comp g.continuous.enorm).aemeasurable
+    ((ENNReal.continuous_pow 2).comp g.continuous.eNorm).aemeasurable
   have key : ∀ t : ℝ, 0 < t → t ≤ 1 → ∫⁻ x, ‖u x‖ₑ ^ 2 ≤ ENNReal.ofReal (t ^ 2) * K := by
     intro t ht0 ht1
     have hta : |t| ≤ 1 := by rw [abs_of_pos ht0]; exact ht1
@@ -198,11 +198,11 @@ theorem dRho_intertwine : ∀ (l : Type) [Fintype l] (L' : (l ⊕ l → ℝ) →
     set m := A' g - A' f - (t : ℂ) • dRho (L' w) (A' f) with hm
     have hkb : ∀ x, ‖k x‖ ≤ t ^ 2 * B₁ x := fun x => by
       have e : k x = rhoFun (t • w) f x - f x - t * dRho w f x := by
-        simp only [hk, SchwartzMap.sub_apply, SchwartzMap.smul_apply, smul_eq_mul, hg]
+        simp only [hk, sub_apply, smul_apply, smul_eq_mul, hg]
       rw [e]; exact hB₁ t hta x
     have hmb : ∀ x, ‖m x‖ ≤ t ^ 2 * B₂ x := fun x => by
       have e : m x = rhoFun (t • L' w) (A' f) x - A' f x - t * dRho (L' w) (A' f) x := by
-        simp only [hm, SchwartzMap.sub_apply, SchwartzMap.smul_apply, smul_eq_mul, hAg]
+        simp only [hm, sub_apply, smul_apply, smul_eq_mul, hAg]
       rw [e]; exact hB₂ t hta x
     have hum : (t : ℂ) • u = m - A' k := by
       simp only [hu, hk, hm, map_sub, map_smul, smul_sub]
@@ -213,12 +213,12 @@ theorem dRho_intertwine : ∀ (l : Type) [Fintype l] (L' : (l ⊕ l → ℝ) →
     have hIk := lintegral_le_of_bound k B₁ (by positivity) hB₁0 hkb
     have hIm := lintegral_le_of_bound m B₂ (by positivity) hB₂0 hmb
     have hsc : ∀ x, ‖((t : ℂ) • u) x‖ₑ ^ 2 = a * ‖u x‖ₑ ^ 2 := fun x => by
-      rw [SchwartzMap.smul_apply, enorm_smul, mul_pow, ha, ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+      rw [smul_apply, eNorm_smul, mul_pow, ha, ← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
         Complex.norm_real, Real.norm_eq_abs, sq_abs]
     have main : a * ∫⁻ x, ‖u x‖ₑ ^ 2 ≤ a * (a * K) := by
       calc a * ∫⁻ x, ‖u x‖ₑ ^ 2 = ∫⁻ x, ‖((t : ℂ) • u) x‖ₑ ^ 2 := by
             rw [← lintegral_const_mul' _ _ hat]; simp only [hsc]
-        _ = ∫⁻ x, ‖m x - A' k x‖ₑ ^ 2 := by rw [hum]; simp only [SchwartzMap.sub_apply]
+        _ = ∫⁻ x, ‖m x - A' k x‖ₑ ^ 2 := by rw [hum]; simp only [sub_apply]
         _ ≤ ∫⁻ x, (2 * ‖m x‖ₑ ^ 2 + 2 * ‖A' k x‖ₑ ^ 2) := lintegral_mono fun x => enorm_sub_sq_le _ _
         _ = 2 * (∫⁻ x, ‖m x‖ₑ ^ 2) + 2 * ∫⁻ x, ‖A' k x‖ₑ ^ 2 := by
             rw [lintegral_add_left' ((hmeas m).const_mul 2), lintegral_const_mul' _ _ t4, lintegral_const_mul' _ _ t4]

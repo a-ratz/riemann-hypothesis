@@ -69,7 +69,7 @@ theorem md_pr (t : Fˣ) : md (pr t) = 1 := by
   simp [md, pr_eq_diagonal, ideleModule_diagonal]
 
 theorem continuous_md : Continuous (md : IdeleGroup F → ℝ) :=
-  continuous_subtype_val.comp continuous_ideleModule
+  continuous_subtypeVal.comp continuous_ideleModule
 
 theorem th_pr_mul (f : IdeleGroup F → ℝ≥0∞) (ξ : Fˣ) (a : IdeleGroup F) :
     th f (pr ξ * a) = th f a := by
@@ -235,7 +235,7 @@ theorem measurable_fiber (w : InfinitePlace F) {f : IdeleGroup F → ℝ≥0∞}
   refine Measurable.lintegral_prod_left (f := fun (u : normOneSubgroup F) (y : ℝ) =>
     th f ((u : IdeleGroup F) * moduleSection w (expPos y))) ?_
   refine (measurable_th hf).comp (Continuous.measurable ?_)
-  exact (continuous_subtype_val.comp continuous_fst).mul
+  exact (continuous_subtypeVal.comp continuous_fst).mul
     (((continuous_moduleSection w).comp expPosHomeomorph.continuous).comp continuous_snd)
 
 theorem lintegral_normOne_mul (a : IdeleGroup F) {f : IdeleGroup F → ℝ≥0∞} (hf : Measurable f) :
@@ -244,7 +244,7 @@ theorem lintegral_normOne_mul (a : IdeleGroup F) {f : IdeleGroup F → ℝ≥0�
   have hD := isFundamentalDomain_normOneFundamentalDomain F (normOneMeasure F)
   let e : Fˣ ≃ (diagonalNormOne F).op := (diagonalNormOneEquiv F).trans (diagonalNormOne F).equivOp
   set h : normOneSubgroup F → ℝ≥0∞ := fun u => f ((u : IdeleGroup F) * a) with hh
-  have hm : Measurable h := hf.comp (continuous_subtype_val.measurable.mul_const a)
+  have hm : Measurable h := hf.comp (continuous_subtypeVal.measurable.mul_const a)
   calc ∫⁻ u, h u ∂normOneMeasure F
       = ∑' γ : (diagonalNormOne F).op, ∫⁻ u in normOneFundamentalDomain F, h (γ • u) ∂normOneMeasure F :=
         hD.lintegral_eq_tsum'' h
@@ -268,8 +268,8 @@ theorem zi_eq (w : InfinitePlace F) {f : IdeleGroup F → ℝ≥0∞} (hf : Meas
     f ((p.1 : IdeleGroup F) * moduleSection w p.2) * ENNReal.ofReal ((p.2 : ℝ) ^ s) with hg
   have hgm : Measurable g := by
     refine (hf.comp (Continuous.measurable ?_)).mul (ENNReal.measurable_ofReal.comp ?_)
-    · exact (continuous_subtype_val.comp continuous_fst).mul ((continuous_moduleSection w).comp continuous_snd)
-    · exact (measurable_subtype_coe.comp measurable_snd).pow_const s
+    · exact (continuous_subtypeVal.comp continuous_fst).mul ((continuous_moduleSection w).comp continuous_snd)
+    · exact (measurable_subtypeVal.comp measurable_snd).pow_const s
   have h1 : zi f s = ∫⁻ p, g p ∂(normOneMeasure F).prod posRealMeasure := by
     rw [← hmp.lintegral_comp hgm]
     refine lintegral_congr fun a => ?_
@@ -292,8 +292,8 @@ theorem vol_inter (H : Subgroup (IdeleGroup F)) (hHo : IsOpen (H : Set (IdeleGro
     normOneMeasure F (normOneFundamentalDomain F ∩ {u | (u : IdeleGroup F) ∈ H}) =
       normOneMeasure F (normOneFundamentalDomain F) / (H.index : ℝ≥0∞) := by
   classical
-  haveI : H.FiniteIndex := ⟨hHi⟩
-  haveI : Fintype (IdeleGroup F ⧸ H) := Subgroup.fintypeQuotientOfFiniteIndex
+  have : H.FiniteIndex := ⟨hHi⟩
+  have : Fintype (IdeleGroup F ⧸ H) := Subgroup.fintypeQuotientOfFiniteIndex
   set m := (normOneMeasure F).restrict (normOneFundamentalDomain F) with hm
   let A : IdeleGroup F ⧸ H → Set (normOneSubgroup F) :=
     fun q => {u | ((u : IdeleGroup F) : IdeleGroup F ⧸ H) = q}
@@ -318,7 +318,7 @@ theorem vol_inter (H : Subgroup (IdeleGroup F)) (hHo : IsOpen (H : Set (IdeleGro
     refine ⟨⟨_, hb⟩, ?_⟩
     rw [QuotientGroup.eq]
     simpa using hh
-  have hA₀m : MeasurableSet A₀ := (hHo.preimage continuous_subtype_val).measurableSet
+  have hA₀m : MeasurableSet A₀ := (hHo.preimage continuous_subtypeVal).measurableSet
   have hAm : ∀ q, MeasurableSet (A q) := by
     intro q
     obtain ⟨b, rfl⟩ := hrep q
@@ -415,13 +415,13 @@ theorem tendsto_fiber (hF : IsTotallyReal F) {θ : ℝ →+* HeckeCharacterZeroL
   have hvol := vol_inter H hHo hHi hpr hcov
 
   set A : Set (normOneSubgroup F) := {u | (u : IdeleGroup F) ∈ H} with hAdef
-  have hAm : MeasurableSet A := (hHo.preimage continuous_subtype_val).measurableSet
+  have hAm : MeasurableSet A := (hHo.preimage continuous_subtypeVal).measurableSet
 
   have hray : Tendsto (fun x : ℝ => ∫⁻ u in normOneFundamentalDomain F, Phi f ((u : IdeleGroup F) * r x) ∂normOneMeasure F)
       (𝓝[>] 0) (𝓝 (∫⁻ u in normOneFundamentalDomain F, A.indicator (fun _ => c) u ∂normOneMeasure F)) := by
     refine tendsto_lintegral_filter_of_dominated_convergence (fun _ => (C : ℝ≥0∞)) ?_ ?_ ?_ ?_
     · refine Eventually.of_forall fun x => ?_
-      exact (measurable_Phi hf).comp (continuous_subtype_val.measurable.mul_const _)
+      exact (measurable_Phi hf).comp (continuous_subtypeVal.measurable.mul_const _)
     · exact Eventually.of_forall fun x => Eventually.of_forall fun u => hC _
     · rw [lintegral_const, Measure.restrict_apply_univ]
       exact ENNReal.mul_ne_top ENNReal.coe_ne_top (normOneMeasure_normOneFundamentalDomain_lt_top F).ne
@@ -444,7 +444,7 @@ theorem tendsto_fiber (hF : IsTotallyReal F) {θ : ℝ →+* HeckeCharacterZeroL
     exact tendsto_id.atBot_div_const (by positivity)
   refine (hray.comp hx).congr fun y => ?_
   have hm : md (moduleSection w (expPos y)) = md (r (Real.exp (y / d))) := by
-    rw [md_ray hF hθ hr (Real.exp_pos _), ← Real.exp_nat_mul, mul_div_cancel₀ _ hd0]
+    rw [md_ray hF hθ hr (Real.exp_pos _), ← Real.exp_natCast_mul, mul_div_cancel₀ _ hd0]
     simp [md]
   rw [show expPos y = ⟨Real.exp y, Real.exp_pos y⟩ from rfl, fiber_eq w f (Real.exp_pos y)]
   exact (fiber_translate _ _ hm).symm

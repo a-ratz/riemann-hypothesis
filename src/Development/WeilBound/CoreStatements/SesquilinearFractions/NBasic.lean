@@ -57,16 +57,16 @@ namespace PositivityTheory.Xgf
 theorem isScalarTower_rat_of_ringHom {k k' : Type} [Field k] [NumberField k] [Field k'] [NumberField k'] (f : k →+* k') :
     letI : Algebra k k' := f.toAlgebra;
     IsScalarTower ℚ k k' := by
-  letI : Algebra k k' := f.toAlgebra
+  let : Algebra k k' := f.toAlgebra
   exact IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
 
 theorem exists_extension_embedding_alg_closed : ∀ (k k' A : Type) [Field k] [NumberField k] [Field k'] [NumberField k'] [Field A] [CharZero A] [IsAlgClosed A] (f : k →+* k') (j : k →+* A), ∃ j' : k' →+* A, j'.comp f = j := by
   intro k k' A _ _ _ _ _ _ _ f j
-  letI : Algebra k k' := f.toAlgebra
-  letI : Algebra k A := j.toAlgebra
-  haveI : IsScalarTower ℚ k k' := isScalarTower_rat_of_ringHom f
-  haveI : Module.Finite k k' := Module.Finite.of_restrictScalars_finite ℚ k k'
-  haveI : Algebra.IsAlgebraic k k' := Algebra.IsAlgebraic.of_finite k k'
+  let : Algebra k k' := f.toAlgebra
+  let : Algebra k A := j.toAlgebra
+  have : IsScalarTower ℚ k k' := isScalarTower_rat_of_ringHom f
+  have : Module.Finite k k' := Module.Finite.of_restrictScalars_finite ℚ k k'
+  have : Algebra.IsAlgebraic k k' := Algebra.IsAlgebraic.of_finite k k'
   refine ⟨(IsAlgClosed.lift : k' →ₐ[k] A).toRingHom, ?_⟩
   ext x
   exact (IsAlgClosed.lift : k' →ₐ[k] A).commutes x
@@ -76,10 +76,10 @@ theorem card_embeddings_extending {k k' A : Type} [Field k] [NumberField k] [Fie
     [IsAlgClosed A] (f : k →+* k') (j : k →+* A) :
     letI : Algebra k k' := f.toAlgebra;
     (Finset.univ.filter fun j' : k' →+* A => j'.comp f = j).card = Module.finrank k k' := by
-  letI : Algebra k k' := f.toAlgebra
-  letI : Algebra k A := j.toAlgebra
-  haveI : IsScalarTower ℚ k k' := isScalarTower_rat_of_ringHom f
-  haveI : Module.Finite k k' := Module.Finite.of_restrictScalars_finite ℚ k k'
+  let : Algebra k k' := f.toAlgebra
+  let : Algebra k A := j.toAlgebra
+  have : IsScalarTower ℚ k k' := isScalarTower_rat_of_ringHom f
+  have : Module.Finite k k' := Module.Finite.of_restrictScalars_finite ℚ k k'
   rw [← Fintype.card_subtype, Fintype.card_eq_nat_card,
     ← AlgHom.natCard_of_splits k k' A (fun _ => IsAlgClosed.splits _)]
   refine Nat.card_congr
@@ -91,8 +91,8 @@ theorem card_embeddings_extending {k k' A : Type} [Field k] [NumberField k] [Fie
 theorem sum_embeddings_base_change : ∀ (k k' A : Type) [Field k] [NumberField k] [Field k'] [NumberField k'] [Field A] [CharZero A] [IsAlgClosed A] (f : k →+* k') (F : (k →+* A) → ℝ), (Module.finrank ℚ k : ℝ) * ∑ j : k' →+* A, F (j.comp f) = (Module.finrank ℚ k' : ℝ) * ∑ j : k →+* A, F j := by
   intro k k' A _ _ _ _ _ _ _ f F
   classical
-  letI : Algebra k k' := f.toAlgebra
-  haveI : IsScalarTower ℚ k k' := isScalarTower_rat_of_ringHom f
+  let : Algebra k k' := f.toAlgebra
+  have : IsScalarTower ℚ k k' := isScalarTower_rat_of_ringHom f
   have hsum : ∑ j' : k' →+* A, F (j'.comp f) = (Module.finrank k k' : ℝ) * ∑ j : k →+* A, F j := by
     rw [← Finset.sum_fiberwise Finset.univ (fun j' : k' →+* A => j'.comp f), Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_

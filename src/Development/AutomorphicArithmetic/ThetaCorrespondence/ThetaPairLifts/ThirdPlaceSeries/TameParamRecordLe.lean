@@ -56,7 +56,7 @@ namespace DiscreteGroups.sglob.DzType.Rt
 open GlobalTheory.TameRecord
 theorem tame_param_le_of_tame_coupled : _root_.DiscreteGroups.sglob.DzType.DepthZeroInertiaBigAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (T : GlobalTheory.RowTie.WDTie D.nd D.naut) (I : Ident D) (rc : GlobalTheory.SerSys.Corr D), _root_.GlobalTheory.TypeRec.IsSeriesCorrespondence hL T I rc → ∀ (L : ∀ k, LabelDatum (D.host.g k)) (k : Fin 2) (v : D.nd.PlG k) (κ : IsLocalRing.ResidueField (D.nd.plOm.1 (D.naut.plGw k v)) ≃+* Formalism.CyclotomicNorms.Fbar (D.host.g k)), TameCoupled (D.nd.plOm.1 (D.naut.plGw k v)) κ (D.ntypes.tg k v) (L k).gen → DiscreteGroups.sglob.DzType.Rt.TameParamLe D.R.nV (L k) (fun a => D.naut.inePol a (D.ntypes.tg k v)) (fun π : Supp.GLRep _ => rc k v π.1 π.2) := by
   intro hDZ hL D T I rc hrc L k v κ hκ ρ hb hρ τ P hP hinf
-  haveI : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
+  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
   obtain ⟨n, π⟩ := ρ
   have hs : GlobalTheory.PRep.IsSmooth π.ρ := hρ.2.2.1
   set σ := transRep I k v π hρ.2.1 hs

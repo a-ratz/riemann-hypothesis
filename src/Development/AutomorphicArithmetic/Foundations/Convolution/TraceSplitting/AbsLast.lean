@@ -145,11 +145,11 @@ theorem hfun_eq_zero (y : G) (hy : ∀ q : K' ⧸ U.subgroupOf K', ∀ g ∈ s, 
     hfun K' U s a y = 0 := by
   unfold hfun
   refine Finset.sum_eq_zero fun q _ => Finset.sum_eq_zero fun g hg => ?_
-  rw [if_neg (fun h => hy q g hg (QuotientGroup.eq.1 h)), mul_zero]
+  rw [ite_eq_right (fun h => hy q g hg (QuotientGroup.eq.1 h)), mul_zero]
 
 theorem hasCompactSupport_hfun [TopologicalSpace G] [IsTopologicalGroup G] (hK'c : IsCompact (K' : Set G))
     (hK'o : IsOpen (K' : Set G)) : HasCompactSupport (hfun K' U s a) := by
-  haveI : Finite (K' ⧸ U.subgroupOf K') := inferInstance
+  have : Finite (K' ⧸ U.subgroupOf K') := inferInstance
   refine HasCompactSupport.intro' (K := ⋃ q : K' ⧸ U.subgroupOf K', ⋃ g ∈ s,
     (Homeomorph.mulLeft (((q.out : K') : G) * g)⁻¹) ⁻¹' (K' : Set G)) ?_ ?_ ?_
   · exact isCompact_iUnion fun q => s.isCompact_biUnion fun g _ => (Homeomorph.isCompact_preimage _).2 hK'c
@@ -192,7 +192,7 @@ theorem levOp_hfun {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : Representati
   refine Finset.sum_congr rfl fun q _ => ?_
   rw [Finset.sum_comm (s := T)]
   refine Finset.sum_congr rfl fun g hg => ?_
-  rw [← LinearMap.sum_apply, Finset.sum_ite_eq, if_pos (hmemT q g hg), LinearMap.smul_apply,
+  rw [← LinearMap.sum_apply, Finset.sum_ite_eq, ite_eq_left (hmemT q g hg), LinearMap.smul_apply,
     LinearMap.comp_apply, LinearMap.id_apply, hout]
 
 end GlobalTheory.HeckeTraceIndep
@@ -203,16 +203,16 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
   intro G _ _ _ K hKo hKc K' hL ι _ σ hfix hne c hc i₀
   obtain ⟨hK'o, hK'K, -⟩ := hL
   have hK'c : IsCompact (K' : Set G) := hKc.of_isClosed_subset (Subgroup.isClosed_of_isOpen _ hK'o) hK'K
-  haveI : ∀ i, IsSimpleModule (MonoidAlgebra ℂ G) (σ i).ρ.asModule := fun i =>
+  have : ∀ i, IsSimpleModule (MonoidAlgebra ℂ G) (σ i).ρ.asModule := fun i =>
     (Representation.irreducible_iff_isSimpleModule_asModule _).mp (σ i).irred
   have hzero : ∀ i j, i ≠ j → ∀ f : (σ i).ρ.asModule →ₗ[MonoidAlgebra ℂ G] (σ j).ρ.asModule, f = 0 := by
     intro i j hij f
-    haveI := (σ i).irred
-    haveI := (σ j).irred
-    haveI : IsEmpty ((σ i).ρ.Equiv (σ j).ρ) := ⟨fun e => hij (hne i j ⟨e⟩)⟩
-    haveI := (Representation.IntertwiningMap.equivLinearMapAsModule (σ i).ρ (σ j).ρ).toEquiv.symm.subsingleton
+    have := (σ i).irred
+    have := (σ j).irred
+    have : IsEmpty ((σ i).ρ.Equiv (σ j).ρ) := ⟨fun e => hij (hne i j ⟨e⟩)⟩
+    have := (Representation.IntertwiningMap.equivLinearMapAsModule (σ i).ρ (σ j).ρ).toEquiv.symm.subsingleton
     exact Subsingleton.elim _ _
-  haveI : ∀ i, FiniteDimensional ℂ (fixed (σ i).ρ K') := fun i => (hfix i).1
+  have : ∀ i, FiniteDimensional ℂ (fixed (σ i).ρ K') := fun i => (hfix i).1
   let b : ∀ i, Module.Basis (Fin (Module.finrank ℂ (fixed (σ i).ρ K'))) ℂ (fixed (σ i).ρ K') :=
     fun i => Module.finBasis ℂ _
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.OrthogonalProjectionOnto.main (R := MonoidAlgebra ℂ G)
@@ -221,10 +221,10 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
   set s : Finset G := x.coeff.support
   set U : Subgroup G := conjInter K' s
   have hUo : IsOpen (U : Set G) := isOpen_conjInter K' hK'o s
-  haveI : CompactSpace K' := isCompact_iff_compactSpace.mp hK'c
-  haveI : Finite (K' ⧸ U.subgroupOf K') := Subgroup.quotient_finite_of_isOpen _ (by
-    rw [Subgroup.coe_subgroupOf]; exact hUo.preimage continuous_subtype_val)
-  letI : Fintype (K' ⧸ U.subgroupOf K') := Fintype.ofFinite _
+  have : CompactSpace K' := isCompact_iff_compactSpace.mp hK'c
+  have : Finite (K' ⧸ U.subgroupOf K') := Subgroup.quotient_finite_of_isOpen _ (by
+    rw [Subgroup.coe_subgroupOf]; exact hUo.preimage continuous_subtypeVal)
+  let : Fintype (K' ⧸ U.subgroupOf K') := Fintype.ofFinite _
   have hU : ∀ u ∈ U, ∀ g ∈ s, g⁻¹ * u * g ∈ K' := fun u hu => hu.2
   set f : G → ℂ := hfun K' U s (fun g => x.coeff g) with hf
   have hHecke : IsHecke K' f := ⟨hasCompactSupport_hfun K' U s _ hK'c hK'o,
@@ -248,14 +248,14 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
     rw [hact i _ (b i k).2]
     by_cases hi : i = i₀
     · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = b i k := by
-        exact hxk.trans (if_pos hi)
-      rw [if_pos hi, e]
+        exact hxk.trans (ite_eq_left hi)
+      rw [ite_eq_left hi, e]
       have h2 : ∀ q : K' ⧸ U.subgroupOf K', (σ i).ρ ((q.out : K') : G) (b i k : (σ i).V) = b i k :=
         fun q => fixed_apply (b i k).2 q.out
       simp only [h2, Finset.sum_const, Finset.card_univ]
       rw [← Nat.cast_smul_eq_nsmul ℂ, smul_smul]
-    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = 0 := hxk.trans (if_neg hi)
-      rw [if_neg hi, e]
+    · have e : (σ i).ρ.asAlgebraHom x (b i k : (σ i).V) = 0 := hxk.trans (ite_eq_right hi)
+      rw [ite_eq_right hi, e]
       simp
   have hfixedEq : ∀ i, ∀ v ∈ fixed (σ i).ρ K', levOp (σ i).ρ K K' f LinearMap.id v =
       (if i = i₀ then r⁻¹ * N else 0) • v := by
@@ -283,16 +283,16 @@ theorem twTr_linearIndependent : ∀ (G : Type) [Group G] [TopologicalSpace G] [
     rw [this, map_smul, LinearMap.trace_id, smul_eq_mul]
   have hsum := hc f hHecke
   simp only [htr] at hsum
-  rw [Finset.sum_eq_single i₀ (fun i _ hi => by simp [hi]) (by simp), if_pos rfl] at hsum
+  rw [Finset.sum_eq_single i₀ (fun i _ hi => by simp [hi]) (by simp), ite_eq_left rfl] at hsum
   have hr : r ≠ 0 := by
-    haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
-    haveI : Finite (K ⧸ K'.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ (by
-      rw [Subgroup.coe_subgroupOf]; exact hK'o.preimage continuous_subtype_val)
+    have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+    have : Finite (K ⧸ K'.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ (by
+      rw [Subgroup.coe_subgroupOf]; exact hK'o.preimage continuous_subtypeVal)
     rw [hr_def, Nat.cast_ne_zero]
     exact Subgroup.index_ne_zero_of_finite
   have hN : (N : ℂ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
   have hd : (Module.finrank ℂ (fixed (σ i₀).ρ K') : ℂ) ≠ 0 := by
-    haveI : Nontrivial (fixed (σ i₀).ρ K') := Submodule.nontrivial_iff_ne_bot.2 (hfix i₀).2
+    have : Nontrivial (fixed (σ i₀).ρ K') := Submodule.nontrivial_iff_ne_bot.2 (hfix i₀).2
     exact_mod_cast Module.finrank_pos.ne'
   exact (mul_eq_zero.1 hsum).resolve_right (mul_ne_zero (mul_ne_zero (inv_ne_zero hr) hN) hd)
 
@@ -351,7 +351,7 @@ private theorem smoothOp_eq_levOp (m : Measure G) [m.IsHaarMeasure] {U : Subgrou
   rw [finsum_eq_sum_of_support_subset (s := hs.toFinset) _ (by
     intro q hq
     simp only [Function.mem_support, ne_eq] at hq
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h0
     exact hq (by rw [h0, zero_smul]))]
   refine GlobalTheory.OpTrace.eq_of_forall_dual fun l => ?_
@@ -391,12 +391,12 @@ theorem UpperTheory.ConvolutionTheory.C.charIndep :
   obtain ⟨hUc, hUo⟩ := hU
   have hfx : ∀ i, fixed (σ i).ρ U = fixedVectors (σ i).ρ U := fun i =>
     Submodule.ext fun v => GlobalTheory.OpTrace.mem_fixed
-  haveI hfd' : ∀ i, FiniteDimensional ℂ (fixed (σ i).ρ U) := fun i => by rw [hfx i]; exact hfd i
+  have hfd' : ∀ i, FiniteDimensional ℂ (fixed (σ i).ρ U) := fun i => by rw [hfx i]; exact hfd i
   let S : Setoid ι := ⟨fun i j => Nonempty ((σ i).ρ.Equiv (σ j).ρ),
     ⟨fun i => ⟨Representation.Equiv.refl _⟩, fun ⟨e⟩ => ⟨e.symm⟩, fun ⟨e⟩ ⟨e'⟩ => ⟨e.trans e'⟩⟩⟩
   let mk : ι → Quotient S := Quotient.mk S
   let r : Quotient S → ι := Quotient.out
-  haveI : Fintype (Quotient S) := Fintype.ofFinite _
+  have : Fintype (Quotient S) := Fintype.ofFinite _
   have hmkr : ∀ q, mk (r q) = q := fun q => Quotient.out_eq q
   have hr : ∀ i, Nonempty ((σ i).ρ.Equiv (σ (r (mk i))).ρ) := fun i =>
     (Quotient.exact (hmkr (mk i))).elim fun e => ⟨e.symm⟩
@@ -419,7 +419,7 @@ theorem UpperTheory.ConvolutionTheory.C.charIndep :
       ⟨_, isIntegralOp_smoothOp m (σ i).smooth hlc hf.1, hfr i, rfl⟩)
     have hconst : ∀ i, s i = s (r (mk i)) := fun i => by
       obtain ⟨e⟩ := hr i
-      haveI := hfr i
+      have := hfr i
       exact ((finRankTrace_eq_of_equiv e.toLinearEquiv (T := smoothOp (σ i).ρ m f)
         (T' := smoothOp (σ (r (mk i))).ρ m f)
         ((σ i).smooth.map_smoothOp_of_intertwining (σ (r (mk i))).smooth hlc hf.1 e.toLinearEquiv.toLinearMap
@@ -462,7 +462,7 @@ theorem UpperTheory.ConvolutionTheory.C.charIndep :
   have hset : {i | Nonempty ((σ i).ρ.Equiv (σ i₀).ρ)} =
       ↑(Finset.univ.filter fun i => mk i = mk i₀) := by
     ext i
-    simp only [Set.mem_setOf_eq, Finset.coe_filter, Finset.mem_univ, true_and]
+    simp only [Set.mem_ofPred_eq, Finset.coe_filter, Finset.mem_univ, true_and]
     exact ⟨fun h => Quotient.sound h, fun h => Quotient.exact h⟩
   rw [hset, finsum_mem_coe_finset]
   exact hfin
@@ -499,7 +499,7 @@ private theorem fixed_fd (U : Subgroup (Gw n v)) (hU : CO U) (σ : SmIrr (Gw n v
   exact h2
 
 private theorem td : TotallyDisconnectedSpace (Gw n v) := by
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) (v.adicCompletion K)) :=
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) (v.adicCompletion K)) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → v.adicCompletion K))
   exact ⟨isTotallyDisconnected_of_image Units.continuous_val.continuousOn Units.val_injective
     (isTotallyDisconnected_of_totallyDisconnectedSpace _)⟩
@@ -519,18 +519,18 @@ theorem UpperTheory.ConvolutionTheory.T.absLast :
   let σ : Option ι → SmIrr (Gw n v) := fun o => o.elim τ₀ τ
   let C : Option ι → ℂ := fun o => o.elim (c * ((Multiset.filter (· = ζ) Z₀).card : ℂ))
     (fun i => -(a i * ((Multiset.filter (· = ζ) (Z i)).card : ℂ)))
-  haveI : m.IsMulRightInvariant := GroundTheory.Automorphic.Measures.isMulRightInvariant_GL (v.adicCompletion K) n m
-  haveI : LocallyCompactSpace (Gw n v) :=
+  have : m.IsMulRightInvariant := GroundTheory.Automorphic.Measures.isMulRightInvariant_GL (v.adicCompletion K) n m
+  have : LocallyCompactSpace (Gw n v) :=
     hU.1.locallyCompactSpace_of_mem_nhds_of_group (hU.2.mem_nhds U.one_mem)
-  haveI : T2Space (Gw n v) := Units.isEmbedding_embedProduct.t2Space
-  haveI : TotallyDisconnectedSpace (Gw n v) := td
+  have : T2Space (Gw n v) := Units.isEmbedding_embedProduct.t2Space
+  have : TotallyDisconnectedSpace (Gw n v) := td
   have key := UpperTheory.ConvolutionTheory.C.charIndep (Gw n v) m U hU (Option ι) σ C (fun o => fixed_fd U hU (σ o)) ?_ none hfix
   · have hset : {o : Option ι | Nonempty ((σ o).ρ.Equiv (σ none).ρ)} = {none} := by
       ext o
       cases o with
       | none => exact ⟨fun _ => rfl, fun _ => ⟨Representation.Equiv.refl (σ none).ρ⟩⟩
       | some i =>
-        simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, reduceCtorEq, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, reduceCtorEq, iff_false]
         exact fun h => hno ⟨i, h⟩
     rw [hset, finsum_mem_singleton] at key
     exact (mul_ne_zero hc hk) key

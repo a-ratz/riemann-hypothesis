@@ -116,7 +116,7 @@ private lemma subst_pderiv_inr_cob1_eq_sum_sub_C {R : Type} [CommRing R] {d : �
 
   simp only [map_sub, map_sum, map_mul, map_zero, mul_zero, Finset.sum_const_zero, sub_zero,
   apply_ite, map_one, mul_ite, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true]
+  Finset.mem_univ, ite_true]
   simp only [coe_substAlgHom]
   have h1 : (fun s => subst (Sum.elim (X : Fin d → MvPowerSeries (Fin d) R) (0 : Fin d → MvPowerSeries (Fin d) R)) (μ s)) = X :=
     funext hadd
@@ -222,7 +222,7 @@ private lemma coeff_single_inr_eq_ite_of_add_id_of_symm {R : Type} [CommRing R] 
   rw [← h]
   by_cases hkj : k = j
   · subst hkj; simp
-  · rw [if_neg, if_neg hkj]
+  · rw [ite_eq_right, ite_eq_right hkj]
     intro h'
     exact hkj (Finsupp.single_left_injective one_ne_zero h').symm
 
@@ -332,7 +332,7 @@ theorem _root_.GlobalTheory.PeriodExists.main : ∀ (p : ℕ) [Fact p.Prime] (C 
   have hex : ∃ y, c.HasPeriod F.θ t f y := by
     classical
     have hF := F.frame
-    haveI : IsAdicComplete (Ideal.span {(p : F.B)}) F.B :=
+    have : IsAdicComplete (Ideal.span {(p : F.B)}) F.B :=
       hF.complete
     obtain ⟨hf0, hlin, hcob⟩ := hf
     have hD : _root_.GlobalTheory.QLog.DIn (⊤ : Ideal F.B) f := by

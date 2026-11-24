@@ -99,7 +99,7 @@ variable {E K : Type} [Field E] [NumberField E] [StarRing E] [Field K] {P : Heig
 
 theorem ocbPhi_unitV (σ : K →+* ℂ) (χ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) (a : E) :
     σ (LocE.unitV χ a) = @ocbChiV (𝓞 E ⧸ P.asIdeal) (resField P) ((Units.map (σ : K →* ℂ)).comp χ) (redP P a) := by
-  letI := resField P
+  let := resField P
   unfold LocE.unitV ocbChiV
   by_cases hx : redP P a = 0
   · have hnu : ¬ IsUnit (redP P a) := by
@@ -157,7 +157,7 @@ theorem ocbPhiGS_red (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) 
         k₀ m t j n' c n ybar := by
   obtain ⟨hk', hk, haN, hsrc, hk1, hm4⟩ := ocbPhi_ranks hr
   subst hc'
-  letI := resField P
+  let := resField P
   have hqn : q ≠ 0 := by
     rintro rfl
     exact hu (by simp)

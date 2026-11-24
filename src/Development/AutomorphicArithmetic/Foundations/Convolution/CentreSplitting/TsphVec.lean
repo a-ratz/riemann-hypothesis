@@ -102,7 +102,7 @@ private theorem tj_eq (w : Pl K) {ϖ ϖ₀ : w.adicCompletion K} (h : IsUnifV K 
   unfold Tj dosetInd
   congr 1
   ext g
-  rw [DoubleCoset.mem_doubleCoset, Set.mem_setOf_eq, e]
+  rw [DoubleCoset.mem_doubleCoset, Set.mem_ofPred_eq, e]
   constructor
   · rintro ⟨a, ha, b, hb, hg⟩
     refine ⟨a, ha, k * b, mul_mem hk hb, Units.ext ?_⟩
@@ -137,7 +137,7 @@ private theorem hop_apply (J : Subgroup (GL (Fin n) (w.adicCompletion K))) (x : 
       exact ⟨x, Finset.mem_singleton_self x, ⟨a, ha⟩, ⟨b, hb⟩, e⟩
     · simp [dosetInd, (out_mem_iff J x c).2 hc]
   rw [Hop, ContinuousLinearMap.comp_apply, hp, finsum_mem_eq_finite_toFinset_sum _ hS,
-    ContinuousLinearMap.sum_apply, ← finsum_mem_eq_finite_toFinset_sum _ hS, finsum_mem_def, heckeVec]
+    sum_apply, ← finsum_mem_eq_finite_toFinset_sum _ hS, finsum_mem_def, heckeVec]
   refine finsum_congr fun c => ?_
   by_cases hc : ∃ k ∈ J, c = QuotientGroup.mk (k * x)
   · rw [Set.indicator_of_mem (by exact hc), dosetInd, Set.indicator_of_mem ((out_mem_iff J x c).2 hc), rhoLoc]
@@ -180,10 +180,10 @@ private theorem tsph_iff {V : Submodule ℂ (LL μ)} (hV : IsSummand μ V) (B : 
       congr 1
       funext a
       by_cases ha : a ≤ i
-      · rw [if_pos ha, if_pos (Nat.lt_succ_of_le ha), zpow_one]
-      · rw [if_neg ha, if_neg (fun h' => ha (Nat.le_of_lt_succ h')), zpow_zero])
+      · rw [ite_eq_left ha, ite_eq_left (Nat.lt_succ_of_le ha), zpow_one]
+      · rw [ite_eq_right ha, ite_eq_right (fun h' => ha (Nat.le_of_lt_succ h')), zpow_zero])
   rw [kgl_eq] at hv
-  rw [Tsph, ContinuousLinearMap.smul_apply, scal, kgl_eq, hop_apply μ w _ _ (Final.GLintComm K w n) hv, ← ht]
+  rw [Tsph, smul_apply, scal, kgl_eq, hop_apply μ w _ _ (Final.GLintComm K w n) hv, ← ht]
   exact ⟨fun h' => Subtype.ext (e.trans h'), fun h' => e.symm.trans (congrArg Subtype.val h')⟩
 
 end SlopeTestRemainingChoices

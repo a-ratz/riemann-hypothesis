@@ -133,7 +133,7 @@ private def cgrp (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
 private theorem isOpen_cgrp (n : ℕ) :
     IsOpen (cgrp K n : Set (Matrix.SpecialLinearGroup (Fin 2) K)) := by
   have hc : Continuous fun g : Matrix.SpecialLinearGroup (Fin 2) K => g.1 - 1 :=
-    continuous_subtype_val.sub continuous_const
+    continuous_subtypeVal.sub continuous_const
   exact (isOpen_boxSet _).preimage hc
 
 private theorem isCompact_cgrp [T2Space K] (n : ℕ) :

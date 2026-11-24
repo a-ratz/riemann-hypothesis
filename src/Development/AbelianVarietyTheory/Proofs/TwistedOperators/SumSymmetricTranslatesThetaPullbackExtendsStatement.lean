@@ -172,7 +172,7 @@ theorem expands_pull_every_level (hLaws : Laws) (P : Geo.Tor.PELUnif (maximalIde
     letI := H.starRing
     ∃ F' : Fam P.D.toPre (FractionRing V) (k * N), P.U.Expands (k * N) s' F' ∧
       PullAl P.D (FractionRing V) P.oD a k N F F' := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨uΨ, huΨ, -, -⟩ := P.w0
   have hM : P.D.toPre.P.L.IsLB := P.D.toPre.P.isLB
   obtain ⟨F', hF'⟩ := exists_pullAl P.D (FractionRing V) hM P.oD H.w0 uΨ huΨ a N hN hN0 k F
@@ -808,7 +808,7 @@ theorem nuK_pull [IsAdicComplete (maximalIdeal V) V] [CharZero V]
     (htw : IsTwistPull tK.G tK.PP.L (lift (fst _ _) μ') μ' (lift_snd _ _) a' b' α F₁ h₁) :
     NuK P Q vK m w a (zCast tK.G ea h₁) := by
   subst ea eb ef eμ
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨s, F, hs, hF, hν⟩ := h0
   obtain ⟨s', hs', hrel⟩ := exists_pullRel_tie m w hw P π a b F₁ h₁ α₀ α hα hn hc htw s hs
   obtain ⟨F', hF', huniq⟩ := (P.U.expand a ha).1 s'

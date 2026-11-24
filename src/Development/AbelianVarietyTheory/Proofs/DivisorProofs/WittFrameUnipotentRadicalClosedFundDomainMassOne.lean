@@ -55,7 +55,7 @@ theorem unipRad_frame_closed_mass_one : ∀ (F E : Type) [Field F] [NumberField 
     ext i j
     rfl
   have hC : GlobalTheory.UAut.IsIsoCols σ J X := e ▸ GlobalTheory.UAut.isIsoCols_of_isWittFrame hW (sigma_sigma h) hJ _
-  haveI := GlobalTheory.UAut.locallyCompact_unipRad h hJ hC
+  have := GlobalTheory.UAut.locallyCompact_unipRad h hJ hC
   exact ⟨GlobalTheory.UAut.unipFlag_const (σ := σ) (J := J) X 0 ▸ GlobalTheory.UAut.isClosed_unipFlag hJ (sigma_sigma h) hC _,
     GlobalTheory.UAut.exists_mass_one (GlobalTheory.UAut.cocompact_unipRad h hJ hC)⟩
 

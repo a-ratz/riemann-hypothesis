@@ -86,7 +86,7 @@ theorem isNilpotent_of_isUp {u : GG g N} (hu : IsUp g N u) : IsNilpotent (u.val 
     have h' : b < a := h
     simp [Matrix.sub_apply, hu.2 a b h', Matrix.one_apply_ne h'.ne']
   have hc := Matrix.aeval_self_charpoly (u.val - 1)
-  rw [Matrix.charpoly_of_upperTriangular _ ht] at hc
+  rw [Matrix.charpoly_of_isUpperTriangular _ ht] at hc
   refine ⟨N, ?_⟩
   simpa [Matrix.sub_apply, hu.1] using hc
 

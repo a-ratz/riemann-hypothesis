@@ -70,10 +70,10 @@ theorem cycZ_eq_χQ (g : ↥(GK Bw.Kw)) :
   set x' : ℚ_[l] := ((P.χQ (g : GQ l) : ℚ_[l]ˣ) : ℚ_[l]) with hx'
   have key : ∀ m : ℕ, ‖x - x'‖ ≤ (l : ℝ) ^ (-(m : ℤ)) := by
     intro m
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-    haveI : NeZero ((l ^ m : ℕ) : Ω) := ⟨by exact_mod_cast pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-    obtain ⟨ζ', hζ'⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+    have : NeZero ((l ^ m : ℕ) : Ω) := ⟨by exact_mod_cast pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    obtain ⟨ζ', hζ'⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
     have hζ : IsPrimitiveRoot (Bw.j ζ') (l ^ m) := hζ'.map_of_injective Bw.j.injective
     obtain ⟨a, ha, hxa⟩ := Formalism.AdicCompletionExports.isCycG_cycZ l E Ω ℤ_[l] (RingHom.id _)
       ((Br.ι Bw g : Gw) : Ω ≃ₐ[E] Ω) m ζ' hζ'.pow_eq_one
@@ -143,7 +143,7 @@ theorem cycMatch_rec {w : ℕ} (hn : K.plOf i dc w ∈ placesOver D.host.E (D.nd
   have hχ := (D.loc (D.nd.l i)).PD_χ (D.nbr i _ hn).Kw g
   simp only [eK, RingEquiv.ofBijective_apply, Br.toLLK, IsFractionRing.lift_algebraMap, LocBridge.toLL,
     RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe, epsU, Glob.epsO, MonoidHom.comp_apply,
-    Units.coe_map, MonoidHom.coe_coe, cycLL, Br.PD, RingHom.toMonoidHom_eq_coe, RingHom.coe_monoidHom_mk, MonoidHom.coe_mk, OneHom.coe_mk,
+    Units.coe_map, MonoidHom.coe_ofClass, cycLL, Br.PD, RingHom.toMonoidHom_eq_coe, RingHom.toMonoidHom_mk, MonoidHom.coe_mk, OneHom.coe_mk,
     LocBridge.eO_alg]
   rw [← IsScalarTower.algebraMap_apply, hχ, ← hP]
   first

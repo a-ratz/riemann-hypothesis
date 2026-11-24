@@ -186,7 +186,7 @@ theorem contDiffOn_step (F : Set (ℝ → Mat n → V))
   refine (congrArg (fun L => L (τ, ξ)) e1).trans ?_
   simp only [ContinuousLinearMap.coprod_apply, ContinuousLinearMap.smulRight_apply]
   rw [fderiv_frame _ hz.2]
-  simp only [ContinuousLinearMap.one_apply]
+  simp only [one_apply_eq_self]
   congr 1
   exact Finset.sum_congr rfl fun p _ => by rw [hf p s y hz.2]
 
@@ -253,7 +253,7 @@ theorem rwLin : RwLin := by
       ∑ i, L i (fderiv ℝ (Rw w (f i)) x (x * bs p))
     rw [e.fderiv_eq]
     refine (DFunLike.congr_fun hsum (x * bs p)).trans ?_
-    exact ContinuousLinearMap.sum_apply _ _ _
+    exact sum_apply _ _ _
 
 end GlobalTheory.CompanionTheory.WaveK.Base.RwLinPf
 end -- clump:auto
@@ -373,7 +373,7 @@ theorem contDiffOn_step (F : Set (ℝ → Mat n → V))
   refine (congrArg (fun L => L (τ, ξ)) e1).trans ?_
   simp only [ContinuousLinearMap.coprod_apply, ContinuousLinearMap.smulRight_apply]
   rw [fderiv_frame _ hz.2]
-  simp only [ContinuousLinearMap.one_apply]
+  simp only [one_apply_eq_self]
   congr 1
   exact Finset.sum_congr rfl fun p _ => by rw [hf p s y hz.2]
 
@@ -415,7 +415,7 @@ variable [MeasurableSpace (G n)] [BorelSpace (G n)] {μ : Measure (G n)} [μ.IsH
 variable {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
 
 theorem cls_of {K : Mat n → V} (h : MemLp (fun y : G n => K y.val) 2 μ) : cls μ K = h.toLp _ :=
-  dif_pos h
+  dite_eq_left h
 
 theorem norm_cls_sq {K : Mat n → V} (h : MemLp (fun y : G n => K y.val) 2 μ) :
     ‖cls μ K‖ ^ 2 = ∫ y : G n, ‖K y.val‖ ^ 2 ∂μ := by

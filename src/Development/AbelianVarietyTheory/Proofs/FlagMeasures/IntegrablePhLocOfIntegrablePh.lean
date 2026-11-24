@@ -112,7 +112,7 @@ variable {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [Inne
 theorem continuous_coefOn (hU : IsURepOn (UJset ε) σ) (v w : H) : Continuous (coefOn (ε := ε) σ v w) := by
   obtain ⟨-, -, hcont⟩ := hU
   have hσ : Continuous fun g : Formalism.REAL.UJ ε => σ (umat g) v :=
-    (hcont v).comp_continuous (Units.continuous_val.comp continuous_subtype_val) fun g => g.2
+    (hcont v).comp_continuous (Units.continuous_val.comp continuous_subtypeVal) fun g => g.2
   exact continuous_const.inner hσ
 
 theorem coefOn_one (hU : IsURepOn (UJset ε) σ) {w : H} (hw : ‖w‖ = 1) : coefOn (ε := ε) σ w w 1 = 1 := by

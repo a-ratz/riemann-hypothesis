@@ -98,7 +98,7 @@ theorem flat_of_levels {B E : Type} [CommRing B] [IsNoetherianRing B] [CommRing 
     (hden : ∀ (y : E) (k : ℕ), ∃ b : B, algebraMap B E b - y ∈ Ideal.span {(algebraMap B E p) ^ k}) :
     Module.Flat B E := by
   set I : Ideal B := Ideal.span {p} with hI
-  haveI : IsAdicComplete I E := by
+  have : IsAdicComplete I E := by
     rw [← IsAdicComplete.map_algebraMap_iff (S := E)]
     rwa [hI, Ideal.map_span, Set.image_singleton]
   let f : B →ₗ[B] E := Algebra.linearMap B E
@@ -169,12 +169,12 @@ theorem flat_letA (O : Type) [CommRing O] [IsNoetherianRing O] (n : ℕ) [NeZero
     Module.Flat (LetA O n) E := by
   let B := Localization.Away (letπ : LetA O n)
   let g : B →+* E := IsLocalization.Away.lift (S := B) (letπ : LetA O n) hπ
-  letI : Algebra B E := g.toAlgebra
+  let : Algebra B E := g.toAlgebra
   have hg : ∀ a : LetA O n, algebraMap B E (algebraMap (LetA O n) B a) = algebraMap (LetA O n) E a :=
     fun a => IsLocalization.Away.lift_eq (S := B) (letπ : LetA O n) hπ a
-  haveI : IsScalarTower (LetA O n) B E := IsScalarTower.of_algebraMap_eq fun a => (hg a).symm
+  have : IsScalarTower (LetA O n) B E := IsScalarTower.of_algebraMap_eq fun a => (hg a).symm
   have hp : algebraMap B E (p : B) = (p : E) := map_natCast _ _
-  haveI : Module.Flat B E := by
+  have : Module.Flat B E := by
     refine flat_of_levels (p : B) (by rwa [hp]) ?_ ?_
     · intro b k hb
       rw [hp] at hb
@@ -319,20 +319,20 @@ theorem kernel_freeA : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F 
       (GlobalTheory.Decompl.fontaine_and_decompletion D HW F) l K s LL h T₀ T₁ T₂ ι π hses
   obtain ⟨hinj, hex, -⟩ := hexact
   obtain ⟨_, -, hl⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
-  haveI := ((D.loc l).PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := ((D.loc l).PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   have hproj := (HW l).W_proj K s LL h T₁
   set N₀ := (W.N T₁).comap ((W.map ι).restrictScalars (AA K LL)) with hN₀
-  haveI : Module.Free W.EE (W.DD T₀) := (W.DD_free T₀).1
-  haveI : IsNoetherianRing ↥(OL LL) := inferInstance
-  haveI : IsNoetherianRing (PowerSeries ↥(OL LL)) := inferInstance
-  haveI : IsNoetherianRing (AA K LL) :=
+  have : Module.Free W.EE (W.DD T₀) := (W.DD_free T₀).1
+  have : IsNoetherianRing ↥(OL LL) := inferInstance
+  have : IsNoetherianRing (PowerSeries ↥(OL LL)) := inferInstance
+  have : IsNoetherianRing (AA K LL) :=
     inferInstanceAs (IsNoetherianRing (ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → PowerSeries ↥(OL LL)))
-  haveI : Module.Finite (AA K LL) ↥(W.N T₁) := Module.Finite.iff_fg.mpr (W.N_fg T₁)
+  have : Module.Finite (AA K LL) ↥(W.N T₁) := Module.Finite.iff_fg.mpr (W.N_fg T₁)
   have hfin : Module.Finite (AA K LL) ↥N₀ := by
     let g : ↥N₀ →ₗ[AA K LL] ↥(W.N T₁) :=
       ((W.map ι).restrictScalars (AA K LL)).restrict (fun x hx => hx)
-    haveI : IsNoetherian (AA K LL) ↥(W.N T₁) := isNoetherian_of_isNoetherianRing_of_finite _ _
+    have : IsNoetherian (AA K LL) ↥(W.N T₁) := isNoetherian_of_isNoetherianRing_of_finite _ _
     exact Module.Finite.of_injective g fun a b hab =>
       Subtype.ext (hinj (congrArg Subtype.val hab))
   have hl0 : ((l : ℕ) : ↥(OL LL)) ≠ 0 := by
@@ -538,7 +538,7 @@ theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
     intro h0
     have := congrArg (fun x : ↥(OL LL) => (x : ↥LL.1)) h0
     simp [(Fact.out : l.Prime).ne_zero] at this
-  haveI : Nontrivial W.EE :=
+  have : Nontrivial W.EE :=
     ⟨⟨algebraMap (AA K LL) W.EE 0, algebraMap (AA K LL) W.EE 1, fun h0 => zero_ne_one (W.EE_inj h0)⟩⟩
   refine GlobalTheory.NL.PhiFlat.phi_flat W T hT bN hQ (W.DD_free T).2 l ?_ z hz hsum
   intro w hw
@@ -689,8 +689,8 @@ theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
   have hex : Function.Injective (W.map ι) ∧ Function.Exact (W.map ι) (W.map π) ∧
       Function.Surjective (W.map π) := by
     let E := ((F l).E K s LL h).tie
-    haveI := GlobalTheory.EtaleExact.finite_OL LL
-    haveI : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
+    have := GlobalTheory.EtaleExact.finite_OL LL
+    have : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
     have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
     refine GlobalTheory.EtaleExact.exact_of_tie E (GlobalTheory.EtaleExact.map_ne_top_of_tie E ?_ ?_) T₀ T₁ T₂ ι π hses
     · rw [hp]
@@ -724,8 +724,8 @@ theorem mem_N_of_map_mem : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
   intro D HW F l _ K s LL h W E T₀ T₁ T₂ ι π h0 h1 h2 hses x hx
   have hex : Function.Injective (W.map ι) ∧ Function.Exact (W.map ι) (W.map π) ∧
       Function.Surjective (W.map π) := by
-    haveI := GlobalTheory.EtaleExact.finite_OL LL
-    haveI : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
+    have := GlobalTheory.EtaleExact.finite_OL LL
+    have : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
     refine GlobalTheory.EtaleExact.exact_of_tie E (GlobalTheory.EtaleExact.map_ne_top_of_tie E ?_ ?_) T₀ T₁ T₂ ι π hses
     · rw [(D.loc l).PD_p K]
       exact GlobalTheory.EtaleExact.isUnit_or_dvd_pow (D.loc l) LL
@@ -734,11 +734,11 @@ theorem mem_N_of_map_mem : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
   have key := _root_.GlobalTheory.NL.FrobeniusMatrixUniqueness.main D HW F l K s LL h T₀ h0
   obtain ⟨hinj, hexact, hsurj⟩ : Function.Injective (W.map ι) ∧ Function.Exact (W.map ι) (W.map π) ∧
       Function.Surjective (W.map π) := hex
-  haveI := GlobalTheory.EtaleExact.finite_OL LL
-  haveI : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
-  haveI := ((D.loc l).PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
-  haveI : Module.Flat (AA K LL) W.EE :=
+  have := GlobalTheory.EtaleExact.finite_OL LL
+  have : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
+  have := ((D.loc l).PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : Module.Flat (AA K LL) W.EE :=
     _root_.GlobalTheory.FlatLocCompl.flat_letA _ _ W.EE ((D.loc l).PD K).p W.EE_π W.EE_complete W.EE_dense W.EE_sat
   have hbc : IsBaseChange W.EE ((W.N T₁).comap ((W.map ι).restrictScalars (AA K LL))).subtype :=
     _root_.GlobalTheory.isBaseChange_comap_of_exact (AA K LL) W.EE _ _ _ (W.map ι) (W.map π) (W.N T₁) (W.N T₂) hinj hexact hsurj

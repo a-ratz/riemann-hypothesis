@@ -253,7 +253,7 @@ theorem ps_split {q : ℕ} [NeZero q] {A : Type} [CommRing A] {ζ ξ : A} (hq : 
         fun k hk => by
           rw [← hT k hk]; exact Finset.sum_congr rfl fun i _ => by ring
       rw [Finset.sum_congr rfl hT2]
-      rw [Finset.sum_ite_eq' (Finset.range q) 0, if_pos (Finset.mem_range.2 hq0)]
+      rw [Finset.sum_ite_eq' (Finset.range q) 0, ite_eq_left (Finset.mem_range.2 hq0)]
     rw [hsum, hc]
   · have h1 : c * S i * η i = c * S i := by rw [mul_assoc, hSη]
     calc c * S i * ξ = c * S i * ξ * (w * ζ) ^ (i : ℕ) := by rw [hw, one_pow, mul_one]
@@ -356,7 +356,7 @@ theorem ConnLoc_pf : ConnLoc := by
   have hi : ∀ i, P (𝒰.X i) (𝒰.f i) ∨ Q (𝒰.X i) (𝒰.f i) := fun i => hSs _ _ (h𝒰 _ _ (Presieve.ofArrows.mk i))
   have hcov := ((Scheme.presieve₀_mem_precoverage_iff _).mp 𝒰.mem₀).1
   have hop : ∀ i, IsOpen (Set.range (𝒰.f i)) := fun i => by
-    haveI : Etale (𝒰.f i) := 𝒰.map_prop i
+    have : Etale (𝒰.f i) := 𝒰.map_prop i
     exact (𝒰.f i).isOpenMap.isOpen_range
   let A : Set X := ⋃ (i) (_ : P (𝒰.X i) (𝒰.f i)), Set.range (𝒰.f i)
   let B : Set X := ⋃ (i) (_ : ¬ P (𝒰.X i) (𝒰.f i)), Set.range (𝒰.f i)
@@ -429,7 +429,7 @@ theorem PtLift_of (hC : PtCov) : PtLift := by
 
 theorem tateTwistSection_constantOnPoints_of_connLoc_lift (hT : LateralTheory.EtaleFoundations.CongruenceLocalDecomposition.TwLoc) (hL : ConnLoc) (hP : PtLift) : EtaleTateTwistSectionConstantOnPointsOfConnectedProper := by
   intro l _ k _ _ hl j X p hp s hX y y'
-  haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hq : ((l ^ j : ℕ) : k) ≠ 0 := by push_cast; exact pow_ne_zero _ hl
   obtain ⟨ζ0⟩ := primK k (l ^ j) hq
   let φ : k →+* Γ(X, ⊤) := (p.appTop).hom.comp (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom
@@ -474,7 +474,7 @@ theorem tateTwistSection_constantOnPoints_of_connLoc_lift (hT : LateralTheory.Et
         | (rw [mul_nsmul, q_nsmul, smul_zero])
     · right
       intro W h hW hz
-      haveI := hW
+      have := hW
       apply hqc
       rw [res_comp, hc, res_nsmul, (hT (l ^ j) 0).2.2] at hz
       exact (hT (l ^ j) 0).2.1 W _ c hz
@@ -814,7 +814,7 @@ section Field
 variable {q : ℕ} [NeZero q] {k : Type} [Field k]
 
 theorem prim_isPrim (ζ : Prim q k) : IsPrimitiveRoot ζ.1 q := by
-  haveI : NeZero (q : k) := ⟨ζ.2.1.ne_zero⟩
+  have : NeZero (q : k) := ⟨ζ.2.1.ne_zero⟩
   rw [← Polynomial.isRoot_cyclotomic_iff]
   have h := ζ.2.2
   simpa [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic] using h
@@ -896,7 +896,7 @@ theorem ring_tors {q : ℕ} [NeZero q] (i : ℤ) {A : Type} [CommRing A] [Nontri
     (h : c • (Submodule.Quotient.mk (Finsupp.single ζ 1) : (Prim q A →₀ ULift.{1} (ZMod q)) ⧸ twRel q i A) = 0) :
     q ∣ c := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
   let f : A →+* A ⧸ m := Ideal.Quotient.mk m
   have h2 := congrArg (Submodule.mapQ _ _ (Finsupp.lmapDomain (ULift.{1} (ZMod q)) (ULift.{1} (ZMod q)) (Prim.map f))
     (twRel_le q i f)) h
@@ -920,7 +920,7 @@ theorem TwTors_of : LateralTheory.EtaleFoundations.TwLocPf.TwTors := by
     simpa using this
   have hS := Presheaf.equalizerSieve_mem Scheme.etaleTopology (toSheafify Scheme.etaleTopology P) (c • x) 0 h1
   obtain ⟨𝒰, hle⟩ := Scheme.exists_cover_of_mem_grothendieckTopology hS
-  haveI := jsEt
+  have := jsEt
   obtain ⟨j, y, -⟩ := 𝒰.exists_eq (Classical.arbitrary U)
   have hj := hle _ _ (Presieve.ofArrows.mk j)
   simp only [Presheaf.equalizerSieve_apply, map_zero] at hj
@@ -1010,7 +1010,7 @@ private theorem sec_res_sec_map_comm {R : Type} [CommRing R] {F G : Shv R} (φ :
 private theorem lowPt (hA : A9) (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [IsAlgClosed k] (hl : (l : k) ≠ 0) (j : ℕ) :
     (∀ z : Ht (l ^ j) (sch.obj (S k)) 0 0, ∃ a : ℕ, z = a • one (l ^ j) (sch.obj (S k))) ∧
       ∀ a : ℕ, a • one (l ^ j) (sch.obj (S k)) = 0 → l ^ j ∣ a := by
-  haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨_, e, _, he2⟩ := hA (ZMod (l ^ j)) (tw (l ^ j) 0)
   obtain ⟨ζ0⟩ := exists_prim l k hl j
   let φ : ((Prim (l ^ j) Γ(S k, ⊤)) →₀ ULift.{1, 0} (ZMod (l ^ j))) →ₗ[ULift.{1, 0} (ZMod (l ^ j))]

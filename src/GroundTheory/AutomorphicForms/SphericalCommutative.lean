@@ -137,7 +137,7 @@ theorem map_transposeInv : μ.map (transposeInv F n) = μ := by
     rw [map_apply continuous_transposeInv.measurable (isOpen_integralGL F n).measurableSet, hpre]
   have hc : haarScalarFactor (μ.map (transposeInv F n)) μ = 1 := by
     have h := congrArg (fun ν : Measure (GL (Fin n) F) => ν K) e
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h
     rw [hK] at h
     have := (ENNReal.mul_eq_right hK0 hKT).1 h.symm
     exact_mod_cast this

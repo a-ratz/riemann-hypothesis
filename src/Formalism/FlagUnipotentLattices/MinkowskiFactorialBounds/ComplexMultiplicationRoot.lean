@@ -65,11 +65,11 @@ theorem integer_group_preservation : Formalism.HermitianLatticeCounting.LocalInt
   have mem : ∀ x y : E, IsInt x → IsInt y → (∃ w : 𝓞 E, x + y = (g : E) * (w : E)) →
       (x, y) ∈ (ZZ g : Set (E × E)) := by
     intro x y hx hy hw
-    simp only [ZZ, Set.mem_setOf_eq]
+    simp only [ZZ, Set.mem_ofPred_eq]
     exact ⟨hx, hy, hw⟩
   have out : ∀ x y : E, (x, y) ∈ (ZZ g : Set (E × E)) → IsInt x ∧ IsInt y := by
     intro x y hxy
-    simp only [ZZ, Set.mem_setOf_eq] at hxy
+    simp only [ZZ, Set.mem_ofPred_eq] at hxy
     exact ⟨hxy.1, hxy.2.1⟩
   have hg : IsInt (g : E) := by simpa using hI (g : 𝓞 E)
   have h0 : IsInt (0 : E) := by simpa using hI 0
@@ -220,7 +220,7 @@ private theorem exists_not_mem_prime_mul_eq_of_locIn {E : Type} [Field E] [Numbe
   let f : 𝓞 E →+* 𝓞 E := NumberField.RingOfIntegers.mapRingHom σ
   have hf : ∀ y : 𝓞 E, ((f y : 𝓞 E) : E) = σ (y : E) := fun y => rfl
   have hQ : (P.comap f).IsPrime := by
-    haveI := hP
+    have := hP
     first
     | exact Ideal.comap_isPrime f P
     | infer_instance

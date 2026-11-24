@@ -93,7 +93,7 @@ private theorem exists_pow_mul_isIntegral_of_valuation_le_one_away {F : Type} [F
     have hvp : v.intValuation p ≤ WithZero.exp (-(n : ℤ)) := by
       have hx : HeightOneSpectrum.valuation F v x = v.intValuation p / v.intValuation q := by
         rw [← hpq', map_div₀, v.valuation_of_algebraMap, v.valuation_of_algebraMap]
-      rw [hx, div_le_one₀ (zero_lt_iff.2 hq')] at hv
+      rw [hx, div_le_one₀ (pos_iff_ne_zero.2 hq')] at hv
       exact hv.trans hvq
     have hpn := (v.intValuation_le_pow_iff_dvd p n).1 hvp
     rw [Ideal.dvd_iff_le] at hpn

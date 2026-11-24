@@ -228,7 +228,7 @@ theorem sat_of (hR : RedData ϖ k r n b Λ) (hϖ : Irreducible ϖ)
   obtain ⟨a0, ha0⟩ := hall
   obtain ⟨j, z, hz, hzeq, a1, ha1⟩ :=
     minpow hR hϖ o3 (fun a => ((h a : M.L.O) : E)) (fun a => (h a).2) a0 ha0
-  haveI : Nontrivial E := by
+  have : Nontrivial E := by
     by_contra hnt
     rw [not_nontrivial_iff_subsingleton] at hnt
     have h10 : (1 : M.L.O) = 0 := Subtype.ext (Subsingleton.elim _ _)
@@ -484,7 +484,7 @@ theorem flb_main {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
         ∃ Q : Matrix (Fin (Module.finrank E V)) (Fin (Module.finrank E V)) E, (∀ k l, Q k l ∈ M.L.O) ∧
           Q * Matrix.of (fun k l => H.h (b k) (b l)) = 1 := by
   classical
-  haveI : NoZeroDivisors E := ⟨fun {a b} hab => by
+  have : NoZeroDivisors E := ⟨fun {a b} hab => by
     by_contra hne
     push_neg at hne
     obtain ⟨u, hu⟩ := hE a hne.1
@@ -492,10 +492,10 @@ theorem flb_main {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
     have h2 := congrArg (fun t => (↑u⁻¹ : E) * t) hab
     simp only [mul_zero, ← mul_assoc] at h2
     rwa [← hu, Units.inv_mul, one_mul] at h2⟩
-  haveI : IsDomain E := NoZeroDivisors.to_isDomain E
+  have : IsDomain E := NoZeroDivisors.to_isDomain E
   obtain ⟨hfg, hspan, hdual⟩ := hΛ
-  haveI : Module.Finite M.L.O Λ := Module.Finite.iff_fg.mpr hfg
-  haveI : NoZeroSMulDivisors M.L.O Λ := ⟨fun {r x} h => by
+  have : Module.Finite M.L.O Λ := Module.Finite.iff_fg.mpr hfg
+  have : NoZeroSMulDivisors M.L.O Λ := ⟨fun {r x} h => by
     by_cases hr : r = 0
     · exact Or.inl hr
     right
@@ -509,7 +509,7 @@ theorem flb_main {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
     simp only [smul_zero, smul_smul] at h2
     rw [← hu, Units.inv_mul, one_smul] at h2
     simpa using h2⟩
-  haveI : Module.Free M.L.O Λ := Module.free_of_finite_type_torsion_free'
+  have : Module.Free M.L.O Λ := Module.free_of_finite_type_torsion_free'
   let B := Module.Free.chooseBasis M.L.O Λ
   let bb : Module.Free.ChooseBasisIndex M.L.O Λ → V := fun i => (B i : V)
   have hexp : ∀ (x : V) (hx : x ∈ Λ), x = ∑ i, ((B.repr ⟨x, hx⟩ i : M.L.O) : E) • bb i := by
@@ -600,7 +600,7 @@ theorem flb_main {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
     intro y hy
     obtain ⟨c, hcO, rfl⟩ := hexpb y hy
     rw [flb_h_sum_right]
-    simp only [hdb, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hdb, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact flb_cj_mem M.L (hcO k)
   obtain ⟨c', hc'O, hc'⟩ := hexpb d hdΛ
   have hz : ∑ m', (G⁻¹ k m' - c' m') • b m' = 0 := by
@@ -612,7 +612,7 @@ theorem flb_main {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
 
 theorem flatBasis_of (h1 : FLocO) : FLatBasis := by
   intro F E _ _ _ _ _ _ _ M hF hc hE V _ _ H Λ hΛ
-  haveI := hF
+  have := hF
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[F]
   obtain ⟨-, hden0, hfac⟩ := h1 F E M.L hF hc hE ϖ hϖ
   have hnt : Nontrivial E := Module.nontrivial_of_finrank_pos (R := F) (by rw [M.L.rank]; norm_num)
@@ -701,19 +701,19 @@ theorem fr_ic_free {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
     (hc : CharZero F) (hE : ∀ x : E, x ≠ 0 → IsUnit x) :
     Module.Free 𝒪[F] (integralClosure 𝒪[F] E) ∧ Module.Finite 𝒪[F] (integralClosure 𝒪[F] E) ∧
       Module.finrank 𝒪[F] (integralClosure 𝒪[F] E) = 2 := by
-  haveI := hl
-  haveI := hc
+  have := hl
+  have := hc
   have hnt : Nontrivial E := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     have := L.rank
     rw [Module.finrank_zero_of_subsingleton] at this
     omega
-  letI : Field E := (show IsField E from
+  let : Field E := (show IsField E from
     ⟨exists_pair_ne E, mul_comm, fun {x} hx => (hE x hx).exists_right_inv⟩).toField
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ L.rank
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ L.rank
   set_option synthInstance.maxHeartbeats 200000 in
-    haveI : Module.IsTorsionFree 𝒪[F] E := FaithfulSMul.to_isTorsionFree _ E
+    have : Module.IsTorsionFree 𝒪[F] E := FaithfulSMul.to_isTorsionFree _ E
     refine ⟨IsIntegralClosure.module_free 𝒪[F] F E (integralClosure 𝒪[F] E),
       IsIntegralClosure.finite 𝒪[F] F E (integralClosure 𝒪[F] E), ?_⟩
     rw [IsIntegralClosure.rank 𝒪[F] F E (integralClosure 𝒪[F] E), L.rank]
@@ -723,7 +723,7 @@ theorem fr_card {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [Co
     (hc : CharZero F) (hE : ∀ x : E, x ≠ 0 → IsUnit x) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) :
     Nat.card (L.O ⧸ Ideal.span {piO L ϖ}) = Nat.card 𝓀[F] ^ 2 := by
   classical
-  haveI := hl
+  have := hl
   obtain ⟨hfree, hfin, hrank⟩ := fr_ic_free L hl hc hE
   set A := integralClosure 𝒪[F] E with hA
 
@@ -1448,9 +1448,9 @@ theorem locDensCorank_of (hC : CongStep) (hF : FieldCount) (hS : SplitCount) :
   intro F E _ _ _ _ _ _ _ M hloc hchar V _ _ H Λ hsd ϖ hϖ ι _ _ A a hA hdet hcard
   rw [hC F E M V H Λ ϖ ι A a hA hdet]
   by_cases hE : ∀ x : E, x ≠ 0 → IsUnit x
-  · rw [if_pos hE]
+  · rw [ite_eq_left hE]
     exact hF F E M hloc hchar hE V H Λ hsd ϖ hϖ ι a hcard
-  · rw [if_neg hE]
+  · rw [ite_eq_right hE]
     exact hS F E M hloc hchar ((PI.UnitaryGroupMassFormula.CntFormula.locE_isUnit_or_exists_algEquiv_prod_swap M.L).resolve_left hE) V H Λ hsd ϖ hϖ ι a hcard
 
 theorem locDensCorank_of_counts (hF : FieldCount) (hS : SplitCount) : PI.LocDensCorank.LocDensCorank := by

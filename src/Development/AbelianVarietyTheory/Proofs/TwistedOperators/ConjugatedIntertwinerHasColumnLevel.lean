@@ -83,10 +83,10 @@ private theorem e_inv_mul_eq_chi2_mul {D : D7} (X : Formalism.L2.SG.HidaSetting.
   · have hky : k⁻¹ * y ∈ X.K2 := hmulK _ (hinvK _ hk) _ hy
     have hsplit : X.chi2 y = X.chi2 k * X.chi2 (k⁻¹ * y) := by
       rw [← hchi _ hk _ hky, mul_inv_cancel_left]
-    rw [he, he, if_pos hky, if_pos hy, hsplit, star_mul']
+    rw [he, he, ite_eq_left hky, ite_eq_left hy, hsplit, star_mul']
     linear_combination (-(star (X.chi2 (k⁻¹ * y)) / ((X.B.μf X.K2).toReal : ℂ))) * hunit
   · have hky : k⁻¹ * y ∉ X.K2 := fun h => hy (by simpa using hmulK _ hk _ h)
-    rw [he, he, if_neg hky, if_neg hy, mul_zero]
+    rw [he, he, ite_eq_right hky, ite_eq_right hy, mul_zero]
 
 theorem reg_comp_Re {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (k : X.B.I.Gf) (hk : k ∈ X.K2) :
     (X.B.R (1, k)).comp X.B.Re = X.chi2 k • X.B.Re := by
@@ -95,7 +95,7 @@ theorem reg_comp_Re {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (k 
   ext1 y
   apply ext_inner_left ℂ
   intro x
-  rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, inner_smul_right,
+  rw [ContinuousLinearMap.comp_apply, smul_apply, inner_smul_right,
     inner_R_eq_inner_R_inv X, X.B.Re_spec.2, X.B.Re_spec.2]
   have hstep : ∀ g : X.B.I.Gf,
       ⟪X.B.R (1, k)⁻¹ x, X.B.R (1, g) y⟫_ℂ = ⟪x, X.B.R (1, k * g) y⟫_ℂ := by
@@ -120,7 +120,7 @@ private theorem contRep_mul_right_eq_chi2_mul {D : D7} (X : Formalism.L2.SG.Hida
     rfl
   have h1 := Formalism.L2.SG.EvalTOntoRep.contRep_reg X hψ ((1 : X.B.I.Ginf), κ)
   have hR : X.B.R ((1 : X.B.I.Ginf), κ) (Φ v) = X.chi2 κ • Φ v := by
-    rw [hΦv, ← ContinuousLinearMap.comp_apply, reg_comp_Re X κ hκ, ContinuousLinearMap.smul_apply]
+    rw [hΦv, ← ContinuousLinearMap.comp_apply, reg_comp_Re X κ hκ, smul_apply]
   rw [hR] at h1
   have h2 := Formalism.L2.SG.EvalTOntoRep.contRep_smul X (X.chi2 κ) hψ
   have heq := Formalism.L2.SG.EvalTOntoRep.contRep_unique X h1 h2

@@ -134,7 +134,7 @@ theorem _root_.GlobalTheory.ClassFin.act_exp_eq_of_isMinVec : ∀ (ι : Type) [F
         have := (pow_eq_zero_iff (n := 2) two_ne_zero).mp hb
         linarith
       have hl : lam k = 0 := by
-        rw [← Real.exp_nat_mul] at ht
+        rw [← Real.exp_natCast_mul] at ht
         simpa using (Real.exp_eq_one_iff _).mp ht
       simp [hl]
   rw [hsplit s]

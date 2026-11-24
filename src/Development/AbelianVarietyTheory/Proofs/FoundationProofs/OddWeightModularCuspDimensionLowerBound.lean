@@ -175,9 +175,9 @@ theorem dualEntry_slash_of_eq {Γ : Subgroup SL(2, ℤ)} (hΓ : (-1 : SL(2, ℤ)
   have hc : ∀ l j, F j ∣[w j] (s l * y) = c l • F j ∣[w j] s (π l) := by
     intro l j
     by_cases hp : s l * y = g l * s (π l)
-    · simp only [c, if_pos hp]
+    · simp only [c, ite_eq_left hp]
       rw [hp, (hF j).2.slash_mul (hg l), one_smul]
-    · simp only [c, if_neg hp]
+    · simp only [c, ite_eq_right hp]
       rw [(hdec l).resolve_left hp, slash_neg_of_odd (hF j).1, (hF j).2.slash_mul (hg l), neg_one_smul]
   have hπi : π i = i' := by
     apply hs.2 (π i) i' ((g i)⁻¹ * γ) (Γ.mul_mem (Γ.inv_mem (hg i)) hγ)
@@ -194,7 +194,7 @@ theorem dualEntry_slash_of_eq {Γ : Subgroup SL(2, ℤ)} (hΓ : (-1 : SL(2, ℤ)
     rw [h3]
     exact Γ.mul_mem hγ (Γ.inv_mem (hg i))
   rw [dualEntry_slash hcc hc hA, hπi]
-  simp only [c, if_pos hp, one_smul]
+  simp only [c, ite_eq_left hp, one_smul]
 
 theorem mdiff_dualEntry (hF : ∀ j, MDiff (F j)) (hA : ∀ τ, (evM s w F τ).det ≠ 0) (i j : Fin r) :
     MDiff (dualEntry s w F i j) := by
@@ -205,9 +205,9 @@ theorem mdiff_dualEntry (hF : ∀ j, MDiff (F j)) (hA : ∀ τ, (evM s w F τ).d
   rw [e]
   refine CuspForm.discriminant.holo'.mul (((mdiff_det_evM s w hF).inv hA).mul (mdiff_det fun a b => ?_))
   by_cases h : a = i
-  · simp only [Matrix.updateRow_apply, if_pos h]
+  · simp only [Matrix.updateRow_apply, ite_eq_left h]
     exact mdifferentiable_const
-  · simp only [Matrix.updateRow_apply, if_neg h]
+  · simp only [Matrix.updateRow_apply, ite_eq_right h]
     exact mdiff_slash (hF b) _ _
 
 theorem exists_dual_cuspForms (Γ : Subgroup SL(2, ℤ)) (r : ℕ) (s : Fin r → SL(2, ℤ)) (w : Fin r → ℤ)
@@ -310,9 +310,9 @@ theorem norm_le (v : Fin 2 → ℤ) (n : ℕ) : ‖eisSummand 3 v (pt n)‖ ≤ 
 theorem tendsto_term (v : Fin 2 → ℤ) : Tendsto (fun n => eisSummand 3 v (pt n)) atTop (𝓝 (lim0 v)) := by
   by_cases h : v 0 = 0
   · have : ∀ n, eisSummand 3 v (pt n) = (v 1 : ℂ) ^ (-3 : ℤ) := fun n => by simp [eisSummand, h]
-    simp only [this, lim0, h, if_true]
+    simp only [this, lim0, h, ite_true]
     exact tendsto_const_nhds
-  · simp only [lim0, h, if_false]
+  · simp only [lim0, h, ite_false]
     refine squeeze_zero_norm (a := fun n : ℕ => 1 / ((n : ℝ) + 1)) (fun n => ?_)
       tendsto_one_div_add_atTop_nhds_zero_nat
     obtain ⟨_, him⟩ := re_im_summand v n
@@ -348,7 +348,7 @@ theorem cast_zero_one (M : ℕ) : ((↑) : ℤ → ZMod M) ∘ (![0, 1] : Fin 2 
   ext i; fin_cases i <;> simp
 
 theorem lim_one {M : ℕ} (hM : 3 ≤ M) : ∑' v : gammaSet M 1 (![0, 1] : Fin 2 → ZMod M), lim0 v = 1 := by
-  haveI : Fact (2 < M) := ⟨by omega⟩
+  have : Fact (2 < M) := ⟨by omega⟩
   have hm : (![0, 1] : Fin 2 → ℤ) ∈ gammaSet M 1 (![0, 1] : Fin 2 → ZMod M) := ⟨cast_zero_one M, by simp⟩
   rw [tsum_eq_single ⟨_, hm⟩]
   · simp [lim0]
@@ -386,7 +386,7 @@ theorem eq_of_eis_eq {M : ℕ} (hM : 3 ≤ M) {c : Fin 2 → ZMod M}
 theorem exists_isMF_slash_ne : ∀ M : ℕ, 3 ≤ M → ∀ x : SL(2, ℤ), x ∉ CongruenceSubgroup.Gamma M →
     ∃ (k : ℤ) (f : ℍ → ℂ), IsMF (CongruenceSubgroup.Gamma M) k f ∧ f ∣[k] x ≠ f := by
   intro M hM x hx
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   have hMF : ∀ a : Fin 2 → ZMod M, IsMF (CongruenceSubgroup.Gamma M) 3 (eisensteinSeries a 3) := fun a =>
     isMF_coe (ModularForm.eisensteinSeriesMF le_rfl a)
   rw [CongruenceSubgroup.Gamma_mem] at hx
@@ -728,7 +728,7 @@ theorem exists_odd_det_evM_ne_zero (M : ℕ) (Γ : Subgroup SL(2, ℤ)) (r : ℕ
   have hli' : LinearIndependent ℂ (fun j => Matrix.transpose (evM s w (fun j => ∑ q, f j ∣[w j] t q) τ₀) j) := by
     rw [hcols]
     exact hli.comp e e.injective
-  exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 hli')).ne_zero
+  exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_col_iff_isUnit.1 hli')).ne_zero
 
 end GlobalTheory.OddFrame
 end -- clump:auto
@@ -921,8 +921,8 @@ theorem _root_.GlobalTheory.CosetEval.evals_independent : ∀ M : ℕ, 0 < M →
       refine (dense_setOf_ne_zero_of_mdifferentiable_of_ne_zero hD
         (fun h0 => hne p hp (sub_eq_zero.1 h0))).mono fun τ hτ => Or.inr ?_
       exact sub_ne_zero.1 hτ
-  haveI : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
-  haveI : Countable SL(2, ℤ) := Subtype.countable
+  have : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
+  have : Countable SL(2, ℤ) := Subtype.countable
   obtain ⟨τ₀, hτ₀⟩ := (dense_iInter_of_isOpen hOopen hOdense).nonempty
   refine ⟨τ₀, fun ι _ x c hx hc => ?_⟩
   let χ : ι → (_root_.GlobalTheory.CosetEval.mfMonoid (CongruenceSubgroup.Gamma M) →* ℂ) :=
@@ -969,7 +969,7 @@ theorem tendsto_inv_qParam_pow_mul {M a : ℕ} (ha : a < M) {g : ℍ → ℂ}
   have h1 : (fun τ : ℍ => (Function.Periodic.qParam (M : ℝ) (τ : ℂ) ^ a)⁻¹) =O[atImInfty]
       fun τ : ℍ => Real.exp (2 * Real.pi * τ.im * a / M) := by
     refine Asymptotics.IsBigO.of_norm_le fun τ => le_of_eq ?_
-    rw [norm_inv, norm_pow, Function.Periodic.norm_qParam, ← Real.exp_nat_mul, ← Real.exp_neg, coe_im]
+    rw [norm_inv, norm_pow, Function.Periodic.norm_qParam, ← Real.exp_natCast_mul, ← Real.exp_neg, coe_im]
     congr 1; ring
   refine (h1.mul hg).trans_tendsto ?_
   have hr : -2 * Real.pi * (1 - a / M) < 0 := by
@@ -1004,7 +1004,7 @@ theorem sum_mul_co_eq {M : ℕ} {Γ : Subgroup SL(2, ℤ)} {r : ℕ} {s : Fin r 
     simp only [fun j => (H j).2.2 (hF j).1, mul_neg, Finset.sum_neg_distrib]
     split_ifs <;> ring
   · intro i
-    rw [Finset.sum_sub_distrib, Finset.sum_ite_eq' (Finset.range M) a, if_pos (Finset.mem_range.2 ha),
+    rw [Finset.sum_sub_distrib, Finset.sum_ite_eq' (Finset.range M) a, ite_eq_left (Finset.mem_range.2 ha),
       ← hc i, Finset.sum_comm, sub_eq_zero]
     simp only [Matrix.mulVec, dotProduct, leadM, Matrix.of_apply]
     exact Finset.sum_congr rfl fun j _ => by rw [← Finset.mul_sum, mul_comm]
@@ -1050,7 +1050,7 @@ theorem exists_tendsto_evM_mul (M : ℕ) (Γ : Subgroup SL(2, ℤ)) (r : ℕ) (s
         split_ifs with h
         · rw [h]
         · simp
-      rw [Finset.sum_congr rfl this, Finset.sum_ite_eq' (Finset.range M) a, if_pos ha]
+      rw [Finset.sum_congr rfl this, Finset.sum_ite_eq' (Finset.range M) a, ite_eq_left ha]
     have hta : t τ ^ a ≠ 0 := pow_ne_zero _ (ht0 τ)
     have e : co M (w l) (F l) (s i) a =
         ∑ j, (t τ ^ a)⁻¹ * (c l a j * ∑ n ∈ Finset.range M, co M (w j) (F j) (s i) n * t τ ^ n) := by
@@ -1148,8 +1148,8 @@ theorem coeff_eq_zero_of_bigO {F : Type*} [FunLike F ℍ ℂ] {Γ : Subgroup (GL
 theorem qParam_pow_bigO {h : ℝ} (hh : 0 < h) {m M : ℕ} (hm : (M : ℝ) * h ≤ m) :
     (fun τ : ℍ => Periodic.qParam h τ ^ m) =O[atImInfty] fun τ : ℍ => Periodic.qParam 1 τ ^ M := by
   refine IsBigO.of_bound 1 (Eventually.of_forall fun τ => ?_)
-  rw [one_mul, norm_pow, norm_pow, Periodic.norm_qParam, Periodic.norm_qParam, ← Real.exp_nat_mul,
-    ← Real.exp_nat_mul, Real.exp_le_exp]
+  rw [one_mul, norm_pow, norm_pow, Periodic.norm_qParam, Periodic.norm_qParam, ← Real.exp_natCast_mul,
+    ← Real.exp_natCast_mul, Real.exp_le_exp]
   have hy : 0 < (τ : ℂ).im := τ.im_pos
   have key : (M : ℝ) * (τ : ℂ).im ≤ m * (τ : ℂ).im / h := by
     rw [le_div_iff₀ hh]; nlinarith
@@ -1208,7 +1208,7 @@ theorem GlobalTheory.HeckeFamilyMatrices.finiteDimensional_modularForm_cuspForm 
   intro Γ k hΓ
   have h1 := finiteDimensional_of_isArithmetic (Γ : Subgroup (GL (Fin 2) ℝ)) k
   refine ⟨h1, ?_⟩
-  haveI := h1
+  have := h1
   exact Module.Finite.equiv (CuspForm.equivCuspFormSubmodule (Γ : Subgroup (GL (Fin 2) ℝ)) k).symm
 end -- clump:auto
 end -- clump:auto
@@ -1327,7 +1327,7 @@ theorem levelOne_form_one_add_expDecay :
   intro d hd hev
   obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le (by omega : (0 : ℤ) ≤ d)
   have hk : 3 ≤ k := by omega
-  have hk2 : Even k := by simpa [Int.even_coe_nat] using hev
+  have hk2 : Even k := by simpa [Int.even_natCast] using hev
   let f : ModularForm 𝒮ℒ (k : ℤ) := ModularForm.E hk
   refine ⟨f, isMF_coe_top f, ?_⟩
   have h0 : valueAtInfty (f : ℍ → ℂ) = 1 := by
@@ -1493,16 +1493,16 @@ theorem sum_finrank_le_finrank_cuspForm (Γ : Subgroup SL(2, ℤ)) (r : ℕ) (s 
     intro c τ
     induction (Finset.univ : Finset (Fin r)) using Finset.induction_on with
     | empty => simp
-    | insert a t ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, CuspForm.add_apply, ih]
+    | insert a t ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, add_apply, ih]
   let L : (Π j, ModularForm 𝒮ℒ (k - w j)) →ₗ[ℂ] CuspForm Γ k :=
     { toFun := fun g => ∑ j, (hcf j (g j)).toCF
       map_add' := by
         intro a b; ext τ
-        simp only [CuspForm.add_apply, happ, IsCF.coe_toCF, Pi.mul_apply, Pi.add_apply, ModularForm.add_apply,
+        simp only [add_apply, happ, IsCF.coe_toCF, Pi.mul_apply, Pi.add_apply, add_apply,
           add_mul, Finset.sum_add_distrib]
       map_smul' := by
         intro c a; ext τ
-        simp only [CuspForm.smul_apply, happ, IsCF.coe_toCF, Pi.mul_apply, Pi.smul_apply, ModularForm.smul_apply,
+        simp only [smul_apply, happ, IsCF.coe_toCF, Pi.mul_apply, Pi.smul_apply, smul_apply,
           RingHom.id_apply, smul_eq_mul, Finset.mul_sum, mul_assoc] }
   have hinj : Function.Injective L := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
@@ -1524,7 +1524,7 @@ theorem sum_finrank_le_finrank_cuspForm (Γ : Subgroup SL(2, ℤ)) (r : ℕ) (s 
     funext j; ext τ
     have := Matrix.eq_zero_of_mulVec_eq_zero (hdet τ) (hvec τ)
     exact congrFun this j
-  haveI : FiniteDimensional ℂ (Π j, ModularForm 𝒮ℒ (k - w j)) := inferInstance
+  have : FiniteDimensional ℂ (Π j, ModularForm 𝒮ℒ (k - w j)) := inferInstance
   calc ∑ j, Module.finrank ℂ (ModularForm 𝒮ℒ (k - w j))
       = Module.finrank ℂ (Π j, ModularForm 𝒮ℒ (k - w j)) := (Module.finrank_pi_fintype ℂ).symm
     _ ≤ Module.finrank ℂ (CuspForm Γ k) := LinearMap.finrank_le_finrank_of_injective hinj
@@ -1712,9 +1712,9 @@ theorem re_μ_zpow {w : ℤ} (hw : Odd w) :
   obtain ⟨m, hm⟩ := hw
   have hc : -w = 6 * (-w / 6) + 1 ∨ -w = 6 * (-w / 6) + 3 ∨ -w = 6 * (-w / 6) + 5 := by omega
   rcases hc with h | h | h
-  · rw [if_neg (by omega), h, key, zpow_one, hre]
-  · rw [if_pos (by omega), h, key, zpow_ofNat, h3]; simp
-  · rw [if_neg (by omega), h, key, zpow_ofNat, h5, Complex.sub_re, hre]; norm_num
+  · rw [ite_eq_right (by omega), h, key, zpow_one, hre]
+  · rw [ite_eq_left (by omega), h, key, zpow_ofNat, h3]; simp
+  · rw [ite_eq_right (by omega), h, key, zpow_ofNat, h5, Complex.sub_re, hre]; norm_num
 
 theorem not_fixed {N : ℕ} (hN : 5 ≤ N) {γ x : SL(2, ℤ)} (hγ : γ ∈ CongruenceSubgroup.Gamma1 N) :
     ¬ (x * uEl = γ * x ∨ x * uEl = -(γ * x)) := by

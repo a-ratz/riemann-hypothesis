@@ -63,9 +63,9 @@ theorem coheight_add_dim_closure_eq (F : Type) [Field F] (X : Scheme.{0}) [IsInt
       topologicalKrullDim X := by
   refine le_antisymm ?_ ?_
   · rw [add_comm]
-    haveI : QuasiSober (closure ({z} : Set X)) :=
+    have : QuasiSober (closure ({z} : Set X)) :=
       isClosed_closure.isClosedEmbedding_subtypeVal.quasiSober
-    exact DimCodim.dim_add_le_of_le_coheight continuous_subtype_val Subtype.val_injective _
+    exact DimCodim.dim_add_le_of_le_coheight continuous_subtypeVal Subtype.val_injective _
       fun w => Order.coheight_anti (specializes_iff_mem_closure.2 w.2)
   obtain ⟨_, ⟨U, hU, rfl⟩, hzU, -⟩ :=
     X.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ z) isOpen_univ

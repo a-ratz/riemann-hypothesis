@@ -330,11 +330,11 @@ theorem exists_marking_match_at (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : F
   have he : ∀ τ, Formalism.L2.PjFree.relab c σ (e.symm τ) = τ := e.apply_symm_apply
   have m1 : ∀ τ ∈ (U.X k).Ψ, Dw.mult (e.symm τ) = r - (U.X k).p0 := fun τ hτ => by
     unfold Datum.mult
-    rw [if_pos ((hrt _).1 (by rw [he]; exact ((hty k).2 τ).1 hτ)), (hty k).1]
+    rw [ite_eq_left ((hrt _).1 (by rw [he]; exact ((hty k).2 τ).1 hτ)), (hty k).1]
     omega
   have m2 : ∀ τ ∉ (U.X k).Ψ, Dw.mult (e.symm τ) = (U.X k).p0 := fun τ hτ => by
     unfold Datum.mult
-    rw [if_neg (fun h => hτ (((hty k).2 τ).2 (by rw [← he τ]; exact (hrt _).2 h))), (hty k).1]
+    rw [ite_eq_right (fun h => hτ (((hty k).2 τ).2 (by rw [← he τ]; exact (hrt _).2 h))), (hty k).1]
   have hrel : ∀ τ, ∀ i < Dw.mult (e.symm τ), ∀ v ∈ (U.X k).Λ,
       Formalism.L2.PjFree.perFr (U.X k') x'.1 ((a : Matrix (Fin r) (Fin r) E) *ᵥ v) τ i =
         ∑ j ∈ Finset.range (Dw.mult (e.symm τ)), A (e.symm τ) i j * Formalism.L2.PjFree.perFr (U.X k) x.1 v τ j :=
@@ -685,7 +685,7 @@ theorem cong_on_sdLattice : ∀ {D : D7} (V : HSp D) {β : GL (Fin V.rank) (Lev.
   have h1 : (1 : D.host.E) ∈ (D.host.AA : Submodule (𝓞 D.host.E) D.host.E) *
       (((D.host.AA)⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) :
         Submodule (𝓞 D.host.E) D.host.E) := by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ (GlobalTheory.MarkCoset.AA_ne_zero D)]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ (GlobalTheory.MarkCoset.AA_ne_zero D)]
     exact (FractionalIdeal.mem_one_iff _).2 ⟨1, map_one _⟩
   have hP : P 1 := Submodule.mul_induction_on h1 hmul hadd
   intro x hx
@@ -1068,9 +1068,9 @@ theorem transp_reads_const_mul : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies 
     intro x hx hy t hbt F
     have e1 : rdU (uAt r v i) (actLev (Xo := (r.used v).full.Q.Xo ((i : ℕ) + 1)) (r.used v).full.Q.c (levFull ((r.used v).full.Q.Dw ((i : ℕ) + 1)) (r.used v).full.Q.l) γ F.1) k x =
         toC (evR _ _ (actLev (Xo := (r.used v).full.Q.Xo ((i : ℕ) + 1)) (r.used v).full.Q.c (levFull ((r.used v).full.Q.Dw ((i : ℕ) + 1)) (r.used v).full.Q.l) γ F.1)
-          ((uAt r v i).un k ⟨x, hx⟩)) := dif_pos hx
+          ((uAt r v i).un k ⟨x, hx⟩)) := dite_eq_left hx
     have e2 : rdU (uAt r v i) F.1 k' (castFrame hm.psi (lact a x)) =
-        toC (evR _ _ F.1 ((uAt r v i).un k' ⟨_, hy⟩)) := dif_pos hy
+        toC (evR _ _ F.1 ((uAt r v i).un k' ⟨_, hy⟩)) := dite_eq_left hy
     have e3 := evalAt_actL hL (hl.p.evalWD _ hj) frMap_trans_id γ (hsecF F).1 ((uAt r v i).un k ⟨x, hx⟩)
     have e4 := (GlobalTheory.Frames.algebraic_laws GlobalTheory.lawsFieldsSeparately.2.1 _ _ _ _ _ _).2.2.2.2.2.2 (CAt _)
       (inferInstanceAs (IsReduced ℂ)) _ _ F.1 (hsecF F) t _ _ hbt
@@ -1449,7 +1449,7 @@ theorem exists_runModel (p : PtAt ex Csz) (hm : More p) (r : TwoRuns p.T p.P.Gp)
   have hΓ : ∀ c, (Xx c).Γ = ((uAt r v i).X c).Γ := fun c => congrArg Data.Γ (hXd c)
   have hΛ : ∀ c, (Xx c).Λ = ((uAt r v i).X c).Λ := fun c => congrArg Data.Λ (hXd c)
   let k0 : (uAt r v i).Comp := hne.some
-  letI inst : MulAction p.P.Gp (uAt r v i).Comp := { smul := act, one_smul := h1, mul_smul := hmul }
+  let inst : MulAction p.P.Gp (uAt r v i).Comp := { smul := act, one_smul := h1, mul_smul := hmul }
   let M : TwoLevels D.host.E D.R.r p.P.Gp (uAt r v i).Comp :=
     { Ψ := ((uAt r v i).X k0).Ψ
       Gm := ((uAt r v i).X k0).Gm

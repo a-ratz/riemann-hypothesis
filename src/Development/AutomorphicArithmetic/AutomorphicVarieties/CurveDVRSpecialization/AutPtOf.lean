@@ -69,7 +69,7 @@ private theorem ap_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
     (φ : R →ₐ[ℤ_[l]] PadicAlgCl l) :
     ∃ E : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] E ∧ ∀ x, φ x ∈ E ∧ ‖φ x‖ ≤ 1 := by
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ_[l]) (M := R)
-  haveI := (s.finite_toSet.image φ).to_subtype
+  have := (s.finite_toSet.image φ).to_subtype
   refine ⟨IntermediateField.adjoin ℚ_[l] (φ '' (s : Set R)),
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x, fun x =>
     ⟨?_, ap_norm _ ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) x).map φ)⟩⟩
@@ -84,7 +84,7 @@ private theorem ap_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
 
 private theorem ap_coef {l : ℕ} [Fact l.Prime] (c c₁ : Coef l) (A : Subalgebra c.O (PadicAlgCl l)) [Module.Finite c.O A] :
     ∃ c₂ : Coef l, c₁.O ≤ c₂.O ∧ ∀ x ∈ A, x ∈ c₂.O := by
-  haveI : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
+  have : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
   obtain ⟨E₁, f₁, m₁⟩ := ap_field c₁.O.val
   obtain ⟨E₂, f₂, m₂⟩ := ap_field (A.val.restrictScalars ℤ_[l])
   obtain ⟨c₂, hc⟩ := UpperTheory.V.X.So.coefOf l (E₁ ⊔ E₂)
@@ -112,7 +112,7 @@ private theorem ap_det {n : ℕ} {A B G H : Type} [CommRing A] [CommRing B] [Gro
     (ρ : G →* Matrix (Fin n) (Fin n) A) (f : A →+* B) (p : H →* G) (τ : H →* Matrix (Fin n) (Fin n) B)
     (h : ∀ g, τ g = (ρ (p g)).map f) : ((W.GDet.ofRep ρ).map f).comap p = W.GDet.ofRep τ := by
   refine W.GDet.ext fun C _ _ x => ?_
-  letI : Algebra A C := ((algebraMap B C).comp f).toAlgebra
+  let : Algebra A C := ((algebraMap B C).comp f).toAlgebra
   change (W.GDet.repAlg ρ C (MonoidAlgebra.mapDomainRingHom C p x)).det = (W.GDet.repAlg τ C x).det
   congr 1
   induction x using MonoidAlgebra.induction_linear with
@@ -140,7 +140,7 @@ private theorem ap_locAlg (hG : GlobalTheory.Published.GlobalArtinReciprocity) {
   have h2 := (Loc.laMul h).2.1 _ _ _ m (Loc.laCyc hG h hw)
   have h3 := (Loc.laMul h).2.2 (χ.comp (Dec (F := L) A).subtype) (χ.comp (Ine (F := L) A).subtype)⁻¹
     (Subgroup.isOpen_mono (H₁ := χ.ker.comap (Ine (F := L) A).subtype) (fun x hx => inv_eq_one.2 hx)
-      (hχ.preimage continuous_subtype_val)) fun s => mul_inv_cancel _
+      (hχ.preimage continuous_subtypeVal)) fun s => mul_inv_cancel _
   have h4 := ((Loc.laMul h).1 _ _ _ _ _ _ ((Loc.laMul h).1 _ _ _ _ _ _ h2 h3).1 h1).1
   refine ⟨_, h4.1, fun b hb s => ?_⟩
   have h5 := h4.2 b hb s

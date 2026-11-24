@@ -163,7 +163,7 @@ theorem so_proj {ψ : AddChar (AF F) ℂ} {M : Model σ X W} (hM : M.IsGood ψ) 
   exact Finset.sum_congr rfl fun i _ => hO _ _ (hφ i)
 
 theorem factor_of (hD : KDecay) (hK : Kills) : Factor := by
-  letI : IsEmpty Empty := ⟨Empty.elim⟩
+  let : IsEmpty Empty := ⟨Empty.elim⟩
   intro F E _ _ _ _ _ σ B a a' G X om om' R Rf hm
   obtain ⟨dc, dc'⟩ := hD F E σ B a a' G X om om' hm.triple
   obtain ⟨k, k'⟩ := hK F E σ B a a' G X om om' R Rf hm

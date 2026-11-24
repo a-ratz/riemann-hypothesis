@@ -78,7 +78,7 @@ theorem hfin_disc (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) 
   refine discreteTopology_iff_isOpen_singleton.2 fun γ => ?_
   let ent : HR (AF F) σ J → Matrix (Fin M) (Fin M) (AF F ⊗[F] E) :=
     fun h => ((h : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) _)
-  have hent : Continuous ent := Units.continuous_val.comp continuous_subtype_val
+  have hent : Continuous ent := Units.continuous_val.comp continuous_subtypeVal
   refine isOpen_induced_iff.2 ⟨{h | ∀ i j, ent h i j - ent γ i j ∈ V}, ?_, ?_⟩
   · simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>

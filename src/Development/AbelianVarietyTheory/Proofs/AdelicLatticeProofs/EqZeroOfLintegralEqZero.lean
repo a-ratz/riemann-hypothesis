@@ -82,7 +82,7 @@ theorem eq_zero_of_lintegral_eq_zero {G : Type} [AddCommGroup G] [TopologicalSpa
     (𝓕 : Set G) (h𝓕 : IsAddFundamentalDomain Γ 𝓕 μ) (f : G → ℂ) (hf : Continuous f)
     (hp : ∀ γ ∈ Γ, ∀ w, ‖f (γ + w)‖ = ‖f w‖) (h0 : ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ = 0) : f = 0 := by
   have ho : IsOpen {w | f w ≠ 0} := isOpen_ne_fun hf continuous_const
-  have h1 := (lintegral_eq_zero_iff (hf.measurable.enorm.pow_const 2)).1 h0
+  have h1 := (lintegral_eq_zero_iff (hf.measurable.eNorm.pow_const 2)).1 h0
   have h2 : μ ({w | f w ≠ 0} ∩ 𝓕) = 0 := by
     rw [← Measure.restrict_apply ho.measurableSet]
     refine measure_mono_null (fun w hw => ?_) h1
@@ -101,7 +101,7 @@ theorem lintegral_eq_zero_of_approx {G : Type} [MeasurableSpace G] (ν : Measure
     (C C' : ℝ) (h : ∀ t : ℝ, 0 < t → ∃ a b r : G → ℂ, δ = a - b ∧ ∫⁻ w, ‖a w‖ₑ ^ 2 ∂ν = ∫⁻ w, ‖r w‖ₑ ^ 2 ∂ν ∧
       (∀ w, ‖r w‖ ≤ C * t) ∧ ∀ w, ‖b w‖ ≤ C' * t) : ∫⁻ w, ‖δ w‖ₑ ^ 2 ∂ν = 0 := by
   have en : ∀ z : ℂ, ‖z‖ₑ ^ 2 = ENNReal.ofReal (‖z‖ ^ 2) := fun z => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   have key : ∀ t : ℝ, 0 < t → ∫⁻ w, ‖δ w‖ₑ ^ 2 ∂ν ≤ ENNReal.ofReal (2 * (C * t) ^ 2 + 2 * (C' * t) ^ 2) := by
     intro t ht
     obtain ⟨a, b, r, e, h1, h2, h3⟩ := h t ht
@@ -182,9 +182,9 @@ theorem om_dLine (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) (g :
     om (g, h) (dLine ψ S T L f) = dLine ψ S T L' (om (g, h) f) := by
   have hψ := hom.std
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WA T S) := ⟨rfl⟩
+  have : BorelSpace (WA T S) := ⟨rfl⟩
   obtain ⟨⟨μ, 𝓕, hμ, h𝓕, h1⟩, -⟩ := GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (WA T S) (ratL T S) K hK hc
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hf' := hom.om_pres (g, h) f hf
   have hδ := theta_sub (theta_dLine hθ hψ hL' hf') (hom.om_pres (g, h) _ (theta_dLine hθ hψ hL hf))
   obtain ⟨C, hC⟩ := quotient_bound hθ hψ hL hf

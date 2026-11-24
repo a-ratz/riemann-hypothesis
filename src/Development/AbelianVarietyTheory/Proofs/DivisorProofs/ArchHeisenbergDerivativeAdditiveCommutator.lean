@@ -141,11 +141,11 @@ theorem heis_deriv_laws : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
         trPair (fun i => evI F ((d.e u).2 i)) x * f x := hD
   refine ⟨fun u u' hu hu' => ?_, fun u r hu => ?_, fun u u' hu hu' f => ?_⟩
   · ext f x
-    rw [ContinuousLinearMap.add_apply, SchwartzMap.add_apply, hD' _ (at_add u u' hu hu'), hD' u hu,
+    rw [add_apply, add_apply, hD' _ (at_add u u' hu hu'), hD' u hu,
       hD' u' hu', map_add, Prod.fst_add, Prod.snd_add, evV_add, evV_add, map_add, trPair_add]
     ring
   · ext f x
-    rw [ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, hD' _ (at_smul u _ hu), hD' u hu,
+    rw [smul_apply, smul_apply, hD' _ (at_smul u _ hu), hD' u hu,
       map_smul, Prod.smul_fst, Prod.smul_snd, evV_smul, evV_smul, map_smul, trPair_smul]
     simp only [Complex.real_smul, smul_eq_mul]
     ring
@@ -164,7 +164,7 @@ theorem heis_deriv_laws : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
 
       simp only [map_sub, map_sum, Complex.ofReal_sub]
     ext x
-    rw [SchwartzMap.sub_apply, SchwartzMap.smul_apply, hD' u hu (D u' f), hD' u' hu' (D u f), e', e,
+    rw [sub_apply, smul_apply, hD' u hu (D u' f), hD' u' hu' (D u f), e', e,
       fderiv_step, fderiv_step, (isSymm f x).eq (fun i => evI F ((d.e u').1 i)), key, smul_eq_mul]
     ring
 

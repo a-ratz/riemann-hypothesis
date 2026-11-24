@@ -118,7 +118,7 @@ theorem isAlgZp_zeta (T : Tower p Ω) (m : ℕ) : IsAlgZp p (T.ζ m) := by
 
 theorem kum_geo_zero (T : Tower p Ω) {n m : ℕ} {H : Subgroup (Gal p Ω)} {a : Gal p Ω → ZMod (p ^ n)}
     (ha : IsKum T n H (T.ζ m) a) {g : Gal p Ω} (hH : g ∈ H) (hg : g ∈ Ggeo p Ω) : a g = 0 := by
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
   have hg' : ∀ x : Ω, IsAlgZp p x → g x = x := hg
   have e := ha g hH
   rw [hg' _ (isAlgZp_zeta T m)] at e
@@ -158,7 +158,7 @@ theorem edge_class_cup : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∀ c₁ : �
   obtain ⟨c', hc'⟩ := _root_.GlobalTheory.K5.Reb.h1_geometric_level_coboundary p hp2
   refine ⟨c₁ + c', ?_⟩
   intro Ω _ _ hclo T L n hnL x y lz lq η f hxy hlz hlq hfi hff hη hηlc hcob
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   obtain ⟨W, ⟨hWi, hWlc⟩, hW⟩ := hcob
   have hx_add : ∀ g ∈ Gn T L, ∀ h ∈ Gn T L, x (g * h) = x g + x h := fun g hg h hh => (hxy g hg h hh).1
   have hlq_add := kum_add T hnL (qq_ne_zero T (L + n)) hlq

@@ -128,7 +128,7 @@ theorem exists_sections_orbit_subset_nonzeroLocus : ∀ (Γ : Type) [Group Γ] [
   intro Γ _ _ R _ X s ρ hs
   obtain ⟨N, j, hj, -⟩ := hs
 
-  haveI : CompactSpace (PSpace R N) := by
+  have : CompactSpace (PSpace R N) := by
     refine ⟨?_⟩
     have hcov : (Set.univ : Set (PSpace R N)) = ⋃ i, (ProjSpace.chart R N i : Set (PSpace R N)) := by
       ext y
@@ -136,7 +136,7 @@ theorem exists_sections_orbit_subset_nonzeroLocus : ∀ (Γ : Type) [Group Γ] [
       exact ProjSpace.exists_mem_chart R N y
     rw [hcov]
     exact isCompact_iUnion fun i => (ProjSpace.isAffineOpen_chart R N i).isCompact
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace j
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace j
 
   obtain ⟨d, n, F, hd, hF, hcov⟩ := exists_forms_forall_mem_basicOpen (fun g => (ρ g).asIso.hom ≫ j)
   refine ⟨(lbPow (ProjSpace.O1 R N) d).pull j, n, fun i => secPull (ProjSpace.formSec d (F i) (hF i)) j,
@@ -270,8 +270,8 @@ theorem isPullback_fractionField {O O' F F' : Type} [CommRing O] [CommRing O'] [
     exact Function.Injective.of_comp (f := algebraMap O F) this
   refine ⟨hinj, ?_⟩
   have hfin : b.Finite := (IsFinite.SpecMap_iff _).mp hb
-  letI := b.toAlgebra
-  letI := ((algebraMap O F).comp b).toAlgebra
+  let := b.toAlgebra
+  let := ((algebraMap O F).comp b).toAlgebra
   have : IsScalarTower O' O F := .of_algebraMap_eq' rfl
   have : Module.Finite O' O := hfin
   have : FaithfulSMul O' O := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
@@ -328,8 +328,8 @@ theorem exists_quotient_model_scheme : ∀ (E : Type) [Field E] [NumberField E] 
   intro E _ _ _ H U F O _ _ c t β Γ _ _ C U' F' O' _ _ c' β' b k r ρ₀ ρ hβ hβ' hbk hb hrc hr hρ
   obtain ⟨⟨_, _⟩, -, hF⟩ := hβ
   obtain ⟨⟨_, _⟩, -, hF'⟩ := hβ'
-  letI := β.toAlgebra
-  letI := β'.toAlgebra
+  let := β.toAlgebra
+  let := β'.toAlgebra
   obtain ⟨hN, hC, hS, hpre, hfl, hdom, hqc⟩ :=
     genericPart_dense_proOpen O F C.X U C.s C.jQ C.flat C.proj C.jQ_open C.jQ_dense
   have hdom' : IsDominant C.j := hdom
@@ -361,7 +361,7 @@ theorem exists_quotient_model_scheme : ∀ (E : Type) [Field E] [NumberField E] 
   obtain ⟨-, hnorm, hflat⟩ := _root_.GlobalTheory.quotient_isReduced_isNormal_flat Γ C.X X' ρ π hπ
   have hbf : Flat (spMap b) := by
     rw [Flat.SpecMap_iff]
-    letI := b.toAlgebra
+    let := b.toAlgebra
     have : FaithfulSMul O' O := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
     exact RingHom.flat_algebraMap_iff.mpr (inferInstance : Module.Flat O' O)
   have hs'f : Flat s' := hflat O' s' (by rw [hs']; have := C.flat; infer_instance)

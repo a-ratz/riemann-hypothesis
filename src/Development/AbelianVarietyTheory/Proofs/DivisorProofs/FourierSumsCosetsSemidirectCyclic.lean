@@ -111,10 +111,10 @@ theorem fourier_coset_sums : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [
     rw [this, Units.val_inj, hinj.eq_iff]
   refine ⟨η, fun g => by simp [η], by rw [show η (inr s) = η₀ s from by simp [η], hη₀s]; rfl, ?_⟩
   intro X Y
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G := Fintype.ofFinite G
   let e : G ⋊[φ] Γ ≃ G × Γ :=
     ⟨fun x => (x.left, x.right), fun p => ⟨p.1, p.2⟩, fun _ => rfl, fun _ => rfl⟩
-  haveI : Fintype (G ⋊[φ] Γ) := Fintype.ofEquiv (G × Γ) e.symm
+  have : Fintype (G ⋊[φ] Γ) := Fintype.ofEquiv (G × Γ) e.symm
 
   have key : ∀ (c : ℂ) (t : Γ), (∀ x : G ⋊[φ] Γ, c * (η x : ℂ)⁻¹ = 1 ↔ x.right = t) →
       c ^ Nat.card Γ = 1 →

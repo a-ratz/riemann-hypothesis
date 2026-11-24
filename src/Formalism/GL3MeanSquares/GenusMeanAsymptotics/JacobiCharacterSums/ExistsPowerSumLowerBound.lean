@@ -180,7 +180,7 @@ theorem turan_lb (C : ℝ) (hC : 0 < C) (a n m : ℕ) (hn : 1 ≤ n) :
       _ = n / (C * (m + n)) := by rw [div_div, mul_comm]
   calc Real.exp (-((a : ℝ) * m) - a * n * Real.log (max C 1))
       = Real.exp (-(m : ℝ) / n - Real.log (max C 1)) ^ (a * n) := by
-        rw [← Real.exp_nat_mul]
+        rw [← Real.exp_natCast_mul]
         congr 1
         push_cast
         field_simp
@@ -205,7 +205,7 @@ theorem fact_bound (x : ℝ) (hx : 0 ≤ x) (j : ℕ) (hj : 1 ≤ j) :
           first
             | exact Real.pow_div_factorial_le_exp _ hjpos.le j
             | exact Real.pow_div_factorial_le_exp hjpos.le j
-      _ = Real.exp 1 ^ j := by rw [← Real.exp_nat_mul, mul_one]
+      _ = Real.exp 1 ^ j := by rw [← Real.exp_natCast_mul, mul_one]
   have h1 : 1 / (j.factorial : ℝ) ≤ Real.exp 1 ^ j / (j : ℝ) ^ j := by
     rw [div_le_div_iff₀ hF hP]
     rw [div_le_iff₀ hF] at hkey

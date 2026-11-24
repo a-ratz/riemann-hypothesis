@@ -53,7 +53,7 @@ namespace GlobalTheory.FockCompare.SymplVal
 theorem trace_field {F E : Type} [Field F] [Field E] [Algebra F E] [CharZero F] (h2 : Module.finrank F E = 2)
     (σ : E →ₐ[F] E) (hσ : ∀ e, σ (σ e) = e) (hf : ∀ e, σ e = e → ∃ f, algebraMap F E f = e) (e : E) :
     algebraMap F E (Algebra.trace F E e) = e + σ e := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
   obtain ⟨a, ha⟩ := hf (e + σ e) (by rw [map_add (f := _), hσ, add_comm])
   have h1 : Algebra.trace F E (σ e) = Algebra.trace F E e :=
     Algebra.trace_eq_of_algEquiv (AlgEquiv.ofAlgHom σ σ (AlgHom.ext hσ) (AlgHom.ext hσ)) e
@@ -65,7 +65,7 @@ theorem trace_tensor {F E : Type} [Field F] [Field E] [Algebra F E] [CharZero F]
     (σ : E →ₐ[F] E) (hσ : ∀ e, σ (σ e) = e) (hf : ∀ e, σ e = e → ∃ f, algebraMap F E f = e)
     (R : Type) [CommRing R] [Algebra F R] (z : R ⊗[F] E) :
     algebraMap R (R ⊗[F] E) (Algebra.trace R (R ⊗[F] E) z) = z + sigR R σ z := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
   induction z using TensorProduct.induction_on with
   | zero => simp
   | add a b ha hb => simp only [map_add (f := _), ha, hb]; ring

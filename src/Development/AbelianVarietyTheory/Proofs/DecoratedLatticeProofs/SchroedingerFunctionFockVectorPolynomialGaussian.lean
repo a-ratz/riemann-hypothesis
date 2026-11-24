@@ -128,7 +128,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 theorem hasDerivAt_iter {u : E → ℂ} (hu : ContDiff ℝ ∞ u) (k : ℕ) (y x : E) (t : ℝ) :
     HasDerivAt (fun t : ℝ => iteratedFDeriv ℝ k u (y + t • x) (fun _ => x))
       (iteratedFDeriv ℝ (k+1) u (y + t • x) (fun _ => x)) t := by
-  have hk : (k : WithTop ℕ∞) < ∞ := by exact_mod_cast ENat.coe_lt_top k
+  have hk : (k : WithTop ℕ∞) < ∞ := by exact_mod_cast ENat.natCast_lt_top k
   have hd := ((hu.differentiable_iteratedFDeriv hk) (y + t • x)).hasFDerivAt
   have hl : HasDerivAt (fun t : ℝ => y + t • x) x t := by
     simpa using ((hasDerivAt_id t).smul_const x).const_add y
@@ -238,7 +238,7 @@ theorem foldr_ofFn_dirD {u : E → ℂ} (hu : ContDiff ℝ ∞ u) : ∀ (k : ℕ
     intro m
     rw [List.ofFn_succ, List.foldr_cons, ih (fun i => m i.succ)]
     have hd : Differentiable ℝ (iteratedFDeriv ℝ k u) :=
-      ContDiff.differentiable_iteratedFDeriv (by exact_mod_cast ENat.coe_lt_top k) hu
+      ContDiff.differentiable_iteratedFDeriv (by exact_mod_cast ENat.natCast_lt_top k) hu
     funext x
     have hA : HasFDerivAt (iteratedFDeriv ℝ k u) (fderiv ℝ (iteratedFDeriv ℝ k u) x) (x + (0:ℝ) • m 0) := by
       simpa using (hd x).hasFDerivAt
@@ -452,10 +452,10 @@ theorem exists_poly_mul_gauss_of_annC : ∀ (D : D7) (V : HSp D) (n : ℕ) (l : 
   funext k
   obtain ⟨τ, i, j, b⟩ := k
   cases b
-  · simp only [φ, r, Bool.false_eq_true, if_false, if_true, map_mul, map_add (f := _), MvPolynomial.aeval_C, MvPolynomial.aeval_X,
+  · simp only [φ, r, Bool.false_eq_true, ite_false, ite_true, map_mul, map_add (f := _), MvPolynomial.aeval_C, MvPolynomial.aeval_X,
       Matrix.of_apply, Algebra.algebraMap_self, RingHom.id_apply, Complex.re_eq_add_conj]
     ring
-  · simp only [φ, r, Bool.false_eq_true, if_false, if_true, map_mul, map_sub, MvPolynomial.aeval_C, MvPolynomial.aeval_X,
+  · simp only [φ, r, Bool.false_eq_true, ite_false, ite_true, map_mul, map_sub, MvPolynomial.aeval_C, MvPolynomial.aeval_X,
       Matrix.of_apply, Algebra.algebraMap_self, RingHom.id_apply, Complex.im_eq_sub_conj]
     ring
 
@@ -538,11 +538,11 @@ theorem slice_polyGauss : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V :
       ext i j
       by_cases h : τ' = τ
       · subst h
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         show z τ' i j + ((t : ℂ) • X) i j = z τ' i j + t • w τ' i j
         rw [hw0, Complex.real_smul]
         rfl
-      · rw [if_neg h]
+      · rw [ite_eq_right h]
         show z τ' i j + (0 : Matrix (Fin V.rank) (Fin n) ℂ) i j = z τ' i j + t • w τ' i j
         rw [hw1 τ' h]
         simp
@@ -703,7 +703,7 @@ theorem mem_fockA_of_slices : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ 
   let Pre : ((Fin V.rank → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) → ℂ) →ₗ[ℂ] (Mx D V.rank n → ℂ) :=
     LinearMap.funLeft ℂ ℂ fin
   let W : Submodule ℂ (Mx D V.rank n → ℂ) := Submodule.span ℂ (Set.range fun i => Pre (G i))
-  haveI : FiniteDimensional ℂ W := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
+  have : FiniteDimensional ℂ W := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   obtain ⟨S, g', hg'W, hrec⟩ := exists_eval_recon W
   have hWle : W ≤ (WeilM.SB _).map Pre := Submodule.span_le.2 (by rintro _ ⟨i, rfl⟩; exact ⟨G i, hG i, rfl⟩)
   choose g'' hg''SB hg''eq using fun y => hWle (hg'W y)

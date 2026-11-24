@@ -169,7 +169,7 @@ open GlobalTheory.PlaceInt.FrameTie GermD in
 
 theorem GlobalTheory.PlaceInt.frameTie_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ReciprocityTheory.ChartRestriction.G.PullbackSections.FrameTieSt Xo c := by
   intro E _ _ _ H Dw l Xo c _ _ Tc io yI C
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨⟨-, hact, -⟩, x', hx2, hx1, ⟨e', he'⟩, wP', hPg, ⟨cP₂, hP₂, hP₂'⟩, cP₁, hP₁, hP₁'⟩ := C.gen
   have ha : ∀ m, x' m ≫ C.I.t'.act.act H.w0 = Formalism.L2.Pj.homAt (𝟙 (Sp Tc.Fr))
       (jetSubstP m fun p : Fin 1 × Fin C.ch.d => psTrunc m (C.ch.B.A.act H.w0 p.2)) ≫ x' m := fun m =>

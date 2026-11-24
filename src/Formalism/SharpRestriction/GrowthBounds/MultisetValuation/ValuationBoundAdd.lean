@@ -60,7 +60,7 @@ variable {p : ℕ} [Fact p.Prime] {X : Sys p} (Y : Pend X)
 
 theorem pKc_ne : (p : Y.Kc) ≠ 0 := by
   rw [← map_natCast (algebraMap (K0 p) Y.Kc)]
-  exact (map_ne_zero (algebraMap (K0 p) Y.Kc)).mpr (WittVector.FractionRing.p_nonzero p (kb p))
+  exact (map_ne_zero (algebraMap (K0 p) Y.Kc)).mpr (WittVector.FractionRing.p_ne_zero p (kb p))
 
 include Y in
 theorem pK_ne : (p : X.G.Kf) ≠ 0 := by

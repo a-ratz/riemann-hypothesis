@@ -177,10 +177,10 @@ theorem finite_not_isUnit_det {E R : Type} [Field E] [CommRing R] (φ : E →+* 
     by_cases h : i = j <;> simp [h, Matrix.one_apply]
   have h1 : ∀ M ∈ {M : Ideal R | M.IsMaximal ∧ 1 - ε ∈ M}, {l : E | (1 + φ l • G).det ∈ M}.Finite := by
     rintro M ⟨hM, -⟩
-    letI := Ideal.Quotient.field M
+    let := Ideal.Quotient.field M
     refine (finite_det_one_add_smul_eq_zero ((Ideal.Quotient.mk M).comp φ)
       (G.map (Ideal.Quotient.mk M))).subset fun l hl => ?_
-    rw [Set.mem_setOf_eq, ← key, Ideal.Quotient.eq_zero_iff_mem]
+    rw [Set.mem_ofPred_eq, ← key, Ideal.Quotient.eq_zero_iff_mem]
     exact hl
   refine ((hfin.biUnion h1).union (Set.finite_singleton (-1))).subset fun l hl => ?_
   obtain ⟨M, hM, hl⟩ := exists_max_ideal_of_mem_nonunits (mem_nonunits_iff.2 hl)
@@ -188,7 +188,7 @@ theorem finite_not_isUnit_det {E R : Type} [Field E] [CommRing R] (φ : E →+* 
     rw [mul_sub, mul_one, hε, sub_self]; exact M.zero_mem
   rcases hM.isPrime.mem_or_mem h0 with h | h
   · right
-    letI := Ideal.Quotient.field M
+    let := Ideal.Quotient.field M
     have h2 := Ideal.Quotient.eq_zero_iff_mem.2 hl
     have h3 := Ideal.Quotient.eq_zero_iff_mem.2 h
     have h4 : G.map (Ideal.Quotient.mk M) = 1 := by
@@ -254,14 +254,14 @@ theorem infinite_norm_one {F E : Type} [Field F] [Field E] [CharZero E] [Algebra
 
 theorem exists_norm_one_isUnit_det : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (c : E ≃ₐ[F] E), Module.finrank F E = 2 → (∀ x, c (c x) = x) → c ≠ 1 → ∀ (n : ℕ) (g : Matrix (Fin n) (Fin n) (RA F E)) (e : FiniteAdeleRing (𝓞 F) F), e * e = e → {v | e v ≠ 0}.Finite → ∃ lam : E, lam * c lam = 1 ∧ IsUnit (1 + ((1 : FiniteAdeleRing (𝓞 F) F) ⊗ₜ[F] lam) • ((e ⊗ₜ[F] (1 : E)) • g + ((1 - e) ⊗ₜ[F] (1 : E)) • (1 : Matrix (Fin n) (Fin n) (RA F E)))).det := by
   intro F E _ _ _ _ _ c hrk hc hc1 n g e he hfin
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   have hsub : ((1 - e) ⊗ₜ[F] (1 : E) : RA F E) = 1 - e ⊗ₜ[F] (1 : E) := by
     rw [TensorProduct.sub_tmul, Algebra.TensorProduct.one_def]
   have hM : {M : Ideal (RA F E) | M.IsMaximal ∧ 1 - e ⊗ₜ[F] (1 : E) ∈ M}.Finite := by
     refine ((finite_primes_one_sub F e hfin).biUnion fun P _ =>
       Algebra.QuasiFinite.finite_primesOver (S := RA F E) P).subset ?_
     rintro M ⟨hM, h⟩
-    haveI := hM.isPrime
+    have := hM.isPrime
     refine Set.mem_biUnion (x := M.under (FiniteAdeleRing (𝓞 F) F)) ⟨inferInstance, ?_⟩
       ⟨inferInstance, inferInstance⟩
     rw [← hsub] at h

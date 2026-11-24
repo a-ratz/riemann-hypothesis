@@ -238,7 +238,7 @@ theorem measure_support : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     MeasurableSet {x : Matrix (Fin r ⊕ E) (Fin r ⊕ D) k | InSupp x} ∧
     (volM ν (Fin r ⊕ E) (Fin r ⊕ D)).real {x | InSupp x} = volAdd ν r * ((resCard k : ℝ) ^ (r * Fintype.card E))⁻¹ := by
   intro k _ _ _ _ _ _ ν hν r D E _ _ _ _
-  haveI := hν.1
+  have := hν.1
   rw [inSupp_eq_pre]
   refine ⟨GlobalTheory.IndexVolume.measurableSet_pre _, ?_⟩
   have h1 : (volM ν (Fin r ⊕ E) (Fin r ⊕ D)).real (GlobalTheory.IndexVolume.pre (suppBar (k := k) (Fin r) D E)) =
@@ -480,7 +480,7 @@ theorem part1 (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNona
     (ξ μ₀ : kˣ →* ℂˣ) (hξu : IsUnitaryChar ξ) (hξt : IsTame ξ) (hμu : IsUnram μ₀) (hμn : IsUnitaryChar μ₀) :
     IsBiType ξ (fun g : GL (A ⊕ D) k =>
       ip ν (om (μ₀ * ξ) g (1 : GL (A ⊕ E) k) (datum ξ)) (datum ξ : Matrix (A ⊕ E) (A ⊕ D) k → ℂ)) := by
-  haveI := hν.1
+  have := hν.1
   have hμ' : ∀ x, ‖((μ₀ * ξ) x : ℂ)‖ = 1 := fun x => by
     simp [MonoidHom.mul_apply, Units.val_mul, norm_mul, hξu x, hμn x]
   have hL1 := _root_.GlobalTheory.DatumEigen.om_datum k A D E ξ μ₀ hξt hμu
@@ -540,7 +540,7 @@ theorem part3 (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNona
     ip ν (om μ (mtor ϖ e) (1 : GL (Fin r ⊕ E) k) (datum ξ)) (datum ξ : Matrix (Fin r ⊕ E) (Fin r ⊕ D) k → ℂ) =
       (μ ϖ : ℂ) ^ (∑ i, e i) * ((volAdd ν r * ((resCard k : ℝ) ^ (r * Fintype.card E))⁻¹ : ℝ) : ℂ) *
       (resCard k : ℂ) ^ (-((r + Fintype.card E : ℕ) : ℂ) / 2 * (sumAbs e : ℂ)) := by
-  haveI := hν.1
+  have := hν.1
   obtain ⟨hS, hV⟩ := _root_.GlobalTheory.SupportVolume.measure_support k ν hν r D E
   have q1 : 1 < Nat.card 𝓀[k] := Finite.one_lt_card
   have q0 : (0 : ℝ) < resCard k := by unfold resCard; exact_mod_cast (lt_trans one_pos q1)

@@ -155,7 +155,7 @@ theorem exists_eichler (θ : 𝓞 E) (hθ : (θ : E) + star (θ : E) = 1) {r : �
     rw [eich_apply, h1, h2]
     simp
   refine ⟨eichE S σ w _ hww hwσ ht, ?_, _, hfix, fun x => eich_apply S σ w _ x⟩
-  simp only [NLam, Set.mem_setOf_eq, IsAutLam]
+  simp only [NLam, Set.mem_ofPred_eq, IsAutLam]
   refine ⟨⟨?_, ?_⟩, ?_, ?_⟩
   · change ∀ x y, S.hT (eich S σ w _ x) (eich S σ w _ y) = S.hT x y
     exact fun x y => eich_isom S σ w _ hww hwσ ht x y

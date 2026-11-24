@@ -103,7 +103,7 @@ theorem pow_ext {G G' : Over (Sp V)} [GrpObj G] [GrpObj G'] {n : ℕ} (pG : IsPo
 
 theorem one_pr {G G' : Over (Sp V)} [GrpObj G] [GrpObj G'] {n : ℕ} (pG : IsPowGrp G' G n) {T : Over (Sp V)} (i : Fin n) :
     (1 : T ⟶ G') ≫ pG.pr i = 1 := by
-  haveI := pG.hom i
+  have := pG.hom i
   exact MonObj.one_comp _
 
 end GlobalTheory.PowGerm.UnivPow

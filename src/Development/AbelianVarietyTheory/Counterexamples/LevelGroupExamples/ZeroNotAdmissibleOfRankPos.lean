@@ -126,7 +126,7 @@ theorem zetaM_coe (c : Coeff l) : ((zetaM c : c.F) : ℂ) = zeta l.M := by
   rw [hdiv]
   change (zeta l.M') ^ k = _
   unfold zeta
-  rw [← Complex.exp_nat_mul, hk]
+  rw [← Complex.exp_natCast_mul, hk]
   congr 1
   have : (k : ℂ) ≠ 0 := by exact_mod_cast hk0
   have : (l.M : ℂ) ≠ 0 := by exact_mod_cast hM
@@ -209,7 +209,7 @@ theorem levelFourierDatum_eq_iff (c : Coeff l) {n : ℕ} (x0 x0' : Fin n → Dw.
     exact zpow_congr c (pairL_congr _ _ _ _ h (fun b => by simp))
 
 theorem finite_LevQ : Finite (LevQ Dw l) := by
-  haveI := Dw.fin
+  have := Dw.fin
   have hM : l.M ≠ 0 := by have := l.three_le; omega
   have hb : l.Mb ≠ ⊥ := by
     intro h
@@ -217,8 +217,8 @@ theorem finite_LevQ : Finite (LevQ Dw l) := by
     have := this (Ideal.subset_span rfl)
     rw [h, Ideal.mem_bot] at this
     exact hM (by exact_mod_cast this)
-  haveI : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ hb
-  haveI : Module.Finite (𝓞 E ⧸ l.Mb) (LevQ Dw l) := Module.Finite.of_restrictScalars_finite (𝓞 E) _ _
+  have : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ hb
+  have : Module.Finite (𝓞 E ⧸ l.Mb) (LevQ Dw l) := Module.Finite.of_restrictScalars_finite (𝓞 E) _ _
   exact Module.finite_of_finite (𝓞 E ⧸ l.Mb)
 
 end GlobalTheory.LevelPairing

@@ -72,7 +72,7 @@ theorem exists_joint_eigenvector {ι : Type} (T : ι → Module.End ℂ V) (hT :
     ∃ v ∈ W, v ≠ 0 ∧ ∃ c : ι → ℂ, ∀ i, T i v = c i • v := by
   obtain ⟨U, ⟨hU0, hUW, hU⟩, hmin⟩ := WellFounded.has_min (wellFounded_lt (α := Submodule ℂ V))
     {U | U ≠ ⊥ ∧ U ≤ W ∧ ∀ i, ∀ v ∈ U, T i v ∈ U} ⟨W, h0, le_rfl, hW⟩
-  haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU0
+  have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU0
   have key : ∀ i, ∃ c : ℂ, ∀ v ∈ U, T i v = c • v := by
     intro i
     obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue ((T i).restrict (hU i))
@@ -173,7 +173,7 @@ theorem exists_highest [Nontrivial V] (n : ℕ) (F : Fin n → Fin n → Module.
   · rw [hF]; simp
   · have h1 := hc i j i
     have h2 := hc j j i
-    simp only [hij.ne, if_false, if_true] at h1 h2
+    simp only [hij.ne, ite_false, ite_true] at h1 h2
     rw [sub_mul, mul_sub]
     linear_combination (norm := module) h1 - h2
   · simp [hν, sub_smul]
@@ -234,7 +234,7 @@ theorem isPreconnected_invSet : IsPreconnected (invSet E a) := by
     ext i j
     by_cases h : i = j <;> simp [h] <;> ring
   have hc : {s | x s ∉ invSet E a}.Countable := by
-    refine (Set.countable_iUnion fun w => (Polynomial.finite_setOf_isRoot (p := p w) fun h => ?_).countable).mono
+    refine (Set.countable_iUnion fun w => (Polynomial.finite_setOfPred_isRoot (p := p w) fun h => ?_).countable).mono
       fun s hs => ?_
     · simpa [h] using hp w 0
     · have h : ¬ IsUnit (1 + s • B).det := fun h => hs ((Matrix.isUnit_iff_isUnit_det _).2 h)
@@ -592,7 +592,7 @@ theorem commute_dmat (Ξ : AlgRep E a) (Z : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ)
       conv_lhs => rw [← Finset.univ_sum_single x]
       refine Finset.sum_congr rfl fun w _ => ?_
       unfold atEmb
-      rw [if_pos (by rw [InfinitePlace.mk_embedding])]
+      rw [ite_eq_left (by rw [InfinitePlace.mk_embedding])]
       congr 1 <;> simp
 
     rw [e, map_sum]
@@ -610,7 +610,7 @@ theorem commute_dmat (Ξ : AlgRep E a) (Z : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ)
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem exists_scalar (Ξ : AlgRep E a) (Z : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ) (h : ∀ y, Z * Ξ.mat y = Ξ.mat y * Z) :
     ∃ c : ℂ, Z = c • (1 : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ) := by
-  haveI : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
+  have : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (Matrix.toLin' Z)
   refine ⟨c, ?_⟩
   have h1 := (Ξ.irred (Module.End.eigenspace (Matrix.toLin' Z) c) fun y v hv => by
@@ -632,7 +632,7 @@ theorem qdet_scalar (Ξ : AlgRep E a) (τ : E →+* ℂ) (u : ℂ) :
 theorem exists_dualInfChar (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (Ξ : AlgRep E a)
     (τ : E →+* ℂ) : ∃ m : Multiset ℂ, HasDualInfChar Ξ τ m ∧ m.Nodup ∧
       ∀ z ∈ m, ∃ n : ℤ, z = (n : ℂ) + ((a : ℂ) - 1) / 2 := by
-  haveI : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
+  have : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
   let f := (Matrix.toLinAlgEquiv' : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ ≃ₐ[ℂ] Module.End ℂ (Fin Ξ.d → ℂ)).toAlgHom
   have hf : ∀ M v, f M v = M *ᵥ v := fun _ _ => rfl
   have hgl : Formalism.REAL.GlRel fun i j => f (dualE Ξ τ i j) := fun i j k l => by

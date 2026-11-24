@@ -108,7 +108,7 @@ theorem ae_eq_of_dense_of_local_sq_bound : ∀ {X : Type} [MeasurableSpace X] (�
     obtain ⟨CP, hCP⟩ := hPb n
     obtain ⟨CQ, hCQ⟩ := hQb n
     have hmeas : AEMeasurable (fun x => ((‖P u x - Q u x‖₊ : ENNReal)) ^ 2) (μ.restrict (K n)) :=
-      (((hCP u).1.sub (hCQ u).1).nnnorm.aemeasurable.coe_nnreal_ennreal).pow_const 2
+      (((hCP u).1.sub (hCQ u).1).nnNorm.aemeasurable.coe_nnreal_ennreal).pow_const 2
     set M : ℝ := 2 * (|CP| + |CQ|) with hM
     have hbound : ∀ δ : ℝ, 0 < δ →
         ∫⁻ x, ((‖P u x - Q u x‖₊ : ENNReal)) ^ 2 ∂(μ.restrict (K n)) ≤ ENNReal.ofReal (M * δ ^ 2) := by
@@ -130,7 +130,7 @@ theorem ae_eq_of_dense_of_local_sq_bound : ∀ {X : Type} [MeasurableSpace X] (�
           have : P u x - Q u x = (P u x - P u' x) - (Q u x - Q u' x) + (P u' x - Q u' x) := by abel
           rw [this, e1', e2', e3', sub_self, add_zero]
         rw [e]
-        have hn : ‖P (u - u') x - Q (u - u') x‖₊ ≤ ‖P (u - u') x‖₊ + ‖Q (u - u') x‖₊ := nnnorm_sub_le _ _
+        have hn : ‖P (u - u') x - Q (u - u') x‖₊ ≤ ‖P (u - u') x‖₊ + ‖Q (u - u') x‖₊ := nnNorm_sub_le _ _
         have hsq : ‖P (u - u') x - Q (u - u') x‖₊ ^ 2 ≤
             2 * ‖P (u - u') x‖₊ ^ 2 + 2 * ‖Q (u - u') x‖₊ ^ 2 := by
           have hn' : ((‖P (u - u') x - Q (u - u') x‖₊ : NNReal) : ℝ) ≤
@@ -149,7 +149,7 @@ theorem ae_eq_of_dense_of_local_sq_bound : ∀ {X : Type} [MeasurableSpace X] (�
         _ = 2 * ∫⁻ x, ((‖P (u - u') x‖₊ : ENNReal)) ^ 2 ∂(μ.restrict (K n)) +
               2 * ∫⁻ x, ((‖Q (u - u') x‖₊ : ENNReal)) ^ 2 ∂(μ.restrict (K n)) := by
             rw [lintegral_add_left'
-              (((hCP (u - u')).1.nnnorm.aemeasurable.coe_nnreal_ennreal.pow_const 2).const_mul 2),
+              (((hCP (u - u')).1.nnNorm.aemeasurable.coe_nnreal_ennreal.pow_const 2).const_mul 2),
               lintegral_const_mul' _ _ (by norm_num), lintegral_const_mul' _ _ (by norm_num)]
         _ ≤ 2 * ENNReal.ofReal (CP * ‖u - u'‖ ^ 2) + 2 * ENNReal.ofReal (CQ * ‖u - u'‖ ^ 2) := by
             gcongr
@@ -244,14 +244,14 @@ theorem extend_ae_linear_of_local_sq : ∀ {X : Type} [MeasurableSpace X] (μ : 
     refine Measure.AbsolutelyContinuous.mk fun s hs h0 => ?_
     rw [hν, Measure.sum_apply _ hs]
     refine ENNReal.tsum_eq_zero.2 fun n => ?_
-    rw [Measure.smul_apply, Measure.restrict_apply hs, smul_eq_mul,
+    rw [smul_apply, Measure.restrict_apply hs, smul_eq_mul,
       measure_mono_null Set.inter_subset_left h0, mul_zero]
   have hμν : μ ≪ ν := by
     refine Measure.AbsolutelyContinuous.mk fun s hs h0 => ?_
     rw [hν, Measure.sum_apply _ hs, ENNReal.tsum_eq_zero] at h0
     have h1 : ∀ n, μ (s ∩ K n) = 0 := fun n => by
       have := h0 n
-      rw [Measure.smul_apply, Measure.restrict_apply hs, smul_eq_mul] at this
+      rw [smul_apply, Measure.restrict_apply hs, smul_eq_mul] at this
       exact (mul_eq_zero.1 this).resolve_left (hw0 n)
     have : s = ⋃ n, s ∩ K n := by rw [← Set.inter_iUnion, hcov, Set.inter_univ]
     rw [this]; exact measure_iUnion_null h1
@@ -300,7 +300,7 @@ theorem extend_ae_linear_of_local_sq : ∀ {X : Type} [MeasurableSpace X] (μ : 
     apply ENNReal.toReal_le_of_le_ofReal (by positivity)
     rw [eLpNorm_eq_eLpNorm' (by norm_num) (by norm_num) (hae u u.2)]
     exact eLpNorm_two_le_of_lintegral ν _ _ (by positivity) (hsq u u.2)
-  have hdense : DenseRange D.subtype := hD.denseRange_val
+  have hdense : DenseRange D.subtype := hD.denseRange_subtypeVal
   set Ext : H →L[ℂ] Lp E 2 ν := L.extendOfNorm D.subtype with hExtdef
   have hExt : ∀ u (hu : u ∈ D), Ext u = (hmem u hu).toLp (F u) := fun u hu => by
     rw [← hL u hu]
@@ -309,14 +309,14 @@ theorem extend_ae_linear_of_local_sq : ∀ {X : Type} [MeasurableSpace X] (μ : 
   have hTae : ∀ u, T u =ᵐ[ν] Ext u := by
     intro u
     by_cases hu : u ∈ D
-    · simp only [T, if_pos hu]
+    · simp only [T, ite_eq_left hu]
       rw [hExt u hu]
       exact (MemLp.coeFn_toLp _).symm
-    · simp only [T, if_neg hu]
+    · simp only [T, ite_eq_right hu]
       rfl
   have hres : ∀ n, μ.restrict (K n) ≪ ν := fun n =>
     (Measure.absolutelyContinuous_of_le Measure.restrict_le_self).trans hμν
-  refine ⟨T, fun u hu => if_pos hu, fun u u' => ?_, fun b u => ?_, fun n => ?_⟩
+  refine ⟨T, fun u hu => ite_eq_left hu, fun u u' => ?_, fun b u => ?_, fun n => ?_⟩
   · refine hμν.ae_le ?_
     filter_upwards [hTae (u + u'), hTae u, hTae u', Lp.coeFn_add (Ext u) (Ext u')]
       with x h1 h2 h3 h4
@@ -367,7 +367,7 @@ theorem exists_isQuotMeas_Sset : ∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → �
   obtain ⟨μN, hN⟩ := Formalism.FourierDecayAlt.P.unipotent_haar_exists k r
   have conv : ∀ {U : Set (Mat k r)} {μ : Measure (Mt k r)}, Formalism.FourierDecayAlt.B.IsHaarOn U μ → IsHaarOn U μ := by
     intro U μ h
-    haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
+    have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
     exact ⟨inferInstance, h.ne_zero, h.conc, h.left⟩
   obtain ⟨hSg, hsub, hH, hR⟩ := GlobalTheory.muSof_isHaar k r z μW μN hz hT
     (conv hW) (conv hN)
@@ -566,7 +566,7 @@ theorem lint_Afun_compact_le : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
   have hFm : Measurable F := by
     have h1 : ContinuousOn (fun x => (‖A x‖₊ : ENNReal) ^ 2) GM := by
       have h0 : ContinuousOn (fun x => (‖A x‖₊ : ENNReal)) GM :=
-        (ENNReal.continuous_coe.comp continuous_nnnorm).comp_continuousOn hAc
+        (ENNReal.continuous_coe.comp continuous_nnNorm).comp_continuousOn hAc
       exact (ENNReal.continuous_pow 2).comp_continuousOn h0
     have h2 := ContinuousOn.measurable_piecewise h1
       (continuousOn_const (c := (0 : ENNReal)) (s := GMᶜ)) hGMc.measurableSet
@@ -625,7 +625,7 @@ theorem lint_Afun_compact_le : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
     rw [← hval, ofReal_integral_eq_lintegral_ofReal hint
       (Filter.Eventually.of_forall fun x => by positivity)]
     refine lintegral_congr fun x => ?_
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ← enorm_eq_nnnorm, ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ← eNorm_eq_nnNorm, ofReal_norm]
   calc ∫⁻ x in K, (‖A x‖₊ : ENNReal) ^ 2 ∂μG = ∫⁻ x in K, F x ∂μG := by
         refine lintegral_congr_ae (ae_restrict_of_ae ?_)
         filter_upwards [hae] with x hx
@@ -673,12 +673,12 @@ theorem afun_add (hStd : Std σ w a μG d) (hSide : Side z π μS) {v : H} (hv :
   have h2 := (_root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w) hst hStd.2.2.2.2.2.2.2.1
     (σ x u') (hst x hx u' hu') v hv).1
   simp only [Afun, be, map_add (f := _), coef_add_left, add_smul]
-  rw [integral_add h1 h2, ContinuousLinearMap.add_apply]
+  rw [integral_add h1 h2, add_apply]
 
 theorem afun_smul (b : ℂ) (u v : H) (ξ : Wp) (x : Mat k r) :
     Afun (psiGen k r z c) π μS σ (b • u) v ξ x = b • Afun (psiGen k r z c) π μS σ u v ξ x := by
   simp only [Afun, be, map_smul, coef_smul_left, mul_smul]
-  rw [integral_smul, ContinuousLinearMap.smul_apply]
+  rw [integral_smul, smul_apply]
 
 theorem afun_mul_right (hσ : IsURepOn (GG k r) σ) (u v : H) (ξ : Wp) {x y : Mat k r}
     (hx : x ∈ GG k r) (hy : y ∈ GG k r) :
@@ -771,7 +771,7 @@ theorem GlobalTheory.SgInf.bessel_ext_bounded : ∀ (k r : ℕ) {H : Type} [Norm
     rw [sub_add_cancel] at hx
     rw [hx]; simp
   have hmeasn : ∀ u, AEMeasurable (fun x => (‖T0 u x‖₊ : ENNReal) ^ 2) μG := fun u =>
-    (hT0m u).nnnorm.aemeasurable.coe_nnreal_ennreal.pow_const 2
+    (hT0m u).nnNorm.aemeasurable.coe_nnreal_ennreal.pow_const 2
   refine ⟨fun u M => T0 u (Matrix.of.symm M), ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro u hu; funext M; show T0 u _ = _; rw [hT0D u hu]; rfl
   · intro u u'; exact hT0add u u'
@@ -809,7 +809,7 @@ theorem GlobalTheory.SgInf.bessel_ext_bounded : ∀ (k r : ℕ) {H : Type} [Norm
     have hPi := _root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hSide.1 hSide.2.1 hSide.2.2.1
     have hPin : ‖PiS (psiGen k r z c) π s‖ ≤ 1 := (hPi.2.2.1 s hs).1
     have hnorm : ∀ e : Wp, ‖PiS (psiGen k r z c) π s e‖₊ ≤ ‖e‖₊ := fun e => by
-      rw [← NNReal.coe_le_coe, coe_nnnorm, coe_nnnorm]
+      rw [← NNReal.coe_le_coe, coe_nnNorm, coe_nnNorm]
       exact ((PiS (psiGen k r z c) π s).le_opNorm e).trans
         (mul_le_of_le_one_left (norm_nonneg _) hPin)
     refine _root_.GlobalTheory.ae_eq_of_dense_of_local_sq_bound μG K hKm hcov (DD σ w : Set H) hdense
@@ -1004,7 +1004,7 @@ theorem GlobalTheory.SgInf.exists_besselExt : ∀ (k r : ℕ) {H : Type} [Normed
       ‖F u 1‖ ≤ C * (Ws.map fun ws => ‖dsigW σ ws u‖).sum := by
     intro u hu
     have := (hreg u hu).choose_spec
-    simp only [F, dif_pos hu]
+    simp only [F, dite_eq_left hu]
     exact this
   have hDDsm : ∀ u ∈ DD σ w, IsSmoothVec σ u := fun u hu => (hDDi.2.2.2.2 hw).1 u (hDDi.2.2.1 hu)
   refine ⟨fun u => F u 1, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
@@ -1055,7 +1055,7 @@ theorem GlobalTheory.SgInf.exists_besselExt : ∀ (k r : ℕ) {H : Type} [Normed
       (by rw [← hTD u hu]; exact (hF u hsu).2.1) 1 one_memG
     show F u 1 = _
     rw [this]
-    simp only [Afun, hrep.1.1, ContinuousLinearMap.one_apply]
+    simp only [Afun, hrep.1.1, one_apply_eq_self]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousBesselMapSmoothVectors =====

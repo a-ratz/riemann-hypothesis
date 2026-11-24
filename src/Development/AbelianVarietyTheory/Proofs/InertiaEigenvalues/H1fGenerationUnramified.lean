@@ -67,7 +67,7 @@ theorem admGenL_all : ∀ D : D7, Formalism.MainNotions.RamifiedCoefficientChain
   have hseq0 := GlobalTheory.SeqDim.h1f_finrank l (D.loc l) (D.locA l) ht K ↥LL.1 ↥(OL LL) hgood A
   have hseq := (hseq0 hDR).2
   have hdR0 := GlobalTheory.Per.TiedDdR.ddR_finrank_le l (D.loc l) (D.locA l) ht K LL T.V T.ρ
-  haveI := hdR0.1
+  have := hdR0.1
   have hdR := hdR0.2
   have hK : finrank ℚ_[l] ↥K.1 = finrank ℚ_[l] ↥(K0 K) :=
     (AlgEquiv.ofBijective (IsScalarTower.toAlgHom ℚ_[l] ↥(K0 K) ↥K.1) hbij).toLinearEquiv.finrank_eq.symm

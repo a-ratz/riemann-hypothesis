@@ -144,7 +144,7 @@ theorem not_injective_of_coord_eventually_const {f : (Fin e → ℂ) → Fin e �
   have h4 := congrArg (fun L : (Fin e → ℂ) →L[ℂ] ℂ => L v) h3
   have h5 : fderiv ℂ f y v m = 1 := by simpa using congrFun hv m
   simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply,
-    ContinuousLinearMap.zero_apply, h5] at h4
+    zero_apply, h5] at h4
   exact one_ne_zero h4
 
 theorem exists_injective (hC : CriticalFibreInfinite.Statement) {P : Ideal (MRing ι)} (hP : IsArithVar P (e + 1))

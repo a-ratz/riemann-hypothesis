@@ -103,12 +103,12 @@ private theorem Cls.integrable_chart (h : Cls ν p w Gd) {F : Sm E a} (hF : Gd F
 private theorem Cls.bdd_chart (h : Cls ν p w Gd) {F : Sm E a} (hF : Gd F) (g : GA E a) {S : Set (Lie E a)}
     (hS : IsCompact S) (hSU : S ⊆ invSet E a) : ∃ C : ℝ, ∀ y, ∀ x ∈ S, ‖chart F.1 (p y * g) x * w y‖ ≤ C := by
   have hu : Continuous fun x : S => (IsUnit.unit (hSU x.2 : IsUnit (Matrix.of x.1)) : GL (Fin a) (Cinf E)) := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
-    have := contDiffOn_invM.continuousOn.comp_continuous (f := fun x : S => x.1) continuous_subtype_val fun x => hSU x.2
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
+    have := contDiffOn_invM.continuousOn.comp_continuous (f := fun x : S => x.1) continuous_subtypeVal fun x => hSU x.2
     refine Continuous.congr this fun p => ?_
     simp only [Matrix.coe_units_inv]
     rfl
-  haveI : CompactSpace S := isCompact_iff_compactSpace.1 hS
+  have : CompactSpace S := isCompact_iff_compactSpace.1 hS
   obtain ⟨C, hC⟩ := h.bdd F hF _ (isCompact_range ((continuous_const (y := g)).mul (continuous_infGL.comp hu)))
   refine ⟨C, fun y x hx => ?_⟩
   rw [chart_unit F.1 g _ (hSU hx)]
@@ -119,8 +119,8 @@ private theorem chart_avg (F : GA E a → ℂ) (g : GA E a) :
     chart (avg ν p w F) g = fun x => ∫ y, chart F (p y * g) x * w y ∂ν := by
   funext x
   by_cases h : IsUnit (Matrix.of x)
-  · simp only [chart, avg, dif_pos h, mul_assoc]
-  · simp only [chart, dif_neg h, zero_mul, integral_zero]
+  · simp only [chart, avg, dite_eq_left h, mul_assoc]
+  · simp only [chart, dite_eq_right h, zero_mul, integral_zero]
 
 private theorem Cls.hasFDerivAt (h : Cls ν p w Gd) {F : Sm E a} (hF : Gd F) (g : GA E a) {x : Lie E a}
     (hx : x ∈ invSet E a) : HasFDerivAt (chart (avg ν p w F.1) g)
@@ -168,12 +168,12 @@ theorem Cls.lieD_avg (h : Cls ν p w Gd) {F : Sm E a} (hF : Gd F) (X : Lie E a) 
     lieD X (avg ν p w F.1) g = avg ν p w (GlobalTheory.CuspRep.lie E a X F).1 g := by
   have h1 : oneL E a ∈ invSet E a := isUnit_one
   rw [lieD, (h.hasFDerivAt hF g h1).fderiv]
-  simp only [chart_avg, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, ← integral_mul_const]
+  simp only [chart_avg, sum_apply, smul_apply, smul_eq_mul, ← integral_mul_const]
   rw [← integral_finsetSum _ fun i _ => (h.integrable_chart (h.lie F _ hF) g h1).mul_const _]
   refine integral_congr_ae (.of_forall fun y => ?_)
   simp only [lie_apply, lieD]
   rw [fderiv_chart F _ h1]
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, Finset.sum_mul]
+  simp only [sum_apply, smul_apply, smul_eq_mul, Finset.sum_mul]
   exact Finset.sum_congr rfl fun i _ => by ring
 
 end UpperTheory.ConvolutionTheory.BW.SliceClasses

@@ -212,7 +212,7 @@ theorem abstract {F B R n : Type} [Field F] [CommRing B] [Algebra F B] [CommRing
 
     rw [Matrix.mul_apply, Fintype.sum_prod_type, Finset.sum_comm, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
-    simp only [hp, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul, hfix _ _ (hA₀ _ _)]
+    simp only [hp, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul, hfix _ _ (hA₀ _ _)]
   have hZ : ∀ (i : n) (m : Fin r) (c : n × Fin r), (D * p) (i, m) c = (φ ^ (m : ℕ)) (w c.2 * a c.1 i) := by
     intro i m c
     have hinner : ∀ x : n, ∑ k : Fin r, D (i, m) (x, k) * p (x, k) c =
@@ -223,7 +223,7 @@ theorem abstract {F B R n : Type} [Field F] [CommRing B] [Algebra F B] [CommRing
       · intro k hk
         rw [hDdef, Matrix.blockDiagonal_apply_ne _ _ _ (Ne.symm hk), zero_mul]
     rw [Matrix.mul_apply, Fintype.sum_prod_type]
-    simp only [hinner, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul]
+    simp only [hinner, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_mul]
     rw [mul_comm]
   have hZY : D * p = p * (A₀ : Matrix (n × Fin r) (n × Fin r) B) * Gm := by
     ext ⟨i, m⟩ c
@@ -464,7 +464,7 @@ theorem exists_tower_basis (E : IntermediateField F K) {r : ℕ} (bω : Module.B
       LinearIndependent F (fun jk : n × Fin r => ((bω jk.2 : E) : K) • a jk.1) ∧
       Submodule.span F (Set.range fun jk : n × Fin r => ((bω jk.2 : E) : K) • a jk.1) =
         Submodule.span F (Set.range v) := by
-  haveI := isScalarTower_sub (M := M) E
+  have := isScalarTower_sub (M := M) E
   set V := Submodule.span F (Set.range v) with hVdef
   have hstab : ∀ e ∈ E, ∀ x ∈ V, e • x ∈ V := by
     intro e he x hx
@@ -489,13 +489,13 @@ theorem exists_tower_basis (E : IntermediateField F K) {r : ℕ} (bω : Module.B
       right_inv := fun _ => rfl }
   have hfinVE : Module.finrank F VE = Fintype.card n * r := by
     rw [← hfinV]; exact e1.finrank_eq
-  haveI : Module.Finite F V := by
+  have : Module.Finite F V := by
     rw [hVdef]; exact FiniteDimensional.span_of_finite F (Set.finite_range v)
-  haveI : Module.Finite F VE := Module.Finite.equiv e1.symm
-  haveI : Module.Finite E VE := Module.Finite.of_restrictScalars_finite F E VE
+  have : Module.Finite F VE := Module.Finite.equiv e1.symm
+  have : Module.Finite E VE := Module.Finite.of_restrictScalars_finite F E VE
   have hE : Module.finrank F E = r := by
     rw [Module.finrank_eq_card_basis bω, Fintype.card_fin]
-  haveI : Module.Finite F E := Module.Finite.of_basis bω
+  have : Module.Finite F E := Module.Finite.of_basis bω
   have hrpos : 0 < r := by
     rw [← hE]; exact Module.finrank_pos
   have htower := Module.finrank_mul_finrank F E VE
@@ -695,7 +695,7 @@ namespace GlobalTheory.PMon.ResR
 open Fin.NatCast in
 theorem eq_zero_of_sum_kd_mul_U0_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (r : ℕ) (ω : Fin r → ↥(MaximalUnramifiedExtension l)), (∀ k, fr l r (ω k) = ω k) → ∀ (hdet : (frobMat ω).det ≠ 0) (n : Type) [Fintype n] [DecidableEq n] (U : Fin r → GL n P.R.BdR) (x : Fin r × n), (∀ c : n → ↥(MaximalUnramifiedExtension l), (∀ i, fr l r (c i) = c i) → ∑ i, kd P (c i) * (U x.1 : Matrix n n P.R.BdR) i x.2 ∈ Fil P 1 → c = 0) → ∀ c : n × Fin r → ↥(MaximalUnramifiedExtension l), (∀ i, fr l 1 (c i) = c i) → ∑ i, kd P (c i) * (U0 P ω hdet U : Matrix (n × Fin r) (n × Fin r) P.R.BdR) i (x.2, x.1) ∈ Fil P 1 → c = 0 := by
   intro l _ P r ω hω hdet n _ _ U x hx c hc hsum
-  haveI : NeZero r := ⟨fun h => by subst h; exact x.1.elim0⟩
+  have : NeZero r := ⟨fun h => by subst h; exact x.1.elim0⟩
   set Q : Matrix (n × Fin r) (n × Fin r) ↥(MaximalUnramifiedExtension l) := ((resGL n ω hdet)⁻¹ : GL (n × Fin r) ↥(MaximalUnramifiedExtension l)).val with hQ
   have hQp : Q * resMat n ω = 1 := (resGL n ω hdet).inv_mul
   set d := Matrix.vecMul c Q with hd_def
@@ -752,7 +752,7 @@ theorem eq_zero_of_sum_kd_mul_U0_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (P : Loc
       intro a
       rw [hU0]
       simp only [Matrix.mul_apply, Matrix.blockDiagonal_apply, Matrix.map_apply, Fintype.sum_prod_type, mul_ite,
-        mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.mul_sum, mul_assoc]
+        mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.mul_sum, mul_assoc]
     rw [Finset.sum_congr rfl fun a _ => step a, Finset.sum_comm]
     refine Finset.sum_congr rfl fun j _ => ?_
 
@@ -866,7 +866,7 @@ theorem iota_q_eq (ω : Fin r → ↥(MaximalUnramifiedExtension l)) (hdet : (fr
   have hG : G = kp⁻¹ * blockGL U * tzGL P e * W₀ := by
     apply Units.ext
     rw [hGdef]
-    simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, RingHom.mapMatrix_apply, Units.val_mul]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, RingHom.mapMatrix_apply, Units.val_mul]
     rw [show (A₀ : Matrix (n × Fin r) (n × Fin r) P.R.B).map (P.ιB : P.R.B →+* P.R.BdR) =
       (A₀ : Matrix (n × Fin r) (n × Fin r) P.R.B).map (ev P 0) from rfl, hA]
     rfl
@@ -1043,9 +1043,9 @@ theorem colv_latC_and_linearIndependent : ∀ (l : ℕ) [Fact l.Prime] (P : LocP
     fun j => hW.1 _ _, funext fun i => ?_⟩⟩, ?_⟩
   · rw [hφcol]; simp only [hω]; rfl
   · rw [hcol]; simp [Matrix.mulVec, dotProduct, Matrix.mul_diagonal]
-  · haveI : Nontrivial P.R.BdR := ⟨⟨(P.PD (botExt l)).ι (P.PD (botExt l)).t, 0, fun h =>
+  · have : Nontrivial P.R.BdR := ⟨⟨(P.PD (botExt l)).ι (P.PD (botExt l)).t, 0, fun h =>
       (P.PD (botExt l)).not_mem_filtration_two (by rw [h]; exact zero_mem _)⟩⟩
-    haveI : Nontrivial P.R.B := ⟨⟨1, 0, fun h => one_ne_zero (by simpa using congrArg P.ιB h : (1 : P.R.BdR) = 0)⟩⟩
+    have : Nontrivial P.R.B := ⟨⟨1, 0, fun h => one_ne_zero (by simpa using congrArg P.ιB h : (1 : P.R.BdR) = 0)⟩⟩
     rw [Fintype.linearIndependent_iff]
     intro g hg
     have hg' : ∀ i, ∑ c, g c • colv P ω A₀ c i = 0 := fun i => by
@@ -1437,7 +1437,7 @@ theorem modStep_holds : ModStep := by
   intro l _ P AI T n _ _ K r ρ w x y hxy hR hF hS
   choose U hU hUe using hF
   obtain ⟨hfield, -, -, -, hval, hmul, -⟩ := _root_.GlobalTheory.PMon.bdR_tied l P AI T
-  haveI : Nontrivial P.R.BdR := ⟨hfield.exists_pair_ne⟩
+  have : Nontrivial P.R.BdR := ⟨hfield.exists_pair_ne⟩
   have hsum : ∀ (s : Finset n) (f : n → P.R.BdR), (∀ k ∈ s, f k ∈ Fil P 1) → ∑ k ∈ s, f k ∈ Fil P 1 := by
     intro s f hf
     unfold Fil at *

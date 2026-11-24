@@ -83,7 +83,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Local
 theorem meas_avg (H : Subgroup G) (ν : Measure H) [SFinite ν] {f : G → ℝ≥0∞} (hf : Measurable f) :
     Measurable (fun g : G => ∫⁻ h, f (g * (h : G)) ∂ν) := by
   have hc : Continuous (fun p : G × H => p.1 * (p.2 : G)) :=
-    continuous_fst.mul (continuous_subtype_val.comp continuous_snd)
+    continuous_fst.mul (continuous_subtypeVal.comp continuous_snd)
   exact (hf.comp hc.measurable).lintegral_prod_right'
 
 theorem avg_mul_mem (H : Subgroup G) (ν : Measure H) [ν.IsMulLeftInvariant] (f : G → ℝ≥0∞)
@@ -117,7 +117,7 @@ theorem lint_eq (H : Subgroup G) (ν : Measure H) [ν.IsMulLeftInvariant] [IsFin
   rw [lintegral_congr e1]
   have hmeas2 : AEMeasurable (Function.uncurry fun (g : G) (h : H) => f (g * (h : G))) (μ.prod ν) := by
     have hc2 : Continuous (fun p : G × H => p.1 * (p.2 : G)) :=
-      continuous_fst.mul (continuous_subtype_val.comp continuous_snd)
+      continuous_fst.mul (continuous_subtypeVal.comp continuous_snd)
     exact (hf.comp hc2.measurable).aemeasurable
   rw [lintegral_lintegral_swap hmeas2]
   have : ∀ h : H, ∫⁻ g, f (g * (h : G)) ∂μ = ∫⁻ g, f g ∂μ := fun h => by
@@ -134,11 +134,11 @@ theorem desc_uniq (H : Subgroup G) (hH : IsClosed (H : Set G)) (ν : Measure H) 
     (h₁ : ∀ k : H, μ₁.map (· * (k : G)) = μ₁) (h₂ : ∀ k : H, μ₂.map (· * (k : G)) = μ₂)
     (hm : μ₁.map p = μ₂.map p) : μ₁ = μ₂ := by
   classical
-  haveI : IsFiniteMeasure ν := ⟨lt_top_iff_ne_top.2 hfin⟩
-  haveI : IsClosed (H : Set G) := hH
-  haveI : PolishSpace G := polish_of_lcsc G
-  haveI : PolishSpace (G ⧸ H) := polish_of_lcsc _
-  haveI : BorelSpace (G ⧸ H) := CosetSpace.borelSpace
+  have : IsFiniteMeasure ν := ⟨lt_top_iff_ne_top.2 hfin⟩
+  have : IsClosed (H : Set G) := hH
+  have : PolishSpace G := polish_of_lcsc G
+  have : PolishSpace (G ⧸ H) := polish_of_lcsc _
+  have : BorelSpace (G ⧸ H) := CosetSpace.borelSpace
   have hmk : ∀ g : G, iotaQ H p (g : G ⧸ H) = p g := by
     intro g
     obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul H g
@@ -228,7 +228,7 @@ theorem stabH_closed (z' : Fin (2 * r + k + 1) → ℂ) : IsClosed ((stabH k r z
 def jH (z' : Fin (2 * r + k + 1) → ℂ) (h : stabH k r z') : Mt k r := HU.inc h.1
 
 theorem jH_memb (z' : Fin (2 * r + k + 1) → ℂ) : MeasurableEmbedding (jH (k := k) (r := r) z') :=
-  HU.inc_memb.comp (MeasurableEmbedding.subtype_coe (stabH_closed z').measurableSet)
+  HU.inc_memb.comp (MeasurableEmbedding.subtypeVal (stabH_closed z').measurableSet)
 
 theorem jH_mem (z' : Fin (2 * r + k + 1) → ℂ) (h : stabH k r z') : Matrix.of (jH z' h) ∈ UWset k r z' :=
   ⟨(HU.inc_mem h.1).1, (HU.inc_mem h.1).2, h.2⟩

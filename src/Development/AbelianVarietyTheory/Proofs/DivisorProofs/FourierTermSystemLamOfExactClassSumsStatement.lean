@@ -59,9 +59,9 @@ namespace GlobalTheory.Poinc.SepLam
 
 theorem mem_of_forall_mem_sup_pow {V : Type} [CommRing V] [IsNoetherianRing V] [IsLocalRing V] (I : Ideal V) (hI : I ≠ ⊤)
     (z : V) (h : ∀ j : ℕ, z ∈ I ⊔ maximalIdeal V ^ j) : z ∈ I := by
-  haveI : Nontrivial (V ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
-  haveI : IsLocalRing (V ⧸ I) := IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Ideal.Quotient.mk I) := Function.Surjective.isLocalHom _ Ideal.Quotient.mk_surjective
+  have : Nontrivial (V ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
+  have : IsLocalRing (V ⧸ I) := IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+  have : IsLocalHom (Ideal.Quotient.mk I) := Function.Surjective.isLocalHom _ Ideal.Quotient.mk_surjective
   have hmax : (maximalIdeal V).map (Ideal.Quotient.mk I) ≤ maximalIdeal (V ⧸ I) :=
     Ideal.map_le_iff_le_comap.mpr fun x hx hu => hx (isUnit_of_map_unit (Ideal.Quotient.mk I) x hu)
   have hbot := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal (V ⧸ I)) (Ideal.IsMaximal.ne_top inferInstance)
@@ -83,7 +83,7 @@ theorem lam_of_exact : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (
   intro O _ bar q s W A _ _ Φ N₁ hs hN hE
   classical
   refine ⟨(W ⟨0, hs⟩ ⟨0, hs⟩).toNat, fun y hm i x hx => ?_⟩
-  haveI : Subsingleton (Fin (Φ.m y)) := by rw [hm]; infer_instance
+  have : Subsingleton (Fin (Φ.m y)) := by rw [hm]; infer_instance
   have hsym : ∀ a b, Φ.δ y i a b = Φ.δ y i b a := (Φ.bal y i).1
   have hδpos : ∀ z, z ≠ 0 → 0 < Φ.δ y i z z := fun z hz => by
     obtain ⟨k, hk⟩ := Φ.pos y z hz
@@ -130,7 +130,7 @@ theorem lam_of_exact : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (
     rw [Ne, Ideal.span_singleton_eq_top]
     exact fun hu => (IsLocalRing.mem_maximalIdeal _).mp (Ideal.pow_mem_of_mem _ htm _ (Nat.succ_pos _)) hu
   have key : Φ.ev y h - Φ.u y mu₀ c * Φ.t y i ^ n₀ ∈ Ideal.span {Φ.t y i ^ (n₀ + 1)} := by
-    haveI : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
+    have : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
     refine mem_of_forall_mem_sup_pow _ hI _ fun j => ?_
     obtain ⟨S, hS1, hS2, hS3⟩ := hh (max j (n₀ + 1))
     have hmem : mu₀ ∈ S := by

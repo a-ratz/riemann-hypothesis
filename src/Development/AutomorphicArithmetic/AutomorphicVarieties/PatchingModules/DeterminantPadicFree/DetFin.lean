@@ -236,10 +236,10 @@ theorem UpperTheory.V.Pa.Det.detFin :
     ∀ {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} {x : NP F n} (k : Kap x) (S : Set F.G₀), PhiCond F.Γ l → Detects k S → ∃ T : Finset F.G₀, (T : Set F.G₀) ⊆ S ∧ Detects k (T : Set F.G₀) := by
   intro l _ F n x k S hΦ hdet
   classical
-  haveI : CharP x.K l := charK l x.K
-  haveI : Module.Free x.A (DD x.A k.g) := Module.Free.of_equiv (ddLin x.A k.g).symm
-  haveI : Module.Finite x.A (DD x.A k.g) := Module.Finite.equiv (ddLin x.A k.g).symm
-  haveI : CompactSpace F.G₀ :=
+  have : CharP x.K l := charK l x.K
+  have : Module.Free x.A (DD x.A k.g) := Module.Free.of_equiv (ddLin x.A k.g).symm
+  have : Module.Finite x.A (DD x.A k.g) := Module.Finite.equiv (ddLin x.A k.g).symm
+  have : CompactSpace F.G₀ :=
     isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
   let I : Ideal (DD x.A k.g) := Ideal.span {algebraMap x.A (DD x.A k.g) x.t}
   let χ : F.G₀ →* DD x.A k.g :=
@@ -268,7 +268,7 @@ theorem UpperTheory.V.Pa.Det.detFin :
           rw [hz.2 g trivial h trivial, smul_add, Matrix.mul_smul, Matrix.smul_mul, smul_comm c (χ g)] }
   have hG : PhiCond F.G₀ l := Det.phiSub l F.η.ker F.η_open hΦ
   have he : Continuous fun g : F.G₀ => ((F.ε g : ℤ_[l]ˣ) : ℤ_[l]) :=
-    Units.continuous_val.comp (F.ε_cont.comp continuous_subtype_val)
+    Units.continuous_val.comp (F.ε_cont.comp continuous_subtypeVal)
   have hA : AdicCont (Ideal.span {x.t}) fun g : F.G₀ => algebraMap ℤ_[l] x.A (F.ε g) := by
     intro N
     have hl : ((l : ℕ) : x.A ⧸ (Ideal.span {x.t}) ^ N) = 0 := by
@@ -300,7 +300,7 @@ theorem UpperTheory.V.Pa.Det.detFin :
     etaL.comp ((Matrix.traceLinearMap (Fin n) x.A (DD x.A k.g)).comp
       ((LinearMap.mulRight x.A (k.ρ1 x.A σ)).comp (LinearMap.proj (σ : F.G₀))))
   let B : Submodule x.A (F.G₀ → Matrix (Fin n) (Fin n) (DD x.A k.g)) := ⨅ σ : S, LinearMap.ker (f σ)
-  obtain ⟨T, hT⟩ := Det.finSub x.t Zb B f PowerSeries.X_irreducible hFG
+  obtain ⟨T, hT⟩ := Det.finSub x.t Zb B f PowerSeries.irreducible_X hFG
     (fun i b hb => LinearMap.mem_ker.mp ((Submodule.mem_iInf _).mp hb i))
     (fun z _ hz => ⟨0, by
       rw [pow_zero, one_smul]

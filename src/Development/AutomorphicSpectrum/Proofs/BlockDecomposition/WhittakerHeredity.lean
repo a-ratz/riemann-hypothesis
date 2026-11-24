@@ -222,7 +222,7 @@ theorem exists_diag_mul_unip {k : Type} [Field k] {N : ℕ} (b : GL (Fin N) k)
   classical
   have hb' : (b : Matrix (Fin N) (Fin N) k).BlockTriangular id := fun i j h => hb h
   have hdet : ∏ i, (b : Matrix (Fin N) (Fin N) k) i i ≠ 0 := by
-    rw [← Matrix.det_of_upperTriangular hb']
+    rw [← Matrix.det_of_isUpperTriangular hb']
     exact (Matrix.isUnits_det_units b).ne_zero
   have hD : ∀ i, (b : Matrix (Fin N) (Fin N) k) i i ≠ 0 :=
     fun i => (Finset.prod_ne_zero_iff.1 hdet) i (Finset.mem_univ i)
@@ -366,8 +366,8 @@ theorem elemGL_apply {k : Type} [Field k] {N : ℕ} (i j : Fin N) (hij : i ≠ j
   rw [Matrix.transvection, Matrix.add_apply, Matrix.single_apply]
   congr 1
   by_cases h : a = i ∧ b = j
-  · rw [if_pos h, if_pos ⟨h.1.symm, h.2.symm⟩]
-  · rw [if_neg h, if_neg fun e => h ⟨e.1.symm, e.2.symm⟩]
+  · rw [ite_eq_left h, ite_eq_left ⟨h.1.symm, h.2.symm⟩]
+  · rw [ite_eq_right h, ite_eq_right fun e => h ⟨e.1.symm, e.2.symm⟩]
 
 theorem conj_pm_apply {k : Type} [Field k] {N : ℕ} (w : Equiv.Perm (Fin N)) (g : GL (Fin N) k) (a b : Fin N) :
     (GroundTheory.Automorphic.permGL k w * g * (GroundTheory.Automorphic.permGL k w)⁻¹).val a b = g.val (w⁻¹ a) (w⁻¹ b) := by
@@ -380,19 +380,19 @@ theorem exists_root_conj_mem_unipRad : ∀ (k : Type) [Field k] [ValuativeRel k]
   have hlt : i < j := Fin.lt_def.2 (by omega)
   have hu : elemGL i j hne t ∈ unipB k (Fin N) := by
     refine (mem_unipB k).2 ⟨fun a b hba => ?_, fun a => ?_⟩
-    · rw [elemGL_apply, Matrix.one_apply_ne hba.ne', if_neg fun e => ?_, add_zero]
+    · rw [elemGL_apply, Matrix.one_apply_ne hba.ne', ite_eq_right fun e => ?_, add_zero]
       rw [e.1, e.2] at hba
       exact absurd hba hlt.not_gt
-    · rw [elemGL_apply, Matrix.one_apply_eq, if_neg fun e => hne (e.1.symm.trans e.2), add_zero]
+    · rw [elemGL_apply, Matrix.one_apply_eq, ite_eq_right fun e => hne (e.1.symm.trans e.2), add_zero]
   refine ⟨elemGL i j hne t, hu, ?_, ?_⟩
   · show Circle.toUnits (ψ (∑ p : Fin N × Fin N with (p.2 : ℕ) = p.1 + 1, (elemGL i j hne t).val p.1 p.2)) = _
     congr 2
     rw [Finset.sum_eq_single_of_mem (i, j) (Finset.mem_filter.2 ⟨Finset.mem_univ _, hij⟩)]
-    · rw [elemGL_apply, Matrix.one_apply_ne hne, if_pos ⟨rfl, rfl⟩, zero_add]
+    · rw [elemGL_apply, Matrix.one_apply_ne hne, ite_eq_left ⟨rfl, rfl⟩, zero_add]
     · rintro ⟨a, b⟩ hp hpne
       have hab : (b : ℕ) = a + 1 := (Finset.mem_filter.1 hp).2
       have hne' : a ≠ b := fun e => by rw [e] at hab; omega
-      rw [elemGL_apply, Matrix.one_apply_ne hne', if_neg fun e => hpne (Prod.ext e.1 e.2), add_zero]
+      rw [elemGL_apply, Matrix.one_apply_ne hne', ite_eq_right fun e => hpne (Prod.ext e.1 e.2), add_zero]
   · have hent : ∀ a b : Fin N, (pm k w * elemGL i j hne t * (pm k w)⁻¹).val a b =
         (1 : Matrix (Fin N) (Fin N) k) a b + if a = w i ∧ b = w j then t else 0 := by
       intro a b
@@ -404,10 +404,10 @@ theorem exists_root_conj_mem_unipRad : ∀ (k : Type) [Field k] [ValuativeRel k]
       · simp only [Equiv.Perm.inv_eq_iff_eq]
     refine mem_unipRad.2 ⟨mem_parab.2 fun a b hab => ?_, fun c x y => ?_⟩
     · have hne' : a ≠ b := fun e => by rw [e] at hab; exact lt_irrefl _ hab
-      rw [hent, Matrix.one_apply_ne hne', if_neg fun e => ?_, add_zero]
+      rw [hent, Matrix.one_apply_ne hne', ite_eq_right fun e => ?_, add_zero]
       rw [e.1, e.2] at hab
       exact lt_asymm hab hb
-    · rw [hent, if_neg fun e => ?_, add_zero]
+    · rw [hent, ite_eq_right fun e => ?_, add_zero]
       · by_cases e : x = y
         · rw [e, Matrix.one_apply_eq, Matrix.one_apply_eq]
         · rw [Matrix.one_apply_ne e, Matrix.one_apply_ne fun e' => e (by simpa using (stdBlocks d hd).injective e')]
@@ -507,7 +507,7 @@ theorem kill_cell (ψ : AddChar k Circle) (hψ : Continuous ψ) (hψ1 : ψ ≠ 1
           ⋂ i, ⋂ j, ⋂ _ : blk (stdBlocks d hd) j < blk (stdBlocks d hd) i,
             {g : GL (Fin N) k | g.val i j = 0} := by
         ext g
-        simp only [SetLike.mem_coe, mem_parab, Set.mem_iInter, Set.mem_setOf_eq]
+        simp only [SetLike.mem_coe, mem_parab, Set.mem_iInter, Set.mem_ofPred_eq]
       rw [heq]
       exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
         isClosed_eq (Units.continuous_val.matrix_elem i j) continuous_const)
@@ -524,7 +524,7 @@ theorem kill_cell (ψ : AddChar k Circle) (hψ : Continuous ψ) (hψ1 : ψ ≠ 1
   let θ : L J →* ℂˣ := (whitChar ψ N).comp (Subgroup.inclusion (hLU J))
   have hθ : IsOpen (θ.ker : Set (L J)) :=
     (GlobalTheory.Whittaker.isSmoothChar_whitChar hψ).preimage
-      (Continuous.subtype_mk continuous_subtype_val _ : Continuous (Subgroup.inclusion (hLU J)))
+      (Continuous.subtype_mk continuous_subtypeVal _ : Continuous (Subgroup.inclusion (hLU J)))
   obtain ⟨f', h1, h2, h3⟩ := GlobalTheory.CompanionTheory.TwAvgInd.exists_twisted_average_smInd (parab k (stdBlocks d hd)) _ (L J) (hLc J) θ hθ f
   have hu' : u ∈ L J := hJ1 hj₁
   have hfw : f'.1.1 (pm k w) = 0 := by

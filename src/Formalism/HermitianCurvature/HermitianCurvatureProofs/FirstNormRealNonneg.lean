@@ -237,7 +237,7 @@ theorem ae_allNe (S : HidaSetting E Wp Wq) : ∀ᵐ c : J.CV E, ∀ v, c (S.pl v
   have h0 := MeasureTheory.Measure.addHaar_submodule volume (LinearMap.ker p) hne
   rw [ae_iff]
   refine measure_mono_null (fun c hc => ?_) h0
-  simp only [Set.mem_setOf_eq, not_not] at hc
+  simp only [Set.mem_ofPred_eq, not_not] at hc
   simp [p, hc]
 
 theorem dense_allNe (S : HidaSetting E Wp Wq) : Dense {c : J.CV E | ∀ v, c (S.pl v) ≠ 0} := MeasureTheory.Measure.dense_of_ae (ae_allNe S)

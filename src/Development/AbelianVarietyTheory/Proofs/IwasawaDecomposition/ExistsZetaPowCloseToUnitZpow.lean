@@ -95,9 +95,9 @@ theorem GlobalTheory.TamePowTeich.exists_zeta_pow_close : ∀ {E Ω : Type} [Fie
   intro E Ω _ _ _ _ P A ζ hA hζ u e hu
   classical
   set n := Formalism.ConjugateSelfDual.normV P - 1 with hn_def
-  letI : Field (𝓞 E ⧸ P.asIdeal) := @Ideal.Quotient.field _ _ P.asIdeal P.isMaximal
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot P.asIdeal P.ne_bot
-  letI : Fintype (𝓞 E ⧸ P.asIdeal) := Fintype.ofFinite _
+  let : Field (𝓞 E ⧸ P.asIdeal) := @Ideal.Quotient.field _ _ P.asIdeal P.isMaximal
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot P.asIdeal P.ne_bot
+  let : Fintype (𝓞 E ⧸ P.asIdeal) := Fintype.ofFinite _
   have hcard : Formalism.ConjugateSelfDual.normV P = Fintype.card (𝓞 E ⧸ P.asIdeal) := by
     show Nat.card _ = _
     exact Nat.card_eq_fintype_card
@@ -132,10 +132,10 @@ theorem GlobalTheory.TamePowTeich.exists_zeta_pow_close : ∀ {E Ω : Type} [Fie
     push_neg at hcon
     have : 1 ≤ A.valuation (U ^ n - 1) := by
       rw [hprod, map_prod]
-      exact Finset.one_le_prod' hcon
+      exact Finset.one_le_prod hcon
     exact absurd hUn (not_lt.2 this)
   obtain ⟨μ, hμ, hμU⟩ := hex
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   obtain ⟨b, -, hb⟩ := hζ.eq_pow_of_pow_eq_one ((Polynomial.mem_nthRootsFinset hn 1).1 hμ)
   have hb1 : A.valuation (ζ ^ b) = 1 := by rw [map_pow, hζ1, one_pow]
   have hclose : A.valuation (ζ ^ b - U) < 1 := by

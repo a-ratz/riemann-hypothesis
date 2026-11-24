@@ -144,7 +144,7 @@ variable {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero Γ] (w : Valua
 private lemma prod_lt {ι : Type*} [Fintype ι] [DecidableEq ι] (f : ι → K) (h : ∀ i, w (f i) ≤ 1) (i : ι)
     (hi : w (f i) < 1) : w (∏ j, f j) < 1 := by
   rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ i), map_mul, map_prod]
-  exact mul_lt_one_of_lt_of_le hi (Finset.prod_le_one' fun j _ => h j)
+  exact mul_lt_one_of_lt_of_le hi (Finset.prod_le_one fun j _ => h j)
 
 private lemma det_sub (M : Matrix (Fin n) (Fin n) K) (h1 : ∀ i j, w (M i j) ≤ 1)
     (h2 : ∀ i j, j < i → w (M i j) < 1) : w (M.det - ∏ i, M i i) < 1 := by
@@ -208,14 +208,14 @@ private lemma scaled (t : Fin n → K) (ht0 : ∀ i, t i ≠ 0) (hinj : Function
     · rw [map_mul, hy, mul_one]; exact hdi j
     · simp
   have hM2 : ∀ j l, l < j → w (M j l) < 1 := fun j l h => by
-    simp only [M, Matrix.of_apply, if_neg h.ne', zero_sub, Valuation.map_neg, map_mul]
+    simp only [M, Matrix.of_apply, ite_eq_right h.ne', zero_sub, Valuation.map_neg, map_mul]
     rw [mul_comm]; exact mul_lt_one_of_lt_of_le (h2 j l h) (hdj j)
   have hMi : M i i = y - u i i := by
     have := ht0 i
     simp [M, d, this]
   have hM3 : ∀ j, j ≠ i → w (M j j) = 1 := fun j hj => by
     have hne : w (t j) ≠ w (t i) := fun h => hj (hinj h)
-    simp only [M, Matrix.of_apply, if_true, d]
+    simp only [M, Matrix.of_apply, ite_true, d]
     split_ifs with h
     · rw [div_self (ht0 i), one_mul, w.map_sub_eq_of_lt_left, hy]
       rw [hy, map_mul, h3, mul_one, map_div₀, div_lt_one₀ (hwt i)]; exact h
@@ -490,7 +490,7 @@ theorem UpperTheory.ConvolutionTheory.G.closedSubgroup_cutoff_exists :
   have hDpos : ∀ x, 0 < D x := by
     intro x
     obtain ⟨h, ⟨t₀, rfl⟩, hne⟩ := hcov x
-    exact (hcx x).integral_pos_of_hasCompactSupport_nonneg_nonzero (hcs x)
+    exact (hcx x).integral_pos_of_hasCompactSupport_nonneg_ne_zero (hcs x)
       (fun t => hβ0 _) hne
   have hDinv : ∀ s x, D (i s * x) = D x := by
     intro s x
@@ -535,7 +535,7 @@ private theorem exists_krylov_det_ne_zero {k : Type*} [Field k] [Infinite k] {n 
   rw [Module.finrank_fin_fun] at hw
   refine ⟨w, ?_⟩
   rw [← isUnit_iff_ne_zero, ← Matrix.isUnit_iff_isUnit_det,
-    ← Matrix.linearIndependent_cols_iff_isUnit]
+    ← Matrix.linearIndependent_col_iff_isUnit]
   have hcol : (GroundTheory.Automorphic.krylov M w).col =
       fun j : Fin n => (Matrix.toLin' M ^ (j : ℕ)) w := by
     ext1 j
@@ -548,7 +548,7 @@ private theorem isClosed_charpoly_eq {k : Type*} [NontriviallyNormedField k] [In
   have : {g : GL (Fin n) k | (g : Matrix (Fin n) (Fin n) k).charpoly = P} =
       ⋂ a : k, {g : GL (Fin n) k | (Matrix.scalar (Fin n) a - (g : Matrix (Fin n) (Fin n) k)).det = P.eval a} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     constructor
     · rintro rfl a
       rw [Matrix.eval_charpoly]
@@ -596,7 +596,7 @@ private theorem sum_map_tensor [FiniteDimensional F E] [IsGalois F E] {A : Type}
   | zero => simp
   | tmul l a =>
     simp only [Algebra.TensorProduct.map_tmul, AlgHom.id_apply, LinearMap.rTensor_tmul,
-      TensorProduct.lid_tmul, AlgHom.coe_coe]
+      TensorProduct.lid_tmul, AlgHom.coe_ofClass]
     have h : ∑ τ : E ≃ₐ[F] E, ((τ : E →ₐ[F] E) : E → E) l = algebraMap F E (Algebra.trace F E l) :=
       (trace_eq_sum_automorphisms l).symm
     rw [← TensorProduct.sum_tmul, h, Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul]
@@ -641,7 +641,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 private theorem fixed_adele [IsGalois F E] (σ : E ≃ₐ[F] E) (hσ : ∀ τ : E ≃ₐ[F] E, τ ∈ Subgroup.zpowers σ)
     (y : 𝔸[E]) (hy : galAd σ y = y) : ∃ a, adeleMap F E a = y := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have h1 : Algebra.TensorProduct.map (σ : E →ₐ[F] E) (AlgHom.id F 𝔸[F]) ((adeleTensorEquiv F E).symm y) =
       (adeleTensorEquiv F E).symm y := by
     apply (adeleTensorEquiv F E).injective
@@ -670,7 +670,7 @@ end
 theorem UpperTheory.ConvolutionTheory.G.galois_fixed_adelic_matrices_descend :
     N3 := by
   intro F E _ _ _ _ _ _ σ hσ n hn δ γ hγ hN x
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have hp : (sigmaGL σ : Monoid.End (GL (Fin n) E)) ^ Module.finrank F E = 1 := by
     rw [← sigmaGL_pow, ← IsGalois.card_aut_eq_finrank, pow_card_eq_one', sigmaGL_one]
   have hfix : sigmaGL σ (incl γ : GL (Fin n) E) = incl γ := by
@@ -892,7 +892,7 @@ private theorem integrable_mul_toReal (μ : Measure X) {Φ : X → ℂ} {a : X �
     Integrable (fun x => Φ x * ((a x).toReal : ℂ)) μ := by
   refine ⟨(hΦ.mul (Complex.measurable_ofReal.comp ha.ennreal_toReal)).aestronglyMeasurable, ?_⟩
   refine lt_of_le_of_lt (lintegral_mono fun x => ?_) hf
-  rw [enorm_mul]
+  rw [eNorm_mul]
   gcongr
   rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg ENNReal.toReal_nonneg]
   exact ENNReal.ofReal_toReal_le
@@ -914,7 +914,7 @@ theorem UpperTheory.ConvolutionTheory.G.isUnit_last_join :
   have hA : ∀ x, ∫⁻ t, ρ (u (i t * x)) ∂ν = 1 := fun x => by simpa [map_mul] using hn.2 x
   have hB : ∀ x, ∫⁻ t, ρ₀ (u (i t * x)) ∂ν = 1 := fun x => by simpa [map_mul] using h0.2 x
   have hfin' : ∫⁻ x, ‖Φ x‖ₑ * ρ₀ (u x) ∂μ < ⊤ := by
-    rw [← lintegral_swap_norm μ ν i hi ha hb hΦ.enorm (fun t x => by rw [hinv]) hA hB]
+    rw [← lintegral_swap_norm μ ν i hi ha hb hΦ.eNorm (fun t x => by rw [hinv]) hA hB]
     exact hfin
   have h1 := integrable_mul_toReal μ hΦ ha hfin
   have h2 := integrable_mul_toReal μ hΦ hb hfin'
@@ -1070,7 +1070,7 @@ private theorem finite_fiber_integral {X T : Type} [Group X] [TopologicalSpace X
   have hi := (hc.integrable_of_hasCompactSupport (μ := μ) hk).2
   unfold HasFiniteIntegral at hi
   convert hi using 3 with x
-  rw [enorm_mul]
+  rw [eNorm_mul]
   congr 1
   simp [eNorm_eq_nnNorm]
 
@@ -1090,7 +1090,7 @@ theorem UpperTheory.ConvolutionTheory.G.orbitalIntegral_absolute_convergence :
   have f2 := finite_fiber_integral μ' i' Φ' ρ' hΦ' hρ' hC' hs'
   have e1 := h1 X X T μ ν (MonoidHom.id X) i measurable_id hi.continuous Φ _ hΦ.measurable hinv hn f1
   have e2 := h1 X' X' T' μ' ν' (MonoidHom.id X') i' measurable_id hi'.continuous Φ' _ hΦ'.measurable hinv' hn' f2
-  haveI := prod_isInvInvariant ν ν'
+  have := prod_isInvInvariant ν ν'
   have hn3 : IsNormAlong id (fun t : T × T' => (i t.1, i' t.2)) (ν.prod ν')
       (fun x : X × X' => (ρ x.1 : ℝ≥0∞) * (ρ' x.2 : ℝ≥0∞)) := by
     refine ⟨(hn.1.comp measurable_fst).mul (hn'.1.comp measurable_snd), fun x => ?_⟩
@@ -1105,12 +1105,12 @@ theorem UpperTheory.ConvolutionTheory.G.orbitalIntegral_absolute_convergence :
     rw [b1, b2, mul_one] at this
     exact this
   have f3 : ∫⁻ x : X × X', ‖Φ x.1 * Φ' x.2‖ₑ * ((ρ x.1 : ℝ≥0∞) * (ρ' x.2 : ℝ≥0∞)) ∂(μ.prod μ') < ⊤ := by
-    have a1 : Measurable fun x => ‖Φ x‖ₑ * (ρ x : ℝ≥0∞) := hΦ.measurable.enorm.mul hn.1
-    have a2 : Measurable fun x => ‖Φ' x‖ₑ * (ρ' x : ℝ≥0∞) := hΦ'.measurable.enorm.mul hn'.1
+    have a1 : Measurable fun x => ‖Φ x‖ₑ * (ρ x : ℝ≥0∞) := hΦ.measurable.eNorm.mul hn.1
+    have a2 : Measurable fun x => ‖Φ' x‖ₑ * (ρ' x : ℝ≥0∞) := hΦ'.measurable.eNorm.mul hn'.1
     have := lintegral_prod_mul (μ := μ) (ν := μ') a1.aemeasurable a2.aemeasurable
     refine lt_of_eq_of_lt ?_ (this ▸ ENNReal.mul_lt_top f1 f2)
     refine lintegral_congr fun x => ?_
-    rw [enorm_mul]
+    rw [eNorm_mul]
     ring
   have e3 := h1 (X × X') (X × X') (T × T') (μ.prod μ') (ν.prod ν') (MonoidHom.id _) (i.prodMap i') measurable_id
     (hi.continuous.prodMap hi'.continuous) (fun x => Φ x.1 * Φ' x.2) _
@@ -1162,7 +1162,7 @@ private theorem finite_meet (Γ : Subgroup X) [DiscreteTopology Γ] (θ : X →*
     {δ : Γ | ∃ y ∈ C, f (y⁻¹ * δ * θ y) ≠ 0}.Finite := by
   have hK : IsCompact ((fun p : X × X => p.1 * p.2 * (θ p.1)⁻¹) '' (C ×ˢ tsupport f)) :=
     (hC.prod f.hasCompactSupport).image (by fun_prop)
-  have ht := Γ.tendsto_coe_cofinite_of_discrete (isDiscrete_iff_discreteTopology.2 ‹_›)
+  have ht := Γ.tendsto_coe_cofinite_of_isDiscrete (isDiscrete_iff_discreteTopology.2 ‹_›)
   have hfin := ht hK.compl_mem_cocompact
   rw [mem_map, mem_cofinite] at hfin
   refine hfin.subset ?_
@@ -1191,7 +1191,7 @@ private theorem tsum_lintegral_ne_top (Γ : Subgroup X) [DiscreteTopology Γ] (�
         simp only [twEquiv_apply]
       rw [h1, tsum_eq_sum (s := hS.toFinset)]
       · refine Finset.sum_le_sum fun δ _ => ?_
-        rw [← ofReal_norm_eq_enorm]
+        rw [← ofReal_norm]
         exact ENNReal.ofReal_le_ofReal (hB _)
       · intro δ hδ
         by_contra h0
@@ -1404,7 +1404,7 @@ theorem UpperTheory.ConvolutionTheory.G.twistedGeometricSide_unfolding :
       (ne_top_of_le_ne_top hfin (ENNReal.le_tsum δ)).lt_top⟩
   have hs : Summable fun δ : Γ => ∫ x in fundamentalDomain Γ, ‖f (x⁻¹ * δ * θ x)‖ ∂μ := by
     refine (ENNReal.summable_toReal hfin).congr fun δ => ?_
-    rw [integral_norm_eq_lintegral_enorm (hI δ).1]
+    rw [integral_norm_eq_lintegral_eNorm (hI δ).1]
   refine ⟨?_, fun i => (one_class Γ μ θ hθ f hI hs (r i) (hr i)).2⟩
   have hsum : ∀ x : X, ∑ᶠ γ : Γ, f ((Quotient.out (mk Γ x))⁻¹ * (γ : X) * θ (Quotient.out (mk Γ x))) =
       ∑' γ : Γ, f (x⁻¹ * γ * θ x) := by
@@ -1529,7 +1529,7 @@ theorem UpperTheory.ConvolutionTheory.G.unitaryGroupGeometricSide_of_quotient_id
     rw [HasFiniteIntegral, lintegral_quotientMeasure] at h
     simpa only [hout] using h
   have hfin : ∀ ρ, IsNormAlong id i ν ρ → ∫⁻ x, ‖Φ x‖ₑ * ρ x ∂μ < ⊤ := fun ρ hρ => by
-    have h := key ρ hρ.1 hρ.2 (fun x => ‖Φ x‖ₑ) hΦm.enorm (fun t x => by simp only [hΦi])
+    have h := key ρ hρ.1 hρ.2 (fun x => ‖Φ x‖ₑ) hΦm.eNorm (fun t x => by simp only [hΦi])
     rw [h] at hEfin
     by_contra hc
     rw [not_lt, top_le_iff] at hc

@@ -106,7 +106,7 @@ theorem reads_le {B : Base} {X : PreX B.toPre} (I : TC B X) (u : B.Word) (i : �
   have hQ : QE I.sel (I.tup I.mu0 : Chr B.fields.F B.fields.E B.fields.K) = ∅ := by
     rw [I.trueColumn_tuple_trivial_eq_one]
     exact twistPrimes_trivialTuple_empty I.sel I.S
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   obtain ⟨p0, hp0, -⟩ := h.k_std ()
   have hk : k () ∈ UAd B.sp.cm (B.R.N i) := hp0.uni
   have hyk : y c * k () ∈ UAd B.sp.cm (B.R.N i) := (h.pt c).uni
@@ -693,7 +693,7 @@ theorem realOf (h1 : Vol.DiscreteSeriesExist) (h2 : Vol.FormalDegreeFormula₂) 
 
 theorem goodIdempotent_real_of_harishChandra_series (D : D7) (h : GlobalTheory.GLq.ESerTie D) : IdempotentRealFixed D :=
   GlobalTheory.GoodIdemReal.star_coeff_of_reverse D fun k g hm h0 x => by
-    haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+    have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     obtain ⟨L, -, he⟩ := h k
     rw [he, he]
     exact DFunLike.congr_fun (GlobalTheory.GLq.GalSer.eSerC_map L _ D.R.r hm (GlobalTheory.SeriesSupport.rel_dual L hm h0)) x

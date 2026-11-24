@@ -62,11 +62,11 @@ theorem minor_of_triangular (g : GL (Fin n) k) (m : Fin n)
   unfold minor
   have hdet : (g.val.toSquareBlockProp fun i => i ≤ m).det = ∏ i : {i : Fin n // i ≤ m}, g.val i i := by
     rcases h with h | h
-    · rw [Matrix.det_of_lowerTriangular]
+    · rw [Matrix.det_of_isLowerTriangular]
       · rfl
       · intro i j hij
         exact h i j (OrderDual.toDual_lt_toDual.1 hij)
-    · rw [Matrix.det_of_upperTriangular]
+    · rw [Matrix.det_of_isUpperTriangular]
       · rfl
       · intro i j hij
         exact h i j hij

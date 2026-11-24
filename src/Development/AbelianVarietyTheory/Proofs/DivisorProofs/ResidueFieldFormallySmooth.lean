@@ -58,7 +58,7 @@ theorem GlobalTheory.residueField_formallySmooth_of_isClosed :
           ((X.presheaf.germ U x hxU).hom.comp (cstOn f U)).toAlgebra
          Algebra.FormallySmooth k (IsLocalRing.ResidueField (X.presheaf.stalk x))) := by
   intro k _ _ X f _ U x hxU _
-  letI : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U x hxU).hom.comp (cstOn f U)).toAlgebra
+  let : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U x hxU).hom.comp (cstOn f U)).toAlgebra
   have key : f.appLE ⊤ U le_top ≫ X.presheaf.germ U x hxU =
       (Sp k).presheaf.germ ⊤ (f x) trivial ≫ f.stalkMap x := by
     rw [Scheme.Hom.germ_stalkMap f ⊤ x trivial]
@@ -88,6 +88,6 @@ theorem GlobalTheory.residueField_formallySmooth_of_isClosed :
         (IsLocalRing.residue (X.presheaf.stalk x)).comp (algebraMap k (X.presheaf.stalk x)) := rfl
     rw [h, hφ, CommRingCat.hom_comp]
     exact (hS'.comp (LocallyOfFiniteType.stalkMap f x)).comp hR.essFiniteType
-  haveI : Algebra.EssFiniteType k (IsLocalRing.ResidueField (X.presheaf.stalk x)) :=
+  have : Algebra.EssFiniteType k (IsLocalRing.ResidueField (X.presheaf.stalk x)) :=
     RingHom.essFiniteType_algebraMap.mp hE
   exact Algebra.FormallySmooth.of_perfectField

@@ -396,7 +396,7 @@ theorem bergman_frames_of_short_range_alt : _root_.GlobalTheory.CovTop.Published
     · rw [← h0]; positivity
     · have := Real.exp_le_exp.2 hkap
       rw [Real.exp_log h0] at this
-      rw [← Real.exp_nat_mul]; push_cast; linarith
+      rw [← Real.exp_natCast_mul]; push_cast; linarith
   have hK1 : (1 : ℝ) ≤ kap p i / lenT p i (Fm.parT x hx ι).PP + 1 := by
     have : 0 ≤ kap p i / lenT p i (Fm.parT x hx ι).PP := div_nonneg hkap0 (Nat.cast_nonneg _)
     linarith
@@ -408,7 +408,7 @@ theorem bergman_frames_of_short_range_alt : _root_.GlobalTheory.CovTop.Published
   have hS0 : 0 ≤ ∑ τ, ∑ k, |(P.u₁ τ k : ℝ)| := by positivity
   have hSE : ∑ τ, ∑ k, |(P.u₁ τ k : ℝ)| ≤ Real.exp (7 * (Fm.L x ι).sc.L) := by
     have e7 : Real.exp (7 * (Fm.L x ι).sc.L) = Real.exp (Fm.L x ι).sc.L ^ 7 := by
-      rw [← Real.exp_nat_mul]; norm_num
+      rw [← Real.exp_natCast_mul]; norm_num
     rw [e7]
     refine hS.trans ?_
     have hZ2 : zBase (Fm.L x ι) ^ 2 ≤ Real.exp (Fm.L x ι).sc.L ^ 4 := by
@@ -538,15 +538,15 @@ theorem gapGe_of_wtBig {P : WtPar Dw} (h : WtBig P) : GapGe 1 P.u₁ ∧ GapGe 1
   have h2 : ∀ τ k, k + 1 < Dw.p + Dw.q → 3 ≤ gap (P.u₂ τ) k := fun τ k hk => by
     have a := h3 τ k hk
     have b := (P.gap_rem τ k).1
-    simp only [gap, dif_pos hk, WtPar.u₂, Pi.add_apply] at a b ⊢
+    simp only [gap, dite_eq_left hk, WtPar.u₂, Pi.add_apply] at a b ⊢
     omega
   refine ⟨h3.mono (by norm_num), fun τ k hk => le_trans (by norm_num) (h2 τ k hk), fun j τ k hk => ?_⟩
   have a := h3 τ k hk
   have b := h2 τ k hk
   have c : -2 ≤ gap (FlagTan.kap Dw τ) k := by
-    simp only [gap, dif_pos hk, FlagTan.kap]
+    simp only [gap, dite_eq_left hk, FlagTan.kap]
     split_ifs <;> push_cast <;> omega
-  simp only [gap, dif_pos hk, WtPar.wt, WtPar.uc, Pi.add_apply, Pi.smul_apply] at a b c ⊢
+  simp only [gap, dite_eq_left hk, WtPar.wt, WtPar.uc, Pi.add_apply, Pi.smul_apply] at a b c ⊢
   simp only [nsmul_eq_mul]
   have e1 := mul_nonneg (Int.natCast_nonneg (FlagTan.dimFlag Dw)) (le_trans (by norm_num) a)
   have e2 := mul_nonneg (Int.natCast_nonneg j) (le_trans (by norm_num) a)
@@ -757,9 +757,9 @@ theorem log_size_le (f r L kap S : ℝ) (hf : 1 ≤ f) (hr : 1 ≤ r) (hL : 1 �
     · exact (Real.log_le_iff_le_exp h0).1 hk
   have e4 : (7 : ℝ) ≤ Real.exp (6 * L) := by linarith [Real.add_one_le_exp (6 * L)]
   have hE : Real.exp (6 * L) = Real.exp L ^ 2 * Real.exp L ^ 2 * Real.exp (2 * L) := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]; congr 1; push_cast; ring
+    rw [← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]; congr 1; push_cast; ring
   have hE2 : Real.exp L ^ 2 ≤ Real.exp (6 * L) := by
-    rw [← Real.exp_nat_mul]; exact Real.exp_le_exp.2 (by push_cast; linarith)
+    rw [← Real.exp_natCast_mul]; exact Real.exp_le_exp.2 (by push_cast; linarith)
   have a1 : (f * r * L) ^ 2 * kap ≤ Real.exp (6 * L) := by
     rw [hE, mul_pow]
     have : (f * r) ^ 2 ≤ Real.exp L ^ 2 := pow_le_pow_left₀ hfr0.le e1 2

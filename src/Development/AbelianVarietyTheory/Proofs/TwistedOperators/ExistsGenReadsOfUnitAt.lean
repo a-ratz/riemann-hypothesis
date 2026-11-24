@@ -80,7 +80,7 @@ theorem exists_genReads_of_unitAt (hσ : GoodEmb c σ) (hU : IsUnf U) (h1 : 1 �
     ∃ (bas : (Fin Wt.g ⊕ Fin Wt.g → ℤ) ≃ₗ[ℤ] (U.X k).Λ) (idx : Fin Wt.g ≃ (U.X k).Ψ × Fin r),
       IsSympl (U.X k) bas ∧ IdxIs c σ (U.X k) idx Wt.e ∧ GenReads U k bas idx Wt.e x Y.θ ∧
         ∀ z w, hermForm Y.Hm z w = hx (U.X k) bas idx x.1 z w := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hU' : Formalism.L2.PjFree.IsUnf (Formalism.L2.PjFree.Unf.ofPj U) := hU
   obtain ⟨W0⟩ := nonempty_uw hU'
   obtain ⟨hκ, hsd, -⟩ := GlobalTheory.Dict.uw_lattice E H Dw l Xo c σ _ _ hσ hU' h1 W0 k

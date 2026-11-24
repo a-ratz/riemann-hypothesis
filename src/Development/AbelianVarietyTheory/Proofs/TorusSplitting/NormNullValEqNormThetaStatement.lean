@@ -231,7 +231,7 @@ theorem norm_gen_eq_const_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       (norm_mul_exp_add hH (hAH (n k • b) (j k) ((n k : ℂ) • z + a k)).1 ((hAH (n k • b) (j k) _).2 (hj k)))] at e2
     exact (mul_right_cancel₀ (Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _
       (mul_ne_zero (norm_ne_zero_iff.2 (hne _ _ (hj k))) (Real.exp_ne_zero _))) e2).symm
-  haveI : DiscreteTopology (AddSubgroup.toIntSubmodule Pm.range) := hP.2.2.1
+  have : DiscreteTopology (AddSubgroup.toIntSubmodule Pm.range) := hP.2.2.1
   have hb : Bornology.IsBounded (Set.range F) := by
     obtain ⟨C, hC⟩ := isBounded_iff_forall_norm_le.1
       (AppellHumbertTrivial.exists_bound_of_periodic (AddSubgroup.toIntSubmodule Pm.range) hP.2.2.2.1

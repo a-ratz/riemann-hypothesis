@@ -104,11 +104,11 @@ theorem mass_le_sum {ι : Type} (s : Finset ι) (d : S.Datum) (P : Submodule L.O
   refine ENNReal.tsum_le_tsum fun o => ?_
   by_cases hP : S.IsTerm d o.out ∧ P o.out
   · obtain ⟨i, hi, hQ⟩ := h _ hP.1 hP.2
-    rw [if_pos hP]
+    rw [ite_eq_left hP]
     refine le_trans ?_ (Finset.single_le_sum (f := fun i => if S.IsTerm d o.out ∧ Q i o.out then
       ENNReal.ofReal (S.mu o.out) else 0) (fun _ _ => zero_le) hi)
-    exact (if_pos ⟨hP.1, hQ⟩).ge
-  · rw [if_neg hP]
+    exact (ite_eq_left ⟨hP.1, hQ⟩).ge
+  · rw [ite_eq_right hP]
     exact zero_le
 
 
@@ -264,8 +264,8 @@ theorem _root_.GlobalTheory.HL.CoordSq.sums_eq : ∀ {F : Type} [Field F] [Valua
       _root_.Formalism.MainNotions.S.LocNG.sumSq R d0 (fun _ => True) = ENNReal.ofReal κ * S.ampSq (fun _ _ => True) ∧
       _root_.Formalism.MainNotions.S.LocNG.nn R d0 = ENNReal.ofReal κ * S.nn := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P S c R d0
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   obtain ⟨κ, hκ, hsum⟩ := _root_.GlobalTheory.HL.CoordSum.tsum_reps_eq M hM H r k P S c R d0
   have hamp := _root_.GlobalTheory.HL.CoordAmp.amp_mass_eq M hM H r k P S c R
   have hvanA : ∀ (δ : S.Datum) (Q : Submodule M.L.O S.V → Prop),
@@ -273,13 +273,13 @@ theorem _root_.GlobalTheory.HL.CoordSq.sums_eq : ∀ {F : Type} [Field F] [Valua
     intro δ Q hδ
     unfold _root_.GlobalTheory.HL.Frames.amp
     refine (tsum_congr fun o => ?_).trans tsum_zero
-    rw [if_neg fun h => hδ ⟨_, h.1⟩]
+    rw [ite_eq_right fun h => hδ ⟨_, h.1⟩]
   have hvanM : ∀ (δ : S.Datum) (Q : Submodule M.L.O S.V → Prop),
       (¬ ∃ Λ, S.IsTerm δ Λ) → S.mass δ Q = 0 := by
     intro δ Q hδ
     unfold _root_.GlobalTheory.HL.Frames.mass
     refine (tsum_congr fun o => ?_).trans tsum_zero
-    rw [if_neg fun h => hδ ⟨_, h.1⟩]
+    rw [ite_eq_right fun h => hδ ⟨_, h.1⟩]
   have hinv : ∀ h ∈ S.H0, ∀ (δ : S.Datum) (Q : S.Datum → Submodule M.L.O S.V → Prop),
       (∀ δ', ∀ s ∈ S.St, ∀ Λ, S.IsTerm δ' Λ → Q δ' Λ → Q δ' (s • Λ)) →
       (∀ δ' Λ, S.IsTerm δ' Λ → (Q δ' Λ ↔ Q (h • δ') (h • Λ))) →
@@ -299,7 +299,7 @@ theorem _root_.GlobalTheory.HL.CoordSq.sums_eq : ∀ {F : Type} [Field F] [Valua
     unfold _root_.GlobalTheory.HL.Frames.BBzero
     rw [hM', hsat]
   have hsq : ∀ z : ℂ, ((‖z‖₊ : ℝ≥0∞) ^ 2) = ENNReal.ofReal (‖z‖ ^ 2) := fun z => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     rfl
   have hA : ∀ (p : _root_.Formalism.MainNotions.S.Loc.Term V M r → Prop) (Q : S.Datum → Submodule M.L.O S.V → Prop),
       (∀ d, _root_.Formalism.MainNotions.S.LocNG.amp R d p
@@ -394,7 +394,7 @@ theorem ncard_classes {O V : Type} [Ring O] [AddCommGroup V] [Module O V]
   have hsub : (B.map M.mkQ : Set (V ⧸ M)) ⊆ (A.map M.mkQ : Set (V ⧸ M)) :=
     Submodule.map_mono hBA
   have hfin : (A.map M.mkQ : Set (V ⧸ M)).Finite := Set.toFinite _
-  rw [hset, Set.ncard_image_of_injective _ hinj, Set.ncard_diff hsub (hfin.subset hsub)]
+  rw [hset, Set.ncard_image_of_injective _ hinj, Set.ncard_sdiff hsub (hfin.subset hsub)]
   rfl
 
 theorem two_le_resQ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -414,7 +414,7 @@ theorem exists_family : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSp
   have hq : 2 ≤ S.q := two_le_resQ S.ϖ S.ϖ_irr
   have hcard : Nat.card ((S.sat Λ).map (S.M d Λ).mkQ) = S.q ^ i := by
     rw [← hbe, ← relIndex_eq_card_map]; rfl
-  haveI hfin : Finite ((S.sat Λ).map (S.M d Λ).mkQ) := by
+  have hfin : Finite ((S.sat Λ).map (S.M d Λ).mkQ) := by
     apply Nat.finite_of_card_ne_zero
     rw [hcard]
     positivity
@@ -448,7 +448,7 @@ theorem exists_family : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSp
   have hMB : S.M d Λ ≤ B := le_inf hMA le_sup_right
   have hBA : B ≤ S.sat Λ := inf_le_left
   have hle' : B.map (S.M d Λ).mkQ ≤ (S.sat Λ).map (S.M d Λ).mkQ := Submodule.map_mono hBA
-  haveI hfinB : Finite (B.map (S.M d Λ).mkQ) :=
+  have hfinB : Finite (B.map (S.M d Λ).mkQ) :=
     Finite.of_injective _ (Submodule.inclusion_injective hle')
   obtain ⟨i', hi'⟩ := (GlobalTheory.FiniteModuleOrder.card_eq_pow_and_index_ge L S.ϖ S.ϖ_irr
     (B.map (S.M d Λ).mkQ)).1
@@ -657,8 +657,8 @@ theorem mass_mono (d : S.Datum) (P Q : Submodule L.O S.V → Prop)
   unfold Frames.mass
   refine ENNReal.tsum_le_tsum fun o => ?_
   by_cases ho : S.IsTerm d o.out ∧ P o.out
-  · rw [if_pos ho, if_pos ⟨ho.1, h _ ho.1 ho.2⟩]
-  · rw [if_neg ho]; exact bot_le
+  · rw [ite_eq_left ho, ite_eq_left ⟨ho.1, h _ ho.1 ho.2⟩]
+  · rw [ite_eq_right ho]; exact bot_le
 
 theorem mass_le_sum {ι : Type} (s : Finset ι) (d : S.Datum) (P : Submodule L.O S.V → Prop)
     (Q : ι → Submodule L.O S.V → Prop)
@@ -668,11 +668,11 @@ theorem mass_le_sum {ι : Type} (s : Finset ι) (d : S.Datum) (P : Submodule L.O
   refine ENNReal.tsum_le_tsum fun o => ?_
   by_cases ho : S.IsTerm d o.out ∧ P o.out
   · obtain ⟨m, hm, hq⟩ := h _ ho.1 ho.2
-    rw [if_pos ho]
+    rw [ite_eq_left ho]
     refine le_trans ?_ (Finset.single_le_sum (f := fun m =>
       if S.IsTerm d o.out ∧ Q m o.out then ENNReal.ofReal (S.mu o.out) else 0) (fun _ _ => bot_le) hm)
-    rw [if_pos ⟨ho.1, hq⟩]
-  · rw [if_neg ho]; exact bot_le
+    rw [ite_eq_left ⟨ho.1, hq⟩]
+  · rw [ite_eq_right ho]; exact bot_le
 
 theorem sumData_mono (φ ψ : S.Datum → ℝ≥0∞) (h : ∀ d, φ d ≤ ψ d) : S.sumData φ ≤ S.sumData ψ := by
   unfold Frames.sumData
@@ -782,7 +782,7 @@ theorem mass_le_sum (S : Frames L r k) (d : S.Datum) (P : Submodule L.O S.V → 
   split_ifs with ho
   · obtain ⟨i, hi, hq⟩ := h _ ho.1 ho.2
     refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le) hi)
-    rw [if_pos ⟨ho.1, hq⟩]
+    rw [ite_eq_left ⟨ho.1, hq⟩]
   · exact zero_le
 
 theorem mass_mono (S : Frames L r k) (d : S.Datum) (P Q : Submodule L.O S.V → Prop)
@@ -933,7 +933,7 @@ theorem ampSq_nonzero_defect : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
         intro d
         unfold Frames.amp
         have : ∀ Λ, ¬ (S.IsTerm d Λ ∧ ¬ S.BBzero d Λ) := fun Λ h => hex ⟨d, Λ, h⟩
-        simp only [this, if_false, tsum_zero]
+        simp only [this, ite_false, tsum_zero]
       unfold Frames.ampSq Frames.sumData
       simp [ha]
     rw [h0]
@@ -991,8 +991,8 @@ end
 
 theorem ngAt : ∀ (C : ℝ), 39 ≤ C → ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r k : ℕ) (P : LocNG.FPair H r), 4 * r + 7 ≤ k → Module.finrank E V = k + 2 * r + 1 → P.RelG (LocNG.theta M) → LocNG.NGAt k P C := by
   intro C hC F _ _ _ E _ _ _ _ M hM V _ _ H r k P hk hV hP R d0
-  letI := hM.loc
-  letI := hM.char0
+  let := hM.loc
+  let := hM.char0
   obtain ⟨S, ⟨c⟩⟩ := GlobalTheory.HL.CoordExist.exists_coord M hM H r k P hV hP
   obtain ⟨κ, -, e1, e2, e3, e4⟩ := _root_.GlobalTheory.HL.CoordSq.sums_eq M hM H r k P S c R d0
   obtain ⟨hH, hq, hpr⟩ := _root_.GlobalTheory.HL.CoordHeight.height_eq M hM H r k P S c

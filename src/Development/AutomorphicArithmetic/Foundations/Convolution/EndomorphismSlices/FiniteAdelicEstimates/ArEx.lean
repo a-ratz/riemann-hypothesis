@@ -59,11 +59,11 @@ attribute [local instance] borelG borelF borelA borelH
 theorem UpperTheory.Zero.ConvolutionTheory.EB.arEx :
     UpperTheory.Zero.ConvolutionTheory.EB.ArEx := by
   intro E _ _ _ a b l₁ l₂ D
-  haveI : BorelSpace (G a) := ⟨rfl⟩
-  haveI : BorelSpace (G b) := ⟨rfl⟩
-  haveI : BorelSpace (Hf E a b) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (G a) := lc_G a
-  haveI : LocallyCompactSpace (G b) := lc_G b
+  have : BorelSpace (G a) := ⟨rfl⟩
+  have : BorelSpace (G b) := ⟨rfl⟩
+  have : BorelSpace (Hf E a b) := ⟨rfl⟩
+  have : LocallyCompactSpace (G a) := lc_G a
+  have : LocallyCompactSpace (G b) := lc_G b
   let μa : Measure (G a) := Measure.haar
   let μb : Measure (G b) := Measure.haar
   have ha : μa.IsHaarMeasure := inferInstance

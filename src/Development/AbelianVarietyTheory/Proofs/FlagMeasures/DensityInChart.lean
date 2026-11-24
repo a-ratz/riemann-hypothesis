@@ -104,7 +104,7 @@ theorem upper_of_density (l ν : Measure V) [l.IsAddHaarMeasure] [IsLocallyFinit
   refine ht.frequently (Eventually.frequently ?_)
   filter_upwards [H x hx', self_mem_nhdsWithin, hc.eventually (gt_mem_nhds hε)] with r hr hr0 hlt
   have hr0 : 0 < r := hr0
-  simp only [Function.comp, Measure.smul_apply]
+  simp only [Function.comp, smul_apply]
   rw [densHom_scale l x hs hr0]
   have h2 : ν (Metric.closedBall x ((1 + -1 * ε) * r)) ≤ ν (Metric.ball 0 r) :=
     le_trans (measure_mono (Metric.closedBall_subset_ball (by nlinarith))) hr
@@ -131,7 +131,7 @@ theorem lower_of_density (l ν : Measure V) [l.IsAddHaarMeasure] [IsLocallyFinit
   refine ht.frequently (Eventually.frequently ?_)
   filter_upwards [H x hx', self_mem_nhdsWithin, hc.eventually (lt_mem_nhds hε)] with r hr hr0 hlt
   have hr0 : 0 < r := hr0
-  simp only [Function.comp, Measure.smul_apply]
+  simp only [Function.comp, smul_apply]
   rw [densHom_scale l x hs hr0]
   have h2 : ν (Metric.ball 0 r) ≤ ν (Metric.closedBall x ((1 + 1 * ε) * r)) :=
     le_trans hr (measure_mono (by rw [one_mul]; exact Metric.ball_subset_closedBall))
@@ -217,7 +217,7 @@ theorem tendsto_of_chart {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   have hν : ∀ A : Set V, MeasurableSet A → ν A = μ (e '' (A ∩ Metric.ball 0 δ)) := by
     intro A hA
     simp only [ν]
-    rw [Measure.map_apply measurable_subtype_coe hA, hψ.comap_apply]
+    rw [Measure.map_apply measurable_subtypeVal hA, hψ.comap_apply]
     congr 1
     rw [Set.inter_comm, ← Subtype.image_preimage_coe, Set.image_image]
     rfl
@@ -229,7 +229,7 @@ theorem tendsto_of_chart {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
       ν (L '' Metric.ball 0 r) = μ (e '' (L '' Metric.ball 0 r)) := by
     intro r h
     rw [hν (L '' Metric.ball 0 r) (L.toHomeomorph.isOpenMap _ Metric.isOpen_ball).measurableSet, Set.inter_eq_left.2 h]
-  haveI : IsFiniteMeasure ν := ⟨by rw [hν _ MeasurableSet.univ, Set.univ_inter]; exact hfin'⟩
+  have : IsFiniteMeasure ν := ⟨by rw [hν _ MeasurableSet.univ, Set.univ_inter]; exact hfin'⟩
   refine tendsto_of_squeeze l ν (hc.congr' ?_) ?_ L f ?_
   · filter_upwards [Ioo_mem_nhdsGT hδ] with r hr
     rw [hνb 0 r (by simpa using hr.2.le)]
@@ -283,7 +283,7 @@ theorem hasStrict_exp (J : V →L[ℝ] A) : HasStrictFDerivAt (fun x => NormedSp
   exact h.comp 0 J.hasStrictFDerivAt
 
 theorem exp_neg_mul (a : A) : NormedSpace.exp (-a) * NormedSpace.exp a = 1 := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   rw [← NormedSpace.exp_add_of_commute (Commute.refl a).neg_left, neg_add_cancel, NormedSpace.exp_zero]
 
 theorem sandwich (S : Set A) (J : V →L[ℝ] A) (P : A →L[ℝ] V) (hP : ∀ x, P (J x) = x)
@@ -437,8 +437,8 @@ theorem density_in_chart : ∀ (m : ℕ) (S : Set (Matrix (Fin m) (Fin m) ℂ)) 
   obtain ⟨hlie, hnb⟩ := GlobalTheory.ClosedMatGroup.closed_subgroup m S hS
   obtain ⟨c₀, -, -, hu⟩ := _root_.GlobalTheory.MatHaarDensity.exists_hasDens m S μ hS hμ
   have hct : c ≠ ⊤ := by rw [hu c hc]; exact ENNReal.ofReal_ne_top
-  haveI : FiniteDimensional ℝ E := L.symm.toLinearEquiv.finiteDimensional
-  haveI : CompleteSpace E := FiniteDimensional.complete ℝ E
+  have : FiniteDimensional ℝ E := L.symm.toLinearEquiv.finiteDimensional
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℝ E
   obtain ⟨P₀, hP₀⟩ := (lieIncl S).exists_leftInverse_of_injective (LinearMap.ker_eq_bot.2 (lieIncl_injective S))
   let J : lieE S →L[ℝ] Matrix (Fin m) (Fin m) ℂ := LinearMap.toContinuousLinearMap (lieIncl S)
   let P : Matrix (Fin m) (Fin m) ℂ →L[ℝ] lieE S := LinearMap.toContinuousLinearMap P₀
@@ -472,7 +472,7 @@ theorem density_in_chart : ∀ (m : ℕ) (S : Set (Matrix (Fin m) (Fin m) ℂ)) 
     ext v i j
     exact hD2 i j v
   obtain ⟨δ₀, hδ₀, hb⟩ := Metric.eventually_nhds_iff_ball.1 hl
-  letI : NormedAlgebra ℚ (Matrix (Fin m) (Fin m) ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedAlgebra ℚ (Matrix (Fin m) (Fin m) ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
   have he : Continuous fun x => (Matrix.of.symm (NormedSpace.exp (J x)) : PI.MtM m) := NormedSpace.exp_continuous.comp J.continuous
   refine tendsto_of_chart (X := PI.MtM m) volume μ (fun x => Matrix.of.symm (NormedSpace.exp (J x))) he hδ₀
     ?_ hct hc ?_ L _ ?_

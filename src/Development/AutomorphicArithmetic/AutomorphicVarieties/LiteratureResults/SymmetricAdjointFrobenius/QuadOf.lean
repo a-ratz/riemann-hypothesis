@@ -69,7 +69,7 @@ private theorem deg_sum (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (�
     (T : Finset (v.asIdeal.primesOver (𝓞 E))) : ∑ q ∈ T, q.1.inertiaDeg (𝓞 F) ≤ 2 := by
   have := v.isMaximal
   have : Fintype (v.asIdeal.primesOver (𝓞 E)) := (IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 E)).fintype
-  rw [← h2, Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E,
+  rw [← h2, IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E,
     ← Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 E)]
   refine (Finset.sum_le_sum_of_subset T.subset_univ).trans (Finset.sum_le_sum fun q _ => ?_)
   have := q.2.1

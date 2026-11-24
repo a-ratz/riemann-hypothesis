@@ -140,14 +140,14 @@ theorem exists_ne_zero_of_mem_nhds {U : Set k} (hU : U ∈ 𝓝 (0 : k)) : ∃ t
   push_neg at h
   obtain ⟨t, ht, hto, h0t⟩ := mem_nhds_iff.1 hU
   have e : t = {0} := Set.Subset.antisymm (fun s hs => h s (ht hs)) (Set.singleton_subset_iff.2 h0t)
-  haveI : DiscreteTopology k := discreteTopology_of_isOpen_singleton_zero (e ▸ hto)
+  have : DiscreteTopology k := discreteTopology_of_isOpen_singleton_zero (e ▸ hto)
   have hfin : (𝒪[k] : Set k).Finite := (GlobalTheory.SplitWeil.Model.isCompact_int (k := k)).finite_of_discrete
-  haveI : Finite 𝒪[k] := hfin.to_subtype
+  have : Finite 𝒪[k] := hfin.to_subtype
   exact IsDiscreteValuationRing.not_isField 𝒪[k] (Finite.isField_of_domain 𝒪[k])
 
 theorem exists_bound {m n : ℕ} {C : Set (Matrix (Fin m) (Fin n) k)} (hC : IsCompact C) :
     ∃ c : 𝒪[k], c ≠ 0 ∧ ∀ Z ∈ C, ∀ i j, (c : k) * Z i j ∈ 𝒪[k] := by
-  haveI : Nonempty {c : 𝒪[k] // c ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
+  have : Nonempty {c : 𝒪[k] // c ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
   have hO : IsOpen (𝒪[k] : Set k) := Valuation.isOpen_integer (v := valuation k)
 
   have hd : ∀ x : k, ∃ d : 𝒪[k], d ≠ 0 ∧ (d : k) * x ∈ 𝒪[k] := by
@@ -166,7 +166,7 @@ theorem exists_bound {m n : ℕ} {C : Set (Matrix (Fin m) (Fin n) k)} (hC : IsCo
   obtain ⟨⟨c, hc⟩, h⟩ := hC.elim_directed_cover
     (fun c : {c : 𝒪[k] // c ≠ 0} => {Z : Matrix (Fin m) (Fin n) k | ∀ i j, (c.1 : k) * Z i j ∈ 𝒪[k]})
     (fun c => by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         IsOpen.preimage (f := fun Z : Matrix (Fin m) (Fin n) k => (c.1 : k) * Z i j) (by fun_prop) hO)
     (fun Z _ => by
@@ -237,7 +237,7 @@ theorem span_eq_top_left {m n : ℕ} (hn : 0 < n) {X : Set (Fin m → k)} {Y : S
   let H : Submodule 𝒪[k] (Matrix (Fin m) (Fin n) k) :=
     { carrier := {Z | ∀ j, ∑ i, Z i j * ℓ i = 0}
       add_mem' := fun {A B} hA hB j => by
-        simp only [Set.mem_setOf_eq, Matrix.add_apply, add_mul, Finset.sum_add_distrib, hA j, hB j, add_zero]
+        simp only [Set.mem_ofPred_eq, Matrix.add_apply, add_mul, Finset.sum_add_distrib, hA j, hB j, add_zero]
       zero_mem' := fun j => by simp
       smul_mem' := fun c A hA j => by
         have := hA j
@@ -251,7 +251,7 @@ theorem span_eq_top_left {m n : ℕ} (hn : 0 < n) {X : Set (Fin m → k)} {Y : S
     rw [this, hX x hx, mul_zero])
   have hHc : IsClosed (H : Set (Matrix (Fin m) (Fin n) k)) := by
     show IsClosed {Z : Matrix (Fin m) (Fin n) k | ∀ j, ∑ i, Z i j * ℓ i = 0}
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun j => isClosed_eq (by fun_prop) continuous_const
   have hcl : closure (Submodule.span 𝒪[k] (prods X Y) : Set (Matrix (Fin m) (Fin n) k)) ⊆ (H : Set (Matrix (Fin m) (Fin n) k)) := closure_minimal (fun Z hZ => hsub hZ) hHc
   have hℓ0 : ∀ i, ℓ i = 0 := by
@@ -261,8 +261,8 @@ theorem span_eq_top_left {m n : ℕ} (hn : 0 < n) {X : Set (Fin m → k)} {Y : S
     have hφ : Continuous φ := by
       refine continuous_pi fun i => continuous_pi fun j => ?_
       by_cases h : i = i₀ ∧ j = j₀
-      · simp only [φ, Matrix.of_apply, if_pos h]; exact continuous_id
-      · simp only [φ, Matrix.of_apply, if_neg h]; exact continuous_const
+      · simp only [φ, Matrix.of_apply, ite_eq_left h]; exact continuous_id
+      · simp only [φ, Matrix.of_apply, ite_eq_right h]; exact continuous_const
     have h0 : φ 0 ∈ closure (Submodule.span 𝒪[k] (prods X Y) : Set (Matrix (Fin m) (Fin n) k)) := by
       have : φ 0 = 0 := by ext i j; simp [φ]
       rw [this]; exact subset_closure (zero_mem _)
@@ -291,7 +291,7 @@ theorem span_eq_top_right {m n : ℕ} (hm : 0 < m) {X : Set (Fin m → k)} {Y : 
   let H : Submodule 𝒪[k] (Matrix (Fin m) (Fin n) k) :=
     { carrier := {Z | ∀ i, ∑ j, Z i j * ℓ j = 0}
       add_mem' := fun {A B} hA hB i => by
-        simp only [Set.mem_setOf_eq, Matrix.add_apply, add_mul, Finset.sum_add_distrib, hA i, hB i, add_zero]
+        simp only [Set.mem_ofPred_eq, Matrix.add_apply, add_mul, Finset.sum_add_distrib, hA i, hB i, add_zero]
       zero_mem' := fun i => by simp
       smul_mem' := fun c A hA i => by
         have := hA i
@@ -305,7 +305,7 @@ theorem span_eq_top_right {m n : ℕ} (hm : 0 < m) {X : Set (Fin m → k)} {Y : 
     rw [this, hY y hy, mul_zero])
   have hHc : IsClosed (H : Set (Matrix (Fin m) (Fin n) k)) := by
     show IsClosed {Z : Matrix (Fin m) (Fin n) k | ∀ i, ∑ j, Z i j * ℓ j = 0}
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun i => isClosed_eq (by fun_prop) continuous_const
   have hcl : closure (Submodule.span 𝒪[k] (prods X Y) : Set (Matrix (Fin m) (Fin n) k)) ⊆ (H : Set (Matrix (Fin m) (Fin n) k)) := closure_minimal (fun Z hZ => hsub hZ) hHc
   have hℓ0 : ∀ j, ℓ j = 0 := by
@@ -315,8 +315,8 @@ theorem span_eq_top_right {m n : ℕ} (hm : 0 < m) {X : Set (Fin m → k)} {Y : 
     have hφ : Continuous φ := by
       refine continuous_pi fun i => continuous_pi fun j => ?_
       by_cases h : i = i₀ ∧ j = j₀
-      · simp only [φ, Matrix.of_apply, if_pos h]; exact continuous_id
-      · simp only [φ, Matrix.of_apply, if_neg h]; exact continuous_const
+      · simp only [φ, Matrix.of_apply, ite_eq_left h]; exact continuous_id
+      · simp only [φ, Matrix.of_apply, ite_eq_right h]; exact continuous_const
     have h0 : φ 0 ∈ closure (Submodule.span 𝒪[k] (prods X Y) : Set (Matrix (Fin m) (Fin n) k)) := by
       have : φ 0 = 0 := by ext i j; simp [φ]
       rw [this]; exact subset_closure (zero_mem _)
@@ -383,11 +383,11 @@ theorem closure_eq {m n : ℕ} (X : Set (Fin m → k)) (Y : Set (Fin n → k))
     convert this using 1; ring
   have hL₁ : Submodule.IsFullLattice k (Submodule.span 𝒪[k] X) :=
     by
-      letI := Submodule.IsLattice.of_fg k (fg_of_bound _ _ (mul_ne_zero hc0' hyj) hb₁)
+      let := Submodule.IsLattice.of_fg k (fg_of_bound _ _ (mul_ne_zero hc0' hyj) hb₁)
       exact ⟨by rw [Submodule.span_span_of_tower]; exact h1⟩
   have hL₂ : Submodule.IsFullLattice k (Submodule.span 𝒪[k] Y) :=
     by
-      letI := Submodule.IsLattice.of_fg k (fg_of_bound _ _ (mul_ne_zero hc0' hxi) hb₂)
+      let := Submodule.IsLattice.of_fg k (fg_of_bound _ _ (mul_ne_zero hc0' hxi) hb₂)
       exact ⟨by rw [Submodule.span_span_of_tower]; exact h2⟩
   obtain ⟨P₀, hP₀⟩ := GlobalTheory.RootEx.UnfoldShape.exists_eq_act_stdLat k (Fin m) _ hL₁
   obtain ⟨Q₀, hQ₀⟩ := GlobalTheory.RootEx.UnfoldShape.exists_eq_act_stdLat k (Fin n) _ hL₂
@@ -403,10 +403,10 @@ theorem closure_eq {m n : ℕ} (X : Set (Fin m → k)) (Y : Set (Fin n → k))
       let N : Submodule 𝒪[k] (Matrix (Fin m) (Fin n) k) :=
         { carrier := {W | (P₀⁻¹).val * W ∈ GlobalTheory.SplitFlip.matLat (Fin m) (Submodule.span 𝒪[k] Y)}
           add_mem' := fun {A B} hA hB => by
-            simp only [Set.mem_setOf_eq, Matrix.mul_add]; exact add_mem hA hB
-          zero_mem' := by simp only [Set.mem_setOf_eq, Matrix.mul_zero]; exact zero_mem _
+            simp only [Set.mem_ofPred_eq, Matrix.mul_add]; exact add_mem hA hB
+          zero_mem' := by simp only [Set.mem_ofPred_eq, Matrix.mul_zero]; exact zero_mem _
           smul_mem' := fun c A hA => by
-            simp only [Set.mem_setOf_eq, Matrix.mul_smul]; exact Submodule.smul_mem _ c hA }
+            simp only [Set.mem_ofPred_eq, Matrix.mul_smul]; exact Submodule.smul_mem _ c hA }
       refine (Submodule.span_le.2 ?_ : Submodule.span 𝒪[k] (prods X Y) ≤ N) hZ
       rintro _ ⟨x, hx, y, hy, rfl⟩
       show (P₀⁻¹).val * vecMulVec x y ∈ GlobalTheory.SplitFlip.matLat (Fin m) (Submodule.span 𝒪[k] Y)
@@ -441,7 +441,7 @@ theorem closure_eq {m n : ℕ} (X : Set (Fin m → k)) (Y : Set (Fin n → k))
       rw [SetLike.mem_coe, key, GlobalTheory.SplitFlip.mem_matLat]
       exact forall_congr' fun i => mem₂ _
     rw [e]
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun i => isClosed_iInter fun j => IsClosed.preimage ?_
       (Valuation.isClosed_integer (v := valuation k))
     simp only [Matrix.mulVec, dotProduct, Matrix.mul_apply]
@@ -480,7 +480,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem mem_int_iff {v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)} (x : Fv F v) : x ∈ 𝒪[Fv F v] ↔ x ∈ v.adicCompletionIntegers F := by
   rw [HeightOneSpectrum.mem_adicCompletionIntegers]
-  haveI : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (Fv F v))
     (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ)))).le_one_iff_le_one
@@ -526,7 +526,7 @@ theorem exists_unit_diff {D : D7} {v : GlobalTheory.IndefiniteRowSideFullHecke.W
     (hU : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E)) :
     ∃ (b : 𝓞 D.host.E) (α : Fv D.host.F v), α ∈ v.adicCompletionIntegers D.host.F ∧
       α * (τ (D.sp.cm.sig (b : D.host.E)) - τ (b : D.host.E)) = 1 := by
-  haveI := hU
+  have := hU
   obtain ⟨b, hb⟩ := GlobalTheory.TwU.IntegralHilbert90Unramified.exists_sub_sig_notMem D.sp.cm.sig (isConjOf_sig D) (splitPrime τ)
   rw [mem_splitPrime] at hb
   have hle := apply_coe_mem τ (b - RingOfIntegers.mapAlgHom D.sp.cm.sig b)
@@ -817,7 +817,7 @@ theorem exists_isLinBar : ∀ {D : D7} {a a' : ℕ} (Bs : GlobalTheory.Indefinit
     unfold GlobalTheory.VacShape.coBar
     rw [(hM z).2.1]
     simp
-  haveI : CharZero (Fv D.host.F Bs.v₁) := charZero_of_injective_algebraMap (algebraMap D.host.F _).injective
+  have : CharZero (Fv D.host.F Bs.v₁) := charZero_of_injective_algebraMap (algebraMap D.host.F _).injective
   obtain ⟨ι, hbij, htr, hmu⟩ := GlobalTheory.T.stoneVonNeumann_schwartzBruhat_transverseLagrangians (GlobalTheory.LatVac.psiAt Bs.ψ Bs.v₁) hψc hunr'
     ((GlobalTheory.LatVac.locCo Γ.M'.co Bs.v₁).comp uT) ((GlobalTheory.LatVac.locCo Γ.M'.co Bs.v₁).comp uM)
     (fun Y Y' => by
@@ -1516,7 +1516,7 @@ theorem eq_smul_indicator_closure {X : Type} [AddCommGroup X] [TopologicalSpace 
     exact hx e2.symm
   have hHeq : (H : Set X) = (fun h => Y₀ + h) ⁻¹' {y | f y ≠ 0} := by
     ext h
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, SetLike.mem_coe]
     constructor
     · intro hh; rw [hH h hh]; exact hY₀
     · intro hne; simpa using hW _ hne
@@ -1573,8 +1573,8 @@ theorem GlobalTheory.SBClosure.main : ∀ {F : Type} [Field F] [NumberField F] (
     ∃ c : ℂ, f = c • (closure (S : Set (Matrix (Fin m) (Fin k) (Fv F v)))).indicator 1 ∧
       IsOpen (closure (S : Set (Matrix (Fin m) (Fin k) (Fv F v)))) ∧ IsCompact (closure (S : Set (Matrix (Fin m) (Fin k) (Fv F v)))) := by
   intro F _ _ v m k S B hB f hf hf0 hinv hsupp huniq
-  haveI : NonarchimedeanAddGroup (Fin k → Fv F v) := GlobalTheory.SBClosure.nonarch_pi (fun _ : Fin k => Fv F v)
-  haveI : NonarchimedeanAddGroup (Matrix (Fin m) (Fin k) (Fv F v)) :=
+  have : NonarchimedeanAddGroup (Fin k → Fv F v) := GlobalTheory.SBClosure.nonarch_pi (fun _ : Fin k => Fv F v)
+  have : NonarchimedeanAddGroup (Matrix (Fin m) (Fin k) (Fv F v)) :=
     GlobalTheory.SBClosure.nonarch_pi (fun _ : Fin m => Fin k → Fv F v)
   exact GlobalTheory.SBClosure.eq_smul_indicator_closure S B hB f hf hf0 hinv hsupp huniq
 end -- clump:auto
@@ -1664,7 +1664,7 @@ theorem vacuum_eq_smul_indicator : ∀ {D : D7} {a a' : ℕ} (Bs : GlobalTheory.
     exact (hι.trans u hat hu0 φ₀ h0 φ₀ h0 hA Y).symm
   have hsupp : ∀ Y ∉ GlobalTheory.VacShape.Bd Bs Γ L₁ L₂, ι φ₀ Y = 0 := by
     intro Y hY
-    simp only [GlobalTheory.VacShape.Bd, Set.mem_setOf_eq, not_forall] at hY
+    simp only [GlobalTheory.VacShape.Bd, Set.mem_ofPred_eq, not_forall] at hY
     obtain ⟨x, hx, hx0, rfl, u, hu, hu0, hne1⟩ := hY
     have hat := (GlobalTheory.LatVac.latAtV_at_stable _ _ _).1 u hu
     have hB := hfix u hu

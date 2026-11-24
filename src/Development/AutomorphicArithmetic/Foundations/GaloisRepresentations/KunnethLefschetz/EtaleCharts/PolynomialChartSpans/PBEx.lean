@@ -301,7 +301,7 @@ variable {K : Type} [CommRing K] {W Z Y : Scheme.{0}} {q : Z ⟶ Spec (CommRingC
 
 private theorem wI_cP (B : Blow q i π D d) (α : B.ι) : wI B α ≫ cP B = (oW B α).ι := by
   unfold wI cP
-  exact Sigma.ι_desc _ _
+  exact Sigma.ι_comp_desc _ _
 
 private theorem mem_V (B : Blow q i π D d) {U : Scheme.{0}} {p : U ⟶ W} {α : B.ι}
     (c : U ⟶ (oW B α : Scheme.{0})) (h : p = c ≫ (oW B α).ι) (y : U) : (p ≫ i) y ∈ B.V α := by
@@ -702,7 +702,7 @@ private lemma eq_of_appLE_eq {Y V : Scheme.{0}} (C : Y.Opens) (hC : IsAffineOpen
     simpa using hz (Set.mem_univ x)
   obtain ⟨l, rfl⟩ : ∃ l, l ≫ C.ι = y := ⟨_, IsOpenImmersion.lift_fac C.ι y (r y h)⟩
   obtain ⟨l', rfl⟩ : ∃ l, l ≫ C.ι = y' := ⟨_, IsOpenImmersion.lift_fac C.ι y' (r y' h')⟩
-  haveI : IsAffine (C : Scheme.{0}) := hC
+  have : IsAffine (C : Scheme.{0}) := hC
   rw [appLE_lift_eq, appLE_lift_eq] at e
   have e2 : l.appTop = l'.appTop := (cancel_epi C.topIso.inv).mp e
   rw [ext_of_isAffine e2]
@@ -1118,7 +1118,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.tCover :
     let y : (oT B j p : Scheme.{0}) := ⟨x, hp⟩
     have hc : tI B j p ≫ eP B j = (oT B j p).ι := by
       unfold tI eP
-      exact Sigma.ι_desc _ _
+      exact Sigma.ι_comp_desc _ _
     refine ⟨tI B j p y, ?_⟩
     have hy : (tI B j p ≫ eP B j) y = x := by
       rw [hc]

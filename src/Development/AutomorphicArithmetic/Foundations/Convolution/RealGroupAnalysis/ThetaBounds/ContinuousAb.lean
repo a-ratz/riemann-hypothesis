@@ -54,7 +54,7 @@ private theorem wt_nonneg' {K : Type} [Field K] [NumberField K]
 
 private theorem continuous_ab {K : Type} [Field K] [NumberField K] :
     Continuous (ab : (A K)ˣ → ℝ) :=
-  continuous_subtype_val.comp (IdeleGroup.continuous_ideleModule (K := K))
+  continuous_subtypeVal.comp (IdeleGroup.continuous_ideleModule (K := K))
 
 private theorem ab_pos {K : Type} [Field K] [NumberField K] (a : (A K)ˣ) : 0 < ab a :=
   (IdeleGroup.ideleModule K a).2

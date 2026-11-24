@@ -247,11 +247,11 @@ theorem UpperTheory.exists_specialization_of_eval_ne_zero :
   intro k L _ _ _ _ n x s
   let f : MvPolynomial (Fin n) k →ₐ[k] L := MvPolynomial.aeval x
   let J : Ideal (MvPolynomial (Fin n) k) := RingHom.ker f
-  haveI : J.IsPrime := RingHom.ker_isPrime _
+  have : J.IsPrime := RingHom.ker_isPrime _
   let ξ : (MvPolynomial (Fin n) k ⧸ J) →ₐ[k] L := Ideal.kerLiftAlg f
   have hξinj : Function.Injective ξ := Ideal.kerLiftAlg_injective f
   have hξmk : ∀ p, ξ (Ideal.Quotient.mk J p) = MvPolynomial.aeval x p := fun p => rfl
-  haveI : Algebra.FiniteType k (MvPolynomial (Fin n) k ⧸ J) :=
+  have : Algebra.FiniteType k (MvPolynomial (Fin n) k ⧸ J) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ k J) (Ideal.Quotient.mkₐ_surjective k J)
   obtain ⟨a, S, hξ, ha, hs, H⟩ := GlobalTheory.exists_ne_zero_forall_point_extend_subalgebra k
     (MvPolynomial (Fin n) k ⧸ J) L ξ hξinj s
@@ -287,8 +287,8 @@ theorem UpperTheory.Reformulated.B.Qi48.exists_psi :
     [inst_3 : Algebra L T] [Algebra.FiniteType L T] (m : Ideal T),
     m.IsMaximal → ∃ (ψ : T →ₐ[L] L), ∀ (x : T), (ψ : T → L) x = (0 : L) ↔ x ∈ m := by
   intro L T _ _ _ _ _ m hm
-  letI : Field (T ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite L (T ⧸ m) := finite_of_finite_type_of_isJacobsonRing L (T ⧸ m)
+  let : Field (T ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite L (T ⧸ m) := finite_of_finite_type_of_isJacobsonRing L (T ⧸ m)
   have hb : Function.Bijective (Algebra.ofId L (T ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : L ≃ₐ[L] (T ⧸ m) := AlgEquiv.ofBijective (Algebra.ofId L (T ⧸ m)) hb
@@ -317,9 +317,9 @@ private lemma exists_unif (T : Type) [CommRing T] [IsDedekindDomain T] (hT : ¬ 
     ∃ π ∈ m, π ≠ 0 ∧ ∀ c : T, c ≠ 0 →
       ∃ (s t : T) (e : ℕ), s ∉ m ∧ t ∉ m ∧ c * s = t * π ^ e := by
   have hbot : m ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hm hT
-  haveI := hm.isPrime
+  have := hm.isPrime
   let D := Localization.AtPrime m
-  haveI : IsDiscreteValuationRing D :=
+  have : IsDiscreteValuationRing D :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain T hbot D
   have hinj : Function.Injective (algebraMap T D) :=
     IsLocalization.injective D m.primeCompl_le_nonZeroDivisors
@@ -947,7 +947,7 @@ theorem UpperTheory.finite_kernel_powClasses_of_primitive_root :
     ∀ (K K' : Type) [Field K] [Field K'] [Algebra K K'] [FiniteDimensional K K'] (q : ℕ) [NeZero q], (∃ ζ : K, IsPrimitiveRoot ζ q) → FinCls q {a : Kˣ | ∃ b : K', algebraMap K K' (a : K) = b ^ q} := by
   intro K K' _ _ _ _ q _ ⟨ζ, hζ⟩
   classical
-  haveI := hζ.neZero'
+  have := hζ.neZero'
   have hq : ((q : ℕ) : K) ≠ 0 := NeZero.ne _
   have hq0 : q ≠ 0 := NeZero.ne q
   let σ₀ : K' →ₐ[K] AlgebraicClosure K := (by
@@ -960,7 +960,7 @@ theorem UpperTheory.finite_kernel_powClasses_of_primitive_root :
   have hbb : ∀ a ∈ S, algebraMap K K' (a : K) = bb a ^ q := by
     intro a ha
     have ha' : ∃ b : K', algebraMap K K' (a : K) = b ^ q := ha
-    simp only [bb, dif_pos ha']
+    simp only [bb, dite_eq_left ha']
     exact ha'.choose_spec
   have hbb0 : ∀ a ∈ S, bb a ≠ 0 := by
     intro a ha h0
@@ -986,7 +986,7 @@ theorem UpperTheory.finite_kernel_powClasses_of_primitive_root :
   intro a ha
   have hex : ∃ a' ∈ S, sig a' = sig a := ⟨a, ha, rfl⟩
   have htS : rep (sig a) ∈ S ∧ sig (rep (sig a)) = sig a := by
-    simp only [rep, dif_pos hex]
+    simp only [rep, dite_eq_left hex]
     exact hex.choose_spec
   refine ⟨rep (sig a), Finset.mem_image.mpr ⟨sig a, hfin.mem_toFinset.mpr ⟨a, ha, rfl⟩, rfl⟩, ?_⟩
   set t := rep (sig a) with ht
@@ -1054,7 +1054,7 @@ theorem UpperTheory.finite_kummerSelmer_of_finite_extension :
   have : Algebra.EssFiniteType K K' := Algebra.EssFiniteType.of_comp k K K'
   have : Module.Finite K K' := Algebra.finite_of_essFiniteType_of_isAlgebraic
   have : NeZero (q : k) := ⟨hq.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot k q
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot k q
   obtain ⟨T0, hT0⟩ := UpperTheory.finite_kernel_powClasses_of_primitive_root K K' q
     ⟨algebraMap k K ζ, hζ.map_of_injective (algebraMap k K).injective⟩
   obtain ⟨T', hT'⟩ := hK'
@@ -1072,7 +1072,7 @@ theorem UpperTheory.finite_kummerSelmer_of_finite_extension :
   intro f hf
   obtain ⟨t', ht', u, hu⟩ := hT' (φ f) (himg f hf)
   have hex : ∃ f ∈ SelAll k K q, ∃ u : K'ˣ, φ f = t' * u ^ q := ⟨f, hf, u, hu⟩
-  have hg : g t' = hex.choose := dif_pos hex
+  have hg : g t' = hex.choose := dite_eq_left hex
   obtain ⟨_, u0, hu0⟩ := hex.choose_spec
   set f0 := hex.choose
   have hmem : f * f0⁻¹ ∈ {a : Kˣ | ∃ b : K', algebraMap K K' (a : K) = b ^ q} := by
@@ -1224,24 +1224,24 @@ theorem UpperTheory.curve_picard_of_selmerPicard_of_modelCurve :
     LateralTheory.E.LeafPicCut.LeafSelPic → LateralTheory.E.LeafCurveVCut.LeafModelCurve → LateralTheory.E.E4.LeafPic := by
   intro hSel hModel hH q _ k B _ _ _ _ _ _ hq
   by_cases hB : IsField B
-  · letI := hB.toField
-    haveI : Subsingleton (CommRing.Pic B) := inferInstance
+  · let := hB.toField
+    have : Subsingleton (CommRing.Pic B) := inferInstance
     exact Finite.of_subsingleton
-  · haveI hK : IsFunctionField k (FractionRing B) := UpperTheory.isFunctionField_fractionRing_of_dedekind_finiteType k B hB
+  · have hK : IsFunctionField k (FractionRing B) := UpperTheory.isFunctionField_fractionRing_of_dedekind_finiteType k B hB
     obtain ⟨u, hu, hfd⟩ := IsFunctionField.exists_transcendental_finiteDimensional (k := k) (K := FractionRing B)
     obtain ⟨C0, c0, x, ψ, hc, hx, hψ⟩ := hModel k (FractionRing B) u hu hfd
-    haveI : IsIntegral C0 := hc.1
+    have : IsIntegral C0 := hc.1
     obtain rfl : x = genericPoint C0 := hx.eq (genericPoint_spec C0)
-    letI : Algebra k C0.functionField :=
+    let : Algebra k C0.functionField :=
       (CommRingCat.ofHom (algebraMap k (FractionRing B)) ≫ Spec.preimage ψ).hom.toAlgebra
-    letI : Algebra (FractionRing B) C0.functionField := (Spec.preimage ψ).hom.toAlgebra
-    haveI : IsScalarTower k (FractionRing B) C0.functionField := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra (FractionRing B) C0.functionField := (Spec.preimage ψ).hom.toAlgebra
+    have : IsScalarTower k (FractionRing B) C0.functionField := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     have heq : Spec.map (CommRingCat.ofHom (algebraMap k C0.functionField)) =
         C0.fromSpecStalk (genericPoint C0) ≫ c0 := by
       change Spec.map (CommRingCat.ofHom (algebraMap k (FractionRing B)) ≫ Spec.preimage ψ) = _
       rw [Spec.map_comp, Spec.map_preimage, hψ]
     obtain ⟨hF, hch⟩ := UpperTheory.isFunctionField_and_charts_of_isCurve_of_isUnit hH q k hq c0 hc heq
-    haveI := hF
+    have := hF
     exact UpperTheory.finite_pic_torsion_of_finite_kummerSelmer hSel k B q
       (UpperTheory.finite_kummerSelmer_of_finite_extension k (FractionRing B) C0.functionField q hq (UpperTheory.finite_kummerSelmer_of_charts k _ q hch))
 end -- clump:auto

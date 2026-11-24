@@ -105,12 +105,12 @@ theorem det_lead_ne (U : Matrix (Fin r) (Fin r) ℂ) (hU : ∀ a c : Fin r, c < 
   have hdiag : ∀ a, U a a ≠ 0 := by
     intro a ha
     apply hd
-    rw [Matrix.det_of_upperTriangular htri]
+    rw [det_of_isUpperTriangular htri]
     exact Finset.prod_eq_zero (Finset.mem_univ a) ha
   have htri2 : (U.submatrix (Fin.castLE hm) (Fin.castLE hm)).BlockTriangular id := by
     intro a c h
-    exact hU _ _ (Fin.lt_def.mpr (by simp only [Fin.coe_castLE]; exact Fin.lt_def.mp h))
-  rw [Matrix.det_of_upperTriangular htri2]
+    exact hU _ _ (Fin.lt_def.mpr (by simp only [Fin.val_castLE]; exact Fin.lt_def.mp h))
+  rw [det_of_isUpperTriangular htri2]
   exact Finset.prod_ne_zero_iff.mpr fun a _ => hdiag _
 
 section Line

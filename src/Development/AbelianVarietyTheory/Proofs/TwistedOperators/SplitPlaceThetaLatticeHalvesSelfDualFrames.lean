@@ -117,7 +117,7 @@ theorem exists_max_of_int (D : D7) {v : FinPl D} (g : D.host.E →+* Fv D.host.F
     rw [FractionalIdeal.eq_zero_iff]
     intro a ha
     have := hle a ha
-    rw [map_zero, map_zero, le_zero_iff, map_eq_zero] at this
+    rw [map_zero, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     exact (map_eq_zero g).1 this
   exact ⟨a₀, hmem, h0, fun a' ha' => hle a' ha'⟩
 
@@ -289,7 +289,7 @@ theorem adjCo_bound : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.host.E
   | zero =>
     intro i j
     rw [adjCo_zero, Matrix.zero_apply, map_zero]
-    exact zero_le'
+    exact zero_le
   | add x y _ _ hx hy =>
     intro i j
     rw [adjCo_add, Matrix.add_apply]

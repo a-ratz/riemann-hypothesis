@@ -219,7 +219,7 @@ theorem content_step (W : LocWach PD LL O v n) (hcase : Formalism.MainNotions.Li
       (lE W κ * f - algebraMap (LetA O n) W.EE (letE c) * algebraMap O W.EE x)) :
     ∃ x'' : O, InFr W c (ps W 1 ^ y) (qA W ^ b₀)
       (lE W (deA PD.p b₀ y) * f - algebraMap (LetA O n) W.EE (letE c) * algebraMap O W.EE x'') := by
-  haveI : Fact PD.p.Prime := Fact.mk PD.hp
+  have : Fact PD.p.Prime := Fact.mk PD.hp
   have hR := GS.ringData_of_caseA_of_p9 W hcase hP9
   have hp0 := GS.p_ne_zero W
   have hlm := l_mem_max W hO

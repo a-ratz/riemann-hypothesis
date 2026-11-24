@@ -132,8 +132,8 @@ private lemma main {A C : Type} [CommRing A] [CommRing C] {d : ℕ} [Algebra (Mv
 
 theorem regSeq : RegSeq := by
   intro A C _ _ d φ hφ a ha l
-  letI := φ.toAlgebra
-  haveI : Module.Flat (MvPolynomial (Fin d) A) C := hφ
+  let := φ.toAlgebra
+  have : Module.Flat (MvPolynomial (Fin d) A) C := hφ
   rw [pow_two] at ha
   exact main (A := A) (fun l => φ (MvPolynomial.X l)) (fun _ => rfl) a ha l
 
@@ -151,8 +151,8 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry GlobalTheory.EtC CrystallineSemistableComparison CrystallineSemistableComparison.Onto UpperTheory.Gal.KunnethLefschetz.G.PX
 
 private lemma flat_of_etale {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (h : f.Etale) : f.Flat := by
-  letI := f.toAlgebra
-  haveI : Algebra.Etale A B := h
+  let := f.toAlgebra
+  have : Algebra.Etale A B := h
   exact (inferInstance : Module.Flat A B)
 
 private lemma flat_res {X : Scheme.{0}} {U V : X.Opens} (hU : IsAffineOpen U) (hV : IsAffineOpen V) (h : V ≤ U) :

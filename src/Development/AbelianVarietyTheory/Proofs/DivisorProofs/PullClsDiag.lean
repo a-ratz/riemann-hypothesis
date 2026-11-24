@@ -108,7 +108,7 @@ theorem eq_id : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) 
   intro p _ D R _ b N hN hNp S s o m
   have hψ := m.cart
   have e₂ : m.φ ≫ o.A.hom = o.A.hom := hψ.1.w.trans (Category.comp_id _)
-  haveI : IsIso m.φ := hψ.1.isIso_fst_of_isIso
+  have : IsIso m.φ := hψ.1.isIso_fst_of_isIso
   let σ : o.A ≅ o.A := Over.isoMk (asIso m.φ) e₂
   have hσ : IsMonHom σ.hom := isMonHom_of_mul_comp σ.hom fun T x y => mul_comp_of_grpPullback_id σ.hom hψ x y
   have key : σ.hom = 𝟙 _ := by

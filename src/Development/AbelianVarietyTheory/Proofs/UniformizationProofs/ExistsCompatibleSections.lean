@@ -112,8 +112,8 @@ theorem stalkMap_gr (j : Y ⟶ X) (y : Y) (U : X.Opens) (h : j y ∈ U) (s : Γ(
 
 theorem mem_of_flat' {a : A} {I : Ideal A} (hI : ∀ x, a * x = 0 → x ∈ I) {B : Type} [CommRing B]
     (c : A →+* B) (hf : c.Flat) (b : B) (hb : c a * b = 0) : b ∈ I.map c := by
-  letI := c.toAlgebra
-  haveI : Module.Flat A B := hf
+  let := c.toAlgebra
+  have : Module.Flat A B := hf
   obtain ⟨l, d, y, hy, hc⟩ := Module.Flat.isTrivialRelation_of_sum_smul_eq_zero (R := A) (M := B)
     (f := fun _ : Unit => a) (x := fun _ => b)
     (by rw [Fintype.sum_unique, Algebra.smul_def]; exact hb)

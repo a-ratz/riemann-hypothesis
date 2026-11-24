@@ -87,7 +87,7 @@ theorem UpperTheory.V.Pa.Core.chiRes :
         (MonoidAlgebra.mapRingHom F.G₀ (res O B : B →+* ResidueField O) (MonoidAlgebra.single g 1)) =
         (u.D.chi (MonoidAlgebra.single g 1)).map (res O B) := by
       let f : B →+* ResidueField O := res O B
-      letI : Algebra B (Polynomial (ResidueField O)) := ((algebraMap _ _).comp f).toAlgebra
+      let : Algebra B (Polynomial (ResidueField O)) := ((algebraMap _ _).comp f).toAlgebra
       let φ : Polynomial B →ₐ[B] Polynomial (ResidueField O) :=
         { Polynomial.mapRingHom f with
           commutes' := fun a => by

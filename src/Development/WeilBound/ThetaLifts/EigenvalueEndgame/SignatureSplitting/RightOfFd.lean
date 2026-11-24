@@ -92,7 +92,7 @@ theorem right_of_fd [Countable Γ] (μ : Measure G) [μ.IsHaarMeasure] {𝓕 : S
       change _ * x * g = _ * (x * g)
       rw [mul_assoc]; rfl
   have h3 : μ ((· * g) ⁻¹' 𝓕) = μ 𝓕 := h2.measure_eq h
-  rw [← Measure.map_apply (measurable_mul_const g) hm, e, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
+  rw [← Measure.map_apply (measurable_mul_const g) hm, e, smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
   have h4 : (c : ℝ≥0∞) = 1 := (ENNReal.mul_left_inj (h.measure_ne_zero (NeZero.ne μ)) hf.ne).1 (h3.trans (one_mul _).symm)
   rw [e, ENNReal.coe_eq_one.1 h4, one_smul]
 
@@ -115,7 +115,7 @@ theorem Lat.pair (L : Lat Γ) : ∃ (μ : Measure G) (𝓕 : Set G), μ.IsHaarMe
   have h0 := h'.measure_ne_zero (NeZero.ne μ)
   have h1 := (fd_fin hC hc μ h').ne
   exact ⟨(μ 𝓕)⁻¹ • μ, 𝓕, Measure.IsHaarMeasure.smul μ (ENNReal.inv_ne_zero.2 h1) (ENNReal.inv_ne_top.2 h0), hm, h,
-    by rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]⟩
+    by rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]⟩
 
 omit [T2Space G] in
 theorem int_indep [Countable Γ] {μ μ' : Measure G} [μ.IsHaarMeasure] [μ'.IsHaarMeasure] {𝓕 𝓕' : Set G}
@@ -125,7 +125,7 @@ theorem int_indep [Countable Γ] {μ μ' : Measure G} [μ.IsHaarMeasure] [μ'.Is
   set c := Measure.haarScalarFactor μ μ'
   have h2 : IsFundamentalDomain Γ 𝓕' μ := h'.mono (by rw [e]; exact Measure.smul_absolutelyContinuous)
   have h3 := h.measure_eq h2
-  rw [h1, e, Measure.smul_apply, h1', ENNReal.smul_def, smul_eq_mul, mul_one] at h3
+  rw [h1, e, smul_apply, h1', ENNReal.smul_def, smul_eq_mul, mul_one] at h3
   have h4 : μ = μ' := by rw [e, ENNReal.coe_eq_one.1 h3.symm, one_smul]
   subst h4
   exact h.setIntegral_eq h2 fun γ x => hf γ γ.2 x

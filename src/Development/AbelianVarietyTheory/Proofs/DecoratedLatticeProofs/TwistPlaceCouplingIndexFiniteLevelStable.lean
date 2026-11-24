@@ -89,7 +89,7 @@ theorem box_eq_preimage {n : Type} (c : kˣ) :
   refine forall_congr' fun i => ?_
   rw [Valuation.mem_integer_iff, map_mul, Units.val_inv_eq_inv_val, map_inv₀]
   have hc : 0 < valuation k (c : k) := by
-    rw [zero_lt_iff]; exact (Valuation.ne_zero_iff _).2 c.ne_zero
+    rw [pos_iff_ne_zero]; exact (Valuation.ne_zero_iff _).2 c.ne_zero
   rw [inv_mul_le_iff₀ hc, mul_one]
 
 theorem isOpen_box {n : Type} [Fintype n] (c : kˣ) : IsOpen (box n c : Set (n → k)) := by

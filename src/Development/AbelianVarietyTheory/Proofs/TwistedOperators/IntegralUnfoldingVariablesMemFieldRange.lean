@@ -76,9 +76,9 @@ theorem isOpen_stab {f : X → ℂ} (hf : IsLocallyConstant f) (hc : HasCompactS
     IsOpen (stab f : Set X) := by
   classical
   have hT : IsCompact (tsupport f) := hc
-  haveI : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hT
+  have : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hT
   have hfin : (f '' tsupport f).Finite := by
-    have := (hf.comp_continuous (continuous_subtype_val : Continuous (Subtype.val : tsupport f → X))).range_finite
+    have := (hf.comp_continuous (continuous_subtypeVal : Continuous (Subtype.val : tsupport f → X))).range_finite
     rwa [Set.range_comp, Subtype.range_coe] at this
   have key : ∀ c ∈ f '' tsupport f, c ≠ 0 → ∀ᶠ v in nhds (0 : X), ∀ y, f y = c → f (y + v) = c := by
     intro c _ hc0
@@ -125,7 +125,7 @@ theorem integral_eq_sum [MeasurableSpace X] [OpensMeasurableSpace X] [Measurable
     (hg : ∀ u ∈ U, ∀ y, g (y + u) = g y) (hc : HasCompactSupport g) :
     ∃ s : Finset X, ∫ y, g y ∂μ = (∑ γ ∈ s, g γ) * ((μ.real (U : Set X) : ℝ) : ℂ) := by
   classical
-  haveI := discrete_quot U hU
+  have := discrete_quot U hU
   have hfin : ((QuotientAddGroup.mk : X → X ⧸ U) '' tsupport g).Finite :=
     (hc.isCompact.image QuotientAddGroup.continuous_mk).finite_of_discrete
   set T := hfin.toFinset with hT
@@ -140,12 +140,12 @@ theorem integral_eq_sum [MeasurableSpace X] [OpensMeasurableSpace X] [Measurable
         (fun _ => g (Quotient.out c)) y = if c = (y : X ⧸ U) then g y else 0 := by
       intro c
       by_cases h : c = (y : X ⧸ U)
-      · rw [if_pos h, Set.indicator_of_mem (show y ∈ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from (hind c y rfl).2 h)]
+      · rw [ite_eq_left h, Set.indicator_of_mem (show y ∈ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from (hind c y rfl).2 h)]
         have hm : -(Quotient.out c) + y ∈ U := (hind c y rfl).2 h
         have := hg _ hm (Quotient.out c)
         rw [add_neg_cancel_left] at this
         exact this.symm
-      · rw [if_neg h, Set.indicator_of_notMem (show y ∉ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from fun hm => h ((hind c y rfl).1 hm))]
+      · rw [ite_eq_right h, Set.indicator_of_notMem (show y ∉ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from fun hm => h ((hind c y rfl).1 hm))]
     simp only [key]
     rw [Finset.sum_ite_eq']
     split_ifs with hmem
@@ -216,8 +216,8 @@ open GlobalTheory.FunObj ValuativeRel
 theorem integral_vars_mem_range : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] {G : GlobalTheory.SplitFlip.Grid k} (ν : MeasureTheory.Measure k), GlobalTheory.SplitWeil.IsUnitVol ν → ∀ {K : Type} [Field K] (σ : K →+* ℂ) (f : Vars G → ℂ), IsLocallyConstant f → HasCompactSupport f → (∀ e, f e ∈ Set.range σ) → ∫ e, f e ∂(varsVol G ν) ∈ Set.range σ := by
   intro k _ _ _ _ _ _ G ν hν K _ σ f hf hc hv
   obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := k)
-  haveI := hν.1
-  haveI : (varsVol G ν).IsAddLeftInvariant := by unfold varsVol; infer_instance
+  have := hν.1
+  have : (varsVol G ν).IsAddLeftInvariant := by unfold varsVol; infer_instance
   refine integral_mem_range (varsVol G ν) (Set.univ.pi fun _ => Set.univ.pi fun _ => (𝒪[k] : Set k)) ?_ ?_ ?_ ?_
     σ f hf hc hv
   · exact isOpen_set_pi Set.finite_univ fun _ _ => isOpen_set_pi Set.finite_univ fun _ _ => Model.isOpen_int

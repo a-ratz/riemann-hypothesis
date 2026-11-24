@@ -79,9 +79,9 @@ theorem exists_rat_translate_height_le : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ
   intro D S S₀ ρ d
   obtain ⟨KU, hKU, hU⟩ := GlobalTheory.UnitU.cocompact D ρ
   obtain ⟨KR, hKR, hR⟩ := GlobalTheory.Unf.FlagSub.radX_cocompact d
-  have hlv : Continuous (GlobalTheory.JacMeas.lv d) := d.continuous_levi.comp continuous_subtype_val
+  have hlv : Continuous (GlobalTheory.JacMeas.lv d) := d.continuous_levi.comp continuous_subtypeVal
   have hc : Continuous fun q : radX d × UX D ρ => q.1.1 * GlobalTheory.JacMeas.lv d q.2 :=
-    (continuous_subtype_val.comp continuous_fst).mul (hlv.comp continuous_snd)
+    (continuous_subtypeVal.comp continuous_fst).mul (hlv.comp continuous_snd)
   have hK : IsCompact ((fun q : radX d × UX D ρ => q.1.1 * GlobalTheory.JacMeas.lv d q.2) '' (KR ×ˢ KU)) :=
     (hKR.prod hKU).image hc
   obtain ⟨C, hC⟩ := exists_height_le_of_isCompact S hK
@@ -193,7 +193,7 @@ theorem size_det_le {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι 
   rw [Matrix.det_apply]
   refine hsum _ _ _ fun σ => ?_
   have h1 : N (∏ i, M (σ i) i) ≤ ∏ j, c j :=
-    (size_prod_le N hmul hone _ _).trans (Finset.prod_le_prod' fun j _ => h _ j)
+    (size_prod_le N hmul hone _ _).trans (Finset.prod_le_prod fun j _ => h _ j)
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with e | e
   · rwa [e, one_smul]
   · rwa [e, Units.neg_smul, one_smul, hneg]
@@ -234,7 +234,7 @@ theorem minor_unip {m k ρ : ℕ} (γ n : Matrix (Fin m) (Fin m) R) (e : Matrix 
       ← replicateCol_mulVec, mulVec_mulVec, Matrix.mul_zero, add_zero, Matrix.mul_one, Matrix.mul_add, Matrix.mul_one,
       replicateCol_add, add_comm (replicateCol Unit (i₀ *ᵥ y))]
   have e2 : (1 + T).det = 1 := by
-    rw [det_of_upperTriangular]
+    rw [det_of_isUpperTriangular]
     · simp [hT]
     · intro i j hij
       have : j < i := hij
@@ -261,11 +261,11 @@ theorem prod_bound {α β : Type} [Fintype α] (n : ℕ) {y c h x : α → ℝ�
   have h7 : ∏ᶠ v, y' v ≤ (∏ᶠ v, K v ^ n) * (∏ᶠ v, h' v) ^ n * ∏ᶠ v, x' v := by
     rw [finprod_pow hh, ← finprod_mul_distrib (fs hK') (fs h5'),
       ← finprod_mul_distrib (fs ((hK'.and h5').mono fun v hv => by rw [hv.1, hv.2, one_mul])) (fs h6)]
-    exact finprod_le_finprod' (fs hy) (fs (((hK'.and h5').and h6).mono fun v hv => by
+    exact finprod_le_finprod (fs hy) (fs (((hK'.and h5').and h6).mono fun v hv => by
       rw [hv.1.1, hv.1.2, hv.2, one_mul, one_mul])) h2
   have h8 : ∏ w, y w ≤ (∏ w, c w) * (∏ w, h w) ^ n * ∏ w, x w := by
     rw [← Finset.prod_pow, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-    exact Finset.prod_le_prod' fun w _ => h1 w
+    exact Finset.prod_le_prod fun w _ => h1 w
   refine (mul_le_mul' h8 h7).trans_eq ?_
   ring
 
@@ -320,13 +320,13 @@ theorem nInf_minor_le (w : InfinitePlace D.host.F) {K : ℝ≥0} (he : ∀ i j, 
   refine size_minor_le (nInf w) Nat.cast (fun x y => nInf_le_iff.2 fun τ => ?_) (nInf_le_iff.2 fun τ => ?_) (fun x => ?_)
     (fun ι _ f c h => nInf_le_iff.2 fun τ => ?_) g.1 e i₀ x r (fun i j => nInf_le_iff.2 fun τ => ?_) he hi
     (vInf_le_iff.1 le_rfl)
-  · rw [RingHom.map_mul, RingHom.map_mul, nnnorm_mul]
+  · rw [RingHom.map_mul, RingHom.map_mul, nnNorm_mul]
     exact mul_le_mul' (nInf_le_iff.1 le_rfl τ) (nInf_le_iff.1 le_rfl τ)
-  · rw [RingHom.map_one, RingHom.map_one, nnnorm_one]
-  · simp only [nInf, RingHom.map_neg, nnnorm_neg]
+  · rw [RingHom.map_one, RingHom.map_one, nnNorm_one]
+  · simp only [nInf, RingHom.map_neg, nnNorm_neg]
 
   · rw [map_sum, map_sum]
-    refine (nnnorm_sum_le _ _).trans ((Finset.sum_le_card_nsmul _ _ c fun i _ => nInf_le_iff.1 (h i) τ).trans ?_)
+    refine (nnNorm_sum_le _ _).trans ((Finset.sum_le_card_nsmul _ _ c fun i _ => nInf_le_iff.1 (h i) τ).trans ?_)
     rw [nsmul_eq_mul, Finset.card_univ]
   · refine le_trans ?_ (le_htOf _ _)
     refine le_trans ?_ ((normInf_le_iff _ w).1 le_rfl τ)

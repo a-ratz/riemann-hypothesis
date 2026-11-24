@@ -168,7 +168,7 @@ theorem UpperTheory.V.FW.classGroup_div_mem_of_mul_conj_eq :
       map_mul' := Ideal.map_mul (RingOfIntegers.mapRingEquiv τ) }
   let f : Ideal (𝓞 K) → ClassGroup (𝓞 K) := fun a =>
     if h : a ∈ (Ideal (𝓞 K))⁰ then ClassGroup.mk0 ⟨a, h⟩ else 1
-  have hfv : ∀ a (h : a ∈ (Ideal (𝓞 K))⁰), f a = ClassGroup.mk0 ⟨a, h⟩ := fun a h => dif_pos h
+  have hfv : ∀ a (h : a ∈ (Ideal (𝓞 K))⁰), f a = ClassGroup.mk0 ⟨a, h⟩ := fun a h => dite_eq_left h
   have hf : ∀ a b, a ≠ 0 → b ≠ 0 → f (a * b) = f a * f b := by
     intro a b ha hb
     have ha' := mem_nonZeroDivisors_of_ne_zero ha
@@ -326,7 +326,7 @@ theorem UpperTheory.V.FW.locInf :
         Complex.conj_re] at h4
       rw [h4, ← h1] at h3
       rwa [Complex.ofReal_re] at h3
-  letI : Algebra u.Completion W.Completion := AbsoluteValue.Completion.algebraOfLiesOver u.1 W.1
+  let : Algebra u.Completion W.Completion := AbsoluteValue.Completion.algebraOfLiesOver u.1 W.1
   set e := InfinitePlace.Completion.ringEquivRealOfIsReal hu with he
   set a := algebraMap (maximalRealSubfield K) u.Completion (x : maximalRealSubfield K) with ha
   set d := Module.finrank u.Completion W.Completion with hd_def
@@ -579,13 +579,13 @@ private theorem hMinus_mul (e : ι → K →+* ℂ) {a b : K} (ha : cE K a = a) 
   have h1 := hMinus_re (e i) ha ha0
   have h2 := hMinus_re (e i) hb hb0
   rcases h1.lt_or_gt with p | p <;> rcases h2.lt_or_gt with q | q
-  · rw [if_neg (not_lt.mpr (mul_pos_of_neg_of_neg p q).le), if_pos p, if_pos q]
+  · rw [ite_eq_right (not_lt.mpr (mul_pos_of_neg_of_neg p q).le), ite_eq_left p, ite_eq_left q]
     decide
-  · rw [if_pos (mul_neg_of_neg_of_pos p q), if_pos p, if_neg (not_lt.mpr q.le)]
+  · rw [ite_eq_left (mul_neg_of_neg_of_pos p q), ite_eq_left p, ite_eq_right (not_lt.mpr q.le)]
     decide
-  · rw [if_pos (mul_neg_of_pos_of_neg p q), if_neg (not_lt.mpr p.le), if_pos q]
+  · rw [ite_eq_left (mul_neg_of_pos_of_neg p q), ite_eq_right (not_lt.mpr p.le), ite_eq_left q]
     decide
-  · rw [if_neg (not_lt.mpr (mul_pos p q).le), if_neg (not_lt.mpr p.le), if_neg (not_lt.mpr q.le)]
+  · rw [ite_eq_right (not_lt.mpr (mul_pos p q).le), ite_eq_right (not_lt.mpr p.le), ite_eq_right (not_lt.mpr q.le)]
     decide
 
 private theorem hMinus_neg (f : ι → ZMod 2) : -f = f := by
@@ -727,8 +727,8 @@ private theorem gen2 {G Q W : Type} [Group G] [Finite Q] [AddCommGroup W] (h2 : 
     (hv : ∀ g, ψ (MonoidAlgebra.single g 1) = v (p g)) :
     Finite W ∧ Nat.card W ≤ 2 ^ Nat.card Q := by
   classical
-  letI : Fintype Q := Fintype.ofFinite Q
-  letI : Module (ZMod 2) W := AddCommGroup.zmodModule h2
+  let : Fintype Q := Fintype.ofFinite Q
+  let : Module (ZMod 2) W := AddCommGroup.zmodModule h2
   let φ : (Q → ZMod 2) →ₗ[ZMod 2] W := Fintype.linearCombination (ZMod 2) v
   have hs : Function.Surjective φ := by
     intro w
@@ -821,7 +821,7 @@ theorem UpperTheory.V.FW.sgnAlg :
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective w
     rw [two_nsmul, ← map_add (f := _), Ideal.Quotient.eq_zero_iff_mem]
     exact hdbl x
-  haveI hfin : Finite (MonoidAlgebra ℤ G ⧸ I) :=
+  have hfin : Finite (MonoidAlgebra ℤ G ⧸ I) :=
     (gen2 h2 (Ideal.Quotient.mk I).toAddMonoidHom Ideal.Quotient.mk_surjective id
       (fun g => Ideal.Quotient.mk I (MonoidAlgebra.single g 1)) fun _ => rfl).1
   set t : MonoidAlgebra ℤ G ⧸ I := Ideal.Quotient.mk I (MonoidAlgebra.of ℤ G γ - 1) with ht
@@ -966,7 +966,7 @@ private theorem geom_sin (k : ℕ) (θ : ℝ) (h : Real.sin θ ≠ 0) (w : ℂ) 
   have h1 : ((Real.sin θ : ℝ) : ℂ) = (e⁻¹ - e) * Complex.I / 2 := by
     rw [Complex.ofReal_sin, Complex.sin, neg_mul, Complex.exp_neg, he]
   have h2 : ((Real.sin ((2 * k + 1 : ℕ) * θ) : ℝ) : ℂ) = ((e ^ (2 * k + 1))⁻¹ - e ^ (2 * k + 1)) * Complex.I / 2 := by
-    rw [Complex.ofReal_sin, Complex.sin, neg_mul, Complex.exp_neg, he, ← Complex.exp_nat_mul]
+    rw [Complex.ofReal_sin, Complex.sin, neg_mul, Complex.exp_neg, he, ← Complex.exp_natCast_mul]
     simp only [Complex.ofReal_mul, Complex.ofReal_natCast, mul_assoc]
   have h3 := geom_sum_mul w (2 * k + 1)
   rw [← he] at hw
@@ -1031,7 +1031,7 @@ theorem UpperTheory.V.FW.sgnUnit :
     rw [hval, ← geom_sin k _ (sin_ne M a hM ha) (ψ ζ)]
 
     · simp only [map_mul, map_pow, map_sum, map_inv₀]
-    · rw [hψ, hφ, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul]
+    · rw [hψ, hφ, ← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul]
       congr 1
       push_cast
       ring
@@ -1141,7 +1141,7 @@ private theorem exists_finset_adjoin_laurent_preimage (M : ℕ) [NeZero M] (L : 
     apply Subgroup.eq_top_of_card_eq
     rw [Nat.card_zpowers, ← hgp.eq_orderOf]
     have ht := IsCyclotomicExtension.Rat.torsionOrder_eq (n := M) (K := L)
-    rw [if_pos ⟨2 * k, by omega⟩] at ht
+    rw [ite_eq_left ⟨2 * k, by omega⟩] at ht
     exact ht.symm
   intro y
   obtain ⟨j, hj⟩ := Subgroup.mem_zpowers_iff.mp (htop ▸ Subgroup.mem_top y)
@@ -1181,9 +1181,9 @@ open scoped Pointwise
 theorem UpperTheory.V.CF.cycIne :
     ∀ (N : ℕ) [NeZero N] (C : Type) [Field C] [NumberField C] [IsCyclotomicExtension {N} ℚ C] (ζ : C) (p : ℕ), p.Prime → IsPrimitiveRoot ζ N → ∀ w : HeightOneSpectrum (𝓞 C), (p : 𝓞 C) ∈ w.asIdeal → ∀ (σ : Gal(C/ℚ)) (a : ℕ), σ ζ = ζ ^ a → (σ ∈ w.asIdeal.inertia Gal(C/ℚ) ↔ a ≡ 1 [MOD ordCompl[p] N]) ∧ (σ ∈ MulAction.stabilizer Gal(C/ℚ) w.asIdeal ↔ ∃ i : ℕ, a ≡ p ^ i [MOD ordCompl[p] N]) := by
   intro N _ C _ _ _ ζ p hp hζ w hw σ a hσ
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI := w.isPrime
-  haveI : w.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) := by
+  have : Fact p.Prime := ⟨hp⟩
+  have := w.isPrime
+  have : w.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) := by
     have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
       ((Ideal.span_singleton_prime (by exact_mod_cast hp.ne_zero)).2
         (Nat.prime_iff_prime_int.1 hp)).isMaximal (by simpa using hp.ne_zero)
@@ -1300,7 +1300,7 @@ theorem UpperTheory.V.FW.sgnCyc :
   obtain ⟨h1, h2, h3, h4⟩ := sgnStab (f * 2 ^ n) L φ
   refine (hMinus L _ (embT (f * 2 ^ n) L φ) (evenF (-1 : (ZMod (f * 2 ^ n))ˣ))
     (unrJ f n L hf hf1 hn) (unitSurj f n L hf hf1 hn) h1 h2).trans ?_
-  haveI : Fact (2 < f * 2 ^ n) := ⟨hM⟩
+  have : Fact (2 < f * 2 ^ n) := ⟨hM⟩
   refine sgnAlg _ (-1) γ (thetaH (f * 2 ^ n) c) N _ (by simp) ?_ h3 ?_ hmem
   · intro h
     have h' := congrArg Units.val h

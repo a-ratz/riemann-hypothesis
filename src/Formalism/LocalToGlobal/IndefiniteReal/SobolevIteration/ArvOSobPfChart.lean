@@ -134,8 +134,8 @@ theorem hasStrictFDerivAt_cay :
   show HasStrictFDerivAt (fun g : Matrix (Fin n) (Fin n) ℂ => (1 + 1) * Ring.inverse (g + 1) * (g - 1)) _ _
   refine hm.congr_fderiv ?_
   refine ContinuousLinearMap.ext fun h => ?_
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
-    ContinuousLinearMap.id_apply, ContinuousLinearMap.one_apply, sub_self, smul_zero, add_zero, smul_eq_mul,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.smulRight_apply,
+    ContinuousLinearMap.id_apply, one_apply_eq_self, sub_self, smul_zero, add_zero, smul_eq_mul,
     Function.comp_apply]
   rw [Ring.mul_inverse_cancel _ isUnit_two]
   simp

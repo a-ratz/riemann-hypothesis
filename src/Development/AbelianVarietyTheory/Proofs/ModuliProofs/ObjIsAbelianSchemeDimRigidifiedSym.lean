@@ -78,9 +78,9 @@ theorem algChart_of_relativeDimension {R : Type} [CommRing R] (B : Type) [CommRi
         ∀ φ : B →ₐ[R] A, aug.comp φ = ε' →
           ∃! ψ : JetR R (Fin n) m →ₐ[R] A, aug.comp ψ = jetAug R (Fin n) m ∧ ψ.comp (π m) = φ := by
   obtain ⟨g, hgC, hg⟩ := hB.exists_etale_mvPolynomial
-  letI : Algebra (MvPolynomial (Fin n) R) B := g.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) B := IsScalarTower.of_algebraMap_eq' hgC.symm
-  haveI : Algebra.Etale (MvPolynomial (Fin n) R) B := hg
+  let : Algebra (MvPolynomial (Fin n) R) B := g.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) B := IsScalarTower.of_algebraMap_eq' hgC.symm
+  have : Algebra.Etale (MvPolynomial (Fin n) R) B := hg
   have hπ : ∀ m : ℕ, ∃ π : B →ₐ[R] JetR R (Fin n) m, (jetAug R (Fin n) m).comp π = ε' ∧
       ∀ j, π (sX R j) = algebraMap R _ (ε' (sX R j)) + zR m j := fun m =>
     etale_exists (n := n) ε' (jetAug R (Fin n) m) (ker_jetAug_nil (Fin n) m) _ (fun j => by
@@ -219,8 +219,8 @@ theorem two_mul_sum_embeddings {r : k} (hr : r ^ 2 = -(H.d : k)) (p q : ℕ) :
   have h2 : φ (H.rt : E) ^ 2 = r ^ 2 := by
     rw [← map_pow, GlobalTheory.HostModel.coe_rt_sq, hr]; simp
   rcases sq_eq_sq_iff_eq_or_eq_neg.1 h2 with h | h
-  · rw [h, if_pos rfl, if_neg hr0.symm]
-  · rw [h, neg_neg, if_pos rfl, if_neg hr0.symm, add_comm]
+  · rw [h, ite_eq_left rfl, ite_eq_right hr0.symm]
+  · rw [h, neg_neg, ite_eq_left rfl, ite_eq_right hr0.symm, add_comm]
 
 open Classical in
 theorem sum_embeddings {r : k} (hr : r ^ 2 = -(H.d : k)) (p q : ℕ) :

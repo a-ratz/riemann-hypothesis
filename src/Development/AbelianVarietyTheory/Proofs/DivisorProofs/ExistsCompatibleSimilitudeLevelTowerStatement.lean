@@ -66,8 +66,8 @@ theorem compat_seq {X : Type} (A : ℕ → Set X) (hfin : ∀ j, (A j).Finite)
     ∃ s : ℕ → X, ∀ j, s j ∈ A j ∧ φ j (s (j + 1)) = s j := by
   let F : ℕᵒᵖ ⥤ Type := Functor.ofOpSequence (X := fun j => ↥(A j))
     (fun j => TypeCat.ofHom (fun x => ⟨φ j x.1, hφ j x.1 x.2⟩ : ↥(A (j + 1)) → ↥(A j)))
-  haveI : ∀ j : ℕᵒᵖ, Finite (F.obj j) := fun j => (hfin j.unop).to_subtype
-  haveI : ∀ j : ℕᵒᵖ, Nonempty (F.obj j) := fun j => (hne j.unop).to_subtype
+  have : ∀ j : ℕᵒᵖ, Finite (F.obj j) := fun j => (hfin j.unop).to_subtype
+  have : ∀ j : ℕᵒᵖ, Nonempty (F.obj j) := fun j => (hne j.unop).to_subtype
   obtain ⟨s, hs⟩ := nonempty_sections_of_finite_inverse_system F
   refine ⟨fun j => (s (Opposite.op j)).1, fun j => ⟨(s (Opposite.op j)).2, ?_⟩⟩
   have h := hs (homOfLE (Nat.le_add_right j 1)).op
@@ -95,7 +95,7 @@ theorem map_nsmul_of_add {f : D.La → Q} (hf : ∀ x y, f (x + y) = f x * f y) 
   | succ n ih => rw [succ_nsmul, hf, ih, pow_succ]
 
 theorem cancel_nsmul (D : Datum p) (n : ℕ) (hn : n ≠ 0) {a b : D.La} (h : n • a = n • b) : a = b := by
-  haveI := D.freeLa
+  have := D.freeLa
   have h' : (n : ℤ) • a = (n : ℤ) • b := by simpa [natCast_zsmul] using h
   exact smul_right_injective D.La (by exact_mod_cast hn : (n : ℤ) ≠ 0) h'
 
@@ -137,8 +137,8 @@ theorem IsLev.step {act : D.O → Q → Q} {W : ℕ → Q → Q → kˣ} {ζ : �
 
 theorem finite_range_of_add {f : D.La → Q} (hadd : ∀ x y, f (x + y) = f x * f y) {n : ℕ} (hn : n ≠ 0)
     (hker : ∀ y, f (n • y) = 1) : (Set.range f).Finite := by
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let B := Module.Free.chooseBasis ℤ D.La
   have hpos : (0 : ℤ) < (n : ℤ) := by exact_mod_cast Nat.pos_of_ne_zero hn
   refine ((Set.Finite.pi (fun _ : Module.Free.ChooseBasisIndex ℤ D.La => Set.finite_Ico (0 : ℤ) n)).image
@@ -159,8 +159,8 @@ theorem finite_isLev {act : D.O → Q → Q} {W : ℕ → Q → Q → kˣ} {ζ :
     {f | IsLev D act W ζ r f}.Finite := by
   rcases Set.eq_empty_or_nonempty {f | IsLev D act W ζ r f} with h | ⟨f0, hf0⟩
   · rw [h]; exact Set.finite_empty
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let B := Module.Free.chooseBasis ℤ D.La
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   have hT : (Set.range f0).Finite :=

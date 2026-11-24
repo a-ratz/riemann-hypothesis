@@ -510,7 +510,7 @@ theorem bridge_lidx_det_holds (K V : Type) [Field K] [NumberField K] [AddCommGro
     Formalism.HermitianLatticesTheory.lidx w.asIdeal A B =
       vAdd w (LinearMap.det (γ : V →ₗ[K] V)) := by
   rw [← lidxW_eq_lidx]
-  letI : Submodule.IsFullLattice K A := hA
+  let : Submodule.IsFullLattice K A := hA
   refine lidxW_eq_vAdd_det w A B γ (Submodule.IsLattice.fg K A)
     (Submodule.IsFullLattice.span_eq_top (A := K) (M := A)) ?_
   rw [← atW_map]

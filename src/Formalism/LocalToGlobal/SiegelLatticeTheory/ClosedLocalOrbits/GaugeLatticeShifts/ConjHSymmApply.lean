@@ -121,7 +121,7 @@ theorem conj_haar_eq {w : Fin k → Fin n → ℂ} (Fw : Frm ε e p z w T) (hdim
   have : LocallyCompactSpace (NG ε e z) := (NG_closed ε e z).isClosedEmbedding_subtypeVal.locallyCompactSpace
   have : SecondCountableTopology (NG ε e z) := Topology.IsEmbedding.subtypeVal.secondCountableTopology
   have hNm : MeasurableSet ((NG ε e z) : Set (UJ ε)) := (NG_closed ε e z).measurableSet
-  have memb : MeasurableEmbedding (Subtype.val : (NG ε e z) → UJ ε) := MeasurableEmbedding.subtype_coe hNm
+  have memb : MeasurableEmbedding (Subtype.val : (NG ε e z) → UJ ε) := MeasurableEmbedding.subtypeVal hNm
   set m0 : Measure (UJ ε) := (Measure.haar : Measure (NG ε e z)).map Subtype.val with hm0
 
   have huniq : ∀ ν : Measure (UJ ε), IsHaarS (NLoc ε e z) ν → ∃ c : ℝ≥0, ν = c • m0 := by
@@ -158,12 +158,12 @@ theorem conj_haar_eq {w : Fin k → Fin n → ℂ} (Fw : Frm ε e p z w T) (hdim
     have hνfin : IsFiniteMeasureOnCompacts ν' := by
       refine ⟨fun K hK => ?_⟩
       rw [hν', memb.comap_apply]
-      exact (hK.image continuous_subtype_val).measure_lt_top
+      exact (hK.image continuous_subtypeVal).measure_lt_top
     have hνeq : ν' = ν'.haarScalarFactor Measure.haar • Measure.haar :=
       Measure.isMulLeftInvariant_eq_smul ν' Measure.haar
     refine ⟨ν'.haarScalarFactor Measure.haar, ?_⟩
     conv_lhs => rw [← hmapν, hνeq]
-    rw [Measure.map_smul _ measurable_subtype_coe.aemeasurable]
+    rw [Measure.map_smul _ measurable_subtypeVal.aemeasurable]
 
   obtain ⟨C', hC'c, hC'n⟩ : ∃ C' : Set (NG ε e z), IsCompact C' ∧ C' ∈ 𝓝 (1 : (NG ε e z)) := by
     obtain ⟨C', h1, h2⟩ := exists_compact_mem_nhds (1 : (NG ε e z))
@@ -173,14 +173,14 @@ theorem conj_haar_eq {w : Fin k → Fin n → ℂ} (Fw : Frm ε e p z w T) (hdim
   have hHc := HG_compact Fw hdim
   set K : Set (UJ ε) := (fun q : UJ ε × UJ ε => q.1 * q.2 * q.1⁻¹) '' ((HG ε e p z : Set (UJ ε)) ×ˢ C) with hK
   have hKc : IsCompact K :=
-    (hHc.prod (hC'c.image continuous_subtype_val)).image (by fun_prop)
+    (hHc.prod (hC'c.image continuous_subtypeVal)).image (by fun_prop)
   have hKN : K ⊆ ((NG ε e z) : Set (UJ ε)) := by
     rintro _ ⟨⟨h', x⟩, ⟨hh', ⟨x', _, rfl⟩⟩, rfl⟩
     exact conj_mem ε e p z hh' x'.2
   have hCK : C ⊆ K := fun x hx => ⟨(1, x), ⟨(HG ε e p z).one_mem, hx⟩, by simp⟩
   have hKm : MeasurableSet K := hKc.isClosed.measurableSet
   have hm0K : m0 K = (Measure.haar : Measure (NG ε e z)) (Subtype.val ⁻¹' K) := by
-    rw [hm0, Measure.map_apply measurable_subtype_coe hKm]
+    rw [hm0, Measure.map_apply measurable_subtypeVal hKm]
   have hm0pos : 0 < m0 K := by
     rw [hm0K]
     refine lt_of_lt_of_le hC'pos (measure_mono ?_)

@@ -96,7 +96,7 @@ theorem intersection_constant_metric_line : ∀ II : IntersectionSystem, IsInter
   rw [(hII K ι).2.2 P e L _ 1 (fun _ => 0) hP hL hA (fun k => by simp [HermLine.ofWeight]) hhom h1]
   have hempty : divSupp P (1 : MRing ι) = ∅ := by
     ext W
-    simp only [divSupp, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+    simp only [divSupp, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
     intro hW
     rw [Ideal.span_singleton_one, sup_top_eq] at hW
     exact (hW.1.1.ne_top (top_le_iff.1 hW.1.2)).elim

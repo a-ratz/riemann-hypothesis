@@ -224,7 +224,7 @@ theorem exists_lieCorr_of_pow_eq_zero : ∀ (p : ℕ) [Fact p.Prime]  (R : Type)
     refine (congrArg Over.Hom.left h).trans ?_
     rw [Hom.one_def, Over.comp_left, Over.toUnit_left]
     exact (congrArg (· ≫ η[A].left) (Cris.spMap_id R)).trans (Category.id_comp _)
-  haveI : IsAdicComplete (Ideal.span {(p : R)}) R :=
+  have : IsAdicComplete (Ideal.span {(p : R)}) R :=
     isAdicComplete_span_natCast_of_isNilpotent p R ⟨N, hN⟩
   obtain ⟨x', hx', -⟩ := t.existsUnique_lieCorr hv
   refine ⟨v, ?_⟩
@@ -453,11 +453,11 @@ theorem psi_sup_smul_top_eq_top : GlobalTheory.Published.AbelianHodgeDeRham →
     ∀ I : Ideal R, I.IsMaximal → LinearMap.range ψ ⊔ I • (⊤ : Submodule R G.omega) = ⊤ := by
   intro hH p _ R _ N hN A _ g hA hg G t ψ hψ I hI
   obtain ⟨-, hBC, -⟩ := GlobalTheory.abelianDeRham_free_baseChange_rigid hH
-  letI : Field (R ⧸ I) := Ideal.Quotient.field I
+  let : Field (R ⧸ I) := Ideal.Quotient.field I
   have hNk : ((p : ℕ) : R ⧸ I) ^ N = 0 := by
     rw [← map_natCast (algebraMap R (R ⧸ I)), ← map_pow, hN, map_zero]
   have hk0 : ((p : ℕ) : R ⧸ I) = 0 := pow_eq_zero_iff'.1 hNk |>.1
-  letI : GrpObj ((Over.pullback (spMap (algebraMap R (R ⧸ I)))).obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback (spMap (algebraMap R (R ⧸ I)))).obj A) := Functor.grpObjObj
   have h := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_pullback A (spMap (algebraMap R (R ⧸ I)))
   have hAk : IsAbelianScheme ((Over.pullback (spMap (algebraMap R (R ⧸ I)))).obj A) :=
     GlobalTheory.isAbelianScheme_pullback_obj _ A hA

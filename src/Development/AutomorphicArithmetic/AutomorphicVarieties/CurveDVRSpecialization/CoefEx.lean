@@ -75,7 +75,7 @@ private theorem ce_char {l : ℕ} [Fact l.Prime] (Γ : Type) [Group Γ] [Topolog
 
 private theorem ce_fin {l : ℕ} [Fact l.Prime] (s : Set (PadicAlgCl l)) (hs : s.Finite) :
     FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] s) := by
-  haveI := hs.to_subtype
+  have := hs.to_subtype
   exact IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
 
 private theorem ce_coef {l : ℕ} [Fact l.Prime] (c : Coef l) :
@@ -109,15 +109,15 @@ private theorem ce_large {l : ℕ} [Fact l.Prime] (L : Type) [Field L] [NumberFi
 theorem UpperTheory.V.Pr.coefEx :
     UpperTheory.V.Pr.CoefEx := by
   intro l _ c L Ω _ _ _ _ _ ka ka' h h'
-  haveI : CompactSpace (G L Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[L] Ω))
-  haveI : T2Space (G L Ω) := inferInstanceAs (T2Space (Ω ≃ₐ[L] Ω))
+  have : CompactSpace (G L Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[L] Ω))
+  have : T2Space (G L Ω) := inferInstanceAs (T2Space (Ω ≃ₐ[L] Ω))
   obtain ⟨E₁, f₁, m₁⟩ := ce_char (G L Ω) ka h
   obtain ⟨E₂, f₂, m₂⟩ := ce_char (G L Ω) ka' h'
   obtain ⟨E₃, f₃, m₃⟩ := ce_coef c
   obtain ⟨E₄, f₄, m₄⟩ := ce_large (l := l) L
   obtain ⟨c₁, hc⟩ := UpperTheory.V.X.So.coefOf l ((E₁ ⊔ E₂) ⊔ (E₃ ⊔ E₄))
-  haveI : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
-  haveI : Algebra.IsIntegral ℤ_[l] c₁.O := Algebra.IsIntegral.of_finite ℤ_[l] c₁.O
+  have : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
+  have : Algebra.IsIntegral ℤ_[l] c₁.O := Algebra.IsIntegral.of_finite ℤ_[l] c₁.O
   have l₁ : E₁ ≤ (E₁ ⊔ E₂) ⊔ (E₃ ⊔ E₄) := le_sup_of_le_left le_sup_left
   have l₂ : E₂ ≤ (E₁ ⊔ E₂) ⊔ (E₃ ⊔ E₄) := le_sup_of_le_left le_sup_right
   have l₃ : E₃ ≤ (E₁ ⊔ E₂) ⊔ (E₃ ⊔ E₄) := le_sup_of_le_right le_sup_left
@@ -133,7 +133,7 @@ theorem UpperTheory.V.Pr.coefEx :
       have e : φ.comp (algebraMap ℤ_[l] c.O) = algebraMap ℤ_[l] c₁.O := (Subalgebra.inclusion hle).comp_algebraMap
       rw [e]
       exact fun x => Algebra.IsIntegral.isIntegral x
-    haveI : IsLocalHom φ := hint.isLocalHom (Subalgebra.inclusion_injective hle)
+    have : IsLocalHom φ := hint.isLocalHom (Subalgebra.inclusion_injective hle)
     refine ⟨ResidueField.map φ, fun a b hab => ?_⟩
     rw [ResidueField.map_residue]
     exact congrArg _ (Subtype.ext hab)

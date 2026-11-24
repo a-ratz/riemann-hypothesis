@@ -84,6 +84,6 @@ theorem inv_finPart_mul_mem (g : UA E n) : (finPart g)⁻¹ * g ∈ infU E n := 
 theorem continuous_finPart : Continuous (finPart (E := E) (n := n)) := by
   have h1 : Continuous (GeneralLinearGroup.map (pFin E) : GA E n → GL (Fin n) (Af E)) :=
     Continuous.units_map _ (continuous_id.matrix_map continuous_snd)
-  exact Continuous.subtype_mk (GlobalTheory.DefU.ClassFin.continuous_finGL.comp (h1.comp continuous_subtype_val)) _
+  exact Continuous.subtype_mk (GlobalTheory.DefU.ClassFin.continuous_finGL.comp (h1.comp continuous_subtypeVal)) _
 
 end GlobalTheory.EllU

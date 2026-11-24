@@ -129,10 +129,10 @@ theorem autToPow_eq_iff {m : ℕ} [NeZero m] {ζ : Ω} (hζ : IsPrimitiveRoot ζ
 theorem exists_fixing [CharZero Ω] [IsAlgClosure F Ω] (L : IntermediateField F Ω) {m : ℕ}
     [NeZero m] {ζ : Ω} (hζ : IsPrimitiveRoot ζ m) (hirr : Irreducible (cyclotomic m L))
     (j : (ZMod m)ˣ) : ∃ u : Ω ≃ₐ[F] Ω, u ∈ L.fixingSubgroup ∧ hζ.autToPow F u = j := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := F) L
-  haveI : IsAlgClosure L Ω := ⟨inferInstance, inferInstance⟩
-  haveI : CharZero L := (algebraMap L Ω).charZero
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := F) L
+  have : IsAlgClosure L Ω := ⟨inferInstance, inferInstance⟩
+  have : CharZero L := (algebraMap L Ω).charZero
   have hj : IsPrimitiveRoot (ζ ^ (j : ZMod m).val) m :=
     hζ.pow_of_coprime _ (ZMod.val_coe_unit_coprime j)
   have h1 : minpoly L (ζ ^ (j : ZMod m).val) = minpoly L ζ := by
@@ -151,7 +151,7 @@ theorem irreducible_of_onto [CharZero Ω] (Z : IntermediateField F Ω) {m : ℕ}
     (h : ∀ j : (ZMod m)ˣ, ∃ u : Ω ≃ₐ[F] Ω, u ∈ Z.fixingSubgroup ∧ hζ.autToPow F u = j) :
     Irreducible (cyclotomic m Z) := by
   classical
-  haveI : CharZero Z := (algebraMap Z Ω).charZero
+  have : CharZero Z := (algebraMap Z Ω).charZero
   have hm : 0 < m := NeZero.pos m
   have h0 : aeval ζ (cyclotomic m Z) = 0 := by
     rw [aeval_def, ← eval_map, map_cyclotomic]
@@ -210,22 +210,22 @@ theorem exists_pow_eq_on (M : IntermediateField F Ω) [FiniteDimensional F M] [I
 
 theorem cross : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (L : IntermediateField F Ω) [FiniteDimensional F L] [IsGalois F L] (g : G F Ω) (m : ℕ), m.Prime → Module.finrank F L ∣ m - 1 → Irreducible (cyclotomic m L) → ∃ (Z : IntermediateField F Ω) (τ : (ZMod m)ˣ), FiniteDimensional F Z ∧ Irreducible (cyclotomic m Z) ∧ ∀ σ : G F Ω, σ ∈ Z.fixingSubgroup → (∀ ζ : Ω, ζ ^ m = 1 → σ ζ = ζ ^ (τ : ZMod m).val) → σ * g⁻¹ ∈ L.fixingSubgroup := by
   intro F Ω _ _ _ _ _ L _ _ g m hm hdiv hirr
-  haveI : Fact m.Prime := ⟨hm⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+  have : Fact m.Prime := ⟨hm⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
   obtain ⟨τ, hτ⟩ := IsCyclic.exists_generator (α := (ZMod m)ˣ)
   obtain ⟨u, hu, hu'⟩ := exists_fixing L hζ hirr (τ * (hζ.autToPow F g)⁻¹)
   set h := u * g with hh
   have hχ : hζ.autToPow F h = τ := by rw [hh, map_mul, hu']; simp
-  haveI : IsCyclotomicExtension {m} F (IntermediateField.adjoin F {ζ}) :=
+  have : IsCyclotomicExtension {m} F (IntermediateField.adjoin F {ζ}) :=
     hζ.intermediateField_adjoin_isCyclotomicExtension F
-  haveI : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
+  have : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
     IsCyclotomicExtension.finiteDimensional {m} F _
-  haveI : IsGalois F (IntermediateField.adjoin F {ζ}) := IsCyclotomicExtension.isGalois {m} F _
+  have : IsGalois F (IntermediateField.adjoin F {ζ}) := IsCyclotomicExtension.isGalois {m} F _
   let M : IntermediateField F Ω := L ⊔ IntermediateField.adjoin F {ζ}
-  haveI : FiniteDimensional F M := IntermediateField.finiteDimensional_sup _ _
-  haveI : IsGalois F M := { }
+  have : FiniteDimensional F M := IntermediateField.finiteDimensional_sup _ _
+  have : IsGalois F M := { }
   have hζM : ζ ∈ M := (le_sup_right : _ ≤ M) (IntermediateField.mem_adjoin_simple_self F ζ)
   refine ⟨M ⊓ IntermediateField.fixedField (Subgroup.zpowers h), τ, ?_, ?_, ?_⟩
   · exact Module.Finite.of_injective
@@ -392,19 +392,19 @@ theorem _root_.GlobalTheory.idealCharacterL_continuation_ne_zero_one :
           else 0) := by
       intro P
       by_cases hP : P ∈ S
-      · rw [if_pos hP]
+      · rw [ite_eq_left hP]
         have hXP : X P.asIdeal = 0 := hXzero _ (by
           rw [sup_eq_left.mpr ((hmemS P).mp hP)]
           exact P.isPrime.ne_top)
         rw [hXP, zero_mul, sub_zero, Complex.log_one, neg_zero, zero_add]
-      · rw [if_neg hP, add_zero, hcX P (fun h => hP ((hmemS P).mpr h))]
+      · rw [ite_eq_right hP, add_zero, hcX P (fun h => hP ((hmemS P).mpr h))]
     show LX s * F s = _
-    rw [tsum_congr hsplit, hsa.tsum_add (summable_of_ne_finset_zero (s := S) fun P hP => if_neg hP),
-      tsum_eq_sum (s := S) (fun P hP => if_neg hP), Complex.exp_add, ← hLX s hs, hF,
+    rw [tsum_congr hsplit, hsa.tsum_add (summable_of_ne_finset_zero (s := S) fun P hP => ite_eq_right hP),
+      tsum_eq_sum (s := S) (fun P hP => ite_eq_right hP), Complex.exp_add, ← hLX s hs, hF,
       Complex.exp_sum]
     congr 1
     refine Finset.prod_congr rfl fun P hP => ?_
-    rw [if_pos hP, Complex.exp_neg, Complex.exp_log (hfac P s hs0)]
+    rw [ite_eq_left hP, Complex.exp_neg, Complex.exp_log (hfac P s hs0)]
   · show LX 1 * F 1 ≠ 0
     rw [hF]
     exact mul_ne_zero hLX1 (Finset.prod_ne_zero_iff.mpr fun P _ => inv_ne_zero (hfac P 1 (by simp)))
@@ -622,14 +622,14 @@ theorem exists_continuous_ne_zero_one :
     by_cases hy : y = 0
     · simp [ψ, hy]
     have hxy : x * y ≠ 0 := mul_ne_zero hx hy
-    simp only [ψ, dif_neg hx, dif_neg hy, dif_neg hxy]
+    simp only [ψ, dite_eq_right hx, dite_eq_right hy, dite_eq_right hxy]
     rw [← Units.val_mul, ← map_mul]
     congr 3
     ext
     simp
   have hψunit : ∀ u : (ZMod m)ˣ, ψ (u : ZMod m) = ((χ u : ℂˣ) : ℂ) := by
     intro u
-    simp only [ψ, dif_neg u.ne_zero]
+    simp only [ψ, dite_eq_right u.ne_zero]
     congr 3
     ext
     simp
@@ -647,7 +647,7 @@ theorem exists_continuous_ne_zero_one :
   have hXnorm : ∀ I, I ≠ ⊥ → I ⊔ M = ⊤ → ‖X I‖ = 1 := by
     intro I _ hI
     have hne := (hcop I).1 hI
-    simp only [X, ψ, dif_neg hne]
+    simp only [X, ψ, dite_eq_right hne]
     exact GlobalTheory.Mem.RayPrimes.norm_char χ _
   have hXzero : ∀ I, I ⊔ M ≠ ⊤ → X I = 0 := by
     intro I hI
@@ -732,7 +732,7 @@ namespace GlobalTheory
 theorem natCard_le_of_forall_pow_eq_self (F : Type*) [CommRing F] [IsDomain F] [Finite F]
     (q : ℕ) (hq : 1 < q) (h : ∀ x : F, x ^ q = x) : Nat.card F ≤ q := by
   classical
-  haveI := Fintype.ofFinite F
+  have := Fintype.ofFinite F
   have hne : (X ^ q - X : F[X]) ≠ 0 := by
     intro h0
     have h1 := congrArg Polynomial.natDegree (sub_eq_zero.1 h0)
@@ -761,7 +761,7 @@ theorem exists_finite_ncard_primesOver_eq_finrank_of_pow_absNorm_sub_mem :
   refine ⟨(fun P : HeightOneSpectrum (𝓞 M) => P.under (𝓞 K)) ''
     {P | P.asIdeal ∣ differentIdeal (𝓞 K) (𝓞 M)}, (Ideal.finite_factors hD).image _, ?_⟩
   intro v hv hx
-  haveI := v.isPrime
+  have := v.isPrime
   have hq : 1 < Ideal.absNorm v.asIdeal := by
     have h0 : Ideal.absNorm v.asIdeal ≠ 0 := by
       rw [Ne, Ideal.absNorm_eq_zero_iff]; exact v.ne_bot
@@ -770,10 +770,10 @@ theorem exists_finite_ncard_primesOver_eq_finrank_of_pow_absNorm_sub_mem :
     omega
   have hf : ∀ P ∈ v.asIdeal.primesOver (𝓞 M), P.inertiaDeg (𝓞 K) = 1 := by
     intro P hP
-    haveI := hP.1
-    haveI := hP.2
+    have := hP.1
+    have := hP.2
     have hP0 : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P
-    haveI : Finite (𝓞 M ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
+    have : Finite (𝓞 M ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
     have hle : Nat.card (𝓞 M ⧸ P) ≤ Ideal.absNorm v.asIdeal := by
       refine natCard_le_of_forall_pow_eq_self _ _ hq fun y => ?_
       obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -789,28 +789,28 @@ theorem exists_finite_ncard_primesOver_eq_finrank_of_pow_absNorm_sub_mem :
     omega
   have he : ∀ P ∈ v.asIdeal.primesOver (𝓞 M), P.ramificationIdx (𝓞 K) = 1 := by
     intro P hP
-    haveI := hP.1
-    haveI := hP.2
+    have := hP.1
+    have := hP.2
     have hP0 : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P
     have hn : ¬ P ∣ differentIdeal (𝓞 K) (𝓞 M) := by
       intro hd
       refine hv ⟨⟨P, hP.1, hP0⟩, hd, ?_⟩
       ext1
       exact (Ideal.over_def P v.asIdeal).symm
-    haveI : Algebra.IsUnramifiedAt (𝓞 K) P := not_dvd_differentIdeal_iff.1 hn
+    have : Algebra.IsUnramifiedAt (𝓞 K) P := not_dvd_differentIdeal_iff.1 hn
     exact Ideal.ramificationIdx_eq_one P (𝓞 K)
   refine ⟨?_, fun P hP => ?_⟩
   · obtain ⟨P⟩ := (inferInstance : Nonempty (v.asIdeal.primesOver (𝓞 M)))
-    haveI := P.2.1
-    haveI := P.2.2
+    have := P.2.1
+    have := P.2.2
     have h := Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn v.asIdeal (𝓞 M)
       Gal(M/K)
     rw [Ideal.ramificationIdxIn_eq_ramificationIdx v.asIdeal P.1 Gal(M/K),
       Ideal.inertiaDegIn_eq_inertiaDeg v.asIdeal P.1 Gal(M/K), he P.1 P.2, hf P.1 P.2,
       IsGalois.card_aut_eq_finrank] at h
     simpa using h
-  · haveI := hP.1
-    haveI := hP.2
+  · have := hP.1
+    have := hP.2
     rw [← Ideal.absNorm_pow_inertiaDeg v.asIdeal P, hf P hP, pow_one]
 
 end GlobalTheory

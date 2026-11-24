@@ -177,14 +177,14 @@ theorem levPush_of : IdealSplit → LevPush := by
           o.act.act (algebraMap (𝓞 D.F) D.O α)) := by
         intro a ha
         refine hker _ _ ⟨?_, m, ?_⟩
-        · haveI := o'.act.hom (algebraMap (𝓞 D.F) D.O α)
+        · have := o'.act.hom (algebraMap (𝓞 D.F) D.O α)
           rw [Category.assoc, hcomm, ← Category.assoc, hA a ha, MonObj.one_comp]
         · intro bb hbb
           obtain ⟨t, ht⟩ := Ideal.mem_span_singleton'.mp (hαm bb hbb)
           rw [← act_mul', ← act_mul']
           have hre : bb * α * a = t * ((c : 𝓞 D.F) * a) := by linear_combination (-a) * ht
           rw [hre, act_mul', act_mul', act_nat, hkill _ (hA a ha)]
-          haveI := o.act.hom (algebraMap (𝓞 D.F) D.O t)
+          have := o.act.hom (algebraMap (𝓞 D.F) D.O t)
           exact MonObj.one_comp _
       have hK : KilledBy o (𝔞 ^ ρ) ((h0 ≫ o.act.act (algebraMap (𝓞 D.F) D.O α)) ≫
           o.act.act (algebraMap (𝓞 D.F) D.O u)) := by

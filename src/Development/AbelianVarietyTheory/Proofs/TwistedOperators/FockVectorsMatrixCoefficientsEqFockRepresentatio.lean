@@ -365,7 +365,7 @@ private theorem hasDerivAt_fockData_expt_smul {p q r s : ℕ} {T₀ : GrpData (p
       (F.π (T₁.expt ((x - t) • Y), 1) (F.ι w)) := by
     funext x
     have hx : t + (x - t) = x := by ring
-    rw [← ContinuousLinearMap.mul_apply, ← hmul, hx]
+    rw [← mul_apply_eq_comp, ← hmul, hx]
   rw [hfun]
   exact h2
 
@@ -405,7 +405,7 @@ theorem coef_of_side : ∀ (p q r s n : ℕ) (T₀ : GrpData (p * r + q * s) (p 
   have h1 : ∀ P', D 1 P' = 0 := by
     intro P'
     simp only [D, map_one, Units.val_one, phiFr_one br hfr, hL.one _ (hL.mem P'), _root_.one_zpow, mul_one]
-    rw [show ((1 : T₁.G), (1 : T₂.G)) = 1 from rfl, map_one, ContinuousLinearMap.one_apply, hip, sub_self]
+    rw [show ((1 : T₁.G), (1 : T₂.G)) = 1 from rfl, map_one, one_apply_eq_self, hip, sub_self]
   have hder : ∀ Y ∈ upq p q, ∀ x P', HasDerivAt (fun t : ℝ => D (x * T₁.expt (t • Y)) P') (D x (aY Y P')) 0 := by
     intro Y hY x P'
     have hYt : ∀ t : ℝ, t • Y ∈ upq p q := fun t => GlobalTheory.FockEmbExp.smul_mem hY t
@@ -439,9 +439,9 @@ theorem coef_of_side : ∀ (p q r s n : ℕ) (T₀ : GrpData (p * r + q * s) (p 
         = (N : ℂ) * ((T₁.sq x : ℂˣ) : ℂ) ^ m * (Complex.exp (↑t * ((c : ℂ) * Y.trace)) *
           ⟪F.ι (κ Q), F.π (x, 1) (F.π (T₁.expt (t • Y), 1) (F.ι (κ P')))⟫_ℂ) := by
       intro t
-      rw [map_mul, Units.val_mul, GlobalTheory.CoverExp.sq_expt T₁ (hYt t), mul_zpow, ← Complex.exp_int_mul,
+      rw [map_mul, Units.val_mul, GlobalTheory.CoverExp.sq_expt T₁ (hYt t), mul_zpow, ← Complex.exp_intCast_mul,
         show ((x * T₁.expt (t • Y), (1 : T₂.G))) = (x, 1) * (T₁.expt (t • Y), 1) by simp, map_mul,
-        ContinuousLinearMap.mul_apply, Matrix.trace_smul, Complex.real_smul, hmC]
+        mul_apply_eq_comp, Matrix.trace_smul, Complex.real_smul, hmC]
       ring_nf
     have hD : (fun t : ℝ => D (x * T₁.expt (t • Y)) P') = fun t : ℝ => ip (A (NormedSpace.exp (t • phiFr fr br e Y)) (pt P'))
         (A (phiFr fr br e ((T₁.cov x⁻¹ : GL (Ix p q) ℂ) : Mat p q)) (pt Q)) - (N : ℂ) * ((T₁.sq x : ℂˣ) : ℂ) ^ m *
@@ -461,7 +461,7 @@ theorem coef_of_side : ∀ (p q r s n : ℕ) (T₀ : GrpData (p * r + q * s) (p 
     rw [← hL.unit _ hhU _ (hL.mem _) _ hEΘ, hQ]
     simp only [D, hκ, map_add (f := _), map_smul, inner_add_right, inner_smul_right, inner_zero_left, Function.comp_apply,
       ContinuousLinearMap.coe_restrictScalars', zero_smul, T₁.expt_zero, Prod.mk_one_one, map_one,
-      ContinuousLinearMap.one_apply, Complex.ofReal_zero, zero_mul, Complex.exp_zero, one_mul, add_zero]
+      one_apply_eq_self, Complex.ofReal_zero, zero_mul, Complex.exp_zero, one_mul, add_zero]
     ring
   have hb : ∀ Y ∈ upq p q, ∀ P', ∃ C r : ℝ, 0 < r ∧ ∀ k x, ‖D x ((aY Y)^[k] P')‖ ≤ C * (k.factorial : ℝ) / r ^ k := by
     intro Y hY P'
@@ -507,7 +507,7 @@ theorem coef_of_side : ∀ (p q r s n : ℕ) (T₀ : GrpData (p * r + q * s) (p 
       refine ⟨C, ρ, hρ, fun k => ?_⟩
       have h0 : f k 0 = F.ι ((fun w => fockAct1 p q r s Y w + ((c : ℂ) * Y.trace) • w)^[k] (κ P')) := by
         simp only [f, Complex.ofReal_zero, zero_mul, Complex.exp_zero, one_smul, zero_smul, T₁.expt_zero,
-          Prod.mk_one_one, map_one, ContinuousLinearMap.one_apply]
+          Prod.mk_one_one, map_one, one_apply_eq_self]
       rw [← h0]
       exact hb0 k
     have hsq : ∀ x : T₁.G, ‖((T₁.sq x : ℂˣ) : ℂ)‖ = 1 := by

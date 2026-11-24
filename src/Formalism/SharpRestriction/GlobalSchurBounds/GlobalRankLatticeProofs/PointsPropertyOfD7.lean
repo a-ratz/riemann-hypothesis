@@ -67,7 +67,7 @@ private theorem ram_of_unit (D : D7) (p : ℕ) (hp : p.Prime) (hN : p ∣ D.host
     (u : (ZMod D.host.condN)ˣ) (hu : (u : ZMod D.host.condN).val ≡ 1 [MOD D.host.condN / p])
     (hu1 : D.host.art u ≠ 1) :
     ∃ σ : D.host.E ≃ₐ[ℚ] D.host.E, σ ≠ 1 ∧ ∀ x : 𝓞 D.host.E, σ • x - x ∈ P := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hu' : (u : ZMod D.host.condN).val ≡ 1 [MOD ordCompl[p] D.host.condN] := by
     by_cases hN0 : D.host.condN = 0
     · have h0 : ordCompl[p] D.host.condN = D.host.condN / p := by
@@ -155,7 +155,7 @@ theorem inert_iff_mem_zpowers (D : D7) (p : ℕ) (hp : p.Prime)
     (hram : (span {(p : ℤ)}).ramificationIdxIn (𝓞 D.host.E) = 1)
     (𝔭 : Ideal (𝓞 D.host.F)) (h𝔭 : 𝔭.IsPrime) (hlies : 𝔭.LiesOver (span {(p : ℤ)})) :
     Inert D 𝔭 ↔ D.R.cc ∈ Subgroup.zpowers (frob D p) := by
-  haveI hpf : Fact p.Prime := ⟨hp⟩
+  have hpf : Fact p.Prime := ⟨hp⟩
   have hgal : ∀ σ, D.host.galE σ = D.host.gal σ := fun σ => rfl
   have hbot : 𝔭 ≠ ⊥ := by
     rintro rfl
@@ -177,11 +177,11 @@ theorem inert_iff_mem_zpowers (D : D7) (p : ℕ) (hp : p.Prime)
     · rw [h1]; norm_num
   obtain ⟨P, hP⟩ := hne
   obtain ⟨hPp, hPl⟩ := hP
-  haveI := hPp
-  haveI := hPl
-  haveI := h𝔭
-  haveI := hlies
-  haveI hPq : P.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans P 𝔭 (span {(p : ℤ)})
+  have := hPp
+  have := hPl
+  have := h𝔭
+  have := hlies
+  have hPq : P.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans P 𝔭 (span {(p : ℤ)})
   have hcomap : P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) = 𝔭 := hPl.over.symm
   have hcc1 : D.R.cc ≠ 1 := by
     intro h
@@ -204,8 +204,8 @@ theorem inert_iff_mem_zpowers (D : D7) (p : ℕ) (hp : p.Prime)
       unfold frob at hmem
       split_ifs at hmem with hex
       · obtain ⟨hP', hl', hfr⟩ := hex.choose_spec.choose_spec
-        haveI := hP'
-        haveI := hl'
+        have := hP'
+        have := hl'
         obtain ⟨u, hu, hgu⟩ := (D.host.der.frob_any p _ _).1 hfr
         have hst : hex.choose ∈ MulAction.stabilizer _ hex.choose_spec.choose :=
           (D.host.der.decomp p _ _).2 ⟨u, 1, by simpa using hu, hgu⟩
@@ -228,8 +228,8 @@ theorem inert_iff_mem_zpowers (D : D7) (p : ℕ) (hp : p.Prime)
       unfold frob
       split_ifs with hex
       · obtain ⟨hP', hl', hfr⟩ := hex.choose_spec.choose_spec
-        haveI := hP'
-        haveI := hl'
+        have := hP'
+        have := hl'
         rw [hgal, hgs]
         exact ((D.host.der.frob p hN _).2.1 _ _ hu).1 hfr
       · exact absurd ⟨σ, P, hPp, hPq, hσ⟩ hex

@@ -74,8 +74,8 @@ theorem abs_conj {Γ N N₂ : Subgroup G} {γ : G} (hγ : γ ∈ Γ) (hN : ∀ u
       left_inv := fun u => Subtype.ext (by simp [mul_assoc])
       right_inv := fun u => Subtype.ext (by simp [mul_assoc])
       map_mul' := fun u v => Subtype.ext (by simp [mul_assoc])
-      continuous_toFun := ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
-      continuous_invFun := ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _ }
+      continuous_toFun := ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
+      continuous_invFun := ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _ }
   let ψ := φ.toHomeomorph.toMeasurableEquiv
   have mp : MeasurePreserving ψ μ (μ.map ψ) := ⟨ψ.measurable, rfl⟩
   let e : Γ.subgroupOf N ≃ Γ.subgroupOf N₂ :=
@@ -98,7 +98,7 @@ theorem UnipGood.integrable {N : Subgroup (UA σ W.J)} (hN : UnipGood N) {μ : M
     (h𝓕 : IsFundamentalDomain ((ratU σ W.J).subgroupOf N) 𝓕 μ) {f : UA σ W.J → ℂ} (hf : IsAut f) (h : UA σ W.J) :
     IntegrableOn (fun u : N => f (u.1 * h)) 𝓕 μ := by
   obtain ⟨C, hC, hc⟩ := hN.cov
-  have c : Continuous fun u : N => f (u.1 * h) := hf.1.comp (continuous_subtype_val.mul continuous_const)
+  have c : Continuous fun u : N => f (u.1 * h) := hf.1.comp (continuous_subtypeVal.mul continuous_const)
   obtain ⟨b, hb⟩ := hC.exists_bound_of_continuousOn c.continuousOn
   refine Measure.integrableOn_of_bounded (hN.fin μ 𝓕 hμ h𝓕).2.ne c.aestronglyMeasurable (M := b)
     (Filter.Eventually.of_forall fun u => ?_)
@@ -127,7 +127,7 @@ theorem exists_abs_gt : ∃ t : (AE F E)ˣ, 1 < (absE F E t : ℝ) := by
   refine ⟨GlobalTheory.Doubling.ideleAtInf F E w (Units.map (algebraMap w.Completion (w.Completion ⊗[F] E)).toMonoidHom (Units.mk0 b hne)), ?_⟩
   rw [GlobalTheory.Doubling.absE_ideleAtInf, GlobalTheory.Doubling.absEw_apply]
   change 1 < ((‖Algebra.norm w.Completion (algebraMap w.Completion (w.Completion ⊗[F] E) b)‖₊ ^ w.mult : ℝ≥0) : ℝ)
-  rw [Algebra.norm_algebraMap, Module.finrank_baseChange, NNReal.coe_pow, coe_nnnorm, norm_pow, h2, ← pow_mul]
+  rw [Algebra.norm_algebraMap, Module.finrank_baseChange, NNReal.coe_pow, coe_nnNorm, norm_pow, h2, ← pow_mul]
   have hn : 0 < Module.finrank F E := Module.finrank_pos
   have hm : 0 < w.mult := by unfold InfinitePlace.mult; split_ifs <;> norm_num
   exact one_lt_pow₀ (by norm_num) (Nat.mul_ne_zero hn.ne' hm.ne')

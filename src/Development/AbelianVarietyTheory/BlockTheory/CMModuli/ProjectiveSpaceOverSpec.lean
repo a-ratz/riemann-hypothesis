@@ -70,13 +70,13 @@ theorem isStrictHenselisation_real_complex : IsStrictHenselisation (algebraMap �
   refine ⟨inferInstance, ?_, inferInstance, ?_⟩
   · have e : ℂ ≃+* ResidueField ℂ := RingEquiv.ofBijective (residue ℂ)
       ⟨(residue ℂ).injective, residue_surjective⟩
-    haveI : IsAlgClosed (ResidueField ℂ) := IsAlgClosed.of_ringEquiv ℂ _ e
+    have : IsAlgClosed (ResidueField ℂ) := IsAlgClosed.of_ringEquiv ℂ _ e
     infer_instance
   · refine MorphismProperty.le_ind _ _ ?_
     change (algebraMap ℝ ℂ).Etale
     rw [RingHom.etale_algebraMap]
-    haveI : Algebra.FormallyEtale ℝ ℂ := Algebra.FormallyEtale.of_isSeparable ℝ ℂ
-    haveI : Algebra.FinitePresentation ℝ ℂ :=
+    have : Algebra.FormallyEtale ℝ ℂ := Algebra.FormallyEtale.of_isSeparable ℝ ℂ
+    have : Algebra.FinitePresentation ℝ ℂ :=
       (Algebra.FinitePresentation.of_finiteType).1 inferInstance
     exact ⟨inferInstance, inferInstance⟩
 

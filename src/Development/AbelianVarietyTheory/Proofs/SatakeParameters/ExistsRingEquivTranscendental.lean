@@ -123,8 +123,8 @@ theorem exists_ringEquiv_transcendental (p : ℕ) [Fact p.Prime] {z : ℂ} (hz :
     transcendental_iff_injective.1 ht
   let fz : F →+* ℂ := IsFractionRing.lift hzi
   let ft : F →+* ℂ_[p] := IsFractionRing.lift hti
-  letI : Algebra F ℂ := fz.toAlgebra
-  letI : Algebra F ℂ_[p] := ft.toAlgebra
+  let : Algebra F ℂ := fz.toAlgebra
+  let : Algebra F ℂ_[p] := ft.toAlgebra
   have hP : Countable (Polynomial ℚ) := by
     have := Polynomial.cardinalMk_le_max (R := ℚ)
     rw [Cardinal.mkRat, max_self] at this
@@ -240,7 +240,7 @@ namespace GlobalTheory.InertGenusOne
 open Formalism.MainNotions.GL3Theta Formalism.L2.G.Pend NumberField Formalism.BasicNotions
 
 theorem lamC_coe {p : ℕ} [Fact p.Prime] (lam : Formalism.MainNotions.TaylorLogMetric.Qbar →+* ℂ_[p]) (a : Formalism.MainNotions.TaylorLogMetric.Qbar) :
-    Formalism.MainNotions.TaylorLogMetric.lamC lam (a : ℂ) = lam a := dif_pos a.2
+    Formalism.MainNotions.TaylorLogMetric.lamC lam (a : ℂ) = lam a := dite_eq_left a.2
 
 theorem datum_exists_coprime (hGood : Formalism.L2.Th1.CM.CM2) (hHt : Formalism.L2.Th1.CM.CM3) : Formalism.L2.KerInert.GenusOneModelExists := by
   intro D cc δ hcurve hδ12 p _ hcop h5 hIn lam

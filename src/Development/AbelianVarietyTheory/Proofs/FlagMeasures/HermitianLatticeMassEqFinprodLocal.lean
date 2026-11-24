@@ -71,15 +71,15 @@ theorem uniformiser_mem_jacobson (ϖ : 𝒪[F]) (h : Irreducible ϖ) (w : L.O)
     (hw : (w : E) = algebraMap F E (ϖ : F)) : w ∈ (⊥ : Ideal L.O).jacobson := by
   let f : 𝒪[F] →+* L.O := (algebraMap 𝒪[F] E).codRestrict L.O
     (fun x => (L.O_def _).2 isIntegral_algebraMap)
-  letI : Algebra 𝒪[F] L.O := f.toAlgebra
-  haveI : IsScalarTower 𝒪[F] L.O E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.IsIntegral 𝒪[F] L.O := by
+  let : Algebra 𝒪[F] L.O := f.toAlgebra
+  have : IsScalarTower 𝒪[F] L.O E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.IsIntegral 𝒪[F] L.O := by
     refine ⟨fun x => ?_⟩
     have h1 : IsIntegral 𝒪[F] (x : E) := (L.O_def (x : E)).1 x.2
     exact (isIntegral_algHom_iff (IsScalarTower.toAlgHom 𝒪[F] L.O E) Subtype.val_injective).1 h1
   refine Ideal.mem_sInf.2 ?_
   rintro P ⟨-, hP⟩
-  haveI := hP
+  have := hP
   have hmax : (P.comap (algebraMap 𝒪[F] L.O)).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := 𝒪[F]) P
   have hm : ϖ ∈ P.comap (algebraMap 𝒪[F] L.O) := by
@@ -186,7 +186,7 @@ theorem mass_eq_finprod : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     refine (hstd.union hcoord).subset ?_
     intro p hp
     by_contra hcon
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hcon
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hcon
     obtain ⟨h1, h2⟩ := hcon
     apply hp
     change (G.S p).St ⊓ MulAction.stabilizer (G.S p).GLV (A.lat p Λ) = (G.S p).K0
@@ -207,7 +207,7 @@ theorem mass_eq_finprod : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     by_contra hcon
     apply hp
     have hu : U p = K p := not_not.1 hcon
-    have h1 : c p = 1 := if_neg (not_not.2 hu)
+    have h1 : c p = 1 := ite_eq_right (not_not.2 hu)
     exact ⟨1, by rw [h1]; simp⟩
   let φ := extHom A (k + 2 * r + 1)
   have hdense : ∀ g, g ∈ Subgroup.pi Set.univ K ∨ g ∈ Subgroup.pi Set.univ U →
@@ -242,10 +242,10 @@ theorem mass_eq_finprod : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
       by_cases he : U p = K p
       · rw [he]; exact h1
       · refine ⟨hKSt p h1, ?_⟩
-        haveI := (A.loc p).lf
+        have := (A.loc p).lf
         have hcp : ((c p : ((A.loc p).Fp)ˣ) : (A.loc p).Fp) = (((G.S p).ϖ : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) := by
           have h3 : c p = Units.mk0 (((G.S p).ϖ : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp)
-              (fun h0 => (G.S p).ϖ_irr.ne_zero (Subtype.ext h0)) := if_pos he
+              (fun h0 => (G.S p).ϖ_irr.ne_zero (Subtype.ext h0)) := ite_eq_left he
           rw [h3]
           rfl
         refine stabilises_of_close (A.L p) (A.lat p Λ) (hlat p).1 (G.S p).ϖ (G.S p).ϖ_irr _ ?_
@@ -262,8 +262,8 @@ theorem mass_eq_finprod : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
   obtain ⟨hKU, hUK⟩ := _root_.GlobalTheory.HL.relIndex_pair_comap_of_dense_image φ (Subgroup.pi Set.univ K) (Subgroup.pi Set.univ U) hdense
   have hidx : ∀ p, (K p).relIndex (U p) ≠ 0 ∧ (U p).relIndex (K p) ≠ 0 := by
     intro p
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+    have := (A.loc p).lf
+    have := (A.loc p).char0
     obtain ⟨a, b, -⟩ := (GlobalTheory.HL.volSt (A.L p) r k (G.S p)).1 (A.lat p Λ) (hlat p)
     exact ⟨a, b⟩
   have hKU' : {p | K p ≠ U p}.Finite := hfin.subset fun p hp h => hp h.symm

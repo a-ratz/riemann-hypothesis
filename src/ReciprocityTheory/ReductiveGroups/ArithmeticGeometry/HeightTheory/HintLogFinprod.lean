@@ -92,7 +92,7 @@ theorem hint_fp_split {R Fr ι : Type*} [CommRing R] [Field Fr] [Algebra R Fr] (
       have hpS : p ∈ S := by
         by_contra h
         exact hp (by simp [h])
-      rw [finprod_eq_if, if_pos hpS, map_pow, map_pow]
+      rw [finprod_eq_if, ite_eq_left hpS, map_pow, map_pow]
       exact hint_zpow_split _ _
   · refine ⟨∅, by simp, ?_⟩
     rw [finprod_of_infinite_mulSupport hfin]
@@ -202,8 +202,8 @@ theorem hint_intNorm (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (sg : K →+* ℂ) (g
     Integrable (fun z : ReciprocityTheory.MultiplicativeHeights.BlockSphere d.D (d.N + 1) =>
       ∑ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg (d.tOf z)), Real.log ‖P g‖)
       (ReciprocityTheory.MultiplicativeHeights.blockSphereProb d.D (d.N + 1)) := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
   obtain ⟨κ, hκ, hN⟩ := (d.norm_factorization hd h).1 c g hg
   obtain ⟨a, b, ha, hb, hsplit⟩ := d.hint_good_split hd h c _
     (fun p _ hp => d.hint_good_of_ne c p hp)
@@ -256,7 +256,7 @@ variable {d} in
 theorem hint_line (hd : d.AxH 𝒜) {c : ι} {G : WT} {f g : A c} (hg : g ∈ 𝒜 c G) (hg0 : g ≠ 0)
     (hf : f ∈ 𝒜 c G) : f = ratio (Ω := Ω c) f g • g := by
   have h1 := hd.finrank_one c G
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨g, hg⟩ : 𝒜 c G) (by simpa using hg0)).mp h1
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨g, hg⟩ : 𝒜 c G) (by simpa using hg0)).mp h1
     ⟨f, hf⟩
   have hex : ∃ a : Ω c, f = a • g := ⟨a, by simpa using (congrArg Subtype.val ha).symm⟩
   unfold ratio
@@ -315,7 +315,7 @@ theorem hint_intU (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (sg : K →+* ℂ) :
     Integrable (fun z : ReciprocityTheory.MultiplicativeHeights.BlockSphere d.D (d.N + 1) =>
       ∑ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg (d.tOf z)), Real.log ‖d.hintU c P‖)
       (ReciprocityTheory.MultiplicativeHeights.blockSphereProb d.D (d.N + 1)) := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
   obtain ⟨F, hF, hF0, hFmh, -, -⟩ := d.componentForm_properties hd h c
   obtain ⟨a, b, ha, hb, hsplit⟩ := d.hint_good_split hd h c
     (fun p => d.nPMM h c (d.w (d.jc c) c) p)
@@ -352,8 +352,8 @@ theorem hint_intU (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (sg : K →+* ℂ) :
   obtain ⟨αa, hαa0, hαa⟩ := hintMH_map ha sg
   obtain ⟨αb, hαb0, hαb⟩ := hintMH_map hb sg
   have hn : 0 < d.N + 1 := Nat.succ_pos _
-  haveI := sphereMeasure_isProbability hn
-  haveI := blockSphereMeasure_isProbability (B := d.D) hn
+  have := sphereMeasure_isProbability hn
+  have := blockSphereMeasure_isProbability (B := d.D) hn
   have I1 := hint_fubini hn hFc0 hFcmh
   have I2 := hint_logInt_tail hn hac0 hαa hαa0 0
   have I3 := hint_logInt_tail hn hbc0 hαb hαb0 0

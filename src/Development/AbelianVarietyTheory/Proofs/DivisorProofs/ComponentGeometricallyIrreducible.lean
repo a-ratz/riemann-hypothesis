@@ -148,7 +148,7 @@ theorem irreducibleSpace_pullback_of_cover : ∀ {F : Type} [Field F] {X : Schem
     (∀ y ∈ U, ∃ V : X.Opens, V ≤ U ∧ y ∈ V ∧ IrreducibleSpace ↑(pullback (V.ι ≫ h) (spMap f))) →
     IrreducibleSpace ↑(pullback (U.ι ≫ h) (spMap f)) := by
   intro F _ X h k _ f U hU hV
-  haveI := surjective_spMap_of_field f
+  have := surjective_spMap_of_field f
   set q := pullback.fst (U.ι ≫ h) (spMap f) with hq
   have hqs : Function.Surjective q := q.surjective
 
@@ -161,7 +161,7 @@ theorem irreducibleSpace_pullback_of_cover : ∀ {F : Type} [Field F] {X : Schem
     · let e : pullback (V.ι ≫ h) (spMap f) ≅ pullback (X.homOfLE hVU) q :=
         pullback.congrHom (by rw [← X.homOfLE_ι hVU, Category.assoc]) rfl ≪≫
           (pullbackRightPullbackFstIso (U.ι ≫ h) (spMap f) (X.homOfLE hVU)).symm
-      haveI : IrreducibleSpace ↑(pullback (X.homOfLE hVU) q) :=
+      have : IrreducibleSpace ↑(pullback (X.homOfLE hVU) q) :=
         (Scheme.homeoOfIso e).surjective.irreducibleSpace (Scheme.homeoOfIso e).continuous
       rw [← Set.image_univ]
       exact (PreirreducibleSpace.isPreirreducible_univ (X := ↑(pullback (X.homOfLE hVU) q))).image _
@@ -175,7 +175,7 @@ theorem irreducibleSpace_pullback_of_cover : ∀ {F : Type} [Field F] {X : Schem
   have hUne : (U : Set X).Nonempty := hU.nonempty
   obtain ⟨y₀, hy₀⟩ := hUne
   obtain ⟨p₀, -⟩ := hqs ⟨y₀, hy₀⟩
-  haveI : Nonempty ↑(pullback (U.ι ≫ h) (spMap f)) := ⟨p₀⟩
+  have : Nonempty ↑(pullback (U.ι ≫ h) (spMap f)) := ⟨p₀⟩
   let S : Set (Set ↑(pullback (U.ι ≫ h) (spMap f))) :=
     {W | ∃ (V : X.Opens) (hVU : V ≤ U), IrreducibleSpace ↑(pullback (V.ι ≫ h) (spMap f)) ∧
       (V : Set X).Nonempty ∧ W = Set.range (pullback.snd (X.homOfLE hVU) q)}
@@ -263,9 +263,9 @@ theorem irreducibleSpace_pullback_affine {F : Type} [Field F] [CharZero F] {X : 
     (k : Type) [Field k] (f : F →+* k) : IrreducibleSpace ↑(pullback (V.ι ≫ g) (spMap f)) := by
   let φ : CommRingCat.of F ⟶ Γ(X, V) :=
     (Scheme.ΓSpecIso (CommRingCat.of F)).inv ≫ g.appTop ≫ X.presheaf.map (homOfLE le_top).op
-  letI : Algebra F Γ(X, V) := φ.hom.toAlgebra
-  letI : Algebra F (X.residueField x) := (Spec.preimage (X.fromSpecResidueField x ≫ g)).hom.toAlgebra
-  letI : Algebra F k := f.toAlgebra
+  let : Algebra F Γ(X, V) := φ.hom.toAlgebra
+  let : Algebra F (X.residueField x) := (Spec.preimage (X.fromSpecResidueField x ≫ g)).hom.toAlgebra
+  let : Algebra F k := f.toAlgebra
   have hft : Algebra.FiniteType F Γ(X, V) := by
     have h1 : (g.appLE ⊤ V le_top).hom.FiniteType :=
       HasRingHomProperty.appLE @LocallyOfFiniteType g inferInstance ⟨⊤, isAffineOpen_top (Sp F)⟩ ⟨V, hV⟩ le_top
@@ -326,13 +326,13 @@ theorem GlobalTheory.GeomIrrComp.exists_open_irreducibleSpace_baseChange : ∀ (
     ∃ U : (Xo.XF c).Opens, (U : Set (Xo.XF c)) = Z ∧ ∀ (k : Type) [Field k] (f : c.F →+* k),
       IrreducibleSpace ↑(pullback (U.ι ≫ pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) (spMap f)) := by
   intro E _ _ _ H Dw l Xo c hac Z
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim Xo.s
-  haveI : Smooth (strK (Xo := Xo) (c := c)) := inferInstance
-  haveI : GlobalTheory.IsNormalScheme (Xo.XF c) := GlobalTheory.isNormalScheme_of_smooth strK
-  haveI : LocallyOfFiniteType (strK (Xo := Xo) (c := c)) := inferInstance
-  haveI : IsLocallyNoetherian (Xo.XF c) := LocallyOfFiniteType.isLocallyNoetherian strK
-  haveI : IsReduced (Xo.XF c) := GlobalTheory.IsNormalScheme.isReduced
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim Xo.s
+  have : Smooth (strK (Xo := Xo) (c := c)) := inferInstance
+  have : GlobalTheory.IsNormalScheme (Xo.XF c) := GlobalTheory.isNormalScheme_of_smooth strK
+  have : LocallyOfFiniteType (strK (Xo := Xo) (c := c)) := inferInstance
+  have : IsLocallyNoetherian (Xo.XF c) := LocallyOfFiniteType.isLocallyNoetherian strK
+  have : IsReduced (Xo.XF c) := GlobalTheory.IsNormalScheme.isReduced
   refine ⟨GlobalTheory.IsNormalScheme.component Z, rfl, fun k _ f => ?_⟩
   have hZc : IsClosed (Z : Set (Xo.XF c)) := isClosed_of_mem_irreducibleComponents _ Z.2
   have hg : IsGenericPoint (genPt Z) (Z : Set (Xo.XF c)) := by

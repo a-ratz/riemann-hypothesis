@@ -1019,7 +1019,7 @@ theorem norm_le_iff_dvd (c : Coef l) (x : c.O) (k : ℕ) :
     have htx : IsDiscreteValuationRing.addVal c.O x ≠ ⊤ := by
       rw [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]; exact hx0
     rw [← IsDiscreteValuationRing.addVal_le_iff_dvd, IsDiscreteValuationRing.addVal_pow,
-      ← ENat.coe_toNat htl, ← ENat.coe_toNat htx, ← hev, ← he_def, ← hv_def]
+      ← ENat.natCast_toNat htl, ← ENat.natCast_toNat htx, ← hev, ← he_def, ← hv_def]
     rw [nsmul_eq_mul]
     exact_mod_cast h3
   · rintro ⟨y, rfl⟩
@@ -1134,9 +1134,9 @@ theorem exists_pow_mul_of_deep_level : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l)
     have h' : (((l : ℕ) : c.O) : PadicAlgCl l) = 0 := by rw [h0]; rfl
     have : ((l : ℕ) : PadicAlgCl l) = 0 := by simpa using h'
     exact (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero) this
-  haveI : Finite (c.O ⧸ Ideal.span {((l : ℕ) : c.O)}) :=
+  have : Finite (c.O ⧸ Ideal.span {((l : ℕ) : c.O)}) :=
     (UpperTheory.V.X.So.levFacts l c.O ((l : ℕ) : c.O) hl0 _ ⟨LinearEquiv.refl _ _⟩).1
-  haveI : Finite (Matrix (Fin 2) (Fin 2) (c.O ⧸ Ideal.span {((l : ℕ) : c.O)})) :=
+  have : Finite (Matrix (Fin 2) (Fin 2) (c.O ⧸ Ideal.span {((l : ℕ) : c.O)})) :=
     inferInstanceAs (Finite (Fin 2 → Fin 2 → _))
   let F : ℕ →o Set (Matrix (Fin 2) (Fin 2) (c.O ⧸ Ideal.span {((l : ℕ) : c.O)})) :=
     ⟨fun n => img c ρ (n + 2), monotone_nat_of_le_succ fun n => img_mono c ρ (n + 2) (by omega)⟩
@@ -1533,13 +1533,13 @@ theorem noab_congr_pow : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (Γ : Type) [
       ext x
       rw [show x ∈ (U : Set Γ) ↔ ((R x).det = 1 ∧ Sm ρ (R x - 1)) from Iff.rfl, hdeq x]
       simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Metric.mem_closedBall, dist_zero_right,
-        Set.mem_setOf_eq]
+        Set.mem_ofPred_eq]
       rfl
     rw [hset]
     refine (isOpen_ne_fun (hRc.matrix_det) continuous_const).inter
       (isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_)
     exact (IsUltrametricDist.isOpen_closedBall 0 hρ0.ne').preimage ((hRc.sub continuous_const).matrix_elem i j)
-  haveI : Finite (Γ ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
+  have : Finite (Γ ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
   obtain ⟨k, hk0, -, hk⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (Subgroup.index_ne_zero_of_finite (H := U)) g
   exact ⟨k, hk0, hk.1, hk.2⟩
 
@@ -1786,7 +1786,7 @@ def logHom : ℤ_[l]ˣ →* Multiplicative ℤ_[l] where
 
 theorem continuous_logHom : Continuous (logHom (l := l)) := by
   have h1 : Continuous fun u : ℤ_[l]ˣ => ((u : ℤ_[l]) : ℚ_[l]) :=
-    (continuous_subtype_val : Continuous (fun x : ℤ_[l] => (x : ℚ_[l]))).comp (Units.continuous_val (M := ℤ_[l]))
+    (continuous_subtypeVal : Continuous (fun x : ℤ_[l] => (x : ℚ_[l]))).comp (Units.continuous_val (M := ℤ_[l]))
   have h2 : Continuous fun u : ℤ_[l]ˣ => Formalism.MainNotions.LocalSituation.logZl l ((u : ℤ_[l]) : ℚ_[l]) :=
     (GlobalTheory.PadicLogUnits.logZl_hom l).2.1.comp_continuous h1 (fun u => norm_coe_unit u)
   exact continuous_ofAdd.comp (h2.subtype_mk _)
@@ -1807,7 +1807,7 @@ theorem isIrr_of_comp {Γ k : Type} [Group Γ] [Field k] {n : ℕ} (r : Γ →* 
 
 theorem exists_cycZ_nat (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (hl : l ≠ 2) :
     ∃ (σ : G ℚ Ω) (n : ℕ), 2 ≤ n ∧ ((cycZ ℚ Ω l σ : ℤ_[l]) = n) := by
-  haveI : (Ideal.span {((2 : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime 2
+  have : (Ideal.span {((2 : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime 2
   obtain ⟨M, hM, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 ℚ) (Ideal.span {((2 : ℕ) : ℤ)})
     (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 ℚ)).injective_int]; exact bot_le)
   let v : HeightOneSpectrum (𝓞 ℚ) :=
@@ -1830,8 +1830,8 @@ theorem exists_cycZ_nat (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     intro h1
     have : Nat.card (𝓞 ℚ ⧸ v.asIdeal) = 1 := h1
     obtain ⟨hs, _⟩ := Nat.card_eq_one_iff_unique.mp this
-    haveI : v.asIdeal.IsMaximal := hM
-    haveI : Nontrivial (𝓞 ℚ ⧸ v.asIdeal) := inferInstance
+    have : v.asIdeal.IsMaximal := hM
+    have : Nontrivial (𝓞 ℚ ⧸ v.asIdeal) := inferInstance
     exact not_subsingleton _ hs
   omega
 

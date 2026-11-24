@@ -239,7 +239,7 @@ private lemma eighthPower_slash_S :
     rw [show (-I) ^ 4 = (1 : ℂ) by rw [neg_pow, I_pow_four]; norm_num, one_mul]
   have hE : cexp (-π * I * (((-t)⁻¹ + 1) / 2) ^ 2 / (-t)⁻¹) ^ 8 =
       cexp (8 * (-π * I * (((-t)⁻¹ + 1) / 2) ^ 2 / (-t)⁻¹)) := by
-    rw [← Complex.exp_nat_mul]; norm_num
+    rw [← exp_natCast_mul]; norm_num
   have hsum : cexp (2 * π * I * (-t)⁻¹) * cexp (8 * (-π * I * (((-t)⁻¹ + 1) / 2) ^ 2 / (-t)⁻¹))
       = cexp (2 * π * I * t) := by
     rw [← Complex.exp_add, Complex.exp_eq_exp_iff_exists_int]
@@ -343,7 +343,7 @@ open scoped UpperHalfPlane MatrixGroups ModularForm Manifold Topology Real in
 private lemma deriv_thetaChar_pow_eight_eq (τ : ℍ) :
     (deriv (fun z : ℂ => _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.thetaChar (g := 1) !![(τ : ℂ)] ![1 / 2] ![1 / 2] ![z]) 0) ^ 8 =
       _root_.GlobalTheory.JacobiDeriv.eighthPower τ := by
-  rw [deriv_thetaChar_half_half', mul_pow, _root_.GlobalTheory.JacobiDeriv.eighthPower, ← Complex.exp_nat_mul]
+  rw [deriv_thetaChar_half_half', mul_pow, _root_.GlobalTheory.JacobiDeriv.eighthPower, ← exp_natCast_mul]
   congr 1
   rw [Complex.exp_eq_exp_iff_exists_int]
   refine ⟨2, ?_⟩
@@ -362,7 +362,7 @@ theorem _root_.GlobalTheory.JacobiDeriv.deriv_thetaChar_pow_eight : ∀ τ : Upp
     exact ModularForm.discriminant_ne_zero UpperHalfPlane.I (by simpa using this)
   have hrank : Module.finrank ℂ (CuspForm 𝒮ℒ 12) = 1 :=
     Module.finrank_eq_of_rank_eq CuspForm.rank_eq_one_of_weight_eq_twelve
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ hΔ).mp hrank
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ hΔ).mp hrank
     _root_.GlobalTheory.JacobiDeriv.eighthPowerForm
   have hpt : ∀ τ : ℍ, _root_.GlobalTheory.JacobiDeriv.eighthPower τ = c * ModularForm.discriminant τ := by
     intro τ

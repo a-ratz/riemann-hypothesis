@@ -84,7 +84,7 @@ open scoped WithZero in
 private lemma eq_one_of_sq_eq_one_withZero_int {r : WithZero (Multiplicative ℤ)} (h : r ^ 2 = 1) :
     r = 1 := by
   rcases lt_trichotomy r 1 with hr | hr | hr
-  · exact absurd h (ne_of_lt (pow_lt_one₀ zero_le' hr two_ne_zero))
+  · exact absurd h (ne_of_lt (pow_lt_one₀ zero_le hr two_ne_zero))
   · exact hr
   · exact absurd h (ne_of_gt (one_lt_pow₀ hr two_ne_zero))
 
@@ -148,7 +148,7 @@ private lemma valuation_algebraMap_eq_of_unit_at_under {F E : Type} [Field F] [N
         · exact ⟨a, h⟩
         · exact ⟨b, h⟩
       obtain ⟨c, hc⟩ := hc
-      have hσ0 : V (σ x) ≠ 0 := ne_of_gt (lt_of_lt_of_le (zero_lt_iff.mpr hx0) hle)
+      have hσ0 : V (σ x) ≠ 0 := ne_of_gt (lt_of_lt_of_le (pos_iff_ne_zero.mpr hx0) hle)
       refine ⟨(a' ^ 2 - δ * b' ^ 2) / c, ?_⟩
       rw [← hw, map_div₀, map_div₀, ← hN, ← hc, map_mul, mul_div_cancel_right₀ _ hσ0]
   obtain ⟨d, hd⟩ := key
@@ -219,7 +219,7 @@ theorem _root_.GlobalTheory.QNorm.hilbert90_sUnits_quadratic_extension_qnorm : �
     rw [map_mul, valuation_algebraMap_eq_of_unit_at_under hq w (hadm _ hvS).1 (hδ _ hvS), ha _ hvS,
       hfib w hw]
     have h0 : (ch (w.under (𝓞 F))).valuation E y ≠ 0 := (Valuation.ne_zero_iff _).mpr hy0
-    simp only [n, if_neg hvS]
+    simp only [n, ite_eq_right hvS]
     nth_rewrite 1 [← WithZero.exp_log h0]
     rw [← WithZero.exp_add, add_neg_cancel, WithZero.exp_zero]
   · show (u : E) = y * algebraMap F E a / σ (y * algebraMap F E a)
@@ -500,7 +500,7 @@ private theorem quad_unique {F E : Type} [Field F] [Field E] [Algebra F E] {δ :
 theorem isQuad_galois_and_embedding : ∀ (F E : Type) [Field F] [CharZero F] [Field E] [Algebra F E] (δ : F) (θ : E) (σ : E ≃ₐ[F] E), IsQuad δ θ σ → IsGalois F E ∧ (∀ τ : E ≃ₐ[F] E, τ = 1 ∨ τ = σ) ∧ ∀ (L : Type) [Field L] (φ : F →+* L) (r : L), r ^ 2 = φ δ → ∃ ψ : E →+* L, (∀ a : F, ψ (algebraMap F E a) = φ a) ∧ ψ θ = r := by
   intro F E _ _ _ _ δ θ σ h
   refine ⟨?_, ?_, ?_⟩
-  · haveI : FiniteDimensional F E := by
+  · have : FiniteDimensional F E := by
       classical
       refine ⟨⟨{1, θ}, ?_⟩⟩
       rw [eq_top_iff]
@@ -591,7 +591,7 @@ theorem card_real_eq_pos_add_tReal (F : Type) [Field F] [NumberField F] (δ : F)
   have hc : {φ : F →+* ℝ | 0 < φ δ}ᶜ = {φ : F →+* ℝ | φ δ < 0} := by
     ext φ
     have : φ δ ≠ 0 := by simpa using hδ
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_lt]
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_lt]
     exact ⟨fun a => lt_of_le_of_ne a this, le_of_lt⟩
   rw [hc] at h
   rw [← h]
@@ -681,7 +681,7 @@ theorem two_mul_card_le_card_over : ∀ (F E : Type) [Field F] [NumberField F] [
   · obtain ⟨w, hw⟩ := (places_over F E).2.1 v
     have : 0 < (SE.filter (fun w => w.under (𝓞 F) = v)).card :=
       Finset.card_pos.2 ⟨w, Finset.mem_filter.2 ⟨(hSE w).2 (hw ▸ hv), hw⟩⟩
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
     omega
 
 end GlobalTheory.QNorm

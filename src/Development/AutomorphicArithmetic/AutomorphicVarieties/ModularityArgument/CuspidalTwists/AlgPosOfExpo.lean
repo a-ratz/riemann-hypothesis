@@ -70,7 +70,7 @@ open scoped Matrix
 private theorem algPos_of_expo (ω : HChar ℚ) (h : ∀ v, ∃ n : ℤ, TR.expo ω v = n) : ∃ a, IsAlgPos ω a := by
   obtain ⟨n, hn⟩ := h default
   refine ⟨fun _ => n, fun k hk => ?_⟩
-  letI : Unique (ℚ →+* ℂ) := ⟨⟨Rat.castHom ℂ⟩, fun _ => Subsingleton.elim _ _⟩
+  let : Unique (ℚ →+* ℂ) := ⟨⟨Rat.castHom ℂ⟩, fun _ => Subsingleton.elim _ _⟩
   have hk0 : (0 : ℝ) < ((k : ℚ) : ℝ) := hk (Rat.castHom ℝ)
   let diagR : ℚ →+* TR.Rinf ℚ := (TR.pInf ℚ).comp (algebraMap ℚ (Ad ℚ))
   have hv : ∀ v, diagR (k : ℚ) v = ((k : ℚ) : ℝ) := fun v =>
@@ -93,7 +93,7 @@ private theorem algPos_of_expo (ω : HChar ℚ) (h : ∀ v, ∃ n : ℤ, TR.expo
     · change (1 : Af ℚ) = 1 - 0 + 0
       simp
   have e2 := TR.chiInf_expU_eq ω fun _ => Real.log ((k : ℚ) : ℝ)
-  rw [← e, Fintype.sum_unique, hn, Complex.exp_int_mul, ← Complex.ofReal_exp, Real.exp_log hk0] at e2
+  rw [← e, Fintype.sum_unique, hn, Complex.exp_intCast_mul, ← Complex.ofReal_exp, Real.exp_log hk0] at e2
   rw [HChar.inf, MonoidHom.comp_apply, hdiag, Fintype.prod_unique, eq_ratCast, ← Complex.ofReal_ratCast]
   exact e2
 
@@ -201,16 +201,16 @@ private theorem det_alg (P : HypothesesH) {Ω : Type} [Field Ω] [CharZero Ω] [
   exact h2
 
 private theorem conj_ex (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] : ∃ c : G ℚ Ω, IsConjEl c := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   let j : Ω →ₐ[ℚ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω ℂ := j.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  let : Algebra Ω ℂ := j.toRingHom.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let τ : ℂ ≃ₐ[ℚ] ℂ := AlgEquiv.ofRingEquiv (f := starRingAut) fun x => by simp
   exact ⟨τ.restrictNormal Ω, algebraMap Ω ℂ, fun x => AlgEquiv.restrictNormal_commutes τ Ω x⟩
 

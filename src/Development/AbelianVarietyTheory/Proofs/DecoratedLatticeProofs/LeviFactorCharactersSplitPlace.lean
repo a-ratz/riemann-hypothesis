@@ -116,14 +116,14 @@ namespace GlobalTheory.HalfLinForm
 
 theorem halfAvg_linear : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (μ : Measure (Mx D T.rank ρ)) (𝓕 : Set (Mx D T.rank ρ)), IsCovolOne (ratMx D T.rank ρ) μ 𝓕 → ∀ e, IsSplitIdem D e → ∀ ℓ₀ : (WO S₀ T → ℂ) →ₗ[ℂ] ℂ, ∀ H : AddSubgroup (Mx D T.rank ρ), (∀ x, x ∈ H ↔ ∀ i j, cA D e * x i j = x i j) → ∀ [MeasurableSpace H] [BorelSpace H] (ν : Measure H) [ν.IsAddHaarMeasure], ∃ ℓ : (WO S T → ℂ) →ₗ[ℂ] ℂ, ∀ f, IsThetaFunO ψ S T f → ℓ f = ∫ x : H, ℓ₀ ((_root_.I195MixedCoordinates_5faa2c9cd849d5d53bf59d46.source d) T ψ μ 𝓕 f x.1) ∂ν := by
   intro D ψ hψ S S₀ T ρ d μ 𝓕 hμ e he ℓ₀ H hH _ _ ν _
-  haveI : IsTopologicalAddGroup (Mx D T.rank ρ) := GlobalTheory.HalfAverage.tagMx _ _
-  haveI : T2Space (Mx D T.rank ρ) := GlobalTheory.HalfAverage.t2Mx _ _
-  haveI : T2Space H := inferInstance
-  haveI : R1Space H := T2Space.r1Space
-  haveI : ContinuousSub (Mx D T.rank ρ) := by first | exact IsTopologicalAddGroup.to_continuousSub | exact inferInstance
+  have : IsTopologicalAddGroup (Mx D T.rank ρ) := GlobalTheory.HalfAverage.tagMx _ _
+  have : T2Space (Mx D T.rank ρ) := GlobalTheory.HalfAverage.t2Mx _ _
+  have : T2Space H := inferInstance
+  have : R1Space H := T2Space.r1Space
+  have : ContinuousSub (Mx D T.rank ρ) := by first | exact IsTopologicalAddGroup.to_continuousSub | exact inferInstance
   have hHc : IsClosed (H : Set (Mx D T.rank ρ)) := by
     have : (H : Set (Mx D T.rank ρ)) = ⋂ i, ⋂ j, {t : Mx D T.rank ρ | cA D e * t i j = t i j} := by
-      ext t; simp only [SetLike.mem_coe, hH, Set.mem_iInter, Set.mem_setOf_eq]
+      ext t; simp only [SetLike.mem_coe, hH, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     exact isClosed_iInter fun i => isClosed_iInter fun j =>
       isClosed_eq (continuous_const.mul ((continuous_apply j).comp (continuous_apply i)))
@@ -139,7 +139,7 @@ theorem halfAvg_linear : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCha
       rw [IsLocallyConstant.iff_eventually_eq]
       intro t
       have hn : {s : H | (s : Mx D T.rank ρ) - t ∈ U} ∈ nhds t := by
-        refine IsOpen.mem_nhds (hUo.preimage (continuous_subtype_val.sub continuous_const)) ?_
+        refine IsOpen.mem_nhds (hUo.preimage (continuous_subtypeVal.sub continuous_const)) ?_
         show (t : Mx D T.rank ρ) - t ∈ U
         rw [sub_self]; exact U.zero_mem
       filter_upwards [hn] with s hs
@@ -244,7 +244,7 @@ theorem integral_comp_addEquiv_eq_smul {G : Type*} [AddGroup G] [TopologicalSpac
     [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
     (ν : Measure G) [ν.IsAddHaarMeasure] (T : G ≃+ G) (hc : Continuous T) (hc' : Continuous T.symm) :
     ∃ r : ℝ, 0 < r ∧ ∀ φ : G → ℂ, ∫ x, φ (T x) ∂ν = r * ∫ x, φ x ∂ν := by
-  haveI : (ν.map T).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map ν T hc hc'
+  have : (ν.map T).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map ν T hc hc'
   let hT : G ≃ₜ G := { toEquiv := T.toEquiv, continuous_toFun := hc, continuous_invFun := hc' }
   have hemb : MeasurableEmbedding T := hT.measurableEmbedding
   refine ⟨((ν.map T).addHaarScalarFactor ν : ℝ), NNReal.coe_pos.2 (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _), ?_⟩
@@ -282,8 +282,8 @@ theorem integral_twist_fix_eq_smul : ∀ (D : D7) (m n : ℕ) (c : AE D) (H : Ad
     have : (H : Set (Mx D m n)) = {x : Mx D m n | ∀ i j, c * x i j = x i j} := by
       ext x; exact hH x
     rw [this]; exact isClosed_fix D m n c
-  haveI : LocallyCompactSpace H := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : LocallyCompactSpace H := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := Topology.IsInducing.subtypeVal.secondCountableTopology
   let T : H ≃+ H :=
     { toFun := fun x => ⟨h.1 ⬝ x.1 ⬝ a.1, mem h a x.1 x.2⟩
       invFun := fun x => ⟨(h⁻¹).1 ⬝ x.1 ⬝ (a⁻¹).1, mem h⁻¹ a⁻¹ x.1 x.2⟩
@@ -303,10 +303,10 @@ theorem integral_twist_fix_eq_smul : ∀ (D : D7) (m n : ℕ) (c : AE D) (H : Ad
         rw [Matrix.mul_add, Matrix.add_mul] }
   have hc : Continuous T := by
     show Continuous fun x : H => (⟨h.1 ⬝ x.1 ⬝ a.1, mem h a x.1 x.2⟩ : H)
-    exact Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _
+    exact Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _
   have hc' : Continuous T.symm := by
     show Continuous fun x : H => (⟨(h⁻¹).1 ⬝ x.1 ⬝ (a⁻¹).1, mem h⁻¹ a⁻¹ x.1 x.2⟩ : H)
-    exact Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _
+    exact Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _
   obtain ⟨r, hr, hφ⟩ := integral_comp_addEquiv_eq_smul ν T hc hc'
   exact ⟨r, hr, fun φ => hφ (fun x : H => φ x.1)⟩
 
@@ -492,7 +492,7 @@ theorem avg_mixS_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdC
   obtain ⟨-, hY, -⟩ := GlobalTheory.HeisMixSource.heis_mixS D ψ hψ S S₀ T ρ d ⟨μ, 𝓕, hμ⟩ f hf
   obtain ⟨⟨U, hU, hUinv⟩, K, hK, hKs⟩ := GlobalTheory.MixHalf.mixS_half D ψ hψ S S₀ T ρ d μ 𝓕 hμ e he f hf
   obtain ⟨L, hL, hLU, hsep⟩ := GlobalTheory.HalfSeparate.exists_open_separated D ψ hψ T ρ e he
-    (U.comap (halfMx (cA D e) T.rank ρ).subtype) (hU.preimage continuous_subtype_val)
+    (U.comap (halfMx (cA D e) T.rank ρ).subtype) (hU.preimage continuous_subtypeVal)
   have hφ := @GlobalTheory.fourier_uniqueness_of_openSubgroup (halfMx (cA D e) T.rank ρ) (halfMx e T.rank ρ) _ _ _ mH bH ν hν _
     (fun a t => ψ (halfSympl T (a : Mx D T.rank ρ) (t : Mx D T.rank ρ)))
     (fun a s t => by simp only [AddSubgroup.coe_add, halfSympl_add_right, AddChar.map_add_eq_mul])
@@ -561,8 +561,8 @@ namespace GlobalTheory.SplitPlaceForm
 
 theorem exists_form_of_core : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (μ : Measure (Mx D T.rank ρ)) (𝓕 : Set (Mx D T.rank ρ)), IsCovolOne (ratMx D T.rank ρ) μ 𝓕 → ∀ e, IsSplitIdem D e → ∀ ℓ₀ : (WO S₀ T → ℂ) →ₗ[ℂ] ℂ, (∀ u : WO S₀ T, (∀ i j, cA D e * u i j = u i j) → ∀ f, IsThetaFunO ψ S₀ T f → ℓ₀ (heisO ψ S₀ T u f) = ℓ₀ f) → (∃ f, IsThetaFunO ψ S₀ T f ∧ ℓ₀ f ≠ 0) → ∃ ℓ : (WO S T → ℂ) →ₗ[ℂ] ℂ, (∀ u : WO S T, (∀ i j, cA D e * u i j = u i j) → ∀ f, IsThetaFunO ψ S T f → ℓ (heisO ψ S T u f) = ℓ f) ∧ (∃ f, IsThetaFunO ψ S T f ∧ ℓ f ≠ 0) ∧ ∀ (h : GL (Fin T.rank) (AE D)) (a : GL (Fin ρ) (AE D)), ∃ r : ℝ, 0 < r ∧ ∀ (f f' : WO S T → ℂ) (k : ℂ), IsThetaFunO ψ S T f → IsThetaFunO ψ S T f' → (∀ x : Mx D T.rank ρ, (∀ i j, cA D e * x i j = x i j) → ℓ₀ ((_root_.I195MixedCoordinates_b25480cef10b1759a6cbdced.source d) T ψ μ 𝓕 (f') x) = k * ℓ₀ ((_root_.I195MixedCoordinates_b25480cef10b1759a6cbdced.source d) T ψ μ 𝓕 (f) (h.1 ⬝ x ⬝ a.1))) → ℓ f' = r * k * ℓ f := by
   intro D ψ hψ S S₀ T ρ d μ 𝓕 hμ e he ℓ₀ h0 hne
-  letI : MeasurableSpace (GlobalTheory.HalfAverage.halfMx (cA D e) T.rank ρ) := GlobalTheory.HalfAverage.measHalf _ _ _
-  haveI : BorelSpace (GlobalTheory.HalfAverage.halfMx (cA D e) T.rank ρ) := GlobalTheory.HalfAverage.borelHalf _ _ _
+  let : MeasurableSpace (GlobalTheory.HalfAverage.halfMx (cA D e) T.rank ρ) := GlobalTheory.HalfAverage.measHalf _ _ _
+  have : BorelSpace (GlobalTheory.HalfAverage.halfMx (cA D e) T.rank ρ) := GlobalTheory.HalfAverage.borelHalf _ _ _
   have hH : ∀ x, x ∈ GlobalTheory.HalfAverage.halfMx (cA D e) T.rank ρ ↔ ∀ i j, cA D e * x i j = x i j := fun x => Iff.rfl
   obtain ⟨ℓ, hℓ⟩ := GlobalTheory.HalfLinForm.halfAvg_linear D ψ hψ S S₀ T ρ d μ 𝓕 hμ e he ℓ₀ (GlobalTheory.HalfAverage.halfMx (cA D e) T.rank ρ) hH (GlobalTheory.HalfAverage.haarHalf (cA D e) T.rank ρ)
   refine ⟨ℓ, fun u hu f hf => ?_, ?_, fun h a => ?_⟩
@@ -753,7 +753,7 @@ theorem GlobalTheory.SplitLeviDet.leviPart : ∀ (D : D7) (S S₀ : HSp D) (ρ :
     have key : t = locU e h1 (t * Units.map (cA D).toMonoidHom t⁻¹) * (w * Units.map (cA D).toMonoidHom w) := by
       apply Units.ext
       rw [Units.val_mul, Units.val_mul, Units.coe_map, locU_val, Units.val_mul, Units.coe_map, hw, locU_val]
-      simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_add (f := _), map_mul, map_sub, map_one, hcc]
+      simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_add (f := _), map_mul, map_sub, map_one, hcc]
       linear_combination (-((e * t * cA D ((t⁻¹ : (AE D)ˣ) : AE D) + 1 - e) * (t * cA D (t : AE D) - t - cA D (t : AE D) + 1) +
           ((t : AE D) ^ 2 * cA D ((t⁻¹ : (AE D)ˣ) : AE D) - t * cA D ((t⁻¹ : (AE D)ˣ) : AE D) - t + 1))) * h2 -
         ((t : AE D) * cA D ((t⁻¹ : (AE D)ˣ) : AE D) * cA D (t : AE D) - t * cA D ((t⁻¹ : (AE D)ˣ) : AE D) - cA D (t : AE D) + 1) * h1 -

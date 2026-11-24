@@ -133,7 +133,7 @@ theorem valPart_mem : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, MetE
     have h := congrArg PiTensorProduct.lift.symm h3
     rwa [LinearEquiv.symm_apply_apply, map_zero] at h
   have h5 := congrArg (fun U : MMap s.M => U v) h4
-  simp only [MultilinearMap.sub_apply, MultilinearMap.smul_apply, MultilinearMap.zero_apply, sub_eq_zero] at h5
+  simp only [sub_apply, smul_apply, zero_apply, sub_eq_zero] at h5
   simpa [heckeOn, postOn_apply] using h5
 
 end GlobalTheory.EvenOnto.ValPart
@@ -190,7 +190,7 @@ theorem cc_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7,
     refine Submodule.eq_top_iff'.2 fun u => ?_
     have h0 : PiTensorProduct.lift.symm (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = 0 := by
       refine MultilinearMap.ext fun v => ?_
-      rw [MultilinearMap.zero_apply]
+      rw [zero_apply]
       have hv : ((v τ : s.M.sm τ) : s.M.H τ) = 0 := (Submodule.eq_bot_iff _).1 hτ _ (v τ).2
       exact MultilinearMap.map_coord_zero (PiTensorProduct.lift.symm (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ))) τ
         (Subtype.ext hv)
@@ -201,7 +201,7 @@ theorem cc_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7,
     exact zero_mem _
   have hschur := GlobalTheory.MultFinite.schurMult (θ := c.θ) (M := s.M) (J := (s.J : Set (GA D s.V)))
     (χ := (1 : GA D s.V → ℂ)) hP s.ν s.fd
-  haveI := hs.haar
+  have := hs.haar
   have hright : s.ν.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds s.V s.ν hs.haar
   obtain ⟨hlin, hpos⟩ := GlobalTheory.SchurConst.ipM_posDef D c.θ s.V s.par s.M (s.J : Set (GA D s.V))
     (1 : GA D s.V → ℂ) s.ν s.fd hc.inf hs.haar hs.fund hschur hsm
@@ -214,7 +214,7 @@ theorem cc_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7,
     (LinearEquiv.injective _) (Mult c.θ s.M (s.J : Set (GA D s.V)) (1 : GA D s.V → ℂ))
   haveI : FiniteDimensional ℂ ((Mult c.θ s.M (s.J : Set (GA D s.V)) (1 : GA D s.V → ℂ)).map
       (PiTensorProduct.lift : MMap s.M ≃ₗ[ℂ] _).toLinearMap) := hfd c hc j hj s hs
-  haveI : FiniteDimensional ℂ (Mult c.θ s.M (s.J : Set (GA D s.V)) (1 : GA D s.V → ℂ)) :=
+  have : FiniteDimensional ℂ (Mult c.θ s.M (s.J : Set (GA D s.V)) (1 : GA D s.V → ℂ)) :=
     LinearEquiv.finiteDimensional φ.symm
   let I := {t : HeightOneSpectrum (𝓞 D.host.E) × List ℤ × Finset (GA D s.V) //
     Hecke₂ s.V (s.J : Set (GA D s.V)) (1 : GA D s.V → ℂ) c.S t.1 t.2.1 t.2.2}

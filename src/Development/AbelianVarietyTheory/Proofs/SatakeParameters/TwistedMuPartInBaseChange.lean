@@ -99,7 +99,7 @@ theorem exists_split_not_mem (hC : ∀ Sg : Set (PlE H), Sg.Finite →
   have he : {σ : G H.E N.Om | ∃ w ∉ S, IsSplitPl H w ∧ ∃ B : ValuationSubring N.Om,
       IsPlaceOver (F := H.E) B w ∧ IsFrob (F := H.E) B (normV w) σ} = ∅ := by
     ext σ
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     rintro ⟨w, hw, hs, -⟩
     exact hn w hw hs
   rw [he, closure_empty] at h

@@ -112,7 +112,7 @@ def iotaX (X : flipOneThree.Inst) : ℚ_[X.p] →+* KK X.O :=
 
 theorem iotaX_int (X : flipOneThree.Inst) (x : ℤ_[X.p]) :
     ∃ y : X.O, iotaX X (x : ℚ_[X.p]) = algebraMap X.O (KK X.O) y := by
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal X.O) X.O := X.setting.complete
+  have : IsAdicComplete (IsLocalRing.maximalIdeal X.O) X.O := X.setting.complete
   exact ⟨_, iotaQ_int X.p X.O X.setting.p_mem X.setting.p_ne x⟩
 
 end Formalism.MainNotions.G.SymmetricFormBlocks

@@ -228,14 +228,14 @@ theorem exists_elt_balanced : ∀ (K : Type) [Field K] [NumberField K] (e : Heig
   have hprod : ((∏ w, f w ^ w.mult : NNReal) : ℝ) = Real.exp (τ * S + (Module.finrank ℚ K : ℝ) * c) := by
     rw [NNReal.coe_prod, ← hsum, Real.exp_sum]
     refine Finset.prod_congr rfl fun w _ => ?_
-    rw [NNReal.coe_pow, Real.exp_nat_mul]
+    rw [NNReal.coe_pow, Real.exp_natCast_mul]
     rfl
   have hmink : minkowskiBound K I < MeasureTheory.volume (convexBodyLT K f) := by
     rw [convexBodyLT_volume, minkowskiBound_eq_absNorm_mul]
     have h1 : minkowskiBound K 1 = ENNReal.ofReal V0 := (ENNReal.ofReal_toReal (minkowskiBound_lt_top K 1).ne).symm
     rw [h1, ← ENNReal.ofReal_mul (by
       rw [hnorm]; exact Finset.prod_nonneg fun la _ => by positivity)]
-    refine lt_of_lt_of_le ?_ (le_mul_of_one_le_left zero_le' (by exact_mod_cast one_le_convexBodyLTFactor K))
+    refine lt_of_lt_of_le ?_ (le_mul_of_one_le_left zero_le (by exact_mod_cast one_le_convexBodyLTFactor K))
     rw [← ENNReal.ofReal_coe_nnreal, ENNReal.ofReal_lt_ofReal_iff (by rw [hprod]; positivity), hprod]
     have hV : V0 ≤ Real.exp |Real.log V0| := by
       rcases hV0nn.eq_or_lt with h | h
@@ -434,7 +434,7 @@ theorem le_val_of_mixVals (hc : HTCmp Xo c) {B : ℝ} {Z : Comp Xo c} {u : AllWt
       rw [EReal.coe_le_coe_iff]
       nlinarith
   · exact Or.inl (hf la v (by
-      have : (mixVals Xo c B).1 la = (recVals Xo c).1 la := if_neg h
+      have : (mixVals Xo c B).1 la = (recVals Xo c).1 la := ite_eq_right h
       rw [this]; exact hv))
 
 theorem fin_bound {Z : Comp Xo c} {G G' : WTZ E} {θ : Rul Xo c} {e : HeightOneSpectrum (𝓞 c.F) →₀ ℝ}
@@ -486,8 +486,8 @@ theorem inf_bound {a b n s t T : ℝ} {B : ℝ≥0∞} {k : ℕ} (ha : 0 ≤ a) 
           (ENNReal.ofReal (Real.exp (2 * (8 : ℕ) * s)) * B ^ 8) ^ k := by gcongr
     _ = _ := by
         rw [mul_pow, ← pow_mul, ← mul_assoc, ← ENNReal.ofReal_pow (Real.exp_pos _).le,
-          ← ENNReal.ofReal_pow (Real.exp_pos _).le, ← ENNReal.ofReal_mul (by positivity), ← Real.exp_nat_mul,
-          ← Real.exp_nat_mul, ← Real.exp_add]
+          ← ENNReal.ofReal_pow (Real.exp_pos _).le, ← ENNReal.ofReal_mul (by positivity), ← Real.exp_natCast_mul,
+          ← Real.exp_natCast_mul, ← Real.exp_add]
         congr 3
         push_cast
         ring
@@ -677,7 +677,7 @@ theorem continuous_rotBlock {B n : ℕ} (b : Fin B) {u : EuclideanSpace ℂ (Fin
   refine continuous_pi fun i => continuous_induced_rng.2 ?_
   simp only [Function.comp_def, coe_rotBlock]
   have hc : ∀ j, Continuous fun p : ℝ × BlockSphere B n => (p.2 j : EuclideanSpace ℂ (Fin n)) := fun j =>
-    continuous_subtype_val.comp ((continuous_apply j).comp continuous_snd)
+    continuous_subtypeVal.comp ((continuous_apply j).comp continuous_snd)
   have hθ : Continuous fun p : ℝ × BlockSphere B n => circPt p.1 := by
     unfold circPt; fun_prop
   split_ifs
@@ -1180,7 +1180,7 @@ theorem height_add_log_nonneg (hP : _root_.GlobalTheory.CovTop.PublishedHodgeBun
         (latOn Y.U Z (wtOf (dat p i) u1 0)) w abelian₂)
     (hG : GoodOn Y.U (xiR D) (fun _ => D.sp.W ((i : ℕ) + 1)) Y.dict Z (wtOf (dat p i) u1 0)) (hd : 0 < Y.dg u1 Z) :
     0 ≤ Y.ht u1 Z + Real.log abelian₂ := by
-  haveI hTC : IsTotallyComplex Y.d.c₂.F := ⟨fun v => by
+  have hTC : IsTotallyComplex Y.d.c₂.F := ⟨fun v => by
     rw [← InfinitePlace.not_isReal_iff_isComplex, InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
     exact fun e => GlobalTheory.CompHt.conj_comp_ne (c := Y.d.c₂) v.embedding (RingHom.ext fun a => RingHom.congr_fun e a)⟩
   have hd' : 0 < compDeg Y.U Z (wtOf (dat p i) u1 0) := by exact_mod_cast hd

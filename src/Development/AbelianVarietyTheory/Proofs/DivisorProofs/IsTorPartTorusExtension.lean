@@ -116,7 +116,7 @@ theorem IsTorPart.factor {A : Type} [CommRing A] [IsLocalRing A] [IsNoetherianRi
     (i : splitTorus (Sp A) X' ⟶ H) (hi : IsMonHom i) : ∃ r : X →+ X', i = torusMap _ r ≫ tι := by
   have hm := h.mono
   obtain ⟨hι, B, _, q, hB, hq, hk⟩ := h
-  haveI : ConnectedSpace (Sp A) := GlobalTheory.SplitTorus.connectedSpace_of_isLocalRing A
+  have : ConnectedSpace (Sp A) := GlobalTheory.SplitTorus.connectedSpace_of_isLocalRing A
   have ht : i ≫ q = toUnit _ ≫ η[_] := splitTorus_hom_proper_trivial_local A X' _ (i ≫ q) inferInstance
   let u := hk.lift i (toUnit _) ht
   have hu : u ≫ tι = i := hk.lift_fst _ _ _

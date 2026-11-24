@@ -85,12 +85,12 @@ instance dk_right (ε : Fin n → Bool) : (dk ε).IsMulRightInvariant := by
   exact MeasureTheory.isMulRightInvariant_smul (μ := muK ε) (muK ε Set.univ)⁻¹
 
 lemma muK_inv (ε : Fin n → Bool) : Measure.map (fun x : KG ε => x⁻¹) (muK ε) = muK ε := by
-  haveI := muK_rightInvariant ε
+  have := muK_rightInvariant ε
   set ν := Measure.map (fun x : KG ε => x⁻¹) (muK ε) with hν
-  haveI : ν.IsMulLeftInvariant := by
+  have : ν.IsMulLeftInvariant := by
     change (muK ε).inv.IsMulLeftInvariant
     infer_instance
-  haveI : IsFiniteMeasure ν := by rw [hν]; infer_instance
+  have : IsFiniteMeasure ν := by rw [hν]; infer_instance
   have e := Measure.isMulInvariant_eq_smul_of_compactSpace ν (muK ε)
   have huniv : ν Set.univ = muK ε Set.univ := by
     rw [hν, Measure.map_apply measurable_inv MeasurableSet.univ, Set.preimage_univ]
@@ -160,7 +160,7 @@ lemma schur (T : KType ε Λ) (A : T.V →L[ℂ] T.V) (hA : ∀ k, T.op k * A = 
       intro k v hv
       rw [Module.End.mem_eigenspace_iff] at hv ⊢
       have e := congrArg (fun B : T.V →L[ℂ] T.V => B v) (hA k)
-      simp only [ContinuousLinearMap.mul_apply] at e
+      simp only [mul_apply_eq_comp] at e
       change A (T.op k v) = c • T.op k v
       rw [← e]
       change T.op k ((A : T.V →ₗ[ℂ] T.V) v) = _
@@ -172,10 +172,10 @@ lemma schur (T : KType ε Λ) (A : T.V →L[ℂ] T.V) (hA : ∀ k, T.op k * A = 
       have hv : v ∈ Module.End.eigenspace (A : T.V →ₗ[ℂ] T.V) c := h ▸ Submodule.mem_top
       rw [Module.End.mem_eigenspace_iff] at hv
       simpa using hv
-  · haveI : Subsingleton T.V := not_nontrivial_iff_subsingleton.mp hV
+  · have : Subsingleton T.V := not_nontrivial_iff_subsingleton.mp hV
     exact ⟨0, ContinuousLinearMap.ext fun v => Subsingleton.elim _ _⟩
 
-lemma cont_op (T : KType ε Λ) : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+lemma cont_op (T : KType ε Λ) : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
 
 lemma cont_conj (T : KType ε Λ) (P : T.V →L[ℂ] T.V) :
     Continuous fun k : KG ε => T.op k * P * T.op k⁻¹ := ((cont_op T).mul continuous_const).mul ((cont_op T).comp continuous_inv)
@@ -220,8 +220,8 @@ theorem kschur_op {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (
   have htr : ∀ A : T.V →L[ℂ] T.V, trL A = LinearMap.trace ℂ T.V (A : T.V →ₗ[ℂ] T.V) := fun A => rfl
   have hconj : ∀ k : KG ε, trL (T.op k * P * T.op k⁻¹) = trL P := by
     intro k
-    rw [htr, htr, ContinuousLinearMap.coe_mul, ContinuousLinearMap.coe_mul, mul_assoc,
-      LinearMap.trace_mul_comm, mul_assoc, ← ContinuousLinearMap.coe_mul, op_inv_mul]
+    rw [htr, htr, ContinuousLinearMap.toLinearMap_mul, ContinuousLinearMap.toLinearMap_mul, mul_assoc,
+      LinearMap.trace_mul_comm, mul_assoc, ← ContinuousLinearMap.toLinearMap_mul, op_inv_mul]
     simp
   have htrP : trL P = ((‖v‖ ^ 2 : ℝ) : ℂ) := by
     rw [htr, LinearMap.trace_eq_sum_inner _ (stdOrthonormalBasis ℂ T.V)]
@@ -259,7 +259,7 @@ theorem kschur_coef {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
     rfl
   have hpt : ∀ k : KG ε, ⟪u, (T.op k * P * T.op k⁻¹) u⟫_ℂ = ((‖⟪u, T.op k v⟫_ℂ‖ ^ 2 : ℝ) : ℂ) := by
     intro k
-    simp only [ContinuousLinearMap.mul_apply, hP, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply]
+    simp only [mul_apply_eq_comp, hP, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply]
     rw [hadj, ContinuousLinearMap.adjoint_inner_right, map_smul, inner_smul_right, ← inner_conj_symm,
       RCLike.conj_mul]
     push_cast
@@ -274,10 +274,10 @@ theorem kschur_coef {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
       ((‖v‖ ^ 2 * ‖u‖ ^ 2 : ℝ) : ℂ) := by
     calc ((Module.finrank ℂ T.V : ℝ) : ℂ) * ⟪u, (∫ k, T.op k * P * T.op k⁻¹ ∂(dk ε)) u⟫_ℂ
         = ⟪u, (((Module.finrank ℂ T.V : ℝ) : ℂ) • ∫ k, T.op k * P * T.op k⁻¹ ∂(dk ε)) u⟫_ℂ := by
-          rw [ContinuousLinearMap.smul_apply, inner_smul_right]
+          rw [smul_apply, inner_smul_right]
       _ = ⟪u, (((‖v‖ ^ 2 : ℝ) : ℂ) • (1 : T.V →L[ℂ] T.V)) u⟫_ℂ := by rw [hop]
       _ = ((‖v‖ ^ 2 : ℝ) : ℂ) * ⟪u, u⟫_ℂ := by
-          rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, inner_smul_right]
+          rw [smul_apply, one_apply_eq_self, inner_smul_right]
       _ = _ := by
           have h : ⟪u, u⟫_ℂ = ((‖u‖ ^ 2 : ℝ) : ℂ) := by
             apply Complex.ext

@@ -243,7 +243,7 @@ theorem finrank_frac_of_stdSmooth (k R K : Type) [Field k] [CommRing R] [IsDomai
 
 theorem FieldDim_of : FieldDim := by
   intro k _ d X _ p hp
-  letI := (kHom p).toAlgebra
+  let := (kHom p).toAlgebra
   obtain ⟨U, hU, V, hV, hx, e, hf⟩ := hp.exists_isStandardSmoothOfRelativeDimension (genericPoint X)
   have hUtop : U = ⊤ := by
     have hs : Subsingleton (PrimeSpectrum k) := inferInstance
@@ -258,9 +258,9 @@ theorem FieldDim_of : FieldDim := by
     have := hf.comp (RingHom.IsStandardSmoothOfRelativeDimension.equiv
       (Scheme.ΓSpecIso (CommRingCat.of k)).symm.commRingCatIsoToRingEquiv)
     exact this
-  letI : Algebra k Γ(X, V) := ψ.hom.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension d k Γ(X, V) := hψ
-  haveI : IsScalarTower k Γ(X, V) X.functionField := by
+  let : Algebra k Γ(X, V) := ψ.hom.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension d k Γ(X, V) := hψ
+  have : IsScalarTower k Γ(X, V) X.functionField := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     have key : Scheme.Hom.appTop p ≫ X.presheaf.germ ⊤ (genericPoint X) trivial =
@@ -272,7 +272,7 @@ theorem FieldDim_of : FieldDim := by
         ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ p.appLE ⊤ V e) ≫ X.germToFunctionField V := by
       rw [Category.assoc, ← key]
     exact congrArg (fun f => CommRingCat.Hom.hom f c) H
-  haveI := functionField_isFractionRing_of_isAffineOpen X V hV
+  have := functionField_isFractionRing_of_isAffineOpen X V hV
   exact finrank_frac_of_stdSmooth k Γ(X, V) X.functionField d
 
 end LateralTheory.EtaleTrace.Cov
@@ -602,7 +602,7 @@ theorem isEtaleAt_bot {A B K : Type} [CommRing A] [IsDomain A] [CommRing B] [IsD
 
 theorem genEtaleAtBot : GenEtaleAtBot := by
   intro X P _ _ π U hU hne hU' hfin hinj hun
-  haveI : Nonempty U := hne.to_subtype
+  have : Nonempty U := hne.to_subtype
   have hV : Nonempty (π ⁻¹ᵁ U) := by
     by_contra h
     rw [not_nonempty_iff] at h
@@ -624,7 +624,7 @@ theorem genEtaleAtBot : GenEtaleAtBot := by
   have h2 := h1.comp hun
   rw [← CommRingCat.hom_comp, Scheme.Hom.germ_stalkMap] at h2
   let algK : Algebra Γ(P, U) X.functionField := (π.app U ≫ X.presheaf.germ _ _ hη).hom.toAlgebra
-  haveI : IsScalarTower Γ(P, U) Γ(X, π ⁻¹ᵁ U) X.functionField := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower Γ(P, U) Γ(X, π ⁻¹ᵁ U) X.functionField := IsScalarTower.of_algebraMap_eq' rfl
   have : Algebra.FormallyUnramified Γ(P, U) X.functionField := h2
   have := functionField_isFractionRing_of_isAffineOpen X (π ⁻¹ᵁ U) hU'
   exact isEtaleAt_bot (K := X.functionField) hinj
@@ -653,12 +653,12 @@ theorem genAffineData : GenAffineData := by
   refine ⟨U, hU, ⟨x, hxU⟩, hU', ?_, ?_, ?_⟩
   · have hft : (r.appLE ⊤ U le_top).hom.FiniteType :=
       HasRingHomProperty.appLE (P := @LocallyOfFiniteType) r hr ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top
-    letI := (r.appLE ⊤ U le_top).hom.toAlgebra
-    haveI : IsNoetherianRing Γ(S k, ⊤) :=
+    let := (r.appLE ⊤ U le_top).hom.toAlgebra
+    have : IsNoetherianRing Γ(S k, ⊤) :=
       isNoetherianRing_of_ringEquiv k (Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv.symm
-    haveI : Algebra.FiniteType Γ(S k, ⊤) Γ(P, U) := hft
+    have : Algebra.FiniteType Γ(S k, ⊤) Γ(P, U) := hft
     exact Algebra.FiniteType.isNoetherianRing Γ(S k, ⊤) Γ(P, U)
-  · haveI : IsAffine U := hU
+  · have : IsAffine U := hU
     have h0 : (π ∣_ U).appTop.hom.Finite := (π ∣_ U).finite_appTop
     rw [morphismRestrict_appTop] at h0
     have gen : ∀ (W : P.Opens) (T : X.Opens) (h : T = π ⁻¹ᵁ W), W = U →
@@ -667,8 +667,8 @@ theorem genAffineData : GenAffineData := by
       subst h
       simp
     exact gen _ _ _ (by simp) h0
-  · haveI : IsDominant π := inferInstance
-    haveI : IsSchemeTheoreticallyDominant π := .of_isDominant π
+  · have : IsDominant π := inferInstance
+    have : IsSchemeTheoreticallyDominant π := .of_isDominant π
     exact π.app_injective U
 
 theorem GenEtale_of_atBot (h : GenEtaleAtBot) : GenEtale := GenEtale_of' genAffineData h
@@ -963,7 +963,7 @@ theorem HomRel_of : HomRel := by
     exact hm (homogeneousComponent_eq_zero m G (by omega))
   have hc := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p m) (hsum.symm.trans hGx)
   simp only [Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow, Polynomial.coeff_zero] at hc
-  rwa [Finset.sum_ite_eq, if_pos hmem] at hc
+  rwa [Finset.sum_ite_eq, ite_eq_left hmem] at hc
 
 end LateralTheory.EtaleTrace.Cov
 end -- clump:auto
@@ -993,7 +993,7 @@ theorem jetIndep_chain {n : ℕ} (w : Fin n → K) (F : MvPolynomial (Fin n) k) 
     simp only [map_mul, aeval_X, Derivation.leibniz, hf, pderiv_X, Finset.sum_add_distrib, mul_smul, Finset.smul_sum, Derivation.leibniz]
     simp [Pi.single_apply]
     simp only [apply_ite (aeval w), map_zero, add_smul, ite_smul, zero_smul, Finset.sum_add_distrib,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_smul]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, mul_smul]
 
 theorem jetIndep_pderiv {n : ℕ} (w : Fin n → K) (hw : LinearIndependent K (jet k w)) {m : ℕ}
     (F : MvPolynomial (Fin n) k) (hF : F.IsHomogeneous m) (h0 : aeval w F = 0) (j : Fin n) :

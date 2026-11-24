@@ -189,7 +189,7 @@ theorem covol_map {G G' : Type} [Mul G] [Mul G'] [MeasurableSpace G] [Measurable
 theorem covol_smul {G : Type} [Mul G] [MeasurableSpace G] (Γ : Set G) (μ : Measure G) (A : Set G)
     (a : ENNReal) (h0 : a ≠ 0) (ht : a ≠ ⊤) : covol Γ (a • μ) A = a * covol Γ μ A := by
   unfold covol
-  simp only [ENNReal.mul_iInf_of_ne h0 ht, Measure.smul_apply, smul_eq_mul]
+  simp only [ENNReal.mul_iInf_of_ne h0 ht, smul_apply, smul_eq_mul]
 
 theorem pi_smul {ι : Type} [Fintype ι] {α : ι → Type} [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measure (α i))
     [∀ i, SigmaFinite (μ i)] (c : ι → ℝ≥0) :
@@ -359,7 +359,7 @@ theorem exists_adele_equiv {F E F' E' : Type} [Field F] [NumberField F] [Field E
       ∀ y, y ∈ IntAf F' E' ↔ ρ y ∈ IntAf F E := by
   obtain ⟨a, a1, a2, -⟩ := GlobalTheory.AdeleBaseChange.exists_finiteAdele_baseChange_equiv F E
   obtain ⟨b, b1, b2, -⟩ := GlobalTheory.AdeleBaseChange.exists_finiteAdele_baseChange_equiv F' E'
-  letI : Algebra E' E := e.toRingHom.toAlgebra
+  let : Algebra E' E := e.toRingHom.toAlgebra
   obtain ⟨c, c1, c2, -⟩ := GlobalTheory.AdeleBaseChange.exists_finiteAdele_baseChange_equiv E' E
   let eA : E' ≃ₐ[E'] E := { e with commutes' := fun _ => rfl }
   let d : Af E' ≃+* E ⊗[E'] Af E' :=
@@ -683,7 +683,7 @@ theorem gaugeVol_transport : ∀ (I I' : AutInst) (e : I'.E ≃+* I.E) (A : Matr
   obtain ⟨-, hlc, hsc, hcK, hoK, -⟩ := GlobalTheory.CongTop.adelic_topology I
   let Ψ : I'.Gf ≃ᵐ I.Gf := Tf.toHomeomorph.toMeasurableEquiv
   have hΨ : ∀ g, Ψ g = Tf g := fun _ => rfl
-  haveI : (μf'.map Ψ).IsHaarMeasure := Tf.isHaarMeasure_map μf'
+  have : (μf'.map Ψ).IsHaarMeasure := Tf.isHaarMeasure_map μf'
   have ha := Measure.isMulLeftInvariant_eq_smul (μf'.map Ψ) μf
   have ha0 := Measure.haarScalarFactor_pos_of_isHaarMeasure (μf'.map Ψ) μf
   generalize Measure.haarScalarFactor (μf'.map Ψ) μf = a at ha ha0

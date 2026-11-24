@@ -134,8 +134,8 @@ theorem transport (E : I.Ginf ≃ₜ* H) (K : Subgroup H) (S : Set I.Ginf) (hS :
         simp only [Function.comp_apply]
         rw [resEquiv_mul, ← hψ, Homeomorph.apply_symm_apply]
       rw [this, ← Measure.map_map hψm (measurable_const_mul _), map_mul_left_eq_self]
-  · have hval : Measurable ((↑) : K → H) := measurable_subtype_coe
-    have hvalS : Measurable ((↑) : S' → I.Ginf) := measurable_subtype_coe
+  · have hval : Measurable ((↑) : K → H) := measurable_subtypeVal
+    have hvalS : Measurable ((↑) : S' → I.Ginf) := measurable_subtypeVal
     have hE : Measurable E := E.continuous.measurable
     show (μ'.map ψ).map ((↑) : K → H) = μ.map E
     rw [Measure.map_map hval hψm]

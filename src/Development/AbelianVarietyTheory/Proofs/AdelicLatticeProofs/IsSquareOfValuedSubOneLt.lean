@@ -76,7 +76,7 @@ theorem _root_.GlobalTheory.LocalQuad.SquareTheorem.isSquare_of_norm_sub_one_lt 
     calc ‖z‖ ^ 2 ≤ r ^ 2 := pow_le_pow_left₀ (norm_nonneg _) hz 2
       _ ≤ r := by nlinarith
   let s := Metric.closedBall (0 : K) r
-  haveI : CompleteSpace s := Metric.isClosed_closedBall.completeSpace_coe
+  have : CompleteSpace s := Metric.isClosed_closedBall.completeSpace_coe
   have hmem : ∀ z : s, c - (z : K) ^ 2 ∈ s := by
     intro z
     have hz : ‖(z : K)‖ ≤ r := mem_closedBall_zero_iff.1 z.2
@@ -90,11 +90,11 @@ theorem _root_.GlobalTheory.LocalQuad.SquareTheorem.isSquare_of_norm_sub_one_lt 
     have hb : ‖(b : K)‖ ≤ r := mem_closedBall_zero_iff.1 b.2
     rw [Subtype.dist_eq, Subtype.dist_eq, dist_eq_norm, dist_eq_norm]
     have : (c - (a : K) ^ 2) - (c - (b : K) ^ 2) = ((b : K) + a) * ((b : K) - a) := by ring
-    simp only [f, this, norm_mul, coe_nnnorm]
+    simp only [f, this, norm_mul, coe_nnNorm]
     rw [norm_sub_rev (b : K)]
     exact mul_le_mul_of_nonneg_right
       ((IsUltrametricDist.norm_add_le_max _ _).trans (max_le hb ha)) (norm_nonneg _)
-  haveI : Nonempty s := ⟨⟨0, by simp [s, hr0]⟩⟩
+  have : Nonempty s := ⟨⟨0, by simp [s, hr0]⟩⟩
   set z : s := ContractingWith.fixedPoint f hf
   have hz : (z : K) = c - (z : K) ^ 2 := by
     have := ContractingWith.fixedPoint_isFixedPt (f := f) hf

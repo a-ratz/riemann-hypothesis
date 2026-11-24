@@ -58,7 +58,7 @@ theorem final_lowKMultOneG :
       ∀ S S' : Submodule ℂ H, Formalism.MainNotions.S.IsKTypeOf ε σ (Formalism.QuantumDeterminants.lowK ε lam) S →
         Formalism.MainNotions.S.IsKTypeOf ε σ (Formalism.QuantumDeterminants.lowK ε lam) S' → S = S' := by
   intro N ε lam H _ _ σ hHC hDS h hgap hlt S S' hS hS'
-  haveI : CompleteSpace H := hDS.1
+  have : CompleteSpace H := hDS.1
   exact lowKMultOneG_of_cas N ε lam H σ hHC hDS h hgap hlt
     (casOnSmooth_of_isDS hDS ⟨hHC.1, h, hgap, hlt⟩) S S' hS hS'
 

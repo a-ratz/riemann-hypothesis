@@ -216,7 +216,7 @@ variable [IsDomain O] [IsDiscreteValuationRing O]
 
 private theorem u_int (L : IsLoc O Δ) (h2 : ∃ u : Oˣ, algebraMap O K u = 2 - τ) {u : Etau K τ} (hu2 : u ^ 2 = -ω)
     (hu : QuadraticAlgebra.norm u = 1) : u.re ∈ (algebraMap O K).range ∧ u.im ∈ (algebraMap O K).range := by
-  haveI := L.frac
+  have := L.frac
   have e1 := congrArg QuadraticAlgebra.re hu2
   have e2 := congrArg QuadraticAlgebra.im hu2
   simp [sq] at e1 e2
@@ -265,7 +265,7 @@ private theorem phi_semi (L : IsLoc O Δ) {g s T : K} {ε : Oˣ} (hs : Δ * s ^ 
   have hvb := fixP_mul h h1 h2 hb
   have hq' : algebraMap O K q ∈ (algebraMap O K).range := ⟨q, rfl⟩
   have hD : Δ * s ^ 2 * algebraMap O K q ∈ (algebraMap O K).range := ⟨ε * q, by rw [map_mul, hs]⟩
-  simp only [Phi, Set.mem_setOf_eq]
+  simp only [Phi, Set.mem_ofPred_eq]
   refine ⟨?_, _, fixP_sub h (fixP_smul h hp hva) (fixP_smul h hD hvb), _,
     fixP_sub h (fixP_smul h hq' hva) (fixP_smul h hp hvb), rfl⟩
   have hst := (descent O K Δ L s ε hs (g • x1)).2 hx1
@@ -729,8 +729,8 @@ theorem UpperTheory.V.Z.Sym.Loc.caseM :
       exact fix_phi L hg hcg hs hur hui hτr h2τ hu hν hν' hd h
     · rintro ⟨S₀, h0, rfl⟩
       exact phi_fix L hg hcg hs hur hui hτr hu hν hν' h0
-  letI := torAct Δ τ
-  letI := quoAct τ
+  let := torAct Δ τ
+  let := quoAct τ
   unfold lcount pcount
   refine wTrans _ _ _ _ _ _ (fun S S₀ => IsFixP O τ ((t : K) * (τ ^ 2 - 4)) S₀ ∧ S = Phi O Δ g s S₀)
     ?_ ?_ ?_ ?_ ?_ ?_
@@ -756,17 +756,17 @@ theorem UpperTheory.V.Z.Sym.Loc.caseM :
   · rintro z S S₀ ⟨h0, rfl⟩
     exact ⟨hPinv z S₀ h0, phi_act g s S₀ z⟩
   · rintro S S₀ ⟨h0, e⟩
-    rw [if_pos ((hFix S).2 ⟨S₀, h0, e⟩), if_pos h0]
+    rw [ite_eq_left ((hFix S).2 ⟨S₀, h0, e⟩), ite_eq_left h0]
   · intro S hS
     have hS' : IsFix O c (ν • ofE Δ u) (((t : K) • s • (ω : Lsq K Δ)) • ofE Δ (ω - star ω : Etau K τ)) S := by
       by_contra hn
-      rw [if_neg hn] at hS
+      rw [ite_eq_right hn] at hS
       exact hS rfl
     obtain ⟨S₀, h0, e⟩ := (hFix S).1 hS'
     exact ⟨S₀, ⟨h0, e⟩, fun S₁ ⟨h1, e1⟩ => phi_inj h1 h0 (e1.symm.trans e)⟩
   · intro S₀ hS
     have h0 : IsFixP O τ ((t : K) * (τ ^ 2 - 4)) S₀ := by
       by_contra hn
-      rw [if_neg hn] at hS
+      rw [ite_eq_right hn] at hS
       exact hS rfl
     exact ⟨Phi O Δ g s S₀, ⟨h0, rfl⟩, fun S ⟨_, e⟩ => e⟩

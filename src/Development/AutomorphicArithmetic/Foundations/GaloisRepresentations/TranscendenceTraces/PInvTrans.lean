@@ -103,9 +103,9 @@ private theorem same_ker {A B G Ω : Type} [CommRing A] [CommRing B] [Algebra A 
     (h : φ.comp (algebraMap A B) = ψ.comp (algebraMap A B)) (hk : RingHom.ker φ = RingHom.ker ψ) :
     ∃ g : G, ∀ b, ψ b = φ (g • b) := by
   let Q : Ideal B := RingHom.ker φ
-  haveI : Q.IsPrime := RingHom.ker_isPrime φ
+  have : Q.IsPrime := RingHom.ker_isPrime φ
   let P : Ideal A := Q.under A
-  haveI : Q.LiesOver P := ⟨rfl⟩
+  have : Q.LiesOver P := ⟨rfl⟩
   let φb : B ⧸ Q →+* Ω := Ideal.Quotient.lift Q φ (fun a ha => ha)
   let ψb : B ⧸ Q →+* Ω := Ideal.Quotient.lift Q ψ (fun a ha => by
     have : a ∈ RingHom.ker ψ := hk ▸ ha
@@ -167,8 +167,8 @@ end UpperTheory.Gal.TranscendenceTraces
 theorem UpperTheory.Gal.TranscendenceTraces.invTrans_of :
     InvTrans := by
   intro A B G Ω _ _ _ _ _ _ _ _ _ φ φ' h
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
-  haveI : (RingHom.ker φ').IsPrime := RingHom.ker_isPrime φ'
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have : (RingHom.ker φ').IsPrime := RingHom.ker_isPrime φ'
   have hu : (RingHom.ker φ).under A = (RingHom.ker φ').under A := by
     ext a
     change φ (algebraMap A B a) = 0 ↔ φ' (algebraMap A B a) = 0

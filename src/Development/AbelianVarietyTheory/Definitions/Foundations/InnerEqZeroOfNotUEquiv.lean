@@ -231,8 +231,8 @@ omit [TopologicalSpace G] in
 theorem inner_eq_be_of_norm [CompleteSpace H] (h1 : ∀ g x, ‖π g x‖ = ‖x‖) (h2 : IsTopIrreducible π)
     (h3 : ∀ g x, ‖ρ g x‖ = ‖x‖) (hT : T ∈ homIn π ρ U) (hT' : T' ∈ homIn π ρ U') (x y : H) :
     ⟪T' y, T x⟫_ℂ = be T T' * ⟪y, x⟫_ℂ := by
-  letI : TopologicalSpace G := ⊥
-  haveI : DiscreteTopology G := ⟨rfl⟩
+  let : TopologicalSpace G := ⊥
+  have : DiscreteTopology G := ⟨rfl⟩
   have hπ : IsUnitaryRep π := ⟨h1, fun _ => continuous_of_discreteTopology⟩
   have hρ : IsUnitaryRep ρ := ⟨h3, fun _ => continuous_of_discreteTopology⟩
   obtain ⟨c, hc⟩ := GlobalTheory.hilbert_schur H G π h1 (fun S hS h => h2.2 S ⟨hS, h⟩) (T'.adjoint ∘L T) fun g => by

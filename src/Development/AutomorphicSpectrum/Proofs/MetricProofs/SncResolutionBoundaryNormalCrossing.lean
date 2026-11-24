@@ -163,8 +163,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Cmp.BdRad
 theorem exists_den_prod_params : ∀ (m e : ℕ) (I Dc : Ideal (MvPolynomial (Fin m) ℂ)) (t : Fin m → ℂ) (r : Fin e → MvPolynomial (Fin m) ℂ) (Jf : Finset (Fin e)), I ≤ Dc → (∀ h ∈ I, eval t h = 0) → IsRegularLocalRing (locRing I t) → ringKrullDim (locRing I t) = e → Ideal.span (Set.range fun l => algebraMap _ (locRing I t) (r l)) = Ideal.map (algebraMap _ (locRing I t)) (ptIdeal t) → (∀ 𝔮 : Ideal (MvPolynomial (Fin m) ℂ), 𝔮.IsPrime → I ≤ 𝔮 → 𝔮 ≤ ptIdeal t → (Dc ≤ 𝔮 ↔ ∃ i ∈ Jf, r i ∈ 𝔮)) → ∃ h : MvPolynomial (Fin m) ℂ, eval t h ≠ 0 ∧ h * ∏ l ∈ Jf, r l ∈ Dc.radical ∧ ∀ g ∈ Dc.radical, h * g ∈ Ideal.span {∏ l ∈ Jf, r l} ⊔ I := by
   classical
   intro m e I Dc t r Jf hID hp hreg hdim hspan hprime
-  haveI := hreg
-  haveI : IsDomain (locRing I t) := isDomain_of_isRegularLocalRing
+  have := hreg
+  have : IsDomain (locRing I t) := isDomain_of_isRegularLocalRing
   set alg : MvPolynomial (Fin m) ℂ →+* locRing I t := algebraMap _ (locRing I t) with halg
   set R : Fin e → locRing I t := fun l => alg (r l) with hR
   have hspan' : Ideal.span (Set.range R) = IsLocalRing.maximalIdeal (locRing I t) := by
@@ -192,7 +192,7 @@ theorem exists_den_prod_params : ∀ (m e : ℕ) (I Dc : Ideal (MvPolynomial (Fi
     rw [hPQ, ← radical_span_prod_eq R Jf hpr hna, ← hPQ, Ideal.radical_eq_sInf, Ideal.radical_eq_sInf]
     congr 1
     ext 𝔓
-    simp only [Set.mem_setOf_eq, Ideal.span_singleton_le_iff_mem]
+    simp only [Set.mem_ofPred_eq, Ideal.span_singleton_le_iff_mem]
     exact ⟨fun ⟨h1, h2⟩ => ⟨(hpr2 𝔓 h2).mp h1, h2⟩, fun ⟨h1, h2⟩ => ⟨(hpr2 𝔓 h2).mpr h1, h2⟩⟩
 
   obtain ⟨h', hh', hQrad⟩ : ∃ h', eval t h' ≠ 0 ∧ h' * Q ∈ Dc.radical := by
@@ -738,7 +738,7 @@ theorem _root_.GlobalTheory.T.snc_chart_regular_with_boundary_choice : ∀ (K : 
       simp [mem_src_iff]
     rw [heq]
     exact isOpen_iInter_of_finite fun k =>
-      isOpen_ne_fun ((continuous_apply _).comp continuous_subtype_val) continuous_const
+      isOpen_ne_fun ((continuous_apply _).comp continuous_subtypeVal) continuous_const
   have hcoord : ContinuousOn (SncRes.coord P p) (SncRes.src P p) := by
     refine continuousOn_iff_continuous_domRestrict.2 (continuous_pi fun j => ?_)
     let q := (Fintype.equivFin (Σ k, ι k)).symm j
@@ -751,7 +751,7 @@ theorem _root_.GlobalTheory.T.snc_chart_regular_with_boundary_choice : ∀ (K : 
       simp only [SncRes.proj, affCoord]
       rw [div_div_div_cancel_right₀ (norm_ne y.1 q.1), mul_div_mul_right _ _ hstar]
     have hv (a : Σ k, ι k × ι k) : Continuous fun y : SncRes.src P p => y.1.1 a :=
-      (continuous_apply a).comp (continuous_subtype_val.comp continuous_subtype_val)
+      (continuous_apply a).comp (continuous_subtypeVal.comp continuous_subtypeVal)
     change Continuous (fun y : SncRes.src P p => SncRes.coord P p y.1 j)
     simp only [hratio]
     exact (hv ⟨q.1, (q.2, p q.1)⟩).div (hv ⟨q.1, (p q.1, p q.1)⟩)
@@ -853,7 +853,7 @@ theorem isMultiHomog_part (b : K → ℕ) (s : MvPolynomial (Σ k, ι k) ℂ) :
   intro m hm k
   rw [mem_support_iff, coeff_part] at hm
   by_contra hk
-  refine hm (if_neg fun h => hk ?_)
+  refine hm (ite_eq_right fun h => hk ?_)
   exact congrFun h k
 
 theorem isMultiHomog_mul {s f : MvPolynomial (Σ k, ι k) ℂ} {b a : K → ℕ}
@@ -893,16 +893,16 @@ theorem part_mul_mem [DecidableEq K] {I : Ideal (MvPolynomial (Σ k, ι k) ℂ)}
     by_cases hm : mdeg m = b + a
     · have e : ∀ k ∈ (Finset.univ : Finset K), ∑ i, m ⟨k, i⟩ = (b + a) k :=
         fun k _ => congrFun hm k
-      rw [if_pos e]
+      rw [ite_eq_left e]
       have hr : ∀ m' ∈ (s - part b s).support, mdeg m' ≠ b := by
         intro m' hm' hb
-        rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_part, if_pos hb, sub_self] at hm'
+        rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_part, ite_eq_left hb, sub_self] at hm'
         exact hm' rfl
       have e2 : s * f = part b s * f + (s - part b s) * f := by ring
       rw [e2, MvPolynomial.coeff_add, coeff_mul_eq_zero hr hf hm, add_zero]
     · have e : ¬ ∀ k ∈ (Finset.univ : Finset K), ∑ i, m ⟨k, i⟩ = (b + a) k :=
         fun h' => hm (funext fun k => h' k (Finset.mem_univ k))
-      rw [if_neg e]
+      rw [ite_eq_right e]
       by_contra hne
       exact hm (funext fun k => isMultiHomog_mul (isMultiHomog_part b s) hf m
         (mem_support_iff.2 (Ne.symm hne)) k)

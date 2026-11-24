@@ -170,7 +170,7 @@ theorem latCountAll_of (hB : BoxBound) (hLM : LatMap) (hLS : LatSub) (hS : Sep) 
   have hexp : ∏ v, Real.exp (r v) ^ (2 * I.n ^ 2) = Real.exp (2 * (I.n : ℝ) ^ 2 * ∑ v, r v) := by
     rw [Finset.mul_sum, Real.exp_sum]
     refine Finset.prod_congr rfl fun v _ => ?_
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring

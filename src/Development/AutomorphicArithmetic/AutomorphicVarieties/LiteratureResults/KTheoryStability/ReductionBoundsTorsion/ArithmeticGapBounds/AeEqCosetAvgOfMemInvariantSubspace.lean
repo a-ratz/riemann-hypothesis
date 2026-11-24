@@ -200,7 +200,7 @@ theorem countable_map [Countable Λ] : Countable (B.map j) := by
 theorem ae_spread [Countable Λ] [MeasurableMul S] [μ.IsMulLeftInvariant]
     (hD : IsFundamentalDomain (B.map j) DB μ) {u v : S → ℝ} (hu : Measurable u) (hv : Measurable v)
     (hiu : LInv j B u) (hiv : LInv j B v) (h : u =ᵐ[μ.restrict DB] v) : u =ᵐ[μ] v := by
-  haveI := countable_map (j := j) (B := B)
+  have := countable_map (j := j) (B := B)
   have inv : ∀ w : S → ℝ, LInv j B w → ∀ (g : B.map j) (x : S), w (g • x) = w x :=
     fun w hw g x => linv_rel hw (by rw [MulAction.orbitRel_apply]; exact MulAction.mem_orbit x g)
   have htm : MeasurableSet {x | u x ≠ v x} := (measurableSet_eq_fun hu hv).compl
@@ -208,7 +208,7 @@ theorem ae_spread [Countable Λ] [MeasurableMul S] [μ.IsMulLeftInvariant]
     intro g
     ext x
     rw [Set.mem_smul_set_iff_inv_smul_mem]
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [inv u hiu g⁻¹ x, inv v hiv g⁻¹ x]
   have hts : μ ({x | u x ≠ v x} ∩ DB) = 0 := by
     rw [← Measure.restrict_apply htm]
@@ -217,7 +217,7 @@ theorem ae_spread [Countable Λ] [MeasurableMul S] [μ.IsMulLeftInvariant]
 
 theorem ae_translate [MeasurableMul S] [μ.IsMulLeftInvariant] {u v : S → ℝ} (g : S)
     (h : u =ᵐ[μ] v) : (fun x => u (g * x)) =ᵐ[μ] fun x => v (g * x) := by
-  exact (measurePreserving_mul_left μ g).quasiMeasurePreserving.ae_eq h
+  exact (measurePreserving_mul_left μ g).quasiMeasurePreserving.ae_eq_comp h
 
 end PositivityTheory.KB.SpectralGap.PGap
 

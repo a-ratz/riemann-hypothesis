@@ -302,7 +302,7 @@ private theorem locAbs (hA : A9) (hB : B1) (q : ℕ) (i : ℤ) {k : Type} [Field
       pull _ (sch.map (toBY P U')) _ 0 c = pull _ (sch.map (resY P a)) _ 0 w := by
   obtain ⟨O, hO, s, g, hs, v, hv⟩ := GlobalTheory.T.exists_strictlyHenselianEtaleStalk_over_point U.left (Over.mk (𝟙 U.left)) (by dsimp; infer_instance) x
   have hsg : g.left = s := by simpa using Over.w g
-  haveI hr : QuasiCompact (toBY P U) := by dsimp [toBY]; infer_instance
+  have hr : QuasiCompact (toBY P U) := by dsimp [toBY]; infer_instance
   have hu : ∀ (Z : Scheme.{0}), (Z ⟶ U.left) → IsUnit (q : Γ(Z, ⊤)) := fun Z g' => unit_of hq (g' ≫ U.hom ≫ toK)
   have hrange : Set.range (s ≫ U.hom) ⊆ (V : Set B) := by
     rintro _ ⟨z, rfl⟩
@@ -333,8 +333,8 @@ private theorem locAbs (hA : A9) (hB : B1) (q : ℕ) (i : ℤ) {k : Type} [Field
     change pull _ (sch.map m) _ 0 (pl q i (pullback.snd P (s ≫ U.hom)) 0 c0) = _
     rw [hc0, pp, hmn]
   obtain ⟨Z, j, d, hj, hZ, hd⟩ := cont_step hA hB q i (toBY P U) hu O s hs w c0 hc
-  haveI := hZ
-  haveI : Etale U.hom := U.prop
+  have := hZ
+  have : Etale U.hom := U.prop
   let U' : B.Etale := MorphismProperty.Over.mk ⊤ (Z.hom ≫ U.hom) inferInstance
   let a : U' ⟶ U := MorphismProperty.Over.homMk Z.hom rfl trivial
   refine ⟨U', a, d, ⟨j v, ?_⟩, ?_⟩
@@ -357,7 +357,7 @@ theorem UpperTheory.Cb.etale_cohomology_degree_zero_surjective_limit :
     LateralTheory.E.LeafSurj0Pf.LeafSurj0V := by
   intro hyps q _ k _ hq i B W Y0 Y1 Y2 x0 ι _ V hV p g1 g2 hp hp1 hP hSHV U y u hu
   obtain ⟨-, -, -, -, -, -, -, hA, -, -, hB, -⟩ := hyps
-  haveI : IsProper (g2 ≫ g1 ≫ p) := hP
+  have : IsProper (g2 ≫ g1 ≫ p) := hP
   have hS : ∀ (A : Type) [CommRing A] (t : Sp A ⟶ B), SH A → Set.range t ⊆ V →
       Function.Bijective (pl q i (pullback.snd (g2 ≫ g1 ≫ p) t) 0) :=
     fun A _ t hA' ht => (hSHV A t hA' ht).2.2.2
@@ -403,7 +403,7 @@ theorem UpperTheory.Cb.etale_cohomology_degree_zero_surjective_limit :
       exact hv' ⟨_, rfl⟩
     have hsub : Subsingleton (H (ZMod q) (sch.obj (pullback U''.hom ι)) (tw q i) 0) := by
       obtain ⟨-, e, -, -⟩ := hA (ZMod q) (tw q i)
-      haveI := LateralTheory.EDual.sec_empty_sub (tw q i) (pullback U''.hom ι)
+      have := LateralTheory.EDual.sec_empty_sub (tw q i) (pullback U''.hom ι)
       exact (e _).symm.injective.subsingleton
     obtain ⟨c'', hc''⟩ := relExact (ZMod q) (tw q i) (sch.map (prB ι U'')) 0
       (pull (ZMod q) (sch.map b.left) (tw q i) 0 c) (Subsingleton.elim _ _)

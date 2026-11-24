@@ -142,11 +142,11 @@ theorem finE_mem_lev_of_isKM : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (F
   refine Formalism.L2.DIV.mem_lev.2 ⟨Formalism.L2.DIV.mem_parLev.2 ⟨hU, hS, fun PP _ => ?_, fun PP _ => ?_⟩, ?_⟩
   · intro i j hij
     exfalso
-    simp only [Formalism.L2.DIV.blkOf, if_pos (hb i), if_pos (hb j)] at hij
+    simp only [Formalism.L2.DIV.blkOf, ite_eq_left (hb i), ite_eq_left (hb j)] at hij
     exact lt_irrefl _ hij
   · intro i j hij
     exfalso
-    simp only [Formalism.L2.DIV.blk2, if_pos (hb i), if_pos (hb j)] at hij
+    simp only [Formalism.L2.DIV.blk2, ite_eq_left (hb i), ite_eq_left (hb j)] at hij
     exact lt_irrefl _ hij
   · rw [hP]; exact Subgroup.mem_top _
 
@@ -218,7 +218,7 @@ theorem exists_box {ι : Type} [Fintype ι] {X : ι → Type} [∀ i, Topologica
 
 theorem le_exp_three : (13 : ℝ) ≤ Real.exp 3 := by
   have e1 := Real.exp_one_gt_d9
-  have h : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_nat_mul]; norm_num
+  have h : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_natCast_mul]; norm_num
   rw [h]
   calc (13 : ℝ) ≤ 2.7 ^ 3 := by norm_num
     _ ≤ Real.exp 1 ^ 3 := pow_le_pow_left₀ (by norm_num) (by linarith) 3
@@ -236,7 +236,7 @@ theorem bound (f r d : ℕ) (L n v M rd : ℝ) (hd : (d : ℝ) = 2 * f) (hL : 1 
     calc v ^ f ≤ ((13 : ℝ) ^ (r ^ 2)) ^ f := pow_le_pow_left₀ hv0 hv f
       _ = (13 : ℝ) ^ (r ^ 2 * f) := by rw [pow_mul]
       _ ≤ Real.exp 3 ^ (r ^ 2 * f) := pow_le_pow_left₀ (by norm_num) h13 _
-      _ = Real.exp (((r ^ 2 * f : ℕ) : ℝ) * 3) := by rw [Real.exp_nat_mul]
+      _ = Real.exp (((r ^ 2 * f : ℕ) : ℝ) * 3) := by rw [Real.exp_natCast_mul]
       _ ≤ Real.exp (3 * (f * (r : ℝ) ^ 2 * L)) := by
         refine Real.exp_le_exp.2 ?_
         push_cast
@@ -246,7 +246,7 @@ theorem bound (f r d : ℕ) (L n v M rd : ℝ) (hd : (d : ℝ) = 2 * f) (hL : 1 
     have e1 : ((f : ℝ) * (r : ℝ) ^ 2) ^ 2 ≤ Real.exp L ^ 2 := pow_le_pow_left₀ ha hfr 2
     have e2 : rd ^ 2 ≤ Real.exp (2 * L) ^ 2 := pow_le_pow_left₀ (by linarith) hrd 2
     have e3 : Real.exp (9 * L) = Real.exp 3 * Real.exp L ^ 2 * Real.exp (2 * L) ^ 2 * Real.exp (3 * L - 3) := by
-      rw [← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]; congr 1; push_cast; ring
+      rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]; congr 1; push_cast; ring
     have e4 : 1 ≤ Real.exp (3 * L - 3) := Real.one_le_exp (by linarith)
     have e5 : 3 * ((d : ℝ) ^ 2 * (r : ℝ) ^ 4 * rd ^ 2) = 12 * (((f : ℝ) * (r : ℝ) ^ 2) ^ 2 * rd ^ 2) := by rw [hd]; ring
     rw [e3, e5]
@@ -262,7 +262,7 @@ theorem bound (f r d : ℕ) (L n v M rd : ℝ) (hd : (d : ℝ) = 2 * f) (hL : 1 
     refine hM.trans ?_
     calc (3 * ((d : ℝ) ^ 2 * (r : ℝ) ^ 4 * rd ^ 2)) ^ (3 * d * r ^ 2) ≤ Real.exp (9 * L) ^ (3 * d * r ^ 2) :=
           pow_le_pow_left₀ (by positivity) hX _
-      _ = Real.exp (((3 * d * r ^ 2 : ℕ) : ℝ) * (9 * L)) := by rw [Real.exp_nat_mul]
+      _ = Real.exp (((3 * d * r ^ 2 : ℕ) : ℝ) * (9 * L)) := by rw [Real.exp_natCast_mul]
       _ = _ := by congr 1; push_cast; rw [hd]; ring
   rcases le_or_gt M 0 with hM0 | hM0
   · have : n * (v ^ f * M) ≤ 0 :=
@@ -283,17 +283,17 @@ theorem up_core (hV : VolSt) (hS : StabSt) (hN : NumSt) (D : D7) (Tu : Type) (C 
   have hrk : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hr : 2 ≤ D.R.r := Formalism.L2.Geo.two_le_r D
   have hSig := D.sp.W_sig ((i : ℕ) + 1)
-  haveI := hF.1.1
+  have := hF.1.1
   obtain ⟨⟨θ, hθ⟩, H1⟩ := hF.1.2
   obtain ⟨⟨A, hA⟩, H2⟩ := H1 θ hθ
   obtain ⟨⟨m, hm⟩, -⟩ := H2 A hA
   obtain ⟨rp, hrpc, hrp⟩ := GlobalTheory.T.exists_continuous_realComponentHom_unitaryAdelic D (Wc D i) θ A (D.sp.W_sig _) hθ hA
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
-  haveI : ∀ ρ, (m ρ).IsHaarMeasure := fun ρ => (hm ρ).1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
+  have : ∀ ρ, (m ρ).IsHaarMeasure := fun ρ => (hm ρ).1
   obtain ⟨B, hBm, hB0, hBt⟩ := MainStatements.Tam.A.exists_box m
   have hvol := hV D (Wc D i) _ _ (D.sp.W_sig _) (D.sp.W_sigval _ (Nat.le_add_left _ _) i.2) μ 𝓕 hF.2 θ A m rp hθ hA hm
     hrpc hrp B hBm
@@ -315,7 +315,7 @@ theorem up_core (hV : VolSt) (hS : StabSt) (hN : NumSt) (D : D7) (Tu : Type) (C 
       _ = _ := by ring
   have hμ := (ENNReal.mul_le_mul_iff_left hB0 hBt).1 hkey
 
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hfin : Module.finrank ℚ D.host.E = 2 * D.R.f := by
     rw [show Module.finrank ℚ D.host.E = 4 * D.R.ord from D.host.finrank_cmField]
     unfold Ranks.f Ranks.n; ring

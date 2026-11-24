@@ -48,9 +48,9 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem dx_conj {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (j : Ω →+* ℂ) :
     ∃ c : G ℚ Ω, ∀ x, j (c x) = starRingEnd ℂ (j x) := by
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  letI : Algebra Ω ℂ := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  let : Algebra Ω ℂ := j.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   let s : ℂ ≃ₐ[ℚ] ℂ := AlgEquiv.ofRingEquiv (f := starRingAut (R := ℂ)) fun x => by simp
   exact ⟨s.restrictNormal Ω, fun x => s.restrictNormal_commutes Ω x⟩
 
@@ -78,8 +78,8 @@ private theorem dx_field {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
         rw [← commutatorElement_eq_one_iff_mul_comm, ← map_commutatorElement]
         exact hker _ (hc (Subgroup.commutator_mem_commutator trivial trivial))⟩ }
   refine ⟨L, rfl, this, ⟨fun w => ?_⟩, hab⟩
-  letI : Algebra L ℂ := w.embedding.toAlgebra
-  haveI : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) L
+  let : Algebra L ℂ := w.embedding.toAlgebra
+  have : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) L
   let j : Ω →ₐ[L] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -128,11 +128,11 @@ private theorem dx_mu {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
 private theorem dx_ker {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l w : ℕ} (hl : l.Prime) (hw : w.Prime) (hne : w ≠ l)
     (θ : G ℚ Ω →* Multiplicative (ZMod l)) (ho : IsOpen (θ.ker : Set (G ℚ Ω)))
     (hu : ∀ A, Raw.Away {w} A → Ine (F := ℚ) A ≤ θ.ker) (g : G ℚ Ω) (hg : ∀ ζ : Ω, ζ ^ w = 1 → g ζ = ζ) : g ∈ θ.ker := by
-  obtain ⟨n, hn⟩ := UpperTheory.V.CF.kwAbsRam Ω θ.ker ho (Abelianization.commutator_subset_ker θ) w hw.pos
+  obtain ⟨n, hn⟩ := UpperTheory.V.CF.kwAbsRam Ω θ.ker ho (Group.Abelianization.commutator_le_ker θ) w hw.pos
     fun A hA => hu A fun p hp => by rw [Finset.mem_singleton.1 hp]; exact hA
   have h1 := hn (g ^ w ^ n) fun ζ hζ => dx_mu hw.ne_zero g hg n ζ (by rw [pow_succ, pow_mul, hζ, one_pow])
   rw [MonoidHom.mem_ker, map_pow] at h1
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
   have h2 : θ g ^ l = 1 := by
     have := pow_card_eq_one (x := θ g)
     rwa [Fintype.card_multiplicative, ZMod.card] at this
@@ -146,8 +146,8 @@ private theorem dx_open {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   have hf : Set.Finite {ζ : Ω | ζ ^ w = 1} := by
     refine (nthRootsFinset w (1 : Ω)).finite_toSet.subset fun ζ hζ => ?_
     exact (mem_nthRootsFinset (Nat.pos_of_ne_zero hw) _).2 hζ
-  haveI := hf.to_subtype
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ w = 1}) :=
+  have := hf.to_subtype
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ w = 1}) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine Subgroup.isOpen_mono (H₁ := (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ w = 1}).fixingSubgroup) (fun g hg => h g fun ζ hζ => ?_)
     (IntermediateField.fixingSubgroup_isOpen _)
@@ -194,7 +194,7 @@ theorem UpperTheory.V.Ws.diesEx :
     exact hab.is_comm.comm _ _
   obtain ⟨L, hL, _, _, _⟩ := dx_field T.F (T.F.fixingSubgroup ⊓ V)
     ((IntermediateField.fixingSubgroup_isOpen _).inter hVo)
-    (le_inf hFc fun g hg => (hV g).2 fun w _ θ _ _ => Abelianization.commutator_subset_ker θ hg) l
+    (le_inf hFc fun g hg => (hV g).2 fun w _ θ _ _ => Group.Abelianization.commutator_le_ker θ hg) l
     (hl.out.odd_of_ne_two hD.l_odd) fun g hg => ⟨pow_mem hg _, hVl g⟩
   have hg0 : resQ T.F T.g0 ^ l ∈ L.fixingSubgroup := by
     rw [hL]
@@ -204,7 +204,7 @@ theorem UpperTheory.V.Ws.diesEx :
   obtain ⟨T', h1, h2, h3, h4⟩ := mkTower D hD T.pr T.K L T.degK (hO.split l hD.l_mem) g1
   refine ⟨T', ⟨h1, h2, ?_, ⟨1, fun g hg => ?_⟩, ⟨1, ?_⟩⟩, fun A hA g hg => ?_, fun w hw θ ho hu g hg => ?_⟩
   · rw [h3, ← InfiniteGalois.fixedField_fixingSubgroup L]
-    exact (IntermediateField.le_iff_le _ _).2 (hL ▸ inf_le_left)
+    exact (IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).2 (hL ▸ inf_le_left)
   · rw [h3, hL, pow_one]
     exact ⟨pow_mem hg _, hVl g⟩
   · rw [h4, pow_one]
@@ -219,8 +219,8 @@ theorem UpperTheory.V.Ws.diesEx :
     have e : (a : Ω) * w + b * l = 1 := by exact_mod_cast hab
     have hi : ∀ z : ℤ, A.valuation (z : Ω) ≤ 1 := fun z => (A.valuation_le_one_iff _).2 (intCast_mem A z)
     have := A.valuation.map_add_lt (x := (a : Ω) * w) (y := (b : Ω) * l) (g := 1)
-      (by rw [map_mul]; exact mul_lt_one_of_nonneg_of_lt_one_right (hi a) zero_le' hpA)
-      (by rw [map_mul]; exact mul_lt_one_of_nonneg_of_lt_one_right (hi b) zero_le' hA)
+      (by rw [map_mul]; exact mul_lt_one_of_nonneg_of_lt_one_right (hi a) zero_le hpA)
+      (by rw [map_mul]; exact mul_lt_one_of_nonneg_of_lt_one_right (hi b) zero_le hA)
     rw [e, map_one] at this
     exact lt_irrefl _ this
   · rw [h3, hL] at hg

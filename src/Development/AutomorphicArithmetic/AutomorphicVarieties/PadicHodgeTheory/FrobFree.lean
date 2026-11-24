@@ -144,7 +144,7 @@ private theorem graph_ext {G Y : Type} [Group G] [TopologicalSpace G] [IsTopolog
     by_contra hne
     obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one (G := Y) (U := {z}ᶜ)
       isOpen_compl_singleton (fun h => hne (Set.mem_singleton_iff.1 h).symm)
-    haveI : N.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : N.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     obtain ⟨U, hUn, hUo, hIU, hUk⟩ := hU N.toSubgroup.index (Nat.pos_of_ne_zero Subgroup.FiniteIndex.index_ne_zero)
     have hle : Γ ≤ U.prod N.toSubgroup ⊔ Subgroup.zpowers (σ, y) := by
       refine Subgroup.topologicalClosure_minimal _ (sup_le_sup_right (Subgroup.prod_mono hIU bot_le) _) ?_
@@ -204,9 +204,9 @@ private theorem exists_level {v : ℕ} [Fact v.Prime] (σ : GQ v)
     have e : v ^ n = m + 1 := by omega
     rw [e] at h2
     exact hv.one_lt.ne' (Nat.dvd_one.1 ((Nat.dvd_add_right h).1 h2))
-  haveI : NeZero m := ⟨hm0.ne'⟩
-  haveI : NeZero (m : Om v) := ⟨by exact_mod_cast hm0.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om v) m
+  have : NeZero m := ⟨hm0.ne'⟩
+  have : NeZero (m : Om v) := ⟨by exact_mod_cast hm0.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om v) m
   have hζ0 : ζ ≠ 0 := hζ.ne_zero hm0.ne'
   have hnorm : ‖ζ‖ = 1 := by
     have := congrArg norm hζ.pow_eq_one

@@ -69,7 +69,7 @@ theorem highest_preimage_inner {E : Type*} [NormedAddCommGroup E] [InnerProductS
     refine Submodule.span_le.2 ?_
     rintro _ ⟨i, t, ht, rfl⟩
     exact hbT i t ht
-  haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hST
+  have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hST
   obtain ⟨u, huS, w, hw, hyuw⟩ := S.exists_add_mem_mem_orthogonal y
   have hbS : ∀ i, ∀ t ∈ T, b i t ∈ S := fun i t ht => Submodule.subset_span ⟨i, t, ht, rfl⟩
   have huT : u ∈ T := hST huS
@@ -112,7 +112,7 @@ theorem highest_preimage_of_stable : ∀ (n : ℕ) (V : Type) [NormedAddCommGrou
   let c : Module.End ℂ (Cn n V) → Module.End ℂ (PiLp 2 (fun _ : Finset (Pos n) => V)) := fun f =>
     (e : Cn n V →ₗ[ℂ] _) ∘ₗ f ∘ₗ (e.symm : _ →ₗ[ℂ] Cn n V)
   have hc : ∀ f x, c f (e x) = e (f x) := fun f x => by simp [c]
-  haveI : FiniteDimensional ℂ (T.map e.toLinearMap) := Module.Finite.map T _
+  have : FiniteDimensional ℂ (T.map e.toLinearMap) := Module.Finite.map T _
   have key := highest_preimage_inner (T.map e.toLinearMap) (fun i => c (a i)) (fun i => c (b i)) (c D) (e y)
     inferInstance ?_ ?_ ?_ ?_ ?_ ⟨y, hy, rfl⟩ ?_
   · obtain ⟨_, ⟨y', hy', rfl⟩, h1, h2⟩ := key

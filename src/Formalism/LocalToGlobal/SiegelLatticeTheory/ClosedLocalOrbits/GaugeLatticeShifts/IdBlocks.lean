@@ -194,10 +194,10 @@ theorem measure_decomp (Γ P Q : Set G) (μ : Measure G) (hc : Γ.Countable) (hP
     (hQ : MeasurableSet Q) (hex : ∀ n, ∃ a ∈ Γ, a * n ∈ Q)
     (hun : ∀ n, ∀ a ∈ Γ, ∀ a' ∈ Γ, a * n ∈ Q → a' * n ∈ Q → a = a') :
     μ P = ∑' a : Γ, μ (P ∩ {n | (a : G) * n ∈ Q}) := by
-  haveI : Countable Γ := hc.to_subtype
+  have : Countable Γ := hc.to_subtype
   have hU : P = ⋃ a : Γ, P ∩ {n | (a : G) * n ∈ Q} := by
     ext n
-    simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_ofPred_eq]
     constructor
     · intro hn
       obtain ⟨a, ha, haQ⟩ := hex n
@@ -281,7 +281,7 @@ theorem unfold_sq (μG μN μH ν : Measure G) [SFinite μN] [IsFiniteMeasure μ
       μN Ω * ENNReal.ofReal (μH.real Set.univ * ‖ξ‖ ^ 2 / Module.finrank ℂ V) * ∫⁻ x, ‖W x‖ₑ ^ 2 ∂ν := by
   set c := ENNReal.ofReal (μH.real Set.univ * ‖ξ‖ ^ 2 / Module.finrank ℂ V) with hcdef
   set q : V → ℝ≥0∞ := fun v => ‖⟪v, ξ⟫_ℂ‖ₑ ^ 2 with hqdef
-  have hq : Continuous q := (ENNReal.continuous_pow 2).comp (continuous_id.inner continuous_const).enorm
+  have hq : Continuous q := (ENNReal.continuous_pow 2).comp (continuous_id.inner continuous_const).eNorm
   set f : G → ℝ≥0∞ := Ω.indicator (fun x => q (W x)) with hfdef
   have hf : Measurable f := ((hq.comp hWc).measurable).indicator hΩ.1
   have hψq : ∀ s ∈ S, ∀ v, q (ψ s • v) = q v := by
@@ -324,7 +324,7 @@ theorem unfold_sq (μG μN μH ν : Measure G) [SFinite μN] [IsFiniteMeasure μ
       (hq.comp_aestronglyMeasurable (hπs (W x))).aemeasurable
     rw [lintegral_congr_ae hae, lintegral_const_mul'' _ hqs, hqv]
   simp_rw [hin]
-  have hm : Measurable (fun x => ‖W x‖ₑ ^ 2) := hWc.enorm.measurable.pow_const 2
+  have hm : Measurable (fun x => ‖W x‖ₑ ^ 2) := hWc.eNorm.measurable.pow_const 2
   rw [lintegral_const_mul _ (hm.const_mul c), lintegral_const_mul _ hm, mul_assoc]
 
 end Unfold
@@ -338,14 +338,14 @@ theorem eq_smul_of_inner (A : V →L[ℂ] V) (c : ℝ) (h : ∀ ξ, ⟪ξ, A ξ�
     A = (c : ℂ) • ContinuousLinearMap.id ℂ V := by
   have h0 : ((A - (c : ℂ) • ContinuousLinearMap.id ℂ V : V →L[ℂ] V) : V →ₗ[ℂ] V) = 0 := by
     refine (inner_map_self_eq_zero _).1 fun x => ?_
-    simp only [ContinuousLinearMap.coe_sub', ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_id',
+    simp only [FunLike.coe_sub, FunLike.coe_smul, ContinuousLinearMap.coe_id',
       ContinuousLinearMap.coe_coe, Pi.sub_apply, Pi.smul_apply, id, inner_sub_left, inner_smul_left]
     rw [← inner_conj_symm (A x) x, h x, inner_self_eq_norm_sq_to_K, Complex.conj_ofReal, Complex.conj_ofReal]
     push_cast
     exact sub_self _
   ext x
   have := LinearMap.congr_fun h0 x
-  simp only [ContinuousLinearMap.coe_sub', ContinuousLinearMap.coe_coe, Pi.sub_apply, LinearMap.zero_apply,
+  simp only [FunLike.coe_sub, ContinuousLinearMap.coe_coe, Pi.sub_apply, LinearMap.zero_apply,
     sub_eq_zero] at this
   exact this
 
@@ -393,7 +393,7 @@ theorem oo_eq (μG μN μH ν : Measure G) [SFinite μN] [IsFiniteMeasure μH]
         ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     simp_rw [e1, hpar]
     rw [lintegral_finsetSum (f := fun i x => ‖⟪W x, b i⟫_ℂ‖ₑ ^ 2) _ (fun i _ => ((ENNReal.continuous_pow 2).comp
-      (hWc.inner continuous_const).enorm).measurable)]
+      (hWc.inner continuous_const).eNorm).measurable)]
     simp_rw [hU]
     exact ENNReal.sum_lt_top.2 fun i _ => ENNReal.mul_lt_top hΩf.lt_top ENNReal.ofReal_lt_top
   refine eq_smul_of_inner _ _ fun ξ => ?_
@@ -597,7 +597,7 @@ theorem cross_zero (μG μN μH ν : Measure G) [SFinite μN] [IsFiniteMeasure �
   ext η
   refine ext_inner_left ℂ fun ξ => ?_
   rw [ContinuousLinearMap.integral_apply hint η, ← integral_inner (hint.apply_continuousLinearMap η) ξ]
-  simp only [ContinuousLinearMap.zero_apply, inner_zero_right]
+  simp only [zero_apply, inner_zero_right]
   set g0 : G → ℂ := fun x => starRingEnd ℂ ⟪W x, ξ⟫_ℂ * ⟪W' x, η⟫_ℂ with hg0
   have e0 : ∀ x, ⟪ξ, ((innerSL ℂ (W' x)).smulRight (W x)) η⟫_ℂ = g0 x := by
     intro x
@@ -697,9 +697,9 @@ theorem nh_mem (u : D.what₂.Word) (n h : X.B.I.Ginf) (hn : n ∈ X.NinfU u) (h
 
 theorem isClosed_Hinf (u : D.what₂.Word) : IsClosed ((Hinf X u : Subgroup X.B.I.Ginf) : Set X.B.I.Ginf) := by
   show IsClosed {s : X.B.I.Ginf | ∀ v, ∀ x ∈ fixSet X u, uMat (s v) *ᵥ rv X.B.I v x = rv X.B.I v x}
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   refine isClosed_iInter fun v => isClosed_iInter fun x => isClosed_iInter fun _ => isClosed_eq ?_ continuous_const
-  exact Continuous.matrix_mulVec ((Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply v))
+  exact Continuous.matrix_mulVec ((Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply v))
     continuous_const
 
 theorem piU_aesm (u : D.what₂.Word) (x : X.Vpi u) : AEStronglyMeasurable (fun g => X.piU u g x) (X.muH u) := by
@@ -729,8 +729,8 @@ theorem oot_eq {u : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : 
     OOt t = (starRingEnd ℂ (X.psiInfU u t.pt.1⁻¹) *
       (((X.muN u).real (FundOf t) * (X.muH u).real Set.univ / Module.finrank ℂ (X.Vpi u) : ℝ) : ℂ)) •
         ContinuousLinearMap.id ℂ (X.Vpi u) := by
-  haveI : SigmaFinite (X.muN u) := (X.muN_haar u).1
-  haveI : IsFiniteMeasure (X.muH u) := ⟨hHf.lt_top⟩
+  have : SigmaFinite (X.muN u) := (X.muN_haar u).1
+  have : IsFiniteMeasure (X.muH u) := ⟨hHf.lt_top⟩
   have hW : ∀ x, X.Wu u (t.pt.1⁻¹ * x) = X.psiInfU u t.pt.1⁻¹ • X.Wu u x := by
     intro x
     rw [(X.Wu_spec u).1 _ (fun v => (hγ v).1) x]
@@ -773,13 +773,13 @@ def Meets (cs : ColSys X u what₂) (cs' : ColSys X u' rows') (t : GTerm X u u' 
 theorem blk_of_not (cs : ColSys X u what₂) (cs' : ColSys X u' rows') (FdN FdN' : Set X.B.I.Ginf)
     {t : GTerm X u u' F0 F0' what₂ rows'} {ρ : cs.Cl} {ρ' : cs'.Cl} (h : ¬ Meets cs cs' t ρ ρ') :
     blk cs cs' FdN FdN' t ρ ρ' = 0 := by
-  unfold blk; exact if_neg h
+  unfold blk; exact ite_eq_right h
 
 theorem blk_of (cs : ColSys X u what₂) (cs' : ColSys X u' rows') (FdN FdN' : Set X.B.I.Ginf)
     {t : GTerm X u u' F0 F0' what₂ rows'} {ρ : cs.Cl} {ρ' : cs'.Cl} (h : Meets cs cs' t ρ ρ') :
     blk cs cs' FdN FdN' t ρ ρ' = ((scl FdN FdN' (X := X) (u := u) (u' := u') * X.volK2 : ℝ) : ℂ) •
       (X.chi2 (kOf X u u' (cs.h ρ : X.B.I.Gf) (cs'.h ρ' : X.B.I.Gf) t.pt) • OOt t) := by
-  unfold blk; exact if_pos h
+  unfold blk; exact ite_eq_left h
 
 
 variable (F0) in
@@ -824,7 +824,7 @@ theorem idDiagBlocks_of (cs : ColSys X u what₂) (FdN : Set X.B.I.Ginf) (hK2 : 
     exact hasSum_zero
   by_cases hρ : ρ = ρ'
   · subst hρ
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     obtain ⟨t0, ht0, hm0⟩ := h1.2.2 ρ
     have hval : blk cs cs FdN FdN t0 ρ ρ = ContinuousLinearMap.id ℂ (X.Vpi u) := by
       obtain ⟨hγ, hph⟩ := hP ρ t0 ht0 hm0
@@ -864,7 +864,7 @@ theorem idDiagBlocks_of (cs : ColSys X u what₂) (FdN : Set X.B.I.Ginf) (hK2 : 
       ⟨t0, ht0⟩ hz
     simp only at this
     rwa [hval] at this
-  · rw [if_neg hρ]
+  · rw [ite_eq_right hρ]
     have hz : (fun t : {t : GTerm X u u F0 F0 what₂ what₂ // t.isId} => blk cs cs FdN FdN t.1 ρ ρ') = fun _ => 0 :=
       funext fun t => blk_of_not _ _ _ _ fun hm => hρ (h1.1 ρ ρ' t.1 t.2 hm)
     rw [hz]
@@ -947,8 +947,8 @@ theorem oot_off_eq_zero (t : GTerm X u u' F0 F0' what₂ rows') (hΩ : IsSFund X
     (hRc : (ROinf t).Countable) (hRm : ∀ a ∈ ROinf t, ∀ b ∈ ROinf t, a * b ∈ ROinf t)
     (hRi : ∀ a ∈ ROinf t, a⁻¹ ∈ ROinf t) (hRN : ROinf t ⊆ X.NinfU u) :
     OOt t = 0 := by
-  haveI : SigmaFinite (X.muN u) := (X.muN_haar u).1
-  haveI : IsFiniteMeasure (X.muH u) := ⟨hHf.lt_top⟩
+  have : SigmaFinite (X.muN u) := (X.muN_haar u).1
+  have : IsFiniteMeasure (X.muH u) := ⟨hHf.lt_top⟩
   set γ := t.pt.1 with hγ
   have hSH : ∀ h ∈ ((Hinf X u : Subgroup X.B.I.Ginf) : Set X.B.I.Ginf), h ∈ X.SinfU u :=
     fun h hh => hinf_le_sinf X u h hh

@@ -104,7 +104,7 @@ theorem isGramPair_lineGram (h : IsMetricFr E H) (x : Root m) :
     rw [Matrix.det_fin_one]
     have hp := hval z hyz hz x.1
     have hd := hp.2.1
-    rw [Matrix.det_of_lowerTriangular _ (fun i j hij => hp.2.2.2 i j i.2 hij)] at hd
+    rw [Matrix.det_of_isLowerTriangular _ (fun i j hij => hp.2.2.2 i j i.2 hij)] at hd
     exact isUnit_iff_ne_zero.2 (Finset.prod_ne_zero_iff.1 hd x.2 (Finset.mem_univ _))
   refine ⟨T, T, T, hT, hT, hT, ?_⟩
   filter_upwards [_root_.GlobalTheory.ChernCalc.frame_eventually_near F σ X ι m m E z _ hyz, _root_.GlobalTheory.ChernCalc.frame_eventually_near F σ X ι m m E z _ hz] with w h1 h2

@@ -192,7 +192,7 @@ theorem emb_finite : letI := (emb v l hv).toAlgebra
     refine ⟨1 ⊗ₜ x, ?_⟩
     exact (Algebra.TensorProduct.lift_tmul _ _ (fun _ _ => Commute.all _ _) 1 x).trans (by rw [map_one, one_mul]; rfl)
   exact Module.Finite.of_surjective Φ (by
-    rw [← Set.range_eq_univ, ← Φ.coe_range, ← Φ.range.closed_of_finiteDimensional.closure_eq]
+    rw [← Set.range_eq_univ, ← Φ.coe_range, ← Φ.range.isClosed_of_finiteDimensional.closure_eq]
     exact hd.closure_range)
 
 theorem exists_frac (x : ℚ_[l]) : ∃ a : ℚ, (∃ n : ℕ, a.den = l ^ n) ∧ ‖x - (a : ℚ_[l])‖ ≤ 1 := by
@@ -231,7 +231,7 @@ theorem int_of_frac (b : ℚ) (n : ℕ) (hd : b.den ∣ l ^ n) (h : ‖(b : ℚ_
     by_contra hk0
     exact hnd (hk ▸ dvd_pow_self l hk0)
   rw [this, pow_zero] at hk
-  exact ⟨b.num, (Rat.coe_int_num_of_den_eq_one hk).symm⟩
+  exact ⟨b.num, (Rat.intCast_num_of_den_eq_one hk).symm⟩
 
 def frac (x : ℚ_[l]) : ℚ := (exists_frac l x).choose
 

@@ -524,16 +524,16 @@ theorem hs_toMK_sub_one {n : ℕ} (ε : Fin n → Bool) (k : KG ε) :
     intro i j
     by_cases hij : i = j
     · subst hij
-      rw [Matrix.sub_apply, Matrix.one_apply_eq, if_pos rfl, Complex.sq_norm, Complex.sq_norm,
+      rw [Matrix.sub_apply, Matrix.one_apply_eq, ite_eq_left rfl, Complex.sq_norm, Complex.sq_norm,
         Complex.normSq_sub]
       simp
       ring
-    · rw [Matrix.sub_apply, Matrix.one_apply_ne hij, if_neg hij, sub_zero, add_zero]
+    · rw [Matrix.sub_apply, Matrix.one_apply_ne hij, ite_eq_right hij, sub_zero, add_zero]
   unfold Formalism.REAL.hs
   simp_rw [hentry]
   rw [Finset.sum_comm]
   simp_rw [Finset.sum_add_distrib, hcol]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_const, Finset.card_univ,
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.sum_const, Finset.card_univ,
     Fintype.card_fin, nsmul_eq_mul, mul_one, Finset.sum_sub_distrib, ← Finset.mul_sum]
   rw [Matrix.trace, Complex.re_sum]
   simp [Matrix.diag]
@@ -597,7 +597,7 @@ theorem hs_toMK_sub_one_le {n : ℕ} (ε : Fin n → Bool) (k : KG ε) :
     have : ∀ i j : Fin n, ‖(1 : Matrix (Fin n) (Fin n) ℂ) i j‖ ^ 2 = if i = j then 1 else 0 := by
       intro i j
       by_cases h : i = j <;> simp [Matrix.one_apply, h]
-    simp only [this, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const, Finset.card_univ,
+    simp only [this, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const, Finset.card_univ,
       Fintype.card_fin, nsmul_eq_mul, mul_one]
   have key : ∀ a b : ℂ, ‖a - b‖ ^ 2 ≤ 2 * ‖a‖ ^ 2 + 2 * ‖b‖ ^ 2 := by
     intro a b
@@ -659,7 +659,7 @@ theorem retr_mem {n : ℕ} (ε : Fin n → Bool) :
     rw [Complex.re_eq_add_conj]
     simp only [Finset.sum_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul, coord]
 
-    simp only [if_true, Bool.false_eq_true, if_false, Matrix.trace, Matrix.diag, map_sum,
+    simp only [ite_true, Bool.false_eq_true, ite_false, Matrix.trace, Matrix.diag, map_sum,
     ← Finset.sum_add_distrib, Finset.sum_div, Complex.star_def]
     refine Finset.sum_congr rfl fun a _ => ?_
     ring
@@ -818,7 +818,7 @@ theorem kernel_near_one : ∀ {n : ℕ} (ε : Fin n → Bool), ∃ C : ℝ, 0 �
       calc (1 - δ / A) ^ m ≤ ((1 - δ / (2 * A)) * Real.exp (-(δ / (2 * A)))) ^ m :=
             pow_le_pow_left₀ (by linarith) h1 m
         _ = (1 - δ / (2 * A)) ^ m * Real.exp (-(1 / (2 * A) * m * δ)) := by
-            rw [mul_pow, ← Real.exp_nat_mul]; congr 2; ring
+            rw [mul_pow, ← Real.exp_natCast_mul]; congr 2; ring
     have hL : (1 - δ / (2 * A)) ^ m * (c * (δ / 2) ^ D) ≤ Z :=
       le_trans (mul_le_mul_of_nonneg_left hball' (pow_nonneg hq0.le m)) hlow
     have hLpos : 0 < (1 - δ / (2 * A)) ^ m * (c * (δ / 2) ^ D) := by positivity
@@ -1001,16 +1001,16 @@ variable {n : ℕ}
 theorem continuous_integral_paramK {ε : Fin n → Bool} {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {F : KG ε → KG ε → E} (hF : Continuous (Function.uncurry F)) :
     Continuous (fun x => ∫ k, F x k ∂(muK ε)) := by
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
-  haveI : SecondCountableTopology (KG ε) :=
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : SecondCountableTopology (KG ε) :=
     TopologicalSpace.Subtype.secondCountableTopology (KG ε : Set (UJ ε))
   have h := continuous_parametric_integral_of_continuous (μ := muK ε) hF (isCompact_univ (X := KG ε))
   simpa only [Measure.restrict_univ] using h
 
 theorem integrable_prod_of_continuousK {ε : Fin n → Bool} {F : KG ε × KG ε → ℂ} (hF : Continuous F) :
     Integrable F ((muK ε).prod (muK ε)) := by
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
-  haveI : SecondCountableTopology (KG ε) :=
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : SecondCountableTopology (KG ε) :=
     TopologicalSpace.Subtype.secondCountableTopology (KG ε : Set (UJ ε))
   exact hF.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace F)
 
@@ -1038,7 +1038,7 @@ theorem sqrt_integral_normSq_le_integral_kernel_mul_translate :
       Real.sqrt (∫ x, ‖p x‖ ^ 2 ∂(muK ε)) ≤
         ∫ k, κ k * Real.sqrt (∫ x, ‖p x - p (x * k)‖ ^ 2 ∂(muK ε)) ∂(muK ε) := by
   intro n ε p κ hp hκ hκ0 hκ1 horth
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
   have hsq : ∀ z : ℂ, star z * z = ((‖z‖ ^ 2 : ℝ) : ℂ) := by
     intro z; rw [Complex.star_def, Complex.conj_mul']; push_cast; rfl
   have hA0 : 0 ≤ ∫ x, ‖p x‖ ^ 2 ∂(muK ε) := integral_nonneg fun x => by positivity
@@ -1252,8 +1252,8 @@ theorem norm_sub_expK_sq_le : ∀ {n : ℕ} (ε : Fin n → Bool) (d : ℕ) (φ 
   set R := rder ε [Y] φ with hRdef
   have hRc : Continuous R := continuous_of_mem hRmem
   have hφc : Continuous φ := continuous_of_mem hφ
-  haveI : Measure.IsMulRightInvariant (muK ε) := ⟨(compact_haar_holds n ε).2.2.1⟩
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : Measure.IsMulRightInvariant (muK ε) := ⟨(compact_haar_holds n ε).2.2.1⟩
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
   have hEG := group_exponential_facts n ε Y hY.1
   have hEK := hEG.2.2.2 hY
   let e : ℝ → KG ε := fun t => expK ε Y t
@@ -1299,14 +1299,14 @@ theorem norm_sub_expK_sq_le : ∀ {n : ℕ} (ε : Fin n → Bool) (d : ℕ) (φ 
     hRsc.comp (continuous_fst.mul (he_cont.comp continuous_snd))
   have hI : Integrable (Function.uncurry fun (k : KG ε) (s : ℝ) => ‖R (k * e s)‖ ^ 2)
       ((muK ε).prod (volume.restrict (Set.Ioc (0:ℝ) 1))) := by
-    haveI : IsFiniteMeasure (volume.restrict (Set.Ioc (0:ℝ) 1)) := by
+    have : IsFiniteMeasure (volume.restrict (Set.Ioc (0:ℝ) 1)) := by
       rw [isFiniteMeasure_restrict]; simp
-    haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+    have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
       inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
     have hemb : Topology.IsEmbedding (fun k : KG ε => toMK k) :=
       (isClosedEmbeddingMatrix n ε).1.isEmbedding.comp Topology.IsEmbedding.subtypeVal
-    haveI : SecondCountableTopology (KG ε) := hemb.isInducing.secondCountableTopology
-    haveI : SecondCountableTopology (KG ε × ℝ) := inferInstance
+    have : SecondCountableTopology (KG ε) := hemb.isInducing.secondCountableTopology
+    have : SecondCountableTopology (KG ε × ℝ) := inferInstance
     exact Integrable.of_bound hcont2.aestronglyMeasurable C
       (Filter.Eventually.of_forall fun p => hC _ (Set.mem_univ _))
   have hswap := integral_integral_swap hI

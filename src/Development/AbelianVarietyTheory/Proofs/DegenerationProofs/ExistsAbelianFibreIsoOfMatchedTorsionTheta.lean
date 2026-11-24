@@ -142,7 +142,7 @@ theorem exists_iso_of_reads (hL : Laws) (hT : ThetaPtDeterminesSt) {F : Type} [F
   generalize n ^ (j + 4) = m at *
   have : NeZero ((m ^ 2 : ℕ) : F) := ⟨hM⟩
   have : NeZero (m ^ 2) := ⟨by omega⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F (m ^ 2)
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F (m ^ 2)
   have hζ := hz.isUnit_unit (NeZero.ne _)
   generalize (hz.isUnit (NeZero.ne _)).unit = ζ at hζ
   have inj : Function.Injective (Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom :=

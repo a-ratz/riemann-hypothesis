@@ -312,7 +312,7 @@ theorem exists_jac_map_of_ne (hG : GeometricLemma) (n : Type) [Fintype n] [Decid
     fin_cases i <;> fin_cases j <;> simp <;> omega
   obtain ⟨f₀, g₀, ⟨E₀⟩⟩ := cell_antidiag d σ (b (b.symm G0)) (by rw [Equiv.apply_symm_apply, hG0]; rfl)
     (by rw [Equiv.apply_symm_apply, hG0]; rfl)
-  haveI : Nontrivial (⨂[ℂ] i, (σ (Equiv.swap 0 1 i)).V) := GlobalTheory.ProdSupport.nontrivial_piTensor _
+  have : Nontrivial (⨂[ℂ] i, (σ (Equiv.swap 0 1 i)).V) := GlobalTheory.ProdSupport.nontrivial_piTensor _
     fun j => GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible (σ (Equiv.swap 0 1 j)).irr
   exact exists_map_of_top S hmono hN (b.symm G0) (fun t ht => hstep t ht.ne')
     ((h4 (b.symm G0) f₀ g₀).some.trans E₀)
@@ -379,7 +379,7 @@ theorem exists_jac_map_of_eq (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFin
     fin_cases i <;> fin_cases j <;> simp_all) (piTensor fun i => (σ i).π) hsm
   have F₀ := (h4 (b.symm G0) f₀ g₀).some.trans E₀
   have F₁ := (h4 (b.symm G1) f₁ g₁).some.trans E₁
-  haveI : Nontrivial (⨂[ℂ] i, (σ (Equiv.swap 0 1 i)).V) := GlobalTheory.ProdSupport.nontrivial_piTensor _
+  have : Nontrivial (⨂[ℂ] i, (σ (Equiv.swap 0 1 i)).V) := GlobalTheory.ProdSupport.nontrivial_piTensor _
     fun j => GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible (σ (Equiv.swap 0 1 j)).irr
   rcases lt_or_gt_of_ne h01 with hlt | hlt
   · have hlow : S (b.symm G0).castSucc = ⊥ := (eq_of_steps S hmono 0 _ (Fin.zero_le _) fun t h1 h2 =>

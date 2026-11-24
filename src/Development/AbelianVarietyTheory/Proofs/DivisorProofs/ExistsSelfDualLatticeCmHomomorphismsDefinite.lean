@@ -117,8 +117,8 @@ theorem weilEq_mul_left : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     WeilEq B.t.PP.L (f₁ * f₂) g A.t.PP.L (A.t.act.act (r₁ + r₂)) (𝟙 _) (spMap (σ₁.comp (algebraMap (𝓞 K) K))) := by
   intro E _ _ _ H K _ _ σ₁ A B f₁ f₂ g hf₁ hf₂ hg r₁ r₂ h₁ h₂ n x y c hn hx hy
   have hL : Out.Laws := GlobalTheory.abelianSchemeLaws_all.1
-  haveI : IsCommMonObj B.pol.A := B.pol.isAb.comm
-  haveI : IsCommMonObj A.pol.A := A.pol.isAb.comm
+  have : IsCommMonObj B.pol.A := B.pol.isAb.comm
+  have : IsCommMonObj A.pol.A := A.pol.isAb.comm
   have tor : ∀ (f : A.t.G ⟶ B.t.G), IsMonHom f → ((x ≫ f) ^ n = 1) := fun f hf => by
     rw [← pow_comp_hom, hx, one_comp]
   have tory : (y ≫ g) ^ n = 1 := by rw [← pow_comp_hom, hy, one_comp]
@@ -165,7 +165,7 @@ theorem weilEq_act_left {A B : PAT H (Sp (𝓞 K))} {f g : A.t.G ⟶ B.t.G} {r :
     {t : Sp k ⟶ Sp (𝓞 K)} (s : 𝓞 E) (h : WeilEq B.t.PP.L f g A.t.PP.L (A.t.act.act r) (𝟙 _) t) :
     WeilEq B.t.PP.L (A.t.act.act s ≫ f) g A.t.PP.L (A.t.act.act (s * r)) (𝟙 _) t := by
   intro n x y c hn hx hy
-  haveI := A.t.act.hom s
+  have := A.t.act.hom s
   have hx' : (x ≫ A.t.act.act s) ^ n = 1 := by rw [← pow_comp, hx]; simp
   have := h n (x ≫ A.t.act.act s) y c hn hx' hy
   simpa only [Category.assoc, A.t.act.mul] using this
@@ -662,7 +662,7 @@ theorem eq_zero_of_actT {E : Type} [Field E] [NumberField E] [StarRing (𝓞 E)]
   by_contra ha
   obtain ⟨b, hb⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {a}))
   have hn : Ideal.absNorm (Ideal.span {a}) ≠ 0 := by rwa [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
-  haveI : Nontrivial P.T := Module.nontrivial_of_finrank_pos (R := ℤ_[p]) (by rw [P.hodgeTateLatticePoint_finrank_tateModule]; omega)
+  have : Nontrivial P.T := Module.nontrivial_of_finrank_pos (R := ℤ_[p]) (by rw [P.hodgeTateLatticePoint_finrank_tateModule]; omega)
   obtain ⟨t, ht⟩ := exists_ne (0 : P.T)
   have e := congrArg (P.actT b) (h t)
   rw [map_zero, ← Module.End.mul_apply, ← map_mul, hb, map_natCast, Module.End.natCast_apply,
@@ -852,9 +852,9 @@ theorem lamEq_one {ρ : 𝓞 K} (hρ : ρ ^ 2 = -(H.d : 𝓞 K)) (A A' B : PAT H
   obtain ⟨⟨B₁, mB, -⟩, hB⟩ := GlobalTheory.LamT.pat_pullback E H (𝓞 K) ℂ β B
   obtain ⟨-, -, wA, hwA⟩ := h₁ A₁ m₁ inferInstance
   obtain ⟨-, -, wB, hwB⟩ := hB B₁ mB inferInstance
-  haveI := hf.isMonHom
-  haveI := hf'.isMonHom
-  haveI := A.ab.comm
+  have := hf.isMonHom
+  have := hf'.isMonHom
+  have := A.ab.comm
   have mon_of_points : ∀ {S : Scheme.{0}} {G H : Over S} [GrpObj G] [GrpObj H] (f : G ⟶ H),
       (∀ (T : Over S) (a b : T ⟶ G), (a * b) ≫ f = a ≫ f * b ≫ f) → IsMonHom f := by
     intro S G H _ _ f h
@@ -867,7 +867,7 @@ theorem lamEq_one {ρ : 𝓞 K} (hρ : ρ ^ 2 = -(H.d : 𝓞 K)) (A A' B : PAT H
       have e : lift (fst G G ≫ f) (snd G G ≫ f) = f ⊗ₘ f := by ext1 <;> simp
       rw [Hom.mul_def, Hom.mul_def, lift_fst_snd, Category.id_comp, e] at h1
       exact h1
-  haveI : IsMonHom (1 : A'.t.G ⟶ A.t.G) := mon_of_points _ fun T a b => by
+  have : IsMonHom (1 : A'.t.G ⟶ A.t.G) := mon_of_points _ fun T a b => by
     simp only [MonObj.comp_one, _root_.mul_one]
   obtain ⟨f₁, hm₁, e₁⟩ := GlobalTheory.PairingFibre.exists_hom m₁.cart mB.cart f
   obtain ⟨f₂, hm₂, e₂⟩ := GlobalTheory.PairingFibre.exists_hom m₂.cart mB.cart f'
@@ -939,8 +939,8 @@ theorem exists_inverse : ∃ (N : ℕ) (ψ : Fin p → (X.B.pol.A ⟶ (X.A true)
     ∀ (T : Over (Sp (𝓞 K))) (a : Fin p → (T ⟶ (X.A true).pol.A)) (a' : Fin q → (T ⟶ (X.A false).pol.A)),
       (∀ i, ((∏ k, a k ≫ phiP X k) * ∏ k, a' k ≫ phiQ X k : T ⟶ X.B.pol.A) ≫ ψ i = a i ^ N) ∧
       ∀ i, ((∏ k, a k ≫ phiP X k) * ∏ k, a' k ≫ phiQ X k : T ⟶ X.B.pol.A) ≫ ψ' i = a' i ^ N := by
-  haveI hP : ∀ i, IsMonHom (M := (X.A true).pol.A) (N := X.B.pol.A) (phiP X i) := fun i => (X.lin (.inl i)).isMonHom
-  haveI hQ : ∀ i, IsMonHom (M := (X.A false).pol.A) (N := X.B.pol.A) (phiQ X i) := fun i => (X.lin (.inr i)).isMonHom
+  have hP : ∀ i, IsMonHom (M := (X.A true).pol.A) (N := X.B.pol.A) (phiP X i) := fun i => (X.lin (.inl i)).isMonHom
+  have hQ : ∀ i, IsMonHom (M := (X.A false).pol.A) (N := X.B.pol.A) (phiQ X i) := fun i => (X.lin (.inr i)).isMonHom
   obtain ⟨gA, gB, -⟩ := dims X
   obtain ⟨N, ψ, ψ', hN, h1, h2⟩ := LamF.exists_inverse_isogeny_of_sum thetaUnifAV_all abelianSchemeLaws_all.1
     (fun T K _ _ _ _ _ _ G G' _ _ hG hG' φ hφ => GlobalTheory.existsUnique_hom_extension_semiAbelian T K G G' hG hG' φ hφ)
@@ -1055,10 +1055,10 @@ theorem pairT_patT_gram {T T' : PAT H (Sp (𝓞 K))} {f f' : T.t.G ⟶ T'.t.G} (
     (h : LamEq T'.t.PP.L f f' T.t.PP.L (T.t.act.act g) (𝟙 _)) : letI := H.starRing
     ∀ s t, pairT (patPoint hv ε i T').A ε (patT hv ε i hf s) (patT hv ε i hf' t) =
       pairT (patPoint hv ε i T).A ε ((patPoint hv ε i T).actT g s) t := by
-  letI := H.starRing
-  haveI : IsMonHom (C := Over (Sp (𝓞 K))) (M := T.pol.A) (N := T'.pol.A) f := hf.isMonHom
-  haveI : IsMonHom (C := Over (Sp (𝓞 K))) (M := T.pol.A) (N := T'.pol.A) f' := hf'.isMonHom
-  haveI := (patAct T).hom g
+  let := H.starRing
+  have : IsMonHom (C := Over (Sp (𝓞 K))) (M := T.pol.A) (N := T'.pol.A) f := hf.isMonHom
+  have : IsMonHom (C := Over (Sp (𝓞 K))) (M := T.pol.A) (N := T'.pol.A) f' := hf'.isMonHom
+  have := (patAct T).hom g
   intro s t
   have e := pairT_homT_of_lamEq (X := T.pol) (Y := T.pol) (A := T'.pol) (B := T.pol) hv ε (embO hv i) (patAct T) (patAct T)
     (patAct T') (patAct T) f f' ((patAct T).act g) (𝟙 _) h s t
@@ -1069,10 +1069,10 @@ theorem pairT_patT_orth (hρ : ρ ^ 2 = -(H.d : 𝓞 K)) {A A' B : PAT H (Sp (�
     (hA : HasType H A.t.act ρ m 0) (hA' : HasType H A'.t.act ρ 0 m') {f : A.t.G ⟶ B.t.G} {f' : A'.t.G ⟶ B.t.G}
     (hf : Serre.IsLinearHom A.t.act B.t.act f) (hf' : Serre.IsLinearHom A'.t.act B.t.act f') : letI := H.starRing
     ∀ s t, pairT (patPoint hv ε i B).A ε (patT hv ε i hf s) (patT hv ε i hf' t) = 0 := by
-  letI := H.starRing
-  haveI : IsMonHom (C := Over (Sp (𝓞 K))) (M := A.pol.A) (N := B.pol.A) f := hf.isMonHom
-  haveI : IsMonHom (C := Over (Sp (𝓞 K))) (M := A'.pol.A) (N := B.pol.A) f' := hf'.isMonHom
-  haveI : IsMonHom (1 : A'.pol.A ⟶ A.pol.A) := LamF.IsogSum.isMonHom_of_points _ fun T a b => by
+  let := H.starRing
+  have : IsMonHom (C := Over (Sp (𝓞 K))) (M := A.pol.A) (N := B.pol.A) f := hf.isMonHom
+  have : IsMonHom (C := Over (Sp (𝓞 K))) (M := A'.pol.A) (N := B.pol.A) f' := hf'.isMonHom
+  have : IsMonHom (1 : A'.pol.A ⟶ A.pol.A) := LamF.IsogSum.isMonHom_of_points _ fun T a b => by
     simp only [MonObj.comp_one, _root_.mul_one]
   intro s t
   have e := pairT_homT_of_lamEq (X := A.pol) (Y := A'.pol) (A := B.pol) (B := A.pol) hv ε (embO hv i) (patAct A)
@@ -1103,9 +1103,9 @@ theorem exists_inverse_tateModule_sum_up_to_integer (X : CMObj H K ρ σ₁ p q)
         ∀ (s : Fin p → (pointA hv ε i X true).T) (s' : Fin q → (pointA hv ε i X false).T),
           (∀ l, ψ l (∑ k, phiTP hv ε i X k (s k) + ∑ k, phiTQ hv ε i X k (s' k)) = N • s l) ∧
           ∀ l, ψ' l (∑ k, phiTP hv ε i X k (s k) + ∑ k, phiTQ hv ε i X k (s' k)) = N • s' l := by
-  letI := H.starRing
-  haveI hP : ∀ i, IsMonHom (M := (X.A true).pol.A) (N := X.B.pol.A) (phiP X i) := fun i => (X.lin (.inl i)).isMonHom
-  haveI hQ : ∀ i, IsMonHom (M := (X.A false).pol.A) (N := X.B.pol.A) (phiQ X i) := fun i => (X.lin (.inr i)).isMonHom
+  let := H.starRing
+  have hP : ∀ i, IsMonHom (M := (X.A true).pol.A) (N := X.B.pol.A) (phiP X i) := fun i => (X.lin (.inl i)).isMonHom
+  have hQ : ∀ i, IsMonHom (M := (X.A false).pol.A) (N := X.B.pol.A) (phiQ X i) := fun i => (X.lin (.inr i)).isMonHom
   obtain ⟨N, ψ, ψ', hN, hψ, hψ', h1, h2⟩ := exists_inverse X
   exact ⟨N, hN, fun ℓ _ C _ v O _ _ hv ε i => ⟨_, _, homT_inverse (B := X.B.pol) (A := (X.A true).pol)
     (A' := (X.A false).pol) hv ε (embO hv i) (patAct X.B) (patAct (X.A true)) (patAct (X.A false)) (phiP X) (phiQ X)
@@ -1119,7 +1119,7 @@ variable {ℓ : ℕ} [Fact ℓ.Prime] {C : Type} [Field C] {v : Valuation C ℝ�
 theorem sumT_injective : letI := H.starRing
     Function.Injective fun z : (Fin p → (pointA hv ε i X true).T) × (Fin q → (pointA hv ε i X false).T) =>
       ∑ k, phiTP hv ε i X k (z.1 k) + ∑ k, phiTQ hv ε i X k (z.2 k) := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨N, hN, h⟩ := exists_inverse_tateModule_sum_up_to_integer X
   obtain ⟨ψ, ψ', -, h2⟩ := h ℓ C v O hv ε i
   have key : ∀ (P : Point ℓ v O (𝓞 E)) (x y : P.T), N • x = N • y → x = y := fun P x y e => by
@@ -1132,7 +1132,7 @@ theorem sumT_injective : letI := H.starRing
 include hv ε i in
 theorem gram_det_of_emb {gP : Matrix (Fin p) (Fin p) (𝓞 E)} {gQ : Matrix (Fin q) (Fin q) (𝓞 E)} (h : IsGram X gP gQ) :
     gP.det ≠ 0 ∧ gQ.det ≠ 0 ∧ (∀ a b, H.bar (gP b a) = gP a b) ∧ ∀ a b, H.bar (gQ b a) = gQ a b := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨N, hN, hI⟩ := exists_inverse_tateModule_sum_up_to_integer X
   obtain ⟨ψ, ψ', h1, -⟩ := hI ℓ C v O hv ε i
   obtain ⟨hP, hQ, hO⟩ := tateModule_gram_relations_blocks_orthogonal hv ε i X h
@@ -1158,7 +1158,7 @@ theorem gram_V {gP : Matrix (Fin p) (Fin p) (𝓞 E)} {gQ : Matrix (Fin q) (Fin 
     (∀ a b x y, (pointB hv ε i X).pairV (phiVQ hv ε i X a x) (phiVQ hv ε i X b y) =
       (pointA hv ε i X false).pairV ((pointA hv ε i X false).actV (gQ a b) x) y) ∧
     ∀ a b x y, (pointB hv ε i X).pairV (phiVP hv ε i X a x) (phiVQ hv ε i X b y) = 0 := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨hP, hQ, hO⟩ := tateModule_gram_relations_blocks_orthogonal hv ε i X h
   refine ⟨fun a b x y => ?_, fun a b x y => ?_, fun a b x y => ?_⟩
   · have e := pairV_baseChange (A := pointB hv ε i X) (B := pointA hv ε i X true) (g₂ := LinearMap.id) (hP a b) x y

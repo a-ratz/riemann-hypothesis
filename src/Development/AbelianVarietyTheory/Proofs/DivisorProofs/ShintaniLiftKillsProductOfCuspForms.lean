@@ -119,14 +119,14 @@ theorem liftAll_deg_reg : ∀ (q l : ℕ) (L : List (ℕ × ℕ)), 2 ≤ q → l
     by_cases h : l ∣ p.1
     · obtain ⟨h1, h2⟩ := GlobalTheory.T.deg_liftL_and_reg_pow q l [p] hq hl.pos (by
         intro x hx; rw [List.mem_singleton] at hx; subst hx; exact ⟨hp.1, h, hp.2⟩)
-      rw [if_pos h]
+      rw [ite_eq_left h]
       have hs : deg [p] = p.1 := by simp [deg]
       refine ⟨by rw [h1, hs, ih'.1], ?_⟩
       intro x hx
       rcases List.mem_append.1 hx with hx | hx
       · exact h2 x hx
       · exact ih'.2 x hx
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       have hr := (GlobalTheory.T.regular_pair_lift_to_prime_power_field q l p.1 p.2 hq hl hp.1 h hp.2).1
       have hs : deg [(p.1, p.2 * ∑ i ∈ Finset.range l, q ^ (p.1 * i))] = p.1 := by simp [deg]
       refine ⟨by rw [hs, ih'.1], ?_⟩
@@ -210,7 +210,7 @@ theorem pow_val_add_natCast {M N : ℕ} [NeZero N] (Q : ZMod M) (hQ : Q ^ N = 1)
 theorem fixed_eq (l' m : ℕ) (hl : (l' + 1).Prime) (hlm : ¬ (l' + 1) ∣ m)
     (h : ZMod (l' + 1) → ZMod ((l' + 1) * m)) (hfix : ∀ r, h (r - m) + m = h r) (r : ZMod (l' + 1)) :
     h r = h 0 + (((r * (m : ZMod (l' + 1))⁻¹).val * m : ℕ) : ZMod ((l' + 1) * m)) := by
-  haveI : Fact (l' + 1).Prime := ⟨hl⟩
+  have : Fact (l' + 1).Prime := ⟨hl⟩
   have hm0 : (m : ZMod (l' + 1)) ≠ 0 := fun h0 => hlm ((ZMod.natCast_eq_zero_iff _ _).1 h0)
   have hind : ∀ n : ℕ, h ((n : ZMod (l' + 1)) * m) = h 0 + ((n * m : ℕ) : ZMod ((l' + 1) * m)) := by
     intro n
@@ -230,8 +230,8 @@ theorem fixed_sum (M l' m : ℕ) (Q : ZMod M) (hl : (l' + 1).Prime) (hlm : ¬ (l
     (hQ : Q ^ ((l' + 1) * m) = 1)
     (h : ZMod (l' + 1) → ZMod ((l' + 1) * m)) (hfix : ∀ r, h (r - m) + m = h r) :
     ∑ r, Q ^ (h r).val = Q ^ (h 0).val * ∑ i ∈ Finset.range (l' + 1), Q ^ (m * i) := by
-  haveI : Fact (l' + 1).Prime := ⟨hl⟩
-  haveI : NeZero ((l' + 1) * m) := ⟨by positivity⟩
+  have : Fact (l' + 1).Prime := ⟨hl⟩
+  have : NeZero ((l' + 1) * m) := ⟨by positivity⟩
   have hm0 : (m : ZMod (l' + 1)) ≠ 0 := fun h0 => hlm ((ZMod.natCast_eq_zero_iff _ _).1 h0)
   rw [Finset.sum_congr rfl (fun r _ => by rw [fixed_eq l' m hl hlm h hfix r, pow_val_add_natCast Q hQ]),
     ← Finset.mul_sum]
@@ -253,7 +253,7 @@ theorem card_eq (q l' m k : ℕ) (hm : 0 < m) :
       (∀ r, ZMod.castHom (dvd_mul_right (l' + 1) m) (ZMod (l' + 1)) (g r) = r) ∧
       ((k * ∑ i ∈ Finset.range (l' + 1), q ^ (m * i) : ℕ) : ZMod (q ^ ((l' + 1) * m) - 1)) =
         ∑ r, (k : ZMod (q ^ ((l' + 1) * m) - 1)) * (q : ZMod (q ^ ((l' + 1) * m) - 1)) ^ (g r).val} := by
-  haveI : NeZero ((l' + 1) * m) := ⟨by positivity⟩
+  have : NeZero ((l' + 1) * m) := ⟨by positivity⟩
   rw [← Fintype.card_subtype, ← Nat.card_eq_fintype_card]
   let ef : Fin (l' + 1) ≃ ZMod (l' + 1) := Equiv.refl _
   have hef : ∀ r : ZMod (l' + 1), ((ef.symm r : Fin (l' + 1)) : ℕ) = r.val := fun r => rfl
@@ -323,8 +323,8 @@ theorem count_one_mod : ∀ q l m k : ℕ, 2 ≤ q → l.Prime → 0 < m → ¬ 
   intro q l m k hq hl hm hlm hreg
   obtain ⟨l', rfl⟩ : ∃ l', l = l' + 1 := ⟨l - 1, by have := hl.one_lt; omega⟩
   rw [card_eq q l' m k hm]
-  haveI : Fact (l' + 1).Prime := ⟨hl⟩
-  haveI : NeZero ((l' + 1) * m) := ⟨by positivity⟩
+  have : Fact (l' + 1).Prime := ⟨hl⟩
+  have : NeZero ((l' + 1) * m) := ⟨by positivity⟩
   have hm0 : (m : ZMod (l' + 1)) ≠ 0 := fun h0 => hlm ((ZMod.natCast_eq_zero_iff _ _).1 h0)
   have hQ : (q : ZMod (q ^ ((l' + 1) * m) - 1)) ^ ((l' + 1) * m) = 1 := by
     have h0 : ((q ^ ((l' + 1) * m) - 1 : ℕ) : ZMod (q ^ ((l' + 1) * m) - 1)) = 0 := ZMod.natCast_self _
@@ -650,7 +650,7 @@ theorem torusPair_mangoldt_pow {F : Type} [Field F] (s : F[X] → ℂ) (f : F[X]
     (hirr : Irreducible f) (r : ℕ) (hr : 0 < r) : mangoldt s (f ^ r) = s f := by
   have hset : {g : F[X] | g.Monic ∧ Irreducible g ∧ ∃ r' : ℕ, 0 < r' ∧ f ^ r = g ^ r'} = {f} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · rintro ⟨hg, hgi, r', hr', he⟩
       have h1 : g ∣ f ^ r := he ▸ dvd_pow_self g hr'.ne'
@@ -678,27 +678,27 @@ theorem torusPair_mangoldt_sum (F : Type) [Field F] [Finite F] (θ : AlgebraicCl
       (g := fun α => minpoly F α ^ (n / (minpoly F α).natDegree))]
   swap
   · intro α hα
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hα ⊢
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hα ⊢
     have hm := minpoly.monic (hi α)
     refine ⟨hm.pow _, ?_, ?_⟩
     · rw [hm.natDegree_pow, Nat.div_mul_cancel ((torusPair_pow_eq_one_iff n α (hne α hα)).1 hα)]
     · rw [coeff_zero_eq_eval_zero, eval_pow, ← coeff_zero_eq_eval_zero]
       exact pow_ne_zero _ (minpoly.coeff_zero_ne_zero (hi α) (hne α hα))
   refine Finset.sum_congr rfl fun P hP => ?_
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hP
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hP
   obtain ⟨hP, hd, h0⟩ := hP
   by_cases hex : ∃ (f : F[X]) (m : ℕ), f.Monic ∧ Irreducible f ∧ 0 < m ∧ P = f ^ m
   swap
   · have hempty : {f : F[X] | f.Monic ∧ Irreducible f ∧ ∃ m : ℕ, 0 < m ∧ P = f ^ m} = ∅ := by
       ext f
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨hf, hirr, m, hm, rfl⟩
       exact hex ⟨f, m, hf, hirr, hm, rfl⟩
     rw [mangoldt, hempty, finsum_mem_empty, zero_mul]
     refine (Finset.sum_eq_zero fun α hα => ?_).symm
     exfalso
     obtain ⟨hα1, hα2⟩ := Finset.mem_filter.1 hα
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hα1
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hα1
     have hdv := (torusPair_pow_eq_one_iff n α (hne α hα1)).1 hα1
     exact hex ⟨minpoly F α, n / (minpoly F α).natDegree, minpoly.monic (hi α), minpoly.irreducible (hi α),
       Nat.div_pos (Nat.le_of_dvd hn hdv) (minpoly.natDegree_pos (hi α)), hα2.symm⟩
@@ -711,7 +711,7 @@ theorem torusPair_mangoldt_sum (F : Type) [Field F] [Finite F] (θ : AlgebraicCl
   have hfib : Finset.filter (fun α : AlgebraicClosure F => minpoly F α ^ (n / (minpoly F α).natDegree) = f ^ m)
       (torusPair_finite_torus (F := F) n hn).toFinset = (f.map (algebraMap F (AlgebraicClosure F))).roots.toFinset := by
     ext α
-    simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Multiset.mem_toFinset]
+    simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Multiset.mem_toFinset]
     rw [mem_roots (hf.map _).ne_zero, IsRoot.def, eval_map_algebraMap]
     constructor
     · rintro ⟨h1, h2⟩
@@ -963,7 +963,7 @@ theorem mapsTo_headSub {a n : ℕ} (M : Matrix (Fin n) (Fin n) F) (hM : InParM a
 theorem entry_eq_zero {a n : ℕ} (H : Matrix (Fin n) (Fin n) F)
     (hH : Matrix.toLin' H ∈ nilRad (headSub a n)) (i j : Fin n) (hij : a ≤ (i : ℕ) ∨ (j : ℕ) < a) :
     H i j = 0 := by
-  simp only [nilRad, Set.mem_setOf_eq] at hH
+  simp only [nilRad, Set.mem_ofPred_eq] at hH
   rw [← toLin'_apply_single H i j]
   rcases hij with hi | hj
   · exact (mem_headSub _).1 (hH.1 _) i hi
@@ -971,7 +971,7 @@ theorem entry_eq_zero {a n : ℕ} (H : Matrix (Fin n) (Fin n) F)
 
 theorem neg_mem_nilRad {V : Type} [AddCommGroup V] [Module F V] {A : Submodule F V} {h : Module.End F V}
     (hh : h ∈ nilRad A) : -h ∈ nilRad A := by
-  simp only [nilRad, Set.mem_setOf_eq] at hh ⊢
+  simp only [nilRad, Set.mem_ofPred_eq] at hh ⊢
   refine ⟨fun x => ?_, fun x hx => ?_⟩
   · simpa using A.neg_mem (hh.1 x)
   · simp [hh.2 x hx]
@@ -979,7 +979,7 @@ theorem neg_mem_nilRad {V : Type} [AddCommGroup V] [Module F V] {A : Submodule F
 theorem injective_add {V : Type} [AddCommGroup V] [Module F V] [FiniteDimensional F V] (A : Submodule F V)
     (g h : Module.End F V) (hg : ∀ x ∈ A, g x ∈ A) (hh : h ∈ nilRad A) (hinj : Function.Injective g) :
     Function.Injective (g + h) := by
-  simp only [nilRad, Set.mem_setOf_eq] at hh
+  simp only [nilRad, Set.mem_ofPred_eq] at hh
   obtain ⟨h1, h2⟩ := hh
   have hres : Function.Surjective (g.restrict hg) := by
     rw [← LinearMap.injective_iff_surjective]
@@ -1052,7 +1052,7 @@ theorem sum_inPar_psiG {F : Type} [Field F] [Finite F] (R : F[X] → ℂ) (hR : 
     (ha : 0 < a) (han : a < n) (α : GL (Fin a) F → ℂ) :
     ∑ᶠ p : GL (Fin n) F, (if InPar a p then α (tlG a p) else 0) * star (psiG R n p) = 0 := by
   classical
-  haveI := Fintype.ofFinite F
+  have := Fintype.ofFinite F
   let ψ : Matrix (Fin n) (Fin n) F → ℂ := fun M => psi R (Fin n → F) (Matrix.toLin' M)
   let β : Matrix (Fin n) (Fin n) F → ℂ := fun M => α (toG (tl a M))
   let G : Matrix (Fin n) (Fin n) F → ℂ := fun M =>
@@ -1092,7 +1092,7 @@ theorem sum_inPar_psiG {F : Type} [Field F] [Finite F] (R : F[X] → ℂ) (hR : 
         intro h hh
         have hh' : Matrix.toLin' h ∈ nilRad (headSub (F := F) a n) := (Finset.mem_filter.1 hh).2
         have hu : IsUnit (M + h) ∧ InParM a (M + h) := (unitPar_add_iff M h hh').2 hM
-        simp only [G, if_pos hu, β, tl_add M h hh']
+        simp only [G, ite_eq_left hu, β, tl_add M h hh']
       have hprim := GlobalTheory.CuspGL.isPrimitive_psi F (Fin n → F) R hR (headSub a n) hA0 hAtop
         (Matrix.toLin' M) (mapsTo_headSub M hM.2)
       rw [← Set.image_preimage_eq (nilRad (headSub (F := F) a n)) Matrix.toLin'.surjective,
@@ -1105,14 +1105,14 @@ theorem sum_inPar_psiG {F : Type} [Field F] [Finite F] (R : F[X] → ℂ) (hR : 
     · refine Finset.sum_eq_zero fun h hh => ?_
       have hh' : Matrix.toLin' h ∈ nilRad (headSub (F := F) a n) := (Finset.mem_filter.1 hh).2
       simp only [G]
-      rw [if_neg]
+      rw [ite_eq_right]
       rwa [unitPar_add_iff M h hh']
   have hshift : ∀ h, ∑ M, G (M + h) = ∑ M, G M := fun h =>
     Fintype.sum_equiv (Equiv.addRight h) _ _ (fun M => rfl)
   have h0 : (0 : Matrix (Fin n) (Fin n) F) ∈ Nfin := by
     have : Matrix.toLin' (0 : Matrix (Fin n) (Fin n) F) ∈ nilRad (headSub (F := F) a n) := by
       rw [map_zero]
-      simp only [nilRad, Set.mem_setOf_eq, LinearMap.zero_apply]
+      simp only [nilRad, Set.mem_ofPred_eq, LinearMap.zero_apply]
       exact ⟨fun _ => Submodule.zero_mem _, fun _ _ => by trivial⟩
     exact Finset.mem_filter.2 ⟨Finset.mem_univ _, this⟩
   have hcard : (Nfin.card : ℂ) * ∑ M, G M = 0 := by
@@ -1150,7 +1150,7 @@ theorem sum_hc_cusp {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F →
   · have h0 : ∀ x : GL (Fin n) F, hc 0 n (psiG S 0) (fun _ => 1) n x = 0 := by
       intro x; simp [hc, hcTw, psiG_zero, hS]
     simp only [Nat.sub_zero, h0, zero_mul, finsum_zero]
-  haveI := Fintype.ofFinite (GL (Fin n) F)
+  have := Fintype.ofFinite (GL (Fin n) F)
   have hcl := (GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) 0 0 n (fun _ => 1) (fun _ => 1)).2.2 (rootSum θ k)
   have hR := (GlobalTheory.CuspGL.rootSum_isAdditive_and_pow_X_sub_one F θ k).1
   have key : ∀ y : GL (Fin n) F, ∑ x : GL (Fin n) F, (if InPar a (y⁻¹ * x * y) then
@@ -1190,7 +1190,7 @@ theorem GlobalTheory.Shin.sum_psiG_mul_star_cusp_eq : ∀ (F : Type) [Field F] [
     (S : F[X] → ℂ) (n k : ℕ), S 1 = 0 →
     ∑ᶠ x, psiG S n x * star (cusp θ n k x) = ∑ᶠ x, chG S n x * star (cusp θ n k x) := by
   intro F _ _ θ S n k hS
-  haveI := Fintype.ofFinite (GL (Fin n) F)
+  have := Fintype.ofFinite (GL (Fin n) F)
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   have hz : ∀ a ∈ Finset.range n, ∑ x : GL (Fin n) F,
       hc a (n - a) (psiG S a) (fun _ => 1) n x * star (cusp θ n k x) = 0 := by
@@ -1230,10 +1230,10 @@ namespace GlobalTheory.Shin
 
 theorem shLift_cusp_kills_of_not_dvd : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (Module.finrank F F').Prime → s ≠ 1 → ∀ (ι : AlgebraicClosure F →ₐ[F] AlgebraicClosure F') (θ : AlgebraicClosure F' →* ℂ), (∀ x y : AlgebraicClosure F', x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ n k : ℕ, 0 < n → ¬ Module.finrank F F' ∣ n → Reg (Nat.card F) n k → Kills (shLift s (cusp (pullθ ι θ) n k)) (cusp θ n (k * ∑ i ∈ Finset.range (Module.finrank F F'), Nat.card F ^ (n * i))) := by
   intro F F' _ _ _ _ s hl hs ι θ hθ n k hn hnd hreg
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  haveI := Fintype.ofFinite F
-  haveI := Fintype.ofFinite F'
-  haveI : Fact (Module.finrank F F').Prime := ⟨hl⟩
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have := Fintype.ofFinite F
+  have := Fintype.ofFinite F'
+  have : Fact (Module.finrank F F').Prime := ⟨hl⟩
   set l := Module.finrank F F' with hl_def
   set q := Nat.card F with hq_def
   have hq2 : 2 ≤ q := Finite.one_lt_card
@@ -1389,12 +1389,12 @@ namespace GlobalTheory.Shin.DescentAll
 theorem mem_zpowers_of_prime {F F' : Type} [Field F] [Field F'] [Algebra F F'] [Finite F']
     (s : F' ≃ₐ[F] F') (hl : (Module.finrank F F').Prime) (hs : s ≠ 1) :
     ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s := by
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  haveI : Fintype F := Fintype.ofFinite F
-  haveI : Fintype F' := Fintype.ofFinite F'
-  haveI : FiniteDimensional F F' := Module.Finite.of_finite
-  haveI : IsGalois F F' := inferInstance
-  haveI : Fact (Module.finrank F F').Prime := ⟨hl⟩
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Fintype F := Fintype.ofFinite F
+  have : Fintype F' := Fintype.ofFinite F'
+  have : FiniteDimensional F F' := Module.Finite.of_finite
+  have : IsGalois F F' := inferInstance
+  have : Fact (Module.finrank F F').Prime := ⟨hl⟩
   have hc : Nat.card (F' ≃ₐ[F] F') = Module.finrank F F' := IsGalois.card_aut_eq_finrank F F'
   intro t
   rw [zpowers_eq_top_of_prime_card hc hs]
@@ -1417,10 +1417,10 @@ theorem kills_liftAll : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
     ∀ L : List (ℕ × ℕ), (∀ p ∈ L, 0 < p.1 ∧ Reg (Nat.card F) p.1 p.2) → ∀ n, n = deg L →
     Kills (shLift s (J (pullθ ι θ) L n)) (J θ (liftAll (Nat.card F) (Module.finrank F F') L) n) := by
   intro F F' _ _ _ _ s hl hs ι θ hθ
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  haveI : Fintype F := Fintype.ofFinite F
-  haveI : Fintype F' := Fintype.ofFinite F'
-  haveI : FiniteDimensional F F' := Module.Finite.of_finite
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Fintype F := Fintype.ofFinite F
+  have : Fintype F' := Fintype.ofFinite F'
+  have : FiniteDimensional F F' := Module.Finite.of_finite
   have hgen := mem_zpowers_of_prime s hl hs
   set q := Nat.card F with hqdef
   set l := Module.finrank F F' with hldef
@@ -1467,9 +1467,9 @@ theorem kills_liftAll : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
     have hKA : Kills (shLift s (cusp (pullθ ι θ) p.1 p.2)) (J θ A p.1) := by
       by_cases h : l ∣ p.1
       · have := GlobalTheory.T.shintani_lift_kills_cusp_divisible_degree F F' s hl hs ι θ hθ p.1 p.2 hp.1 h hp.2
-        rw [hAdef, if_pos h]
+        rw [hAdef, ite_eq_left h]
         simpa only [Prod.mk.eta] using this
-      · rw [hAdef, if_neg h]
+      · rw [hAdef, ite_eq_right h]
         have hu := GlobalTheory.T.shintani_lift_kills_cusp_of_degree_not_dvd F F' s hl hs ι θ hθ p.1 p.2 hp.1 h hp.2
         have hJ : J θ [(p.1, p.2 * ∑ i ∈ Finset.range l, q ^ (p.1 * i))] p.1 =
             cusp θ p.1 (p.2 * ∑ i ∈ Finset.range l, q ^ (p.1 * i)) := by

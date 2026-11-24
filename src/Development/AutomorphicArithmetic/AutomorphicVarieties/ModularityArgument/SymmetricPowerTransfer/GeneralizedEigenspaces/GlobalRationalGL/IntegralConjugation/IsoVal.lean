@@ -55,8 +55,8 @@ private theorem iso_le (h : IsoOk i) (a b : k) :
   · have hb' : i b ≠ 0 := fun e => hb (by simpa using e)
     have e1 := h.int (a / b)
     rw [map_div₀, map_div₀, map_div₀,
-      div_le_one₀ (zero_lt_iff.2 ((valuation k').ne_zero_iff.2 hb')),
-      div_le_one₀ (zero_lt_iff.2 ((valuation k).ne_zero_iff.2 hb))] at e1
+      div_le_one₀ (pos_iff_ne_zero.2 ((valuation k').ne_zero_iff.2 hb')),
+      div_le_one₀ (pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 hb))] at e1
     exact e1
 
 private theorem iso_symm (h : IsoOk i) : IsoOk i.symm :=

@@ -88,7 +88,7 @@ theorem _root_.GlobalTheory.AscFin.cond_one (hp : p.Is dV dW x ψ) (y : Mx D V�
   · intro N h1 h2 h3
     rw [inv_one, mt_one_, Matrix.one_mul] at h3
     have hdet : (1 + N).det = 1 := by
-      rw [Matrix.det_of_upperTriangular]
+      rw [det_of_isUpperTriangular]
       · refine Finset.prod_eq_one fun i _ => ?_
         rw [Matrix.add_apply, h2 i i le_rfl, Matrix.one_apply_eq, add_zero]
       · intro i j hij
@@ -263,12 +263,12 @@ theorem FCh_eq_zero_iff {m n : ℕ} (u : Mx D m n) : FCh D m n u = 0 ↔ u.map (
     exact h1 k
 
 theorem continuous_repr : Continuous fun a : AE D => (bAE D).equivFun a := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   exact IsModuleTopology.continuous_of_linearMap (bAE D).equivFun.toLinearMap
 
 theorem continuous_repr_symm : Continuous fun f : Fin (dimE D) → AF D.host.F => (bAE D).equivFun.symm f := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd (AF D.host.F) (AE D)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd (AF D.host.F) (AE D)
   exact IsModuleTopology.continuous_of_linearMap (bAE D).equivFun.symm.toLinearMap
 
 theorem continuous_RCh (m n : ℕ) : Continuous (RCh D m n) := by

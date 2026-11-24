@@ -55,7 +55,7 @@ theorem exists_contract {k E : Type} [Field k] [Field E] [Algebra k E] {A B : Co
     {f : CommRingCat.of k ⟶ A} {p : A ⟶ B} {q : CommRingCat.of E ⟶ B}
     (po : IsPushout f (CommRingCat.ofHom (algebraMap k E)) p q) (l : E →ₗ[k] k) :
     ∃ Λ : B →+ A, ∀ (e : E) (a : A), Λ (q.hom e * p.hom a) = f.hom (l e) * a := by
-  letI : Algebra k A := f.hom.toAlgebra
+  let : Algebra k A := f.hom.toAlgebra
   have w := (CommRingCat.isPushout_tensorProduct k A E).w
   let d := po.desc _ _ w
   let m : A ⊗[k] E →ₗ[k] A := (TensorProduct.rid k A).toLinearMap ∘ₗ l.lTensor A

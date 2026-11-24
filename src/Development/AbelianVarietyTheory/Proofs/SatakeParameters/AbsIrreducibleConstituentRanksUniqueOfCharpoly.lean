@@ -93,7 +93,7 @@ theorem charpoly_matRep {n : ℕ} (b : Module.Basis (Fin n) K V) (ρ : Represent
 
 theorem isSSRep_matRep {n : ℕ} (b : Module.Basis (Fin n) K V) (ρ : Representation K Γ V)
     (h : ρ.IsSemisimpleRepresentation) : IsSSRep (matRep b ρ) := by
-  haveI := h
+  have := h
   intro W hW
   let e := b.equivFun
   let S : Subrepresentation ρ := ⟨W.comap (e : V →ₗ[K] Fin n → K), fun g v hv => by

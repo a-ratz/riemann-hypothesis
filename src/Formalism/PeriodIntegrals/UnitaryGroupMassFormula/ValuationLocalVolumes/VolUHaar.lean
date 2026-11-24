@@ -62,7 +62,7 @@ theorem haar_pre {G : Type*} [AddCommGroup G] [TopologicalSpace G] [MeasurableSp
     (μ : Measure G) [μ.IsAddHaarMeasure] (φ : G ≃ₜ+ G) (K : Set G) (hK : μ K = 1) (S : Set G) :
     μ (φ ⁻¹' S) = μ (φ ⁻¹' K) * μ S := by
   have he : MeasurableEmbedding φ := φ.toHomeomorph.measurableEmbedding
-  haveI : (μ.map φ).IsAddHaarMeasure :=
+  have : (μ.map φ).IsAddHaarMeasure :=
     μ.isAddHaarMeasure_map (φ : G →+ G) φ.continuous φ.surjective
       φ.toHomeomorph.isClosedEmbedding.tendsto_cocompact
   have h := Measure.isAddLeftInvariant_eq_smul (μ.map φ) μ
@@ -82,7 +82,7 @@ theorem top_facts (ι : Type) [Fintype ι] :
     IsTopologicalAddGroup (ι → Fv F v ⊗[F] E) ∧ LocallyCompactSpace (ι → Fv F v ⊗[F] E) ∧
       SecondCountableTopology (ι → Fv F v ⊗[F] E) ∧ BorelSpace (ι → Fv F v ⊗[F] E) ∧
       IsModuleTopology (Fv F v) (ι → Fv F v ⊗[F] E) := by
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   exact ⟨inferInstance, inferInstance, inferInstance, inferInstance, inferInstance⟩
 
 def scMul {ι : Type} [Fintype ι] (z : ι → Fv F v) (hz : ∀ i, z i ≠ 0) :

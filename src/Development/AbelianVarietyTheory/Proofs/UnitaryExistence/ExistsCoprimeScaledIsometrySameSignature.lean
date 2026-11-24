@@ -201,7 +201,7 @@ theorem infinite_norm_one (E : Type) [Field E] [NumberField E] [IsCMField E] :
     exact_mod_cast sub_eq_zero.1 ((mul_eq_zero.1 this).resolve_left (mul_ne_zero two_ne_zero h0))
   · have := hc (-k)
     simp only [Int.cast_neg, neg_mul, ← sub_eq_add_neg, sub_neg_eq_add] at this
-    simp only [Set.mem_setOf_eq, cc, map_div₀, hc, this]
+    simp only [Set.mem_ofPred_eq, cc, map_div₀, hc, this]
     rw [div_mul_div_comm, mul_comm, div_self (mul_ne_zero (hne k) (hne' k))]
 
 theorem exists_unitary_mapsTo {G : Matrix (Fin n) (Fin n) E} (hG : ∀ a b, cc (G a b) = G b a) (hd : G.det ≠ 0)
@@ -223,7 +223,7 @@ theorem exists_unitary_mapsTo {G : Matrix (Fin n) (Fin n) E} (hG : ∀ a b, cc (
       haveI : IsArtinianRing (LocAlg v.1) :=
         IsArtinianRing.of_finite (v.1.adicCompletion (maximalRealSubfield E)) _
       finite_not_isUnit_one_add_smul (locEmb v.1) (u v.1).1)
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_not] at hlu
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, not_not] at hlu
   obtain ⟨γ, hγ, hγX⟩ := exists_unitary_congr_pi (A := fun v : hT.toFinset => LocAlg v.1) (fun v => locEmb v.1)
     (IsCMField.complexConj E : E →+* E) (fun v => locConj v.1) (fun v => locConj_locEmb v.1)
     (IsCMField.complexConj_apply_apply E) (fun v => locConj_locConj v.1) G

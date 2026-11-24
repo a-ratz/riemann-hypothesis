@@ -96,7 +96,7 @@ theorem hy (n : ℕ) (Y : Type u) [TopologicalSpace Y] [T2Space Y] [SecondCounta
 
   set hHf : M → ℝ≥0∞ := fun x => h x * ENNReal.ofReal (nσ x)⁻¹ with hHfdef
   have hHm : Measurable hHf :=
-    (hh.comp measurable_subtype_coe).mul (ENNReal.measurable_ofReal.comp hnσc.measurable.inv)
+    (hh.comp measurable_subtypeVal).mul (ENNReal.measurable_ofReal.comp hnσc.measurable.inv)
   have hdbM : ∀ (x : M) (η : Fin n → ℂ), ENNReal.ofReal (‖dbarDot n X.z (fun y : M => u0 y) x η‖ ^ 2) ≤
       hHf x * ENNReal.ofReal (Levi n X.z (fun y : M => Φ y) x η).re := by
     intro x η
@@ -128,7 +128,7 @@ theorem hy (n : ℕ) (Y : Type u) [TopologicalSpace Y] [T2Space Y] [SecondCounta
   obtain ⟨Fu, hFu, hFbd⟩ := hH M X (fun y => Φ y) (fun y => u0 y) hHf hΦs hΦl hu0s hHm hdbM
 
   set ut : Y → ℂ := fun y => if hy : y ∈ M then Fu ⟨y, hy⟩ else 0 with hutdef
-  have hut : (fun y : M => ut y) = Fu := funext fun y => dif_pos y.2
+  have hut : (fun y : M => ut y) = Fu := funext fun y => dite_eq_left y.2
   have hutc : Continuous (fun y : M => ut y) := by
     rw [hut]; exact Smooth.continuous n X.z X.isLocalHomeomorph _ (Holo.smooth n X.z _ hFu)
   set Fs : ι → Y → ℂ := fun i y => σ i y * ut y with hFsdef
@@ -145,7 +145,7 @@ theorem hy (n : ℕ) (Y : Type u) [TopologicalSpace Y] [T2Space Y] [SecondCounta
     refine measurable_of_restrict_of_restrict_compl hMo.measurableSet ?_ ?_
     · have hc : Continuous (fun y : M => ψ0 y) :=
         ENNReal.continuous_ofReal.comp ((hnσc.mul ((hu0c.sub hutc).norm.pow 2)).mul
-          (Real.continuous_exp.comp (hpsc.comp continuous_subtype_val).neg))
+          (Real.continuous_exp.comp (hpsc.comp continuous_subtypeVal).neg))
       have : M.domRestrict ψ = fun y : M => ψ0 y := funext fun y => by
         show M.indicator ψ0 y = ψ0 y; exact Set.indicator_of_mem y.2 _
       rw [this]; exact hc.measurable

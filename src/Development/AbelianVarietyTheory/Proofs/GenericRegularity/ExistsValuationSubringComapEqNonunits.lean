@@ -114,7 +114,7 @@ theorem modelAt_of_good_level : PartI → ∀ (E : Type) [Field E] [NumberField 
     intro hinv
     rw [Valuation.mem_valuationSubring_iff, map_inv₀] at hinv
     have hpos : 0 < la.valuation c.F (p : c.F) :=
-      zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hp0)
+      pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hp0)
     exact absurd ((inv_le_one₀ hpos).mp hinv) (not_le.mpr hlt)
   have hW : (p : ℂ) ∈ W.nonunits := by
     have h := hnon _ hpU

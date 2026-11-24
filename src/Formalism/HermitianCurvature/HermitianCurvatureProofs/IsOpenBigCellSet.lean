@@ -76,7 +76,7 @@ lemma isOpen_big_cell_set (D : RealPlaceData k r Wp Wq) (L : Finset (Fin (r + 2)
 
 lemma mem_domL (D : RealPlaceData k r Wp Wq) (L : Finset (Fin (r + 2))) (g : Mat k r) :
     g ∈ C6.domL D L ↔ g ∈ GV k r ∧ g ∈ V0 D L := by
-  simp only [C6.domL, V0, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+  simp only [C6.domL, V0, mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
 
 lemma domL_gpos {D : RealPlaceData k r Wp Wq} {L : Finset (Fin (r + 2))} {g : Mat k r} (hg : g ∈ C6.domL D L) :
     g ∈ GPos D := by

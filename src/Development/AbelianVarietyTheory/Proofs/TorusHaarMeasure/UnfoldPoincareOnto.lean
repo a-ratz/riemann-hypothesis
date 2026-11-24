@@ -106,8 +106,8 @@ theorem integral_eq_integral_tsum_of_lintegral {α ι : Type*} [MeasurableSpace 
     refine tsum_congr fun i => ?_
     rw [← lintegral_indicator_one hs, lintegral_map hφ (hg i)]
   have hfin : ∑' i, ∫⁻ z, ‖g i z‖ₑ ∂ν ≠ ⊤ := by
-    have h1 := H (fun w => ‖w‖ₑ) measurable_enorm
-    rw [lintegral_tsum fun i => (hg i).enorm.aemeasurable] at h1
+    have h1 := H (fun w => ‖w‖ₑ) measurable_eNorm
+    rw [lintegral_tsum fun i => (hg i).eNorm.aemeasurable] at h1
     rw [← h1]
     exact hi.2.ne
   have hid : Integrable (fun w : ℂ => w) (μ.map f) :=
@@ -269,7 +269,7 @@ theorem lintegral_le_density {n : ℕ} {B O : Set (V n)} (hB : MeasurableSet B) 
   have hμ : ENNReal.ofReal c • volume.restrict B ≤
       (volume.restrict O).withDensity fun z => ENNReal.ofReal (d z) := by
     refine Measure.le_iff.2 fun s hs => ?_
-    rw [Measure.smul_apply, Measure.restrict_apply hs, withDensity_apply _ hs,
+    rw [smul_apply, Measure.restrict_apply hs, withDensity_apply _ hs,
       Measure.restrict_restrict hs, smul_eq_mul]
     calc ENNReal.ofReal c * volume (s ∩ B) = ∫⁻ _ in s ∩ B, ENNReal.ofReal c :=
           (setLIntegral_const _ _).symm
@@ -437,7 +437,7 @@ theorem norm_le_sqrt_of_lintegral_ball_le (n : ℕ) (z : V n) {R a : ℝ} (hR : 
     rw [← hvol]; exact hmv.trans h
   have hreal : ‖u z‖ ^ 2 * (volume (Metric.ball (0 : V n) R)).toReal ≤ a * I.toReal := by
     have := ENNReal.toReal_mono (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hI.ne) hle
-    rwa [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_enorm,
+    rwa [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_eNorm,
       ENNReal.toReal_ofReal ha] at this
   have hvr : 0 < (volume (Metric.ball (0 : V n) R)).toReal := ENNReal.toReal_pos hpos.ne' hfin.ne
   have hsq : ‖u z‖ ^ 2 ≤ I.toReal / (volume (Metric.ball (0 : V n) R)).toReal * a := by
@@ -773,7 +773,7 @@ theorem enorm_le {k : ℝ} (hk : 0 < k) (u g : ℂ) (w : ℝ≥0∞) :
   have h2 : ‖u‖ * ‖g‖ ≤ ‖u‖ ^ 2 / k + k * ‖g‖ ^ 2 := by
     have : 0 ≤ ‖u‖ * ‖g‖ := by positivity
     linarith
-  rw [← ofReal_norm_eq_enorm, norm_mul, norm_mul, RCLike.norm_conj, Complex.norm_real,
+  rw [← ofReal_norm, norm_mul, norm_mul, RCLike.norm_conj, Complex.norm_real,
     Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg, ENNReal.ofReal_mul (by positivity),
     ← mul_assoc, ← ENNReal.ofReal_mul hk.le, ← add_mul,
     ← ENNReal.ofReal_add (by positivity) (by positivity)]
@@ -919,7 +919,7 @@ theorem poinStatement_of :
     exact le_iSup_of_le z (le_iSup_of_le hz (le_iSup_of_le hd' le_rfl))
   calc ENNReal.ofReal ‖poin X la P x‖
       = ‖∑' γ : X.Γ, (X.χ la γ.1)⁻¹ * P (lact γ.1 x)‖ₑ := ofReal_norm _
-    _ ≤ ∑' γ : X.Γ, ‖(X.χ la γ.1)⁻¹ * P (lact γ.1 x)‖ₑ := enorm_tsum_le_tsum_enorm
+    _ ≤ ∑' γ : X.Γ, ‖(X.χ la γ.1)⁻¹ * P (lact γ.1 x)‖ₑ := eNorm_tsum_le_tsum_eNorm
     _ ≤ ∑' γ : X.Γ, ENNReal.ofReal C * S * ENNReal.ofReal (Real.sqrt (κ (lact γ.1 x))) :=
         ENNReal.tsum_le_tsum hterm
     _ ≤ ENNReal.ofReal C * S * K := by

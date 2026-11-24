@@ -145,7 +145,7 @@ private theorem valuation_lt_one_iff_mem_and_inv_not_mem {Ω : Type} [Field Ω] 
   rcases eq_or_ne z 0 with rfl | hz
   · simp
   · have h0 : 0 < A.valuation z := by
-      rw [zero_lt_iff]
+      rw [pos_iff_ne_zero]
       simpa using hz
     rw [← A.valuation_le_one_iff, ← A.valuation_le_one_iff, map_inv₀, inv_le_one₀ h0]
     simp only [hz, false_or, not_le]
@@ -198,7 +198,7 @@ theorem conjStable_shaFam : ConjStable (shaFam k Ω l) := by
         simpa using h (g.symm y)
   · refine ⟨Ine (F := k) (A.comap (g : Ω →+* Ω)), Or.inr ⟨_, rfl⟩, fun x => ?_⟩
     change x ∈ Inertia (F := k) A ↔ g⁻¹ * x * g ∈ Inertia (F := k) (A.comap (g : Ω →+* Ω))
-    simp only [Inertia, Set.mem_setOf_eq, mem_decompositionSubgroup_iff_selmer_transport, ValuationSubring.valuation_le_one_iff,
+    simp only [Inertia, Set.mem_ofPred_eq, mem_decompositionSubgroup_iff_selmer_transport, ValuationSubring.valuation_le_one_iff,
       ValuationSubring.mem_comap, RingHom.coe_coe, comap_valuation_lt_one_iff_selmer_transport, map_sub, key]
     constructor
     · rintro ⟨h1, h2⟩

@@ -102,7 +102,7 @@ theorem exists_theta [IsLocalRing V₁] (hV : IsCN V₁) (D : DegPre V₁) :
       ∀ (R' : Type) [CommRing R'] (f : V₁ →+* R') θ',
         IsPullSecLC D.P.L (D.famφB 0) (DegPre.famε 1) (snd (Over.mk (Spec.map (CommRingCat.ofHom f))) D.P.A).left θ θ' →
         OneBasisAt D f θ' := by
-  haveI : IsNoetherianRing V₁ := hV.1
+  have : IsNoetherianRing V₁ := hV.1
   obtain ⟨m, b, hm, hb⟩ := GlobalTheory.twistBaseChange V₁ D 1 le_rfl 0
   obtain rfl : m = 1 := hm.trans (one_pow _)
   refine ⟨b 0, fun R' _ f θ' h => ?_⟩

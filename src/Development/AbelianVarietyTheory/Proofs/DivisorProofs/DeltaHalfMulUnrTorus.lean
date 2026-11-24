@@ -102,7 +102,7 @@ theorem uniMat_diag (x : Pos n → k) (i : Fin n) : uniMat x i i = 1 := by
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem uniMat_det (x : Pos n → k) : (uniMat x).det = 1 := by
-  rw [det_of_upperTriangular (fun i j h => uniMat_low x i j h)]
+  rw [det_of_isUpperTriangular (fun i j h => uniMat_low x i j h)]
   simp [uniMat_diag]
 
 theorem continuous_uniMat : Continuous (uniMat : (Pos n → k) → _) := by
@@ -200,7 +200,7 @@ theorem prod_pos_eq {G : Type} [CommGroup G] (t : Fin n → G) :
 theorem delta_eq (q : (borelGL k (Fin n)).Q) :
     (borelGL k (Fin n)).delta q =
       distribHaarChar k (∏ p : Pos n, ((borelGL k (Fin n)).p q p.1.1 * ((borelGL k (Fin n)).p q p.1.2)⁻¹)) := by
-  haveI := SplitWeil.secondCountable k
+  have := SplitWeil.secondCountable k
   borelize k
   borelize ↥(borelGL k (Fin n)).U
   let ν : Measure k := Measure.addHaar
@@ -210,10 +210,10 @@ theorem delta_eq (q : (borelGL k (Fin n)).Q) :
   have hm : ∀ A : Matrix (Pos n) (Pos n) k, Measurable A.mulVec := fun A =>
     (continuous_const.matrix_mulVec continuous_id).measurable
   have hes : Measurable e.symm := e.symm.continuous.measurable
-  haveI : π.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure π
-  haveI : μ.Regular := Measure.Regular.map e.symm
-  haveI : μ.IsOpenPosMeasure := e.symm.continuous.isOpenPosMeasure_map e.symm.surjective
-  haveI : μ.IsMulLeftInvariant := ⟨fun u => by
+  have : π.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure π
+  have : μ.Regular := Measure.Regular.map e.symm
+  have : μ.IsOpenPosMeasure := e.symm.continuous.isOpenPosMeasure_map e.symm.surjective
+  have : μ.IsMulLeftInvariant := ⟨fun u => by
     have h1 : (fun x => u * x) ∘ e.symm = e.symm ∘ (fun y => y + e u) ∘ (leftMat u.1.val).mulVec := by
       funext y
       apply e.injective
@@ -224,7 +224,7 @@ theorem delta_eq (q : (borelGL k (Fin n)).Q) :
     rw [Measure.map_map (measurable_const_mul u) hes, h1,
       ← Measure.map_map hes ((measurable_add_const _).comp (hm _)),
       ← Measure.map_map (measurable_add_const _) (hm _), h2, map_add_right_eq_self]⟩
-  haveI : μ.IsHaarMeasure := {}
+  have : μ.IsHaarMeasure := {}
   set t := (borelGL k (Fin n)).p q
   rw [LeviDatum.delta_apply]
   set g : Subgroup.normalizer ((borelGL k (Fin n)).U : Set (GL (Fin n) k)) := ⟨(borelGL k (Fin n)).s t, _⟩
@@ -242,11 +242,11 @@ theorem delta_eq (q : (borelGL k (Fin n)).Q) :
     rw [Measure.map_map hc.measurable hes, h1, ← Measure.map_map hes (hm _),
       ← Measure.map_smul, h2]
     exact hes.aemeasurable
-  haveI : LocallyCompactSpace (borelGL k (Fin n)).U := (borelGL k (Fin n)).closed_U.locallyCompactSpace
+  have : LocallyCompactSpace (borelGL k (Fin n)).U := (borelGL k (Fin n)).closed_U.locallyCompactSpace
   obtain ⟨K, hK, hK1⟩ := exists_compact_mem_nhds (1 : (borelGL k (Fin n)).U)
   have h4 := modulus_measure _ (borelGL k (Fin n)).closed_U μ g K
   have h5 := congrArg (fun m : Measure _ => m (conjAut _ g '' K)) h3
-  simp only [Measure.smul_apply, smul_eq_mul] at h5
+  simp only [smul_apply, smul_eq_mul] at h5
   rw [Measure.map_apply hc.measurable
     (hK.image hc).isClosed.measurableSet,
     Set.preimage_image_eq _ (conjAut _ g).injective, h4] at h5
@@ -295,9 +295,9 @@ theorem nabs_completion (x : (v.adicCompletion F)ˣ) :
     haveI := GlobalTheory.LocalData.isLocalField v
     GlobalTheory.SplitWeil.nabs (v.adicCompletion F) x =
       (Formalism.UG.qV F v : ℝ) ^ (WithZero.log (Valued.v (x : v.adicCompletion F))) := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  haveI : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  have : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := isEquiv (valuation (v.adicCompletion F))
     (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ)))
@@ -366,8 +366,8 @@ theorem sqrt_zpow_eq (q : ℕ) (m e : ℤ) :
 
 theorem deltaHalf_mul_unrTorus : ∀ (F : Type) [Field F] [NumberField F] (v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F)) [LocallyCompactSpace (v.adicCompletion F)] (n : ℕ) (α : Fin n → ℂˣ) (b : (borelGL (v.adicCompletion F) (Fin n)).Q), (((borelGL (v.adicCompletion F) (Fin n)).deltaHalf b : ℂˣ) : ℂ) * ((unrTorus (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).toMonoidWithZeroHom α ((borelGL (v.adicCompletion F) (Fin n)).p b) : ℂˣ) : ℂ) = Formalism.UG.chiDelta F v (fun i => (α i : ℂ)) b.1 := by
   intro F _ _ v _ n α b
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
   have h := GlobalTheory.BorelModulus.delta_borelGL (v.adicCompletion F) n b
   rw [LeviDatum.deltaHalf_coe, h, Real.sqrt_prod _ (fun i _ => zpow_nonneg (GlobalTheory.SplitWeil.nabs_pos _ _).le _),
     unrTorus_apply, Formalism.UG.chiDelta, Complex.ofReal_prod, Units.coe_prod, ← Finset.prod_mul_distrib]

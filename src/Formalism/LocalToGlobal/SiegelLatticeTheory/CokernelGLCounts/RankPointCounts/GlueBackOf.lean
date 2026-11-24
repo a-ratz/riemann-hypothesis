@@ -190,7 +190,7 @@ theorem glueBack_of (M : Model F E) (r n : ℕ) (hM : M.OK) (hC : CorrIso M r n)
     exact (ψ _).2
   have hfg : N₂.FG := by
     rw [hN₂]
-    haveI : Module.Finite M.L.O (ThL H t₁) := Module.Finite.iff_fg.2 (hFG V H t₁ hG₁)
+    have : Module.Finite M.L.O (ThL H t₁) := Module.Finite.iff_fg.2 (hFG V H t₁ hG₁)
     exact (Module.Finite.fg_top).map g
   have hS1 := hS V H t₁ hG₁
   have hspan : Submodule.span E (N₂ : Set V) = H.W0 t₀.f t₀.f' := by

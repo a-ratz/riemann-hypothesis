@@ -129,7 +129,7 @@ theorem dense_asIdeal_eq_bot_spMap (n : ℕ) (V₁ : Type) [CommRing V₁] [IsDo
   let p₀ : Sp V₁ := ⟨⊥, Ideal.isPrime_bot⟩
   let K := FractionRing V₁
   have hinj : Function.Injective (algebraMap V₁ K) := IsFractionRing.injective V₁ K
-  haveI : CharZero K := charZero_of_injective_algebraMap hinj
+  have : CharZero K := charZero_of_injective_algebraMap hinj
   have hmem : p₀ ∈ {x : Sp V₁ | (spMap b₁ x).asIdeal = ⊥} := by
     let q : Sp K := ⟨⊥, Ideal.isPrime_bot⟩
     have h := GlobalTheory.AbChart.asIdeal_eq_bot_of_charZero n K (spMap ((algebraMap V₁ K).comp b₁)) q
@@ -199,9 +199,9 @@ theorem exists_siegPre_of_points : ∀ (n : ℕ) (hn : 3 ≤ n) (V V₁ : Type) 
   set_option backward.isDefEq.respectTransparency false in
     intro n hn V V₁ _ _ _ _ f₁ b PB lev r d₀ c hadd htors hweil hd
     have hn0 : n ≠ 0 := by omega
-    haveI := PB.isAb.comm
+    have := PB.isAb.comm
     let P₁ : PolAV (Sp V₁) := GlobalTheory.StrictPull.polPull PB (spMap f₁)
-    haveI : IsCommMonObj P₁.A := P₁.isAb.comm
+    have : IsCommMonObj P₁.A := P₁.isAb.comm
     have hpb : IsGrpPullback P₁.A PB.A (spMap f₁) (pullback.fst PB.A.hom (spMap f₁)) :=
       isGrpPullback_pullback PB.A (spMap f₁)
     obtain ⟨κ, hκ⟩ := GlobalTheory.UnifPoint.exists_pointEquiv hpb
@@ -223,14 +223,14 @@ theorem exists_siegPre_of_points : ∀ (n : ℕ) (hn : 3 ≤ n) (V V₁ : Type) 
     have hze : (ze : V₁) = (f₁.comp b) (zetaAway n) := by simp [ze]
     have hprim : ∀ (k : Type) [Field k] (gk : V₁ →+* k), IsPrimitiveRoot (gk ze) n := fun k _ gk => by
       rw [hze]; exact GlobalTheory.SiegelTor.isPrimitiveRoot_map hn0 (gk.comp (f₁.comp b))
-    haveI : IsMonHom (Iso.refl P₁.A).hom := inferInstanceAs (IsMonHom (𝟙 _))
+    have : IsMonHom (Iso.refl P₁.A).hom := inferInstanceAs (IsMonHom (𝟙 _))
     have hid : IsGrpPullback P₁.A P₁.A (spMap (RingHom.id V₁)) (𝟙 _) :=
       (isGrpPullback_of_iso (Iso.refl P₁.A)).congr (by simp [spMap]) rfl
     obtain ⟨s, ψ, hψ, hs, hsP⟩ := GlobalTheory.SiegelOverLocal.exists_siegPre V₁ V₁ P₁ (RingHom.id V₁) P₁ (𝟙 _) hid
       (GlobalTheory.lbIso_pull_id P₁.isLB).symm rfl (cycAway n) (f₁.comp b) PB.g n (zetaAway n) ze lev₁ rfl hu hze hprim
       hadd₁ htors₁ hw
 
-    haveI := hψ
+    have := hψ
     have hLamB : (abelian₂ PB.A PB.L).IsLB := DVR.linComb_isLB _ PB.isLB _ _
     have hLam₁ : (abelian₂ P₁.A P₁.L).IsLB := DVR.linComb_isLB _ P₁.isLB _ _
     obtain ⟨β₂, hsq, hlam⟩ := GlobalTheory.Mum.lbIso_lam_pull_of_isGrpPullback _ _ (spMap f₁) PB.A P₁.A _ hpb
@@ -323,7 +323,7 @@ theorem pairing_prod {H U : Type} [CommGroup H] [CommGroup U] (e : H →* H →*
   rw [hz]
   simp only [map_prod, map_zpow, hp, MonoidHom.zpow_apply, Fintype.prod_sum_type,
     map_mul, MonoidHom.mul_apply, h₁, h₂, h₃, h₄, one_zpow, Finset.prod_const_one, _root_.one_mul, _root_.mul_one,
-    hi, Finset.prod_ite_eq, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+    hi, Finset.prod_ite_eq, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
   rw [← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
   simp only [← zpow_mul, inv_zpow', ← zpow_add, zpow_sub, ← zpow_neg]
@@ -469,7 +469,7 @@ namespace GlobalTheory.DVRExt
 
 theorem exists_unique_extend : ∀ (R : Type) [CommRing R] (P : PolAV (Sp R)) (W L : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [Field L] [Algebra W L] [IsFractionRing W L] (f : R →+* W) (x : Over.mk (spMap ((algebraMap W L).comp f)) ⟶ P.A), ∃! y : Over.mk (spMap f) ⟶ P.A, spMap (algebraMap W L) ≫ y.left = x.left := by
   intro R _ P W L _ _ _ _ _ _ f x
-  haveI : ValuationRing W := inferInstance
+  have : ValuationRing W := inferInstance
   have hv : ValuativeCriterion P.A.hom := by
     have h : IsProper P.A.hom := P.isAb.proper
     rw [IsProper.eq_valuativeCriterion] at h
@@ -595,9 +595,9 @@ namespace GlobalTheory.LevelAfterExt
 theorem exists_siegPre_divPoints : ∀ (n : ℕ), 3 ≤ n → Odd n → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], IsCN V → IsDiscreteValuationRing V → ∀ (b : cycAway n →+* V) (PB : PolAV (Sp V)) (r : ℕ) (c : (Fin r → ℤ) → (𝟙_ (Over (Sp V)) ⟶ PB.A)), ∃ (V₁ : Type) (_ : CommRing V₁) (_ : IsDomain V₁) (_ : IsLocalRing V₁) (f₁ : V →+* V₁) (s : SiegPre PB.g n (zetaAway n) (spMap (f₁.comp b))) (β₁ : s.A.left ⟶ PB.A.left) (β₁₂ : (G2 s.A).left ⟶ (G2 PB.A).left) (d : Fin r → (𝟙_ (Over (Sp V₁)) ⟶ s.A)), IsCN V₁ ∧ IsDiscreteValuationRing V₁ ∧ Function.Injective f₁ ∧ f₁.Finite ∧ IsLocalHom f₁ ∧ s.Principal ∧ IsGrpPullback s.A PB.A (spMap f₁) β₁ ∧ IsSquare β₁ β₁₂ ∧ LBIso s.P ((abelian₂ PB.A PB.L).pull β₁₂) ∧ ∀ i, (d i ^ n).left ≫ β₁ = spMap f₁ ≫ (c (Pi.single i 1)).left := by
   intro n hn3 _ V _ _ _ hV _ b PB r c
   have hn0 : n ≠ 0 := by omega
-  haveI := hV.2.2.1
-  haveI := hV.2.2.2
-  haveI : CharZero (FractionRing V) := charZero_of_injective_ringHom (IsFractionRing.injective V (FractionRing V))
+  have := hV.2.2.1
+  have := hV.2.2.2
+  have : CharZero (FractionRing V) := charZero_of_injective_ringHom (IsFractionRing.injective V (FractionRing V))
   let ze : (cycAway n)ˣ := (GlobalTheory.LowChart.isUnit_zetaAway n hn3).unit
   let ζ : (FractionRing V)ˣ := Units.map ((algebraMap V (FractionRing V)).comp b).toMonoidHom ze
   have hζ : IsPrimitiveRoot ζ n :=
@@ -760,7 +760,7 @@ theorem exists_siegAt_of_siegPB : ∀ {o : Type} [CommRing o] {ζ : o} {h n : �
   have hpb : IsGrpPullback (siegAt F v s' hs).A F.univ.A x (Pdiv.PullbackComparison.pφ (v ≫ (powA F r).hom) F.univ.A) :=
     (Pdiv.PullbackComparison.isGrpPullback _ _).congr hv rfl
   obtain ⟨e, he, heφ⟩ := grpPullback_iso hpb hφ
-  haveI := he
+  have := he
   let C := siegAt F v s' hs
   let θ₂ : (G2 C.A).left ⟶ (G2 c.A).left := (CartesianMonoidalCategory.lift (fst C.A C.A ≫ e.hom) (snd C.A C.A ≫ e.hom)).left
   have hθf : θ₂ ≫ (fst c.A c.A).left = (fst C.A C.A).left ≫ e.hom.left := by
@@ -961,41 +961,41 @@ namespace GlobalTheory.HenselLift
 
 theorem exists_dvr_of_finite_etale : ∀ (A R V : Type) [CommRing A] [IsLocalRing A] [CommRing R] [IsLocalRing R] [CommRing V] [IsDomain V] [IsLocalRing V] (ρ : A →+* R) (ψ : A →+* V), IsLocalHom ρ → ρ.Finite → ρ.Etale → IsCN V → IsDiscreteValuationRing V → IsLocalHom ψ → ∃ (V' : Type) (_ : CommRing V') (_ : IsDomain V') (_ : IsLocalRing V') (f : V →+* V') (κ : R →+* V'), IsCN V' ∧ IsDiscreteValuationRing V' ∧ Function.Injective f ∧ f.Finite ∧ IsLocalHom f ∧ IsLocalHom κ ∧ κ.comp ρ = f.comp ψ := by
   intro A R V _ _ _ _ _ _ _ ρ ψ hρl hρf hρe hV hdvr hψ
-  letI := ρ.toAlgebra
-  letI := ψ.toAlgebra
+  let := ρ.toAlgebra
+  let := ψ.toAlgebra
   obtain ⟨hnoeth, hic, hcpl, hchar⟩ := hV
-  haveI : Algebra.Etale A R := hρe
-  haveI : Module.Finite A R := hρf
-  haveI : IsLocalHom (algebraMap A R) := hρl
-  haveI : IsLocalHom (algebraMap A V) := hψ
-  haveI : Algebra.Etale V (V ⊗[A] R) := Algebra.Etale.baseChange A R V
-  haveI : Module.FaithfullyFlat A R := Module.FaithfullyFlat.of_flat_of_isLocalHom
-  haveI : Nontrivial (V ⊗[A] R) := Module.FaithfullyFlat.rTensor_nontrivial A R V
+  have : Algebra.Etale A R := hρe
+  have : Module.Finite A R := hρf
+  have : IsLocalHom (algebraMap A R) := hρl
+  have : IsLocalHom (algebraMap A V) := hψ
+  have : Algebra.Etale V (V ⊗[A] R) := Algebra.Etale.baseChange A R V
+  have : Module.FaithfullyFlat A R := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have : Nontrivial (V ⊗[A] R) := Module.FaithfullyFlat.rTensor_nontrivial A R V
   obtain ⟨q, hq⟩ := Ideal.exists_maximal (V ⊗[A] R)
-  haveI : HenselianLocalRing V := GlobalTheory.henselianLocalRing_of_isAdicComplete V
+  have : HenselianLocalRing V := GlobalTheory.henselianLocalRing_of_isAdicComplete V
   obtain ⟨e, he, H⟩ := GlobalTheory.exists_idempotent_notMem_iff_of_henselian V q
-  haveI := GlobalTheory.isLocalRing_quotient_one_sub he q H
-  haveI : IsLocalization.Away e (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
+  have := GlobalTheory.isLocalRing_quotient_one_sub he q H
+  have : IsLocalization.Away e (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
     IsLocalization.Away.quotient_of_isIdempotentElem he
-  haveI : Algebra.Etale (V ⊗[A] R) (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
+  have : Algebra.Etale (V ⊗[A] R) (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
     Algebra.Etale.of_isLocalizationAway e
-  haveI : Algebra.Etale V (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
+  have : Algebra.Etale V (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
     Algebra.Etale.comp V (V ⊗[A] R) _
-  haveI : Module.Finite V (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
+  have : Module.Finite V (V ⊗[A] R ⧸ Ideal.span {1 - e}) :=
     Module.Finite.trans (V ⊗[A] R) _
   have hfl : IsLocalHom (algebraMap V (V ⊗[A] R ⧸ Ideal.span {1 - e})) := by
     refine ((local_hom_tfae _).out 1 5).2 ?_
     have := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := V)
       (maximalIdeal (V ⊗[A] R ⧸ Ideal.span {1 - e}))
     exact IsLocalRing.eq_maximalIdeal this
-  haveI := hfl
+  have := hfl
   obtain ⟨hdom, hdvr', -, hff, -⟩ :=
     GlobalTheory.isDiscreteValuationRing_of_etale_of_isLocalHom V (V ⊗[A] R ⧸ Ideal.span {1 - e})
   have hinj : Function.Injective (algebraMap V (V ⊗[A] R ⧸ Ideal.span {1 - e})) :=
     FaithfulSMul.algebraMap_injective _ _
-  haveI : IsNoetherianRing V := hnoeth
-  haveI : IsAdicComplete (maximalIdeal V) V := hcpl
-  haveI : CharZero V := hchar
+  have : IsNoetherianRing V := hnoeth
+  have : IsAdicComplete (maximalIdeal V) V := hcpl
+  have : CharZero V := hchar
   obtain ⟨-, hcpl'⟩ := GlobalTheory.isLocalHom_and_isAdicComplete_of_finite_dvr V
     (V ⊗[A] R ⧸ Ideal.span {1 - e}) inferInstance hinj
   have hcomm : ((Ideal.Quotient.mk (Ideal.span {1 - e})).comp
@@ -1090,7 +1090,7 @@ theorem completedStalk_chart (X : Scheme.{0}) (x : X) [IsNoetherianRing (X.presh
   have fg : (maximalIdeal (X.presheaf.stalk x)).FG := IsNoetherian.noetherian _
   have hm := AdicCompletion.maximalIdeal_eq_map_of_fg fg
   let φ := algebraMap (X.presheaf.stalk x) (AdicCompletion (maximalIdeal (X.presheaf.stalk x)) (X.presheaf.stalk x))
-  haveI : IsLocalHom φ := ((IsLocalRing.local_hom_tfae φ).out 1 3).mpr hm.symm.le
+  have : IsLocalHom φ := ((IsLocalRing.local_hom_tfae φ).out 1 3).mpr hm.symm.le
   have hres : Function.Surjective ((residue _).comp φ) := by
     intro r
     obtain ⟨a, ha⟩ := (AdicCompletion.residueField_map_bijective (X.presheaf.stalk x)).2 r
@@ -1147,7 +1147,7 @@ theorem etCompl : ∀ {o : Type} [CommRing o] [IsNoetherianRing o] {ζ : o} {h n
     exact ⟨inferInstanceAs (Algebra.FormallyUnramified _ R'), inferInstanceAs (Module.Flat _ R')⟩
   have hm' : (maximalIdeal (GlobalTheory.LowChart.W F y)).map ρ = maximalIdeal R' := by
     algebraize [ρ]
-    haveI : IsLocalHom (algebraMap (GlobalTheory.LowChart.W F y) R') := hloc
+    have : IsLocalHom (algebraMap (GlobalTheory.LowChart.W F y) R') := hloc
     exact Algebra.FormallyUnramified.map_maximalIdeal
   let ξ₀ : Sp R' ⟶ (GlobalTheory.LowChart.powA F r).left := spMap ρ ≫ y₀
   have hcp : ξ₀ (closedPoint R') = y₀ (closedPoint (GlobalTheory.LowChart.W F y)) := by
@@ -1208,10 +1208,10 @@ theorem main : ∀ (n : ℕ), 3 ≤ n → Odd n → ∀ (h : ℕ) (F : SFam h n 
   intro n hn _ h F r V₁ _ _ _ hV hdvr b₁ v hs
   have hV0 := hV
   obtain ⟨-, -, hVc, -⟩ := hV
-  haveI := hVc
+  have := hVc
   let w := v (closedPoint V₁)
   obtain ⟨ψ, hψl, hψ⟩ := GlobalTheory.LowChart.exists_local_hom F w V₁ v rfl
-  haveI : IsNoetherianRing (GlobalTheory.LowChart.W F w) := GlobalTheory.LowChart.isNoetherianRing_completedStalkSiegelFibrePower F w
+  have : IsNoetherianRing (GlobalTheory.LowChart.W F w) := GlobalTheory.LowChart.isNoetherianRing_completedStalkSiegelFibrePower F w
   obtain ⟨R', _, _, ρ, hc', hloc, hinj, hfin, het, B, _, _, β, β₂, M, cub, hpb, hsq, hamp, hk, hiso⟩ :=
     GlobalTheory.T.exists_rigidified_cubical_root_polarisation_etale F (GlobalTheory.LowChart.W F w) (GlobalTheory.LowChart.isAdicComplete_completedStalkSiegelFibrePower F w) (GlobalTheory.LowChart.toPow F w ≫ (GlobalTheory.LowChart.powA F r).hom)
 

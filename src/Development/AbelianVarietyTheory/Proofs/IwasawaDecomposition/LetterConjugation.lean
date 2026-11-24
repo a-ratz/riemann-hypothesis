@@ -92,8 +92,8 @@ theorem conj_eq {τ : E →+* ℂ} (h : τ (H.rt : E) ≠ H.rt0) : conjEmb τ (H
 theorem mult_add (τ : E →+* ℂ) : Dw.mult τ + Dw.mult (conjEmb τ) = Dw.p + Dw.q := by
   unfold Datum.mult
   by_cases h : τ (H.rt : E) = H.rt0
-  · rw [if_pos h, if_neg (conj_ne h)]
-  · rw [if_neg h, if_pos (conj_eq h), add_comm]
+  · rw [ite_eq_left h, ite_eq_right (conj_ne h)]
+  · rw [ite_eq_right h, ite_eq_left (conj_eq h), add_comm]
 
 theorem two_mul_length : 2 * (letters Dw).length = Module.finrank ℚ E * (Dw.p + Dw.q) := by
   classical

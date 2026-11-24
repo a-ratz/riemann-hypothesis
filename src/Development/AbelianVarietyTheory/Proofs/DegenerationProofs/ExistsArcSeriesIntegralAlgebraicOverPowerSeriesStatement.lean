@@ -128,7 +128,7 @@ theorem mem_of_pow_mem {K : Type} [Field K] (W : ValuationSubring K) {x : K} {n 
 theorem local_noeth {O' : Type} [CommRing O'] [IsDomain O'] {ϖ : O'} (h : GlobalTheory.LN.ArcBase O' ϖ) :
     IsLocalRing O' ∧ IsNoetherianRing O' := by
   rcases h with ⟨h, -⟩ | ⟨h, -⟩
-  · letI := h.toField
+  · let := h.toField
     exact ⟨inferInstance, inferInstance⟩
   · exact ⟨inferInstance, inferInstance⟩
 
@@ -158,8 +158,8 @@ theorem exists_lift : Laws → BrGtSt → AllA fun {_} _ _ _ {_} {_} {_} {_} {_}
               exact ⟨n, h1, by
                 rw [h2]
                 by_cases h : τ H.rt = algebraMap (FractionRing O') F (algebraMap O' _ (b r))
-                · rw [if_pos h]; exact if_pos h
-                · rw [if_neg h]; exact if_neg h⟩
+                · rw [ite_eq_left h]; exact ite_eq_left h
+                · rw [ite_eq_right h]; exact ite_eq_right h⟩
             I := I, N := N, ν := ν, q := q, hq := hq
             be := { be := a.be.comp ν.eX.toIntLinearEquiv.toLinearMap ν.eX.toIntLinearEquiv.toLinearMap
                     symm := fun y z => a.be_symm _ _
@@ -279,10 +279,10 @@ theorem exists_finset_point {R : Type} [CommRing R] [IsDomain R] {F : Type} [Fie
 
 theorem exists_finite_field_of_values : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (F : Type) [Field F] [Algebra (FractionRing R) F] [Algebra.IsAlgebraic (FractionRing R) F] (N : NumD F) (_ : NumOf D F N) (T : Set N.A), T.Finite → ∃ (K₁ : IntermediateField (FractionRing R) F) (A₀ : Subgroup N.A), FiniteDimensional (FractionRing R) K₁ ∧ (∀ x ∈ T, x ∈ A₀) ∧ (∀ χ, N.c χ ∈ A₀) ∧ (∀ x ∈ A₀, ∀ y ∈ A₀, ∀ u ∈ A₀, (N.θ x y u : F) ∈ K₁) ∧ (∀ x ∈ A₀, (N.σ x : F) ∈ K₁) ∧ (∀ x ∈ A₀, N.th x ∈ K₁) ∧ ∀ χ, (N.ψ χ : F) ∈ K₁ := by
   intro R _ _ D F _ _ _ N ν T hT
-  haveI := D.P.isAb.proper
+  have := D.P.isAb.proper
   choose S hS using fun x : N.A => exists_finset_point D.P.A (ν.eA x)
   let s : Set F := ⋃ x ∈ T, (S x : Set F)
-  haveI : Finite s := (hT.biUnion fun x _ => (S x).finite_toSet).to_subtype
+  have : Finite s := (hT.biUnion fun x _ => (S x).finite_toSet).to_subtype
   let K := IntermediateField.adjoin (FractionRing R) s
   let f : K →+* F := algebraMap K F
   have hf : f.comp (algebraMap (FractionRing R) K) = algebraMap (FractionRing R) F := rfl
@@ -477,9 +477,9 @@ theorem coeff_X_pow_mul_expand {k : ℕ} (hk : k ≠ 0) {j : ℕ} (hj : j < k) (
   · have hm : m = k * (m / k) + j := by rw [← h]; exact (Nat.div_add_mod m k).symm
     have h1 : j ≤ m := by omega
     have h2 : m - j = k * (m / k) := by omega
-    rw [if_pos h1, if_pos h, h2, if_pos (dvd_mul_right _ _),
+    rw [ite_eq_left h1, ite_eq_left h, h2, ite_eq_left (dvd_mul_right _ _),
       Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero hk)]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     split_ifs with h1 h2
     · exfalso
       obtain ⟨c, hc⟩ := h2
@@ -495,7 +495,7 @@ theorem sum_residuePart {k : ℕ} (hk : k ≠ 0) (f : PowerSeries O) :
 
   rw [map_sum, Finset.sum_congr rfl
   (fun l hl => coeff_X_pow_mul_expand hk (Finset.mem_range.1 hl) _ m), Finset.sum_ite_eq,
-  if_pos (Finset.mem_range.2 (Nat.mod_lt _ (Nat.pos_of_ne_zero hk))), coeff_residuePart,
+  ite_eq_left (Finset.mem_range.2 (Nat.mod_lt _ (Nat.pos_of_ne_zero hk))), coeff_residuePart,
   Nat.div_add_mod]
 
 theorem residuePart_X_pow_mul_expand {k : ℕ} (hk : k ≠ 0) {j l : ℕ} (hj : j < k) (hl : l < k)
@@ -520,9 +520,9 @@ theorem extendAdd_X_pow_mul_expand_of_lt (φ : PowerSeries O →+* K) {k : ℕ} 
     {j : ℕ} (hj : j < k) (g : PowerSeries O) :
     extendAdd φ k t (X ^ j * expand k hk g) = t ^ j * φ g := by
   rw [extendAdd_apply, Finset.sum_eq_single j]
-  · rw [residuePart_X_pow_mul_expand hk hj hj, if_pos rfl]
+  · rw [residuePart_X_pow_mul_expand hk hj hj, ite_eq_left rfl]
   · intro l hl hlj
-    rw [residuePart_X_pow_mul_expand hk hj (Finset.mem_range.1 hl), if_neg hlj, map_zero,
+    rw [residuePart_X_pow_mul_expand hk hj (Finset.mem_range.1 hl), ite_eq_right hlj, map_zero,
       mul_zero]
   · intro h
     exact absurd (Finset.mem_range.2 hj) h
@@ -620,7 +620,7 @@ theorem hasSum_map_powerSeries_mk_finsum : ∀ (O K Z : Type) [CommRing O] [Nont
         refine finsum_congr fun z => ?_
         refine finsum_congr_Prop ?_ (fun _ => rfl)
         apply propext
-        simp only [Finset.coe_filter, Set.mem_setOf_eq]
+        simp only [Finset.coe_filter, Set.mem_ofPred_eq]
         exact ⟨fun h => ⟨hs z (h ▸ hm), h⟩, fun h => h.2⟩
       rw [this, Finset.sum_filter]
       refine Finset.sum_congr rfl fun z _ => ?_
@@ -640,7 +640,7 @@ theorem hasSum_map_powerSeries_mk_finsum : ∀ (O K Z : Type) [CommRing O] [Nont
   have hfn : {z | deg z < n}.Finite := by
     refine ((Set.finite_Iio n).biUnion (fun m _ => hfin m)).subset ?_
     intro z hz
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_Iio]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_Iio]
     exact ⟨deg z, hz, rfl⟩
   simp only [SummationFilter.unconditional_filter]
   filter_upwards [Filter.eventually_ge_atTop hfn.toFinset] with s hs
@@ -693,8 +693,8 @@ theorem hasSum_zpow_of_form_le {O C X : Type} [CommRing O] [NontriviallyNormedFi
     refine (Set.Finite.preimage (fun _ _ _ _ h => hinj h)
       (GlobalTheory.ClassMin.finite_sublevel hQ ((D * n : ℤ) : ℝ))).subset ?_
     intro χ hχ
-    simp only [Set.mem_setOf_eq] at hχ
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, GlobalTheory.ClassMin.ofIntBilin_apply]
+    simp only [Set.mem_ofPred_eq] at hχ
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, GlobalTheory.ClassMin.ofIntBilin_apply]
     have h := hE χ
     have h0 := hE0 χ
     have h2 := hB0 (y + m • χ)
@@ -1075,8 +1075,8 @@ theorem exists_complete_isAlgClosed_centred_at_prime :
   have hψ : Function.Injective ψ :=
     (algebraMap (FractionRing O) C).injective.comp
       ((IsFractionRing.injective O (FractionRing O)).comp hφ)
-  letI : Algebra R C := ψ.toAlgebra
-  haveI : FaithfulSMul R C := (faithfulSMul_iff_algebraMap_injective R C).2 hψ
+  let : Algebra R C := ψ.toAlgebra
+  have : FaithfulSMul R C := (faithfulSMul_iff_algebraMap_injective R C).2 hψ
   let g : K →ₐ[R] C := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1114,9 +1114,9 @@ theorem exists_valuedField_centred_subalgebra (R K : Type) [CommRing R] [IsDomai
     apply hinjK
     have := congrArg (fun x : A => (x : K)) hab
     simpa using this
-  haveI : IsNoetherianRing A := isNoetherianRing_of_fg hA
-  haveI : Algebra.IsAlgebraic A K := Algebra.IsAlgebraic.extendScalars hinj
-  haveI : FaithfulSMul A K :=
+  have : IsNoetherianRing A := isNoetherianRing_of_fg hA
+  have : Algebra.IsAlgebraic A K := Algebra.IsAlgebraic.extendScalars hinj
+  have : FaithfulSMul A K :=
     (faithfulSMul_iff_algebraMap_injective A K).2 Subtype.val_injective
   have hne : P ≠ ⊥ := by
     intro h
@@ -1135,8 +1135,8 @@ theorem exists_valuedField_centre_le_pow : ∀ (R K : Type) [CommRing R] [IsDoma
     have hint : IsIntegral R x := by
       have h := (Algebra.IsIntegral.isIntegral (R := R) (⟨x, hx⟩ : R₁)).map R₁.val
       simpa using h
-    letI : Algebra R S := ((algebraMap R K).codRestrict S.toSubring hS).toAlgebra
-    haveI : IsScalarTower R S K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    let : Algebra R S := ((algebraMap R K).codRestrict S.toSubring hS).toAlgebra
+    have : IsScalarTower R S K := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have hint' : IsIntegral S x := hint.tower_top
     obtain ⟨y, hy⟩ := (IsIntegrallyClosed.isIntegral_iff (R := S) (K := K)).1 hint'
     rw [← hy]
@@ -1168,7 +1168,7 @@ theorem exists_valuedField_centre_le_pow : ∀ (R K : Type) [CommRing R] [IsDoma
     have hU0 : U ≠ 0 := fun h => hu (hinjK (by rw [← hU, h, map_zero]))
     let Q : Submodule R K := (q.restrictScalars R).map R₁.val.toLinearMap
     have hQ : Q.FG := by
-      haveI : IsNoetherian R R₁ := isNoetherian_of_isNoetherianRing_of_finite R R₁
+      have : IsNoetherian R R₁ := isNoetherian_of_isNoetherianRing_of_finite R R₁
       exact Submodule.FG.map _ (IsNoetherian.noetherian _)
     let N : Submodule R K := Subalgebra.toSubmodule R₁ ⊔
       Q.map (LinearMap.mulRight R (U ^ (e + 1))⁻¹)
@@ -1212,7 +1212,7 @@ theorem exists_valuedField_centre_le_pow : ∀ (R K : Type) [CommRing R] [IsDoma
       obtain ⟨a, ha, hxa⟩ := hinv x x.2
       obtain ⟨M, hM, hqM⟩ := Ideal.exists_le_maximal q hqp.ne_top
       have hMc : (M.comap (algebraMap R R₁)).IsMaximal := by
-        letI : M.IsMaximal := hM
+        let : M.IsMaximal := hM
         exact Ideal.isMaximal_under_of_isIntegral_of_isMaximal M
       have huM : algebraMap R R₁ u ∈ M := by
         rw [← Ideal.mem_comap, IsLocalRing.eq_maximalIdeal hMc]; exact hum
@@ -1740,7 +1740,7 @@ theorem exists_root_system {K : Type} [Field K] [IsAlgClosed K] (u : Kˣ) : ∃ 
 theorem base_local {O : Type} [CommRing O] [IsDomain O] {ϖ : O} (h : GlobalTheory.LN.ArcBase O ϖ) :
     IsLocalRing O ∧ IsPrincipalIdealRing O := by
   rcases h with ⟨h, -⟩ | ⟨h, -⟩
-  · letI := h.toField
+  · let := h.toField
     exact ⟨inferInstance, inferInstance⟩
   · exact ⟨inferInstance, inferInstance⟩
 
@@ -1859,7 +1859,7 @@ theorem exists_series : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
       obtain ⟨C, _, _, _, _, gam, g1, g2, g3⟩ := _root_.GlobalTheory.exists_valuedField_centre_le_pow (PowerSeries O') K PowerSeries.X
         (fun h => not_isUnit_zero (by simpa using h.map PowerSeries.constantCoeff : IsUnit (0 : O')))
         PowerSeries.X_ne_zero _ hfin S hS e
-      letI : Algebra (FractionRing O') C := (gam.comp (algebraMap _ K)).toAlgebra
+      let : Algebra (FractionRing O') C := (gam.comp (algebraMap _ K)).toAlgebra
       have h1 : ∀ x, algebraMap (FractionRing O') C (algebraMap O' _ x) =
           gam (algebraMap (PowerSeries O') K (PowerSeries.C x)) := fun x => congrArg gam (hK x)
       have hce : CExt O' ⊥ C := ⟨fun x => by rw [h1]; exact g1 _, fun x hx => by

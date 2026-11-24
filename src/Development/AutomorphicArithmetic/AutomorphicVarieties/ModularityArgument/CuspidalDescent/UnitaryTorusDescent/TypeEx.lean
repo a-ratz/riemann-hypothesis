@@ -168,7 +168,7 @@ private theorem te_loc (P : GlobalTheory.Mem.LiteralAutomorphy.LitN) (NZ : Upper
 private theorem te_root {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [Finite (ResidueField O)] {a b : Oˣ}
     (ha : a ^ (Nat.card (ResidueField O) - 1) = 1) (hb : b ^ (Nat.card (ResidueField O) - 1) = 1)
     (h : residue O a = residue O b) : a = b := by
-  letI := Fintype.ofFinite (ResidueField O)
+  let := Fintype.ofFinite (ResidueField O)
   have hu : ((a * b⁻¹ : Oˣ) : O) ^ (Nat.card (ResidueField O) - 1) = 1 := by
     rw [← Units.val_pow_eq_pow_val, mul_pow, inv_pow, ha, hb]; simp
   have hr : residue O (a * b⁻¹ : Oˣ) = 1 := by

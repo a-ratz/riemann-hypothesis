@@ -200,7 +200,7 @@ open UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial UpperTheory.V.Z.Invariant
 private theorem norm_of_split {K M : Type} [Field K] [NumberField K] [Field M] [NumberField M] [Algebra K M]
     (w : HeightOneSpectrum (𝓞 M)) (h : GM.Split M (w.under (𝓞 K))) :
     Formalism.ConjugateSelfDual.normV w = Formalism.ConjugateSelfDual.normV (w.under (𝓞 K)) := by
-  haveI hl : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := ⟨rfl⟩
+  have hl : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := ⟨rfl⟩
   have := w.isMaximal
   have := (w.under (𝓞 K)).isMaximal
   have hs : Function.Surjective (completionMap (w.under (𝓞 K)) w) := h ⟨w, hl⟩
@@ -429,7 +429,7 @@ private theorem exAt {E : Type} [Field E] [NumberField E] [_root_.NumberField.Is
   choose m hm using fun τ => ((Dp.parEx E n hn μ V hV).1 τ).exists
   refine ⟨m, fun w => if hw : ∃ B, SSat μ V w B then hw.choose else 0, hm, fun w hw => ?_⟩
   have hx := h w hw
-  simp only [dif_pos hx]
+  simp only [dite_eq_left hx]
   exact hx.choose_spec
 
 private theorem emb_two {K M : Type} [Field K] [NumberField K] [Field M] [NumberField M] [Algebra K M] [IsGalois K M]
@@ -444,8 +444,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.indNorm :
   intro hC K M _ _ _ _ _ _ _ _ h2 π hn hc hb
   have hp : (Module.finrank K M).Prime := h2 ▸ Nat.prime_two
   have hcard : Nat.card (M ≃ₐ[K] M) = 2 := by rw [IsGalois.card_aut_eq_finrank, h2]
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Nontrivial (M ≃ₐ[K] M) := Finite.one_lt_card_iff_nontrivial.1 (by omega)
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Nontrivial (M ≃ₐ[K] M) := Finite.one_lt_card_iff_nontrivial.1 (by omega)
   obtain ⟨σ, hσ⟩ := exists_ne (1 : M ≃ₐ[K] M)
   have hgen : ∀ τ : M ≃ₐ[K] M, τ ∈ Subgroup.zpowers σ := fun τ => mem_zpowers_of_prime_card hcard hσ
   obtain ⟨-, hAtE, -, -, -, θ, hθ, hst⟩ :=
@@ -482,7 +482,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.indNorm :
     · exact (hb v h).1
   have other : ∀ w : Pl M, GM.Split M (w.under (𝓞 K)) → ∃ w' : Pl M, w' ≠ w ∧ w'.under (𝓞 K) = w.under (𝓞 K) := fun w h => by
     obtain ⟨e, -⟩ := hspl _ h
-    haveI hl : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := ⟨rfl⟩
+    have hl : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := ⟨rfl⟩
     have hx : e (e.symm ⟨w, hl⟩ + 1) ≠ ⟨w, hl⟩ := fun hh => by
       have := e.injective (hh.trans (e.apply_symm_apply _).symm)
       revert this
@@ -829,7 +829,7 @@ private theorem map_inv_self {G : Type} [Group G] [MeasurableSpace G] [Measurabl
 
 private theorem hecke_star {K : Type} [Field K] [NumberField K] {n : ℕ} (D : TypeDat K n) (f : CC K n)
     (hf : D.Hecke f) : D.Hecke (CuspidalProjection.ccStar f) := by
-  haveI := D.prob
+  have := D.prob
   have hm := map_inv_self D.ν D.U D.supp D.inv
   have hI : ∀ φ : G1 K n → ℂ, ∫ k, φ k⁻¹ ∂D.ν = ∫ k, φ k ∂D.ν := fun φ => by
     have := integral_map_equiv (μ := D.ν) (MeasurableEquiv.inv (G1 K n)) φ
@@ -890,16 +890,16 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.famTr :
   set_option synthInstance.maxHeartbeats 200000 in
     intro K _ _ _ μ _ μ₂ _ τ₁ τ₂ hp D d d' A A' θ a g P hP hUP hUΛ ha hDa hg hDg N'
     classical
-    haveI := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := 2 + 2) μ
-    haveI hsf : SFinite (quotientMeasure (Gam K (2 + 2)) μ) := sfinite_of_finite _
-    haveI : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
-    haveI : SecondCountableTopology (RightCosetSpace (Gam K (2 + 2))) :=
+    have := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := 2 + 2) μ
+    have hsf : SFinite (quotientMeasure (Gam K (2 + 2)) μ) := sfinite_of_finite _
+    have : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
+    have : SecondCountableTopology (RightCosetSpace (Gam K (2 + 2))) :=
       (isOpenQuotientMap_mk (Gam K (2 + 2))).isQuotientMap.secondCountableTopology
         (isOpenQuotientMap_mk (Gam K (2 + 2))).isOpenMap
-    haveI : MeasurableSpace.CountablyGenerated (RightCosetSpace (Gam K (2 + 2))) := BorelSpace.countablyGenerated
-    haveI : IsSeparable (quotientMeasure (Gam K (2 + 2)) μ) := isSeparable_of_sigmaFinite _
-    haveI : SecondCountableTopology (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) := Lp.SecondCountableTopology
-    haveI : TopologicalSpace.SeparableSpace (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) :=
+    have : MeasurableSpace.CountablyGenerated (RightCosetSpace (Gam K (2 + 2))) := BorelSpace.countablyGenerated
+    have : IsSeparable (quotientMeasure (Gam K (2 + 2)) μ) := isSeparable_of_sigmaFinite _
+    have : SecondCountableTopology (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) := Lp.SecondCountableTopology
+    have : TopologicalSpace.SeparableSpace (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) :=
       TopologicalSpace.SecondCountableTopology.to_separableSpace
     have hDs := hecke_star D g hDg
     generalize hs : CuspidalProjection.ccStar g = s at hg hDs ⊢
@@ -949,12 +949,12 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.famTr :
     have k₂m : StronglyMeasurable k₂ := StronglyMeasurable.ite om m1 m2
     have k₂b : ∀ y, ‖k₂ y‖ ≤ max (‖P‖ * (C₄ * (C₃ * (C₅ * Real.exp (N₅ * T)) ^ c) ^ N₄)) B₂ := fun y => by
       by_cases hy : Om T (Quotient.out y : G1 K (2 + 2))
-      · simp only [k₂, if_pos hy]
+      · simp only [k₂, ite_eq_left hy]
         refine le_trans ?_ (le_max_left _ _)
         refine (P.le_opNorm _).trans (mul_le_mul_of_nonneg_left ((b₄ _).trans (mul_le_mul_of_nonneg_left
           (pow_le_pow_left₀ (q0 _).le ((hθ _).trans (mul_le_mul_of_nonneg_left
           (pow_le_pow_left₀ (q0 _).le ((hb T _ hT).1 hy) _) hC₃)) _) hC₄)) (norm_nonneg _))
-      · simp only [k₂, if_neg hy]
+      · simp only [k₂, ite_eq_right hy]
         exact (hB₂ _).trans (le_max_right _ _)
     have bae : ∀ φ, (ContinuousLinearMap.adjoint (P ∘L Rop μ g ∘L θ.U ∘L Λ) φ : RightCosetSpace (Gam K (2 + 2)) → ℂ)
         =ᵐ[quotientMeasure (Gam K (2 + 2)) μ] fun y => ⟪k₂ y, φ⟫_ℂ := fun φ => by
@@ -972,9 +972,9 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.famTr :
         exact hx h
       filter_upwards [t1, t2, t3, t4, t5 (ContinuousLinearMap.adjoint θ.U (Rop μ s (P φ)))] with y u1 u2 u3 u4 u5
       by_cases hy : Om T (Quotient.out y : G1 K (2 + 2))
-      · simp only [k₂, if_pos hy]
+      · simp only [k₂, ite_eq_left hy]
         rw [e2, u5 hy, u3, u4, kvout, hsa]
-      · simp only [k₂, if_neg hy]
+      · simp only [k₂, ite_eq_right hy]
         rw [e3, ContinuousLinearMap.comp_apply, u1, u2, lout]
     refine ⟨isTraceClass_comp kHS (hBHS.comp_left M), fun y => ⟪k T (Quotient.out y), M (k₂ y)⟫_ℂ, ?_, ?_, fun y hy => ?_, fun y hy => ?_⟩
     · refine Integrable.of_bound (km.inner (M.continuous.comp_stronglyMeasurable k₂m)).aestronglyMeasurable
@@ -983,8 +983,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.famTr :
         (mul_le_mul_of_nonneg_left (k₂b y) (norm_nonneg _))) (norm_nonneg _) ((norm_nonneg _).trans (hB₁ 1)))
     · exact traceKer _ _ M _ _ k₂ (MemLp.of_bound km.aestronglyMeasurable _ (Filter.Eventually.of_forall fun y => hB₁ _))
         (MemLp.of_bound k₂m.aestronglyMeasurable _ (Filter.Eventually.of_forall k₂b)) kHS hBHS kae bae
-    · simp only [k₂, if_pos hy, kO T _ hy]
-    · simp only [k₂, if_neg hy]
+    · simp only [k₂, ite_eq_left hy, kO T _ hy]
+    · simp only [k₂, ite_eq_right hy]
       have z0 := q0 (Quotient.out y)
       have z1 := kb T _ hT hy
       have z2 : ‖l T (θ.e (Quotient.out y))‖ ≤ C₂ * (C₃ * qht (Quotient.out y : G1 K (2 + 2)) ^ c) ^ N₂ :=
@@ -1089,7 +1089,7 @@ private theorem decay {c C T q : ℝ} {m N' : ℕ} (hc : 0 < c) (hT : 2 * C / c 
   rw [Real.exp_neg]
   refine inv_anti₀ (Real.exp_pos _) ?_
   calc Real.exp (N' * T) ≤ Real.exp (m * (c / 2 * T)) := Real.exp_le_exp.2 (by nlinarith [mul_le_mul_of_nonneg_right hm hT0])
-    _ = Real.exp (c / 2 * T) ^ m := Real.exp_nat_mul _ _
+    _ = Real.exp (c / 2 * T) ^ m := Real.exp_natCast_mul _ _
     _ ≤ q ^ m := pow_le_pow_left₀ (Real.exp_pos _).le h2.le m
 
 private theorem intEst' {X : Type} [MeasurableSpace X] (ν : Measure X) [IsFiniteMeasure ν] (S : Set X) (k c w : X → ℂ) (A B : ℝ)
@@ -1110,7 +1110,7 @@ set_option maxHeartbeats 800000 in
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.kernX :
     KernX := by
   intro K _ _ _ μ _ μ₂ _ τ₁ τ₂ hp D d d' A A' θ a g P hP hθ hΛθ ha haD hg hgD
-  haveI := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := 2 + 2) μ
+  have := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := 2 + 2) μ
   obtain ⟨C0, c, N0, hc, hC0, hom⟩ := omBd (K := K)
   obtain ⟨C1, N1, hC1, b1⟩ := ker_bd μ θ a (CuspidalProjection.ccStar g)
   have ha' := smoothDecay K (2 + 2) μ a ha
@@ -1145,10 +1145,10 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.kernX :
       have : 0 ≤ C1 * C0 ^ N1 := by positivity
       linarith
   · have e := b1 (M ∘L (1 - Pc μ - P)) (Quotient.out y) _ ((hom T _ hT0).1 hy)
-    rw [mul_pow, ← Real.exp_nat_mul, ← mul_assoc, show (N1 : ℝ) * (N0 * T) = (N0 * N1 : ℕ) * T by push_cast; ring] at e
+    rw [mul_pow, ← Real.exp_natCast_mul, ← mul_assoc, show (N1 : ℝ) * (N0 * T) = (N0 * N1 : ℕ) * T by push_cast; ring] at e
     refine le_of_eq_of_le ?_ e
     rw [hw1 y hy, hk, pc_inner μ M hM, proj_inner P M hP.1 hP.2.1 hMP, ← inner_sub_right, ← inner_sub_right]
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply, map_sub]
+    simp only [ContinuousLinearMap.comp_apply, sub_apply, one_apply_eq_self, map_sub]
   · have e := (decay hc hT hT0 hm ((hom T _ hT0).2 hy)).2
     refine (norm_add_le _ _).trans ((add_le_add (b2 M _ _) (hw2 y hy)).trans ?_)
     rw [← add_mul, ← add_mul]

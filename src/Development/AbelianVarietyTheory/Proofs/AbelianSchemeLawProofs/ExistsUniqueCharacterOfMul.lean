@@ -168,7 +168,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma torusPoint_mul {R : CommRingCat.{0}} (φ φ' ψ : torusRing ZU X ⟶ R) (s : Spec R ⟶ S)
     (h : ∀ x : X, ψ.hom (single x 1) = φ.hom (single x 1) * φ'.hom (single x 1)) :
     torusPoint φ s * torusPoint φ' s = torusPoint ψ s := by
-  letI : Algebra ZU.{0} R := ULift.algebra' ℤ R
+  let : Algebra ZU.{0} R := ULift.algebra' ℤ R
   apply torus_hom_ext
   let a : torusRing ZU X →ₐ[ZU.{0}] R :=
     { φ.hom with commutes' := fun r => RingHom.congr_fun (ringHom_uliftInt_ext (φ.hom.comp (algebraMap ZU.{0} (torusRing ZU X))) (algebraMap ZU.{0} R)) r }

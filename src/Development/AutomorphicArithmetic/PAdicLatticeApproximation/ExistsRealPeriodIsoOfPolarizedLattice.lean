@@ -103,7 +103,7 @@ theorem UpperTheory.exists_sum_baseChange_of_commute_baseChange :
   let M : Fin (Module.finrank ℚ V') × Fin (Module.finrank ℚ V) → R :=
     fun p => B.repr (T (1 ⊗ₜ bV' p.1)) p.2
   let S : Submodule ℚ R := Submodule.span ℚ (Set.range M)
-  haveI : FiniteDimensional ℚ S := FiniteDimensional.span_of_finite ℚ (Set.finite_range M)
+  have : FiniteDimensional ℚ S := FiniteDimensional.span_of_finite ℚ (Set.finite_range M)
   let bS := Module.finBasis ℚ S
   let r : Fin (Module.finrank ℚ S) → R := fun l => (bS l : R)
   have hr : LinearIndependent ℚ r := bS.linearIndependent.map' S.subtype (Submodule.ker_subtype S)
@@ -240,7 +240,7 @@ private theorem actOn_inj {C V R : Type} [Ring C] [Algebra ℚ C] [AddCommGroup 
 theorem UpperTheory.commutant_eq_range_actOn_and_injective :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G) (R : Type) [CommRing R] [Algebra ℚ R], (∀ A : Module.End R (R ⊗[ℚ] VQ D), (∀ b : D.O, A ∘ₗ (actQ D b).baseChange R = (actQ D b).baseChange R ∘ₗ A) → ∃ c : R ⊗[ℚ] G.C, actOn L.rep R c = A) ∧ Function.Injective (actOn L.rep R) := by
   intro p _ D G L R _ _
-  haveI : Module.Finite ℤ D.La := D.finLa
+  have : Module.Finite ℤ D.La := D.finLa
   refine ⟨fun A hA => ?_, actOn_inj L.rep L.rep_inj⟩
   obtain ⟨k, r, h, hh, hA'⟩ := UpperTheory.exists_sum_baseChange_of_commute_baseChange D.O (VQ D) (VQ D) R (actQ D) (actQ D) A hA
   have hx : ∀ l, ∃ x, L.rep x = h l := fun l => (L.rep_range (h l)).2 (fun b => hh l b)
@@ -284,8 +284,8 @@ theorem UpperTheory.liftBaseChange_real_bijective_of_lattice :
     rintro _ ⟨z, rfl⟩
     exact ⟨(1 : ℝ) ⊗ₜ j z, by simp [LinearMap.liftBaseChange_tmul, hPq]⟩
   let L : Submodule ℤ (Fin g → ℂ) := P.range.toIntSubmodule
-  haveI : DiscreteTopology L := hdisc
-  haveI : IsZLattice ℝ L := ⟨by simpa [L] using hPspan⟩
+  have : DiscreteTopology L := hdisc
+  have : IsZLattice ℝ L := ⟨by simpa [L] using hPspan⟩
   have hrank : Module.finrank ℤ La = Module.finrank ℝ (Fin g → ℂ) := by
     rw [← ZLattice.rank ℝ L]
     exact LinearEquiv.finrank_eq (LinearEquiv.ofInjective P.toIntLinearMap hP)
@@ -303,7 +303,7 @@ theorem UpperTheory.liftBaseChange_real_bijective_of_lattice :
     rw [eq_top_iff, ← hspan, Submodule.span_le]
     rintro _ ⟨z, rfl⟩
     exact hsub z
-  haveI : Module.Finite ℚ V := ⟨⟨Finset.univ.image (j ∘ b), by
+  have : Module.Finite ℚ V := ⟨⟨Finset.univ.image (j ∘ b), by
     rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]; exact hVspan⟩⟩
   have hV : Module.finrank ℚ V ≤ Module.finrank ℤ La := by
     rw [Module.finrank_eq_card_chooseBasisIndex ℤ La, ← finrank_top, ← hVspan]

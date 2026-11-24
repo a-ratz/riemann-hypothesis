@@ -210,7 +210,7 @@ theorem fibre_volume : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k 
       have e2 : Sg2 k r z (n₁ * g₀ * n₂ * (Matrix.of n * g₁)) = Sg2 k r z (g₀ * (Matrix.of (T n) * A)) := by
         rw [← (_root_.GlobalTheory.Amp.TwoSided.Sg2_invariant_continuousOn_one_le_bounds k r z hz hT).2.1 _ (GG_mul hg₀.1 hx) n₁ (N_sub_S z hn₁) κ hκ, hTof, hg']
         simp only [Matrix.mul_assoc]
-      simp only [Eset0, Set.mem_setOf_eq, of_rmulM]
+      simp only [Eset0, Set.mem_ofPred_eq, of_rmulM]
       rw [e1, e2, hY n hn]
       exact and_congr_left fun _ => iff_of_true (GG_mul hn.1 hg₁) hx
     set ψ : Mt k r → ℝ≥0∞ := fun x =>
@@ -273,7 +273,7 @@ namespace GlobalTheory.Amp.DegSide
 variable {k r : ℕ}
 
 theorem measurableSet_GG : MeasurableSet {x : Mt k r | Matrix.of x ∈ GG k r} := by
-  simpa [Set.compl_setOf] using (WUnfold.measurableSet_not_GG (k := k) (r := r)).compl
+  simpa [Set.compl_ofPred] using (WUnfold.measurableSet_not_GG (k := k) (r := r)).compl
 
 theorem measurable_indicator_GG {β : Type} [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β] [Zero β]
     {f : Mat k r → β} (hf : ContinuousOn f (GG k r)) :
@@ -296,7 +296,7 @@ theorem measurable_conjM (h : Mat k r) : Measurable (conjM h : Mt k r → Mt k r
 theorem null_of_fibres {z : Fin (2 * r + k + 1) → ℂ} {μG μW μN ν : Measure (Mt k r)} (hz : inWb k r z) (hT : 0 < Tz k r z)
     (hW : IsHaarOn (UWset k r z) μW) (hN : IsHaarOn (Nset k r) μN) (hq : IsQuotMeas μG (muProd μW μN) ν)
     {A : Set (Mt k r)} (hA : MeasurableSet A) (h0 : ∀ g : Mat k r, μN (rmulM g ⁻¹' A) = 0) : μG A = 0 := by
-  haveI := hN.1
+  have := hN.1
   have hconj : ∀ h ∈ UWset k r z, μN.map (conjM h) = μN :=
     (GlobalTheory.UnipotentRadicalHaar.unimodular_normal k r z μW μN hz hT hW hN).2.2.2.2
   have hm : Measurable (A.indicator (1 : Mt k r → ℝ≥0∞)) := measurable_one.indicator hA
@@ -387,7 +387,7 @@ theorem side_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
     have hA0 : μG A = 0 := by
       refine null_of_fibres hz' hT' hW hN hqS hA fun g => ?_
       by_cases hg : g ∈ GG k r
-      · rw [Measure.smul_apply, measure_mono_null (s := rmulM g ⁻¹' A) (t := {n | Yj k r hj z z' γ (Matrix.of n * g) = 0}) (fun n hn => hn.2)
+      · rw [smul_apply, measure_mono_null (s := rmulM g ⁻¹' A) (t := {n | Yj k r hj z z' γ (Matrix.of n * g) = 0}) (fun n hn => hn.2)
           (hV g hg).1, smul_zero]
       · refine measure_mono_null (t := {x | Matrix.of x ∉ Nset k r}) (fun n hn hn' => hg ?_) hN.2.2.1
         exact (WUnfold.mul_mem_GG_iff hn'.1).1 hn.1
@@ -409,7 +409,7 @@ theorem side_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
       convert h2 using 1
       ext x
       refine and_congr_right fun hx => ?_
-      simp only [Set.mem_union, Set.mem_setOf_eq]
+      simp only [Set.mem_union, Set.mem_ofPred_eq]
       rw [Set.indicator_of_mem (s := {x : Mt k r | Matrix.of x ∈ GG k r}) (a := x) hx]
     have hEQ : E ∩ {x | i = 0 ∨ 2 ^ i * H₁ < Sg2 k r z' (Matrix.of x)} = E ∩ Q := by
       ext x
@@ -435,12 +435,12 @@ theorem side_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
       rw [Matrix.one_mul, hπ.1.1] at h1
       have h2 : ‖ψ' ρ‖₊ = 1 := NNReal.eq (hψ ρ hρ)
       show (‖⟪w, Φ' (ρ * Matrix.of x)⟫_ℂ‖₊ : ℝ≥0∞) ^ 2 = _
-      rw [h1, inner_smul_right, nnnorm_mul, h2, one_mul]
+      rw [h1, inner_smul_right, nnNorm_mul, h2, one_mul]
       rfl
     have hFm : Measurable ((E ∩ Q).indicator g) := by
       have h1 : ContinuousOn (fun x : Mat k r => (‖⟪w, Φ' x⟫_ℂ‖₊ : ℝ≥0∞) ^ 2) (GG k r) :=
         (ENNReal.continuous_pow 2).comp_continuousOn
-          (ENNReal.continuous_coe.comp_continuousOn (ContinuousOn.inner (𝕜 := ℂ) continuousOn_const hΦc).nnnorm)
+          (ENNReal.continuous_coe.comp_continuousOn (ContinuousOn.inner (𝕜 := ℂ) continuousOn_const hΦc).nnNorm)
       have h2 := (measurable_indicator_GG h1).indicator ((hEm R₀ y).inter hQ)
       rwa [Set.indicator_indicator, (Set.inter_eq_left (t := {x : Mt k r | Matrix.of x ∈ GG k r})).2
         (fun x (hx : x ∈ E ∩ Q) => hx.2.1)] at h2
@@ -468,7 +468,7 @@ theorem side_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
         = ∫⁻ x, (E ∩ Q).indicator g x ∂νR := by
           rw [hEQ, lintegral_indicator ((hEm R₀ y).inter hQ)]
           refine lintegral_congr fun x => ?_
-          rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+          rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
           rfl
       _ = ∫⁻ x in Q, φ x * E.indicator 1 x * g x ∂μG := by
           rw [hcut _ hFm hFi, ← lintegral_indicator hQ]
@@ -849,7 +849,7 @@ theorem low_N {k r j : ℕ} (hj : j ≤ r) {n : Mat k r} (hn : n ∈ Nset k r) {
   · rw [hv l hl, mul_zero]
   · have h := hn.2.1 ⟨l.val, by omega⟩ i (by simp; omega)
     have e : eI k r ⟨l.val, by omega⟩ = l := rfl
-    rw [e, if_neg (fun h => by rw [h] at hi; omega)] at h
+    rw [e, ite_eq_right (fun h => by rw [h] at hi; omega)] at h
     rw [h, zero_mul]
 
 theorem herm_low {k r : ℕ} {u v : Fin (2 * r + k + 1) → ℂ} (hu : ∀ a : Fin r, herm (Hpk k r) u (bvec (eI k r a)) = 0)
@@ -866,7 +866,7 @@ theorem herm_e {k r : ℕ} (u : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     herm (Hpk k r) u (bvec (eI k r a)) = u (esI k r a) := by
   have : star (bvec (eI k r a)) = bvec (eI k r a) := by simp [bvec]
   unfold herm
-  rw [this, bvec, single_one_dotProduct, Hpk_mulVec, if_pos (Or.inl (show (eI k r a).val < r from a.isLt))]
+  rw [this, bvec, single_one_dotProduct, Hpk_mulVec, ite_eq_left (Or.inl (show (eI k r a).val < r from a.isLt))]
   rfl
 
 theorem herm_low_low {k r : ℕ} {u v : Fin (2 * r + k + 1) → ℂ} (hu : Low r u) (hv : Low r v) :
@@ -882,7 +882,7 @@ theorem herm_nonneg {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r
     {v : Fin (2 * r + k + 1) → ℂ} (he : ∀ a : Fin r, herm (Hpk k r) v (bvec (eI k r a)) = 0)
     (hvz : herm (Hpk k r) v z = 0) : 0 ≤ (herm (Hpk k r) v v).re := by
   let y : Fin (2 * r + k + 1) → ℂ := fun i => if i.val < r then v i else 0
-  have hy : Low r y := fun i hi => if_neg (by omega)
+  have hy : Low r y := fun i hi => ite_eq_right (by omega)
   have hw : inWb k r (v - y) := by
     intro i hi
     rcases hi with hi | hi
@@ -922,7 +922,7 @@ theorem low_split {k r j : ℕ} (hj : j ≤ r) {n₁ n₂ g : Mat k r} (h₁ : n
   have hy := low_N le_rfl h₂ hv
   set y := n₂ *ᵥ v with hyd
   let lo : Fin (2 * r + k + 1) → ℂ := fun i => if i.val < j then y i else 0
-  have hlo : Low j lo := fun i hi => if_neg (by omega)
+  have hlo : Low j lo := fun i hi => ite_eq_right (by omega)
   refine ⟨n₂⁻¹ *ᵥ lo, low_N hj ((nSubgroup k r).2.2 _ h₂) hlo, ?_⟩
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.mulVec_sub, Matrix.mulVec_mulVec lo,
     Matrix.mul_nonsing_inv _ hu2, Matrix.one_mulVec, ← hyd]
@@ -938,7 +938,7 @@ theorem low_split {k r j : ℕ} (hj : j ≤ r) {n₁ n₂ g : Mat k r} (h₁ : n
     · rw [Matrix.mulVec_smul, hg (Fin.castLE le_rfl a) ha, smul_comm]
     · have : (eI k r (Fin.castLE le_rfl a)).val < j := by simp [eI]; omega
       have e0 : (y - lo) (eI k r (Fin.castLE le_rfl a)) = 0 := by
-        simp only [Pi.sub_apply, lo, if_pos this, sub_self]
+        simp only [Pi.sub_apply, lo, ite_eq_left this, sub_self]
       rw [e0]; simp
   rw [e]
   intro i hi
@@ -958,7 +958,7 @@ theorem Dj_eq {k r j : ℕ} (hj : j ≤ r) (z z' : Fin (2 * r + k + 1) → ℂ) 
   ext a b
   have ha : a.val < r := lt_of_lt_of_le a.isLt hj
   have hb : b.val < r := lt_of_lt_of_le b.isLt hj
-  simp only [Matrix.submatrix_apply, Zhat, fvec, Zj, Fin.val_castLE, ha, hb, dif_pos]
+  simp only [Matrix.submatrix_apply, Zhat, fvec, Zj, Fin.val_castLE, ha, hb, dite_eq_left]
   rfl
 
 theorem unit_det {k r : ℕ} {g : Mat k r} (hg : g ∈ GG k r) : IsUnit g.det ∧ g⁻¹ ∈ GG k r :=
@@ -1163,7 +1163,7 @@ theorem exists_short (k r : ℕ) {l : ℕ} (hl : l ≤ r) (z : Fin (2 * r + k + 
       ∀ a, eucl (∑ b, t b a • (x⁻¹ *ᵥ bvec (eI k r (Fin.castLE hl b)))) ≤ Sg k r z x := by
   obtain ⟨u, hu, -⟩ := gramSchmidt_lengths k r z x hx
   refine ⟨(upper u).submatrix (Fin.castLE hl) (Fin.castLE hl), ?_, fun a => ?_⟩
-  · rw [Matrix.det_of_upperTriangular]
+  · rw [det_of_isUpperTriangular]
     · simp [upper]
     · intro a b hab
       have hab' : b < a := hab
@@ -1446,7 +1446,7 @@ theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1)
   rw [MeasurableEquiv.map_apply] at n2
   have a1 : ∀ᵐ x ∂νR, Matrix.of x ∈ GG k r ∧ Yj k r hj z z' γ (Matrix.of x) ≠ 0 := by
     filter_upwards [compl_mem_ae_iff.2 n1] with x hx
-    simpa only [Set.mem_compl_iff, Set.mem_setOf_eq, not_or, not_not] using hx
+    simpa only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_or, not_not] using hx
   have a2 : ∀ᵐ x ∂νR, Yj k r hj z' z γ⁻¹ (γ * Matrix.of x) ≠ 0 := by
     filter_upwards [compl_mem_ae_iff.2 n2] with x hx
     exact fun h => hx (Or.inr h)
@@ -1518,7 +1518,7 @@ theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1)
     refine le_trans (le_of_eq ?_) h
     congr 2
     ext x
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     rw [show lmulEquiv hγ x = lmulM γ x from rfl, lmul_inv_lmul hγ]
 
 end GlobalTheory.Amp.DegConv

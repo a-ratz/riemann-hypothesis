@@ -122,7 +122,7 @@ theorem stable {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c : ℕ} (hϖ : GlobalTheory.Sp
     exact pow_le_pow_right_of_le_one' hu.le (le_max_left _ _)
   have hγ1 : valuation k ((ϖ ^ max c 1 : kˣ) : k) < 1 := by
     simp only [Units.val_pow_eq_pow_val, map_pow]
-    exact pow_lt_one₀ zero_le' hu (by omega)
+    exact pow_lt_one₀ zero_le hu (by omega)
   have hA'int : ∀ i j, A' i j ∈ 𝒪[k] := by
     intro i j
     have h1 : valuation k (A i j) ≤ 1 := hAint i j
@@ -130,7 +130,7 @@ theorem stable {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c : ℕ} (hϖ : GlobalTheory.Sp
     exact Valuation.map_add_le _ ((hA i j).trans hγ1.le) h1
   have hB'c : ∀ i j, B' i j ∈ GlobalTheory.SplitWeil.cball (ϖ ^ c) := by
     intro i j
-    rw [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq, ← sub_add_cancel (B' i j) (B i j)]
+    rw [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq, ← sub_add_cancel (B' i j) (B i j)]
     exact Valuation.map_add_le _ ((hB i j).trans hγc) (hBc i j)
   have hdiff := det_sub_le A A' hAint hA'int ⟨((ϖ ^ max c 1 : kˣ) : k), hγ1.le⟩ hA
   have hdiff1 : valuation k (A'.det - A.det) < valuation k A.det := by
@@ -196,7 +196,7 @@ theorem integral_of_ne {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c : ℕ} (hϖ : GlobalT
   rw [Valuation.mem_integer_iff]
   refine (show valuation k (B i j) ≤ valuation k ((ϖ ^ c : kˣ) : k) from hB i j).trans ?_
   simp only [Units.val_pow_eq_pow_val, map_pow]
-  exact pow_le_one₀ zero_le' hu.le
+  exact pow_le_one₀ zero_le hu.le
 
 end Local
 
@@ -206,7 +206,7 @@ theorem GlobalTheory.StdPairSB.stdPair_mem_SB : ∀ {k : Type} [Field k] [Valuat
     (c a a' : ℕ), GlobalTheory.SplitFlip.IsUnif ϖ → GlobalTheory.SplitFlip.CondLE ϖ c ν →
       stdA ν ϖ c a a' ∈ SB (Matrix (Fin a) (Fin (a + a')) k) ∧ stdB ν ϖ c a a' ∈ SB (Matrix (Fin a') (Fin (a + a')) k) := by
   intro k _ _ _ _ ν ϖ c a a' hϖ hν
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hc1 : ∀ m : ℕ, Continuous fun X : Matrix (Fin m) (Fin (a + a')) k => blk₁ X := by
     intro m; exact continuous_pi fun i => continuous_pi fun j => continuous_id.matrix_elem i (Fin.castAdd a' j)
   have hc2 : ∀ m : ℕ, Continuous fun X : Matrix (Fin m) (Fin (a + a')) k => blk₂ X := by

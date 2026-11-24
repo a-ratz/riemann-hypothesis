@@ -226,7 +226,7 @@ theorem exists_lintegral_lt_top (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsC
 
   set g := coeffIntegrand σ θ w ℓ s with hgdef
   have hgc : Continuous g := continuous_coeffIntegrand hσ θ hθ w ℓ s
-  have hgm : Measurable fun m => ‖g m‖ₑ := hgc.measurable.enorm
+  have hgm : Measurable fun m => ‖g m‖ₑ := hgc.measurable.eNorm
   let E : Finset (Set.range β) → Set (levi F n β) := fun S =>
     {m | (∀ b, k b ≤ blockOrd F b m) ∧ ∀ b ∉ S, blockOrd F b m < k b + blockSize β b}
   have hEm : ∀ S, MeasurableSet (E S) := fun S =>
@@ -242,7 +242,7 @@ theorem exists_lintegral_lt_top (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsC
         by_cases hm : m ∈ E ∅
         · rw [Set.indicator_of_mem hm]
           by_cases hg : g m = 0
-          · rw [hg, enorm_zero]
+          · rw [hg, eNorm_zero]
             exact zero_le
           · have hℓm : ℓ (σ m w) ≠ 0 := fun h => hg (by simp [hgdef, coeffIntegrand, h])
             rw [Set.indicator_of_mem (hmemC m hℓm fun b =>
@@ -252,11 +252,11 @@ theorem exists_lintegral_lt_top (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsC
       refine (lintegral_mono hle).trans_lt ?_
       rw [lintegral_indicator hC.isClosed.measurableSet]
       have := setLIntegral_lt_top_of_isCompact (μ := μ) hC.measure_lt_top.ne hC
-        (f := fun m => ‖g m‖₊) hgc.nnnorm
-      simpa [enorm_eq_nnnorm] using this
+        (f := fun m => ‖g m‖₊) hgc.nnNorm
+      simpa [eNorm_eq_nnNorm] using this
     | insert b S hb ih =>
       have hρ : ‖c b‖ₑ < 1 := by
-        rw [enorm_eq_nnnorm]
+        rw [eNorm_eq_nnNorm]
         exact_mod_cast (show ‖c b‖₊ < 1 from hc1 b)
 
       have hdec : ∀ m, (E (insert b S)).indicator (fun m => ‖g m‖ₑ) m =
@@ -347,7 +347,7 @@ theorem exists_lintegral_lt_top (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsC
         refine lintegral_congr fun m => ?_
         simp only [Set.indicator, Set.mem_ofPred_eq, inv_mul_cancel_left]
         split_ifs
-        · rw [hgdef, coeffIntegrand_blockUnif_pow_mul hω, enorm_mul, enorm_pow]
+        · rw [hgdef, coeffIntegrand_blockUnif_pow_mul hω, eNorm_mul, eNorm_pow]
         · rw [mul_zero]
       simp_rw [hterm]
       rw [ENNReal.tsum_mul_right, ENNReal.tsum_geometric]
@@ -723,7 +723,7 @@ theorem continuous_zeroBlock_apply (b : Set.range β) (i j : Fin n) :
   simp only [zeroBlock]
   split_ifs
   · exact continuous_const
-  · exact (continuous_entry F n i j).comp continuous_subtype_val
+  · exact (continuous_entry F n i j).comp continuous_subtypeVal
 
 theorem exists_two_of_blockSize {b : Set.range β} (hb : 2 ≤ blockSize β b) :
     ∃ i₀ j₀ : Fin n, blockOf β i₀ = b ∧ β i₀ = β j₀ ∧ i₀ ≠ j₀ := by
@@ -819,9 +819,9 @@ theorem integral_indicator_eq_zero (hσ : IsSmooth σ) (hc : IsCuspidal σ)
           intro b'
           by_cases hb' : b' = b
           · subst hb'
-            simp only [k, if_pos rfl]
+            simp only [k, ite_eq_left rfl]
             exact hPr _ hm
-          · simp only [k, if_neg hb']
+          · simp only [k, ite_eq_right hb']
             refine neg_le_blockOrd fun i j hi => ?_
             have := hsupp _ (zeroBlock_blockDiag (mem_levi.1 m.2)) h0 i j
             simpa [zeroBlock, hi, hb'] using this
@@ -903,11 +903,11 @@ theorem exists_laurent (hσ : IsSmooth σ) (hc : IsCuspidal σ) (θ : levi F n �
               rintro b' (rfl | h)
               · exact h2
               · exact h1 b' h
-            rw [if_pos h1, if_pos this, if_neg (fun h => absurd h.2 (not_le.2 h2)), add_zero]
-          · rw [if_pos h1, if_neg (fun h => h2 (h b (Or.inl rfl))), if_pos ⟨h1, not_lt.1 h2⟩,
+            rw [ite_eq_left h1, ite_eq_left this, ite_eq_right (fun h => absurd h.2 (not_le.2 h2)), add_zero]
+          · rw [ite_eq_left h1, ite_eq_right (fun h => h2 (h b (Or.inl rfl))), ite_eq_left ⟨h1, not_lt.1 h2⟩,
               zero_add]
-        · rw [if_neg h1, if_neg (fun h => h1 fun b' hb' => h b' (Or.inr hb')),
-            if_neg (fun h => h1 h.1), add_zero]
+        · rw [ite_eq_right h1, ite_eq_right (fun h => h1 fun b' hb' => h b' (Or.inr hb')),
+            ite_eq_right (fun h => h1 h.1), add_zero]
       rw [hpt]
       simp only [Pi.add_apply]
       rw [integral_add (hint.indicator (hQm _)) (hint.indicator hRm)]
@@ -975,12 +975,12 @@ theorem exists_laurent (hσ : IsSmooth σ) (hc : IsCuspidal σ) (θ : levi F n �
           else 0 := by
       intro k
       by_cases hk : k = ordDet (m : GL (Fin n) F)
-      · rw [if_pos hk]
+      · rw [ite_eq_left hk]
         by_cases hm : m ∈ Q nonB1
         · rw [Set.indicator_of_mem ((hQk k).2 ⟨hm, hk.symm⟩), Set.indicator_of_mem hm, hval, hk]
         · rw [Set.indicator_of_notMem (fun h => hm ((hQk k).1 h).1), Set.indicator_of_notMem hm,
             mul_zero]
-      · rw [if_neg hk, Set.indicator_of_notMem (fun h => hk ((hQk k).1 h).2.symm), mul_zero]
+      · rw [ite_eq_right hk, Set.indicator_of_notMem (fun h => hk ((hQk k).1 h).2.symm), mul_zero]
     rw [Finset.sum_congr rfl fun k _ => hterm k, Finset.sum_ite_eq']
     split_ifs with hmem
     · rfl

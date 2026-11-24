@@ -93,10 +93,10 @@ theorem exists_basis_jD (T : LocLat G Qp LL O) {ι : Type} [Fintype ι]
     (e : Module.Basis ι W.EE (W.DD T)) :
     ∃ c : Module.Basis ι RW (TW RW T), ∀ i, c i = E.jD T (e i) := by
   classical
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI := nontrivial_EE W
-  haveI : Nontrivial RW := (ioE_injective E).nontrivial
-  haveI := T.L.free
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := nontrivial_EE W
+  have : Nontrivial RW := (ioE_injective E).nontrivial
+  have := T.L.free
   have hsp : ⊤ ≤ Submodule.span RW (Set.range fun i => E.jD T (e i)) := by
     rw [← E.jD_span T, Submodule.span_le]
     rintro _ ⟨x, rfl⟩
@@ -112,9 +112,9 @@ theorem exists_basis_jD (T : LocLat G Qp LL O) {ι : Type} [Fintype ι]
 include E in
 theorem exists_basis_DD (T : LocLat G Qp LL O) :
     Nonempty (Module.Basis (Fin (Module.finrank O ↥T.L.T)) W.EE (W.DD T)) := by
-  haveI := nontrivial_EE W
-  haveI := (W.DD_free T).1
-  haveI := finite_DD E T
+  have := nontrivial_EE W
+  have := (W.DD_free T).1
+  have := finite_DD E T
   exact ⟨Module.finBasisOfFinrankEq _ _ (W.DD_free T).2⟩
 
 theorem jD_fixed (T : LocLat G Qp LL O) (g : G) (hg : W.resΓ g = 1) (x : W.DD T) :

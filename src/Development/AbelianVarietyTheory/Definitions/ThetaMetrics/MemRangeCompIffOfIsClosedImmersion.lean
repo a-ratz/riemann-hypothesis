@@ -66,7 +66,7 @@ def valMap (x : Sp C ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) : Γ(X, U) 
   x.appLE U ⊤ h ≫ (Scheme.ΓSpecIso (CommRingCat.of C)).hom
 
 theorem valR_eq (x : Sp C ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) :
-    valR x U f = (valMap x U h).hom f := dif_pos h
+    valR x U f = (valMap x U h).hom f := dite_eq_left h
 
 theorem valF_eq_valR {F : Type} [Field F] (x : Sp F ⟶ X) (U : X.Opens) (f : Γ(X, U)) :
     valF x U f = valR x U f := rfl
@@ -302,7 +302,7 @@ theorem continuous_iff {B : Type*} [TopologicalSpace B] {e : B → (Sp C ⟶ X)}
 
 theorem PtsOver.continuous_map {S : Scheme.{0}} {p : X ⟶ S} {q : Y ⟶ S} (g : X ⟶ Y) (hg : g ≫ q = p)
     (s : Sp C ⟶ S) : Continuous (PtsOver.map g hg s) :=
-  ((continuous_comp g).comp continuous_subtype_val).subtype_mk _
+  ((continuous_comp g).comp continuous_subtypeVal).subtype_mk _
 
 theorem isInducing_of_tendsto {α β : Type*} [TopologicalSpace α] [TopologicalSpace β] {f : α → β}
     (hf : Continuous f) (H : ∀ (x : α) (l : Filter α), Tendsto f l (𝓝 (f x)) → Tendsto id l (𝓝 x)) :
@@ -312,7 +312,7 @@ theorem isInducing_of_tendsto {α β : Type*} [TopologicalSpace α] [Topological
 
 theorem PtsOver.isEmbedding_map {S : Scheme.{0}} {p : X ⟶ S} {q : Y ⟶ S} (g : X ⟶ Y) (hg : g ≫ q = p)
     (s : Sp C ⟶ S) (H : IsEmbedding fun x : Sp C ⟶ X => x ≫ g) : IsEmbedding (PtsOver.map g hg s) :=
-  IsEmbedding.of_comp (PtsOver.continuous_map g hg s) continuous_subtype_val
+  IsEmbedding.of_comp (PtsOver.continuous_map g hg s) continuous_subtypeVal
     (H.comp IsEmbedding.subtypeVal)
 
 
@@ -365,7 +365,7 @@ theorem PtsOver.isOpenEmbedding_map {S : Scheme.{0}} {p : X ⟶ S} {q : Y ⟶ S}
     [IsOpenImmersion j] (hj : j ≫ q = p) (s : Sp C ⟶ S) : IsOpenEmbedding (PtsOver.map j hj s) :=
   ⟨PtsOver.isEmbedding_map j hj s (isOpenEmbedding_comp j).isEmbedding, by
     rw [PtsOver.range_map]
-    exact (isOpenEmbedding_comp j).isOpen_range.preimage continuous_subtype_val⟩
+    exact (isOpenEmbedding_comp j).isOpen_range.preimage continuous_subtypeVal⟩
 
 end Top
 
@@ -469,7 +469,7 @@ theorem PtsOver.continuous_iff_of_generators {R : Type} [CommRing R] {p : X ⟶ 
     Continuous e ↔ ∀ i, IsOpen {b | ⊤ ≤ (e b).1 ⁻¹ᵁ U i} ∧
       ∀ f ∈ s i, ContinuousOn (fun b => valR (e b).1 (U i) f) {b | ⊤ ≤ (e b).1 ⁻¹ᵁ U i} := by
   refine ⟨fun H i => ?_, fun H => ?_⟩
-  · have H' := continuous_iff.1 (continuous_subtype_val.comp H) (U i)
+  · have H' := continuous_iff.1 (continuous_subtypeVal.comp H) (U i)
     exact ⟨H'.1, fun f _ => H'.2 f⟩
   refine continuous_iff_continuousAt.2 fun b => ?_
   obtain ⟨i, hi⟩ := exists_le_preimage_of_iSup_eq_top (e b).1 hcov
@@ -572,7 +572,7 @@ theorem PtsOver.isClosedEmbedding_map [T1Space C] {S : Scheme.{0}} {p : X ⟶ S}
     [IsClosedImmersion i] (hi : i ≫ q = p) (s : Sp C ⟶ S) : IsClosedEmbedding (PtsOver.map i hi s) :=
   ⟨PtsOver.isEmbedding_map i hi s (isClosedEmbedding_comp i).isEmbedding, by
     rw [PtsOver.range_map]
-    exact (isClosedEmbedding_comp i).isClosed_range.preimage continuous_subtype_val⟩
+    exact (isClosedEmbedding_comp i).isClosed_range.preimage continuous_subtypeVal⟩
 
 theorem isEmbedding_of_isPullback {P S : Scheme.{0}} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ S} {g : Y ⟶ S}
     (hP : IsPullback fst snd f g) : IsEmbedding fun z : Sp C ⟶ P => (z ≫ fst, z ≫ snd) := by
@@ -616,7 +616,7 @@ theorem isEmbedding_of_isPullback {P S : Scheme.{0}} {fst : P ⟶ X} {snd : P �
     if h : ⊤ ≤ (y ≫ fst) ⁻¹ᵁ U ∧ ⊤ ≤ (y ≫ snd) ⁻¹ᵁ V then pushout.desc _ _ (hcond y h.1 h.2)
     else pushout.desc _ _ (hcond z hzU hzV)
   have hψ : ∀ (y : Sp C ⟶ P) (h1 : ⊤ ≤ (y ≫ fst) ⁻¹ᵁ U) (h2 : ⊤ ≤ (y ≫ snd) ⁻¹ᵁ V),
-      ψ y = pushout.desc _ _ (hcond y h1 h2) := fun y h1 h2 => dif_pos ⟨h1, h2⟩
+      ψ y = pushout.desc _ _ (hcond y h1 h2) := fun y h1 h2 => dite_eq_left ⟨h1, h2⟩
   have hlim : Tendsto ψ l (𝓝 (ψ z)) := by
     rw [(isEmbedding_pushout (R := CommRingCat.of C) a b).tendsto_nhds_iff]
     refine Tendsto.prodMk_nhds ?_ ?_
@@ -744,9 +744,9 @@ theorem isClosedEmbedding_coord [T1Space C] {t : Sp C ⟶ Sp R} (ht : t = spMap 
     IsClosedEmbedding
       fun (x : PtsOver (spMap (algebraMap R A)) t) (i : σ) => ptsOverEquivAlgHom A ht x (a i) := by
   refine ⟨isEmbedding_coord ht a ha, ?_⟩
-  rw [range_coord ht a ha, Set.setOf_forall]
+  rw [range_coord ht a ha, Set.ofPred_forall]
   refine isClosed_iInter fun q => ?_
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   refine isClosed_iInter fun _ => ?_
   have : Continuous fun z : σ → C => MvPolynomial.aeval z q := by
     simp only [MvPolynomial.aeval_def, MvPolynomial.eval₂_eq]

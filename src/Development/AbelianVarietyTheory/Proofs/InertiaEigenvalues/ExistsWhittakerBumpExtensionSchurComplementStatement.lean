@@ -430,7 +430,7 @@ theorem map_Dof (M : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) R) :
 
 theorem det_Scof (M : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) R) (hM : IsUnit M.det)
     (hD : IsUnit (Dof M).det) : IsUnit (Scof M).det := by
-  letI := (blk M).toBlocks₂₂.invertibleOfIsUnitDet hD
+  let := (blk M).toBlocks₂₂.invertibleOfIsUnitDet hD
   have h1 : M.det = (Dof M).det * (Scof M).det := by
     rw [← Matrix.det_submatrix_equiv_self (eqv m r).symm M]
     have := Matrix.det_fromBlocks₂₂ (blk M).toBlocks₁₁ (blk M).toBlocks₁₂ (blk M).toBlocks₂₁ (blk M).toBlocks₂₂
@@ -535,7 +535,7 @@ theorem chart_schurF_eq (β : GA E (m + 1) → ℂ) (b₁ : GA E (r + 1) → ℂ
   rw [chart, dite_eq_left hx]
   change schurF β b₁ χ (g * infGL E _ hx.unit) = _
   rw [schurF]
-  rw [if_pos hDM, psi_split, apply_mkGL β _ hSM, apply_mkGL b₁ _ hDM, chiF]
+  rw [ite_eq_left hDM, psi_split, apply_mkGL β _ hSM, apply_mkGL b₁ _ hDM, chiF]
   have e1 : pInf E (Xof M (Fin.last m) 0) = Xof ((g : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)).map (pInf E) * Matrix.of x) (Fin.last m) 0 := by
     rw [← hMi, ← map_Xof _ M hDM, Matrix.map_apply]
   have e2 : pFin E (Xof M (Fin.last m) 0) = Xof ((g : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)).map (pFin E)) (Fin.last m) 0 := by
@@ -586,7 +586,7 @@ theorem chart_schurF_zero (β : GA E (m + 1) → ℂ) (b₁ : GA E (r + 1) → �
       apply hK
       refine ⟨_, hc, ?_⟩
       have hu1 : (u : Matrix (Fin (r + 1)) (Fin (r + 1)) (Ad E)).det = 1 := by
-        rw [Matrix.det_of_upperTriangular (fun i j h => hu.1 i j h)]
+        rw [Matrix.det_of_isUpperTriangular (fun i j h => hu.1 i j h)]
         exact Finset.prod_eq_one fun i _ => hu.2 i
       have hu2 : ((u⁻¹ : GA E (r + 1)) : Matrix (Fin (r + 1)) (Fin (r + 1)) (Ad E)).det = 1 := by
         have := congrArg Matrix.det (congrArg Units.val (inv_mul_cancel u))
@@ -618,7 +618,7 @@ theorem contDiffOn_chart_schurF : ∀ (E : Type) [Field E] [NumberField E] [_roo
     have hx : IsUnit (Matrix.of x) := hx0
     rw [chart, dite_eq_left hx]
     change schurF β b₁ χ (g * infGL E _ hx.unit) = 0
-    rw [schurF, if_neg]
+    rw [schurF, ite_eq_right]
     intro hDM
     apply hDf
     have h1 : ((infGL E _ hx.unit : GA E _) : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)).map (pFin E) = 1 :=
@@ -849,7 +849,7 @@ theorem schurF_blockGL (E : Type) [Field E] [NumberField E] [_root_.NumberField.
       funext i j; simp
     rw [chiF, h0]
     simp [zero_mem]
-  rw [schurF, if_pos (by rw [hD]; simp), Xof, Scof, Yof, hA, hB, hC, hD]
+  rw [schurF, ite_eq_left (by rw [hD]; simp), Xof, Scof, Yof, hA, hB, hC, hD]
   simp only [inv_one, Matrix.mul_one, Matrix.zero_mul, Matrix.mul_zero, sub_zero, Matrix.zero_apply]
   rw [hpsi, hmk, hmk1, hchi, one_mul]
 
@@ -968,15 +968,15 @@ theorem mem_NA_of_blocks (uA : GA E (m + 1)) (uD : GA E (r + 1)) (huA : uA ∈ G
   · obtain ⟨x, rfl⟩ := (eqv m r).symm.surjective i
     obtain ⟨y, rfl⟩ := (eqv m r).symm.surjective j
     simp only [unblk, submatrix_apply, Equiv.apply_symm_apply]
-    rw [Fin.lt_iff_val_lt_val] at hij
+    rw [Fin.lt_def] at hij
     rcases x with a | a <;> rcases y with b | b
     · simp only [eqv_symm_inl_val] at hij
-      rw [fromBlocks_apply₁₁]; exact huA.1 a b (Fin.lt_iff_val_lt_val.2 hij)
+      rw [fromBlocks_apply₁₁]; exact huA.1 a b (Fin.lt_def.2 hij)
     · simp only [eqv_symm_inl_val, eqv_symm_inr_val] at hij
       exact absurd hij (by have := a.isLt; omega)
     · rw [fromBlocks_apply₂₁, Matrix.zero_apply]
     · simp only [eqv_symm_inr_val] at hij
-      rw [fromBlocks_apply₂₂]; exact huD.1 a b (Fin.lt_iff_val_lt_val.2 (by omega))
+      rw [fromBlocks_apply₂₂]; exact huD.1 a b (Fin.lt_def.2 (by omega))
   · obtain ⟨x, rfl⟩ := (eqv m r).symm.surjective i
     simp only [unblk, submatrix_apply, Equiv.apply_symm_apply]
     rcases x with a | a
@@ -1010,13 +1010,13 @@ theorem GlobalTheory.SchurExtCpt.exists_compact_support : ∀ (E : Type) [Field 
   intro p hp hF
   by_cases hD : IsUnit (Dof (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E))).det
   swap
-  · exact absurd (by unfold schurF; rw [if_neg hD]) hF
+  · exact absurd (by unfold schurF; rw [ite_eq_right hD]) hF
   unfold schurF at hF
-  rw [if_pos hD] at hF
+  rw [ite_eq_left hD] at hF
   obtain ⟨⟨⟨-, h2⟩, h3⟩, h4⟩ := (mul_ne_zero_iff.1 hF) |>.imp (mul_ne_zero_iff.1) id |>.imp (fun h => h.imp mul_ne_zero_iff.1 id) id
 
   have hdet : IsUnit (Scof (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E))).det := by
-    haveI : Invertible (blk (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E))).toBlocks₂₂ :=
+    have : Invertible (blk (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E))).toBlocks₂₂ :=
       Matrix.invertibleOfIsUnitDet _ hD
     have he : (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)).det =
         (Dof (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E))).det *
@@ -1062,7 +1062,7 @@ theorem GlobalTheory.SchurExtCpt.exists_compact_support : ∀ (E : Type) [Field 
     have hint : ∀ i j, pFin E (Yof (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)) i j) ∈
         GroundTheory.Global.integralFiniteAdeles (𝓞 E) E := by
       by_contra hc
-      rw [if_neg hc] at h42
+      rw [ite_eq_right hc] at h42
       exact h42 rfl
     refine ⟨(fun i j => pInf E (Yof (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)) i j),
       fun i j => pFin E (Yof (p : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)) i j)), ⟨subset_tsupport _ ?_, ?_⟩, ?_⟩
@@ -1131,7 +1131,7 @@ theorem superDiag_eq_sd {n : ℕ} (g : GL (Fin n) R) : GlobalTheory.Whittaker.su
   simp [GlobalTheory.Whittaker.superDiag, sd, Finset.sum_filter]
 
 theorem det_of_isUT {n : ℕ} {U : Matrix (Fin n) (Fin n) R} (hU : IsUT U) : U.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j h => hU.1 i j h)]
+  rw [det_of_isUpperTriangular (fun i j h => hU.1 i j h)]
   simp [hU.2]
 
 variable {m r : ℕ}
@@ -1236,22 +1236,22 @@ theorem sd_blocks (U : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) R) :
       (if m + 1 + j.val = i.val + 1 then U ((eqv m r).symm (Sum.inl i)) ((eqv m r).symm (Sum.inr j)) else 0) =
       Bof U (Fin.last m) 0 := by
     rw [Finset.sum_eq_single (Fin.last m), Finset.sum_eq_single (0 : Fin (r + 1))]
-    · rw [if_pos (by simp)]; rfl
-    · intro j _ hj; rw [if_neg]; intro h; apply hj; ext; simp at h ⊢; omega
+    · rw [ite_eq_left (by simp)]; rfl
+    · intro j _ hj; rw [ite_eq_right]; intro h; apply hj; ext; simp at h ⊢; omega
     · simp
-    · intro i _ hi; refine Finset.sum_eq_zero fun j _ => ?_; rw [if_neg]; intro h; apply hi; ext; simp; omega
+    · intro i _ hi; refine Finset.sum_eq_zero fun j _ => ?_; rw [ite_eq_right]; intro h; apply hi; ext; simp; omega
     · simp
   have h3 : ∑ i : Fin (r + 1), ∑ j : Fin (m + 1),
       (if j.val = m + 1 + i.val + 1 then U ((eqv m r).symm (Sum.inr i)) ((eqv m r).symm (Sum.inl j)) else 0) = 0 := by
     refine Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun j _ => ?_
-    rw [if_neg]; omega
+    rw [ite_eq_right]; omega
   have h4 : ∑ i : Fin (r + 1), ∑ j : Fin (r + 1),
       (if m + 1 + j.val = m + 1 + i.val + 1 then U ((eqv m r).symm (Sum.inr i)) ((eqv m r).symm (Sum.inr j)) else 0) =
       sd (Dof U) := by
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     by_cases h : j.val = i.val + 1
-    · rw [if_pos (by omega), if_pos h]; rfl
-    · rw [if_neg (by omega), if_neg h]
+    · rw [ite_eq_left (by omega), ite_eq_left h]; rfl
+    · rw [ite_eq_right (by omega), ite_eq_right h]
   simp only [Finset.sum_add_distrib]
   rw [h2, h3, h4, zero_add]
   rfl
@@ -1290,7 +1290,7 @@ theorem psiN_mkGL {V : Matrix (Fin k) (Fin k) (Ad E)} (hV : IsUT V) : GlobalTheo
 
 theorem isUnit_Scof {m r : ℕ} (M : Matrix (Fin (m + r + 1 + 1)) (Fin (m + r + 1 + 1)) (Ad E)) (hM : IsUnit M.det)
     (hD : IsUnit (Dof M).det) : IsUnit (Scof M).det := by
-  letI := (Dof M).invertibleOfIsUnitDet hD
+  let := (Dof M).invertibleOfIsUnitDet hD
   have h1 : M.det = (Dof M).det * (Scof M).det := by
     have e : (blk M).det = M.det := Matrix.det_submatrix_equiv_self _ _
     rw [← e, blk_eq, Matrix.det_fromBlocks₂₂, Matrix.invOf_eq_nonsing_inv]; rfl
@@ -1309,14 +1309,14 @@ theorem schurF_equivariant : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
   unfold schurF
   rw [Units.val_mul]
   by_cases hD : IsUnit (Dof M).det
-  · rw [if_pos ((isUnit_Dof_mul_iff M hU).2 hD), if_pos hD, Xof_mul_entry M hU hD, Scof_mul M hU hD, Dof_mul M hU,
+  · rw [ite_eq_left ((isUnit_Dof_mul_iff M hU).2 hD), ite_eq_left hD, Xof_mul_entry M hU hD, Scof_mul M hU hD, Dof_mul M hU,
       Yof_mul M hU, mkGL_mul (Aof_isUT hU) (isUnit_Scof M hM hD), mkGL_mul (Dof_isUT hU) hD,
       hβ _ (mkGL_mem_NA (Aof_isUT hU)), hb _ (mkGL_mem_NA (Dof_isUT hU)), psiN_mkGL (Aof_isUT hU),
       psiN_mkGL (Dof_isUT hU)]
     have h : GlobalTheory.JSW.psiN u = psi (sd (Aof U)) * psi (Bof U (Fin.last m) 0) * psi (sd (Dof U)) := by
       rw [GlobalTheory.JSW.psiN, superDiag_eq_sd, sd_blocks, ← psi_add, ← psi_add]; rfl
     rw [h, psi_add]; ring
-  · rw [if_neg (mt (isUnit_Dof_mul_iff M hU).1 hD), if_neg hD, mul_zero]
+  · rw [ite_eq_right (mt (isUnit_Dof_mul_iff M hU).1 hD), ite_eq_right hD, mul_zero]
 
 end GlobalTheory.SchurEquiv
 end -- clump:auto
@@ -1426,11 +1426,11 @@ theorem GlobalTheory.SchurExt.exists_ext : ∀ (E : Type) [Field E] [NumberField
   · let U : Subgroup (GL (Fin (m + r + 1 + 1)) (Af E)) :=
       { carrier := {k | ∀ g, extB S β b₁ f Φ (g * finGL E _ k) = extB S β b₁ f Φ g}
         mul_mem' := fun {a b} ha hb g => by
-          simp only [Set.mem_setOf_eq] at ha hb ⊢
+          simp only [Set.mem_ofPred_eq] at ha hb ⊢
           rw [map_mul, ← mul_assoc, hb, ha]
         one_mem' := fun g => by simp only [map_one, mul_one]
         inv_mem' := fun {a} ha g => by
-          simp only [Set.mem_setOf_eq] at ha ⊢
+          simp only [Set.mem_ofPred_eq] at ha ⊢
           have := ha (g * finGL E _ a⁻¹)
           rw [mul_assoc, ← map_mul, inv_mul_cancel, map_one, mul_one] at this
           exact this.symm }
@@ -1447,7 +1447,7 @@ theorem GlobalTheory.SchurExt.exists_ext : ∀ (E : Type) [Field E] [NumberField
     refine hs.congr fun x hx => ?_
     have hx' : IsUnit (Matrix.of x) := hx
     obtain ⟨e1, e2⟩ := L_projInf E _ S g hx'.unit
-    simp only [chart, dif_pos hx', extB, e1, e2]
+    simp only [chart, dite_eq_left hx', extB, e1, e2]
   · intro h hh
     obtain ⟨e1, e2⟩ := (L_projSupS E _ S).1 _ (L_blockSupS E m r S h hh)
     have hf0 : f 0 = 1 := f.one_of_mem_closedBall (Metric.mem_closedBall_self f.rIn_pos.le)

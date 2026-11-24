@@ -55,7 +55,7 @@ theorem ainf_isDomain_and_injective : ∀ (l : ℕ) [Fact l.Prime], IsDomain (Pe
   intro l _
   have : IsDomain (Per.Fl l) := inferInstance
   have h : IsDomain (Per.Ainf l) := inferInstance
-  have hp : (l : Per.Ainf l) ≠ 0 := WittVector.p_nonzero l _
+  have hp : (l : Per.Ainf l) ≠ 0 := WittVector.p_ne_zero l _
   have hle : Submonoid.powers (l : Per.Ainf l) ≤ nonZeroDivisors _ :=
     powers_le_nonZeroDivisors_of_noZeroDivisors hp
   exact ⟨h, IsLocalization.isDomain_of_le_nonZeroDivisors (Per.AinfP l) hle, IsLocalization.injective _ hle⟩

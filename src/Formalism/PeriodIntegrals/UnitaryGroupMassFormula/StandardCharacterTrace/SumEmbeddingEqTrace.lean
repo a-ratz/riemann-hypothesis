@@ -280,7 +280,7 @@ theorem stdCharTR_main : PI.StdCharTR.Target := by
     push_cast
     ring
   refine ⟨ψ, ⟨?_, ?_, ?_, ?_⟩, fun x => hval x⟩
-  · exact continuous_subtype_val.comp (AddCircle.continuous_toCircle.comp hcont)
+  · exact continuous_subtypeVal.comp (AddCircle.continuous_toCircle.comp hcont)
   · intro x
     rw [hψ]
     first

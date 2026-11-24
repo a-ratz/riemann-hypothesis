@@ -50,7 +50,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.lintegral_unipotent_quotient_right_in
     ∀ (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (u : G1 F → ℝ≥0∞), Measurable u → (∀ b g, u (nU b * g) = u g) → ∀ g₀, (M.J0 M₀ fun g => u (g * g₀)) = M.J0 M₀ u := by
   intro F _ _ M₀ u hu hinv g₀
   obtain ⟨β, hβ⟩ := UpperTheory.ConvolutionTheory.R2.M.wtEx F
-  haveI := M₀.right
+  have := M₀.right
   have hone := UpperTheory.ConvolutionTheory.R2.M.wtOne F β hβ
   have hm : ∀ h : G1 F, Measurable fun g : G1 F => g * h := fun h => measurable_mul_const h
   have h1 := UpperTheory.ConvolutionTheory.R2.M.wtA F M₀ β (fun g => u (g * g₀)) 1 hβ.1 hone (hu.comp (hm g₀))

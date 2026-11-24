@@ -300,17 +300,17 @@ open scoped InnerProductSpace
 theorem GlobalTheory.kTypeInKFinite : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (D : Submodule ℂ H) (E : Fin n → Fin n → Module.End ℂ D), CompleteSpace H → IsURepOn (UJset ε) σ → IsIrredOn (UJset ε) σ → IsKMod ε σ D E → ∀ (μ : Fin n → ℝ) (S : Submodule ℂ H), IsKTypeOf ε σ μ S → S ≤ D ∧ FiniteDimensional ℂ (S.comap D.subtype) ∧ KStab ε E (S.comap D.subtype) ∧ (∀ ν : Fin n → ℝ, ∀ x ∈ S.comap D.subtype, x ≠ 0 → KHighest ε E ν x → ν = μ) := by
   intro n ε H _ _ σ D E hH hU hI hK μ S hS
   have hSD : S ≤ D := fun v hv => (hK.mem v).2 ⟨S, hS.1, hv, hS.2.1⟩
-  haveI : FiniteDimensional ℂ S := hS.1
+  have : FiniteDimensional ℂ S := hS.1
   have hmap : (S.comap D.subtype).map D.subtype = S := by
     rw [Submodule.map_comap_subtype]; exact inf_eq_right.mpr hSD
-  haveI hFD : FiniteDimensional ℂ (S.comap D.subtype) :=
+  have hFD : FiniteDimensional ℂ (S.comap D.subtype) :=
     LinearEquiv.finiteDimensional (Submodule.comapSubtypeEquivOfLe hSD).symm
   have hStab : KStab ε E (S.comap D.subtype) := by
     rw [_root_.GlobalTheory.KFinStab.kStab_iff_kStableOn n ε H σ D E hH hU hI hK _ hFD, hmap]; exact hS.2.1
   have hinj := Submodule.map_injective_of_injective (f := D.subtype) Subtype.val_injective
   have hirr : ∀ L' ≤ S.comap D.subtype, KStab ε E L' → L' = ⊥ ∨ L' = S.comap D.subtype := by
     intro L' hL' hst
-    haveI : FiniteDimensional ℂ L' := Submodule.finiteDimensional_of_le hL'
+    have : FiniteDimensional ℂ L' := Submodule.finiteDimensional_of_le hL'
     have hK' := (_root_.GlobalTheory.KFinStab.kStab_iff_kStableOn n ε H σ D E hH hU hI hK L' inferInstance).1 hst
     have hle : L'.map D.subtype ≤ S := hmap ▸ Submodule.map_mono hL'
     rcases hS.2.2.1 _ hle hK' with h | h

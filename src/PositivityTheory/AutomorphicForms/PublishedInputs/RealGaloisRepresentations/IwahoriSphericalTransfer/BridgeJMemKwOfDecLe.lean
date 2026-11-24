@@ -56,7 +56,7 @@ theorem bridge_j_mem_Kw_of_dec_le : ∀ (F Ω : Type) [Field F] [NumberField F] 
       rw [← hh]
       exact h.commutes x
     simpa [h2] using h1
-  haveI : IsGalois ℚ_[l] (Om l) := inferInstance
+  have : IsGalois ℚ_[l] (Om l) := inferInstance
   rw [← InfiniteGalois.fixedField_fixingSubgroup Bw.Kw.1]
   exact fun σ => hfix σ.1 σ.2
 

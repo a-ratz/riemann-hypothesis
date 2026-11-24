@@ -81,14 +81,14 @@ namespace PI.InertPrimeWork
 
 theorem not_isSquare_of_jacobi {d p : ℕ} (hp : p.Prime) (h : jacobiSym (-(d : ℤ)) p = -1) :
     ¬ IsSquare (((-(d : ℤ) : ℤ)) : ZMod p) := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   rw [← jacobiSym.legendreSym.to_jacobiSym] at h
   exact (legendreSym.eq_neg_one_iff p).1 h
 
 theorem inert (K : Type) [Field K] [NumberField K] (hK : Module.finrank ℚ K = 2) (b : K) (d p : ℕ)
     (hb : b ^ 2 = -(d : K)) (hp : p.Prime) (hj : jacobiSym (-(d : ℤ)) p = -1) :
     (Ideal.span {(p : 𝓞 K)}).IsPrime := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hsq := not_isSquare_of_jacobi hp hj
   have hnormI : Ideal.absNorm (Ideal.span {(p : 𝓞 K)}) = p ^ 2 := by
     rw [Ideal.absNorm_span_singleton]
@@ -114,12 +114,12 @@ theorem inert (K : Type) [Field K] [NumberField K] (hK : Module.finrank ℚ K = 
       rintro rfl
       rw [Ideal.absNorm_bot] at hPk
       exact hp.ne_zero hPk.symm
-    haveI : Finite (𝓞 K ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
-    letI : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
-    letI : Field (𝓞 K ⧸ P) := Ideal.Quotient.field P
+    have : Finite (𝓞 K ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
+    let : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
+    let : Field (𝓞 K ⧸ P) := Ideal.Quotient.field P
     have hcard : Fintype.card (𝓞 K ⧸ P) = p := by
       rw [Fintype.card_eq_nat_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, hPk]
-    haveI : CharP (𝓞 K ⧸ P) p := charP_of_card_eq_prime hcard
+    have : CharP (𝓞 K ⧸ P) p := charP_of_card_eq_prime hcard
     let ψ : ZMod p →+* 𝓞 K ⧸ P := ZMod.castHom (dvd_refl p) _
     have hψi : Function.Injective ψ := ψ.injective
     have hψb : Function.Bijective ψ :=

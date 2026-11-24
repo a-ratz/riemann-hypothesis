@@ -76,14 +76,14 @@ theorem negZeta_pow {n m : ℕ} (hn : 0 < n) (hm : 0 < m) : negZeta (n * m) ^ m 
   have h₁ : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hn.ne'
   have h₂ : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hm.ne'
   apply Units.ext
-  rw [Units.val_pow_eq_pow_val, negZeta, negZeta, Units.val_mk0, Units.val_mk0, ← Complex.exp_nat_mul]
+  rw [Units.val_pow_eq_pow_val, negZeta, negZeta, Units.val_mk0, Units.val_mk0, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp
 
 theorem negZeta_zpow (n : ℕ) (j : ℤ) :
     ((negZeta n ^ j : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (j : ℂ) / n) := by
-  rw [Units.val_zpow_eq_zpow_val, negZeta, Units.val_mk0, ← Complex.exp_int_mul]
+  rw [Units.val_zpow_eq_zpow_val, negZeta, Units.val_mk0, ← Complex.exp_intCast_mul]
   congr 1
   ring
 

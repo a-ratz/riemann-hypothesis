@@ -68,12 +68,12 @@ theorem pi_map_scale {ι X : Type} [Fintype ι] [MeasurableSpace X] (μ : Measur
     (f : X → X) (hf : Measurable f) (c : ℝ≥0) (h : μ.map f = c • μ) :
     (Measure.pi fun _ : ι => μ).map (fun x i => f (x i)) =
       (c ^ Fintype.card ι) • Measure.pi fun _ : ι => μ := by
-  haveI : SigmaFinite (μ.map f) := by rw [h]; infer_instance
+  have : SigmaFinite (μ.map f) := by rw [h]; infer_instance
   rw [Measure.pi_map_pi (f := fun _ => f) (fun _ => hf.aemeasurable)]
   simp only [h]
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi]
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
+  rw [smul_apply, Measure.pi_pi]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ]
   push_cast
   rfl
@@ -86,7 +86,7 @@ theorem map_comap_scale {X Y : Type} [MeasurableSpace X] [MeasurableSpace Y] (φ
     (Measure.comap φ P).map f = C • Measure.comap φ P := by
   ext B hB
   rw [Measure.map_apply hf hB, Measure.comap_apply₀ φ P hi him (hf hB).nullMeasurableSet,
-    Measure.smul_apply, Measure.comap_apply₀ φ P hi him hB.nullMeasurableSet]
+    smul_apply, Measure.comap_apply₀ φ P hi him hB.nullMeasurableSet]
   have e : φ '' (f ⁻¹' B) = D ⁻¹' (φ '' B) := by
     ext y
     constructor
@@ -97,7 +97,7 @@ theorem map_comap_scale {X Y : Type} [MeasurableSpace X] [MeasurableSpace Y] (φ
       refine ⟨x, ?_, rfl⟩
       have : f x = z := hi (by rw [hc, hzy])
       simpa [this] using hz
-  rw [e, ← MeasurableEquiv.map_apply, hD, Measure.smul_apply]
+  rw [e, ← MeasurableEquiv.map_apply, hD, smul_apply]
 
 variable {F : Type} [Field F] [NumberField F]
 
@@ -126,7 +126,7 @@ theorem norm_natCast (v : HeightOneSpectrum (𝓞 F)) (a e : ℕ) (ha : 0 < a)
 theorem scale_fv (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)) [lam.IsAddHaarMeasure]
     (x : Fv F v) (hx : x ≠ 0) (k : ℕ) (hk : ‖x‖ = ((Ideal.absNorm v.asIdeal : ℝ))⁻¹ ^ k) :
     lam.map (fun y => x * y) = ((Ideal.absNorm v.asIdeal : ℝ≥0) ^ k) • lam := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have hu : IsUnit x := hx.isUnit
   have hc : ((distribHaarChar (Fv F v) hu.unit : ℝ≥0) : ℝ) = ((Ideal.absNorm v.asIdeal : ℝ))⁻¹ ^ k := by
@@ -141,7 +141,7 @@ theorem scale_fv (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)) [lam.
     simp
   have hm : Measurable fun y : Fv F v => x * y := (continuous_const.mul continuous_id).measurable
   ext B hB
-  rw [Measure.map_apply hm hB, Measure.smul_apply]
+  rw [Measure.map_apply hm hB, smul_apply]
   have e : (fun y => x * y) ⁻¹' B = hu.unit⁻¹ • B := by
     ext y
     rw [Set.mem_smul_set_iff_inv_smul_mem]
@@ -175,7 +175,7 @@ theorem coordK_map (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b : Mo
     (h : lam.map (fun y => t * y) = c • lam) :
     (coordK R b lam).map (fun y => algebraMap R (R ⊗[F] E) t * y) = (c ^ d) • coordK R b lam := by
   obtain ⟨hr, -, -, -, -, -, hh, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hb := hh d b
   have hemb : MeasurableEmbedding (fun (y : R ⊗[F] E) (k : Fin d) =>
       (Algebra.TensorProduct.basis R b).repr y k) :=
@@ -227,10 +227,10 @@ theorem coordHerm_map (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b :
       algebraMap R (R ⊗[F] E) t * (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) i j) :
     (coordHerm R σ b lam 1).map τ = c • coordHerm R σ b lam 1 := by
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hK, -, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R d b lam ‹_›
-  haveI := hK
-  haveI := hH 1
+  have := hK
+  have := hH 1
   set φ : HermR R σ 1 → (Fin 1 → R) × ({p : Fin 1 × Fin 1 // p.1 < p.2} → R ⊗[F] E) :=
     fun S => ((fun i : Fin 1 => algebraMap F R (1 / 2) *
           Algebra.trace R (R ⊗[F] E) ((S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) i i)),
@@ -280,12 +280,12 @@ theorem dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   intro F E _ _ _ _ _ σ hσ M J hJ d b v lam hlam m hm hM a e ha h1 h2 s A hA
   have hloc := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨i1, i2, i3, i4, -⟩ := id hloc
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : lam.IsAddHaarMeasure := hlam.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : lam.IsAddHaarMeasure := hlam.1
   obtain ⟨j1, j2, j3, j4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hK, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lam ‹_›
-  haveI := hK
+  have := hK
   have hd : d = 2 := by
     rw [← hσ.2.2.1, Module.finrank_eq_card_basis b, Fintype.card_fin]
   subst hd
@@ -331,7 +331,7 @@ theorem dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     push_cast
     rfl
   have hτm : Measurable τ := by
-    haveI : BorelSpace (HermR (Fv F v) σ 1) := ⟨rfl⟩
+    have : BorelSpace (HermR (Fv F v) σ 1) := ⟨rfl⟩
     exact (continuous_nsmul (a ^ 2)).measurable
   have hc := coordHerm_map (Fv F v) σ hσ b lam _ ht2 _ hs2 τ hτm hτe
   have hτ : ∀ S, (τ S : Matrix (Fin 1) (Fin 1) (Fv F v ⊗[F] E)) = cT (sigR (Fv F v) σ) g * S * g := by
@@ -354,7 +354,7 @@ theorem dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     simp [Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.tmul_mul_tmul]
   rw [hτs] at key
   have key2 := congrArg (fun μ' : Measure (Fin 1 → Fin M → Fv F v ⊗[F] E) => μ' A) key
-  simp only [Measure.smul_apply, Measure.map_apply hrmap hA] at key2
+  simp only [smul_apply, Measure.map_apply hrmap hA] at key2
   have e1 : ((q ^ e) ^ 2) ^ M = q ^ (2 * e) * q ^ (e * (2 * M - 2)) := by
     rw [← pow_add, ← pow_mul, ← pow_mul]
     congr 1
@@ -373,7 +373,7 @@ theorem dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       (fun X => rmul (Fv F v) X g) ⁻¹' A := by
     rw [hrm]
     ext X
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, hf, hcast]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, hf, hcast]
   rw [hset, ← key3, hqdef]
   push_cast
   rfl

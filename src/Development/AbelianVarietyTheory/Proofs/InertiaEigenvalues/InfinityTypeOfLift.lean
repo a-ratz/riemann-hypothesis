@@ -115,7 +115,7 @@ theorem evPt_eq_tinv (τ : L →+* ℂ) (B : GL (Fin n) ℂ) :
       simp [NG.evPt, h1, h2, h3]
 
 theorem inv_upper {B : GL (Fin n) ℂ} (hB : B.val.BlockTriangular id) : (B⁻¹).val.BlockTriangular id := by
-  haveI : Invertible B.val := B.invertible
+  have : Invertible B.val := B.invertible
   rw [Matrix.coe_units_inv]
   exact Matrix.blockTriangular_inv_of_blockTriangular hB
 

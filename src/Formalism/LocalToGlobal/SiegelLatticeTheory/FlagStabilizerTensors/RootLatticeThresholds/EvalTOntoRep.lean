@@ -71,7 +71,7 @@ theorem eq_zero_of_ae (ψ : X.B.I.GA → ℂ) (hc : Continuous ψ) (hinv : ∀ �
       exact h0
     rw [ae_iff] at h0'
     refine measure_mono_null (fun y hy => ?_) h0'
-    simp only [Set.mem_setOf_eq, Classical.not_imp]
+    simp only [Set.mem_ofPred_eq, Classical.not_imp]
     exact ⟨hy.2, hy.1⟩
   have hsub : N ⊆ ⋃ γ : rr_GF X.B.I, (fun y => (γ : X.B.I.GA) * y) ⁻¹' (N ∩ X.B.fund) := by
     intro y hy

@@ -420,7 +420,7 @@ theorem gp_sob_rep (M : DSModel V S) (τ : D.what₂.Tau) {ℓ : M.H τ →ₗ[�
     intro v
     have h1 := hC (v : M.H τ) v.2
     have hs : (L.map fun l => ‖l.foldr (dRep (M.rep τ)) (v : M.H τ)‖).sum ≤ L.length * ‖T v‖ := by
-      have h3 := List.sum_le_card_nsmul (L.map fun l => ‖l.foldr (dRep (M.rep τ)) (v : M.H τ)‖) ‖T v‖ (by
+      have h3 := List.sum_le_length_nsmul (L.map fun l => ‖l.foldr (dRep (M.rep τ)) (v : M.H τ)‖) ‖T v‖ (by
         intro x hx
         obtain ⟨l, hl, rfl⟩ := List.mem_map.1 hx
         obtain ⟨i, rfl⟩ := List.mem_iff_get.1 hl

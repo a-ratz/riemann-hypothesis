@@ -118,9 +118,9 @@ private theorem coeff_tyS_pow_eq_of_two_le {l : ℕ} (hl : 2 ≤ l) (b : ℕ →
     PowerSeries.coeff (l ^ s) (tyS l b) = b s := by
   simp only [tyS, PowerSeries.coeff_mk]
   rw [Finset.sum_eq_single s]
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
   · intro t _ ht
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e
     exact ht (Nat.pow_right_injective hl e)
   · intro hs
@@ -133,7 +133,7 @@ private theorem coeff_tyS_pow_eq_of_two_le {l : ℕ} (hl : 2 ≤ l) (b : ℕ →
 private theorem coeff_tyS_eq_zero_of_ne_pow {l : ℕ} (b : ℕ → C) (m : ℕ) (hm : ∀ s, l ^ s ≠ m) :
     PowerSeries.coeff m (tyS l b) = 0 := by
   simp only [tyS, PowerSeries.coeff_mk]
-  exact Finset.sum_eq_zero fun s _ => if_neg (hm s)
+  exact Finset.sum_eq_zero fun s _ => ite_eq_right (hm s)
 
 theorem tyS_Vpow {l : ℕ} (hl : 2 ≤ l) (a : ℕ → C) :
     tyS l (fun s => if s < 1 then 0 else a (s - 1)) =

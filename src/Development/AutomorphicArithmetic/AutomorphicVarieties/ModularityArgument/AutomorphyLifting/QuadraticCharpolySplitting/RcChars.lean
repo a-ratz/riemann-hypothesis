@@ -63,7 +63,7 @@ theorem charPol_of_chars {a : Weil h →* (w.adicCompletion E)ˣ} {ha : IsLocalA
     (ξ : Fin n → ((w.adicCompletion E)ˣ →* ℂˣ)) (hξ : ∀ j, IsSmoothChar (ξ j))
     (hs : HasSupport x.rep (GlobalTheory.RoadU.chars ξ hξ)) (g : Weil h) :
     (rc x).charPol g = ∏ j, (X - C ((ξ j (a g) : ℂˣ) : ℂ)) := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨hG, hZ⟩ := GlobalTheory.geometricLemma_and_zelevinskyPolynomialRing
   obtain ⟨𝔪, hm⟩ := GlobalTheory.langlandsExhaustionGL_holds (w.adicCompletion E) x
   have he : GlobalTheory.RoadU.chars ξ hξ = msupp 𝔪 :=

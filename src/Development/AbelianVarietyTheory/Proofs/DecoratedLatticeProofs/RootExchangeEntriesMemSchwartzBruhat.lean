@@ -80,8 +80,8 @@ open scoped Pointwise
 theorem exists_nhds_add_eq {M E : Type*} [TopologicalSpace M] [AddCommGroup M] [IsTopologicalAddGroup M] [Zero E]
     {F : M → E} (hl : IsLocallyConstant F) (hc : HasCompactSupport F) :
     ∃ V ∈ nhds (0 : M), ∀ x, ∀ v ∈ V, F (x + v) = F x := by
-  letI : TopologicalSpace E := ⊥
-  haveI : DiscreteTopology E := ⟨rfl⟩
+  let : TopologicalSpace E := ⊥
+  have : DiscreteTopology E := ⟨rfl⟩
   have hT : (F '' tsupport F).Finite := (hc.isCompact.image hl.continuous).finite_of_discrete
   have hsep : ∀ a : E, ∃ W ∈ nhds (0 : M), a ≠ 0 → F ⁻¹' {a} + W ⊆ F ⁻¹' {a} := by
     intro a

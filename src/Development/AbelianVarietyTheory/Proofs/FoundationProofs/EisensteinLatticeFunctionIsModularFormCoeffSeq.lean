@@ -88,7 +88,7 @@ namespace GlobalTheory.EisM
 
 theorem lipschitz_periodic : ∀ (j L : ℕ) (φ : ZMod L → ℂ) (z : ℂ), 2 ≤ j → 0 < L → 0 < z.im → Tendsto (fun R : ℕ => ∑ d ∈ Finset.Icc (-(R : ℤ)) R, φ (d : ZMod L) * trm j 0 (z + d)) atTop (𝓝 ((-2 * π * Complex.I / L) ^ j / (j - 1).factorial * ∑' m : ℕ, ((m + 1 : ℕ) : ℂ) ^ (j - 1) * hat φ (m + 1 : ℕ) * cexp (2 * π * Complex.I * (m + 1 : ℕ) * z / L))) := by
   intro j L φ z hj hL hz
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   obtain ⟨k, rfl⟩ : ∃ k, j = k + 2 := ⟨j - 2, by omega⟩
   have htrm : ∀ w : ℂ, trm (k + 2) 0 w = (w ^ (k + 2))⁻¹ := fun w => by simp [trm]
   set f : ℤ → ℂ := fun d => φ (d : ZMod L) * ((z + d) ^ (k + 2))⁻¹ with hf_def
@@ -159,7 +159,7 @@ theorem lipschitz_periodic : ∀ (j L : ℕ) (φ : ZMod L → ℂ) (z : ℂ), 2 
       refine Finset.sum_congr rfl fun y _ => ?_
       have : q y ^ (m + 1) = cexp (2 * π * Complex.I * (y * (((m + 1 : ℕ) : ℤ) : ℂ)) / L) *
           cexp (2 * π * Complex.I * (m + 1 : ℕ) * z / L) := by
-        rw [hq_def, ← Complex.exp_nat_mul, ← Complex.exp_add]
+        rw [hq_def, ← exp_natCast_mul, ← Complex.exp_add]
         congr 1
         simp only [w]; push_cast; field_simp; ring
       simp only [g, this]; ring
@@ -235,7 +235,7 @@ theorem sum_cot_eq_qexp : ∀ (L : ℕ) (φ : ZMod L → ℂ) (z : ℂ), 0 < L �
   refine tsum_congr fun m => ?_
   rw [hat, Finset.sum_mul, Finset.mul_sum]
   refine Finset.sum_congr rfl fun r _ => ?_
-  rw [← Complex.exp_nat_mul, mul_assoc (φ r), ← Complex.exp_add]
+  rw [← exp_natCast_mul, mul_assoc (φ r), ← Complex.exp_add]
   have e2 : ((m + 1 : ℕ) : ℂ) * (2 * π * Complex.I * ((z + r) / L)) =
       2 * π * Complex.I * (r * (((m + 1 : ℕ) : ℤ) : ℂ)) / L
         + 2 * π * Complex.I * (m + 1 : ℕ) * z / L := by
@@ -299,7 +299,7 @@ theorem summable_periodic_mul_inv_sub_inv_floor :
     ∀ (L : ℕ) (φ : ZMod L → ℂ) (z : ℂ), 0 < L → 0 < z.im →
       Summable (fun d : ℤ => φ d * ((z + d)⁻¹ - (z + (L * (d / L) : ℤ))⁻¹)) := by
   intro L φ z hL _
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   set M : ℝ := ∑ y, ‖φ y‖ with hM
   have hφ : ∀ y, ‖φ y‖ ≤ M := fun y =>
     Finset.single_le_sum (f := fun y => ‖φ y‖) (fun _ _ => norm_nonneg _) (Finset.mem_univ y)
@@ -851,7 +851,7 @@ theorem sum_range_eq_univ (L : ℕ) (hL : 0 < L) (φ : ZMod L → ℂ) (f : ℕ 
     (hf : Set.InjOn f (Finset.range L)) :
     haveI : NeZero L := ⟨hL.ne'⟩;
     ∑ r ∈ Finset.range L, φ (f r) = ∑ y, φ y := by
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   rw [← Finset.sum_image (fun x hx y hy h => hf hx hy h)]
   congr 1
   apply Finset.eq_univ_of_card
@@ -875,7 +875,7 @@ theorem kills (L : ℕ) (hL : 0 < L) (φ : ZMod L → ℂ) (d : ℤ) :
     omega
 
 theorem phi_bounded (L : ℕ) (hL : 0 < L) (φ : ZMod L → ℂ) : ∃ C : ℝ, ∀ y, ‖φ y‖ ≤ C := by
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   exact ⟨∑ y, ‖φ y‖, fun y => Finset.single_le_sum (f := fun y => ‖φ y‖) (fun _ _ => norm_nonneg _) (Finset.mem_univ y)⟩
 
 theorem latF_mul (L : ℕ) (hL : 0 < L) (b : ℤ → ℂ) (φ : ZMod L → ℂ) (k d : ℤ) :
@@ -1102,7 +1102,7 @@ lemma latF_trans (L₁ L₂ : ℕ) (hL₁ : 0 < L₁) (b χ₁ χ₂ : ℤ → �
   by_cases h : (L₁ : ℤ) ∣ x.1
   · obtain ⟨m, hm⟩ := h
     have h2 : (L₁ : ℤ) ∣ x.1 * a + x.2 * (L₁ * L₂ * k) := ⟨m * a + x.2 * L₂ * k, by rw [hm]; ring⟩
-    rw [if_pos ⟨m, hm⟩, if_pos h2]
+    rw [ite_eq_left ⟨m, hm⟩, ite_eq_left h2]
     have e1 : x.1 / L₁ = m := by rw [hm, Int.mul_ediv_cancel_left _ hL]
     have e2 : (x.1 * a + x.2 * (L₁ * L₂ * k)) / L₁ = m * a + (x.2 * k) * L₂ := by
       rw [show x.1 * a + x.2 * (L₁ * L₂ * k) = L₁ * (m * a + (x.2 * k) * L₂) by rw [hm]; ring,
@@ -1119,12 +1119,12 @@ lemma latF_trans (L₁ L₂ : ℕ) (hL₁ : 0 < L₁) (b χ₁ χ₂ : ℤ → �
       intro h2; apply h
       have h3 : (L₁ : ℤ) ∣ x.2 * (L₁ * L₂ * k) := ⟨x.2 * L₂ * k, by ring⟩
       exact hcopa.dvd_of_dvd_mul_right ((dvd_add_left h3).mp h2)
-    rw [if_neg h, if_neg h2, mul_zero]
+    rw [ite_eq_right h, ite_eq_right h2, mul_zero]
 
 lemma latF_kills (L₁ L₂ : ℕ) (hL₁ : 0 < L₁) (b : ℤ → ℂ) (φ : ZMod L₁ → ℂ)
     (hb : ∀ x, b (x + L₂) = b x) (hhat : hat φ 0 = 0) (k d : ℤ) (hd : IsUnit (d : ZMod L₁)) :
     Kills L₁ (L₁ * L₂ * k, d) (latF L₁ b φ) := by
-  haveI : NeZero L₁ := ⟨hL₁.ne'⟩
+  have : NeZero L₁ := ⟨hL₁.ne'⟩
   have hp : Function.Periodic b (L₂ : ℤ) := hb
   have hpz : ∀ y n : ℤ, b (y + n * L₂) = b y := fun y n => by simpa using hp.int_mul n y
   have hL : (L₁ : ℤ) ≠ 0 := by exact_mod_cast hL₁.ne'
@@ -1136,14 +1136,14 @@ lemma latF_kills (L₁ L₂ : ℕ) (hL₁ : 0 < L₁) (b : ℤ → ℂ) (φ : ZM
         = ∑ r ∈ Finset.range L₁, b m * φ ((x.2 : ZMod L₁) + (r : ZMod L₁) * (-(d : ZMod L₁))) := by
           refine Finset.sum_congr rfl fun r _ => ?_
           simp only [latF, Prod.fst_sub, Prod.snd_sub, Prod.smul_mk, smul_eq_mul]
-          rw [if_pos ⟨m - r * L₂ * k, by rw [hm]; ring⟩,
+          rw [ite_eq_left ⟨m - r * L₂ * k, by rw [hm]; ring⟩,
             show x.1 - (r : ℤ) * (L₁ * L₂ * k) = L₁ * (m + (-(r * k)) * L₂) by rw [hm]; ring,
             Int.mul_ediv_cancel_left _ hL, hpz]
           congr 2; push_cast; ring
       _ = 0 := by rw [← Finset.mul_sum, sum_shift L₁ φ _ _ hd.neg, hhat, mul_zero]
   · refine Finset.sum_eq_zero fun r _ => ?_
     simp only [latF, Prod.fst_sub, Prod.snd_sub, Prod.smul_mk, smul_eq_mul]
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h2; apply h
     have h3 : (L₁ : ℤ) ∣ (r : ℤ) * (L₁ * L₂ * k) := ⟨r * L₂ * k, by ring⟩
     simpa using dvd_add h2 h3
@@ -1159,7 +1159,7 @@ theorem eis_latF_mf : ∀ (j L₁ L₂ : ℕ) (b χ₁ χ₂ : ℤ → ℂ) (φ 
     ∃ c : ℂ, MF j (L₁ * L₂) (fun d => χ₁ d * χ₂ d) (eis j c (hat φ) b) ∧
       ∀ τ : ℍ, lat j 0 L₁ (0, 1) (latF L₁ b φ) τ = 2 * (-2 * π * Complex.I / L₁) ^ j / (j - 1).factorial * qs (eis j c (hat φ) b) τ := by
   intro j L₁ L₂ b χ₁ χ₂ φ hj hL₁ hL₂ hhat hb hχ hpar
-  haveI : NeZero L₁ := ⟨hL₁.ne'⟩
+  have : NeZero L₁ := ⟨hL₁.ne'⟩
   obtain ⟨Cb, hCb⟩ := bdd_of_periodic L₂ hL₂ b hb
   have hparity : ∀ x y : ℤ, b (-x) * φ (-(y : ZMod L₁)) = (-1) ^ j * (b x * φ y) := by
     intro x y

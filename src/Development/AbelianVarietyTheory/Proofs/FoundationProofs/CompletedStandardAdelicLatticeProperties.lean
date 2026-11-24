@@ -77,7 +77,7 @@ theorem exists_mul_IhE_mem (cc : Ideal (𝓞 D.host.K)) :
   induction hy using AddSubgroup.closure_induction with
   | mem y hy =>
     obtain ⟨c, -, a, ha, s, hs, rfl⟩ := hy
-    rw [FractionalIdeal.mem_coe] at ha
+    rw [FractionalIdeal.mem_coeToSubmodule] at ha
     unfold Host.AA0 at ha
     rw [FractionalIdeal.mem_inv_iff hB] at ha
     have h1 := ha _ (FractionalIdeal.mem_coeIdeal_of_mem _ (Ideal.absNorm_mem D.host.𝔟))

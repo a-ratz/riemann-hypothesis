@@ -72,7 +72,7 @@ theorem not_inFibre_of_isUnit {q : Cpt ξ} {p : ℕ} (h : IsUnit (p : regAt ξ q
 theorem inFibre_unique {q : Cpt ξ} {p p' : ℕ} (hp : p.Prime) (hp' : p'.Prime) (h : InFibre ξ p q)
     (h' : InFibre ξ p' q) : p' = p := by
   by_contra hne
-  haveI := regAt_isLocalRing (ξ := ξ) q
+  have := regAt_isLocalRing (ξ := ξ) q
   have hc : IsCoprime (p : ℤ) (p' : ℤ) :=
     Nat.isCoprime_iff_coprime.2 ((Nat.coprime_primes hp hp').2 (Ne.symm hne))
   obtain ⟨a, b, hab⟩ := hc.map (Int.castRingHom (regAt ξ q))

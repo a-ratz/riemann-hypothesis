@@ -98,7 +98,7 @@ theorem exists_den {a : F} (ha : p.valuation F a ≤ 1) :
   have hs0' : ((s : 𝓞 F) : F) ≠ 0 := by exact_mod_cast hs0
   rw [map_div₀, valuation_of_algebraMap, valuation_of_algebraMap] at ha
   have hpos : 0 < p.intValuation s := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     exact (intValuation_ne_zero p s hs0)
   have hrs : p.intValuation r ≤ p.intValuation s := by
     rwa [div_le_one₀ hpos] at ha

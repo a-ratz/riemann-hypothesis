@@ -453,7 +453,7 @@ theorem eq_of_agree_on_generators (R : Type) [CommRing R] (X W : Scheme.{0}) (sm
     refine hu.mul_left_injective ?_
     simp only
     rw [h1, hev P, ← h2, ← hev Q]
-  haveI : IsAffine N := hN
+  have : IsAffine N := hN
   have hra : Set.range a ⊆ Set.range N.ι := by
     rw [Scheme.Opens.range_ι]; rintro _ ⟨w, rfl⟩; exact ha trivial
   have hrb : Set.range b ⊆ Set.range N.ι := by
@@ -651,7 +651,7 @@ theorem exists_affineOpen_fraction_pullRatio : ∀ (R : Type) [CommRing R] (N : 
   have hD : IsAffineOpen ((PSpace R N).basicOpen h) := (isAffineOpen_chart R N i).basicOpen h
   have hDc : (PSpace R N).basicOpen h ≤ chart R N i := (PSpace R N).basicOpen_le h
   have hle : (PSpace R N).basicOpen h ≤ φ.coborderRange := fun z hz => (hhO hz).2
-  haveI : IsAffine ((PSpace R N).basicOpen h) := hD
+  have : IsAffine ((PSpace R N).basicOpen h) := hD
   have hp : IsPullback (φ ∣_ (PSpace R N).basicOpen h) (φ ⁻¹ᵁ (PSpace R N).basicOpen h).ι
       ((PSpace R N).homOfLE hle) φ.liftCoborder := by
     refine IsPullback.of_bot (h₃₁ := φ) (v₂₁ := 𝟙 _) (v₂₂ := φ.coborderRange.ι) ?_ ?_ ?_
@@ -748,10 +748,10 @@ theorem GlobalTheory.Mum.exists_ratio_gen_closed : ∀ (R : Type) [CommRing R] [
   let ψ : T ⟶ Y.H := (Y.Φ T).symm ξ
   have hψ : GlobalTheory.TorusCoord.IsPointOf (U.gt 0) (𝟙 (thickObj R (maximalIdeal R) 0 G).left) (Y.Φ T ψ) := by
     simp only [ψ, Equiv.apply_symm_apply]; exact hξ
-  haveI hψi : IsImmersion ψ.left := GlobalTheory.T.closedFibre_torusCoordinates_isImmersion R D A G U.toUnifPre Y ψ hψ
+  have hψi : IsImmersion ψ.left := GlobalTheory.T.closedFibre_torusCoordinates_isImmersion R D A G U.toUnifPre Y ψ hψ
   set p₀ := (fstG (maximalIdeal R) 0 G).left with hp₀
   let φ := ψ.left ≫ GlobalTheory.ProjSpace.toProj Y.H.hom τ hτ
-  haveI : IsImmersion φ := IsImmersion.comp _ _
+  have : IsImmersion φ := IsImmersion.comp _ _
   have hpre : ∀ j, φ ⁻¹ᵁ GlobalTheory.ProjSpace.chart R N j = ψ.left ⁻¹ᵁ nonzeroLocus (τ j) := fun j => by
     simp only [φ, Scheme.Hom.comp_preimage, GlobalTheory.ProjSpace.toProj_preimage_chart]
   have hstr : φ ≫ PSpace.str R N = p₀ ≫ G.hom := by
@@ -934,7 +934,7 @@ theorem locGen_anySec_gen {R : Type} [CommRing R] (q : X ⟶ Spec (CommRingCat.o
   have hev : ∀ F : MvPolynomial (Fin n) R, GlobalTheory.AbLaw.rs X hNN₁ (eval₂ (GlobalTheory.AbLaw.cst q N₁) ρ F) =
       eval₂ (GlobalTheory.AbLaw.cst q (X.basicOpen h)) (fun l => r l * v) F := fun F => by
     rw [eval₂_comp_left, rs_comp_cst, ← hρ]; rfl
-  haveI := hN₁.isLocalization_basicOpen h
+  have := hN₁.isLocalization_basicOpen h
   obtain ⟨⟨a, ⟨_, t, rfl⟩⟩, hga⟩ := IsLocalization.surj (Submonoid.powers h) g
   have hhu : IsUnit (GlobalTheory.AbLaw.rs X hNN₁ h) := IsLocalization.Away.algebraMap_isUnit h
   obtain ⟨Pa, Qa, hQa, ea⟩ := hgen a

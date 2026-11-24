@@ -250,9 +250,9 @@ open Polynomial TrivSqZeroExt
 
 theorem exists_derOn_levelAlg : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω], IsClo p Ω → ∀ (T : Tower p Ω) (n : ℕ), 1 ≤ n → ∀ (M : Type) [AddCommGroup M] [Module (integralClosure (O0 p) Ω) M] (μ ν : M), (Polynomial.aeval (zS T n) (Polynomial.derivative (Polynomial.cyclotomic (p ^ n) (O0 p)))) • μ = 0 → ((p : (integralClosure (O0 p) Ω)) ^ n * qS T n ^ (p ^ n - 1)) • ν = 0 → ∃ D : (integralClosure (O0 p) Ω) → M, IsDerOn (levelAlg T n) D ∧ D (zS T n) = μ ∧ D (qS T n) = ν := by
   intro p _ Ω _ _ hc T n hn M _ _ μ ν hμ hν
-  letI : Module (integralClosure (O0 p) Ω)ᵐᵒᵖ M :=
+  let : Module (integralClosure (O0 p) Ω)ᵐᵒᵖ M :=
     Module.compHom _ ((RingHom.id _).fromOpposite fun _ _ => mul_comm _ _)
-  haveI : IsCentralScalar (integralClosure (O0 p) Ω) M := ⟨fun _ _ => rfl⟩
+  have : IsCentralScalar (integralClosure (O0 p) Ω) M := ⟨fun _ _ => rfl⟩
   obtain ⟨ι, hι⟩ := GlobalTheory.K5.Basic.exists_isEmb T n
   have hinj := _root_.GlobalTheory.K5.EmbInj.emb_injective p Ω hc T n hn ι hι
   have hk : Function.Injective (kap T n) := by

@@ -107,7 +107,7 @@ private lemma map_diagonal_mulVec_measure_pi (D : a → k) (u : kˣ) (hu : (u : 
   have E : distribHaarChar k u • Measure.map (Matrix.diagonal D).mulVec (Measure.pi fun _ : a => ν) =
       Measure.pi fun _ : a => ν := by
     refine (Measure.pi_eq fun s hs => ?_).symm
-    rw [Measure.smul_apply, Measure.map_apply hm (MeasurableSet.univ_pi hs)]
+    rw [smul_apply, Measure.map_apply hm (MeasurableSet.univ_pi hs)]
     have hpre : (Matrix.diagonal D).mulVec ⁻¹' Set.univ.pi s =
         Set.univ.pi fun i => (fun x : k => e i • x) ⁻¹' s i := by
       ext x

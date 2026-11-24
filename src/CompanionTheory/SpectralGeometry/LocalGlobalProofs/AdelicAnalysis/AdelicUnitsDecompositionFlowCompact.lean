@@ -185,7 +185,7 @@ theorem chi_flow {V : Type} [TopologicalSpace V] [AddCommGroup V] [IsTopological
   have h1 : μ Q ≠ ⊤ := hQc.measure_lt_top.ne
   have h2 : (c : ℝ≥0∞) * μ Q = ENNReal.ofReal r * μ Q := by
     have := congrArg (fun m : Measure V => m Q) h
-    simp only [Measure.smul_apply, smul_eq_mul] at this
+    simp only [smul_apply, smul_eq_mul] at this
     exact this
   have h3 : (c : ℝ≥0∞) = ENNReal.ofReal r := (ENNReal.mul_left_inj h0 h1).1 h2
   have h4 := congrArg ENNReal.toReal h3
@@ -204,10 +204,10 @@ theorem core {E : Type} [Field E] [Countable E] [LocallyCompactSpace K] [SecondC
     ∃ ω : Set Kˣ, IsCompact ω ∧ ∀ a : Kˣ, ∃ (l : Eˣ) (a' c : Kˣ) (j : ℤ),
       (a' : K) = ι (l : E) ∧ c ∈ ω ∧ a = a' * τ (Multiplicative.ofAdd (j : ℝ)) * c := by
   obtain ⟨C, hCc, hC⟩ := hcov
-  haveI : LocallyCompactSpace Kˣ := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology Kᵐᵒᵖ :=
+  have : LocallyCompactSpace Kˣ := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology Kᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := K)).symm.secondCountableTopology
-  haveI : SecondCountableTopology Kˣ := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : SecondCountableTopology Kˣ := Units.isEmbedding_embedProduct.secondCountableTopology
   obtain ⟨χ, -, hχ⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.ModulusAction.exists_continuous_modulus (Fin 1 → Fin 1 → K) μ Kˣ act continuous_act continuous_inv
     (fun y => by simp [act]) (fun s t y => by simp [act, mul_smul])
   let jj : (Fin 1 → Fin 1 → E) →+ (Fin 1 → Fin 1 → K) :=
@@ -319,19 +319,19 @@ namespace GlobalTheory.CompanionTheory.SW.Fujisaki
 theorem units_decomp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ τ : Multiplicative ℝ →* (AF F ⊗[F] E)ˣ, IsFlow τ → ∃ ω : Set (AF F ⊗[F] E)ˣ, IsCompact ω ∧ ∀ a : (AF F ⊗[F] E)ˣ, ∃ (l : Eˣ) (a' : (AF F ⊗[F] E)ˣ) (c : (AF F ⊗[F] E)ˣ) (j : ℤ), (a' : AF F ⊗[F] E) = inclR (AF F) (l : E) ∧ c ∈ ω ∧ a = a' * τ (Multiplicative.ofAdd (j : ℝ)) * c := by
   intro F E _ _ _ _ _ σ hσ τ hτ
   obtain ⟨⟨hLC, hSC, hT2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hTR, hLCK, hSCK, hT2K, -, -, -, hBor, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
-  haveI := hTR
-  haveI := hLCK
-  haveI := hSCK
-  haveI := hT2K
-  haveI : BorelSpace (Fin 1 → Fin 1 → AF F ⊗[F] E) := hBor 1 1
-  haveI : Countable E :=
+  have := hTR
+  have := hLCK
+  have := hSCK
+  have := hT2K
+  have : BorelSpace (Fin 1 → Fin 1 → AF F ⊗[F] E) := hBor 1 1
+  have : Countable E :=
     ((Module.finBasis ℚ E).equivFun.toEquiv.injective).countable
   obtain ⟨hcov, hfin, hnc⟩ := _root_.GlobalTheory.CompanionTheory.SW.CocW.main F E σ hσ 1 1
-  haveI := hnc one_pos one_pos
+  have := hnc one_pos one_pos
   have hinf : (Measure.addHaar : Measure (Fin 1 → Fin 1 → AF F ⊗[F] E)) Set.univ = ⊤ :=
     measure_univ_of_isAddLeftInvariant _
   have hD : (0 : ℝ) < 2 * Module.finrank ℚ F := by

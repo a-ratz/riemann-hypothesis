@@ -63,7 +63,7 @@ variable {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p])
 def Good (c : ℂ) : Prop := c ∈ Qbar ∧ IsIntP (lamC lam c)
 
 theorem lamC_of_mem {c : ℂ} (h : c ∈ Qbar) : lamC lam c = lam ⟨c, h⟩ := by
-  simp only [lamC, dif_pos h]
+  simp only [lamC, dite_eq_left h]
 
 theorem good_mul {a b : ℂ} (ha : Good lam a) (hb : Good lam b) : Good lam (a * b) := by
   refine ⟨mul_mem ha.1 hb.1, ?_⟩
@@ -138,7 +138,7 @@ theorem good_al (T : Tor D) (x : VC D N N') : Good lam (al D T x) := by
 theorem good_cf (T : Tor D) (x y : VC D N N') (q : ℚ) (hq : (Formalism.MainNotions.TaylorLogMetric.Hf D T x y).im = q) :
     Good lam (IO.cf T x y) := by
   refine good_of_pow lam _ (2 * q.den) 1 (by have := q.den_pos; omega) (Nat.coprime_one_left p) ?_
-  rw [Nat.cast_one, mul_one, IO.cf, hq, ← Complex.exp_nat_mul]
+  rw [Nat.cast_one, mul_one, IO.cf, hq, ← Complex.exp_natCast_mul]
   convert Complex.exp_int_mul_two_pi_mul_I (-q.num) using 2
   have hd : (q.den : ℂ) ≠ 0 := by exact_mod_cast q.den_nz
   rw [Complex.ofReal_ratCast, Rat.cast_def]
@@ -223,8 +223,8 @@ theorem rep_Iop {Pt Pt' : VC D N N' → Prop} {F G : VC D N N' → ℂ} {La₁ L
       simp [Iop, h0]
     rw [e]
     exact rep_zero
-  · haveI : (La₁.addSubgroupOf La₂).FiniteIndex := ⟨h0⟩
-    haveI : Fintype (La₂ ⧸ La₁.addSubgroupOf La₂) := Fintype.ofFinite _
+  · have : (La₁.addSubgroupOf La₂).FiniteIndex := ⟨h0⟩
+    have : Fintype (La₂ ⧸ La₁.addSubgroupOf La₂) := Fintype.ofFinite _
     have e : Iop D T La₁ La₂ F = fun z => ∑ q : La₂ ⧸ La₁.addSubgroupOf La₂,
         ((Real.sqrt ((La₁.addSubgroupOf La₂).index : ℝ))⁻¹ : ℂ) * al D T ((Quotient.out q : La₂) : VC D N N') *
           U D T ((Quotient.out q : La₂) : VC D N N') F z := by
@@ -248,7 +248,7 @@ variable {p : ℕ} {D : D7} {N N' : ℕ}
 theorem idx_coprime [Fact p.Prime] {V : Type*} [AddCommGroup V] (La₁ La₂ : AddSubgroup V) (s : ℕ)
     (hs : Nat.Coprime s p) (hk : ∀ z ∈ La₂, s • z ∈ La₁) (h0 : (La₁.addSubgroupOf La₂).index ≠ 0) :
     Nat.Coprime (La₁.addSubgroupOf La₂).index p := by
-  haveI : (La₁.addSubgroupOf La₂).FiniteIndex := ⟨h0⟩
+  have : (La₁.addSubgroupOf La₂).FiniteIndex := ⟨h0⟩
   have hp : p.Prime := Fact.out
   rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
   intro hdvd

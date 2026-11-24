@@ -177,7 +177,7 @@ theorem mat_iff (s s' : Matrix (Fin (r + 1)) (Fin (r + 1)) E) :
     ext a b
     have h1 := congrFun (congrFun h a) b
     rw [mat_entry, Zh_scale] at h1
-    haveI : Nontrivial (A.loc p).Ep :=
+    have : Nontrivial (A.loc p).Ep :=
       Module.nontrivial_of_finrank_pos (R := (A.loc p).Fp) (by rw [(A.loc p).rank]; norm_num)
     apply (A.loc p).ιE.injective
     have hu := sc_mul_sci G p a
@@ -254,9 +254,9 @@ theorem bc_gg (i : Fin (r + 1) ⊕ Fin (r + 1)) :
 
 theorem decomp : LinearIndependent E (gg G) ∧ IsCompl (Submodule.span E (Set.range (gg G))) (Wc G) ∧
     ∀ x ∈ Wc G, A.bc p x ∈ (G.S p).W0 := by
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
-  haveI : Nontrivial (A.loc p).Ep :=
+  have := (A.loc p).lf
+  have := (A.loc p).char0
+  have : Nontrivial (A.loc p).Ep :=
     Module.nontrivial_of_finrank_pos (R := (A.loc p).Fp) (by rw [(A.loc p).rank]; norm_num)
   obtain ⟨hli, hco, -⟩ := GlobalTheory.FrameBasic.main (A.L p) r k (G.S p)
   have hME : (G.S p).ME = Submodule.span (A.loc p).Ep (Set.range (Sum.elim (G.S p).f (G.S p).f')) := by
@@ -332,8 +332,8 @@ theorem stab_rat : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
   · intro hz
     have hloc : ∀ p, ∃ h' ∈ (G.S p).St, (∀ j, h' ((G.S p).f j) = ∑ i, locM G p s i j • (G.S p).f i) ∧
         ∀ j, h' ((G.S p).f' j) = ∑ i, locM G p s' i j • (G.S p).f' i := fun p => by
-      haveI := (A.loc p).lf
-      haveI := (A.loc p).char0
+      have := (A.loc p).lf
+      have := (A.loc p).char0
       exact ((stab_eq (A.L p) r k (G.S p)).2 _ _ (locM_unitri G p s hs) (locM_unitri G p s' hs')).1
         ((mat_iff G p s s').2 hz)
     choose hp hpSt hpf hpf' using hloc
@@ -356,8 +356,8 @@ theorem stab_rat : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
       rw [Submodule.span_union, Submodule.span_eq, hco.sup_eq_top]
     have hExt : ∀ p x, hp p (A.bc p x) = A.bc p (φ x) := by
       intro p
-      haveI := (A.loc p).lf
-      haveI := (A.loc p).char0
+      have := (A.loc p).lf
+      have := (A.loc p).char0
       have heq := LinearMap.ext_on (s := Set.range (gg G) ∪ (Wc G : Set G.V))
         (f := (hp p).toLinearMap.comp (bcL A p _)) (g := (bcL A p _).comp φ) hspan (by
           rintro x (⟨i, rfl⟩ | hx)
@@ -382,8 +382,8 @@ theorem stab_rat : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     exact ⟨h, fun p => ⟨hp p, hpSt p, hExt p⟩, fun j => hφ1 (Sum.inl j), fun j => hφ1 (Sum.inr j)⟩
   · rintro ⟨h, hh, h1, h2⟩
     obtain ⟨p⟩ := exists_place (F := F)
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+    have := (A.loc p).lf
+    have := (A.loc p).char0
     have hh0 : ∀ p, ∃ g' ∈ (G.S p).St, A.Ext p h g' := hh
     obtain ⟨h', hh', hE⟩ := hh0 p
     rw [← mat_iff G p]

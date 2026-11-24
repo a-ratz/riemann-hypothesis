@@ -261,7 +261,7 @@ theorem mem_span_of {E : Type} [Field E] [NumberField E] {n : ℕ} {𝔟 : Fract
 
 theorem fg_of_le_fg' {E : Type} [Field E] [NumberField E] {n : ℕ} {N P : Submodule (𝓞 E) (Fin n → E)} (hP : P.FG)
     (hle : N ≤ P) : N.FG := by
-  haveI := isNoetherian_of_fg_of_noetherian P hP
+  have := isNoetherian_of_fg_of_noetherian P hP
   have hfg := IsNoetherian.noetherian (N.comap P.subtype)
   have e : (N.comap P.subtype).map P.subtype = N := by
     rw [Submodule.map_comap_subtype, inf_eq_right.2 hle]

@@ -65,30 +65,30 @@ def uniSet (D : D7) (ρ : ℕ) : Set (Matrix (Fin ρ) (Fin ρ) (AE D)) :=
   {M | ∀ i j : Fin ρ, (j < i → M i j = 0) ∧ M i i = 1}
 
 private theorem t2_lemma (D : D7) : T2Space (AE D) := by
-  haveI : T2Space (Fin 1 → Fin 1 → AE D) := (lattice_Mx D 1 1).2.2.2.1
+  have : T2Space (Fin 1 → Fin 1 → AE D) := (lattice_Mx D 1 1).2.2.2.1
   exact T2Space.of_injective_continuous (f := fun a : AE D => (fun _ _ => a : Mx D 1 1))
     (fun a b h => congrFun (congrFun h 0) 0) (continuous_pi fun _ => continuous_pi fun _ => continuous_id)
 
 theorem isClosed_uniSet (D : D7) (ρ : ℕ) : IsClosed (uniSet D ρ) := by
-  haveI : T2Space (AE D) := t2_lemma D
+  have : T2Space (AE D) := t2_lemma D
   have h1 : ∀ i j : Fin ρ, IsClosed {M : Matrix (Fin ρ) (Fin ρ) (AE D) | j < i → M i j = 0} := by
     intro i j
     by_cases h : j < i
     · have hc : Continuous fun M : Matrix (Fin ρ) (Fin ρ) (AE D) => M i j := continuous_id.matrix_elem i j
       simpa only [h, true_implies] using isClosed_eq hc continuous_const
-    · simp only [h, false_implies, Set.setOf_true]
+    · simp only [h, false_implies, Set.ofPred_true]
       exact isClosed_univ
   have h2 : ∀ i : Fin ρ, IsClosed {M : Matrix (Fin ρ) (Fin ρ) (AE D) | M i i = 1} := fun i =>
     isClosed_eq (show Continuous fun M : Matrix (Fin ρ) (Fin ρ) (AE D) => M i i from
       continuous_id.matrix_elem i i) continuous_const
   have e : uniSet D ρ = ⋂ i, ⋂ j, ({M : Matrix (Fin ρ) (Fin ρ) (AE D) | j < i → M i j = 0} ∩ {M | M i i = 1}) := by
     ext M
-    simp only [uniSet, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+    simp only [uniSet, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
   rw [e]
   exact isClosed_iInter fun i => isClosed_iInter fun j => (h1 i j).inter (h2 i)
 
 theorem det_of_mem {M : Matrix (Fin ρ) (Fin ρ) (AE D)} (hM : M ∈ uniSet D ρ) : M.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j h => (hM i j).1 h)]
+  rw [det_of_isUpperTriangular (fun i j h => (hM i j).1 h)]
   exact Finset.prod_eq_one fun i _ => (hM i i).2
 
 def toUnit (M : Matrix (Fin ρ) (Fin ρ) (AE D)) (hM : M ∈ uniSet D ρ) : GL (Fin ρ) (AE D) :=
@@ -109,7 +109,7 @@ theorem inv_eq_adjugate (u : UX D ρ) :
 
 theorem isClosedEmbedding_val (D : D7) (ρ : ℕ) :
     Topology.IsClosedEmbedding (fun u : UX D ρ => u.1.1) := by
-  have hc : Continuous (fun u : UX D ρ => u.1.1) := Units.continuous_val.comp continuous_subtype_val
+  have hc : Continuous (fun u : UX D ρ => u.1.1) := Units.continuous_val.comp continuous_subtypeVal
   have hg : Continuous (fun M : Matrix (Fin ρ) (Fin ρ) (AE D) => (M, MulOpposite.op M.adjugate)) :=
     continuous_id.prodMk (MulOpposite.continuous_op.comp continuous_id.matrix_adjugate)
   have hind : Topology.IsInducing (fun u : UX D ρ => u.1.1) := by
@@ -142,9 +142,9 @@ variable {D : D7} {ρ : ℕ}
 theorem topology (D : D7) (ρ : ℕ) :
     LocallyCompactSpace (UX D ρ) ∧ SecondCountableTopology (UX D ρ) ∧ T2Space (UX D ρ) := by
   obtain ⟨-, hlc, hsc, ht2, -⟩ := lattice_Mx D ρ ρ
-  haveI : LocallyCompactSpace (Matrix (Fin ρ) (Fin ρ) (AE D)) := hlc
-  haveI : SecondCountableTopology (Matrix (Fin ρ) (Fin ρ) (AE D)) := hsc
-  haveI : T2Space (Matrix (Fin ρ) (Fin ρ) (AE D)) := ht2
+  have : LocallyCompactSpace (Matrix (Fin ρ) (Fin ρ) (AE D)) := hlc
+  have : SecondCountableTopology (Matrix (Fin ρ) (Fin ρ) (AE D)) := hsc
+  have : T2Space (Matrix (Fin ρ) (Fin ρ) (AE D)) := ht2
   have he := isClosedEmbedding_val D ρ
   exact ⟨he.locallyCompactSpace, he.isInducing.secondCountableTopology, he.isEmbedding.t2Space⟩
 
@@ -154,10 +154,10 @@ theorem rational (D : D7) (ρ : ℕ) : Countable (UXQ D ρ) ∧ DiscreteTopology
   have hf : Function.Injective f := fun a b h =>
     Subtype.ext (Subtype.ext (Units.ext (congrArg Subtype.val h)))
   have hc : Continuous f :=
-    (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).subtype_mk _
-  haveI : SecondCountableTopology (Mx D ρ ρ) := hsc
-  haveI : DiscreteTopology (ratMx D ρ ρ) := hd
-  haveI : Countable (ratMx D ρ ρ) := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
+    (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).subtype_mk _
+  have : SecondCountableTopology (Mx D ρ ρ) := hsc
+  have : DiscreteTopology (ratMx D ρ ρ) := hd
+  have : Countable (ratMx D ρ ρ) := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
   exact ⟨hf.countable, DiscreteTopology.of_continuous_injective hc hf⟩
 
 noncomputable def row (u : Matrix (Fin ρ) (Fin ρ) (AE D)) (pick : AE D → D.host.E) (i : Fin ρ) (j : Fin ρ) : D.host.E :=
@@ -228,7 +228,7 @@ theorem reduce : ∀ (D : D7) (ρ : ℕ), ∃ C : Set (AE D), IsCompact C ∧ �
     have hne : j ≠ i := hij.ne'
     have hS : δ i j = pick (∑ l : Fin ρ, if l < j then incA D (δ i l) * u.1.1 l j else 0) := by
       rw [hδ, row_eq]
-      simp only [hji, hne, if_false, hδ]
+      simp only [hji, hne, ite_false, hδ]
     rw [hS]
     exact hpick _
 
@@ -274,7 +274,7 @@ theorem isMulRightInvariant_of_fundamentalDomain {G : Type} [Group G] [Topologic
     congr 1
     exact (Equiv.mulRight g).preimage_image 𝓤
   have e2 := hF2.measure_eq hF1
-  rw [e1, hsc, Measure.smul_apply] at e2
+  rw [e1, hsc, smul_apply] at e2
   have e3 : (c : ENNReal) * ν 𝓤 = 1 * ν 𝓤 := by
     rw [one_mul]
     exact (by simpa [ENNReal.smul_def] using e2.symm)
@@ -289,7 +289,7 @@ theorem isUnitU_exists_unique_rightInvariant : ∀ (D : D7) (ρ : ℕ), (∃ ν,
   intro D ρ
   obtain ⟨hlc, hsc, ht2⟩ := topology D ρ
   obtain ⟨hcount, hdisc⟩ := rational D ρ
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
   obtain ⟨K, hK, hcov⟩ := cocompact D ρ
   refine ⟨?_, ?_, ?_⟩
   · obtain ⟨ν, 𝓝, hH, hF, h1⟩ := exists_unit_of_cocompact (UXQ D ρ) hK hcov
@@ -300,7 +300,7 @@ theorem isUnitU_exists_unique_rightInvariant : ∀ (D : D7) (ρ : ℕ), (∃ ν,
     have hF'' : IsFundamentalDomain (UXQ D ρ) 𝓤 ν' :=
       hF.mono (by rw [hsm]; exact Measure.smul_absolutelyContinuous)
     have e := hF''.measure_eq hF'
-    rw [h1', hsm, Measure.smul_apply, h1] at e
+    rw [h1', hsm, smul_apply, h1] at e
     have hc1 : (c : ENNReal) = 1 := by simpa [ENNReal.smul_def] using e
     rw [hsm, ENNReal.coe_eq_one.1 hc1, one_smul]
   · rintro ν ⟨hH, 𝓤, hF, h1⟩

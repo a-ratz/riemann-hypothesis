@@ -97,7 +97,7 @@ theorem continuous_translate {E : Type} [Field E] [NumberField E] [NumberField.I
   have hu : ∀ k : GlobalTheory.CuspRep.Kinf E a,
       IsUnit (Matrix.of (k.1 : GlobalTheory.CuspRep.Lie E a)) := fun k => (Unitary.toUnits k).isUnit
   have h2 : Continuous fun k : GlobalTheory.CuspRep.Kinf E a => (k.1 : GlobalTheory.CuspRep.Lie E a) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have h3 := h1.comp_continuous h2 hu
   refine h3.congr fun k => ?_
   have h4 : (hu k).unit = Unitary.toUnits k := Units.ext rfl
@@ -151,9 +151,9 @@ theorem isContRep_sub_cptRep (W : Submodule ℂ (Sm E a)) (hW : ∀ k, ∀ w ∈
 
 theorem finiteDimensional_capEigen_maps : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (L : Subgroup (GL (Fin a) (Af E))), IsOpen (L : Set (GL (Fin a) (Af E))) → ∀ (W : Submodule ℂ (Sm E a)) (hW : ∀ k, ∀ w ∈ W, cptRep E a k w ∈ W), FiniteDimensional ℂ W → ∀ (c : (E →+* ℂ) → ℂ → ℂ) (N : Submodule ℂ (W →ₗ[ℂ] Sm E a)), N ≤ maps L W hW → (∀ T ∈ N, ∀ τ u, cap τ u ∘ₗ T = c τ u • T) → FiniteDimensional ℂ N := by
   intro hHC E _ _ _ a L hL W hW hWf c N hN hcap
-  haveI := hWf
+  have := hWf
   have hF := hHC E a L hL W (GlobalTheory.PRep.sub (cptRep E a) W hW) (isContRep_sub_cptRep W hW) c
-  haveI := hF
+  have := hF
   have hmem : ∀ T ∈ N, ∀ w, T w ∈ GlobalTheory.Published.AutFinGL.forms L (GlobalTheory.PRep.sub (cptRep E a) W hW) c := by
     intro T hT w
     have hm : (∀ k w, T (GlobalTheory.PRep.sub (cptRep E a) W hW k w) = cptRep E a k (T w)) ∧
@@ -263,7 +263,7 @@ theorem fd_adjoin_of_ker_le (M : Type) [AddCommGroup M] [Module ℂ M] (A : Type
     (V : Type) [AddCommGroup V] [Module ℂ V] (ρ : A →ₐ[ℂ] Module.End ℂ M) (ev : A →ₗ[ℂ] V)
     (hev : FiniteDimensional ℂ (LinearMap.range ev)) (hker : LinearMap.ker ev ≤ LinearMap.ker ρ.toLinearMap)
     (S : Set (Module.End ℂ M)) (hS : S ⊆ ρ.range) : FiniteDimensional ℂ (Algebra.adjoin ℂ S) := by
-  haveI : FiniteDimensional ℂ (A ⧸ LinearMap.ker ev) :=
+  have : FiniteDimensional ℂ (A ⧸ LinearMap.ker ev) :=
     LinearEquiv.finiteDimensional (ev.quotKerEquivRange).symm
   have hR : FiniteDimensional ℂ (LinearMap.range ρ.toLinearMap) := by
     rw [← Submodule.range_liftQ (LinearMap.ker ev) ρ.toLinearMap hker]
@@ -303,7 +303,7 @@ theorem finiteDimensional_mapsJ : GlobalTheory.Published.AutomorphicFormsFiniteG
           Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z φ) '' Zalg E a) := by
         rintro _ ⟨z, rfl⟩
         exact Submodule.subset_span ⟨z.1, z.2, rfl⟩
-      haveI := hφ.zfin
+      have := hφ.zfin
       exact Submodule.finiteDimensional_of_le h1
     refine fd_adjoin_of_ker_le (mapsJ φ L) (Zalg E a) (Sm E a) (postZAlg φ L) ev hev hker S ?_
     rintro _ ⟨τ, u, rfl⟩

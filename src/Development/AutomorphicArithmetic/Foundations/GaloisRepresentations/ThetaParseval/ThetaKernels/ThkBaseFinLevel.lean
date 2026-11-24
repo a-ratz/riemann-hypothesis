@@ -55,12 +55,12 @@ theorem finLevel_k : _root_.GlobalTheory.ThK.Dbl.FinLevel_k := by
   have lin : ∀ (k : G2 σ Y) (u : Matrix (Fin m) (Fin n ⊕ Fin n) (AE F E)),
       actB (cA σ) k (epsF F • u) = epsF F • actB (cA σ) k u := fun k u => Matrix.smul_mul _ _ _
   have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : ∀ {α β : Type} [Finite α] [Finite β], IsModuleTopology (AF F) (Matrix α β (AE F E)) :=
+  have : ∀ {α β : Type} [Finite α] [Finite β], IsModuleTopology (AF F) (Matrix α β (AE F E)) :=
     inferInstanceAs (IsModuleTopology (AF F) (_ → _ → AE F E))
   have c : Continuous fun y : ((κ → AF F) × (κ → AF F)) × G2 σ Y => dd.e (actB (cA σ) y.2 (dd.e.symm y.1)) :=
     (IsModuleTopology.continuous_of_linearMap dd.e.toLinearMap).comp
       (((IsModuleTopology.continuous_of_linearMap dd.e.symm.toLinearMap).comp continuous_fst).matrix_mul
-        (Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd)).matrix_transpose)
+        (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd)).matrix_transpose)
   obtain ⟨s, hs, h⟩ := finite_values hB.std (hK.eventually_forall_of_forall_eventually
     (P := fun w k => schr B.ψ (epsF F • dd.e (actB (cA σ) k (dd.e.symm w))) Φ = Φ) fun k _ =>
       (c.tendsto' (0, k) 0 (by simp [actB])).eventually (level hB.std.1 hΦ))

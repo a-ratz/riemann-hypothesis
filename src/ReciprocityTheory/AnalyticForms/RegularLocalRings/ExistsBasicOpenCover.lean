@@ -87,7 +87,7 @@ theorem comps_finite [NoetherianSpace α] (T : Set α) : (comps T).Finite := by
   have himg : ((↑) '' ((↑) ⁻¹' C : Set T) : Set α) = C := by
     rw [Subtype.image_preimage_coe, Set.inter_eq_right.2 hC'.1.2]
   refine ⟨(↑) ⁻¹' C, ⟨isIrreducible_preimage_coe_of_subset T C hC'.1.2 hC'.1.1, fun S hS hCS => ?_⟩, himg⟩
-  have hSI : IsIrreducible ((↑) '' S : Set α) := hS.image _ continuous_subtype_val.continuousOn
+  have hSI : IsIrreducible ((↑) '' S : Set α) := hS.image _ continuous_subtypeVal.continuousOn
   have hle := hC'.2 ⟨hSI, by rintro _ ⟨z, -, rfl⟩; exact z.2⟩
     (by rw [← himg]; exact Set.image_mono hCS)
   intro z hz
@@ -104,7 +104,7 @@ theorem sUnion_comps (T : Set α) : ⋃₀ comps T = T := by
   let y : T := ⟨x, hx⟩
   have hI : IsIrreducible (irreducibleComponent y) := isIrreducible_irreducibleComponent
   refine ⟨(↑) '' irreducibleComponent y,
-    ⟨⟨hI.image _ continuous_subtype_val.continuousOn, by rintro _ ⟨z, -, rfl⟩; exact z.2⟩, ?_⟩,
+    ⟨⟨hI.image _ continuous_subtypeVal.continuousOn, by rintro _ ⟨z, -, rfl⟩; exact z.2⟩, ?_⟩,
     ⟨y, mem_irreducibleComponent, rfl⟩⟩
   intro D hD hCD
   have hpre := isIrreducible_preimage_coe_of_subset T D hD.2 hD.1
@@ -230,7 +230,7 @@ theorem exists_sncData [IsNoetherian W] [LocallyOfFiniteType s] {Z : W.IdealShea
   let B := fun l => if hl : l ∈ J then Classical.choose (hbr l hl).exists else (∅ : Set W)
   have hB : ∀ l (hl : l ∈ J), IsBranch (Z.support : Set W) (f l) x (B l) := by
     intro l hl
-    simp only [B, dif_pos hl]
+    simp only [B, dite_eq_left hl]
     exact Classical.choose_spec (hbr l hl).exists
   have hBu : ∀ l (hl : l ∈ J) C, IsBranch (Z.support : Set W) (f l) x C → C = B l :=
     fun l hl C hC => (hbr l hl).unique hC (hB l hl)
@@ -238,7 +238,7 @@ theorem exists_sncData [IsNoetherian W] [LocallyOfFiniteType s] {Z : W.IdealShea
   have hσ : ∀ l k, σ l = some k ↔ l ∈ J ∧ IsBranch (Z.support : Set W) (f l) x (c k) := by
     intro l k
     by_cases hl : l ∈ J
-    · simp only [σ, dif_pos hl, Option.some.injEq]
+    · simp only [σ, dite_eq_left hl, Option.some.injEq]
       constructor
       · intro h
         refine ⟨hl, ?_⟩
@@ -250,14 +250,14 @@ theorem exists_sncData [IsNoetherian W] [LocallyOfFiniteType s] {Z : W.IdealShea
           Subtype.ext (hBu l hl _ hbk).symm
         rw [this]
         simp
-    · simp only [σ, dif_neg hl]
+    · simp only [σ, dite_eq_right hl]
       simp [hl]
   have hinj : Set.InjOn σ J := by
     intro l hl l' hl' h
     have hl₁ : l ∈ J := hl
     have hl₁' : l' ∈ J := hl'
     by_contra hne
-    obtain ⟨k, hk⟩ : ∃ k, σ l = some k := ⟨c.symm ⟨B l, (hB l hl₁).1⟩, by simp only [σ, dif_pos hl₁]⟩
+    obtain ⟨k, hk⟩ : ∃ k, σ l = some k := ⟨c.symm ⟨B l, (hB l hl₁).1⟩, by simp only [σ, dite_eq_left hl₁]⟩
     have h1 := ((hσ l k).mp hk).2
     have h2 := ((hσ l' k).mp (h.symm.trans hk)).2
     exact branch_ne x U hxU f J hrsp hZU hl₁ hl₁' hne h1 h2 rfl
@@ -297,7 +297,7 @@ theorem exists_sncData [IsNoetherian W] [LocallyOfFiniteType s] {Z : W.IdealShea
     ⟨Oset, hOo⟩, ⟨⟨hxO₁, hx⟩, Set.mem_iInter.mpr hxO'⟩, fun z hz => hz.1.2, ?_⟩
   · intro l hl
     have hl' : l ∈ J := hl
-    refine ⟨c.symm ⟨B l, (hB l hl').1⟩, by show σ l = _; simp only [σ, dif_pos hl'], ?_⟩
+    refine ⟨c.symm ⟨B l, (hB l hl').1⟩, by show σ l = _; simp only [σ, dite_eq_left hl'], ?_⟩
     rw [Equiv.apply_symm_apply]
     exact isBranch_of_germ Z.support.isClosed hxU hx (hB l hl') _ (hgerm l)
   · intro k y hy hyO hcy

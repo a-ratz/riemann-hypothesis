@@ -344,7 +344,7 @@ theorem exists_cdvr [FiniteDimensional ℚ_[p] L] :
       (∀ x ∈ L, x ∈ Set.range j) ∧
       ∀ x : T.Fr, x ≠ 0 → ‖j x‖ = (p : ℝ) ^ (-((vV T.V x : ℝ) / (vV T.V ((p : ℕ) : T.Fr) : ℝ))) := by
   obtain ⟨hd, hf⟩ := dvr_fin L
-  have : CompleteSpace L := FiniteDimensional.complete ℚ_[p] L
+  have : CompleteSpace L := FiniteDimensional.completeSpace ℚ_[p] L
   have hc : IsAdicComplete (IsLocalRing.maximalIdeal 𝒪[L]) 𝒪[L] :=
     PositivityTheory.CompleteLocalMinorRing.Minor.isAdicComplete_max (K := L) p
   have h0 : CharZero 𝒪[L] := ⟨fun a b h => Nat.cast_injective (R := L) (by

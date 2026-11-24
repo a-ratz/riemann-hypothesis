@@ -63,7 +63,7 @@ private theorem norm_unif_lt (j : k →+* Qbar l) (hj : Continuous j) : ‖j (un
     intro γ _
     obtain ⟨N, hN⟩ := exists_pow_lt₀ (ValuativeRel.uniformizer_lt_one (R := k)) γ
     filter_upwards [eventually_ge_atTop N] with n hn
-    simp only [Set.mem_setOf_eq, map_pow, GlAx.unif_spec]
+    simp only [Set.mem_ofPred_eq, map_pow, GlAx.unif_spec]
     exact lt_of_le_of_lt (pow_le_pow_right_of_le_one' ValuativeRel.uniformizer_lt_one.le hn) hN
   have hj' : Tendsto (fun n : ℕ => (j (unif k : k)) ^ n) atTop (nhds 0) := by
     have := (hj.tendsto 0).comp hv
@@ -78,8 +78,8 @@ variable {L : Type} [Field L] [NumberField L] {l : ℕ} [Fact l.Prime] (w : Plc 
 
 private theorem pow_ne (h : (L →+* Qbar l) → ℤ) :
     algPow w h ((unif (w.adicCompletion L) : (w.adicCompletion L)ˣ) : w.adicCompletion L) ≠ 0 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite {j : w.adicCompletion L →+* Qbar l // Continuous j}
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite {j : w.adicCompletion L →+* Qbar l // Continuous j}
   unfold algPow
   rw [finprod_eq_prod_of_fintype]
   exact Finset.prod_ne_zero_iff.2 fun j _ => zpow_ne_zero _ ((map_ne_zero j.1).2 (Units.ne_zero _))
@@ -88,9 +88,9 @@ private theorem pow_anti {h h' : (L →+* Qbar l) → ℤ} (hh : ∀ τ, h τ �
     ‖algPow w h' ((unif (w.adicCompletion L) : (w.adicCompletion L)ˣ) : w.adicCompletion L)‖ ≤
       ‖algPow w h ((unif (w.adicCompletion L) : (w.adicCompletion L)ˣ) : w.adicCompletion L)‖ := by
   classical
-  haveI : Finite {j : w.adicCompletion L →+* Qbar l // Continuous j} :=
+  have : Finite {j : w.adicCompletion L →+* Qbar l // Continuous j} :=
     GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite {j : w.adicCompletion L →+* Qbar l // Continuous j}
+  have := Fintype.ofFinite {j : w.adicCompletion L →+* Qbar l // Continuous j}
   unfold algPow
   rw [finprod_eq_prod_of_fintype, finprod_eq_prod_of_fintype, norm_prod, norm_prod]
   refine Finset.prod_le_prod₀ (fun j _ => norm_nonneg _) fun j _ => ?_
@@ -105,7 +105,7 @@ private theorem card_dvd (hl : ((l : ℕ) : 𝓞 L) ∈ w.asIdeal) : l ∣ Nat.c
     have := GlobalTheory.LocLanglands.resCard_eq_normV (E := L) w
     simpa [GlobalTheory.SplitWeil.resCard, Formalism.ConjugateSelfDual.normV] using this
   rw [hc]
-  haveI := w.isPrime
+  have := w.isPrime
   have hz : ((l : ℕ) : 𝓞 L ⧸ w.asIdeal) = 0 := by
     have := (Ideal.Quotient.eq_zero_iff_mem (I := w.asIdeal)).mpr hl
     simpa using this
@@ -151,7 +151,7 @@ private theorem prod_le {M : Type} [CommMonoid M] {n : ℕ} (f : ℕ → M) (j :
   · intro k hk
     simp only [Finset.mem_coe, Finset.mem_range] at hk
     refine ⟨⟨k, by omega⟩, ?_, rfl⟩
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
     show k ≤ (j : ℕ)
     omega
   · intro i _
@@ -183,13 +183,13 @@ private theorem exp_core {l : ℕ} [Fact l.Prime] (ι : Qbar l ≃+* ℂ) {n : �
   have hAne : ∀ k, A k ≠ 0 := by
     intro k
     by_cases h : k < n
-    · simp only [A, dif_pos h]; exact ha _
-    · simp only [A, dif_neg h]; exact one_ne_zero
+    · simp only [A, dite_eq_left h]; exact ha _
+    · simp only [A, dite_eq_right h]; exact one_ne_zero
   have hWn : ∀ k, ‖W k‖ = 1 := by
     intro k
     by_cases h : k < n
-    · simp only [W, dif_pos h]; exact hu _
-    · simp only [W, dif_neg h]; exact norm_one
+    · simp only [W, dite_eq_left h]; exact hu _
+    · simp only [W, dite_eq_right h]; exact norm_one
   have hWne : ∀ k, W k ≠ 0 := fun k => norm_ne_zero_iff.mp (by rw [hWn k]; exact one_ne_zero)
   let T : ℕ → Qbar l := fun k =>
     (∏ i ∈ Finset.range (k + 1), A i) * W k * ∏ i ∈ Finset.range (k + 1), (q : Qbar l) ^ i
@@ -229,12 +229,12 @@ private theorem exp_core {l : ℕ} [Fact l.Prime] (ι : Qbar l ≃+* ℂ) {n : �
       simp only [ω, Units.val_mk0, U, map_div₀, RingEquiv.symm_apply_apply]
     rw [e1, norm_div, hG _ (Nat.succ_le_of_lt i.isLt), hG _ i.isLt.le, hGs,
       mul_div_cancel_left₀ _ (hGne _)]
-    simp only [A, dif_pos i.isLt]
+    simp only [A, dite_eq_left i.isLt]
   have hsa : StrictAnti (fun i : Fin n => ‖a i‖ * ‖(q : Qbar l)‖ ^ (i : ℕ)) := by
     intro i i' hii
     have h1 : ‖a i'‖ ≤ ‖a i‖ := hanti i i' hii.le
     have h2 : ‖(q : Qbar l)‖ ^ (i' : ℕ) < ‖(q : Qbar l)‖ ^ (i : ℕ) :=
-      pow_lt_pow_right_of_lt_one₀ hqpos hq1 (Fin.lt_iff_val_lt_val.mp hii)
+      pow_lt_pow_right_of_lt_one₀ hqpos hq1 (Fin.lt_def.mp hii)
     have h3 : 0 < ‖a i‖ := norm_pos_iff.mpr (ha i)
     calc ‖a i'‖ * ‖(q : Qbar l)‖ ^ (i' : ℕ) ≤ ‖a i‖ * ‖(q : Qbar l)‖ ^ (i' : ℕ) :=
           mul_le_mul_of_nonneg_right h1 (by positivity)
@@ -256,11 +256,11 @@ private theorem exp_core {l : ℕ} [Fact l.Prime] (ι : Qbar l ≃+* ℂ) {n : �
         · have := Fin.le_iff_val_le_val.mp h
           omega
       · intro i _
-        simp only [A, dif_pos i.isLt]
+        simp only [A, dite_eq_left i.isLt]
     have hR : (∏ i with i ≤ j, (ω i : ℂ) * ((q : ℂ) ^ (i : ℕ))⁻¹) =
         ∏ k ∈ Finset.range (j + 1), (U (k + 1) / U k * ((q : ℂ) ^ k)⁻¹) :=
       prod_le (fun k => U (k + 1) / U k * ((q : ℂ) ^ k)⁻¹) j
-    have hWj : ι (W j) = u j := by simp only [W, dif_pos j.isLt, RingEquiv.apply_symm_apply]
+    have hWj : ι (W j) = u j := by simp only [W, dite_eq_left j.isLt, RingEquiv.apply_symm_apply]
     have hqp : (∏ k ∈ Finset.range (j + 1), (q : ℂ) ^ k) ≠ 0 :=
       Finset.prod_ne_zero_iff.mpr fun k _ => pow_ne_zero _ hq0'
     have hUj : U ((j : ℕ) + 1) =

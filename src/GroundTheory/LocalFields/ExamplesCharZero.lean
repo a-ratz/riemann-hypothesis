@@ -104,7 +104,7 @@ theorem valuation_ratCast_le_one_iff (q : ℚ) : valuation K (q : K) ≤ 1 ↔ �
   have hq : (q : K) = (q.num : K) / (q.den : K) := by
     rw [← Rat.cast_intCast, ← Rat.cast_natCast, ← Rat.cast_div, Rat.num_div_den]
   have hvden : valuation K (q.den : K) ≠ 0 := by simp
-  rw [hq, map_div₀, div_le_one₀ (zero_lt_iff.mpr hvden)]
+  rw [hq, map_div₀, div_le_one₀ (pos_iff_ne_zero.mpr hvden)]
   constructor
   · intro h hp
     have hnum : ¬ (p : ℤ) ∣ q.num := by
@@ -181,7 +181,7 @@ theorem valuation_padicHom_padicInt_le_one (x : ℤ_[p]) :
     valuation K (padicHom K p (x : ℚ_[p])) ≤ 1 := by
   refine PadicInt.denseRange_intCast.induction_on x ?_ fun n => ?_
   · exact (Valuation.isClosed_integer (v := valuation K)).preimage
-      ((continuous_padicHom K p).comp continuous_subtype_val)
+      ((continuous_padicHom K p).comp continuous_subtypeVal)
   · simpa using valuation_intCast_le_one K n
 
 theorem valuation_padicHom_le_one_iff (x : ℚ_[p]) :

@@ -80,7 +80,7 @@ theorem exists_padic_point_norm_lt (m : Ideal A) [m.IsMaximal] (hp : (p : A) ∈
   have hb : b ≠ 0 := by
     rintro rfl
     exact h 1 h1m (by simp)
-  haveI : IsDomain L := IsLocalization.isDomain_of_atPrime L m
+  have : IsDomain L := IsLocalization.isDomain_of_atPrime L m
   let F := FractionRing L
   have hinj : Function.Injective (algebraMap A F) := by
     rw [IsScalarTower.algebraMap_eq A L F]
@@ -94,7 +94,7 @@ theorem exists_padic_point_norm_lt (m : Ideal A) [m.IsMaximal] (hp : (p : A) ∈
   let ψ' : B := ⟨ψ, Algebra.subset_adjoin rfl⟩
   have hJ : m.map (algebraMap A B) ⊔ Ideal.span {ψ'} ≠ ⊤ := by
     intro heq
-    letI := invertibleOfNonzero hψ0
+    let := invertibleOfNonzero hψ0
     obtain ⟨q, hq, hqx⟩ :=
       Algebra.exists_aeval_invOf_eq_zero_of_idealMap_adjoin_sup_span_eq_top ψ _ hm heq
     have hs : q.leadingCoeff ∉ m := fun h' => h1m (by simpa using sub_mem h' hq)
@@ -112,9 +112,9 @@ theorem exists_padic_point_norm_lt (m : Ideal A) [m.IsMaximal] (hp : (p : A) ∈
       algebraMap A F b * mul_inv_cancel₀ (hne hc)
   obtain ⟨m₁, hm₁, hle⟩ := Ideal.exists_le_maximal _ hJ
   have hinjB : Function.Injective (algebraMap A B) := fun x x' e => hinj (congrArg Subtype.val e)
-  haveI : CharZero B := charZero_of_injective_algebraMap hinjB
-  haveI : Algebra.FiniteType A B := .adjoin_of_finite (Set.finite_singleton ψ)
-  haveI := finiteType_int_of_finiteType A B
+  have : CharZero B := charZero_of_injective_algebraMap hinjB
+  have : Algebra.FiniteType A B := .adjoin_of_finite (Set.finite_singleton ψ)
+  have := finiteType_int_of_finiteType A B
   have hcom : m₁.comap (algebraMap A B) = m :=
     ((inferInstance : m.IsMaximal).eq_of_le (Ideal.comap_ne_top _ hm₁.ne_top)
       (Ideal.map_le_iff_le_comap.mp (le_sup_left.trans hle))).symm
@@ -244,8 +244,8 @@ theorem exists_germToFunctionField_eq_of_mem_range_stalk {Z : Scheme.{0}} [IsInt
       x ∈ V ∧ V ≤ W ∧ Z.germToFunctionField V s = t := by
   obtain ⟨g, rfl⟩ := h
   obtain ⟨V, hV, s, rfl⟩ := Z.presheaf.exists_germ_eq g
-  haveI : Nonempty V := ⟨⟨x, hV⟩⟩
-  haveI : Nonempty (V ⊓ W : Z.Opens) := ⟨⟨x, hV, hx⟩⟩
+  have : Nonempty V := ⟨⟨x, hV⟩⟩
+  have : Nonempty (V ⊓ W : Z.Opens) := ⟨⟨x, hV, hx⟩⟩
   refine ⟨V ⊓ W, inferInstance, Z.presheaf.map (homOfLE inf_le_left).op s, ⟨hV, hx⟩,
     inf_le_right, ?_⟩
   rw [Scheme.algebraMap_germ_eq_germToFunctionField]
@@ -285,26 +285,26 @@ theorem exists_padic_point_scheme_one_lt_norm {p : ℕ} [Fact p.Prime] {x : Z}
             1 < ‖(((Scheme.ΓSpecIso (.of K)).hom ((genericPt(p, K, y)).appLE U ⊤ hy φ) : K) :
               PadicAlgCl p)‖ := by
   obtain ⟨V, hV, hxV, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := x) trivial
-  haveI : Nonempty V := ⟨⟨x, hxV⟩⟩
-  haveI := finiteType_int_sections π hV
-  haveI := charZero_sections_of_flat π hV
-  haveI := hV.primeIdealOf_isMaximal_of_isClosed ⟨x, hxV⟩ hx
+  have : Nonempty V := ⟨⟨x, hxV⟩⟩
+  have := finiteType_int_sections π hV
+  have := charZero_sections_of_flat π hV
+  have := hV.primeIdealOf_isMaximal_of_isClosed ⟨x, hxV⟩ hx
   have hg : ∀ (W : Z.Opens) [Nonempty W], genericPoint Z ∈ W := fun W h =>
     ((genericPoint_spec Z).mem_open_set_iff W.isOpen).mpr (by simpa using h)
   obtain ⟨f, hfU, hxf⟩ := hV.exists_basicOpen_le (V := U ⊓ U') ⟨_, hg U, hg U'⟩ (hg V)
   have hf : f ≠ 0 := by
     rintro rfl
     simp at hxf
-  haveI : Nonempty (Z.basicOpen f) := ⟨⟨_, hxf⟩⟩
-  letI : Algebra Γ(Z, V) (Z.presheaf.stalk x) := Z.presheaf.algebra_section_stalk ⟨x, hxV⟩
-  haveI : IsLocalization.AtPrime (Z.presheaf.stalk x) (hV.primeIdealOf ⟨x, hxV⟩).asIdeal :=
+  have : Nonempty (Z.basicOpen f) := ⟨⟨_, hxf⟩⟩
+  let : Algebra Γ(Z, V) (Z.presheaf.stalk x) := Z.presheaf.algebra_section_stalk ⟨x, hxV⟩
+  have : IsLocalization.AtPrime (Z.presheaf.stalk x) (hV.primeIdealOf ⟨x, hxV⟩).asIdeal :=
     hV.isLocalization_stalk ⟨x, hxV⟩
-  haveI : IsScalarTower Γ(Z, V) (Z.presheaf.stalk x) Z.functionField :=
+  have : IsScalarTower Γ(Z, V) (Z.presheaf.stalk x) Z.functionField :=
     functionField_isScalarTower Z V ⟨x, hxV⟩
-  haveI := hV.isLocalization_basicOpen f
-  haveI : IsScalarTower Γ(Z, V) Γ(Z, Z.basicOpen f) Z.functionField := .of_algebraMap_eq fun a =>
+  have := hV.isLocalization_basicOpen f
+  have : IsScalarTower Γ(Z, V) Γ(Z, Z.basicOpen f) Z.functionField := .of_algebraMap_eq fun a =>
     (Z.presheaf.germ_res_apply (homOfLE (Z.basicOpen_le f)) _ _ a).symm
-  haveI : FaithfulSMul Γ(Z, V) Z.functionField :=
+  have : FaithfulSMul Γ(Z, V) Z.functionField :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (Z.germToFunctionField_injective V)
   let φ' : Γ(Z, Z.basicOpen f) := Z.presheaf.map (homOfLE (hfU.trans inf_le_left)).op φ
   have hφ' : algebraMap _ Z.functionField φ' = Z.germToFunctionField U φ :=
@@ -374,13 +374,13 @@ theorem exists_germToFunctionField_eq_of_frequently_norm_le_one {U : Z.Opens} [N
         ‖(((Scheme.ΓSpecIso (.of K)).hom ((genericPt(p, K, y)).appLE U ⊤ hy φ) : K) :
           PadicAlgCl p)‖ ≤ 1) :
     ∃ ψ : Γ(Z, W), Z.germToFunctionField W ψ = Z.germToFunctionField U φ := by
-  haveI := jacobsonSpace_of_finiteType_over_int π
+  have := jacobsonSpace_of_finiteType_over_int π
   refine exists_germToFunctionField_eq_of_closedPoints W _ fun x hxW hx => ?_
   by_cases hxU : x ∈ U
   · exact ⟨_, Scheme.algebraMap_germ_eq_germToFunctionField Z hxU φ⟩
-  haveI := hn x hxW hxU hx
+  have := hn x hxW hxU hx
   obtain ⟨p, hp, hpx⟩ := exists_prime_residueField_eq_zero π hx
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   by_contra hne
   obtain ⟨K₀, hK₀, H⟩ := exists_padic_point_scheme_one_lt_norm π hx hpx U' hne
   obtain ⟨K, hK, hle, H'⟩ := h p K₀

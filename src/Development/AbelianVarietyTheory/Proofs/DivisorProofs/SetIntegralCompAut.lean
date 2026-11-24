@@ -64,7 +64,7 @@ theorem setIntegral_comp_aut {G : Type} [AddCommGroup G] [TopologicalSpace G] [I
     (hφ : ∀ γ ∈ Γ, ∀ x, φ (γ + x) = φ x) : ∫ x in 𝓕, φ (e x) ∂ν = ∫ x in 𝓕, φ x ∂ν := by
   let h : G ≃ₜ G := .mk e.toEquiv he he'
   let m : G ≃ᵐ G := h.toMeasurableEquiv
-  haveI : (ν.map e).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map ν e he he'
+  have : (ν.map e).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map ν e he he'
   have hmp : MeasurePreserving m ν (ν.map e) := ⟨he.measurable, rfl⟩
   have hT : IsAddFundamentalDomain Γ (m.symm ⁻¹' 𝓕) (ν.map e) := by
     refine h𝓕.preimage_of_equiv hmp.symm.quasiMeasurePreserving (e := fun γ : Γ => (⟨e γ, hΓ _ γ.2⟩ : Γ)) ⟨?_, ?_⟩ ?_
@@ -89,7 +89,7 @@ theorem setIntegral_comp_aut {G : Type} [AddCommGroup G] [TopologicalSpace G] [I
     exact this
   have hc1 : (c : ENNReal) = 1 := by
     have e2 := hT.measure_eq hF'
-    rw [e1, hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e2
+    rw [e1, hc, smul_apply, ENNReal.smul_def, smul_eq_mul] at e2
     exact ((ENNReal.mul_left_inj h0 h1).1 ((one_mul _).trans e2)).symm
   have hν : ν.map e = ν := by
     rw [hc, ENNReal.coe_eq_one.1 hc1, one_smul]
@@ -113,7 +113,7 @@ theorem inclR_injective : Function.Injective (inclR (F := F) (E := E) (AF F)) :=
 
 theorem det_ne_zero_of_unit {n : ℕ} (g : GL (Fin n) (AF F ⊗[F] E)) (g₀ : Matrix (Fin n) (Fin n) E)
     (h : g.1 = incM F g₀) : g₀.det ≠ 0 := fun h0 => by
-  haveI : Nontrivial (AF F ⊗[F] E) := (inclR_injective (F := F) (E := E)).nontrivial
+  have : Nontrivial (AF F ⊗[F] E) := (inclR_injective (F := F) (E := E)).nontrivial
   have := (Matrix.GeneralLinearGroup.det g).ne_zero
   rw [Matrix.GeneralLinearGroup.val_det_apply, h] at this
   refine this ?_

@@ -169,8 +169,8 @@ theorem twist_vec {l n M : ℕ} [Fact l.Prime] (hM : l ^ n ∣ M) {e : ℤ} {χ 
 
 theorem galB_act_comm : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (N l w : ℕ) [Fact l.Prime], l ≠ 2 → 5 ≤ N → Nat.Coprime N l → Odd w → ∀ (γ : SL(2, ℤ)), γ ∈ CongruenceSubgroup.Gamma0 N ⊓ CongruenceSubgroup.Gamma0 l → ∀ (s : Ω ≃ₐ[ℚ] Ω), ∀ b ∈ X.B N l w, X.galB l s (X.act l (γ : Matrix (Fin 2) (Fin 2) ℤ) b) = X.act l (γ : Matrix (Fin 2) (Fin 2) ℤ) (X.galB l s b) := by
   intro Ω _ _ _ ε X _ _ N l w _ _ hN _ _ γ hγ s b hb
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
   have hl : l.Prime := Fact.out
   funext u
   apply AdicCompletion.ext
@@ -181,8 +181,8 @@ theorem galB_act_comm : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosur
   obtain ⟨M, hM, hNM, hlM, hlnM, hM0M⟩ : ∃ M : ℕ, 0 < M ∧ N ∣ M ∧ l ∣ M ∧ l ^ n ∣ M ∧ M0 ∣ M :=
     ⟨N * l * l ^ n * M0, Nat.mul_pos (Nat.mul_pos (Nat.mul_pos (by omega) hl.pos) (pow_pos hl.pos n)) hM0,
       ⟨l * l ^ n * M0, by ring⟩, ⟨N * l ^ n * M0, by ring⟩, ⟨N * l * M0, by ring⟩, ⟨N * l * l ^ n, by ring⟩⟩
-  haveI : NeZero M := ⟨hM.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : NeZero M := ⟨hM.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   obtain ⟨e, he, heχ⟩ := exists_int_exponent_cyclotomic l s n M hM hlnM
   obtain ⟨e', he', -⟩ := exists_int_exponent_cyclotomic l s.symm n M hM hlnM
   have hee : (e : ZMod M) * e' = 1 := by

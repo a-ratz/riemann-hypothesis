@@ -60,7 +60,7 @@ theorem isModuleTopology_of_tower (R LL V : Type) [CommRing R] [TopologicalSpace
     [Field LL] [Algebra R LL] [TopologicalSpace LL] [IsTopologicalRing LL] [IsModuleTopology R LL]
     [AddCommGroup V] [Module LL V] [Module R V] [IsScalarTower R LL V] [FiniteDimensional LL V]
     [TopologicalSpace V] [IsModuleTopology LL V] : IsModuleTopology R V := by
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
   let e : V ≃ₗ[LL] (Fin (finrank LL V) → LL) := (Module.finBasis LL V).equivFun
   have h1 : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have h2 : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -133,11 +133,11 @@ theorem bkADim_of_dimFormula : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K 
     GlobalTheory.Published.BlochKato.DimFormula (P.PD K) → Formalism.MainNotions.LocalSituation.bkADim (P.PD K) := by
   intro l _ P K hD LL _ _ _ O _ _ hO A hdR
   obtain ⟨-, hfin, hmt, htr, -⟩ := hO
-  haveI := hfin
-  haveI := hmt
-  haveI := htr
-  haveI : FiniteDimensional ℚ_[l] A.V := Module.Finite.trans LL A.V
-  haveI : IsModuleTopology ℚ_[l] A.V := isModuleTopology_of_tower ℚ_[l] LL A.V
+  have := hfin
+  have := hmt
+  have := htr
+  have : FiniteDimensional ℚ_[l] A.V := Module.Finite.trans LL A.V
+  have : IsModuleTopology ℚ_[l] A.V := isModuleTopology_of_tower ℚ_[l] LL A.V
   obtain ⟨-, he⟩ := hD A.V (resQ (LL := LL) A.ρ) A.cont ((isDR_resQ_iff P A.ρ).mpr hdR)
   have hH1 : finrank ℚ_[l] (FiniteCohomology (P.PD K) (resQ A.ρ)) = finrank ℚ_[l] LL * finrank LL (FiniteCohomology (P.PD K) A.ρ) := by
     rw [(h1fEquiv P A.ρ).finrank_eq, finrank_mul_finrank]

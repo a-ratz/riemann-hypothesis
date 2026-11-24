@@ -56,8 +56,8 @@ theorem volq_index {G : Type} [Group G] (H : Subgroup G) {q k : ℕ} (hq : q.Pri
   by_cases h0 : H.index = 0
   · exact Or.inl h0
   right
-  haveI : H.FiniteIndex := ⟨h0⟩
-  haveI := Fact.mk hq
+  have : H.FiniteIndex := ⟨h0⟩
+  have := Fact.mk hq
   have hp : IsPGroup q (G ⧸ H.normalCore) := by
     intro g
     obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective g
@@ -123,7 +123,7 @@ theorem volq_lower {r : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hr :
       have h3 : l = ⟨n + i, h2⟩ := Fin.ext h
       subst h3
       simp [Loc.atN, Loc.eN, h2]
-    · have := hv l (by simp only [Set.mem_setOf_eq] at hl ⊢; omega)
+    · have := hv l (by simp only [Set.mem_ofPred_eq] at hl ⊢; omega)
       simp [Loc.eN, h, this]
   have h2 := hr.1.1.1 i _ h1
   have h3 := (Loc.Ufl k n c i).smul_mem (Loc.atN v (n + i)) (hr.1.1.2.2 i)
@@ -139,7 +139,7 @@ theorem volq_zero {r : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hr : 
     funext l
     by_cases h : l.1 < n
     · simp [Loc.inX, h]
-    · simp only [Loc.inX, LinearMap.pi_apply, h, dif_neg, not_false_eq_true, LinearMap.zero_apply]
+    · simp only [Loc.inX, LinearMap.pi_apply, h, dite_eq_right, not_false_eq_true, LinearMap.zero_apply]
       exact hv l (by simpa using h)
   rw [sub_eq_zero, e]
   exact hr.2 _
@@ -174,7 +174,7 @@ theorem volq_exists_pow (a : E) : ∃ b : ℕ, IntAt P ((qOf P : E) ^ b * a) := 
     have h0 : P.valuation E a ≠ 0 := (map_ne_zero _).2 ha
     obtain ⟨b, hb⟩ := exists_pow_lt₀ hq (Units.mk0 _ h0)⁻¹
     refine ⟨b, ?_⟩
-    rw [map_mul, map_pow, ← le_mul_inv_iff₀ (zero_lt_iff.2 h0), one_mul]
+    rw [map_mul, map_pow, ← le_mul_inv_iff₀ (pos_iff_ne_zero.2 h0), one_mul]
     simpa using hb.le
   obtain ⟨b, hb⟩ := this
   obtain ⟨n, d, h⟩ := P.exists_primeCompl_mul_eq_of_integer _ hb
@@ -243,7 +243,7 @@ end Loc
 theorem volumeAtQ : VolumeAtQ := by
   intro X Pr R sharp j P h w hP hd hw
   unfold Loc.volN Jat lamYat
-  simp only [if_neg hP]
+  simp only [ite_eq_right hP]
   rw [volq_lamY, inv_div, map_div₀]
   have hn : ∀ m : ℕ, w.valuation X.K (m : X.K) ≤ 1 := fun m => by
     have := w.valuation_le_one (K := X.K) (m : 𝓞 X.K)

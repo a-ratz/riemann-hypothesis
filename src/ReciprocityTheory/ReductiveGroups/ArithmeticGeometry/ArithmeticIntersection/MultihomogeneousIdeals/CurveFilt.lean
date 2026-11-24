@@ -136,7 +136,7 @@ theorem weighted_le_of_irrel {P : Ideal (MRingOver F ι)} {k : K}
     omega
   have hmono : monomial m (AddMonoidAlgebra.coeff x m) =
       monomial (m - Finsupp.single ⟨k, i⟩ 1) (AddMonoidAlgebra.coeff x m) * X ⟨k, i⟩ := by
-    rw [X, monomial_mul, mul_one, tsub_add_cancel_of_le hle]
+    rw [X, monomial_mul_monomial, mul_one, tsub_add_cancel_of_le hle]
   rw [hmono]
   exact Ideal.mul_mem_left _ _ (hk i)
 

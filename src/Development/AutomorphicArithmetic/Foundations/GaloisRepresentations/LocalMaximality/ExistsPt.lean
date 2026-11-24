@@ -67,9 +67,9 @@ private theorem lG_of_lemma {L : Type} [Field L] [Algebra ℂ L] (B : Subalgebra
     [Algebra.FiniteType ℂ B] (I : Ideal B) (hI : I ≠ ⊤) :
     ∃ e : B →ₐ[ℂ] ℂ, ∀ b ∈ I, e b = 0 := by
   obtain ⟨M, hM, hIM⟩ := Ideal.exists_le_maximal I hI
-  letI := Ideal.Quotient.field M
-  haveI : Module.Finite ℂ (B ⧸ M) := finite_of_finite_type_of_isJacobsonRing ℂ (B ⧸ M)
-  haveI : Algebra.IsIntegral ℂ (B ⧸ M) := Algebra.IsIntegral.of_finite ℂ _
+  let := Ideal.Quotient.field M
+  have : Module.Finite ℂ (B ⧸ M) := finite_of_finite_type_of_isJacobsonRing ℂ (B ⧸ M)
+  have : Algebra.IsIntegral ℂ (B ⧸ M) := Algebra.IsIntegral.of_finite ℂ _
   have hbij : Function.Bijective (algebraMap ℂ (B ⧸ M)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let φ := AlgEquiv.ofBijective (Algebra.ofId ℂ (B ⧸ M)) hbij
@@ -104,11 +104,11 @@ private theorem lG_of_lemma_3 {L W : Type} [Field L] [Algebra ℂ L] (B : Subalg
   let I : Ideal B :=
     { carrier := {b | (b : L) • x ∈ N}
       add_mem' := fun {a c} ha hc => by
-        simp only [Set.mem_setOf_eq, Subalgebra.coe_add, add_smul] at *
+        simp only [Set.mem_ofPred_eq, Subalgebra.coe_add, add_smul] at *
         exact N.add_mem ha hc
       zero_mem' := by simp
       smul_mem' := fun c {b} hb => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, Subalgebra.coe_mul, mul_smul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, Subalgebra.coe_mul, mul_smul] at *
         exact hN c _ hb }
   by_cases hI : I = ⊤
   · have h1 : (1 : B) ∈ I := by rw [hI]; exact Submodule.mem_top

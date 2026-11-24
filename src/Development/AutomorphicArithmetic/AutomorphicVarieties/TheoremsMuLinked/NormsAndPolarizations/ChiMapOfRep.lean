@@ -56,7 +56,7 @@ open Polynomial
 private theorem chi_map_ofRep {n : ℕ} {A K G : Type} [CommRing A] [CommRing K] [Group G] (f : A →+* K)
     (ρ : G →* Matrix (Fin n) (Fin n) A) (g : G) :
     ((GDet.ofRep ρ).map f).chi (MonoidAlgebra.single g 1) = (ρ g).charpoly.map f := by
-  letI : Algebra A K[X] := ((algebraMap K K[X]).comp f).toAlgebra
+  let : Algebra A K[X] := ((algebraMap K K[X]).comp f).toAlgebra
   rw [← Matrix.charpoly_map]
   change (GDet.repAlg ρ K[X] _).det = (Matrix.charmatrix _).det
   congr 1

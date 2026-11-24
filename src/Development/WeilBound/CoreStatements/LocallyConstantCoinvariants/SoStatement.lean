@@ -133,9 +133,9 @@ theorem eigen_kill (h : IsCMExt F E σ) (hψ : IsStd ψ) (hX : X.J.det ≠ 0) (h
         rw [← coB_eq] at e2
         exact congrFun (congrFun e2 i) j
     simp only [m, e]
-  haveI : T2Space (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (T2Space (Fin n → Fin d → Fv F v))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → Fv F v))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
+  have : T2Space (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (T2Space (Fin n → Fin d → Fv F v))
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → Fv F v))
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin d → Fv F v))
   refine ⟨m, lc_of_mul m fun Φ hΦ => ?_, fun e => hne ?_, fun Φ hΦ => ?_⟩
   · obtain ⟨φ', h', rfl⟩ := hb.2.2 hΦ
@@ -167,7 +167,7 @@ theorem mem_so (hM : M.IsGood ψ) (t : E →ₐ[F] Fv F v) {Ψ} (hΨ : Ψ ∈ sc
   have e : opL v A Ψ = Ψ := funext fun x => by
     change A (fun y => Ψ (repl v x y)) (piK v (finPart x)) = _
     have : A (fun y => Ψ (repl v x y)) = fun y => Ψ (repl v x y) :=
-      congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hQ ⟨_, Submodule.subset_span (hs x)⟩)
+      congrArg Subtype.val (Submodule.projectionOnto_apply_left hQ ⟨_, Submodule.subset_span (hs x)⟩)
     rw [this]
     refine congrArg Ψ (funext fun i => Prod.ext rfl ?_)
     change (finPart x - epsK v (piK v (finPart x)) + epsK v (piK v (finPart x))) i = finPart x i
@@ -198,7 +198,7 @@ theorem mem_so (hM : M.IsGood ψ) (t : E →ₐ[F] Fv F v) {Ψ} (hΨ : Ψ ∈ sc
     let s : Pl F → ℂ := fun w => if w = v then ψ' (fun i => evFin F v (x i)) else 1
     have hfs : (Function.mulSupport s).Finite := (Set.finite_singleton v).subset fun w hw => by
       by_contra h
-      exact hw (if_neg h)
+      exact hw (ite_eq_right h)
     have key : (fun w => Function.update φ v ψ' w (fun i => evFin F w (x i))) =
         fun w => s w * Function.update φ v 1 w (fun i => evFin F w (x i)) := by
       funext w
@@ -207,8 +207,8 @@ theorem mem_so (hM : M.IsGood ψ) (t : E →ₐ[F] Fv F v) {Ψ} (hΨ : Ψ ∈ sc
         simp [s]
       · simp [s, h, Function.update_of_ne h]
     unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure
-    rw [key, finprod_mul_distrib hfs hfin, finprod_eq_single s v fun w hw => if_neg hw]
-    simp only [s, if_true]
+    rw [key, finprod_mul_distrib hfs hfin, finprod_eq_single s v fun w hw => ite_eq_right hw]
+    simp only [s, ite_true]
     ring
   have hrepl : ∀ x y, pure f (Function.update φ v 1) (repl v x y) = pure f (Function.update φ v 1) x := by
     intro x y

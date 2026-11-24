@@ -59,9 +59,9 @@ theorem unimodInf_holds : UnimodInf := by
   obtain ⟨hb, FdN, FdN', u, hX⟩ := hP.1
   have hG : X.measG.μGinf = (Formalism.L2.SG.ProjRows.muInf X.B.I).map (X.toInf hb) := hX.1.2.1
   obtain ⟨s, rfl⟩ := PI.AprimeInfU.toInf_surjective X hb MassDataMassesW.splitIso_holds h
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
-  haveI : ContinuousMul (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : ContinuousMul (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
     inferInstanceAs (ContinuousMul (HR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J))
   have hmT : Measurable (X.toInf hb) := MassDataMassesW.measurable_toInf X hb
   have hms : Measurable fun x : X.B.I.Ginf => x * s := measurable_mul_const s
@@ -69,7 +69,7 @@ theorem unimodInf_holds : UnimodInf := by
       Formalism.L2.SG.ProjRows.muInf X.B.I := by
     have hv : ∀ v, (Formalism.REAL.muG (X.B.I.ε v)).map (fun y => y * s v) = Formalism.REAL.muG (X.B.I.ε v) :=
       fun v => Formalism.REAL.indefinite_unitary_unimodular _ (X.B.I.ε v) (s v)
-    haveI : ∀ v, SigmaFinite ((Formalism.REAL.muG (X.B.I.ε v)).map (fun y => y * s v)) := fun v => by
+    have : ∀ v, SigmaFinite ((Formalism.REAL.muG (X.B.I.ε v)).map (fun y => y * s v)) := fun v => by
       rw [hv v]; infer_instance
     have e := Measure.pi_map_pi (μ := fun v => Formalism.REAL.muG (X.B.I.ε v)) (f := fun v y => y * s v)
       (fun v => (measurable_mul_const (s v)).aemeasurable)

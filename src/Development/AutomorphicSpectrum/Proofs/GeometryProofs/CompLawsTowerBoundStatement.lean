@@ -113,7 +113,7 @@ theorem isIntegral_of_forall_valuationSubring {L : Type} [Field L] (A : Subring 
     rw [Algebra.adjoin_singleton_eq_range_aeval] at hxB
     obtain ⟨p, hp⟩ := hxB
     apply hx
-    letI : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
+    let : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
     have e1 := Polynomial.eval₂_reverse_mul_pow (algebraMap A L) x⁻¹ p
     have e2 : ⅟(x⁻¹) = x := by simp
     rw [e2] at e1
@@ -149,12 +149,12 @@ theorem trace_mem {K L : Type} [Field K] [Field L] (R : Subring K) (φ : K →+*
     (hR : ∀ a : K, IsIntegral R a → a ∈ R) (x : L)
     (hx : ∀ V : ValuationSubring L, (∀ a : R, φ a ∈ V) → x ∈ V) :
     letI := φ.toAlgebra; Algebra.trace K L x ∈ R := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   by_cases hf : FiniteDimensional K L
   · have h1 : IsIntegral (R.map φ) x := isIntegral_of_forall_valuationSubring _ x fun V hV =>
       hx V fun a => hV ⟨a, a.2, rfl⟩
-    letI : Algebra R L := (φ.comp R.subtype).toAlgebra
-    haveI : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq fun a => rfl
+    let : Algebra R L := (φ.comp R.subtype).toAlgebra
+    have : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq fun a => rfl
     have h2 : IsIntegral R x := by
       obtain ⟨p, hp, hp0⟩ := h1
       let f : R →+* R.map φ := (φ.comp R.subtype).codRestrict (R.map φ) fun a => ⟨a, a.2, rfl⟩
@@ -177,15 +177,15 @@ theorem exists_chart {K : Type} {ι : K → Type} [∀ k, Finite (ι k)] {Ω : T
     ∃ cc : (k : K) → ι k, (∀ k, y ⟨k, cc k⟩ ≠ 0) ∧ ∀ k i, y ⟨k, i⟩ / y ⟨k, cc k⟩ ∈ V := by
   have key : ∀ k, ∃ c : ι k, y ⟨k, c⟩ ≠ 0 ∧ ∀ i, y ⟨k, i⟩ / y ⟨k, c⟩ ∈ V := fun k => by
     obtain ⟨i₀, hi₀⟩ := hy k
-    haveI : Nonempty (ι k) := ⟨i₀⟩
+    have : Nonempty (ι k) := ⟨i₀⟩
     obtain ⟨c, hc⟩ := Finite.exists_max fun i => V.valuation (y ⟨k, i⟩)
     have hc0 : y ⟨k, c⟩ ≠ 0 := fun e => by
       have := hc i₀
       rw [e, map_zero] at this
-      exact hi₀ ((V.valuation).zero_iff.1 (le_zero_iff.1 this))
+      exact hi₀ ((V.valuation).zero_iff.1 (nonpos_iff_eq_zero.1 this))
     refine ⟨c, hc0, fun i => ?_⟩
     rw [← V.valuation_le_one_iff, map_div₀]
-    exact div_le_one_of_le₀ (hc i) zero_le'
+    exact div_le_one_of_le₀ (hc i) zero_le
   choose cc h1 h2 using key
   exact ⟨cc, h1, h2⟩
 
@@ -273,7 +273,7 @@ attribute [local instance 1100] Subalgebra.algebra
 
 theorem chart_reg : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)) (o : _root_.GlobalTheory.CompanionTheory.Ar.Top.GoodOrigin Y T) (B : ℕ) (b : T.Comp) (Fr : Small.GenFrame (o.toTowerOrigin.Or B b)) (C : GlobalTheory.Reg.FChart h) (Rd : Reading Fr h C.Z) (_ : GeoRead Rd) (u : GlobalTheory.AllWt.Weight Dw), ∀ s ∈ chartLatNm (T.M B b).y (degOf (T.M B b) u) 1, ((∏ i, C.t i ^ GlobalTheory.AllWt.exOf Dw u 0 i : (Om C.Z)ˣ) : Om C.Z) * trOf Rd u s ∈ C.R := by
   intro hG E _ _ _ H Dw l Xo c r U h e hC Y _ T o B b Fr C Rd hg u s hs
-  letI := Small.cstAlg (o.toTowerOrigin.Or B b)
+  let := Small.cstAlg (o.toTowerOrigin.Or B b)
   obtain ⟨φ, P, t, hφ, hP, hbor, ht⟩ := GlobalTheory.CompanionTheory.Ar.Plug.RdGeo.frame_of_geoRead hG E H Dw l Xo c r U h e hC Y T o B b Fr C.Z Rd hg
   obtain ⟨hL, -, -, -⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   have hGr := GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c (T.M B b).Ω
@@ -283,15 +283,15 @@ theorem chart_reg : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given → ∀ (E 
   have hd := hGr.2.1 _ _ _ _ _ (hGr.2.2.1 _ _ _ hbor) hb
   set a0 : Om C.Z := ((∏ i, C.t i ^ GlobalTheory.AllWt.exOf Dw u 0 i : (Om C.Z)ˣ) : Om C.Z) with ha0
   have htr : a0 * trOf Rd u s = (letI := Rd.φ.toAlgebra; Algebra.trace (Om C.Z) (T.M B b).Ω (Rd.φ a0 * (s / gauge Rd u))) := by
-    letI := Rd.φ.toAlgebra
+    let := Rd.φ.toAlgebra
     have : Rd.φ a0 * (s / gauge Rd u) = a0 • (s / gauge Rd u) := by
       rw [Algebra.smul_def]; rfl
     rw [this, map_smul, smul_eq_mul]
     rfl
   have hR : ∀ a : Om C.Z, IsIntegral C.R.toSubring a → a ∈ C.R.toSubring := fun a ha => by
-    haveI := C.sm
-    haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-    haveI : IsFractionRing C.R (Om C.Z) := IsFractionRing.of_field _ _ fun x => by
+    have := C.sm
+    have : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
+    have : IsFractionRing C.R (Om C.Z) := IsFractionRing.of_field _ _ fun x => by
       obtain ⟨p, hp, q, hq, hq0, e'⟩ := C.frac x
       exact ⟨⟨p, hp⟩, ⟨q, hq⟩, by
         show x = p / q
@@ -401,13 +401,13 @@ theorem exists_section_of_trace : _root_.GlobalTheory.CompanionTheory.Ar.Top.Giv
   classical
   obtain ⟨hL, -, -, -⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   let bb : ∀ Z' : Comp Xo c, Om Z' := fun Z' => if hZ : Z' = Z then hZ ▸ trOf Rd u s else 0
-  have hbb : bb Z = trOf Rd u s := dif_pos rfl
+  have hbb : bb Z = trOf Rd u s := dite_eq_left rfl
   obtain ⟨g, hg, hgv⟩ := GlobalTheory.SecGlueInt.exists_secZ_of_regular E H Dw l Xo c h (GlobalTheory.AllWt.exOf Dw u 0) bb (fun C => by
     by_cases hZ : C.Z = Z
     · subst hZ
       rw [hbb]
       exact TraceRuleSec.chart_reg hG E H Dw l Xo c r U h e hC Y T o B b Fr C Rd hgeo u s hs
-    · have : bb C.Z = 0 := dif_neg hZ
+    · have : bb C.Z = 0 := dite_eq_right hZ
       rw [this, mul_zero]
       exact zero_mem _)
   have hm := GlobalTheory.FlatLine.idem_mul_mem Z hg

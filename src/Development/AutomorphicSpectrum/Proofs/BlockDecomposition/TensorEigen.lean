@@ -124,7 +124,7 @@ theorem exists_finset_contr (v : V ⊗[ℂ] W) :
 theorem finiteDimensional_range_contr (v : V ⊗[ℂ] W) :
     FiniteDimensional ℂ (LinearMap.range (contr v)) := by
   obtain ⟨s, hs⟩ := GlobalTheory.CompanionTheory.TensContr.exists_finset_contr v
-  haveI := FiniteDimensional.span_finset ℂ s
+  have := FiniteDimensional.span_finset ℂ s
   have hle : LinearMap.range (GlobalTheory.CompanionTheory.TensContr.contr v) ≤ Submodule.span ℂ (s : Set V) := by
     rintro _ ⟨l, rfl⟩
     exact hs l
@@ -180,7 +180,7 @@ theorem exists_contr_eigen [Nonempty Y]
     intro x l
     rw [hφ, ← GlobalTheory.CompanionTheory.TensContr.contr_map, heig, GlobalTheory.CompanionTheory.TensContr.contr_smul]
   let U := LinearMap.range φ
-  haveI : FiniteDimensional ℂ U := GlobalTheory.CompanionTheory.TensContr.finiteDimensional_range_contr v
+  have : FiniteDimensional ℂ U := GlobalTheory.CompanionTheory.TensContr.finiteDimensional_range_contr v
   let U' := LinearMap.range (φ ∘ₗ (B y₀).dualMap)
   have hU'U : U' ≤ U := LinearMap.range_comp_le_range _ _
   have hmapU' : U ≤ Submodule.map (A x₀) U' := by
@@ -189,7 +189,7 @@ theorem exists_contr_eigen [Nonempty Y]
     refine ⟨φ (((lam x₀ * mu y₀)⁻¹ • l) ∘ₗ B y₀), ⟨(lam x₀ * mu y₀)⁻¹ • l, ?_⟩, ?_⟩
     · rw [LinearMap.comp_apply, LinearMap.dualMap_apply']
     · rw [rel, map_smul, smul_smul, mul_inv_cancel₀ hk, one_smul]
-  haveI : FiniteDimensional ℂ U' := Submodule.finiteDimensional_of_le hU'U
+  have : FiniteDimensional ℂ U' := Submodule.finiteDimensional_of_le hU'U
   have hUU' : U' = U := by
     refine Submodule.eq_of_le_of_finrank_le hU'U ?_
     calc Module.finrank ℂ U ≤ Module.finrank ℂ (Submodule.map (A x₀) U') :=
@@ -217,7 +217,7 @@ theorem exists_contr_eigen [Nonempty Y]
     obtain ⟨w, hw, hwu⟩ := hmapU' hu
     exact ⟨⟨w, hU'U hw⟩, Subtype.ext (by simpa [T, LinearMap.restrict_apply] using hwu)⟩
   have hinj : Function.Injective T := LinearMap.injective_iff_surjective.mpr hsurj
-  haveI : Nontrivial U := nontrivial_of_ne (⟨φ l₀, ⟨l₀, rfl⟩⟩ : U) 0
+  have : Nontrivial U := nontrivial_of_ne (⟨φ l₀, ⟨l₀, rfl⟩⟩ : U) 0
     (fun h => hl₀ (congrArg Subtype.val h))
   obtain ⟨t, ht⟩ := Module.End.exists_eigenvalue T
   obtain ⟨u, hu⟩ := ht.exists_hasEigenvector

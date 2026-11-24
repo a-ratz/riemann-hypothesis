@@ -74,7 +74,7 @@ theorem value_translate_pullback_eq_generator : ∀ (E : Type) [Field E] [Number
     intro p yy
     exact (hT p.R yy a n xx Ppol hPpol).exists.choose_spec
   have hmem : f ∈ thGen Xo c nab a n := by
-    simp only [thGen.eq_1, Set.mem_setOf_eq]
+    simp only [thGen.eq_1, Set.mem_ofPred_eq]
     exact ⟨xx, Ppol, hPpol, hrule⟩
   refine ⟨f, hmem, u, le_of_eq hu.symm, ?_⟩
   rw [hval a Ppol hPpol f hrule]

@@ -125,8 +125,8 @@ private lemma orbit_fin (π : CuspSub E n) (K : Subgroup (GL (Fin n) (Af E)))
       (fun x => ψ.1 (x * (finGL E n k * kI E n κ))) ∈ U := by
   obtain ⟨s, hs⟩ := fin_cosets K (stab π.finPart ⟨ψ, hψ⟩) hK (π.isSmooth_finPart _)
   let S : GL (Fin n) (Af E) → Submodule ℂ (Sm E n) := fun t => orbSpan (π.finPart t ⟨ψ, hψ⟩).1
-  haveI : ∀ t, FiniteDimensional ℂ (S t) := fun t => (π.cusp _ (π.finPart t ⟨ψ, hψ⟩).2).1.kfin
-  haveI : FiniteDimensional ℂ ↥(s.sup S : Submodule ℂ (Sm E n)) := Submodule.finiteDimensional_finset_sup s S
+  have : ∀ t, FiniteDimensional ℂ (S t) := fun t => (π.cusp _ (π.finPart t ⟨ψ, hψ⟩).2).1.kfin
+  have : FiniteDimensional ℂ ↥(s.sup S : Submodule ℂ (Sm E n)) := Submodule.finiteDimensional_finset_sup s S
   refine ⟨(s.sup S).map (Sm E n).subtype, Module.Finite.map _ _, fun k hk κ => ?_⟩
   obtain ⟨t, ht, hl⟩ := hs k hk
   have e : π.finPart k ⟨ψ, hψ⟩ = π.finPart t ⟨ψ, hψ⟩ := by
@@ -158,8 +158,8 @@ theorem typeIn_pf : PiAdm → DetZero → EvalBasis → CvIn → FormEx → Orth
   intro hAdm hDet hEv hCv hForm hOrth hAbs E _ _ _ n hn D π hfix K W hKo hKc hW hWR f hS hI hT
   obtain ⟨Fm, B, hF, hBs, hBp, hBw, hBi⟩ := hForm E n hn D
   obtain ⟨Y0, -, hYfd, hY⟩ := hAdm E n hn π hfix K W hKo hW
-  haveI := hYfd
-  haveI := hW
+  have := hYfd
+  have := hW
   have hdet : ∀ γ, logAbs (tau K γ).val.det = 0 := fun γ => by
     rw [tau_apply, DiscreteGroups.T1.G.Dcy.logAbs_det_mul', (hDet E n).2 K hKc _ γ.1.2, (hDet E n).1 γ.2, add_zero]
   have hst : ∀ γ, ∀ a ∈ Fm, (fun x => a (x * tau K γ)) ∈ Fm := fun γ a ha => (hBi _ (hdet γ) ⟨a, ha⟩).1
@@ -206,7 +206,7 @@ theorem typeIn_pf : PiAdm → DetZero → EvalBasis → CvIn → FormEx → Orth
     (by
       rintro v ⟨ψ, hψ, e⟩
       obtain ⟨U, hU, hUm⟩ := orbit_fin π K hKc ψ hψ
-      haveI := hU
+      have := hU
       refine fd_span Fm _ U fun γ => ?_
       have := hUm γ.1.1 γ.1.2 γ.2
       convert this using 1
@@ -214,7 +214,7 @@ theorem typeIn_pf : PiAdm → DetZero → EvalBasis → CvIn → FormEx → Orth
       have e2 : ψ.1 = v.1 := e
       rw [hR, tau_apply, e2])
     (by
-      haveI : FiniteDimensional ℂ (Y0.map (Sm E n).subtype) := Module.Finite.map _ _
+      have : FiniteDimensional ℂ (Y0.map (Sm E n).subtype) := Module.Finite.map _ _
       exact fd_sub Fm Y (Y0.map (Sm E n).subtype) fun x hx => hx)
     (by
       rintro v ⟨ψ, hψ, e⟩ hl
@@ -249,7 +249,7 @@ theorem typeIn_pf : PiAdm → DetZero → EvalBasis → CvIn → FormEx → Orth
           rintro _ ⟨γ, rfl⟩
           simp only [hexp γ]
           exact Submodule.sum_mem _ fun b _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨b, rfl⟩))
-      haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range zb)) :=
+      have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range zb)) :=
         FiniteDimensional.span_of_finite ℂ (Set.finite_range zb)
       exact Submodule.finiteDimensional_of_le hle)
     (by

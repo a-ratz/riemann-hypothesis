@@ -168,7 +168,7 @@ theorem sdFromAnn_holds : SdFromAnn := by
     rw [PI.UnitaryGroupMassFormula.LocJacTyp.Sd.sdE_eq, dite_eq_left hex]
   have hsd := hex.choose_spec
   rw [hμ]
-  haveI : hex.choose.IsAddHaarMeasure := hsd.1
+  have : hex.choose.IsAddHaarMeasure := hsd.1
   refine ⟨hsd.1, inferInstance, ?_⟩
   set μ := hex.choose
   have hDopen := PI.UnitaryGroupMassFormula.LocJacTyp.Sd.isOpen_dbox (E := E) v ψ hker ι

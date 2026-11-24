@@ -109,7 +109,7 @@ theorem exists_unique_ringHom_of_sqZero (R : Type) [CommRing R] (X : Scheme.{0})
     refine ⟨spMap ρ x, ?_⟩
     change (spMap ρ ≫ affPt s U) x = (spMap (TrivSqZeroExt.fstHom B B M).toRingHom ≫ z) x
     rw [hz]
-  haveI : IsOpenImmersion (affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
+  have : IsOpenImmersion (affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
   set g := IsOpenImmersion.lift (affPt s U) z hr with hg
   have hgf : g ≫ affPt s U = z := IsOpenImmersion.lift_fac _ _ _
   have hsp : ∀ c c' : Sec s U.1 →+* TrivSqZeroExt B M,
@@ -313,7 +313,7 @@ variable {A τ}
 theorem back_spec (hb : TrBij A τ) (y : Sp (TrivSqZeroExt (Sec A.hom U.1) M) ⟶ A.left)
     (hy : Lifts A.hom (affPt A.hom U) y) :
     Lifts A.hom (unitPt A (Sec A.hom U.1)) (back A U τ y) ∧ τ (Sec A.hom U.1) M (affPt A.hom U) (back A U τ y) = y := by
-  haveI : Nonempty (Sp (TrivSqZeroExt (Sec A.hom U.1) M) ⟶ A.left) := ⟨y⟩
+  have : Nonempty (Sp (TrivSqZeroExt (Sec A.hom U.1) M) ⟶ A.left) := ⟨y⟩
   have h := (hb (Sec A.hom U.1) M (affPt A.hom U) (affPt_w A.hom U)).surjOn hy
   exact ⟨Function.invFunOn_mem h, Function.invFunOn_eq h⟩
 
@@ -341,8 +341,8 @@ include hb hn
 
 theorem key (ψ : Ω[Sec A.hom U.1⁄R] →ₗ[Sec A.hom U.1] M) :
     tr.Φ (back A U τ (pt A U (ψ.compDer (D R (Sec A.hom U.1))))) = (ψ.restrictScalars R) ∘ₗ eU tr τ U := by
-  letI := opMod (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R]
-  haveI : IsCentralScalar (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R] := ⟨fun _ _ ↦ rfl⟩
+  let := opMod (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R]
+  have : IsCentralScalar (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R] := ⟨fun _ _ ↦ rfl⟩
   obtain ⟨hz0, hτz0⟩ := back_spec (τ := τ) U hb (pt A U (D R (Sec A.hom U.1))) (pt_lifts A U _)
   let β := sumHom (RingHom.id (Sec A.hom U.1)) ψ.toAddMonoidHom (fun b m ↦ ψ.map_smul b m)
   have hβ : IsSum β (AlgHom.id R (Sec A.hom U.1)) ψ :=
@@ -390,18 +390,18 @@ theorem lift_unique (ψ ψ' : Ω[Sec A.hom U.1⁄R] →ₗ[Sec A.hom U.1] M)
 
 theorem eU_isBaseChange : IsBaseChange (Sec A.hom U.1) (eU tr τ U) := by
   refine IsBaseChange.of_lift_unique _ fun Q _ _ _ _ g ↦ ?_
-  letI : AddCommGroup Q := Module.addCommMonoidToAddCommGroup (Sec A.hom U.1)
-  letI := opMod (Sec A.hom U.1) Q
-  haveI : IsCentralScalar (Sec A.hom U.1) Q := ⟨fun _ _ ↦ rfl⟩
+  let : AddCommGroup Q := Module.addCommMonoidToAddCommGroup (Sec A.hom U.1)
+  let := opMod (Sec A.hom U.1) Q
+  have : IsCentralScalar (Sec A.hom U.1) Q := ⟨fun _ _ ↦ rfl⟩
   obtain ⟨ψ, hψ⟩ := exists_lift tr hb hn U g
   exact ⟨ψ, hψ, fun ψ' h ↦ lift_unique tr hb hn U ψ' ψ (h.trans hψ.symm)⟩
 
 theorem eU_nat {T T' : AffOp A.left} (a : T ⟶ T') (w : W) :
     eU tr τ T'.unop w = p1 (OAff A.hom) a (eU tr τ T.unop w) := by
-  letI := opMod (Sec A.hom T.unop.1) Ω[Sec A.hom T.unop.1⁄R]
-  haveI : IsCentralScalar (Sec A.hom T.unop.1) Ω[Sec A.hom T.unop.1⁄R] := ⟨fun _ _ ↦ rfl⟩
-  letI := opMod (Sec A.hom T'.unop.1) Ω[Sec A.hom T'.unop.1⁄R]
-  haveI : IsCentralScalar (Sec A.hom T'.unop.1) Ω[Sec A.hom T'.unop.1⁄R] := ⟨fun _ _ ↦ rfl⟩
+  let := opMod (Sec A.hom T.unop.1) Ω[Sec A.hom T.unop.1⁄R]
+  have : IsCentralScalar (Sec A.hom T.unop.1) Ω[Sec A.hom T.unop.1⁄R] := ⟨fun _ _ ↦ rfl⟩
+  let := opMod (Sec A.hom T'.unop.1) Ω[Sec A.hom T'.unop.1⁄R]
+  have : IsCentralScalar (Sec A.hom T'.unop.1) Ω[Sec A.hom T'.unop.1⁄R] := ⟨fun _ _ ↦ rfl⟩
   have hle : T'.unop.1 ≤ T.unop.1 := leOfHom a.unop
   let α : Sec A.hom T.unop.1 →ₐ[R] Sec A.hom T'.unop.1 := Sec.res A.hom hle
   let f : Ω[Sec A.hom T.unop.1⁄R] →ₗ[R] Ω[Sec A.hom T'.unop.1⁄R] := p1 (OAff A.hom) a

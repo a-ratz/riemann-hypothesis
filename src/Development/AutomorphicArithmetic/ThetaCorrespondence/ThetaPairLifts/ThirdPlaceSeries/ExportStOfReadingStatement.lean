@@ -123,20 +123,20 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem exists_ext_frac {A B : Type} [CommRing A] [IsDomain A] [CommRing B] [IsDomain B] [Algebra A B]
     (hinj : Function.Injective (algebraMap A B)) [Module.Finite A B] (f : FractionRing A →+* ℂ) :
     ∃ g : FractionRing B →+* ℂ, ∀ a : A, g (algebraMap B _ (algebraMap A B a)) = f (algebraMap A _ a) := by
-  letI : Algebra A ℂ := (f.comp (algebraMap A (FractionRing A))).toAlgebra
-  haveI : Algebra.IsIntegral A B := Algebra.IsIntegral.of_finite A B
-  haveI : Algebra.IsAlgebraic A B := inferInstance
-  haveI : Algebra.IsAlgebraic B (FractionRing B) := IsLocalization.isAlgebraic _ (nonZeroDivisors B)
-  haveI : Algebra.IsAlgebraic A (FractionRing B) := Algebra.IsAlgebraic.trans A B (FractionRing B)
+  let : Algebra A ℂ := (f.comp (algebraMap A (FractionRing A))).toAlgebra
+  have : Algebra.IsIntegral A B := Algebra.IsIntegral.of_finite A B
+  have : Algebra.IsAlgebraic A B := inferInstance
+  have : Algebra.IsAlgebraic B (FractionRing B) := IsLocalization.isAlgebraic _ (nonZeroDivisors B)
+  have : Algebra.IsAlgebraic A (FractionRing B) := Algebra.IsAlgebraic.trans A B (FractionRing B)
   have hA : Function.Injective (algebraMap A (FractionRing B)) := by
     rw [IsScalarTower.algebraMap_eq A B (FractionRing B)]
     exact (IsFractionRing.injective B (FractionRing B)).comp hinj
   have hC : Function.Injective (algebraMap A ℂ) :=
     f.injective.comp (IsFractionRing.injective A (FractionRing A))
-  haveI : Module.IsTorsionFree A (FractionRing B) := Module.IsTorsionFree.of_smul_eq_zero fun r m h => by
+  have : Module.IsTorsionFree A (FractionRing B) := Module.IsTorsionFree.of_smul_eq_zero fun r m h => by
     rw [Algebra.smul_def, mul_eq_zero] at h
     exact h.imp (fun h => hA (h.trans (map_zero _).symm)) id
-  haveI : Module.IsTorsionFree A ℂ := Module.IsTorsionFree.of_smul_eq_zero fun r m h => by
+  have : Module.IsTorsionFree A ℂ := Module.IsTorsionFree.of_smul_eq_zero fun r m h => by
     rw [Algebra.smul_def, mul_eq_zero] at h
     exact h.imp (fun h => hC (h.trans (map_zero _).symm)) id
   let g := IsAlgClosed.lift (M := ℂ) (R := A) (S := FractionRing B)
@@ -262,9 +262,9 @@ variable {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst
 
 theorem adapt_at (p : PtAt ex Csz) (w : D.what₂.places.Pl) (j : Fin D.R.m) (hm : More p) (ρ : Setup D.ntw) (hρ : ρ.Good)
     (hpin : RealPin p.R p.cG ρ) : ∃ ρ' : Setup D.ntw, ρ'.Good ∧ SameBut ρ ρ' ∧ Adapted p w ρ' := by
-  haveI : Module.Finite (D.ntw.Ok (ex.nch.twI w) (ex.nch.k' w)) (ex.nch.Oe w) := ex.nch.Oe_fin w
+  have : Module.Finite (D.ntw.Ok (ex.nch.twI w) (ex.nch.k' w)) (ex.nch.Oe w) := ex.nch.Oe_fin w
   obtain ⟨g, hg⟩ := exists_ext_frac (ex.nch.Oe_inj w) (ρ.ek (ex.nch.twI w) (ex.nch.sd w) (ex.nch.k' w))
-  haveI : Countable D.what₂.LL := Countable.of_equiv _ (Module.finBasis ℚ D.what₂.LL).equivFun.symm.toEquiv
+  have : Countable D.what₂.LL := Countable.of_equiv _ (Module.finBasis ℚ D.what₂.LL).equivFun.symm.toEquiv
   obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq D.what₂.LL (g.comp (ex.nch.embW w)) D.what₂.embLL
   have hfix : ∀ y : D.LL0, τ (embLL0 D y) = embLL0 D y := fun y => by
     have h := ext_onSmallField ex.nch_tie w hρ g hg y
@@ -280,7 +280,7 @@ theorem adapt_at (p : PtAt ex Csz) (w : D.what₂.places.Pl) (j : Fin D.R.m) (hm
   refine ⟨withTau ρ (ex.nch.twI w) (ex.nch.sd w) τ, withTau_good hρ _ _ τ hfix hδ, ⟨rfl, rfl, rfl, rfl, rfl⟩, realPin_withTau hpin _ _ τ,
     τ.toRingHom.comp g, fun x => hτ x, fun a => ?_⟩
   show τ (g _) = (withTau ρ (ex.nch.twI w) (ex.nch.sd w) τ).ek (ex.nch.twI w) (ex.nch.sd w) (ex.nch.k' w) _
-  rw [withTau_ek, if_pos ⟨rfl, rfl⟩]
+  rw [withTau_ek, ite_eq_left ⟨rfl, rfl⟩]
   exact congrArg τ (hg a)
 
 end Point
@@ -676,8 +676,8 @@ theorem rd_eOp {D : D7} {c : NChoice D} {w : D.what₂.places.Pl} (ht : NChTie D
     rw [map_smul, map_smulₛₗ]
     rw [hrd ⟨b k, hbK k⟩, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
   obtain ⟨x, rfl⟩ := fi.e.surjective y
-  letI : Fintype S.G := Fintype.ofEquiv Gp fi.eG.symm.toEquiv
-  letI : Fintype (G0g D.nd) := Fintype.ofEquiv Gp I.toEquiv
+  let : Fintype S.G := Fintype.ofEquiv Gp fi.eG.symm.toEquiv
+  let : Fintype (G0g D.nd) := Fintype.ofEquiv Gp I.toEquiv
   have hL : A'.eOp eC (fi.e x) = fi.e (∑ s : S.G, eC (fi.eG s) •
       ((((S.A j).chi s)⁻¹ : D.what₂.LLˣ).val • (S.A j).ρ s x)) := by
 
@@ -896,7 +896,7 @@ theorem rat_unframe_alt : GlobalTheory.Published.CuspRapidDecay → ∀ {eps : �
   obtain ⟨c', w, hw, hfr, B', hv⟩ := exists_framed_half hP h0.size (GlobalTheory.Core5.of_core h0.core) (geoHalf p) h0.unif
     (_root_.GlobalTheory.T.inGeo_half_of_ratHyp0 hP Fm x hx i p hR hM t j h0)
   obtain ⟨S', YS', hY⟩ := GlobalTheory.T.seriesRationality_back_from_movedReadings p.R p.cG p.Sx p.nexp w hw
-  letI iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
+  let iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
   have hV' : (setCE p.T c').V ((j : ℕ) + 1) (setCE p.T c').σ₀ = Wc (Fm.D x i) j :=
     B'.fw.laws.spaceW _ ⟨Nat.le_add_left _ _, j.2⟩ _ (setCE p.T c').toCore.good_σ₀
   have hU' : (fullHeckeRealDatMovedReadings p.R w).toRealDat.LUnif := GlobalTheory.T.uniformisationLaws_centralMovedReadings p.R.toRealDat w hw h0.unif

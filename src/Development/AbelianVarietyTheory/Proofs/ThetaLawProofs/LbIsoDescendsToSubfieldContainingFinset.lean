@@ -56,7 +56,7 @@ namespace GlobalTheory
 theorem lbIso_descends_to_subfield_containing_finset :
     ∀ (k K : Type) [Field k] [Field K] (σ : k →+* K) (X₀ : Over (Sp k)) (X : Over (Sp K)) (φ : X.left ⟶ X₀.left) (M N : LB X₀.left), IsPullback φ X.hom X₀.hom (spMap σ) → QuasiCompact X₀.hom → QuasiSeparated X₀.hom → M.IsLB → N.IsLB → LBIso (M.pull φ) (N.pull φ) → ∃ s : Finset K, ∀ (k₁ : Type) [Field k₁] (α : k →+* k₁) (β : k₁ →+* K), β.comp α = σ → (s : Set K) ⊆ Set.range β → ∀ (X₁ : Over (Sp k₁)) (χ : X₁.left ⟶ X₀.left), IsPullback χ X₁.hom X₀.hom (spMap α) → LBIso (M.pull χ) (N.pull χ) := by
   intro k K _ _ σ X₀ X φ M N hφ hqc hqs hM hN H
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   have same : ∀ {Y Y' : Scheme.{0}} (a : Y ⟶ X₀.left) (j : Y' ⟶ Y) (a' : Y' ⟶ X₀.left), a' = j ≫ a →
       LBIso (M.pull a) (N.pull a) → LBIso (M.pull a') (N.pull a') := fun a j a' e h =>
     LBIso.chartPull (chartPullSame M _ _ _ j fun _ => e) (chartPullSame N _ _ _ j fun _ => e) h

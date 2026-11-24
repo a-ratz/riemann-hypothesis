@@ -75,8 +75,8 @@ theorem stalk_loc {X : Scheme.{0}} (B : X.Opens) (y : B.toScheme) {U : X.Opens} 
     (hy : B.ι y ∈ U) :
     letI := (X.presheaf.germ U (B.ι y) hy ≫ B.ι.stalkMap y).hom.toAlgebra
     IsLocalization.AtPrime (B.toScheme.presheaf.stalk y) (hU.primeIdealOf ⟨B.ι y, hy⟩).asIdeal := by
-  letI := (X.presheaf.germ U (B.ι y) hy ≫ B.ι.stalkMap y).hom.toAlgebra
-  letI : Algebra Γ(X, U) (X.presheaf.stalk (B.ι y)) :=
+  let := (X.presheaf.germ U (B.ι y) hy ≫ B.ι.stalkMap y).hom.toAlgebra
+  let : Algebra Γ(X, U) (X.presheaf.stalk (B.ι y)) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨B.ι y, hy⟩
   have hloc := hU.isLocalization_stalk ⟨B.ι y, hy⟩
   have : IsIso (B.ι.stalkMap y) := inferInstance
@@ -171,7 +171,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
   obtain ⟨h, hhB, hph⟩ := hU₁.exists_basicOpen_le (V := barComp TF.Y Z) ⟨p, ξ.2⟩ hp₁
   let ρ₁ : Γ(TF.Y.X, U₁) →+* (X₀ TF.Y Z).functionField :=
     (TF.Y.X.presheaf.germ U₁ p hp₁ ≫ (barComp TF.Y Z).ι.stalkMap ξ).hom
-  letI := ρ₁.toAlgebra
+  let := ρ₁.toAlgebra
   have hloc : IsLocalization.AtPrime (X₀ TF.Y Z).functionField (hU₁.primeIdealOf ⟨p, hp₁⟩).asIdeal :=
     stalk_loc (barComp TF.Y Z) ξ hU₁ hp₁
   have hK : spMap ρ₁ ≫ hU₁.fromSpec = GlobalTheory.LogKSDiv.genPt TF Z ≫ (barComp TF.Y Z).ι := germ_pt (barComp TF.Y Z) ξ hU₁ hp₁
@@ -194,7 +194,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
       ∃ (xc' : ∀ m : ℕ, sp (R₀ := R') (ReciprocityTheory.ChartRestriction.G.Chart.JetR R' (Fin n) m) ⟶ (Over.pullback x').obj TF.Y.t.G),
         IsUnivChart _ n xc' ∧ Compat TF.Y.t ψ xc xc' := by
     subst h
-    letI : Algebra R R' := ψ.toAlgebra
+    let : Algebra R R' := ψ.toAlgebra
     obtain ⟨x₁, hx₁, hcomp⟩ := LieChart.univChart_baseChange_of_chart (R := R) (R' := R') _ C n xc hx
     have h₁ := IsGrpPullback.comp
       (isGrpPullback_pullback ((Over.pullback x).obj TF.Y.t.G) (ReciprocityTheory.ChartRestriction.G.Chart.fB R R'))
@@ -221,9 +221,9 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
     have : CharZero c.F := RingHom.charZero c.F.val.toRingHom
     obtain ⟨α, hinj, ⟨f, hf, hfs⟩, hN⟩ :=
       exists_sepElt (E := E) (F := c.F) c.F.val.toRingHom (embK c) (fun τ a => embK_coe c τ a)
-    letI : Algebra c.F L := φ.toAlgebra
+    let : Algebra c.F L := φ.toAlgebra
     refine ⟨fun τ => LinearMap.toMatrix' (proj (rho hx) (embK c) α τ), fun {k} _ ψ {x' xc'} hx' hv τ => ?_⟩
-    letI : Algebra c.F k := (ψ.comp φ).toAlgebra
+    let : Algebra c.F k := (ψ.comp φ).toAlgebra
     have e₁ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) (proj (rho hx') (embK c) α τ m) := fun m =>
       eig_of_alpha _ _ α hN τ (proj_eig_alpha _ _ α hinj f hf hfs τ m)
     have e₂ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) m → proj (rho hx') (embK c) α τ m = m := fun m hm => by
@@ -231,7 +231,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
         by_cases h : τ' = τ
         · subst h; rwa [Pi.single_eq_same]
         · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-      rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+      rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
     have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (ψ ∘ cc) = ψ ∘ rho hx a cc :=
       fun a cc => vec_inj hx' (by
         show vec TF.Y.t _ xc' (tmap hx' _ _) = vec TF.Y.t _ xc' (_ ∘ tmap hx _ _)
@@ -270,7 +270,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
 
   have hPK : ∀ τ i, (Pr τ).map ρ₁ *ᵥ Bv τ i = Bv τ i := fun τ i =>
     (hPr ρ₁ hxK hcK τ (Bv τ i)).2 (by rw [hρφ]; exact hBe τ i)
-  letI : Algebra c.F (X₀ TF.Y Z).functionField := φ₀.toAlgebra
+  let : Algebra c.F (X₀ TF.Y Z).functionField := φ₀.toAlgebra
   have hEig : ∀ z : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)), ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hxK) (embK c z.1) (Bv z.1 z.2) :=
     fun z => (ReciprocityTheory.ChartRestriction.G.Chart.mem_eigLat_iff _ _ _ _).1 (hBe z.1 z.2)
   have hblk : ∀ τ w, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hxK) (embK c τ) w →
@@ -285,7 +285,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
     rw [← Module.finrank_eq_card_basis bK, Module.finrank_fin_fun]
   let e := Fintype.equivFinOfCardEq hcard
   have hdet : IsUnit (Matrix.of fun i j => Bv (e.symm j).1 (e.symm j).2 i).det := by
-    rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_col_iff_isUnit]
     show LinearIndependent _ ((fun z : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) => Bv z.1 z.2) ∘ e.symm)
     exact hli.comp _ e.symm.injective
   obtain ⟨g, hg, s0, B₀, hB₀, hψB⟩ := spread_exact (hU₁.primeIdealOf ⟨p, hp₁⟩).asIdeal
@@ -298,7 +298,7 @@ theorem GlobalTheory.LogKSDiv.spread_genFrame : ∀ (E : Type) [Field E] [Number
   have hpU : p ∈ TF.Y.X.basicOpen g' := by
     rw [Scheme.basicOpen_mul]
     refine ⟨hph, ?_⟩
-    letI : Algebra Γ(TF.Y.X, U₁) (TF.Y.X.presheaf.stalk p) :=
+    let : Algebra Γ(TF.Y.X, U₁) (TF.Y.X.presheaf.stalk p) :=
       TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf ⟨p, hp₁⟩
     have := hU₁.isLocalization_stalk ⟨p, hp₁⟩
     show p ∈ TF.Y.X.basicOpen g

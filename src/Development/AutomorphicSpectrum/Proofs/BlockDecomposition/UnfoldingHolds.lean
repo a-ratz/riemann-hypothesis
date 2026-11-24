@@ -163,7 +163,7 @@ theorem sect_facts {V : HSp D} {ψ : AddChar (AF D.host.F) ℂ} {χ : (AE D)ˣ �
     fun p hp a ha h1 g => ?_, fun C hC => ?_⟩
   · rw [hs2.1 p hp a ha g, h1]
     simp [npow]
-  · haveI := t2Space_adeleRing' (F := D.host.F)
+  · have := t2Space_adeleRing' (F := D.host.F)
     have h1 : Continuous (iwAbs (PolesModel.modP (D := D) (n := n)) (K D n)) :=
       PolesModel.isIwasawa.continuous_iwAbs GlobalTheory.StdUnn.Model.isClosed_P PolesModel.continuous_modP GlobalTheory.StdUnn.Model.isCompact_K
     have h2 : Continuous fun g => Real.log (iwAbs (PolesModel.modP (D := D) (n := n)) (K D n) g) :=
@@ -212,10 +212,10 @@ theorem nb_continuous {nb : hermA D n → G D n} (h : IsNMap nb) : Continuous nb
   rw [(isEmbedding_matHom (AF D.host.F) D.sp.cm.sig (Jst D n)).continuous_iff, Units.continuous_iff]
   constructor
   · have : Continuous fun b : hermA D n => (blk4 1 b.1 0 1 : Mx D (n + n) (n + n)) :=
-      continuous_blk4_right.comp continuous_subtype_val
+      continuous_blk4_right.comp continuous_subtypeVal
     exact this.congr fun b => (h b).symm
   · have : Continuous fun b : hermA D n => (blk4 1 (-b).1 0 1 : Mx D (n + n) (n + n)) :=
-      continuous_blk4_right.comp (continuous_subtype_val.comp continuous_neg)
+      continuous_blk4_right.comp (continuous_subtypeVal.comp continuous_neg)
     refine this.congr fun b => ?_
     rw [← h, ← hn]
     simp [mat, map_inv]
@@ -244,7 +244,7 @@ theorem countable_mat (a b : ℕ) : Countable (Matrix (Fin a) (Fin b) D.host.E) 
   inferInstanceAs (Countable (Fin a → Fin b → D.host.E))
 
 theorem countable_ratHerm : Countable (ratHerm D n) := by
-  haveI := countable_mat (D := D) n n
+  have := countable_mat (D := D) n n
   have hinj : Function.Injective fun l : ratHerm D n => (Classical.choose (AddSubgroup.mem_comap.1 l.2) :
       Matrix (Fin n) (Fin n) D.host.E) := fun a b h => by
     have ha := Classical.choose_spec (AddSubgroup.mem_comap.1 a.2)
@@ -255,13 +255,13 @@ theorem countable_ratHerm : Countable (ratHerm D n) := by
   exact hinj.countable
 
 theorem countable_GF : Countable (GF D n) := by
-  haveI := countable_mat (D := D) (n + n) (n + n)
+  have := countable_mat (D := D) (n + n) (n + n)
   have hinj : Function.Injective (ratOf (D := D) (n := n)) := fun a b h =>
     Subtype.ext (mat_inj (by rw [mat_ratOf, mat_ratOf, h]))
   exact hinj.countable
 
 theorem countable_cosets : Countable (Cosets (P D n) (GF D n)) := by
-  haveI := countable_GF (D := D) (n := n)
+  have := countable_GF (D := D) (n := n)
   exact Quotient.countable
 
 theorem unfold : PositivityTheory.PfSWUS.Unfold := by
@@ -271,9 +271,9 @@ theorem unfold : PositivityTheory.PfSWUS.Unfold := by
   have hψ := hS.hψ
   have hcn := nb_continuous hNb
   have hcolat := GlobalTheory.CompanionTheory.HermVol.isCoLat_herm (D := D) (r := n)
-  haveI : DiscreteTopology (ratHerm D n) := hcolat.1
-  haveI : Countable (ratHerm D n) := countable_ratHerm
-  haveI : Countable (Cosets (P D n) (GF D n)) := countable_cosets
+  have : DiscreteTopology (ratHerm D n) := hcolat.1
+  have : Countable (ratHerm D n) := countable_ratHerm
+  have : Countable (Cosets (P D n) (GF D n)) := countable_cosets
   obtain ⟨e, he, hr, hterm⟩ := GlobalTheory.T.big_cell_cosets_hermitian_param hw hNb
   choose bb hbG hbm using nb_mem_GF hNb
   let F : Cosets (P D n) (GF D n) → hermA D n → ℂ := fun q b => term (P D n) (GF D n) (sect ω H Φ z) (nb b * g) q

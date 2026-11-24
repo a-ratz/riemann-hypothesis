@@ -225,7 +225,7 @@ theorem isOpen_Ucut (nb : hermA D n → G D n) (v : Pl D) (s : Finset (hermA D n
     ext k
     simp only [SetLike.mem_coe, mem_Ucut, Set.mem_iInter, Set.mem_preimage]
   rw [this]
-  haveI : Submodule.IsFullLattice D.host.E (stdLattice D.host.E (n + n)) := isLattice_stdLattice
+  have : Submodule.IsFullLattice D.host.E (stdLattice D.host.E (n + n)) := isLattice_stdLattice
   exact isOpen_biInter_finset fun x _ => (isOpen_stabLoc _ _ _ v).preimage
     ((continuous_proj _ _ v).comp ((continuous_const.mul continuous_id).mul continuous_const))
 

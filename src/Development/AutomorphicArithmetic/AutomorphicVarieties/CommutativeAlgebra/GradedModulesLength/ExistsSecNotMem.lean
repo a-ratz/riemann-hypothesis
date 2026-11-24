@@ -94,7 +94,7 @@ private theorem exists_sec_notMem {p : Ideal (rees N)} (hp : ¬ Irr (reesGr N) �
 private theorem sec_mul_sec (i j : Fin k) {f g : A} (hf : f ∈ N i) (hg : g ∈ N i) (hf' : f ∈ N j) (hg' : g ∈ N j) :
     sec N i f hf * sec N j g hg' = sec N i g hg * sec N j f hf' := by
   apply Subtype.ext
-  simp only [Subalgebra.coe_mul, coe_sec_eq_monomial_single, MvPolynomial.monomial_mul]
+  simp only [Subalgebra.coe_mul, coe_sec_eq_monomial_single, MvPolynomial.monomial_mul_monomial]
   rw [mul_comm f g]
 
 end SlopeTestRemainingChoices
@@ -105,7 +105,7 @@ private theorem algebraMap_mul_sec_mul_sec_eq_of_mul_eq {B A : Type} [CommRing B
     algebraMap B (rees N) c * (sec N i x hx * sec N j y hy) = sec N i x' hx' * sec N j y' hy' := by
   apply Subtype.ext
   simp only [Subalgebra.coe_mul, Subalgebra.coe_algebraMap, coe_sec_eq_monomial_single, MvPolynomial.algebraMap_apply,
-    MvPolynomial.monomial_mul, MvPolynomial.C_mul_monomial]
+    MvPolynomial.monomial_mul_monomial, MvPolynomial.C_mul_monomial]
   rw [← h, mul_assoc]
 
 theorem UpperTheory.V.Alg.M.zi_holds :

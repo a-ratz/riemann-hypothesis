@@ -86,7 +86,7 @@ variable {D : D7}
 theorem cE_ccK_eq (D : D7) :
     GlobalTheory.VacRead.cE D D.host.ccK =
       ((D.host.ccE : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E) := by
-  rw [FractionalIdeal.coe_coeIdeal]
+  rw [FractionalIdeal.coeToSubmodule_coeIdeal]
   apply le_antisymm
   · refine Submodule.span_le.2 ?_
     rintro _ ⟨c, hc, rfl⟩
@@ -111,7 +111,7 @@ theorem mul_conj_div_absNorm_mem_auxiliaryOrder {a γ : D.host.E} (ha : a ∈ D.
     a * D.host.conj γ / (Ideal.absNorm D.host.ccK : D.host.E) ∈ (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) := by
   have ha' : a ∈ ((D.host.ccE : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E) *
       (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) := by
-    rw [← FractionalIdeal.coe_mul]; exact ha
+    rw [← FractionalIdeal.coeToSubmodule_mul]; exact ha
   refine Submodule.mul_induction_on ha' (fun x hx b hb => ?_) (fun x y hx hy => ?_)
   · rw [← cE_ccK_eq] at hx
     obtain ⟨o, ho⟩ := (GlobalTheory.VacRead.conj_mul_cE_absNorm D D.host.ccK).1 γ hγ x hx
@@ -128,7 +128,7 @@ theorem mul_conj_div_absNorm_mem_auxiliaryOrder {a γ : D.host.E} (ha : a ∈ D.
 theorem mul_mem_AA {ε b : D.host.E} (hε : ε ∈ GlobalTheory.VacRead.cE D D.host.ccK) (hb : b ∈ D.host.AA0) :
     ε * b ∈ D.host.AA := by
   have hε' : ε ∈ (D.host.ccE : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) := by
-    rw [← FractionalIdeal.mem_coe, ← cE_ccK_eq]; exact hε
+    rw [← FractionalIdeal.mem_coeToSubmodule, ← cE_ccK_eq]; exact hε
   exact FractionalIdeal.mul_mem_mul hε' hb
 
 theorem inc_mem_IhE {cc : Ideal (𝓞 D.host.K)} {α : D.host.E} (hα : α ∈ GlobalTheory.VacRead.cE D cc) :
@@ -240,7 +240,7 @@ theorem single_mem_latO_gen (S T : HSp D) (hG : S.gram = 1) {cc : Ideal (𝓞 D.
   · ext i' j'
     rw [hG]
     simp only [Matrix.single_apply, Matrix.of_apply, Matrix.one_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, Pi.single_apply]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, Pi.single_apply]
     rcases eq_or_ne i' i with rfl | h1 <;> rcases eq_or_ne j' j with rfl | h2
     · simp
     · simp [h2, h2.symm]

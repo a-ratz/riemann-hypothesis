@@ -81,8 +81,8 @@ lemma primeLogSum_div_le_factorization (N p : ℕ) (hp : p.Prime) (hpN : p ≤ N
   have hlog : 0 < Nat.log p N := by
     first
     | exact Nat.log_pos hp.one_lt hpN
-  haveI := Fact.mk hp
-  rw [Nat.factorization_def _ hp, padicValNat_factorial (Nat.lt_add_one (Nat.log p N))]
+  have := Fact.mk hp
+  rw [Nat.factorization_def _ hp, multiplicity_factorial (Nat.lt_add_one (Nat.log p N))]
   have h1 : 1 ∈ Finset.Ico 1 (Nat.log p N + 1) := by
     rw [Finset.mem_Ico]
     omega

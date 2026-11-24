@@ -71,7 +71,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.altSz :
   intro V F _ _ _ _ _ _ q k c
   have h : ContDiff ℝ ∞ (fun L : V →L[ℝ] V => (ContinuousAlternatingMap.compContinuousLinearMapCLM L :
       (V [⋀^Fin q]→L[ℝ] F) →L[ℝ] (V [⋀^Fin q]→L[ℝ] F))) := by
-    haveI := alt_fin V F q
+    have := alt_fin V F q
     rw [contDiff_clm_apply_iff]
     intro w
     rw [contDiff_iff_contDiffAt]

@@ -65,7 +65,7 @@ theorem ext_of_schDom {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSe
   let Y' : Over Z := Over.mk s
   let f' : X' ⟶ Y' := Over.homMk f
   let g' : X' ⟶ Y' := Over.homMk g h.symm
-  haveI : IsSeparated Y'.hom := ‹IsSeparated s›
+  have : IsSeparated Y'.hom := ‹IsSeparated s›
   let U' : Over Z := Over.mk (d ≫ f ≫ s)
   let d' : U' ⟶ X' := Over.homMk d
   have e : d' ≫ f' = d' ≫ g' := by
@@ -78,7 +78,7 @@ theorem ext_of_schDom {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSe
     apply le_bot_iff.1
     calc _ ≤ (l.left ≫ (equalizer.ι f' g').left).ker := Scheme.Hom.le_ker_comp _ _
       _ = ⊥ := by rw [← hd]; exact d.ker_eq_bot
-  haveI : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
+  have : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
   have h0 : IsIso ((Over.forget Z).map (equalizer.ι f' g')) := (inferInstance : IsIso (equalizer.ι f' g').left)
   have : IsIso (equalizer.ι f' g') := isIso_of_reflects_iso _ (Over.forget Z)
   have hfg : f' = g' := (cancel_epi (equalizer.ι f' g')).1 (equalizer.condition f' g')
@@ -97,13 +97,13 @@ theorem schDom_away {R : Type} [CommRing R] [IsDomain R] {f : R} (hf : f ≠ 0) 
 theorem ext_generic {R : Type} [CommRing R] [IsDomain R] {f : R} (hf : f ≠ 0) {T P : Scheme.{0}}
     (q : T ⟶ Sp R) [Flat q] (p : P ⟶ Sp R) [IsSeparated p] (u v : T ⟶ P) (hu : u ≫ p = q) (hv : v ≫ p = q)
     (h : pullback.fst q (awayMap f) ≫ u = pullback.fst q (awayMap f) ≫ v) : u = v := by
-  haveI := schDom_away hf q
+  have := schDom_away hf q
   exact ext_of_schDom p (hu.trans hv.symm) _ h
 
 theorem flat_of_openIn {S S₁ P Y : Scheme.{0}} {h : Y ⟶ P} {q : Y ⟶ S₁} {p : P ⟶ S} {s : S₁ ⟶ S}
     (ho : OpenIn h q p s) [Flat s] : Flat h := by
   obtain ⟨w, hw⟩ := ho
-  haveI := hw
+  have := hw
   rw [← pullback.lift_fst h q w]
   infer_instance
 
@@ -152,7 +152,7 @@ theorem mul_agree {S₁ S₂ : Scheme.{0}} (s₁ : S₁ ⟶ Sp σ.R) (s₂ : S�
     [Flat s₁] [Flat H₁.hom] [Flat h₂] (w₁ : h₁ ≫ E.p = H₁.hom ≫ s₁) (w₂ : h₂ ≫ E.p = H₂.hom ≫ s₂)
     [IsOpenImmersion (pullback.lift h₂ H₂.hom w₂)]
     (m₁ : MulAgree H₁ σ.A h₁ E.ιA) (m₂ : MulAgree H₂ σ.A h₂ E.ιA) : MulAgree H₁ H₂ h₁ h₂ := by
-  haveI := E.sep
+  have := E.sep
   obtain ⟨X₁, fa, fb, hX, _⟩ : ∃ (X₁ : Scheme.{0}) (fa fb : X₁ ⟶ H₁.left),
       IsPullback fa fb H₁.hom H₁.hom ∧ Flat fa :=
     ⟨_, _, _, IsPullback.of_hasPullback _ _, inferInstance⟩
@@ -182,7 +182,7 @@ theorem mul_agree {S₁ S₂ : Scheme.{0}} (s₁ : S₁ ⟶ Sp σ.R) (s₂ : S�
   let A'u : Over.mk (π ≫ ya' ≫ H₂.hom) ⟶ H₂ := Over.homMk (π ≫ ya') (by simp)
   let B'u : Over.mk (π ≫ ya' ≫ H₂.hom) ⟶ H₂ := Over.homMk ρ (by simp [eT₂])
   have key : (Au * Bu).left ≫ h₁ = (A'u * B'u).left ≫ h₂ := by
-    haveI : Flat (π ≫ ya ≫ fa ≫ H₁.hom ≫ s₁) := inferInstance
+    have : Flat (π ≫ ya ≫ fa ≫ H₁.hom ≫ s₁) := inferInstance
     refine ext_generic σ.hf (π ≫ ya ≫ fa ≫ H₁.hom ≫ s₁) E.p _ _ ?_ ?_ ?_
     · rw [Category.assoc, w₁, ← Category.assoc, Over.w (Au * Bu)]; simp
     · rw [Category.assoc, w₂, ← Category.assoc, Over.w (A'u * B'u)]
@@ -242,11 +242,11 @@ theorem one_agree {S₁ S₂ : Scheme.{0}} (s₁ : S₁ ⟶ Sp σ.R) (s₂ : S�
     (H₁ : Over S₁) [GrpObj H₁] (H₂ : Over S₂) [GrpObj H₂] (h₁ : H₁.left ⟶ E.P) (h₂ : H₂.left ⟶ E.P)
     [Flat s₁] [Flat s₂] (w₁ : h₁ ≫ E.p = H₁.hom ≫ s₁) (w₂ : h₂ ≫ E.p = H₂.hom ≫ s₂)
     (m₁ : MulAgree H₁ σ.A h₁ E.ιA) (m₂ : MulAgree H₂ σ.A h₂ E.ιA) : OneAgree s₁ s₂ H₁ H₂ h₁ h₂ := by
-  haveI := E.sep
+  have := E.sep
   obtain ⟨Z, u₁, u₂, hP, _⟩ : ∃ (Z : Scheme.{0}) (u₁ : Z ⟶ S₁) (u₂ : Z ⟶ S₂), IsPullback u₁ u₂ s₁ s₂ ∧ Flat u₁ :=
     ⟨_, _, _, IsPullback.of_hasPullback _ _, inferInstance⟩
   have key : (1 : Over.mk u₁ ⟶ H₁).left ≫ h₁ = (1 : Over.mk u₂ ⟶ H₂).left ≫ h₂ := by
-    haveI : Flat (u₁ ≫ s₁) := inferInstance
+    have : Flat (u₁ ≫ s₁) := inferInstance
     refine ext_generic σ.hf (u₁ ≫ s₁) E.p _ _ ?_ ?_ ?_
     · rw [Category.assoc, w₁, ← Category.assoc, Over.w]; rfl
     · rw [Category.assoc, w₂, ← Category.assoc, Over.w]; exact hP.w.symm
@@ -288,9 +288,9 @@ end GlobalTheory.Desc.UAgree
 open GlobalTheory.Desc.UAgree in
 theorem GlobalTheory.Desc.mulAgree_oneAgree_of_openIn : ∀ (σ : Setup) (E : Emb σ) (S₁ S₂ : Scheme.{0}) (s₁ : S₁ ⟶ Sp σ.R) (s₂ : S₂ ⟶ Sp σ.R) (H₁ : Over S₁) [GrpObj H₁] (H₂ : Over S₂) [GrpObj H₂] (h₁ : H₁.left ⟶ E.P) (h₂ : H₂.left ⟶ E.P), Flat s₁ → Flat s₂ → Flat H₁.hom → Flat H₂.hom → OpenIn h₁ H₁.hom E.p s₁ → OpenIn h₂ H₂.hom E.p s₂ → MulAgree H₁ σ.A h₁ E.ιA → MulAgree H₂ σ.A h₂ E.ιA → MulAgree H₁ H₂ h₁ h₂ ∧ OneAgree s₁ s₂ H₁ H₂ h₁ h₂ := by
   intro σ E S₁ S₂ s₁ s₂ H₁ _ H₂ _ h₁ h₂ fs₁ fs₂ fH₁ fH₂ o₁ o₂ m₁ m₂
-  haveI := fs₁; haveI := fs₂; haveI := fH₁; haveI := fH₂
-  haveI : Flat h₂ := flat_of_openIn o₂
+  have := fs₁; have := fs₂; have := fH₁; have := fH₂
+  have : Flat h₂ := flat_of_openIn o₂
   obtain ⟨w₁, -⟩ := o₁
   obtain ⟨w₂, hw₂⟩ := o₂
-  haveI := hw₂
+  have := hw₂
   exact ⟨mul_agree E s₁ s₂ H₁ H₂ h₁ h₂ w₁ w₂ m₁ m₂, one_agree E s₁ s₂ H₁ H₂ h₁ h₂ w₁ w₂ m₁ m₂⟩

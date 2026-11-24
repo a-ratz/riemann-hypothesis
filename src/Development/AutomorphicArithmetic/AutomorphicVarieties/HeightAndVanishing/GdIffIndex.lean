@@ -61,11 +61,11 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 private theorem gdIff_pow {Γ O : Type} [Group Γ] [CommRing O] [IsDomain O] (χ η : Γ →* Oˣ) {n : ℕ} (hn : n ≠ 0)
     (hχ : ∀ g, χ g ^ n = 1) (h : ∀ g, χ g = 1 → η g = 1) : ∃ j : ℕ, ∀ g, η g = χ g ^ j := by
   classical
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   have hle : χ.range ≤ rootsOfUnity n O := by
     rintro _ ⟨g, rfl⟩
     exact (mem_rootsOfUnity _ _).mpr (hχ g)
-  haveI : Finite χ.range :=
+  have : Finite χ.range :=
     Finite.of_injective (Subgroup.inclusion hle) (Subgroup.inclusion_injective hle)
   obtain ⟨x, hx⟩ := IsCyclic.exists_generator (α := χ.range)
   obtain ⟨g0, hg0⟩ := x.2
@@ -79,7 +79,7 @@ private theorem gdIff_pow {Γ O : Type} [Group Γ] [CommRing O] [IsDomain O] (χ
     exact e.symm
   have hord : orderOf (χ g0) ≠ 0 :=
     (orderOf_pos_iff.mpr (isOfFinOrder_iff_pow_eq_one.mpr ⟨n, Nat.pos_of_ne_zero hn, hχ g0⟩)).ne'
-  haveI : NeZero (orderOf (χ g0)) := ⟨hord⟩
+  have : NeZero (orderOf (χ g0)) := ⟨hord⟩
   have hηm : η g0 ∈ rootsOfUnity (orderOf (χ g0)) O := by
     rw [mem_rootsOfUnity, ← map_pow]
     apply h

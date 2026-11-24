@@ -75,7 +75,7 @@ theorem hadamard_decomposition {σ : Type} [Fintype σ] {w : σ → ℂ} {f : (�
     set y := z - w with hy
     have hy0 : y ∈ Metric.eball (0 : σ → ℂ) r := by
       rw [Metric.mem_eball] at hz ⊢
-      rwa [edist_zero_right, hy, ← edist_eq_enorm_sub]
+      rwa [edist_zero_right, hy, ← eDist_eq_eNorm_sub]
     have hy1 : y ∈ Metric.eball (0 : σ → ℂ) p.shift.radius :=
       Metric.eball_subset_eball (hrad ▸ hp.r_le) hy0
     have h1 := hp.hasSum hy0

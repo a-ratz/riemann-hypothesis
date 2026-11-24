@@ -166,13 +166,13 @@ open Polynomial in
 theorem subsingleton_of_domain (hcurve : GlobalTheory.EtC.C2) (q : ℕ) [NeZero q] (K E : Type) [Field K] [IsAlgClosed K]
     [CommRing E] [IsDomain E] [Algebra K[X] E] [Algebra.Etale K[X] E] (hq : IsUnit (q : K))
     (n i : ℤ) (hn : 2 ≤ n) : Subsingleton (Ht q (sp E) n i) := by
-  letI : Algebra K E := ((algebraMap K[X] E).comp (algebraMap K K[X])).toAlgebra
-  haveI : IsScalarTower K K[X] E := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FiniteType K E := Algebra.FiniteType.trans (S := K[X]) inferInstance inferInstance
-  haveI : IsNoetherianRing E := Algebra.FiniteType.isNoetherianRing K[X] E
-  haveI : IsIntegrallyClosed E := GlobalTheory.isIntegrallyClosed_of_smooth K[X] E
-  haveI : Ring.DimensionLEOne E := dimensionLEOne_of_etale K E
-  haveI : IsDedekindDomain E := {}
+  let : Algebra K E := ((algebraMap K[X] E).comp (algebraMap K K[X])).toAlgebra
+  have : IsScalarTower K K[X] E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FiniteType K E := Algebra.FiniteType.trans (S := K[X]) inferInstance inferInstance
+  have : IsNoetherianRing E := Algebra.FiniteType.isNoetherianRing K[X] E
+  have : IsIntegrallyClosed E := GlobalTheory.isIntegrallyClosed_of_smooth K[X] E
+  have : Ring.DimensionLEOne E := dimensionLEOne_of_etale K E
+  have : IsDedekindDomain E := {}
   exact hcurve q K E hq n i hn
 
 end GlobalTheory.EtAlgCD
@@ -186,9 +186,9 @@ theorem isCoprime_of_minimalPrimes {E : Type} [CommRing E]
   rw [Ideal.isCoprime_iff_sup_eq]
   by_contra hne
   obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hne
-  haveI := hloc m
+  have := hloc m
   let P0 : Ideal E := (⊥ : Ideal (Localization.AtPrime m)).comap (algebraMap E (Localization.AtPrime m))
-  haveI : P0.IsPrime := Ideal.comap_isPrime _ _
+  have : P0.IsPrime := Ideal.comap_isPrime _ _
   have key : ∀ r : Ideal E, r ∈ minimalPrimes E → r ≤ m → r = P0 := by
     intro r hr hrm
     have hsub : P0 ≤ r := by
@@ -245,13 +245,13 @@ theorem etale_polynomial_cd_le_one : ∀ (q : ℕ) [NeZero q] (K E : Type) [Fiel
     ∀ n i : ℤ, 2 ≤ n → Subsingleton (Ht q (sp E) n i) := by
   classical
   intro q _ K E _ _ _ _ _ hq n i hn
-  haveI : IsNoetherianRing E := Algebra.FiniteType.isNoetherianRing K[X] E
-  haveI : IsReduced E := GlobalTheory.isReduced_of_smooth_of_isIntegrallyClosed K[X] E
+  have : IsNoetherianRing E := Algebra.FiniteType.isNoetherianRing K[X] E
+  have : IsReduced E := GlobalTheory.isReduced_of_smooth_of_isIntegrallyClosed K[X] E
   have hloc : ∀ (p : Ideal E) [p.IsPrime], IsDomain (Localization.AtPrime p) := fun p _ =>
     (GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_etale K[X] p _).1
   let ι := {p : Ideal E // p ∈ minimalPrimes E}
-  haveI : Finite ι := (minimalPrimes.finite_of_isNoetherianRing E).to_subtype
-  letI : Fintype ι := Fintype.ofFinite ι
+  have : Finite ι := (minimalPrimes.finite_of_isNoetherianRing E).to_subtype
+  let : Fintype ι := Fintype.ofFinite ι
   let f : ι → Ideal E := Subtype.val
   have hcop : Pairwise (Function.onFun IsCoprime f) := fun a b hab =>
     isCoprime_of_minimalPrimes hloc a.2 b.2 (fun h => hab (Subtype.ext h))
@@ -275,15 +275,15 @@ theorem etale_polynomial_cd_le_one : ∀ (q : ℕ) [NeZero q] (K E : Type) [Fiel
   let Φ : E ≃+* ∀ j, E ⧸ f j := RingEquiv.ofBijective ψ ⟨hinj, hsurj⟩
   have hfac : ∀ j, Subsingleton (Ht q (sp (E ⧸ f j)) n i) := by
     intro j
-    haveI : (f j).IsPrime := j.2.1.1
-    haveI : IsLocalization.Away (Φ.symm (Pi.single j 1)) (E ⧸ f j) :=
+    have : (f j).IsPrime := j.2.1.1
+    have : IsLocalization.Away (Φ.symm (Pi.single j 1)) (E ⧸ f j) :=
       isLocalizationAway_of_pi f Φ (fun x j => rfl) j
-    haveI : Algebra.Etale E (E ⧸ f j) := Algebra.Etale.of_isLocalizationAway (Φ.symm (Pi.single j 1))
-    haveI : Algebra.Etale K[X] (E ⧸ f j) := Algebra.Etale.comp K[X] E _
+    have : Algebra.Etale E (E ⧸ f j) := Algebra.Etale.of_isLocalizationAway (Φ.symm (Pi.single j 1))
+    have : Algebra.Etale K[X] (E ⧸ f j) := Algebra.Etale.comp K[X] E _
     exact subsingleton_of_domain GlobalTheory.T.smooth_affine_curve_etale_cohomologicalDimension_le_one q K (E ⧸ f j) hq n i hn
   let σ := (Fintype.equivFin ι).symm
-  haveI := subsingleton_pi q n i (Fintype.card ι) (fun k => E ⧸ f (σ k)) (fun k => hfac (σ k))
-  haveI := subsingleton_of_ringEquiv q n i (RingEquiv.piCongrLeft (fun j => E ⧸ f j) σ)
+  have := subsingleton_pi q n i (Fintype.card ι) (fun k => E ⧸ f (σ k)) (fun k => hfac (σ k))
+  have := subsingleton_of_ringEquiv q n i (RingEquiv.piCongrLeft (fun j => E ⧸ f j) σ)
   exact subsingleton_of_ringEquiv q n i Φ.symm
 
 end GlobalTheory.EtAlgCD
@@ -315,7 +315,7 @@ namespace GlobalTheory.EtC.GenFibreLine
 
 theorem genericFibre_subsingleton : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [IsLocalRing T], AIC T → IsUnit (q : T) → ∀ (A : Type) [CommRing A] [Algebra (Polynomial T) A] [Algebra T A] [IsScalarTower T (Polynomial T) A], SH A → GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap (Polynomial T) A) → ∀ n i : ℤ, 2 ≤ n → Subsingleton (Ht q (sp (TensorProduct T (FractionRing T) A)) n i) := by
   intro q _ T _ _ _ hA hq A _ _ _ _ _ hind n i hn
-  haveI : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
+  have : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
   have hqK : IsUnit (q : FractionRing T) := by simpa using hq.map (algebraMap T (FractionRing T))
   have h2 := GlobalTheory.isIndEtale_tensorProduct_left (Polynomial T) A
     (TensorProduct T (Polynomial T) (FractionRing T)) hind
@@ -338,11 +338,11 @@ theorem genericFibre_subsingleton : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRin
   intro x
   obtain ⟨j, z, hz⟩ := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q D c hc n i).1 x hqA
   let g : TensorProduct T (Polynomial T) (FractionRing T) →+* D.obj j := (t.app j).hom
-  letI : Algebra (Polynomial (FractionRing T)) (D.obj j) := (g.comp eK.toRingHom).toAlgebra
-  haveI : Algebra.Etale (Polynomial (FractionRing T)) (D.obj j) := by
+  let : Algebra (Polynomial (FractionRing T)) (D.obj j) := (g.comp eK.toRingHom).toAlgebra
+  have : Algebra.Etale (Polynomial (FractionRing T)) (D.obj j) := by
     rw [← RingHom.etale_algebraMap]
     exact RingHom.Etale.stableUnderComposition _ _ (RingHom.Etale.of_bijective eK.bijective) (hst j).1
-  haveI := GlobalTheory.T.tateTwistCohomology_subsingleton_etale_over_polynomial_algClosed q (FractionRing T) (D.obj j) hqK n i hn
+  have := GlobalTheory.T.tateTwistCohomology_subsingleton_etale_over_polynomial_algClosed q (FractionRing T) (D.obj j) hqK n i hn
   rw [← hz, Subsingleton.elim z 0, map_zero]
 
 end GlobalTheory.EtC.GenFibreLine

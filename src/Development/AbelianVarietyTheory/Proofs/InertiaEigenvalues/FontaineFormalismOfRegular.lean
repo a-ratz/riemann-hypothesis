@@ -180,7 +180,7 @@ theorem finrank_swap (ρ : Representation LL G V) :
 
 theorem isCrys_iff_finrank [FiniteDimensional Qp LL] (ρ : Representation LL G V) :
     IsCrys PD ρ ↔ finrank K₀ ↥(DcrisK₀ PD ρ) = finrank Qp V := by
-  haveI := PD.finK₀
+  have := PD.finK₀
   have h1 := finrank_swap PD ρ
   have h2 := Module.finrank_mul_finrank Qp LL V
   have h3 : 0 < finrank Qp LL := finrank_pos
@@ -210,7 +210,7 @@ theorem finite_le₀ (hf : FracInv PD) [FiniteDimensional Qp V] (ρ : Representa
   have hr : Module.rank K₀ ↥(DcrisK₀ PD ρ) ≤ finrank Qp V := by
     refine rank_le fun s hs => ?_
     simpa using LinearIndependent.fintype_card_le_finrank (indepB PD hf ρ _ hs)
-  haveI : Module.Finite K₀ ↥(DcrisK₀ PD ρ) := by
+  have : Module.Finite K₀ ↥(DcrisK₀ PD ρ) := by
     rw [← Module.rank_lt_aleph0_iff]
     exact lt_of_le_of_lt hr Cardinal.natCast_lt_aleph0
   exact ⟨inferInstance, finrank_le_of_rank_le hr⟩
@@ -218,11 +218,11 @@ theorem finite_le₀ (hf : FracInv PD) [FiniteDimensional Qp V] (ρ : Representa
 theorem finite_le (hf : FracInv PD) [FiniteDimensional Qp LL] [FiniteDimensional LL V]
     (ρ : Representation LL G V) :
     Module.Finite LL ↥(Dcris PD ρ) ∧ finrank LL ↥(Dcris PD ρ) ≤ finrank Qp K₀ * finrank LL V := by
-  haveI := PD.finK₀
-  haveI : FiniteDimensional Qp V := Module.Finite.trans LL V
+  have := PD.finK₀
+  have : FiniteDimensional Qp V := Module.Finite.trans LL V
   obtain ⟨h1, h2⟩ := finite_le₀ PD hf ρ
-  haveI : Module.Finite Qp ↥(DcrisK₀ PD ρ) := Module.Finite.trans K₀ _
-  haveI : Module.Finite Qp ↥(Dcris PD ρ) := Module.Finite.equiv (swapD PD ρ)
+  have : Module.Finite Qp ↥(DcrisK₀ PD ρ) := Module.Finite.trans K₀ _
+  have : Module.Finite Qp ↥(Dcris PD ρ) := Module.Finite.equiv (swapD PD ρ)
   refine ⟨Module.Finite.of_restrictScalars_finite Qp LL _, ?_⟩
   have h3 := Nat.mul_le_mul_left (finrank Qp K₀) h2
   rw [finrank_swap, ← Module.finrank_mul_finrank Qp LL V, mul_left_comm] at h3
@@ -292,7 +292,7 @@ theorem span_eq_top_of_invariant (hu : LineUnit PD) [FiniteDimensional Qp V] (ρ
 theorem isCrys_iff_span (hf : FracInv PD) (hu : LineUnit PD) [FiniteDimensional Qp LL] [FiniteDimensional LL V]
     (ρ : Representation LL G V) :
     IsCrys PD ρ ↔ Submodule.span B (DcrisK₀ PD ρ : Set (B ⊗[Qp] V)) = ⊤ := by
-  haveI : FiniteDimensional Qp V := Module.Finite.trans LL V
+  have : FiniteDimensional Qp V := Module.Finite.trans LL V
   obtain ⟨h1, h2⟩ := finite_le₀ PD hf ρ
   rw [isCrys_iff_finrank]
   constructor
@@ -412,8 +412,8 @@ omit [IsDomain B] in
 theorem exists_dual_equiv (V : Type) [AddCommGroup V] [Module LL V] [Module Qp V] [IsScalarTower Qp LL V]
     [FiniteDimensional LL V] : ∃ (lam : LL →ₗ[Qp] Qp) (e : Dual LL V ≃ₗ[Qp] Dual Qp V),
       ∀ f v, e f v = lam (f v) := by
-  haveI : FiniteDimensional Qp V := Module.Finite.trans LL V
-  haveI : FiniteDimensional Qp (Dual LL V) := Module.Finite.trans LL _
+  have : FiniteDimensional Qp V := Module.Finite.trans LL V
+  have : FiniteDimensional Qp (Dual LL V) := Module.Finite.trans LL _
   obtain ⟨lam, hlam⟩ := exists_ne (0 : Dual Qp LL)
   let φ : Dual LL V →ₗ[Qp] Dual Qp V :=
     { toFun := fun f => lam ∘ₗ f.restrictScalars Qp
@@ -434,7 +434,7 @@ theorem exists_dual_equiv (V : Type) [AddCommGroup V] [Module LL V] [Module Qp V
 theorem dualCrys (hf : FracInv PD) (hu : LineUnit PD) : DualCrys PD LL := by
   classical
   intro V _ _ _ _ _ ρ h
-  haveI : FiniteDimensional Qp V := Module.Finite.trans LL V
+  have : FiniteDimensional Qp V := Module.Finite.trans LL V
   obtain ⟨lam, e, he⟩ := exists_dual_equiv (Qp := Qp) LL V
   let ibc := TensorProduct.isBaseChange Qp V B
   let Φ : B ⊗[Qp] Dual LL V ≃ₗ[B] Dual B (B ⊗[Qp] V) := (e.baseChange Qp B _ _).trans ibc.toDualBaseChange
@@ -560,7 +560,7 @@ theorem dcrisExact (hf : FracInv PD) : DcrisExact PD LL := by
 omit [FiniteDimensional Qp LL] in
 theorem exists_pow_sigma (hc : Nat.card (K₀ →ₐ[Qp] LL) = finrank Qp K₀) (τ τ' : K₀ →ₐ[Qp] LL) :
     ∃ n : ℕ, ∀ c, τ' c = τ (PD.σ^[n] c) := by
-  haveI := PD.finK₀
+  have := PD.finK₀
   let s : K₀ ≃ₐ[Qp] K₀ := AlgEquiv.ofBijective PD.σ PD.σ_bij
   have hfix : IntermediateField.fixedField (Subgroup.zpowers s) = ⊥ := by
     rw [eq_bot_iff]
@@ -588,7 +588,7 @@ omit [IsDomain B] [FiniteDimensional Qp LL] in
 variable {LL} in
 theorem letter_le (ρ : Representation LL G V) [Module.Finite LL ↥(Dcris PD ρ)] (τ τ' : K₀ →ₐ[Qp] LL)
     (h : ∀ c, τ' c = τ (PD.σ c)) : finrank LL ↥(DcrisL PD ρ τ') ≤ finrank LL ↥(DcrisL PD ρ τ) := by
-  haveI : Module.Finite LL ↥(DcrisL PD ρ τ) := Submodule.finiteDimensional_of_le inf_le_left
+  have : Module.Finite LL ↥(DcrisL PD ρ τ) := Submodule.finiteDimensional_of_le inf_le_left
   have h1 : ∀ g x, φVB PD (LL := LL) (actVB PD ρ g x) = actVB PD ρ g (φVB PD (LL := LL) x) := by
     intro g x
     induction x using TensorProduct.induction_on with
@@ -715,13 +715,13 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
 
       rw [hF, map_sum, Finset.sum_congr rfl fun τ' _ => hon τ τ' _ (y τ').2]
       simp [Pi.single_apply]
-  haveI : ∀ τ, Module.Finite LL (L τ) := fun τ =>
+  have : ∀ τ, Module.Finite LL (L τ) := fun τ =>
     Submodule.finiteDimensional_of_le (S₂ := D) fun x hx => ((hL τ x).1 hx).1
   rw [(LinearEquiv.ofBijective F hb).finrank_eq, Module.finrank_pi_fintype]
 
 theorem letterDim (hf : FracInv PD) : LetterDim PD LL := by
   intro hc V _ _ _ _ _ ρ h τ
-  haveI := PD.finK₀
+  have := PD.finK₀
   obtain ⟨h1, -⟩ := finite_le PD hf ρ
   refine ⟨Submodule.finiteDimensional_of_le (S₂ := Dcris PD ρ) inf_le_left, ?_⟩
   have hle : ∀ (n : ℕ) (τ τ' : K₀ →ₐ[Qp] LL), (∀ c, τ' c = τ (PD.σ^[n] c)) →
@@ -828,8 +828,8 @@ theorem fontaineFormalism_of_regular (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
   obtain ⟨C, hfit⟩ := GlobalTheory.MemLoc.FitsEx.exists_fits l P AI T
   rw [fontaineFormalism_iff]
   intro K LL
-  haveI := LL.2
-  haveI := isDomain_of_tied T K
+  have := LL.2
+  have := isDomain_of_tied T K
   exact formalismFor (P.PD K) ↥LL.1 (fracInv hfit (h C).1 K) (lineUnit hfit (h C).2 K)
 
 theorem fontaineFormalism (hF : GlobalTheory.Published.FontaineBcris) (l : ℕ) [Fact l.Prime] (P : LocPrime l)

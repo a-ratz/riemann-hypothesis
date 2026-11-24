@@ -205,7 +205,7 @@ private theorem ho_psi_cont (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
     IsLocallyConstant fun g => Ideal.Quotient.mk (IsLocalRing.maximalIdeal O ^ n) (Chr.Psi l e (Chr.dirG ℚ Ω ψ) g : O) := by
   let r : Oˣ →* (O ⧸ IsLocalRing.maximalIdeal O ^ n)ˣ := Units.map (Ideal.Quotient.mk (IsLocalRing.maximalIdeal O ^ n)).toMonoidHom
   have hl : (l : O) ∈ IsLocalRing.maximalIdeal O := by
-    haveI := (dvrFacts l O).2.2.1
+    have := (dvrFacts l O).2.2.1
     intro h
     rw [← map_natCast (algebraMap ℤ_[l] O)] at h
     exact PadicInt.p_nonunit (IsUnit.of_map _ _ h)

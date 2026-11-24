@@ -107,7 +107,7 @@ theorem idele_inv_mul_mem_iff {I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E} 
     eq_inv_of_mul_eq_one_left (by rw [← map_mul, ← map_mul, Units.inv_mul, map_one, map_one])
   rw [map_mul, cpt_tmul_one, HeightOneSpectrum.mem_adicCompletionIntegers, map_mul,
     show Valued.v (algebraMap D.host.E (Kw Q) u) = Q.valuation D.host.E u from
-      HeightOneSpectrum.valuedAdicCompletion_eq_valuation' Q u, ← hy, e3, ← div_eq_inv_mul, div_le_one₀ (zero_lt_iff.2 hne)]
+      HeightOneSpectrum.valuedAdicCompletion_eq_valuation' Q u, ← hy, e3, ← div_eq_inv_mul, div_le_one₀ (pos_iff_ne_zero.2 hne)]
 
 theorem auxiliaryVectorDecomposition_eq_zero {A B : HSp D} {c : ℕ} {ε : D.host.E} (hε : ε ≠ 0) (d : HermitianOrthogonalExtensionData A B c ε)
     (y : Fin A.rank → D.host.E) (u : Fin c → D.host.E)
@@ -269,20 +269,20 @@ theorem exists_gen {I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E} (hI : I ≠
       ((t⁻¹ : (FiniteAdeleRing (𝓞 D.host.E) D.host.E)ˣ) : FiniteAdeleRing (𝓞 D.host.E) D.host.E) Q)
     (fun Q => by
       by_cases hQ : Q ∈ S
-      · simp only [if_pos hQ]
+      · simp only [ite_eq_left hQ]
         exact mul_inv_cancel₀ (hu0 Q hQ)
-      · simp only [if_neg hQ]
+      · simp only [ite_eq_right hQ]
         exact GlobalTheory.Idele.idele_apply_mul_inv t Q)
     (by
       filter_upwards [hS.compl_mem_cofinite, (t : FiniteAdeleRing (𝓞 D.host.E) D.host.E).2] with Q h1 h2
-      rw [if_neg h1]
+      rw [ite_eq_right h1]
       exact h2)
     (by
       filter_upwards [hS.compl_mem_cofinite,
         ((t⁻¹ : (FiniteAdeleRing (𝓞 D.host.E) D.host.E)ˣ) : FiniteAdeleRing (𝓞 D.host.E) D.host.E).2] with Q h1 h2
-      rw [if_neg h1]
+      rw [ite_eq_right h1]
       exact h2)
-  refine ⟨y, fun Q => ?_, fun Q hQ => by rw [hy, if_pos hQ]⟩
+  refine ⟨y, fun Q => ?_, fun Q hQ => by rw [hy, ite_eq_left hQ]⟩
   rw [hy]
   split_ifs with hQ
   · exact hu Q hQ
@@ -356,9 +356,9 @@ theorem count_modul (G : GridData L sc) (w : Pl D.host.E) :
   rw [cosExp]
   split_ifs with hw
   · obtain ⟨v, hv, rfl⟩ : ∃ v ∈ G.pl.S0, G.pl.w v = w := by simpa [Places.W0] using hw
-    rw [Finset.sum_eq_single_of_mem v hv fun v' hv' hne' => if_neg fun h => hne' ?_, if_pos rfl, G.pl.under_w hv]
+    rw [Finset.sum_eq_single_of_mem v hv fun v' hv' hne' => ite_eq_right fun h => hne' ?_, ite_eq_left rfl, G.pl.under_w hv]
     rw [← G.pl.under_w hv, ← G.pl.under_w hv', h]
-  · refine Finset.sum_eq_zero fun v hv => if_neg fun h => hw ?_
+  · refine Finset.sum_eq_zero fun v hv => ite_eq_right fun h => hw ?_
     rw [← h]
     simpa [Places.W0] using ⟨v, hv, rfl⟩
 
@@ -389,7 +389,7 @@ theorem count_modulBar (G : GridData L sc) {t : T} {w : Pl D.host.E} (hw : w ∈
       rwa [Formalism.L2.Pj.conj_conj] at h2
   have h2 := Formalism.DivisionValues.ValuationRepresentative.count_map (Formalism.DivisionValues.conjPl w) (G.pl.modul sc) (G.pl.modul_ne_bot sc)
   rw [Formalism.DivisionValues.ValuationRepresentative.conjPl_conjPl] at h2
-  rw [e1, h2, count_modul, conjPl_eq_cP, cosExp, if_neg, Nat.cast_zero]
+  rw [e1, h2, count_modul, conjPl_eq_cP, cosExp, ite_eq_right, Nat.cast_zero]
   intro hc
   obtain ⟨v, hv, hvw⟩ : ∃ v ∈ G.pl.S0, G.pl.w v = GlobalTheory.IdemSupport.cP w := by simpa [Places.W0] using hc
   have hu : v = w.under (𝓞 D.host.F) := by
@@ -437,7 +437,7 @@ theorem count_rowId (G : GridData L sc) {t : T} {w : Pl D.host.E} (hw : w ∈ lo
     exact h4 rfl
   cases j with
   | zero =>
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     change FractionalIdeal.count D.host.E w (stairId (G.pl.stA sc) (G.pl.stAbar sc) (D.R.m - 1) p) = _
     rw [count_stairId h2.1 (ne_zero_of_conj h2.1 h2.2), Places.stA, Places.stAbar,
       FractionalIdeal.count_mul _ _ h1.1 (inv_ne_zero hmb), FractionalIdeal.count_mul _ _ (ne_zero_of_conj h1.1 h1.2)
@@ -445,7 +445,7 @@ theorem count_rowId (G : GridData L sc) {t : T} {w : Pl D.host.E} (hw : w ∈ lo
     push_cast
     ring
   | succ j =>
-    rw [if_neg (Nat.succ_ne_zero j)]
+    rw [ite_eq_right (Nat.succ_ne_zero j)]
     change FractionalIdeal.count D.host.E w (stairId D.host.AA D.host.AAbar _ p) = _
     rw [count_stairId h1.1 (ne_zero_of_conj h1.1 h1.2), hA.1, hA.2]
     simp
@@ -478,7 +478,7 @@ theorem gridChoice_nonempty {U : Set T} (N : Std G U) (Z : Normal W N)
   have hfull : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
       IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
     intro V Λ hΛ
-    haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+    have : Submodule.IsLattice D.host.E Λ := hΛ.1
     refine ⟨?_⟩
     obtain ⟨s, hs⟩ := hΛ.1.fg
     apply eq_top_iff.mpr
@@ -615,9 +615,9 @@ theorem gridChoice_nonempty {U : Set T} (N : Std G U) (Z : Normal W N)
     have := GlobalTheory.Idele.ord_vw_eventually_zero tA
     rw [Filter.eventually_cofinite] at this
     refine this.subset fun w hw => ?_
-    simp only [Set.mem_setOf_eq] at hw ⊢
+    simp only [Set.mem_ofPred_eq] at hw ⊢
     rwa [← GlobalTheory.Idele.count_idealOf, htA]
-  haveI : Nonempty (Pl D.host.E) := ⟨G.pl.w G.pl.v0⟩
+  have : Nonempty (Pl D.host.E) := ⟨G.pl.w G.pl.v0⟩
   let rep : Pl D.host.F → Pl D.host.E := fun v =>
     Classical.epsilon fun w' => w' ∈ hfinA.toFinset ∧ w'.under (𝓞 D.host.F) = v
   refine ⟨⟨B, Function.update b0 D.R.m βl, fun j hj => ?_, fun t ht w hw j hj => ?_, fun t ht w hw => ?_, N, Z,

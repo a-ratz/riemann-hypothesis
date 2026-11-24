@@ -157,10 +157,10 @@ variable {G : Type} [Group G] [TopologicalSpace G] {K₀ K : Type} [Field K₀] 
 
 theorem rationalDuality_of_allCoefficients (h : bkACore PD) : RationalDuality PD := by
   intro V _ _ _ _ _ _ _ V' _ _ _ _ _ _ _ ρ ρ' P hc hc' hdR hP
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  letI : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  let : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   exact h ℚ_[l] ℤ_[l] goodO_padicInt { V := V, ρ := ρ, cont := hc } { V := V', ρ := ρ', cont := hc' } P hdR hP
 
 theorem integralDuality_of_allCoefficients (h : bkBCore PD) : IntegralDuality PD := by

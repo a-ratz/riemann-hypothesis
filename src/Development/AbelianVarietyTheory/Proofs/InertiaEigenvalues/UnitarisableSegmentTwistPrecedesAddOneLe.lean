@@ -108,7 +108,7 @@ theorem log_norm_centralChar {δ : IrrGL (k := k)} {Δ : Segment k} (hL : IsLSeg
       (fun a => (Δ.term a).rep) _ hterm z w
     rw [← f.isIntertwining]
     exact (congrArg f h1).trans (map_smul f _ _)
-  haveI := Model.nontrivial_of_isIrreducible hi
+  have := Model.nontrivial_of_isIrreducible hi
   have hc := congrArg Real.log (norm_eq_one_of_isUnitarisable hU hsc)
   rw [norm_prod, Real.log_one, Real.log_prod fun a _ => norm_ne_zero_iff.2 (Units.ne_zero _)] at hc
   simp only [log_norm_mul_absPow] at hc

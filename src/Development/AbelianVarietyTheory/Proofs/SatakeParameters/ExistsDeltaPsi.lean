@@ -81,9 +81,9 @@ theorem odd_of_v_two (h : IsUnramInv ϖ σ q) (h2 : Valued.v (2 : L) = 1) : Odd 
   obtain ⟨-, -, -, -, -, hq, hc⟩ := h
   set V := (Valued.v : Valuation L (WithZero (Multiplicative ℤ))) with hV
   have hc' : Nat.card (IsLocalRing.ResidueField V.valuationSubring) = q ^ 2 := hc
-  haveI : Finite (IsLocalRing.ResidueField V.valuationSubring) :=
+  have : Finite (IsLocalRing.ResidueField V.valuationSubring) :=
     Nat.finite_of_card_ne_zero (by rw [hc']; positivity)
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField V.valuationSubring)
+  let := Fintype.ofFinite (IsLocalRing.ResidueField V.valuationSubring)
   by_contra hodd
   obtain ⟨k, hk⟩ := Nat.not_odd_iff_even.1 hodd
   have h1 : ringChar (IsLocalRing.ResidueField V.valuationSubring) = 2 := by
@@ -278,8 +278,8 @@ def GrpChart (V : HSp D) (e : AE D) (σ : LP D P →+* LP D P) (π : AE D →+* 
 theorem exists_chart (hP : Formalism.DivisionValues.conjPl P = P) {e : AE D} (he : IsPrimeIdem P e e) :
     ∃ (ϖ : LP D P) (σ : LP D P →+* LP D P) (q : ℕ) (π : AE D →+* LP D P), IsUnramInv ϖ σ q ∧ Valued.v (2 : LP D P) = 1 ∧
       Chart e σ π ∧ ∀ V : HSp D, ∃ β ι, Frame V e σ π β ∧ GrpChart V e σ π β ι := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
   have hP' : P.asIdeal.map (Formalism.DivisionValues.cO D.host.E) = P.asIdeal := congrArg HeightOneSpectrum.asIdeal hP
   have hfix : ∀ x : 𝓞 D.host.E, Formalism.DivisionValues.cO D.host.E x ∈ P.asIdeal ↔ x ∈ P.asIdeal := fun x => by
     conv_lhs => rw [← hP']

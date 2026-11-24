@@ -136,7 +136,7 @@ theorem momB : MomB := by
     rw [Pi.mul_apply, ← ENNReal.ofReal_mul (by positivity), mul_assoc, ← Finset.prod_pow, ← Finset.prod_mul_distrib]
     congr 2
     refine Finset.prod_congr rfl fun i _ => ?_
-    rw [← Real.exp_nat_mul, ← Real.exp_add]; congr 1; ring
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]; congr 1; ring
   rw [lintegral_congr e2, ← ofReal_integral_eq_lintegral_ofReal ((Integrable.fintype_prod hi).const_mul c)
     (.of_forall fun y => by positivity), integral_const_mul,
     integral_fintype_prod_eq_prod (f := fun i (x : ℝ) => Real.exp (-(α i + t * β i) * |x|))]

@@ -569,7 +569,7 @@ instance isAddHaarMeasure_locMeas (v : HeightOneSpectrum (𝓞 K)) : (locMeas K 
 theorem locMeas_integralMatrices (v : HeightOneSpectrum (𝓞 K)) :
     locMeas K n v (integralMatrices (v.adicCompletion K) n :
       Set (Matrix (Fin n) (Fin n) (v.adicCompletion K))) = 1 := by
-  rw [locMeas, Measure.smul_apply, smul_eq_mul, ← matVol, ENNReal.inv_mul_cancel (matVol_ne_zero v)
+  rw [locMeas, smul_apply, smul_eq_mul, ← matVol, ENNReal.inv_mul_cancel (matVol_ne_zero v)
     (matVol_ne_top v)]
 
 theorem integral_locMeas (v : HeightOneSpectrum (𝓞 K)) (f : Matrix (Fin n) (Fin n) (v.adicCompletion K) → ℂ) :
@@ -738,7 +738,7 @@ theorem finiteFourierPi_tensorFin (S : Finset (HeightOneSpectrum (𝓞 K)))
       · exact (hS v hv).1.continuous
       · rw [h0 v hv]
         exact isSchwartzBruhat_integralIndicator.1.continuous
-    exact (hΦc.mul (continuous_subtype_val.comp ((continuous_localAdelicChar v).comp
+    exact (hΦc.mul (continuous_subtypeVal.comp ((continuous_localAdelicChar v).comp
       ((continuous_id.matrix_mul continuous_const).matrix_trace)))).measurable
   have hν1 : ∀ v : HeightOneSpectrum (𝓞 K), locMeas K n v
       ((C v : AddSubgroup (Matrix (Fin n) (Fin n) (v.adicCompletion K))) :

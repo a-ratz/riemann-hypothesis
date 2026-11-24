@@ -64,21 +64,21 @@ theorem conj_scal {A : Type} [CommRing A] {M n : ℕ} (C : Matrix (Fin n) (Fin M
 theorem fib_similitude : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ (n : ℕ), ∀ (μ : Measure (Fin n → Fin M → R ⊗[F] E)) (ν : Measure (HermR R σ n)) (m : HermR R σ n → Measure (Fin n → Fin M → R ⊗[F] E)), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → IsGramFib R σ J n μ ν m → ∀ (g : GL (Fin M) (R ⊗[F] E)) (l : R), IsUnit l → cT (sigR R σ) (g : Matrix (Fin M) (Fin M) (R ⊗[F] E)) * JR R J * (g : Matrix (Fin M) (Fin M) (R ⊗[F] E)) = (algebraMap R (R ⊗[F] E) l) • JR R J → ∀ a c : ℝ≥0, μ.map (actTup R g) = a • μ → ν.map (GlobalTheory.CompanionTheory.SW.MassSimil.scalH R σ l) = c • ν → ∀ S, (m S).map (actTup R g) = (a / c) • m (GlobalTheory.CompanionTheory.SW.MassSimil.scalH R σ l S) := by
   intro F E _ _ _ _ _ σ hσ M J hJ R _ _ _ _ _ hR n μ ν m hμ hν hm g l hl hgl a c hmu hnu S
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hTK, hLK, hSK, hTK2, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := hTK
-  haveI := hLK
-  haveI := hSK
-  haveI := hTK2
-  haveI := hBor n M
+  have := hTK
+  have := hLK
+  have := hSK
+  have := hTK2
+  have := hBor n M
   obtain ⟨hLH, hSH, hT2H, hBH, hG⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R n
-  haveI := hLH
-  haveI := hSH
-  haveI := hT2H
-  haveI := hBH
+  have := hLH
+  have := hSH
+  have := hT2H
+  have := hBH
   obtain ⟨G, hGc, hGe⟩ := hG M J hJ
   have hKu := GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ R hR
   have hcont : ∀ h : GL (Fin M) (R ⊗[F] E),
@@ -108,7 +108,7 @@ theorem fib_similitude : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hcs : ∀ v : R, Continuous (GlobalTheory.CompanionTheory.SW.MassSimil.scalH R σ v : HermR R σ n → HermR R σ n) := by
     intro v
     have hv : Continuous fun A : HermR R σ n => (A : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
-      continuous_subtype_val
+      continuous_subtypeVal
     exact (hv.const_smul (algebraMap R (R ⊗[F] E) v)).subtype_mk _
   let τh : HermR R σ n ≃ₜ HermR R σ n :=
     { toFun := GlobalTheory.CompanionTheory.SW.MassSimil.scalH R σ (u : R)
@@ -124,7 +124,7 @@ theorem fib_similitude : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       ext S
       rfl
     rw [this]
-    exact hKu.isOpen_range.preimage continuous_subtype_val.matrix_det
+    exact hKu.isOpen_range.preimage continuous_subtypeVal.matrix_det
   have hdet : ∀ (v : Rˣ) (A : HermR R σ n), A ∈ B → GlobalTheory.CompanionTheory.SW.MassSimil.scalH R σ (v : R) A ∈ B := by
     intro v A hA
     show IsUnit ((GlobalTheory.CompanionTheory.SW.MassSimil.scalH R σ (v : R) A : HermR R σ n) :
@@ -180,8 +180,8 @@ theorem fib_similitude : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       rw [τh.measurableEmbedding.map_apply, Set.preimage_univ]
     rw [h0] at h1
     exact (isOpen_univ.measure_pos ν Set.univ_nonempty).ne h1
-  haveI hμa : (a • μ).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul μ ha0
-  haveI hνc : (c • ν).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul ν hc0
+  have hμa : (a • μ).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul μ ha0
+  have hνc : (c • ν).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul ν hc0
   have hres := GlobalTheory.CompanionTheory.SW.Rescale.isGramFib_rescale F E σ hσ M J hJ R hR n μ ν m hμ hν hm a c ha0 hc0
   have huq := GlobalTheory.CompanionTheory.SW.GramFib.fibre_unique F E σ hσ M J hJ R hR n (a • μ) (c • ν) _ hμa hνc hres _ hnew (τh S)
   have hs : τh.symm (τh S) = S := τh.symm_apply_apply S

@@ -87,7 +87,7 @@ theorem _root_.GlobalTheory.SubstMem.rename_mem_dualWeyl {a b : ℕ} (hab : a �
       simp only [Finsupp.sum, Finset.sum_apply, Pi.smul_apply]
       refine Finset.sum_congr rfl fun v _ => ?_
       simp [_root_.Formalism.GradedWeylDivisibility.colW, Pi.single_apply]
-      simp only [Fin.ext_iff, Fin.coe_castLE]
+      simp only [Fin.ext_iff, Fin.val_castLE]
     · rw [h2 k (not_lt.1 hk)]
       simp only [Finsupp.sum, Finset.sum_apply, Pi.smul_apply]
       refine Finset.sum_eq_zero fun v _ => ?_
@@ -108,13 +108,13 @@ theorem _root_.GlobalTheory.SubstMem.rename_mem_dualWeyl {a b : ℕ} (hab : a �
         by_cases hv : v2 = j'
         · subst hv
           simp only [AlgHom.comp_apply, rename_X, _root_.Formalism.GradedWeylDivisibility.colAddGen, aeval_X, Prod.map_snd, Prod.map_fst,
-            if_pos rfl]
-          simp only [ite_true, if_true, map_add (f := _), map_mul, rename_X]
+            ite_eq_left rfl]
+          simp only [ite_true, ite_true, map_add (f := _), map_mul, rename_X]
           rfl
         · have hv' : Fin.castLE hab v2 ≠ Fin.castLE hab j' :=
             fun h => hv (Fin.castLE_injective hab h)
           simp only [AlgHom.comp_apply, rename_X, _root_.Formalism.GradedWeylDivisibility.colAddGen, aeval_X, Prod.map_snd, Prod.map_fst,
-            if_neg hv, if_neg hv']
+            ite_eq_right hv, ite_eq_right hv']
           rfl
       have e := DFunLike.congr_fun key f
       simp only [AlgHom.comp_apply] at e
@@ -126,7 +126,7 @@ theorem _root_.GlobalTheory.SubstMem.rename_mem_dualWeyl {a b : ℕ} (hab : a �
         intro v
         have hne : Fin.castLE hab v.2 ≠ j := by
           intro h; apply hj; rw [← h]; exact v.2.isLt
-        simp only [AlgHom.comp_apply, rename_X, _root_.Formalism.GradedWeylDivisibility.colAddGen, aeval_X, Prod.map_snd, if_neg hne]
+        simp only [AlgHom.comp_apply, rename_X, _root_.Formalism.GradedWeylDivisibility.colAddGen, aeval_X, Prod.map_snd, ite_eq_right hne]
       exact DFunLike.congr_fun key f
 
 

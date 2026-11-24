@@ -92,10 +92,10 @@ theorem charpoly_algHom_eq_map_minpoly : ∀ (F L C : Type) [Field F] [Field L] 
   intro F L C _ _ _ _ _ _ _ _ n _ ι a hdeg
   have ha : IsIntegral F a := IsIntegral.of_finite F a
   have hn : 0 < n := hdeg ▸ minpoly.natDegree_pos ha
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   let g : L ⊗[F] C →ₐ[L] Matrix (Fin n) (Fin n) L :=
     Algebra.TensorProduct.lift (Algebra.ofId L _) ι (fun l y ↦ Algebra.commute_algebraMap_left l _)
-  haveI : IsSimpleRing (L ⊗[F] C) := GroundTheory.Brauer.isSimpleRing_tensorProduct_of_right
+  have : IsSimpleRing (L ⊗[F] C) := GroundTheory.Brauer.isSimpleRing_tensorProduct_of_right
   have hg : Function.Injective g := GlobalTheory.CsaCharpoly.injective_of_isSimpleRing g.toRingHom
   have eg : g ((1 : L) ⊗ₜ a) = ι a := by
     simp only [g]; erw [Algebra.TensorProduct.lift_tmul]; simp

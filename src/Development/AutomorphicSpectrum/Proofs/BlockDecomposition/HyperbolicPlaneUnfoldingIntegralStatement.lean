@@ -779,18 +779,18 @@ theorem exists_borel_section_ker :
     rw [this]
     exact isClosed_singleton.preimage hπ
   have hemb : IsClosedEmbedding (Subtype.val : π.ker → P) := hcl.isClosedEmbedding_subtypeVal
-  haveI : LocallyCompactSpace π.ker := hemb.locallyCompactSpace
-  haveI : SecondCountableTopology π.ker := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : BorelSpace π.ker := Subtype.borelSpace _
-  haveI : Countable (Γ.subgroupOf π.ker) :=
+  have : LocallyCompactSpace π.ker := hemb.locallyCompactSpace
+  have : SecondCountableTopology π.ker := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace π.ker := Subtype.borelSpace _
+  have : Countable (Γ.subgroupOf π.ker) :=
     Function.Injective.countable (f := fun h : Γ.subgroupOf π.ker =>
       (⟨((h : π.ker) : P), h.2⟩ : Γ)) (fun a b hab => by
         have h1 : ((a : π.ker) : P) = ((b : π.ker) : P) := congrArg (fun x : Γ => (x : P)) hab
         exact Subtype.ext (Subtype.ext h1))
-  haveI : DiscreteTopology (Γ.subgroupOf π.ker) := by
+  have : DiscreteTopology (Γ.subgroupOf π.ker) := by
     refine discreteTopology_of_isOpen_singleton_one ?_
     have hc : Continuous fun h : Γ.subgroupOf π.ker => ((h : π.ker) : P) :=
-      continuous_subtype_val.comp continuous_subtype_val
+      continuous_subtypeVal.comp continuous_subtypeVal
     have : ({1} : Set (Γ.subgroupOf π.ker)) =
         (fun h : Γ.subgroupOf π.ker => ((h : π.ker) : P)) ⁻¹' interior U := by
       ext h
@@ -886,8 +886,8 @@ theorem conj_haar_character :
   have hKc : IsClosed (π.ker : Set P) := by
     rw [MonoidHom.coe_ker]
     exact isClosed_singleton.preimage hπ
-  haveI : LocallyCompactSpace π.ker := hKc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology π.ker :=
+  have : LocallyCompactSpace π.ker := hKc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology π.ker :=
     TopologicalSpace.Subtype.secondCountableTopology (π.ker : Set P)
   have hcont : ∀ g : P, Continuous (fun m : π.ker => MulAut.conjNormal g m) := by
     intro g
@@ -896,7 +896,7 @@ theorem conj_haar_character :
       funext m
       simp only [Function.comp_apply, MulAut.conjNormal_apply]
     rw [h1]
-    exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+    exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
   have hsymm : ∀ g : P, ⇑(MulEquiv.symm (MulAut.conjNormal g : MulAut π.ker)) =
       fun m => MulAut.conjNormal g⁻¹ m := by
     intro g
@@ -908,7 +908,7 @@ theorem conj_haar_character :
   have hex : ∀ u : G₁, ∃ c : ℝ≥0,
       Measure.map (fun m : π.ker => MulAut.conjNormal (ι u) m) ν = c • ν := by
     intro u
-    haveI : (Measure.map (fun m : π.ker => MulAut.conjNormal (ι u) m) ν).IsHaarMeasure :=
+    have : (Measure.map (fun m : π.ker => MulAut.conjNormal (ι u) m) ν).IsHaarMeasure :=
       MulEquiv.isHaarMeasure_map ν (MulAut.conjNormal (ι u) : MulAut π.ker) (hcont _)
         (by convert hcont (ι u)⁻¹ using 1; exact hsymm _)
     exact ⟨_, Measure.isMulLeftInvariant_eq_smul _ ν⟩
@@ -919,7 +919,7 @@ theorem conj_haar_character :
   have hpre : ∀ v (S : Set π.ker), MeasurableSet S →
       ν ((fun m : π.ker => MulAut.conjNormal (ι v) m) ⁻¹' S) = (a v : ℝ≥0∞) * ν S := by
     intro v S hS
-    rw [← Measure.map_apply (hcont _).measurable hS, ha v, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [← Measure.map_apply (hcont _).measurable hS, ha v, smul_apply, ENNReal.smul_def, smul_eq_mul]
   have hcomp : ∀ u v, (fun m : π.ker => MulAut.conjNormal (ι (u * v)) m) ⁻¹' D =
       (fun m : π.ker => MulAut.conjNormal (ι v) m) ⁻¹'
         ((fun m : π.ker => MulAut.conjNormal (ι u) m) ⁻¹' D) := by
@@ -932,7 +932,7 @@ theorem conj_haar_character :
     rw [← hpre (u * v) D hDm, hcomp, hpre v _ ((hcont _).measurable hDm), hpre u D hDm,
       ENNReal.coe_mul]
     ring
-  haveI : Countable (Γ.subgroupOf π.ker) := by
+  have : Countable (Γ.subgroupOf π.ker) := by
     have hinj : Function.Injective (fun x : Γ.subgroupOf π.ker =>
         (⟨((x : π.ker) : P), Subgroup.mem_subgroupOf.1 x.2⟩ : Γ)) := by
       intro x y h
@@ -941,11 +941,11 @@ theorem conj_haar_character :
       simp only [Subtype.mk.injEq] at h
       exact h
     exact hinj.countable
-  haveI : MeasurableConstSMul (Γ.subgroupOf π.ker) π.ker :=
+  have : MeasurableConstSMul (Γ.subgroupOf π.ker) π.ker :=
     ⟨fun c => by
       show Measurable (fun x : π.ker => (c : π.ker) * x)
       exact measurable_id'.const_mul _⟩
-  haveI : SMulInvariantMeasure (Γ.subgroupOf π.ker) π.ker ν :=
+  have : SMulInvariantMeasure (Γ.subgroupOf π.ker) π.ker ν :=
     ⟨fun c s _ => by
       show ν ((fun x : π.ker => (c : π.ker) * x) ⁻¹' s) = ν s
       exact measure_preimage_mul ν _ s⟩
@@ -957,7 +957,7 @@ theorem conj_haar_character :
       refine ⟨(hcont _).measurable.aemeasurable, ?_⟩
       rw [ha γ]
       intro s hs
-      rw [Measure.smul_apply, hs, smul_zero]
+      rw [smul_apply, hs, smul_zero]
     obtain ⟨e, he⟩ : ∃ e : Γ.subgroupOf π.ker → Γ.subgroupOf π.ker,
         ∀ s, ((e s : π.ker) : P) = (ι γ)⁻¹ * ((s : π.ker) : P) * ι γ := by
       refine ⟨fun s => ⟨⟨(ι γ)⁻¹ * ((s : π.ker) : P) * ι γ, ?_⟩, ?_⟩, fun s => rfl⟩
@@ -1002,7 +1002,7 @@ theorem conj_haar_character :
       funext p
       simp only [Function.comp_apply, MulAut.conjNormal_apply]
     rw [h1]
-    exact ((hι.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)).mul
+    exact ((hι.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)).mul
       (hι.comp continuous_fst).inv
   have hE : MeasurableSet ((fun p : G₁ × π.ker => MulAut.conjNormal (ι p.1) p.2) ⁻¹' D) :=
     hFc.measurable hDm
@@ -1227,7 +1227,7 @@ theorem exists_haar_fundamentalDomain : ∀ (P G₁ : Type) [Group P] [Topologic
   have hcl : IsClosed (π.ker : Set P) := by
     have : (π.ker : Set P) = π ⁻¹' {1} := by ext; simp [MonoidHom.mem_ker]
     rw [this]; exact isClosed_singleton.preimage hπ
-  haveI : LocallyCompactSpace π.ker := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace π.ker := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   obtain ⟨D, hDm, hDu, hD⟩ := _root_.GlobalTheory.CompanionTheory.SplitExtLat.exists_borel_section_ker P G₁ ι π hι hπ hπι Γ hU hK
   let ν : Measure π.ker := Measure.haar
   obtain ⟨hνF, hν0, hνfin⟩ := hD ν
@@ -1306,47 +1306,47 @@ end Glob
 theorem meanP : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ n : ℕ, ∀ (μ₁ : Measure (HA (AF F) σ J)) 𝓕₁, IsHaarH F E σ M J μ₁ → IsFDH F E σ M J μ₁ 𝓕₁ → ∀ dA : Measure (Fin 1 → Fin n → AF F ⊗[F] E), IsCovolOne dA → ∀ (Φ : (Fin (n + 1) → Fin (M + 2) → AF F ⊗[F] E) → ℝ≥0∞) (Ψ : (Fin 1 → Fin (M + 2) → AF F ⊗[F] E) → ℝ≥0∞), Measurable Φ → (∀ h : HA (AF F) σ (hypOne J), Ψ (actW (AF F) σ (hypOne J) h (e0 _ M)) = ∫⁻ Y, ∫⁻ a, Φ (actW (AF F) σ (hypOne J) h (consA a Y)) ∂dA ∂(thetaMeas σ J μ₁ 𝓕₁ (framesE σ J (0 : Matrix (Fin n) (Fin n) E)))) → ∃ (μP : Measure (stabilizer₂ (AF F) σ J)) (𝓕P : Set (stabilizer₂ (AF F) σ J)), μP.IsHaarMeasure ∧ IsFundamentalDomain (ratP (AF F) σ J) 𝓕P μP ∧ μP 𝓕P < ⊤ ∧ ∀ g : HA (AF F) σ (hypOne J), (μP 𝓕P)⁻¹ * ∫⁻ u in 𝓕P, phiA σ J n Φ ((u : HA (AF F) σ (hypOne J)) * g) ∂μP = Ψ (actW (AF F) σ (hypOne J) g⁻¹ (e0 _ M)) := by
   intro F E _ _ _ _ _ σ hσ M J hJ n μ₁ 𝓕₁ hμ₁ h𝓕₁ dA hdA Φ Ψ hΦ hyp
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   obtain ⟨hJb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStep.Unf.Basic.hypOne_basic F E σ hσ M J hJ
   obtain ⟨tg, lc, sc, t2, bs, act⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ (M + 2) _ hJb (AF F)
   obtain ⟨tg₁, lc₁, sc₁, t2₁, bs₁, act₁⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
-  haveI := tg
-  haveI := lc
-  haveI := sc
-  haveI := t2
-  haveI := bs
-  haveI := tg₁
-  haveI := lc₁
-  haveI := sc₁
-  haveI := t2₁
-  haveI := bs₁
+  have := tg
+  have := lc
+  have := sc
+  have := t2
+  have := bs
+  have := tg₁
+  have := lc₁
+  have := sc₁
+  have := t2₁
+  have := bs₁
   obtain ⟨c1, c2, c3, c4, -, -, -, hB, -, -⟩ := TopK.topTens_props F E σ hσ (AF F)
-  haveI := c1
-  haveI := c2
-  haveI := c3
-  haveI := c4
-  haveI := hB (n + 1) (M + 2)
-  haveI := hB 1 (M + 2)
-  haveI := hB n M
-  haveI := hB 1 n
-  haveI : μ₁.IsHaarMeasure := hμ₁
-  haveI : dA.IsAddHaarMeasure := hdA.1
+  have := c1
+  have := c2
+  have := c3
+  have := c4
+  have := hB (n + 1) (M + 2)
+  have := hB 1 (M + 2)
+  have := hB n M
+  have := hB 1 n
+  have : μ₁.IsHaarMeasure := hμ₁
+  have : dA.IsAddHaarMeasure := hdA.1
   obtain ⟨D, hD, hD1⟩ := hdA.2
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
+  have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
   have hPc : IsClosed ((stabilizer₂ (AF F) σ J : Subgroup (HA (AF F) σ (hypOne J))) : Set (HA (AF F) σ (hypOne J))) :=
     isClosed_eq ((act 1).1.comp (continuous_id.prodMk continuous_const)) continuous_const
-  haveI : LocallyCompactSpace (stabilizer₂ (AF F) σ J) := hPc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (stabilizer₂ (AF F) σ J) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : BorelSpace (stabilizer₂ (AF F) σ J) := Subtype.borelSpace _
+  have : LocallyCompactSpace (stabilizer₂ (AF F) σ J) := hPc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (stabilizer₂ (AF F) σ J) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace (stabilizer₂ (AF F) σ J) := Subtype.borelSpace _
   obtain ⟨ι, π, hιc, hπc, hπι, hι1, hπ1, hK, hιact, hl⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStep.Unf.Struct.stab_structure F E σ hσ M J hJ
   obtain ⟨hc0, U, hU, hU1⟩ := rational_countable_discrete F E σ hσ (M + 2) _ hJb
-  haveI hc₁ : Countable (HFinIn (AF F) σ J) := (rational_countable_discrete F E σ hσ M J hJ).1
+  have hc₁ : Countable (HFinIn (AF F) σ J) := (rational_countable_discrete F E σ hσ M J hJ).1
   let Γ₁ : Subgroup (HA (AF F) σ J) := HFinIn (AF F) σ J
-  haveI hc₁' : Countable Γ₁ := hc₁
-  haveI hcP : Countable (ratP (AF F) σ J) := by
-    haveI := hc0
+  have hc₁' : Countable Γ₁ := hc₁
+  have hcP : Countable (ratP (AF F) σ J) := by
+    have := hc0
     have hinj : Function.Injective fun γ : ratP (AF F) σ J =>
         (⟨((γ : stabilizer₂ (AF F) σ J) : HA (AF F) σ (hypOne J)), γ.2⟩ : HFinIn (AF F) σ (hypOne J)) := by
       intro a b h
@@ -1354,7 +1354,7 @@ theorem meanP : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     exact hinj.countable
   have hfin : μ₁ 𝓕₁ < ⊤ := ((finVol_unitaryGroup F E σ hσ M J hJ).2 μ₁ hμ₁).2 𝓕₁ h𝓕₁
   have hUP : ∃ U' ∈ 𝓝 (1 : stabilizer₂ (AF F) σ J), ∀ γ ∈ ratP (AF F) σ J, γ ∈ U' → γ = 1 := by
-    refine ⟨Subtype.val ⁻¹' U, continuous_subtype_val.continuousAt.preimage_mem_nhds hU, ?_⟩
+    refine ⟨Subtype.val ⁻¹' U, continuous_subtypeVal.continuousAt.preimage_mem_nhds hU, ?_⟩
     intro γ hγ hγU
     refine Subtype.ext (hU1 _ hγU ?_)
     exact (mem_HFinIn_iff _ σ _ _).1 hγ
@@ -1362,23 +1362,23 @@ theorem meanP : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     _root_.GlobalTheory.CompanionTheory.SplitExtLat.exists_haar_fundamentalDomain (stabilizer₂ (AF F) σ J) (HA (AF F) σ J) ι π hιc hπc hπι (ratP (AF F) σ J) Γ₁
       hUP hι1 hπ1 μ₁ 𝓕₁ h𝓕₁ hfin hK
   refine ⟨μP, 𝓕P, hμP, h𝓕P, hPf, fun g => ?_⟩
-  haveI := hν
+  have := hν
   have hNc : IsClosed ((π.ker : Subgroup (stabilizer₂ (AF F) σ J)) : Set (stabilizer₂ (AF F) σ J)) := by
     have : ((π.ker : Subgroup (stabilizer₂ (AF F) σ J)) : Set (stabilizer₂ (AF F) σ J)) = π ⁻¹' {1} := by
       ext x
       simp [MonoidHom.mem_ker]
     rw [this]
     exact isClosed_singleton.preimage hπc
-  haveI : LocallyCompactSpace π.ker := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology π.ker := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : BorelSpace π.ker := Subtype.borelSpace _
-  haveI hcN : Countable ((ratP (AF F) σ J).subgroupOf π.ker) := by
+  have : LocallyCompactSpace π.ker := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology π.ker := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace π.ker := Subtype.borelSpace _
+  have hcN : Countable ((ratP (AF F) σ J).subgroupOf π.ker) := by
     have hinj : Function.Injective fun γ : (ratP (AF F) σ J).subgroupOf π.ker =>
         (⟨(γ : π.ker), Subgroup.mem_subgroupOf.1 γ.2⟩ : ratP (AF F) σ J) := by
       intro a b h
       exact Subtype.ext (Subtype.ext (congrArg (fun x : ratP (AF F) σ J => (x : stabilizer₂ (AF F) σ J)) h))
     exact hinj.countable
-  haveI hcΛ : Countable (ratA (F := F) (E := E) n) := by
+  have hcΛ : Countable (ratA (F := F) (E := E) n) := by
     have hs : Function.Surjective fun a : Fin 1 → Fin n → E =>
         (⟨ratTup (AF F) a, ⟨a, rfl⟩⟩ : ratA (F := F) (E := E) n) := by
       rintro ⟨_, a, rfl⟩
@@ -1449,7 +1449,7 @@ theorem meanP : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     refine Measurable.tsum fun X => hΦ.comp ?_
     have : Continuous fun p : stabilizer₂ (AF F) σ J =>
         actW (AF F) σ (hypOne J) ((p : HA (AF F) σ (hypOne J)) * g)⁻¹ (ratTup (AF F) X.1) :=
-      (act (n + 1)).1.comp (((continuous_subtype_val.mul continuous_const).inv).prodMk continuous_const)
+      (act (n + 1)).1.comp (((continuous_subtypeVal.mul continuous_const).inv).prodMk continuous_const)
     exact this.measurable
   have hvol : μP 𝓕P = ν 𝓕N * μ₁ 𝓕₁ := by
     have := hform (fun _ => 1) measurable_const
@@ -1464,36 +1464,36 @@ theorem meanP : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
 theorem unfold_frames : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ n : ℕ, 1 ≤ n → 2 * n < M → ∀ (μ : Measure (HA (AF F) σ (hypOne J))) 𝓕, IsHaarH F E σ (M + 2) (hypOne J) μ → IsFDH F E σ (M + 2) (hypOne J) μ 𝓕 → ∀ (μ₁ : Measure (HA (AF F) σ J)) 𝓕₁, IsHaarH F E σ M J μ₁ → IsFDH F E σ M J μ₁ 𝓕₁ → ∀ dA : Measure (Fin 1 → Fin n → AF F ⊗[F] E), IsCovolOne dA → ∀ (Φ : (Fin (n + 1) → Fin (M + 2) → AF F ⊗[F] E) → ℝ≥0∞) (Ψ : (Fin 1 → Fin (M + 2) → AF F ⊗[F] E) → ℝ≥0∞), Measurable Φ → Measurable Ψ → (∀ h : HA (AF F) σ (hypOne J), Ψ (actW (AF F) σ (hypOne J) h (e0 _ M)) = ∫⁻ Y, ∫⁻ a, Φ (actW (AF F) σ (hypOne J) h (consA a Y)) ∂dA ∂(thetaMeas σ J μ₁ 𝓕₁ (framesE σ J (0 : Matrix (Fin n) (Fin n) E)))) → ∫⁻ X, Φ X ∂(thetaMeas σ (hypOne J) μ 𝓕 (framesE σ (hypOne J) (0 : Matrix (Fin (n + 1)) (Fin (n + 1)) E))) = ∫⁻ y, Ψ y ∂(thetaMeas σ (hypOne J) μ 𝓕 (framesE σ (hypOne J) (0 : Matrix (Fin 1) (Fin 1) E))) := by
   intro F E _ _ _ _ _ σ hσ M J hJ n hn hM μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ dA hdA Φ Ψ hΦ hΨ hyp
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   obtain ⟨hJb, he0, hgq⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStep.Unf.Basic.hypOne_basic F E σ hσ M J hJ
   obtain ⟨tg, lc, sc, t2, bs, act⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ (M + 2) _ hJb (AF F)
-  haveI := tg
-  haveI := lc
-  haveI := sc
-  haveI := t2
-  haveI := bs
+  have := tg
+  have := lc
+  have := sc
+  have := t2
+  have := bs
   obtain ⟨c1, c2, c3, c4, -, -, -, hB, -, -⟩ := TopK.topTens_props F E σ hσ (AF F)
-  haveI := c1
-  haveI := c2
-  haveI := c3
-  haveI := c4
-  haveI := hB (n + 1) (M + 2)
-  haveI := hB 1 (M + 2)
-  haveI : μ.IsHaarMeasure := hμ
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
+  have := c1
+  have := c2
+  have := c3
+  have := c4
+  have := hB (n + 1) (M + 2)
+  have := hB 1 (M + 2)
+  have : μ.IsHaarMeasure := hμ
+  have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
   obtain ⟨μP, 𝓕P, hμP, h𝓕P, hPf, hmean⟩ := meanP F E σ hσ M J hJ n μ₁ 𝓕₁ hμ₁ h𝓕₁ dA hdA Φ Ψ hΦ hyp
-  haveI := hμP
+  have := hμP
   have hPc : IsClosed ((stabilizer₂ (AF F) σ J : Subgroup (HA (AF F) σ (hypOne J))) : Set (HA (AF F) σ (hypOne J))) :=
     isClosed_eq ((act 1).1.comp (continuous_id.prodMk continuous_const)) continuous_const
-  haveI : LocallyCompactSpace (stabilizer₂ (AF F) σ J) := hPc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (stabilizer₂ (AF F) σ J) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : BorelSpace (stabilizer₂ (AF F) σ J) := Subtype.borelSpace _
-  haveI hc : Countable (HFinIn (AF F) σ (hypOne J)) := (rational_countable_discrete F E σ hσ (M + 2) _ hJb).1
+  have : LocallyCompactSpace (stabilizer₂ (AF F) σ J) := hPc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (stabilizer₂ (AF F) σ J) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace (stabilizer₂ (AF F) σ J) := Subtype.borelSpace _
+  have hc : Countable (HFinIn (AF F) σ (hypOne J)) := (rational_countable_discrete F E σ hσ (M + 2) _ hJb).1
   let Γ : Subgroup (HA (AF F) σ (hypOne J)) := HFinIn (AF F) σ (hypOne J)
-  haveI hc' : Countable Γ := hc
-  haveI hcP : Countable (ratP (AF F) σ J) := by
+  have hc' : Countable Γ := hc
+  have hcP : Countable (ratP (AF F) σ J) := by
     have hinj : Function.Injective fun γ : ratP (AF F) σ J =>
         (⟨((γ : stabilizer₂ (AF F) σ J) : HA (AF F) σ (hypOne J)), γ.2⟩ : HFinIn (AF F) σ (hypOne J)) := by
       intro a b h

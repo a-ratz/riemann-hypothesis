@@ -256,7 +256,7 @@ private theorem wP_mul_wP_symm_eq_one {p : ℕ} (σ : Equiv.Perm (Fin p)) : U.wP
   ext a b
   rw [Matrix.mul_apply]
   simp only [U.wP, Matrix.of_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Equiv.symm_apply_eq, Matrix.one_apply]
+    ite_true, Equiv.symm_apply_eq, Matrix.one_apply]
   by_cases hab : a = b
   · subst hab; simp
   · simp [hab, Ne.symm hab]
@@ -292,7 +292,7 @@ private theorem det_lhOf_mul_hMat_ptPerm_ne_zero (h : C.LPt) (hh1 : ∀ b ∈ h,
     have hij' : i < j := OrderDual.toDual_lt_toDual.mp hij
     simp [U.lowW, Matrix.one_apply_ne hij'.ne, not_lt_of_gt hij']
   have hlow : (U.lowW (D.ptPerm h) v).det = 1 := by
-    rw [Matrix.det_of_lowerTriangular _ hbt]
+    rw [det_of_isLowerTriangular _ hbt]
     simp [U.lowW]
   rw [hlow, one_mul]
   exact mul_ne_zero hwdet (Finset.prod_ne_zero_iff.mpr fun i _ => PBJ.Asm.ptScal_ne h hh1 i i.isLt)
@@ -557,7 +557,7 @@ theorem pbF_left_uw (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k n 
   have hiU := unit_of_uw hi
   have := PBG.sigmaFinite_of_haar Bj.haarN
   have := PBG.sigmaFinite_of_haar Bj.haarW
-  haveI : SigmaFinite (U.muRC k p ρ) := Formalism.FourierDecayAlt.P.Dx2.SplitF.sf_RC (k := k) p ρ
+  have : SigmaFinite (U.muRC k p ρ) := Formalism.FourierDecayAlt.P.Dx2.SplitF.sf_RC (k := k) p ρ
   set e1 := (PBG.lmulHomeo h⁻¹ hiU).toMeasurableEquiv
   set e2 := (conjHomeo h⁻¹ hiU).toMeasurableEquiv
   set Φ : PBQ.XP k p ρ ≃ᵐ PBQ.XP k p ρ := MeasurableEquiv.prodCongr (MeasurableEquiv.prodCongr e1 e2)
@@ -591,7 +591,7 @@ theorem pbF_left_uw (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k n 
     rw [← Matrix.mul_assoc, ← PBQ.castM_mul]
     congr 2
     unfold PBQ.sP
-    rw [if_pos hx, if_pos hΦ]
+    rw [ite_eq_left hx, ite_eq_left hΦ]
     show U.Rn k p ρ (-x.2) * U.embG k p ρ ((Matrix.of x.1.1)⁻¹ * (Matrix.of x.1.2)⁻¹) * U.embG k p ρ h =
       U.Rn k p ρ (-x.2) * U.embG k p ρ ((h⁻¹ * Matrix.of x.1.1)⁻¹ * (h⁻¹ * Matrix.of x.1.2 * h⁻¹⁻¹)⁻¹)
     rw [Matrix.mul_assoc, ← Formalism.FourierDecayAlt.P.Dx2.Split.embG_mul]
@@ -620,7 +620,7 @@ open CutEXPbEquiv
 
 theorem pullback_equivalence : CutEX.PbEquiv := by
   intro Wp Wq _ _ _ _ _ _ P p G _ Z _ μ _ h hh h' hh'
-  haveI : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hw : D.castM (by omega : P.r + (P.r - P.r) = P.r) (U.embG P.k P.r (P.r - P.r) h') ∈
       UWset P.k P.r p.T.base.z' := by
     have h1 := Formalism.FourierDecayAlt.P.Dx2.Tower.lev_UW (k := P.k) P.r (P.r - P.r) _ h' hh'
@@ -1031,11 +1031,11 @@ theorem slice_gen (P : M.Par) (p : KB.Pl P Wp Wq) (G : B.Mat P.k P.r → (Wq →
     funext x
     simp only [D.castF, Dx2.MN.castM_rfl]
   refine ⟨?_, ?_⟩
-  · simp only [PBQ.ellH, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+  · simp only [PBQ.ellH, smul_apply, ContinuousLinearMap.id_apply]
     simp only [SliceIntegralLemmas.psiH] at H1i
     exact H1i
   · rw [hcf, D.sliceAt, dite_eq_left hjr]
-    simp only [PBQ.ellH, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+    simp only [PBQ.ellH, smul_apply, ContinuousLinearMap.id_apply]
     exact H1e
 
 theorem om_zero {k ρ : ℕ} (hρ : ρ = 0) (z z' : Fin (2 * ρ + k + 1) → ℂ) (γ : B.Mat k ρ) (hγ : γ ∈ B.GV k ρ)
@@ -1182,7 +1182,7 @@ theorem radial_of_function_holds : RadOfFun := by
   refine ⟨⟨fun c g => if (c, g) ∈ DomR k ρ z z' then f g else 0, ?_, ?_, ?_⟩, ?_⟩
   · intro x hx
     show (if (x.1, x.2) ∈ DomR k ρ z z' then f x.2 else 0) = 0
-    exact if_neg hx
+    exact ite_eq_right hx
   · intro x₀ hx₀
     obtain ⟨hΩ, hG, hpos⟩ := hx₀
     obtain ⟨U, F, hU, hgU, hF, hFe⟩ := hloc x₀.2 hG hpos
@@ -1194,7 +1194,7 @@ theorem radial_of_function_holds : RadOfFun := by
     · intro x hx hxG
       have hxD : (x.1, x.2) ∈ DomR k ρ z z' := ⟨hx.1, hxG, hx.2.2⟩
       show (if (x.1, x.2) ∈ DomR k ρ z z' then f x.2 else 0) = F x.2
-      rw [if_pos hxD]
+      rw [ite_eq_left hxD]
       exact hFe x.2 hx.2.1 hxG
   · intro x hx h hh h' hh'
     obtain ⟨hΩ, hG, hpos⟩ := hx
@@ -1204,11 +1204,11 @@ theorem radial_of_function_holds : RadOfFun := by
     have hD0 : (x.1, x.2) ∈ DomR k ρ z z' := ⟨hΩ, hG, hpos⟩
     show (if (x.1, h * x.2 * h') ∈ DomR k ρ z z' then f (h * x.2 * h') else 0) =
       π h ∘SL (if (x.1, x.2) ∈ DomR k ρ z z' then f x.2 else 0) ∘SL π' h'
-    rw [if_pos hD, if_pos hD0]
+    rw [ite_eq_left hD, ite_eq_left hD0]
     exact hequiv x.2 hG hpos h hh h' hh'
   · intro x hx
     show (if (x.1, x.2) ∈ DomR k ρ z z' then f x.2 else 0) = f x.2
-    exact if_pos hx
+    exact ite_eq_left hx
 
 theorem determinant_vanishing_holds : ZxDet := by
   intro r h hh v
@@ -1376,7 +1376,7 @@ theorem frame_dframe (S : B.RealPlaceData k r Wp Wq) (hr : r = 0) {ν' : Fin (2 
         γ⁻¹ *ᵥ S.z := by
       funext i
       have := i.isLt
-      rw [if_pos (by omega)]
+      rw [ite_eq_left (by omega)]
     have hpr : γ⁻¹ *ᵥ S.z = Formalism.FourierDecayAlt.D.prW k 0 S.z' (γ⁻¹ *ᵥ S.z) +
         (herm (Hpk k 0) (γ⁻¹ *ᵥ S.z) S.z' / herm (Hpk k 0) S.z' S.z') • S.z' := by
       unfold Formalism.FourierDecayAlt.D.prW
@@ -1468,7 +1468,7 @@ theorem head_weight_at_of_exists : DiagonalScalarMatrices.HeadWeightAtOfEx := by
   rw [show ((JC.parLev P P.r).k : ℂ) = (P.k : ℂ) from rfl, ← hVdef] at h1
   erw [h2] at h1
   rw [h1]
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.smul_apply,
+  simp only [FunLike.coe_sum, Finset.sum_apply, smul_apply,
     ContinuousLinearMap.comp_apply, Finset.smul_sum, smul_smul]
   refine Finset.sum_congr rfl fun ρ _ => ?_
   congr 1
@@ -1643,7 +1643,7 @@ theorem outer_int (S : B.RealPlaceData k r Wp Wq) (hN : S.μN = D.muN k r) (hW1 
       ∫ p, theta0 S.z σ.symm p • D.orbIntegrand S (U.mMap k r 0 (U.hMat σ d) γ0) F p ∂S.μSS =
         ∫ x, conjL S x.1 x.2 (U.PhiFun (s := 0) k 0 σ d S.z S.z' F (fun a => a.elim0)
           ((midB r 0 (Matrix.of x.1))⁻¹ * γ0 * midB r 0 (Matrix.of x.2))) ∂(S.μW.prod S.μW') := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hsW : SigmaFinite S.μW := Dx2.OrbJ.sigmaF S.haarW
   have hsW' : SigmaFinite S.μW' := Dx2.OrbJ.sigmaF S.haarW'
   have hfW : IsFiniteMeasure S.μW := ⟨by rw [hW1]; exact ENNReal.one_lt_top⟩
@@ -1774,7 +1774,7 @@ theorem ptMatN_one (ζ : ℂ) : D.ptMatN [(1, ζ)] (0 + 1) = Matrix.of fun _ _ =
 theorem ptMatN_append_head (h : C.LPt) (ζ : ℂ) (R : ℕ) (hR : D.ptSize h = R) :
     D.ptMatN (h ++ [(1, ζ)]) R = D.ptMatN h R := by
   ext a b
-  simp only [D.ptMatN, ptEntry_append, hR, a.isLt, b.isLt, and_self, if_true]
+  simp only [D.ptMatN, ptEntry_append, hR, a.isLt, b.isLt, and_self, ite_true]
 
 theorem isLocPt_app (h : C.LPt) (R : ℕ) (hh : D.IsLocPt h R) (ζ : ℂ) (hζ : ζ ≠ 0) :
     D.IsLocPt (h ++ [(1, ζ)]) (R + 1) := by

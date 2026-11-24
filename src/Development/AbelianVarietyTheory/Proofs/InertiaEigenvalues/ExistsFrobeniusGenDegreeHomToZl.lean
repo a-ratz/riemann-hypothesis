@@ -114,7 +114,7 @@ theorem exists_normalised {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topolog
     show (w (σ * τ) : ℚ_[l]) = ((w σ + w τ : ℤ_[l]) : ℚ_[l])
     rw [PadicInt.coe_add, hw, hw, hw, hadd, PadicInt.coe_add, add_div]
   have hwc : Continuous w :=
-    Continuous.subtype_mk ((continuous_subtype_val.comp hc).div_const _) _
+    Continuous.subtype_mk ((continuous_subtypeVal.comp hc).div_const _) _
   let ν : G →* Multiplicative ℤ_[l] :=
     MonoidHom.mk' (fun σ => Multiplicative.ofAdd (w σ)) (fun σ τ => by
       rw [hwadd]
@@ -256,7 +256,7 @@ theorem exists_gen_degree : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l),
     · exact ⟨i - j, by omega, claim j i h hg.symm⟩
 
   let z' : ↥(GK K) → ℤ_[l] := fun σ => z σ
-  have hz'c : Continuous z' := hzc.comp continuous_subtype_val
+  have hz'c : Continuous z' := hzc.comp continuous_subtypeVal
   have hz'add : ∀ σ τ, z' (σ * τ) = z' σ + z' τ := fun σ τ => hzadd σ τ
   let f : ↥(GK K) →* Multiplicative ℤ_[l] :=
     MonoidHom.mk' (fun σ => Multiplicative.ofAdd (z' σ)) (fun σ τ => by rw [hz'add]; rfl)

@@ -66,7 +66,7 @@ theorem exists_rootsOfUnity_eval_ne_zero {s : ℕ} {c : MvPolynomial (Fin s) ℚ
   set N := c.totalDegree + 1 with hN
   have hNpos : 0 < N := Nat.succ_pos _
   have : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hNpos.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (AlgebraicClosure ℚ) N
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (AlgebraicClosure ℚ) N
   set S := Polynomial.nthRootsFinset N (1 : AlgebraicClosure ℚ)
   have hS : S.card = N := hζ.card_nthRootsFinset
   set c' := MvPolynomial.map (algebraMap ℚ (AlgebraicClosure ℚ)) c
@@ -103,7 +103,7 @@ theorem exists_algHom_rootsOfUnity_ne_zero {B : Type*} [CommRing B] [IsDomain B]
   have hInt : Algebra.IsIntegral (MvPolynomial (Fin s) ℚ) B := ⟨hint⟩
 
   have hI : (Ideal.span {g}).comap (algebraMap (MvPolynomial (Fin s) ℚ) B) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hg (Ideal.mem_span_singleton_self g)
+    Ideal.under_ne_bot_of_integral_mem hg (Ideal.mem_span_singleton_self g)
       (Algebra.IsIntegral.isIntegral g)
   obtain ⟨c, hcI, hc0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
   obtain ⟨b, hb⟩ := Ideal.mem_span_singleton'.mp (Ideal.mem_comap.mp hcI)

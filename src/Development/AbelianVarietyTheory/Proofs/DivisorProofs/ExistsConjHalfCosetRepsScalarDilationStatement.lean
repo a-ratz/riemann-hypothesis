@@ -131,8 +131,8 @@ theorem exists_reps {G : Type} [AddCommGroup G] (H K : AddSubgroup G) (hKH : K �
     have := hinj _ _ hN'
     rw [← QuotientAddGroup.out_eq' q1, ← QuotientAddGroup.out_eq' q2]
     exact (hmk _ _).2 (by rw [this]; exact K.sub_mem hv2 hv1)
-  haveI : Finite (H ⧸ K') := Finite.of_injective f hf
-  haveI : Fintype (H ⧸ K') := Fintype.ofFinite _
+  have : Finite (H ⧸ K') := Finite.of_injective f hf
+  have : Fintype (H ⧸ K') := Fintype.ofFinite _
   have hout : Function.Injective (fun q : H ⧸ K' => ((q.out : H) : G)) := by
     intro q1 q2 h
     rw [← QuotientAddGroup.out_eq' q1, ← QuotientAddGroup.out_eq' q2]
@@ -155,7 +155,7 @@ theorem exists_reps {G : Type} [AddCommGroup G] (H K : AddSubgroup G) (hKH : K �
     set c := Fintype.card (H ⧸ K')
     have hc : c ≠ 0 := Fintype.card_ne_zero
     refine unitOff_sqrt_of_dvd hc (dvd_pow_of_primes hc hN fun p hp hpc => ?_)
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     obtain ⟨q, hq⟩ := exists_prime_addOrderOf_dvd_card p hpc
     rw [← hq]
     apply addOrderOf_dvd_of_nsmul_eq_zero

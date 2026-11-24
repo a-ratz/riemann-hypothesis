@@ -96,14 +96,14 @@ theorem exists_algD_not_polMatch_zero : ∀ {F E : Type} [Field F] [NumberField 
     (Filter.eventually_cofinite.2 (hXT.subset fun v hv => by by_contra hn; exact hv (hsph v hn)))
   obtain ⟨q', hq'⟩ := GlobalTheory.T.weil_model_projection_factorisation σ G.V' G.W G.M' B.ψ h.triple.geo.hM' R.Pi R.p' Rf.Pi Rf.p' s
     (Filter.Eventually.of_forall fun v => rfl)
-  haveI := h.real.nontriv
+  have := h.real.nontriv
   obtain ⟨x, hx⟩ := exists_ne (0 : R.Pi)
   have hx' : x ∈ (G.M'.Pol B.ψ B.emb).map R.p' := by rw [h.real.quot'.onto]; trivial
   obtain ⟨f, hf, hfx⟩ := hx'
   have hloc : ∀ v, ∃ φv, φv ∈ GlobalTheory.WeilM.SB _ ∧ Rf.p' v φv ≠ 0 ∧ (v ∉ X.T → φv = G.M'.vac v) := by
     intro v
     by_cases hv : v ∈ X.T
-    · haveI := h.fin.nontriv v
+    · have := h.fin.nontriv v
       obtain ⟨y, hy⟩ := exists_ne (0 : Rf.Pi v)
       have hy' : y ∈ (GlobalTheory.WeilM.SB _).map (Rf.p' v) := by rw [h.fin.onto' v]; trivial
       obtain ⟨φv, h1, h2⟩ := hy'

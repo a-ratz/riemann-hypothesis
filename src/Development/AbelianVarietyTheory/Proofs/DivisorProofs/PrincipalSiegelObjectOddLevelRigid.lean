@@ -403,7 +403,7 @@ theorem pull_pow_left (hcube : CubeSt) {K : Type} [Field K] [IsAlgClosed K] {A :
 
 theorem separatedSt_of_const_cube : ConstSt → CubeSt → SeparatedSt := by
   intro hconst hcube K _ _ A _ _ hA L hL hamp Q hQ u hu
-  haveI := GlobalTheory.isIntegral_of_isAbelianScheme_field K A hA
+  have := GlobalTheory.isIntegral_of_isAbelianScheme_field K A hA
   obtain ⟨d, hd, n0, s, hs⟩ := (GlobalTheory.Unif.relAmple_iff_veryAmpleBy K A L hL).1 hamp
   have heff : ∀ φ : A.left ⟶ A.left, Eff (pull φ ((d : ℤ) • cls L hL)) := by
     intro φ
@@ -466,7 +466,7 @@ open GlobalTheory.SerreField in
 theorem serreAmple_of_finiteOrder_of_separated :
     FiniteOrderSt → SeparatedSt → SerreAmpleSt := by
   intro hfin hsep K _ _ A _ _ hA L hL hamp N hN3 hNK σ hσ hpull hfix
-  haveI := hσ
+  have := hσ
   obtain ⟨m, hm0, hord⟩ := hfin K A hA L hL hamp σ hσ hpull
   have hFS : ∀ n : ℕ, 1 ≤ n → Flat (Out.mulA A n).left ∧ Surjective (Out.mulA A n).left :=
     fun n hn => flat_and_surjective_of_isFinite_abelianEnd
@@ -477,7 +477,7 @@ theorem serreAmple_of_finiteOrder_of_separated :
   obtain ⟨-, hdiv⟩ := GlobalTheory.TorsionDivisible.finite_torsion_and_divisible K A hA N hNK
   obtain ⟨φ, hφ, e⟩ := hdiv (σ.hom * (𝟙 A)⁻¹) hu (fun x hx => by
     rw [MonObj.comp_mul, GrpObj.comp_inv, hfix K (𝟙 _) x hx, Category.comp_id, mul_inv_cancel])
-  haveI := hφ
+  have := hφ
   have key : toRing σ.hom = 1 := by
     refine GlobalTheory.eq_one_of_pow_eq_one_of_congr_one (homRing A) N hN3 ?_ ?_ (toRing σ.hom) (toRing φ) m
       hm0 ?_ ?_
@@ -487,7 +487,7 @@ theorem serreAmple_of_finiteOrder_of_separated :
       have h2 : u ^ k = 1 := h1
       have h3 : u = 1 := by
         obtain ⟨_, _⟩ := hFS k (by omega)
-        haveI : Epi (Out.mulA A k).left := Flat.epi_of_flat_of_surjective _
+        have : Epi (Out.mulA A k).left := Flat.epi_of_flat_of_surjective _
         refine Over.OverMorphism.ext ((cancel_epi (Out.mulA A k).left).1 ?_)
         rw [← Over.comp_left, ← Over.comp_left, MonObj.comp_one, Out.mulA, MonObj.pow_comp,
           Category.id_comp, h2]
@@ -542,7 +542,7 @@ theorem exists_aut {S S' : Scheme.{0}} {A : Over S} {A' : Over S'} [GrpObj A] [G
   have e₂ : ψ ≫ A'.hom = A'.hom := h'.1.lift_snd _ _ _
   have hψ : IsGrpPullback A' A' (𝟙 _) ψ :=
     IsGrpPullback.cancel h' (by rw [Category.id_comp, e₁]; exact h) (by rw [e₂, Category.comp_id])
-  haveI : IsIso ψ := hψ.1.isIso_fst_of_isIso
+  have : IsIso ψ := hψ.1.isIso_fst_of_isIso
   let σ : A' ≅ A' := Over.isoMk (asIso ψ) e₂
   exact ⟨σ, isMonHom_of_mul_comp σ.hom fun T x y => mul_comp_of_grpPullback_id σ.hom hψ x y, e₁⟩
 

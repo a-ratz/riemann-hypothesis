@@ -95,7 +95,7 @@ theorem liesOver_span_iff (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 F)) [P.IsPri
 theorem sum_locDegree (l : ℕ) [Fact l.Prime] (T : Finset (HeightOneSpectrum (𝓞 F)))
     (hT : ∀ v, v ∈ T ↔ ((l : ℕ) : 𝓞 F) ∈ v.asIdeal) :
     ∑ v ∈ T, locDegree v = Module.finrank ℚ F := by
-  haveI := isMaximal_span_prime l
+  have := isMaximal_span_prime l
   have hl0 : (l : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : l.Prime).ne_zero
   have hp0 : Ideal.span {(l : ℤ)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
@@ -105,7 +105,7 @@ theorem sum_locDegree (l : ℕ) [Fact l.Prime] (T : Finset (HeightOneSpectrum (�
   refine Finset.sum_nbij (fun v => v.asIdeal) ?_ ?_ ?_ ?_
   · intro v hv
     rw [IsDedekindDomain.mem_primesOverFinset_iff hp0 (𝓞 F)]
-    haveI : v.asIdeal.LiesOver (Ideal.span {(l : ℤ)}) :=
+    have : v.asIdeal.LiesOver (Ideal.span {(l : ℤ)}) :=
       (liesOver_span_iff l v.asIdeal).2 ((hT v).1 hv)
     exact ⟨v.isPrime, inferInstance⟩
   · intro v _ w _ hvw
@@ -122,9 +122,9 @@ theorem sum_locDegree (l : ℕ) [Fact l.Prime] (T : Finset (HeightOneSpectrum (�
     rw [Finset.mem_coe, hT]
     exact (liesOver_span_iff l P).1 hPl
   · intro v hv
-    haveI : v.asIdeal.LiesOver (Ideal.span {(l : ℤ)}) :=
+    have : v.asIdeal.LiesOver (Ideal.span {(l : ℤ)}) :=
       (liesOver_span_iff l v.asIdeal).2 ((hT v).1 hv)
-    haveI := v.isMaximal
+    have := v.isMaximal
     unfold locDegree
     rw [Ideal.ramificationIdx'_eq_ramificationIdx (Ideal.span {(l : ℤ)}) v.asIdeal hp0,
       Ideal.inertiaDeg'_eq_inertiaDeg (Ideal.span {(l : ℤ)}) v.asIdeal]

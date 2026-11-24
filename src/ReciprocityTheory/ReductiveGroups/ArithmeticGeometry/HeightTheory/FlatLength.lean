@@ -76,13 +76,13 @@ private theorem length_baseChange_of_submodule_simple_quotient {R S : Type*} [Co
     (ih : Module.length S (S ⊗[R] N) = Module.length R N) :
     Module.length S (S ⊗[R] M) = Module.length R M := by
   have hinj : Function.Injective (N.subtype.baseChange S) := by
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap _ N.injective_subtype
   have hsurj : Function.Surjective (N.mkQ.baseChange S) := by
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact LinearMap.lTensor_surjective S N.mkQ_surjective
   have hex : Function.Exact (N.subtype.baseChange S) (N.mkQ.baseChange S) := by
-    rw [LinearMap.baseChange_eq_ltensor, LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor, LinearMap.baseChange_eq_lTensor]
     exact lTensor_exact S (LinearMap.exact_subtype_mkQ N) N.mkQ_surjective
   rw [Module.length_eq_add_of_exact _ _ hinj hsurj hex,
     Module.length_eq_add_of_exact _ _ N.injective_subtype N.mkQ_surjective
@@ -135,7 +135,7 @@ private theorem length_le_length_baseChange_of_faithfullyFlat {R S : Type*} [Com
       have hb : ((N.mkQ ∘ₗ N'.subtype).baseChange S) z = 0 := by
         rw [LinearMap.baseChange_comp, LinearMap.comp_apply, ← hw, hz]
       rw [LinearMap.zero_apply]
-      rwa [LinearMap.baseChange_eq_ltensor] at hb
+      rwa [LinearMap.baseChange_eq_lTensor] at hb
     have hf : N.mkQ ∘ₗ N'.subtype = 0 :=
       (Module.FaithfullyFlat.zero_iff_lTensor_zero R S _).mpr h0
     intro x hx

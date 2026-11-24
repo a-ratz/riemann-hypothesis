@@ -101,7 +101,7 @@ theorem measU_of_bas (a : ℕ) (Y : TupV (E := E) v n a) (hB : LatBasO σ J ψ v
   have := PI.VolStabSW.secondCountable_Fv F v
   have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   have hOpen := lamT_open σ J ψ v Λ a Y hB hG
   refine ⟨inferInstance, hOpen.measurableSet, ?_⟩

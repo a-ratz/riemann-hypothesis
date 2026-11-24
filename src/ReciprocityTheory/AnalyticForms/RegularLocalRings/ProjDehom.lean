@@ -103,7 +103,7 @@ theorem val_polyToAway {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMulti
     letI := segreGraded hP
     (polyToAway hP p f).val = eval₂ (algebraMap ℂ (Localization.Away (segreW P p)))
       (fun q => Localization.mk (segreW P (chartUpd p q)) 1 * invW P p) f := by
-  letI := segreGraded hP
+  let := segreGraded hP
   induction f using MvPolynomial.induction_on with
   | C c =>
     simp only [polyToAway, coe_eval₂Hom, eval₂_C, RingHom.coe_comp, Function.comp_apply]
@@ -124,7 +124,7 @@ theorem chartIdeal_le_ker_polyToAway {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)}
     letI := segreGraded hP
     chartIdeal P p ≤ RingHom.ker (polyToAway hP p) := by
   classical
-  letI := segreGraded hP
+  let := segreGraded hP
   refine sup_le ?_ ?_
   · obtain ⟨S, hS, hPS⟩ := id hP
     refine hPS.le.trans (Ideal.span_le.mpr fun s hs => ?_)
@@ -165,7 +165,7 @@ theorem chartToAway_bijective {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : 
     letI := segreGraded hP
     Function.Bijective (chartToAway hP p) := by
   classical
-  letI := segreGraded hP
+  let := segreGraded hP
   have hX1 : ∀ k, Ideal.Quotient.mk (chartIdeal P p) (X ⟨k, p k⟩) = 1 := fun k => by
     rw [← map_one (Ideal.Quotient.mk (chartIdeal P p)), Ideal.Quotient.eq]
     exact Ideal.mem_sup_right (Ideal.subset_span ⟨k, rfl⟩)
@@ -272,7 +272,7 @@ def chartCoord {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIde
 theorem gammaChart_symm_C {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
     (p : (k : K) → ι k) (c : ℂ) :
     (gammaChart hP p).symm (Ideal.Quotient.mk _ (C c)) = constSec (toSpecC hP) (chartOpen hP p).1 c := by
-  letI := segreGraded hP
+  let := segreGraded hP
   have hk := toSpecZero_appLE_basicOpen (segreGrading P) (segreW_mem P p) one_pos
   have hC : (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv ≫ (toSpecC hP).appLE ⊤ (chartOpen hP p).1 le_top =
       CommRingCat.ofHom (algebraMap ℂ (segreGrading P 0)) ≫
@@ -325,7 +325,7 @@ theorem chartCoord_overlap {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsM
         (chartCoord hP p' ⟨q.1, p q.1⟩) =
     (projX P hP).presheaf.map (homOfLE (inf_le_right : (chartOpen hP p).1 ⊓ (chartOpen hP p').1 ≤ _)).op
         (chartCoord hP p' q) := by
-  letI := segreGraded hP
+  let := segreGraded hP
   classical
   have hcc : ∀ p₀ q₀, chartCoord hP p₀ q₀ =
       (Proj.awayToSection (segreGrading P) (segreW P p₀)).hom (awayCoord hP p₀ q₀) := by

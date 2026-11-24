@@ -187,13 +187,13 @@ private theorem UpperTheory.V.Ws.red_eii {Γ K : Type} [Group Γ] [Field K] (r :
   · subst hab
     by_cases hai : i = a
     · subst hai
-      simp only [and_self, if_true]
+      simp only [and_self, ite_true]
       rw [Finset.prod_eq_one]
       intro j hj
       exact div_self (sub_ne_zero.2 (hne _ _ (Finset.ne_of_mem_erase hj).symm))
-    · simp only [hai, and_self, if_false, if_true]
+    · simp only [hai, and_self, ite_false, ite_true]
       exact (Finset.prod_eq_zero (Finset.mem_erase.2 ⟨Ne.symm hai, Finset.mem_univ a⟩) (by simp)).symm
-  · simp only [hab, if_false]
+  · simp only [hab, ite_false]
     split_ifs with h'
     · exact absurd (h'.1.symm.trans h'.2) hab
     · rfl
@@ -229,16 +229,16 @@ namespace UpperTheory.V.Ws.Ch
 
 theorem flat_min {A R : Type} [CommRing A] [CommRing R] [IsLocalRing R] (f : A →+* R) (hf : f.Flat) {q : Ideal A}
     (hq : q ∈ minimalPrimes A) (hle : q ≤ (maximalIdeal R).comap f) : ∃ Q ∈ minimalPrimes R, Q.comap f = q := by
-  letI := f.toAlgebra
-  haveI : Module.Flat A R := hf
-  haveI : q.IsPrime := hq.1.1
-  haveI : ((maximalIdeal R).comap f).IsPrime := Ideal.comap_isPrime f _
-  haveI : (maximalIdeal R).LiesOver ((maximalIdeal R).comap f) := ⟨rfl⟩
+  let := f.toAlgebra
+  have : Module.Flat A R := hf
+  have : q.IsPrime := hq.1.1
+  have : ((maximalIdeal R).comap f).IsPrime := Ideal.comap_isPrime f _
+  have : (maximalIdeal R).LiesOver ((maximalIdeal R).comap f) := ⟨rfl⟩
   obtain ⟨P, -, hPp, hPq⟩ := Ideal.exists_ideal_le_liesOver_of_le (maximalIdeal R) hle
-  haveI := hPp
+  have := hPp
   obtain ⟨Q, hQ, hQP⟩ := Ideal.exists_minimalPrimes_le (J := P) bot_le
   refine ⟨Q, hQ, ?_⟩
-  haveI : Q.IsPrime := hQ.1.1
+  have : Q.IsPrime := hQ.1.1
   have hle2 : Q.comap f ≤ q := by
     rw [hPq.over]
     exact Ideal.comap_mono hQP
@@ -264,9 +264,9 @@ theorem chain (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [
     (hD : b + D ≤ a) {P Q : Ideal R} (hP : P ∈ minimalPrimes R) (hQ : Q ∈ minimalPrimes R) :
     Relation.ReflTransGen (Adj R D) P Q := by
   classical
-  haveI : IsCO O O := inferInstance
-  haveI : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O (Fin a)
-  haveI : IsDomain (MvPowerSeries (Fin a) O) := NoZeroDivisors.to_isDomain _
+  have : IsCO O O := inferInstance
+  have : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O (Fin a)
+  have : IsDomain (MvPowerSeries (Fin a) O) := NoZeroDivisors.to_isDomain _
   have hdim := ((UpperTheory.V.CA.cl_cm).1 O a).2
   have hcl : UpperTheory.V.CA.IsCL O (MvPowerSeries (Fin a) O) := by
     refine ⟨inferInstance, IsCO.complete (O := O), IsCO.isLocalHom, ?_⟩
@@ -321,10 +321,10 @@ theorem nice {R : Type} [CommRing R] [IsNoetherianRing R] [IsLocalRing R] (ϖ : 
     (I : Ideal R) (hI : ((N + 1 : ℕ) : WithBot ℕ∞) ≤ ringKrullDim (R ⧸ I)) :
     ∃ p : Ideal R, p.IsPrime ∧ I ≤ p ∧ ringKrullDim (R ⧸ p) = 1 ∧ ϖ ∈ p ∧ (∀ i, ¬ a i ≤ p) ∧ ∀ k, ¬ b k ≤ p := by
   let T := Σ k : κ, {q : Ideal R // q ∈ (b k).minimalPrimes ∧ ∀ i, ¬ a i ≤ q}
-  haveI : ∀ k : κ, Finite {q : Ideal R // q ∈ (b k).minimalPrimes ∧ ∀ i, ¬ a i ≤ q} := fun k =>
+  have : ∀ k : κ, Finite {q : Ideal R // q ∈ (b k).minimalPrimes ∧ ∀ i, ¬ a i ≤ q} := fun k =>
     ((Ideal.finite_minimalPrimes_of_isNoetherianRing R (b k)).subset
       (fun q (hq : q ∈ {q : Ideal R | q ∈ (b k).minimalPrimes ∧ ∀ i, ¬ a i ≤ q}) => hq.1)).to_subtype
-  haveI : Finite T := inferInstance
+  have : Finite T := inferInstance
   let c : ι ⊕ T → Ideal R := Sum.elim a (fun t => t.2.1)
   have hc : ∀ j, UpperTheory.V.Pr.qdim (c j) < N := by
     rintro (i | ⟨k, q, hq, hqa⟩)
@@ -363,7 +363,7 @@ private theorem eq_C_constantCoeff_of_pow_char_pow_eq_self {k : Type} [Field k] 
     le_trans (Fact.out : l.Prime).two_le (Nat.le_self_pow (by omega) l)
   have hm0 : m = 0 := by nlinarith
   have hco := PowerSeries.coeff_order hz0
-  rw [← hm, ENat.toNat_coe, hm0, PowerSeries.coeff_zero_eq_constantCoeff_apply] at hco
+  rw [← hm, ENat.toNat_natCast, hm0, PowerSeries.coeff_zero_eq_constantCoeff_apply] at hco
   exact hco hcc
 
 theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueField O)]
@@ -371,12 +371,12 @@ theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O]
     (hd : ringKrullDim (R ⧸ p) = 1) (hm : ∀ a ∈ maximalIdeal O, algebraMap O R a ∈ p) :
     ∃ (K : Type) (_ : Field K) (_ : Finite K) (_ : Algebra O K) (j : R →ₐ[O] PowerSeries K),
       (∀ x, j x = 0 ↔ x ∈ p) ∧ ∀ x ∈ maximalIdeal R, PowerSeries.constantCoeff (j x) = 0 := by
-  haveI := hp
-  haveI : Nontrivial (R ⧸ p) := inferInstance
-  haveI : IsCO O (R ⧸ p) :=
+  have := hp
+  have : Nontrivial (R ⧸ p) := inferInstance
+  have : IsCO O (R ⧸ p) :=
     co_quot O R (R ⧸ p) (Ideal.Quotient.mkₐ O p) (Ideal.Quotient.mkₐ_surjective O p)
-  haveI : IsAdicComplete (maximalIdeal (R ⧸ p)) (R ⧸ p) := IsCO.complete (O := O)
-  haveI := Fintype.ofFinite (ResidueField O)
+  have : IsAdicComplete (maximalIdeal (R ⧸ p)) (R ⧸ p) := IsCO.complete (O := O)
+  have := Fintype.ofFinite (ResidueField O)
   have hl : ((l : ℕ) : R ⧸ p) = 0 := by
     have h1 : ((l : ℕ) : O) ∈ maximalIdeal O := by
       rw [← residue_eq_zero_iff, map_natCast]
@@ -385,9 +385,9 @@ theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O]
     rw [map_natCast] at h2
     rw [← map_natCast (Ideal.Quotient.mk p), Ideal.Quotient.eq_zero_iff_mem]
     exact h2
-  haveI : CharP (R ⧸ p) l := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hl
-  haveI : Finite (ResidueField (R ⧸ p)) := by
-    haveI : IsLocalHom (algebraMap O (R ⧸ p)) := IsCO.isLocalHom
+  have : CharP (R ⧸ p) l := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hl
+  have : Finite (ResidueField (R ⧸ p)) := by
+    have : IsLocalHom (algebraMap O (R ⧸ p)) := IsCO.isLocalHom
     refine Finite.of_surjective (ResidueField.map (algebraMap O (R ⧸ p))) ?_
     intro y
     obtain ⟨x, rfl⟩ := residue_surjective y
@@ -396,7 +396,7 @@ theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O]
     rw [ResidueField.map_residue, eq_comm, ← sub_eq_zero, ← map_sub, residue_eq_zero_iff]
     exact ha
   obtain ⟨k, _, hk, f, hinj, hloc, -⟩ := UpperTheory.V.Pr.T.curveNorm (R := R ⧸ p) l hd
-  haveI : CharP (PowerSeries k) l :=
+  have : CharP (PowerSeries k) l :=
     (CharP.charP_iff_prime_eq_zero Fact.out).mpr (by rw [← map_natCast f, hl, map_zero])
   obtain ⟨n, -, hcard⟩ := FiniteField.card (ResidueField O) l
   have hconst : ∀ a : O, f (algebraMap O (R ⧸ p) a) =
@@ -409,7 +409,7 @@ theorem curve (l : ℕ) [Fact l.Prime] (O R : Type) [CommRing O] [IsLocalRing O]
       rw [← Ideal.Quotient.mk_algebraMap, Ideal.Quotient.eq_zero_iff_mem]
       exact hm _ hq
     exact sub_eq_zero.mp (by rw [← map_pow, ← map_sub, ← map_pow, ← map_sub, h3, map_zero])
-  letI : Algebra O k :=
+  let : Algebra O k :=
     ((PowerSeries.constantCoeff).comp (f.comp (algebraMap O (R ⧸ p)))).toAlgebra
   refine ⟨k, inferInstance, hk, inferInstance,
     { toRingHom := f.comp (Ideal.Quotient.mk p), commutes' := fun a => ?_ }, fun x => ?_, fun x hx => ?_⟩

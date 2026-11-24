@@ -86,7 +86,7 @@ private theorem full_chars [CharZero k] {n : ℕ} {V : Type} [AddCommGroup V] [M
   let q := multiProdEquiv (stdBlocks (fun i => (y i).1) hd) fun i => equivRep (IrrRep.det (Fin 1) (ξ i) (hξ i))
   have hM : (multiProd (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) fun i => detRep (Fin 1) (ξ i)).IsIrreducible :=
     GlobalTheory.Parabolic.isIrreducible_of_equiv (p.trans q).symm hP
-  haveI := nontrivial_of_irreducible hM
+  have := nontrivial_of_irreducible hM
   haveI : Nontrivial (IndSp _ _) := by
     obtain ⟨S, f, hf⟩ := GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) ξ
     have := hf.nontrivial
@@ -97,7 +97,7 @@ private theorem full_chars [CharZero k] {n : ℕ} {V : Type} [AddCommGroup V] [M
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+    have : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap
@@ -139,7 +139,7 @@ private theorem eq_one_of_unr {n : ℕ} (c : Fin n → Weil h →* ℂˣ) (hc : 
 end WD
 theorem sphT_alt : _root_.UpperTheory.V.Z.Desc.W.SphTAlt := by
   intro _ F Ω _ _ _ _ _ l _ ι n r _ w hl A h hI rc ⟨a, ha, L⟩ σ hP hx
-  haveI : CharZero (w.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : CharZero (w.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
   have e0 := hx.wdOf_eq hl
   obtain ⟨t, ht, φ, hφ, N, b, hN, -, -⟩ := id hx
   have hxu : (rc (algNorm σ)).unr := e0 ▸ (hN.unr_wdOf_iff hl ht ι).2 hI

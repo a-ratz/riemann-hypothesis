@@ -266,7 +266,7 @@ theorem Gam_le (H : Subgroup (G1 F)) (hn : ∀ b : F, nU (rt b) ∈ H) (hw : wW 
   by_cases hc : γ 1 0 = 0
   · obtain ⟨w, hw'⟩ := wW_mem (F := F)
     have h10 : w 1 0 = -1 := by
-      haveI := AdeleBaseChange.nontrivial_adeleRing F
+      have := AdeleBaseChange.nontrivial_adeleRing F
       apply (algebraMap F (A F)).injective
       simpa using (ratS_apply w 1 0).symm.trans (congrArg (fun g : G1 F => g 1 0) hw')
     rw [← H.mul_mem_cancel_right hw, ← hw', ← map_mul]

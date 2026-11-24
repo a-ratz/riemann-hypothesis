@@ -119,17 +119,17 @@ theorem exists_loc_basis {V : Type*} [AddCommGroup V] [Module K V] (p : ℕ) [hp
       exact hall ⟨y, hy⟩ hz
   have hS := Sp_le (K := K) p
   let R := Localization.subalgebra.ofField K (Sp K p) hS
-  haveI : IsDedekindDomain R := IsLocalization.isDedekindDomain (𝓞 K) hS R
+  have : IsDedekindDomain R := IsLocalization.isDedekindDomain (𝓞 K) hS R
   have hp0 : Ideal.span {(p : ℤ)} ≠ ⊥ := by simp [hp.out.ne_zero]
-  haveI : IsPrincipalIdealRing R :=
+  have : IsPrincipalIdealRing R :=
     IsDedekindDomain.isPrincipalIdealRing_localization_over_prime (𝓞 K) (Ideal.span {(p : ℤ)}) hp0 (Sₚ := R)
-  haveI : IsScalarTower R K V := IsScalarTower.of_algebraMap_smul (fun r v => rfl)
+  have : IsScalarTower R K V := IsScalarTower.of_algebraMap_smul (fun r v => rfl)
   let M : Submodule R V := Submodule.span R (U : Set V)
-  haveI : Module.Finite R M := Module.Finite.span_of_finite R U.finite_toSet
-  haveI : Module.IsTorsionFree R V := ⟨fun r hr x y h => by
+  have : Module.Finite R M := Module.Finite.span_of_finite R U.finite_toSet
+  have : Module.IsTorsionFree R V := ⟨fun r hr x y h => by
     have hr0 : (r : K) ≠ 0 := fun h0 => hr.ne_zero (Subtype.ext h0)
     exact smul_right_injective V hr0 h⟩
-  haveI : Module.IsTorsionFree R M :=
+  have : Module.IsTorsionFree R M :=
     Function.Injective.moduleIsTorsionFree M.subtype Subtype.val_injective (fun r m => rfl)
   obtain ⟨n, bas⟩ := Module.basisOfFiniteTypeTorsionFree' (R := R) (M := M)
   have natsmul : ∀ (s : ℕ) (y : V), y ∈ A → (s : K) • y ∈ A := fun s y hy => by
@@ -332,7 +332,7 @@ theorem norm_nat_coprime [Fact p.Prime] {s : ℕ} (h : Nat.Coprime s p) : ‖(s 
 theorem norm_le_of_intAt [Fact p.Prime] (ψ : K →+* ℂ_[p]) {x : K} (h : IntAt p x) : ‖ψ x‖ ≤ 1 := by
   obtain ⟨s, hs, hx⟩ := h
   have h1 : ‖ψ ((s : K) * x)‖ ≤ 1 := by
-    letI : Algebra ℤ ℂ_[p] := Ring.toIntAlgebra _
+    let : Algebra ℤ ℂ_[p] := Ring.toIntAlgebra _
     exact norm_le_one_of_int (isInt_cast (hx.map ψ.toIntAlgHom))
   rwa [map_mul, map_natCast, norm_mul, norm_nat_coprime p hs, one_mul] at h1
 
@@ -410,11 +410,11 @@ theorem mem_one_by_one_lattice_iff (x : Matrix (Fin 1) (Fin 1) D.host.E) :
     rw [hx']
     unfold YYl
     refine Submodule.subset_span ?_
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     refine ⟨x 0 0, hx, 1, ?_, rfl⟩
     unfold homL
     refine Submodule.subset_span ?_
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     intro v hv
     rwa [Matrix.one_mulVec]
 
@@ -428,7 +428,7 @@ theorem one_mem_AA (D : D7) : (1 : D.host.E) ∈ AAs D := by
     FractionalIdeal.coeIdeal_ne_zero.mpr hb
   show (1 : D.host.E) ∈ ((D.host.AA0 : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) :
     Submodule (𝓞 D.host.E) D.host.E)
-  rw [FractionalIdeal.mem_coe]
+  rw [FractionalIdeal.mem_coeToSubmodule]
   unfold Formalism.BasicNotions.Host.AA0
   rw [FractionalIdeal.mem_inv_iff hb']
   intro y hy
@@ -447,7 +447,7 @@ theorem okK_smul_mem (c : 𝓞 D.host.K) {y : D.host.E} (hy : y ∈ AAs D) : ((c
   rwa [Algebra.smul_def, IntermediateField.algebraMap_apply]
 
 theorem aa_fg (D : D7) : (AAs D).toAddSubgroup.FG := by
-  haveI := FractionalIdeal.isNoetherian D.host.AA0
+  have := FractionalIdeal.isNoetherian D.host.AA0
   have h1 : (AAs D).FG := (Submodule.fg_top _).1 (IsNoetherian.noetherian ⊤)
   have h2 := h1.restrictScalars (R := ℤ)
   exact (Submodule.fg_iff_addSubgroup_fg _).1 h2
@@ -628,9 +628,9 @@ theorem local_orthonormal_basis : LocBasisMM := by
         rw [hK_smul_right]
       rw [e2, hc, hK_sum_smul_right]
       rw [Finset.sum_eq_single n]
-      · rw [hK_symm, hw, if_pos rfl, map_one, mul_one]
+      · rw [hK_symm, hw, ite_eq_left rfl, map_one, mul_one]
       · intro i _ hi
-        rw [hK_symm, hw, if_neg hi, map_zero, mul_zero]
+        rw [hK_symm, hw, ite_eq_right hi, map_zero, mul_zero]
       · intro h; exact absurd (Finset.mem_univ n) h
     show G0.hK D ((S : D.host.K) • w n) y ∈ _
     rw [e1]

@@ -123,7 +123,7 @@ noncomputable def valuationInftyCoord : Valuation W.toAffine.CoordinateRing ℤ�
     · exact le_max_of_le_right (exp_le_exp.mpr (by exact_mod_cast WithBot.coe_le_coe.mp h))
 
 theorem valuationInftyCoord_apply {a : W.toAffine.CoordinateRing} (ha : a ≠ 0) :
-    valuationInftyCoord W a = exp ((Algebra.norm F[X] a).natDegree : ℤ) := if_neg ha
+    valuationInftyCoord W a = exp ((Algebra.norm F[X] a).natDegree : ℤ) := ite_eq_right ha
 
 theorem valuationInftyCoord_ne_zero {a : W.toAffine.CoordinateRing} (ha : a ≠ 0) :
     valuationInftyCoord W a ≠ 0 := by
@@ -268,8 +268,8 @@ theorem valuation_eq_exp_neg_ordAtIdeal (v : HeightOneSpectrum W.toAffine.Coordi
   have hord := ordAtIdeal_mul W v hf hs'
   rw [IsLocalization.mk'_spec, ordAtIdeal_algebraMap, ordAtIdeal_algebraMap] at hord
   rw [HeightOneSpectrum.valuation_of_mk', HeightOneSpectrum.intValuation_if_neg _ ha,
-    HeightOneSpectrum.intValuation_if_neg _ hs, ← FractionalIdeal.count_coe W.toAffine.FunctionField v hsa,
-    ← FractionalIdeal.count_coe W.toAffine.FunctionField v hss, ← exp_sub]
+    HeightOneSpectrum.intValuation_if_neg _ hs, ← FractionalIdeal.count_coeIdeal W.toAffine.FunctionField v hsa,
+    ← FractionalIdeal.count_coeIdeal W.toAffine.FunctionField v hss, ← exp_sub]
   congr 1
   linarith
 

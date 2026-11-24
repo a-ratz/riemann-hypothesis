@@ -109,10 +109,10 @@ theorem exists_denom {E : Type} [Field E] [NumberField E] (ρ : E →+* ℂ_[p])
     { carrier := {y | ‖ρ (y : E)‖ < 1}
       zero_mem' := by simp
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at ha hb ⊢
         exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt ha hb)
       smul_mem' := fun c {a} ha => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, norm_mul] at ha ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, norm_mul] at ha ⊢
         exact mul_lt_one_of_nonneg_of_lt_one_right (norm_int_le ρ c) (norm_nonneg _) ha }
   have hI : ∀ y : 𝓞 E, y ∉ I ↔ ‖ρ (y : E)‖ = 1 := fun y =>
     ⟨fun h => le_antisymm (norm_int_le ρ y) (not_lt.1 h), fun h h' => absurd h (ne_of_lt h')⟩
@@ -162,10 +162,10 @@ theorem exists_locBasis (D : D7) (ρ : D.host.E →+* ℂ_[p]) {N : ℕ} (L : Su
     let B : Module.Basis b D.host.E (Fin N → D.host.E) := Module.Basis.mk hli (by simp [hb, hsp])
     let e := B.indexEquiv (Pi.basisFun D.host.E (Fin N))
     refine ⟨fun a => ⟨(e.symm a).1, hbs (e.symm a).2⟩, ?_⟩
-    have h := (Matrix.linearIndependent_cols_iff_isUnit (A := M fun a => ⟨(e.symm a).1, hbs (e.symm a).2⟩)).1
+    have h := (Matrix.linearIndependent_col_iff_isUnit (A := M fun a => ⟨(e.symm a).1, hbs (e.symm a).2⟩)).1
       (hli.comp _ e.symm.injective)
     exact ((Matrix.isUnit_iff_isUnit_det _).1 h).ne_zero
-  haveI : Nonempty (Fin N → s) := ⟨f₀⟩
+  have : Nonempty (Fin N → s) := ⟨f₀⟩
   obtain ⟨f, hf⟩ := Finite.exists_max fun f => ‖ρ (M f).det‖
   have hpos : 0 < ‖ρ (M f).det‖ := lt_of_lt_of_le (norm_pos_iff.2 ((map_ne_zero ρ).2 hf₀)) (hf f₀)
   have hdet : (M f).det ≠ 0 := (map_ne_zero ρ).1 (norm_pos_iff.1 hpos)

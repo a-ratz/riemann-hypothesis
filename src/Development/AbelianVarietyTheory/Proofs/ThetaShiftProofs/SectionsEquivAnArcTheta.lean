@@ -143,7 +143,7 @@ theorem ahFactor_translate (l : u.Λ) (z c : Fin g → ℂ) :
 
 theorem exp_nsmul (j : ℕ) (b l : Fin g → ℂ) :
     Complex.exp (Real.pi * hermForm Hm (j • b) l) = Complex.exp (Real.pi * hermForm Hm b l) ^ j := by
-  rw [← Nat.cast_smul_eq_nsmul ℂ, hermForm_smul_left, ← Complex.exp_nat_mul]
+  rw [← Nat.cast_smul_eq_nsmul ℂ, hermForm_smul_left, ← Complex.exp_natCast_mul]
   congr 1; ring
 
 theorem isThetaFn_sub {j : ℕ} {b : Fin g → ℂ} {θ : (Fin g → ℂ) → ℂ} (h : θ ∈ thetaShift u Hm χ j (j • b)) :

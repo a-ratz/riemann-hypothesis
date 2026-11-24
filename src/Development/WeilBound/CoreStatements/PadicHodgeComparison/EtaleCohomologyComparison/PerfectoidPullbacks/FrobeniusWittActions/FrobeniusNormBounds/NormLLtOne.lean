@@ -65,11 +65,11 @@ variable {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)}
 theorem pow_of_alg {k : Type} [Field k] [Algebra (ZMod l) k] (c : k) (h : IsAlgebraic (ZMod l) c) :
     ∃ f : ℕ, 0 < f ∧ c ^ (l ^ f) = c := by
   have hi : IsIntegral (ZMod l) c := h.isIntegral
-  haveI : FiniteDimensional (ZMod l) (IntermediateField.adjoin (ZMod l) {c}) :=
+  have : FiniteDimensional (ZMod l) (IntermediateField.adjoin (ZMod l) {c}) :=
     IntermediateField.adjoin.finiteDimensional hi
-  haveI : Finite (IntermediateField.adjoin (ZMod l) {c}) := Module.finite_of_finite (ZMod l)
-  letI := Fintype.ofFinite (IntermediateField.adjoin (ZMod l) {c})
-  haveI : CharP (IntermediateField.adjoin (ZMod l) {c}) l :=
+  have : Finite (IntermediateField.adjoin (ZMod l) {c}) := Module.finite_of_finite (ZMod l)
+  let := Fintype.ofFinite (IntermediateField.adjoin (ZMod l) {c})
+  have : CharP (IntermediateField.adjoin (ZMod l) {c}) l :=
     charP_of_injective_algebraMap (algebraMap (ZMod l) _).injective l
   obtain ⟨n, -, hn⟩ := FiniteField.card (IntermediateField.adjoin (ZMod l) {c}) l
   refine ⟨n, n.pos, ?_⟩
@@ -102,7 +102,7 @@ theorem rho_iZ (r : Res l K) (a : ℤ_[l]) : r.ρ (iZ K a) = ZMod.castHom (dvd_r
 
 theorem alg_pow (r : Res l K) [FiniteDimensional ℚ_[l] K] (c : r.k) : ∃ f : ℕ, 0 < f ∧ c ^ (l ^ f) = c := by
   obtain ⟨x, rfl⟩ := r.surj c
-  letI : Algebra (ZMod l) r.k := (ZMod.castHom (dvd_refl l) r.k).toAlgebra
+  let : Algebra (ZMod l) r.k := (ZMod.castHom (dvd_refl l) r.k).toAlgebra
   apply pow_of_alg
   have hint : IsIntegral ℚ_[l] (x.1 : K) := Algebra.IsIntegral.isIntegral _
   set q := minpoly ℚ_[l] (x.1 : K) with hqdef

@@ -83,8 +83,8 @@ theorem finite_level {M : ℕ} (hM : 0 < M) :
     (Set.range fun I : TateIso D k Q act e => (I.ev M, I.ζ M)).Finite := by
   rcases isEmpty_or_nonempty (TateIso D k Q act e) with h | ⟨⟨I₀⟩⟩
   · exact Set.finite_range _
-  haveI := D.fin
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have := D.fin
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
   obtain ⟨A, hA, r, hr⟩ := exists_finite_reps D.La hM
   have hT : {x : Q | x ^ M = 1}.Finite := by
     refine (Set.finite_range fun x => I₀.ev M (r x)).subset fun x hx => ?_
@@ -102,7 +102,7 @@ theorem finite_level {M : ℕ} (hM : 0 < M) :
       simp only [ev_add_nsmul _ hM]
       exact congrFun h y
   have h₂ : (Set.range fun I : TateIso D k Q act e => I.ζ M).Finite := by
-    haveI : NeZero M := ⟨hM.ne'⟩
+    have : NeZero M := ⟨hM.ne'⟩
     have hfin : Finite (rootsOfUnity M k) := inferInstance
     refine Set.Finite.subset (s := (rootsOfUnity M k : Set kˣ)) hfin ?_
     rintro _ ⟨I, rfl⟩

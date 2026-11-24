@@ -213,7 +213,7 @@ theorem parInd_exact : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     have hset : {g : GL n k | ind (parab k e) ((twist ξ (deltaHalf k m)).comp (leviProj k e)) g x' = x'} =
         {g : GL n k | ind (parab k e) ((twist η (deltaHalf k m)).comp (leviProj k e)) g φ.1 = φ.1} := by
       ext g
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · intro h
         apply Subtype.ext
@@ -394,8 +394,8 @@ theorem nontrivial_of_prod₂ {k : Type} [Field k] [ValuativeRel k] [Topological
   rw [not_and_or, not_nontrivial_iff_subsingleton, not_nontrivial_iff_subsingleton] at hc
   have hsub : Subsingleton (TensorProduct ℂ X Y) := by
     rcases hc with hc | hc
-    · haveI := hc; infer_instance
-    · haveI := hc; infer_instance
+    · have := hc; infer_instance
+    · have := hc; infer_instance
   apply hw
   have h0 : φ = 0 := by
     apply Subtype.ext; apply Subtype.ext; apply Subtype.ext; funext g

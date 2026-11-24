@@ -102,7 +102,7 @@ theorem bc_inv_blk {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') {X
 theorem opNorm_blk_le (a : Matrix (Fin p) (Fin p) ℂ) (b : Matrix (Fin q) (Fin q) ℂ) :
     opNorm (blk e a b) ≤ max (opNorm a) (opNorm b) := by
   refine ContinuousLinearMap.opNNNorm_le_bound _ _ fun x => ?_
-  rw [← NNReal.coe_le_coe, NNReal.coe_mul, coe_nnnorm, coe_nnnorm]
+  rw [← NNReal.coe_le_coe, NNReal.coe_mul, coe_nnNorm, coe_nnNorm]
   obtain ⟨v, rfl⟩ : ∃ v : Fin d → ℂ, x = WithLp.toLp 2 v := ⟨x.ofLp, rfl⟩
   set c : ℝ := ((max (opNorm a) (opNorm b) : ℝ≥0) : ℝ) with hcdef
   have hc : 0 ≤ c := NNReal.coe_nonneg _
@@ -168,8 +168,8 @@ theorem heightGL_blk_le (X : GL (Fin d) (AF F ⊗[F] E)) (x : GL (Fin p) (AF F �
   unfold heightGL
   rw [mul_mul_mul_comm, ← Finset.prod_mul_distrib,
     ← finprod_mul_distrib (finite_mulSupport_htFin F x) (finite_mulSupport_htFin F y)]
-  refine mul_le_mul' (Finset.prod_le_prod' fun w _ => ?_)
-    (finprod_le_finprod' (finite_mulSupport_htFin F _) ?_ fun v => ?_)
+  refine mul_le_mul' (Finset.prod_le_prod fun w _ => ?_)
+    (finprod_le_finprod (finite_mulSupport_htFin F _) ?_ fun v => ?_)
   · exact htOf_blk_le e (normInf_blk_le F e w) _ _ _ (bc_val_blk e _ h1) (bc_inv_blk e _ h2)
   · exact ((finite_mulSupport_htFin F x).union (finite_mulSupport_htFin F y)).subset (Function.mulSupport_mul _ _)
   · exact htOf_blk_le e (normFin_blk_le F e v) _ _ _ (bc_val_blk e _ h1) (bc_inv_blk e _ h2)

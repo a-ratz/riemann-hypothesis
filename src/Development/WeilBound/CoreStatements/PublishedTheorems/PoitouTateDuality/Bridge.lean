@@ -87,13 +87,13 @@ theorem exists_subfield_model : ∀ (F Ω : Type) [Field F] [NumberField F] [Fie
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   let e : F ≃ₐ[ℚ] σ.fieldRange := AlgEquiv.ofInjectiveField σ
-  haveI fd : FiniteDimensional ℚ σ.fieldRange := e.toLinearEquiv.finiteDimensional
-  haveI nf : NumberField σ.fieldRange := { to_charZero := inferInstance, to_finiteDimensional := fd }
-  haveI alg : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := by
+  have fd : FiniteDimensional ℚ σ.fieldRange := e.toLinearEquiv.finiteDimensional
+  have nf : NumberField σ.fieldRange := { to_charZero := inferInstance, to_finiteDimensional := fd }
+  have alg : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := by
     have h : @Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) _ _ (AlgebraicClosure.instAlgebra ℚ) :=
       (AlgebraicClosure.isAlgebraic ℚ)
     convert h
-  haveI ac : IsAlgClosure σ.fieldRange (AlgebraicClosure ℚ) :=
+  have ac : IsAlgClosure σ.fieldRange (AlgebraicClosure ℚ) :=
     ⟨AlgebraicClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) σ.fieldRange⟩
   refine ⟨σ.fieldRange, nf, ac, e.toRingEquiv, IsAlgClosure.equivOfEquiv Ω (AlgebraicClosure ℚ) e.toRingEquiv, fun x => ?_⟩
   exact IsAlgClosure.equivOfEquiv_algebraMap Ω (AlgebraicClosure ℚ) e.toRingEquiv x
@@ -187,8 +187,8 @@ theorem exists_galContinuousMulEquiv : ∀ (F Ω F' Ω' : Type) [Field F] [Numbe
     (∀ x : F, E (algebraMap F Ω x) = algebraMap F' Ω' (e x)) →
     ∃ Φ : G F Ω ≃ₜ* G F' Ω', ∀ (σ : G F Ω) (x : Ω), Φ σ (E x) = E (σ x) := by
   intro F Ω F' Ω' _ _ _ _ _ _ _ _ _ _ e E hE
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic F' Ω' := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F' Ω' := IsAlgClosure.isAlgebraic
   have hE' : ∀ x : F', E.symm (algebraMap F' Ω' x) = algebraMap F Ω (e.symm x) := by
     intro x
     rw [RingEquiv.symm_apply_eq, hE, RingEquiv.apply_symm_apply]
@@ -235,8 +235,8 @@ theorem map_mem_closedNormal {A B : Type} [Group A] [TopologicalSpace A] [IsTopo
     Φ a ∈ (Subgroup.normalClosure Y).topologicalClosure := by
   let f : A →* B := (Φ : A ≃* B).toMonoidHom
   let K : Subgroup B := (Subgroup.normalClosure Y).topologicalClosure
-  haveI : K.Normal := Subgroup.is_normal_topologicalClosure _
-  haveI : (K.comap f).Normal := Subgroup.Normal.comap ‹_› f
+  have : K.Normal := Subgroup.is_normal_topologicalClosure _
+  have : (K.comap f).Normal := Subgroup.Normal.comap ‹_› f
   have hK : IsClosed (K : Set B) := Subgroup.isClosed_topologicalClosure _
   have hc : IsClosed ((K.comap f : Subgroup A) : Set A) := hK.preimage Φ.continuous
   have hle : Subgroup.normalClosure X ≤ K.comap f := by
@@ -579,16 +579,16 @@ namespace GlobalTheory.CompanionTheory.PTIso
 theorem apply_eq_pow_cycMod_val {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (r : ℕ) (σ : G F Ω) {ζ : Ω} (hζ : ζ ^ (l ^ r) = 1) :
     σ ζ = ζ ^ ((cycMod F Ω l r σ : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)).val := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have key := cyclotomicCharacter.spec (L := Ω) l (MulSemiringAction.toRingAut (G F Ω) Ω σ) ζ hζ
   simpa [cycMod, cycZ] using key
 
 theorem cycMod_intrinsic : ∀ (F Ω F' Ω' : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] [Field F'] [NumberField F'] [Field Ω'] [Algebra F' Ω'] [IsAlgClosure F' Ω'] (e : F ≃+* F') (E : Ω ≃+* Ω'), (∀ x : F, E (algebraMap F Ω x) = algebraMap F' Ω' (e x)) → ∀ (Φ : G F Ω ≃ₜ* G F' Ω'), (∀ (σ : G F Ω) (x : Ω), Φ σ (E x) = E (σ x)) → ∀ (l : ℕ) [Fact l.Prime] (r : ℕ) (σ : G F Ω), cycMod F' Ω' l r (Φ σ) = cycMod F Ω l r σ := by
   intro F Ω F' Ω' _ _ _ _ _ _ _ _ _ _ e E hE Φ hΦ l _ r σ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ r)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ r)
   have h1 := apply_eq_pow_cycMod_val (F := F) (Ω := Ω) l r σ hζ.pow_eq_one
   have h2 := apply_eq_pow_cycMod_val (F := F') (Ω := Ω') l r (Φ σ) (ζ := E ζ)
     (by rw [← map_pow, hζ.pow_eq_one, map_one])

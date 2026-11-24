@@ -138,19 +138,19 @@ theorem pow_comp_graph {o : Type} [CommRing o] {S : Scheme.{0}} {g k : ℕ} {J :
   cases i with
   | none => simp only [Option.elim_none, GrpObj.comp_inv, Category.comp_id, inv_pow]
   | some i =>
-    haveI := t.hom i
+    have := t.hom i
     exact MonObj.pow_comp x m (t.act i)
 
 theorem cutBy_graphIdeal : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [Finite J] (Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ) (κ n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ (o : Type) [CommRing o] (b : TBase o ((n ^ j) ^ 2)) (i : Option J), ∃ (Q : Polynomial ℚ) (d : ℕ), ∀ (K : Type) [Field K] [IsAlgClosed K] (β : o →+* K) (t : TObj g ((n ^ j) ^ 2) J b (spMap β)) σ (p q : Ix g ((n ^ j) ^ 2) → Ix g ((n ^ j) ^ 2) → K) (f : t.A ⟶ t.A), t.Shape Mat κ → f = i.elim (𝟙 t.A)⁻¹ t.act → t.Emb (n ^ 2) (Over.mk (𝟙 _)) σ → (∀ h, SecCoord _ σ (lift (𝟙 (Over.mk (𝟙 (Sp K)))) (t.lab h ^ n ^ j)).left (p h) ∧ SecCoord _ σ (lift (𝟙 (Over.mk (𝟙 (Sp K)))) ((t.lab h ≫ f) ^ n ^ j)).left (q h)) → CutBy (graphIdeal (fst (Over.mk (𝟙 (Sp K))) t.A).left _ σ (𝟙 _) _ σ (lift (fst _ _) (snd (Over.mk (𝟙 (Sp K))) t.A ≫ f)).left) Q d (fun h i => p h i.1 * q h i.2) := by
   intro H1 H2 g J _ Mat κ n hn hodd
   have hn2 : 2 ≤ n := hn.two_le
-  haveI : NeZero ((n ^ 2) ^ 2) := ⟨by positivity⟩
+  have : NeZero ((n ^ 2) ^ 2) := ⟨by positivity⟩
   obtain ⟨d, k₀, Hc⟩ := _root_.GlobalTheory.cutBy_idealOf_torsion H1 H2 g ((n ^ 2) ^ 2 * (2 + κ)) (Ix g ((n ^ 2) ^ 2) × Ix g ((n ^ 2) ^ 2))
   refine ⟨2 + k₀ + ((n ^ 2) ^ 2 * (1 + κ)) ^ (2 * g), fun j hj o _ b i => ?_⟩
   have hjn : j < n ^ j := Nat.lt_pow_self hn2
   have hdvd : n ^ 2 ∣ n ^ j := pow_dvd_pow n (by omega)
   have hdvd2 : (n ^ 2) ^ 2 ∣ (n ^ j) ^ 2 := pow_dvd_pow_of_dvd hdvd 2
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨by positivity⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨by positivity⟩
   obtain ⟨δ, hδ, Hv⟩ := exists_vol H1 H2 g J Mat κ ((n ^ 2) ^ 2) n (j * 2) ((n ^ j) ^ 2) (pow_mul n j 2).symm (by omega)
     (Nat.succ_le_of_lt (by positivity)) hn
     (lt_of_lt_of_le (lt_of_le_of_lt (by omega) hjn) (Nat.le_self_pow two_ne_zero _)) o b i

@@ -168,7 +168,7 @@ theorem levels : ∀ (D : D7) (V : HSp D) (L : Lat V) (gP Q : Finset (Pl D)) (JG
     obtain ⟨φ, hφc, hφ, hφ1⟩ : ∃ φ : grpAt V (· ∉ Q) → grpAt V (· ∈ gP) × grpAt V (· ∉ gP),
         Continuous φ ∧ (∀ g : grpAt V (· ∉ Q), (g : GA D V) = ((φ g).1 : GA D V) * (φ g).2) ∧ φ 1 = 1 := by
       refine ⟨fun g => e.symm ⟨g, hQcle g.2⟩, ?_, ?_, ?_⟩
-      · exact e.symm.continuous.comp (continuous_subtype_val.subtype_mk _)
+      · exact e.symm.continuous.comp (continuous_subtypeVal.subtype_mk _)
       · intro g
         rw [← he, Homeomorph.apply_symm_apply]
       · rw [Homeomorph.symm_apply_eq]
@@ -185,7 +185,7 @@ theorem levels : ∀ (D : D7) (V : HSp D) (L : Lat V) (gP Q : Finset (Pl D)) (JG
       exact mul_mem (inv_mem (hJQ (φ g).1.2)) g.2
     obtain ⟨ψ, hψc, hψ⟩ : ∃ ψ : grpAt V (· ∉ Q) → grpAt V (fun p => p ∉ gP ∧ p ∉ Q),
         Continuous ψ ∧ ∀ g : grpAt V (· ∉ Q), (ψ g : GA D V) = (φ g).2 :=
-      ⟨fun g => ⟨(φ g).2, h3 g⟩, (continuous_subtype_val.comp (continuous_snd.comp hφc)).subtype_mk _, fun _ => rfl⟩
+      ⟨fun g => ⟨(φ g).2, h3 g⟩, (continuous_subtypeVal.comp (continuous_snd.comp hφc)).subtype_mk _, fun _ => rfl⟩
     apply Subgroup.isOpen_of_mem_nhds _ (g := 1)
     have hU : ψ ⁻¹' ((K₃.subgroupOf (grpAt V (fun p => p ∉ gP ∧ p ∉ Q)) : Subgroup _) :
         Set (grpAt V (fun p => p ∉ gP ∧ p ∉ Q))) ∩

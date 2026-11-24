@@ -127,7 +127,7 @@ def admissibleImaginary (ξ : Fin r → E) (x : Frame X.Ψ r) : Set (X.Ψ → �
 lemma flow_mem_dom_iff {ξ : Fin r → E} (hξ : herm X.Gm ξ ξ = 0) (x : Frame X.Ψ r)
     (hx : x ∈ X.dom) (s : X.Ψ → ℂ) :
     X.flow ξ s x ∈ X.dom ↔ (fun τ => (s τ).im) ∈ admissibleImaginary X ξ x := by
-  simp only [Data.dom, GG, Set.mem_setOf_eq, admissibleImaginary, dmin, mat_flow, gram_flowMat X hξ, det_mul,
+  simp only [Data.dom, GG, Set.mem_ofPred_eq, admissibleImaginary, dmin, mat_flow, gram_flowMat X hξ, det_mul,
     det_flowMat (X := X) hξ, one_mul]
   constructor
   · intro h τ i
@@ -176,7 +176,7 @@ lemma open_convex_aff {ι κ : Type*} [Fintype ι] [Finite κ] (a b : ι → κ 
     exact isOpen_iInter_of_finite fun τ => isOpen_iInter_of_finite fun i =>
       isOpen_lt continuous_const (continuous_const.add ((continuous_apply τ).mul continuous_const))
   · intro y hy z hz s t hs ht hst
-    simp only [Set.mem_setOf_eq, Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hy hz ⊢
+    simp only [Set.mem_ofPred_eq, Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hy hz ⊢
     intro τ i
     have h1 := hy τ i
     have h2 := hz τ i
@@ -215,7 +215,7 @@ lemma admissibleImaginary_eq_halfspaces {ξ : Fin r → E} (x : Frame X.Ψ r) (h
   refine ⟨fun τ i => psgn X.p0 i * (lminor (gram τ.1 X.Gm (mat x τ)) i).re,
     fun τ i => psgn X.p0 i * (2 * X.c τ) * (lminor (gram τ.1 X.Gm (mat x τ)) i * κ τ i).re, ?_⟩
   ext y
-  simp only [admissibleImaginary, Set.mem_setOf_eq, hκ, hre]
+  simp only [admissibleImaginary, Set.mem_ofPred_eq, hκ, hre]
   refine forall_congr' fun τ => forall_congr' fun i => ?_
   apply iff_of_eq
   congr 1

@@ -119,14 +119,14 @@ theorem UpperTheory.Gal.W2.Seed.pCEx :
     ring
   have hneg : (τ₀ w).re < 0 := by
     have hb := hbound τ₀
-    rw [if_pos rfl] at hb
+    rw [ite_eq_left rfl] at hb
     have := (abs_lt.mp hb).2
     rw [hτw, hτz]
     nlinarith
   have hpos : ∀ τ : E →+* ℂ, InfinitePlace.mk τ ≠ InfinitePlace.mk τ₀ → 0 < (τ w).re := by
     intro τ hτ
     have hb := hbound τ
-    rw [if_neg hτ] at hb
+    rw [ite_eq_right hτ] at hb
     have := (abs_lt.mp hb).1
     rw [hτw, hτz]
     nlinarith
@@ -263,8 +263,8 @@ theorem UpperTheory.Gal.W2.Seed.pAtPEx :
   intro hK hU hO hL E _ _ _ A p _ hs
   obtain ⟨Kq, hω, hKq, hgen⟩ := hK E A
   obtain ⟨s, iotaC, hsC⟩ := hL E A.τ₀
-  haveI : CharZero (PadicAlgCl p) := charZero_of_injective_algebraMap (algebraMap ℚ_[p] (PadicAlgCl p)).injective
-  haveI hAlg : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := by
+  have : CharZero (PadicAlgCl p) := charZero_of_injective_algebraMap (algebraMap ℚ_[p] (PadicAlgCl p)).injective
+  have hAlg : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := by
     convert (AlgebraicClosure.isAlgebraic ℚ)
   let iotaA : AlgebraicClosure ℚ →ₐ[ℚ] PadicAlgCl p := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -407,8 +407,8 @@ theorem pCodiffGen : CodiffGen := by
       rcases (Nat.pow_eq_one.1 hn.symm) with h | h
       · exact hq.ne_one h
       · omega
-    · haveI : Finite (𝓞 E ⧸ K) := Ideal.finiteQuotientOfFreeOfNeBot K hK0
-      haveI : Fact q.Prime := ⟨hq⟩
+    · have : Finite (𝓞 E ⧸ K) := Ideal.finiteQuotientOfFreeOfNeBot K hK0
+      have : Fact q.Prime := ⟨hq⟩
       have hcard : q ∣ Nat.card (𝓞 E ⧸ K) := by
         rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
         exact hqe
@@ -858,14 +858,14 @@ theorem UpperTheory.Gal.W2.Seed.pHdSign :
     split_ifs <;> simp [Complex.mul_im, hc]
   · rintro ⟨h, hi0⟩
     have hr := hre h
-    simp only [Arith.hd, Arith.dg, if_pos hi0]
+    simp only [Arith.hd, Arith.dg, ite_eq_left hi0]
     simp
     linarith
   · intro hn
     by_cases hp : InfinitePlace.mk τ = InfinitePlace.mk A.τ₀
     · have hi : (i : ℕ) ≠ 0 := fun hi0 => hn ⟨hp, hi0⟩
       have hr := hre hp
-      simp only [Arith.hd, Arith.dg, if_neg hi]
+      simp only [Arith.hd, Arith.dg, ite_eq_right hi]
       simp [Complex.mul_re, hc]
       nlinarith
     · have hr : 0 < (τ (A.c : E)).re := A.c_pos τ hp
@@ -1092,12 +1092,12 @@ theorem UpperTheory.Gal.W2.Seed.pLiftEx :
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra E (AlgebraicClosure ℚ) := sA.toRingHom.toAlgebra
-  letI : Algebra E ℂ := τ₀.toAlgebra
-  haveI : IsScalarTower ℚ E (AlgebraicClosure ℚ) :=
+  let : Algebra E (AlgebraicClosure ℚ) := sA.toRingHom.toAlgebra
+  let : Algebra E ℂ := τ₀.toAlgebra
+  have : IsScalarTower ℚ E (AlgebraicClosure ℚ) :=
     IsScalarTower.of_algebraMap_eq (fun x => (sA.commutes x).symm)
-  haveI hQ : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := AlgebraicClosure.isAlgebraic ℚ
-  haveI : Algebra.IsAlgebraic E (AlgebraicClosure ℚ) := Algebra.IsAlgebraic.tower_top (K := ℚ) E
+  have hQ : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := AlgebraicClosure.isAlgebraic ℚ
+  have : Algebra.IsAlgebraic E (AlgebraicClosure ℚ) := Algebra.IsAlgebraic.tower_top (K := ℚ) E
   let iA : AlgebraicClosure ℚ →ₐ[E] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1128,17 +1128,17 @@ theorem UpperTheory.Gal.W2.Seed.pOrbEx :
       iseqv := ⟨fun a => ⟨1, by ext x; simp⟩,
         fun {a b} ⟨σ, hσ⟩ => ⟨σ⁻¹, by rw [hσ]; ext x; simp⟩,
         fun {a b c} ⟨σ, hσ⟩ ⟨ρ, hρ⟩ => ⟨ρ * σ, by rw [hρ, hσ]; ext x; simp⟩⟩ }
-  haveI : Finite (E →+* PadicAlgCl p) := inferInstance
-  haveI : Finite S := Subtype.finite
-  haveI : Finite (Quotient R) := Quotient.finite _
+  have : Finite (E →+* PadicAlgCl p) := inferInstance
+  have : Finite S := Subtype.finite
+  have : Finite (Quotient R) := Quotient.finite _
   let s₁ : S := ⟨τ₁, h₁⟩
   let rep : Quotient R → S := fun q => if q = Quotient.mk R s₁ then s₁ else q.out
   have hrep : ∀ q, Quotient.mk R (rep q) = q := by
     intro q
     by_cases hq : q = Quotient.mk R s₁
-    · simp only [rep, if_pos hq]
+    · simp only [rep, ite_eq_left hq]
       exact hq.symm
-    · simp only [rep, if_neg hq]
+    · simp only [rep, ite_eq_right hq]
       exact Quotient.out_eq q
   let eq := Finite.equivFin (Quotient R)
   refine ⟨Nat.card (Quotient R), fun i => (rep (eq.symm i)).1, eq (Quotient.mk R s₁), ?_, ?_, ?_, ?_⟩
@@ -1597,7 +1597,7 @@ theorem UpperTheory.Gal.W2.Seed.pSigSt :
     simp only [gramAt, Arith.H, transpose_apply, map_apply, diagonal_apply]
     by_cases h : i = j
     · subst h
-      rw [if_pos rfl, if_pos rfl, Complex.ext_iff]
+      rw [ite_eq_left rfl, ite_eq_left rfl, Complex.ext_iff]
       simp [(hS E A n τ i).1]
     · simp [h, Ne.symm h]
   have aux : ∀ (r : Fin n → ℝ) (M : Matrix (Fin n) (Fin n) ℂ) (hM : M.IsHermitian),

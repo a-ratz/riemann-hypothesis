@@ -62,7 +62,7 @@ theorem embT_star' (τ : D.what₂.Tau) (x : D.host.E) :
 
 theorem gM_conjTranspose {n : ℕ} (γ : Matrix (Fin n) (Fin n) D.host.E) (τ : D.what₂.Tau) :
     (gM γ τ)ᴴ = gM (letI := D.host.cmStar; star γ) τ := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   ext i j
   simp only [gM, conjTranspose_apply, map_apply, star_apply]
   rw [embT_star']

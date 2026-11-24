@@ -238,7 +238,7 @@ theorem exists_allMaps : ∀ (D : D7) (θ : D.what₂.Tau → (TensorProduct D.h
   choose ψ p1 p2 p3 p4 using fun y : M.Vec =>
     GlobalTheory.T.smooth_vector_automorphic_derivatives D θ V hθ μ 𝓕 ρ hp hρ U hU (Φ' fun τ => (y τ : M.H τ)) (hsmM y).1 (hfix _)
   have p1' : ∀ y : M.Vec, Repr V μ 𝓕 (e (Φ fun τ => (y τ : M.H τ))) (ψ y) := fun y => hΦ' _ ▸ p1 y
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
   have hH : ∀ τ, (gramAt D V τ).IsHermitian := GlobalTheory.SmoothAutCheck.gramAt_herm V
   have hdet : ∀ τ, (gramAt D V τ).det ≠ 0 := fun τ => (GlobalTheory.SmoothAutCheck.gramAt_unit V τ).ne_zero
   have hsv := fun τ => GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ) (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.1
@@ -484,10 +484,10 @@ theorem eq_of_inner_eq {X H : Type} [NormedAddCommGroup H] [InnerProductSpace �
   have h0 : innerSL ℂ (p - q) = 0 := by
     refine ContinuousLinearMap.ext_on hd ?_
     rintro _ ⟨z, rfl⟩
-    rw [innerSL_apply_apply, ContinuousLinearMap.zero_apply, ← inner_conj_symm, inner_sub_right, h z, sub_self,
+    rw [innerSL_apply_apply, zero_apply, ← inner_conj_symm, inner_sub_right, h z, sub_self,
       map_zero]
   have := congrArg (fun L : H →L[ℂ] ℂ => L (p - q)) h0
-  simp only [innerSL_apply_apply, ContinuousLinearMap.zero_apply, inner_self_eq_zero] at this
+  simp only [innerSL_apply_apply, zero_apply, inner_self_eq_zero] at this
   exact sub_eq_zero.1 this
 
 theorem inner_update {κ H : Type} [Fintype κ] [DecidableEq κ] {E : κ → Type} [∀ v, NormedAddCommGroup (E v)]
@@ -604,18 +604,18 @@ theorem exists_of_mem (hP : GlobalTheory.Published.CuspRapidDecay) {θ : D.what�
   | mem T hT => exact exists_of_isMultMap hP hθ μ hT
   | zero =>
     refine ⟨0, zero_mem _, fun v => ?_⟩
-    simp only [ContinuousMultilinearMap.zero_apply, MultilinearMap.zero_apply]
+    simp only [zero_apply, zero_apply]
     exact ae_quotMeasure_iff.1 (Lp.coeFn_zero ℂ 2 _)
   | add T T' _ _ ih ih' =>
     obtain ⟨Φ, h1, h2⟩ := ih
     obtain ⟨Φ', h1', h2'⟩ := ih'
     refine ⟨Φ + Φ', add_mem h1 h1', fun v => ?_⟩
-    simp only [ContinuousMultilinearMap.add_apply, MultilinearMap.add_apply]
+    simp only [add_apply, add_apply]
     exact Filter.EventuallyEq.trans (ae_quotMeasure_iff.1 (Lp.coeFn_add _ _)) ((h2 v).add (h2' v))
   | smul a T _ ih =>
     obtain ⟨Φ, h1, h2⟩ := ih
     refine ⟨a • Φ, Submodule.smul_mem _ a h1, fun v => ?_⟩
-    simp only [ContinuousMultilinearMap.smul_apply, MultilinearMap.smul_apply]
+    simp only [smul_apply, smul_apply]
     exact Filter.EventuallyEq.trans (ae_quotMeasure_iff.1 (Lp.coeFn_smul a _)) ((h2 v).const_smul a)
 
 theorem existsUnique_intertwiner : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (θ : D.what₂.Tau → (TensorProduct D.host.F (Ainf D.host.F) D.host.E →+* ℂ)), IsInfFam θ → ∀ (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (μ : Measure (GA D V)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant], ∀ T ∈ GlobalTheory.CuspMult.allMaps θ M, ∃! Φ : ContinuousMultilinearMap ℂ M.H (DividedPowerChartLift V μ), Φ ∈ homDS M (RG V μ) (GlobalTheory.Cusp.L2cusp V μ) ∧ ∀ v : M.Vec, lift (GQ V) (Φ fun τ => (v τ : M.H τ)) =ᵐ[μ] T v := by
@@ -672,17 +672,17 @@ theorem eq_of_represents_cont {Φ : ContinuousMultilinearMap ℂ M.H (DividedPow
   MultilinearMap.ext fun v => (hT v).ae_eq_iff_eq μ (hT' v) |>.1 ((h v).symm.trans (h' v))
 
 theorem represents_zero : Represents μ (0 : ContinuousMultilinearMap ℂ M.H (DividedPowerChartLift V μ)) 0 := fun _ => by
-  simp only [ContinuousMultilinearMap.zero_apply, MultilinearMap.zero_apply]
+  simp only [zero_apply, zero_apply]
   exact ae_quotMeasure_iff.1 (Lp.coeFn_zero ℂ 2 _)
 
 theorem Represents.add {Φ Φ' : ContinuousMultilinearMap ℂ M.H (DividedPowerChartLift V μ)} {T T' : MMap M} (h : Represents μ Φ T)
     (h' : Represents μ Φ' T') : Represents μ (Φ + Φ') (T + T') := fun v => by
-  simp only [ContinuousMultilinearMap.add_apply, MultilinearMap.add_apply]
+  simp only [add_apply, add_apply]
   exact lift_add_ae (h v) (h' v)
 
 theorem Represents.smul (c : ℂ) {Φ : ContinuousMultilinearMap ℂ M.H (DividedPowerChartLift V μ)} {T : MMap M} (h : Represents μ Φ T) :
     Represents μ (c • Φ) (c • T) := fun v => by
-  simp only [ContinuousMultilinearMap.smul_apply, MultilinearMap.smul_apply]
+  simp only [smul_apply, smul_apply]
   exact lift_smul_ae c (h v)
 
 theorem Represents.translate (g : GfC V) {Φ : ContinuousMultilinearMap ℂ M.H (DividedPowerChartLift V μ)} {T : MMap M}

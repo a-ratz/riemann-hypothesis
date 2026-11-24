@@ -82,20 +82,20 @@ theorem setIntegral_add_right {nS nT : ℕ} (ν : Measure (WOF F E nS nT)) (𝓕
     [ν.IsAddHaarMeasure] (h𝓕 : IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν) (g : WOF F E nS nT → ℂ)
     (h2 : ∀ (r : ratLF F E nS nT) (v : WOF F E nS nT), g (r +ᵥ v) = g v) (u : WOF F E nS nT) :
     ∫ v in 𝓕, g (v + u) ∂ν = ∫ v in 𝓕, g v ∂ν := by
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
-  haveI : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
-  haveI : MeasurableAdd (WOF F E nS nT) :=
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
+  have : MeasurableAdd (WOF F E nS nT) :=
     ⟨fun c => (continuous_const_add c).measurable, fun c => (continuous_add_const c).measurable⟩
-  haveI : MeasurableConstVAdd (ratLF F E nS nT) (WOF F E nS nT) :=
+  have : MeasurableConstVAdd (ratLF F E nS nT) (WOF F E nS nT) :=
     ⟨fun r => (continuous_const_add (r : WOF F E nS nT)).measurable⟩
-  haveI : VAddInvariantMeasure (ratLF F E nS nT) (WOF F E nS nT) ν :=
+  have : VAddInvariantMeasure (ratLF F E nS nT) (WOF F E nS nT) ν :=
     ⟨fun r s _ => measure_preimage_add ν (r : WOF F E nS nT) s⟩
-  haveI : VAddCommClass (WOF F E nS nT) (ratLF F E nS nT) (WOF F E nS nT) :=
+  have : VAddCommClass (WOF F E nS nT) (ratLF F E nS nT) (WOF F E nS nT) :=
     ⟨fun a r x => add_left_comm a (r : WOF F E nS nT) x⟩
-  haveI : Countable (ratLF F E nS nT) := by
-    haveI : Countable E := by
-      haveI : FiniteDimensional ℚ E := inferInstance
+  have : Countable (ratLF F E nS nT) := by
+    have : Countable E := by
+      have : FiniteDimensional ℚ E := inferInstance
       exact ((Module.finBasis ℚ E).equivFun).injective.countable
     have : Countable (Matrix (Fin nT) (Fin nS) E) := inferInstanceAs (Countable (Fin nT → Fin nS → E))
     exact (Set.countable_range ((incAF F E).toAddMonoidHom.mapMatrix (m := Fin nT) (n := Fin nS))).to_subtype

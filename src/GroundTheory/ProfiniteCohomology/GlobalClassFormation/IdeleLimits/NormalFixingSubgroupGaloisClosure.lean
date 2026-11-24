@@ -107,7 +107,7 @@ instance isGalois_rat_algebraicClosure : IsGalois ℚ ℚ̄ := IsAlgClosure.isGa
 theorem normal_fixingSubgroup_galoisClosure (S : FiniteSubfield) :
     (galoisClosure S).1.fixingSubgroup.Normal := by
   show (normalClosure ℚ S.1 ℚ̄).fixingSubgroup.Normal
-  haveI : IsGalois ℚ (normalClosure ℚ S.1 ℚ̄) := IsGalois.normalClosure ℚ S.1 ℚ̄
+  have : IsGalois ℚ (normalClosure ℚ S.1 ℚ̄) := IsGalois.normalClosure ℚ S.1 ℚ̄
   exact IsGalois.fixingSubgroup_normal_of_isGalois _
 
 namespace GLevel
@@ -165,7 +165,7 @@ theorem continuous_restrictHom [F.1.fixingSubgroup.Normal] :
   intro s hs
   have hopen : IsOpen ((F.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup : Subgroup _) :
       Set K.1.fixingSubgroup) :=
-    F.1.fixingSubgroup_isOpen.preimage continuous_subtype_val
+    F.1.fixingSubgroup_isOpen.preimage continuous_subtypeVal
   filter_upwards [hopen.mem_nhds (one_mem _)] with g hg
   have hg' : restrictHom (E := F) g = 1 := by
     rw [← MonoidHom.mem_ker, ker_restrictHom]

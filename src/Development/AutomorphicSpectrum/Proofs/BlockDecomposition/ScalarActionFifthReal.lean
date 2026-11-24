@@ -94,14 +94,14 @@ theorem qdetNext : ∀ (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ) (E : Fin (m
         by_contra hne
         push_neg at hne
         exact hσ (Equiv.ext hne)
-      rw [hc1 σ, Finset.prod_eq_zero (mem_univ k) (if_neg hk), zero_smul, mul_zero]
+      rw [hc1 σ, Finset.prod_eq_zero (mem_univ k) (ite_eq_right hk), zero_smul, mul_zero]
     · intro h1
       exact absurd (mem_univ _) h1
   · simp only
     rw [Finset.sum_eq_single (1 : Equiv.Perm (Fin (m + 1)))]
     · rw [hc0 1]
       simp only [Equiv.Perm.sign_one, Units.val_one, Int.cast_one, one_mul, Equiv.Perm.coe_one,
-        id_eq, if_true, ite_self, prod_const_one, one_smul]
+        id_eq, ite_true, ite_self, prod_const_one, one_smul]
       rw [sum_add_distrib, add_comm]
       congr 1
       simp only [Algebra.algebraMap_eq_smul_one, ← sum_smul]
@@ -203,7 +203,7 @@ theorem coeff_prod_top {A : Type} [CommRing A] [Nontrivial A] {κ : Type} (S : F
   have hd : (∏ a ∈ S, (X + C (f a))).natDegree = S.card := by
     rw [natDegree_prod_of_monic _ _ hm]; simp
   have hc : S.card ≠ 0 := (Finset.card_pos.2 hS).ne'
-  rw [nextCoeff, if_neg (by rw [hd]; exact hc), hd] at h1
+  rw [nextCoeff, ite_eq_right (by rw [hd]; exact hc), hd] at h1
   rw [h1]
   exact Finset.sum_congr rfl fun a _ => nextCoeff_X_add_C _
 
@@ -311,7 +311,7 @@ theorem splitLocal : ∀ (A : Type) [CommRing A] [IsLocalRing A] (κ : Type) [De
     refine ⟨fun a => if a ∈ S1 then j else π0 a, fun a ha => ?_, fun i hi => ?_⟩
     · by_cases haS : a ∈ S1
       · simp [haS]
-      · simp only [haS, if_false]
+      · simp only [haS, ite_false]
         exact mem_insert_of_mem (h1 a (Finset.mem_sdiff.2 ⟨ha, haS⟩))
     · rcases Finset.mem_insert.1 hi with rfl | hiJ
       · have : S.filter (fun a => (if a ∈ S1 then i else π0 a) = i) = S1 := by
@@ -320,7 +320,7 @@ theorem splitLocal : ∀ (A : Type) [CommRing A] [IsLocalRing A] (κ : Type) [De
           constructor
           · rintro ⟨haS, hq⟩
             by_contra hn
-            simp only [hn, if_false] at hq
+            simp only [hn, ite_false] at hq
             exact hj (hq ▸ h1 a (Finset.mem_sdiff.2 ⟨haS, hn⟩))
           · intro ha
             exact ⟨hs ha, by simp [ha]⟩
@@ -536,7 +536,7 @@ theorem capPoly {R : Type} [CommRing R] [Nontrivial R] [Algebra ℂ R] {A : Type
   have hdeg : r.degree < t := by
     rw [degree_lt_iff_coeff_zero]
     intro m hm
-    rw [hcoef, if_neg (by omega)]
+    rw [hcoef, ite_eq_right (by omega)]
   refine ⟨X ^ t + r, monic_X_pow_add hdeg, by rw [natDegree_add_eq_left_of_degree_lt (by rwa [degree_X_pow]), natDegree_X_pow], fun u => ?_, fun k hk => ?_⟩
   · rw [hq u, Finset.sum_range_succ, h1, eval_add, eval_pow, eval_X, map_add (f := _), map_pow, add_comm]
     congr 1
@@ -598,7 +598,7 @@ theorem core {R : Type} [CommRing R] [Algebra ℂ R] (ι : R →ₐ[ℂ] Module.
   classical
   by_cases hc0 : c = 0
   · simp [hc0]
-  haveI : Nontrivial R := ⟨0, 1, fun h => hc0 (by simpa using (congrArg (fun r => ι r c) h).symm)⟩
+  have : Nontrivial R := ⟨0, 1, fun h => hc0 (by simpa using (congrArg (fun r => ι r c) h).symm)⟩
   have e1 := fun j (hj : j ∈ univ.image lev) => capS_poly ι F1 lev hm1 σ1 j hj
   have e2 := fun j (hj : j ∈ univ.image lev) => capS_poly ι F2 lev hm2 σ2 j hj
   choose! p hp1 hp2 hp3 hp4 using e1
@@ -606,11 +606,11 @@ theorem core {R : Type} [CommRing R] [Algebra ℂ R] (ι : R →ₐ[ℂ] Module.
   let I : Ideal R :=
     { carrier := {r | ι r c = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_add (f := _), LinearMap.add_apply, ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := fun a b hb => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at hb ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, map_zero] }
   have hI : ∀ r : R, Ideal.Quotient.mk I r = 0 ↔ ι r c = 0 := fun r => Ideal.Quotient.eq_zero_iff_mem
   have hscal : ∀ x : ℂ, ι (algebraMap ℂ R x) c = x • c := fun x => by
@@ -654,7 +654,7 @@ theorem core {R : Type} [CommRing R] [Algebra ℂ R] (ι : R →ₐ[ℂ] Module.
     simp only [LinearMap.sub_apply, LinearMap.sum_apply, LinearMap.smul_apply, Module.End.one_apply]
     rw [sub_smul, mul_add, add_smul, ← hs]
     abel
-  haveI : Nontrivial (R ⧸ I) := by
+  have : Nontrivial (R ⧸ I) := by
     refine Ideal.Quotient.nontrivial_iff.2 fun h => hc0 ?_
     have h1I : (1 : R) ∈ I := h ▸ Submodule.mem_top
     simpa using (show ι 1 c = 0 from h1I)
@@ -715,7 +715,7 @@ theorem capComm : ∀ (n : ℕ) (lev : Fin n → ℕ) (H : Type) [AddCommGroup H
         have := congrArg lev e; rwa [lev_blkE lev, lev_blkE lev] at this)
       have hne2 : blkE lev j' d ≠ blkE lev j a := fun e => hjj (by
         have := congrArg lev e; rw [lev_blkE lev, lev_blkE lev] at this; exact this.symm)
-      rw [if_neg hne1, if_neg hne2, sub_zero] at h
+      rw [ite_eq_right hne1, ite_eq_right hne2, sub_zero] at h
       exact sub_eq_zero.1 h
   refine ⟨same F1 fun a b c d h1 h2 => (hF a b c d h1 h2).1, same F2 fun a b c d h1 h2 => (hF a b c d h1 h2).2.1, ?_⟩
   rw [capS_eq, capS_eq]
@@ -733,9 +733,9 @@ theorem capScal : CapelliProductsScalar := by
       · exact (capComm n lev H F1 F2 hF p.1 q.1 p.2 q.2).2.2
       · exact (capComm n lev H F1 F2 hF q.1 p.1 q.2 p.2).2.2.symm
       · exact (capComm n lev H F1 F2 hF p.1 q.1 p.2 q.2).2.1
-    letI : IsMulCommutative (Algebra.adjoin ℂ Gs) :=
+    let : IsMulCommutative (Algebra.adjoin ℂ Gs) :=
       Algebra.isMulCommutative_adjoin ℂ (fun a ha b hb _ => hcomm a ha b hb)
-    letI : CommRing (Algebra.adjoin ℂ Gs) :=
+    let : CommRing (Algebra.adjoin ℂ Gs) :=
       { (inferInstance : Ring (Algebra.adjoin ℂ Gs)) with mul_comm := mul_comm' }
     exact core (Algebra.adjoin ℂ Gs).val L hL lev hlev ν σ1 σ2 hsh F1 F2
       (fun j u => ⟨⟨_, Algebra.subset_adjoin (show capS F1 lev j u ∈ Gs from Or.inl ⟨(j, u), rfl⟩)⟩, rfl⟩)

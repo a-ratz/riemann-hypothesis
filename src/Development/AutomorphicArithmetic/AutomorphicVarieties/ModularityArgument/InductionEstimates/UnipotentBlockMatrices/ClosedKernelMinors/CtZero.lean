@@ -118,34 +118,34 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.orthCt :
       constantTermL2 μ 2 w =ᵐ[μ] 0 → ⟪v, w⟫_ℂ = 0 := by
   intro K _ _ μ _ F hFc hFP hFB hFD hFN v w hv hw
   obtain ⟨-, -, -, hlv, -, -, -, -, -, -, -, hcpt⟩ := blkLaws (K := K)
-  haveI : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.mp (hcpt (2 + 2)).1
-  haveI : LocallyCompactSpace (KG K (2 + 2)) := by
+  have : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.mp (hcpt (2 + 2)).1
+  have : LocallyCompactSpace (KG K (2 + 2)) := by
     set_option synthInstance.maxHeartbeats 400000 in
       infer_instance
   let μ₂ : Measure (G1 K 2) := Measure.haar
   let κ : Measure (KG K (2 + 2)) := Measure.haar
-  haveI : SecondCountableTopology (G1 K 2) := inferInstance
-  haveI : SecondCountableTopology (G1 K (2 + 2)) := inferInstance
-  haveI : SecondCountableTopology (KG K (2 + 2)) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : BorelSpace (G1 K 2) := inferInstance
-  haveI : BorelSpace (KG K (2 + 2)) := Subtype.borelSpace _
-  haveI : BorelSpace (ℝ × KG K (2 + 2)) := Prod.borelSpace
-  haveI : BorelSpace (G1 K 2 × ℝ × KG K (2 + 2)) := Prod.borelSpace
-  haveI : BorelSpace (G1 K 2 × G1 K 2 × ℝ × KG K (2 + 2)) := Prod.borelSpace
-  haveI : SFinite μ₂ := by
+  have : SecondCountableTopology (G1 K 2) := inferInstance
+  have : SecondCountableTopology (G1 K (2 + 2)) := inferInstance
+  have : SecondCountableTopology (KG K (2 + 2)) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace (G1 K 2) := inferInstance
+  have : BorelSpace (KG K (2 + 2)) := Subtype.borelSpace _
+  have : BorelSpace (ℝ × KG K (2 + 2)) := Prod.borelSpace
+  have : BorelSpace (G1 K 2 × ℝ × KG K (2 + 2)) := Prod.borelSpace
+  have : BorelSpace (G1 K 2 × G1 K 2 × ℝ × KG K (2 + 2)) := Prod.borelSpace
+  have : SFinite μ₂ := by
     set_option synthInstance.maxHeartbeats 400000 in
       infer_instance
-  haveI : SFinite κ := by
+  have : SFinite κ := by
     set_option synthInstance.maxHeartbeats 400000 in
       infer_instance
-  haveI : SFinite (fd μ₂) := inferInstance
-  haveI : SFinite ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2)) := inferInstance
-  haveI : SFinite (κ.prod ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2))) :=
+  have : SFinite (fd μ₂) := inferInstance
+  have : SFinite ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2)) := inferInstance
+  have : SFinite (κ.prod ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2))) :=
     Measure.prod.instSFinite
-  haveI : SFinite ((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))) := inferInstance
-  haveI : SFinite (((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))).prod
+  have : SFinite ((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))) := inferInstance
+  have : SFinite (((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))).prod
       (κ.prod ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2)))) := Measure.prod.instSFinite
-  haveI : SFinite ((fd μ₂).prod (((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))).prod
+  have : SFinite ((fd μ₂).prod (((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))).prod
       (κ.prod ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2))))) := Measure.prod.instSFinite
   obtain ⟨⟨c, hc⟩, -⟩ := unf μ μ₂ κ
   obtain ⟨hint, heq, -⟩ := master μ μ₂ κ c hc F hFc hFP hFB hFD v w hv
@@ -163,7 +163,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.orthCt :
   have hcont : Continuous fun p : G1 K 2 × G1 K 2 × ℝ × KG K (2 + 2) =>
       lv p.1 p.2.1 p.2.2.1 * (p.2.2.2 : G1 K (2 + 2)) :=
     (hlv.comp (f := fun p : G1 K 2 × G1 K 2 × ℝ × KG K (2 + 2) => (p.1, p.2.1, p.2.2.1)) (by fun_prop)).mul
-      (continuous_subtype_val.comp (by fun_prop))
+      (continuous_subtypeVal.comp (by fun_prop))
   have h2 := ae4 μ₂ μ₂ volume κ (fun p : G1 K 2 × G1 K 2 × ℝ × KG K (2 + 2) =>
       ‖constantTermL2 μ 2 w (lv p.1 p.2.1 p.2.2.1 * (p.2.2.2 : G1 K (2 + 2)))‖ₑ *
         (ENNReal.ofReal (Real.exp (-4 * p.2.2.1)) * unipMeasure K (2 + 2) 2 univ))

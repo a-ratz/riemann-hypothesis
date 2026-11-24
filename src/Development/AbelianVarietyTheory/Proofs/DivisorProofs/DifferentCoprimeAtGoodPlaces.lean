@@ -175,7 +175,7 @@ theorem not_le_differentIdeal_of_psiUnr {F : Type} [Field F] [NumberField F] {ψ
   have hD : ((differentIdeal ℤ (𝓞 F) : Ideal (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F) = (codiff F)⁻¹ :=
     coeIdeal_differentIdeal ℤ ℚ F (𝓞 F)
   have h0 : differentIdeal ℤ (𝓞 F) ≠ 0 := differentIdeal_ne_bot
-  have h1 := FractionalIdeal.count_coe F v h0
+  have h1 := FractionalIdeal.count_coeIdeal F v h0
   rw [hD, FractionalIdeal.count_inv, ← hc, hc2, neg_zero] at h1
   have h2 := (Associates.count_ne_zero_iff_dvd h0 v.irreducible).2 (Ideal.dvd_iff_le.2 hle)
   exact h2 (by exact_mod_cast h1.symm)

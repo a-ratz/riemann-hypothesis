@@ -105,7 +105,7 @@ theorem schwartz_tendsto_apply_of_tendsto_pointwise :
     ∀ (g : ℝ → SchwartzMap V ℂ) (g₀ : SchwartzMap V ℂ), Filter.Tendsto g (nhdsWithin 0 {0}ᶜ) (nhds g₀) →
       Filter.Tendsto (fun t => S t (g t)) (nhdsWithin 0 {0}ᶜ) (nhds g₀) := by
   intro V _ _ _ S hS g g₀ hg
-  haveI : BarrelledSpace ℂ (SchwartzMap V ℂ) := schwartzMap_barrelledSpace V
+  have : BarrelledSpace ℂ (SchwartzMap V ℂ) := schwartzMap_barrelledSpace V
   rw [tendsto_iff_seq_tendsto]
   intro u hu
   have hq := schwartz_withSeminorms ℂ V ℂ
@@ -214,7 +214,7 @@ theorem lintegral_of_integral {l : Type} [Fintype l] (f g : GlobalTheory.RealWei
     rw [MeasureTheory.ofReal_integral_eq_lintegral_ofReal (hi u) (.of_forall fun x => by positivity)]
     congr 1
     funext x
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
   rw [e, e, h]
 
 end GlobalTheory.ArchCont
@@ -262,7 +262,7 @@ theorem continuous_of_intertwining_operator (hP : _root_.GlobalTheory.FunPr.Thet
     have hdec : ∀ f : GlobalTheory.RealWeil.Sch l, f = f 0 • f0 := by
       intro f
       ext x
-      rw [hsub x, SchwartzMap.smul_apply, hf0, smul_eq_mul, mul_one]
+      rw [hsub x, smul_apply, hf0, smul_eq_mul, mul_one]
     have e : ⇑(T t) = fun f => f 0 • T t f0 := by
       funext f
       conv_lhs => rw [hdec f]
@@ -294,7 +294,7 @@ theorem continuous_of_intertwining_operator (hP : _root_.GlobalTheory.FunPr.Thet
       funext f
       have h1 := ha (omS g f)
       have e2 : omS g⁻¹ (omS g f) = f := by
-        rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]
+        rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self]
       simp only [LinearMap.comp_apply, ContinuousLinearMap.coe_coe, e2] at h1
       exact h1
     rw [e]
@@ -376,7 +376,7 @@ theorem GlobalTheory.ArchCont.continuous_weil_action_on_line : _root_.GlobalTheo
     (∀ f : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F (Fin n × Fin d), T 0 f = f) → ∀ t, Continuous (T t) := by
   intro hP F E _ _ _ _ _ σ n d X W M ψ χX χW om hCM hψ hW γ hγ T hT hadd h0 t
   obtain ⟨A, -, hA⟩ := _root_.GlobalTheory.ArchFam.schr_equiv M ψ χX χW om hψ hW γ hγ T hT
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   let μ : MeasureTheory.Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) := MeasureTheory.Measure.addHaar
   have hiso : ∀ t f, ∫ x, ‖T t f x‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ := fun t f =>
     _root_.GlobalTheory.ArchIsom.acts_norm_sq_eq M ψ χX χW om hW μ inferInstance (γ (Multiplicative.ofAdd t)) f (T t f) (hT t f)
@@ -441,7 +441,7 @@ theorem lintegral_of_integral (l : Type) [Fintype l] (f g : GlobalTheory.RealWei
       ((by fun_prop : Continuous fun x => ‖u x‖ ^ 2).aestronglyMeasurable)]
     congr 1
     refine lintegral_congr fun x => ?_
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
   have fin : ∀ u : GlobalTheory.RealWeil.Sch l, ∫⁻ x, ‖u x‖ₑ ^ 2 ≠ ⊤ := by
     intro u
     rw [GlobalTheory.MetaplecticScalarDeriv.lintegral_sq_eq]
@@ -604,7 +604,7 @@ theorem lift_splits_locally : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀
   classical
   intro hP F E _ _ _ _ _ σ n d X W M ψ χX χW om hCM hψ hW γ hγ T hT hadd h0
   obtain ⟨A, hAc, hA⟩ := _root_.GlobalTheory.ArchFam.schr_equiv M ψ χX χW om hψ hW γ hγ T hT
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   let μ : Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Measure.addHaar
   have hiso : ∀ t f, ∫ x, ‖T t f x‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ := fun t f =>
     _root_.GlobalTheory.ArchIsom.acts_norm_sq_eq M ψ χX χW om hW μ inferInstance (γ (Multiplicative.ofAdd t)) f (T t f) (hT t f)

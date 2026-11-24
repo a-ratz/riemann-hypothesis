@@ -464,9 +464,9 @@ private theorem unit_card (l : ℕ) [hl : Fact l.Prime] (L : Type) [Field L] [Nu
   have h1 : residue O (normV w : O) = 0 := (residue_eq_zero_iff _).2 hn
   rw [map_natCast, CharP.cast_eq_zero_iff (ResidueField O) l] at h1
   have hmax := w.isMaximal
-  letI : Field (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.field _
   have hfin : Finite (𝓞 L ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 L ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 L ⧸ w.asIdeal)
   have h2 : l ∣ Fintype.card (𝓞 L ⧸ w.asIdeal) := by
     rw [← Nat.card_eq_fintype_card]; exact h1
   have h3 := (prime_dvd_char_iff_dvd_card (R := 𝓞 L ⧸ w.asIdeal) l).2 h2
@@ -681,7 +681,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem exists_place_above_prime (K : Type) [Field K] [NumberField K] (l : ℕ) [hl : Fact l.Prime] :
     ∃ v : HeightOneSpectrum (𝓞 K), ((l : ℕ) : 𝓞 K) ∈ v.asIdeal := by
   have hp : Prime (l : ℤ) := Nat.prime_iff_prime_int.1 hl.out
-  haveI : (Ideal.span {(l : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp
+  have : (Ideal.span {(l : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp
   obtain ⟨Q, hQ, hc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain (S := 𝓞 K) (Ideal.span {(l : ℤ)})
     (by rw [(RingHom.injective_iff_ker_eq_bot (algebraMap ℤ (𝓞 K))).1 (RingHom.injective_int _)]; exact bot_le)
   have hm : ((l : ℕ) : 𝓞 K) ∈ Q := by
@@ -828,8 +828,8 @@ private theorem opOf_proj {Λ Γ Q M : Type} [CommRing Λ] [Group Γ] [Group Q] 
     | zero => simp
     | add a b ha hb => rw [map_add (f := _), map_add (f := _), map_add (f := _), ha, hb]
     | single g c => simp [σ, ρ']
-  haveI := RingHomInvPair.of_ringEquiv σ
-  haveI := RingHomInvPair.of_ringEquiv_symm σ
+  have := RingHomInvPair.of_ringEquiv σ
+  have := RingHomInvPair.of_ringEquiv_symm σ
   let f : ρ.asModule ≃ₛₗ[(σ : MonoidAlgebra Λ Q →+* MonoidAlgebra Λ Γ)] ρ'.asModule :=
     { ρ.asModuleEquiv.toAddEquiv.trans ρ'.asModuleEquiv.symm.toAddEquiv with
       map_smul' := fun a m => by
@@ -870,8 +870,8 @@ private theorem opOf_tr {Λ R G P Γ σ : Type} [CommRing Λ] [CommRing R] [Alge
     (Y : σ → Module.End R (fixd ρ K1)) (hY : ∀ p m, ρ' (e (γ p)) m = m + Y p m)
     (tr : fixd ρ K1 →ₗ[R] fixd ρ K) (htr : ∀ m, (tr m : P) = dc ρ K K1 1 m) :
     Function.Surjective tr ∧ LinearMap.ker tr = ⨆ p, LinearMap.range (Y p) := by
-  haveI : Finite (K ⧸ K1.subgroupOf K) := Finite.of_equiv Γ e.toEquiv
-  letI := Fintype.ofFinite (K ⧸ K1.subgroupOf K)
+  have : Finite (K ⧸ K1.subgroupOf K) := Finite.of_equiv Γ e.toEquiv
+  let := Fintype.ofFinite (K ⧸ K1.subgroupOf K)
   obtain ⟨h1, h2⟩ := projNorm Λ _ _ ρ' hP
   have hs : ∀ m, (tr m : P) = (∑ g, ρ' g m : fixd ρ K1) := fun m => by
     rw [htr, opOf_dc ρ K K1 m m.2, AddSubmonoidClass.coe_finsetSum]
@@ -905,7 +905,7 @@ private theorem opOf_tr {Λ R G P Γ σ : Type} [CommRing Λ] [CommRing R] [Alge
 
 private theorem opOf_gen {l q n : ℕ} (hl : l.Prime) (a : Fin q → ℕ) :
     Subgroup.closure (Set.range fun p : Fin q × Fin n => (Pi.mulSingle p (Multiplicative.ofAdd 1) : Del l n a)) = ⊤ := by
-  haveI : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
   refine eq_top_iff.2 fun g _ => ?_
   rw [← Finset.univ_prod_mulSingle g]
   refine Subgroup.prod_mem _ fun s _ => ?_
@@ -930,8 +930,8 @@ private theorem opOf_cop {L : Type} [Field L] [NumberField L] (w : Plc L) {l : �
     simpa using (h3.map (residue 𝒪[w.adicCompletion L])).ne_zero
   rw [hl.coprime_iff_not_dvd]
   intro hd
-  letI := Fintype.ofFinite 𝓀[w.adicCompletion L]
-  haveI := Fact.mk hl
+  let := Fintype.ofFinite 𝓀[w.adicCompletion L]
+  have := Fact.mk hl
   rw [resCard, Nat.card_eq_fintype_card] at hd
   exact h4 ((ringChar.spec _ _).2 (by
     have h5 := (prime_dvd_char_iff_dvd_card l).2 hd
@@ -951,7 +951,7 @@ theorem UpperTheory.V.Th.opOfX :
     LocP → ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (V0 : s.Lev) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (n : ℕ) (r : Resid V0.frame O n) (B : UniversalOrdinaryDeterminantRing r) (J : Ideal B.B) (D : ℕ) (b : TWBase (pairOf B.u) J Empty D) (V : s.Lev) (h : (globOf r V).Hom (globOf r V0)) (q : ℕ) (w : Fin q → Plc L) (A : LevMod b h w) (x δ : ∀ j, ((w j).adicCompletion L)ˣ), (∀ j, ((l : ℕ) : 𝓞 L) ∉ (w j).asIdeal) → (∀ j, IsUnif (x j)) → (∀ j, IsGenMod _ (ellC l _) (δ j)) → ∀ (ph ta : Fin q → (globOf r V).G₀) (N : ℕ), LocOk A x δ ph ta → (∀ j, qj w j ≡ 1 [MOD l ^ N]) → ∃ A' : OpMod b h q N, OpRelX A' (qj w) ph ta (2 * n.factorial) := by
   intro hP l hl L Ω _ _ _ _ _ _ s V0 O _ _ _ hO _ n r B J D b V h q w A x δ hw hx hδ ph ta N hok hN
   have hq : ∀ j, IsUnit (qj w j : A.R) := fun j => by
-    haveI := hO.char
+    have := hO.char
     have h1 : IsUnit (qj w j : ResidueField O) :=
       (CharP.isUnit_natCast_iff hl.out).2 (hl.out.coprime_iff_not_dvd.1 (opOf_cop (w j) hl.out (hw j)))
     have h2 : IsUnit (qj w j : O) := by
@@ -968,7 +968,7 @@ theorem UpperTheory.V.Th.opOfX :
     obtain ⟨g, hg1, hg2⟩ := he j i
     exact Subtype.ext (by rw [hg2, hρ', hg1]; exact (hy j i m).symm)
   have hle : UIw1 l n w ≤ UIw n w := fun g hg j hj => opOf_le _ (hg j hj)
-  haveI : ∀ p : Fin q × Fin n, NeZero (l ^ padicValNat l (qj w p.1 - 1)) := fun s => ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : ∀ p : Fin q × Fin n, NeZero (l ^ padicValNat l (qj w p.1 - 1)) := fun s => ⟨pow_ne_zero _ hl.out.ne_zero⟩
   obtain ⟨hs, hk⟩ := opOf_tr A.ρ (UIw n w) (UIw1 l n w) hle ρ' hρ' hpr e
     (fun p : Fin q × Fin n => Pi.mulSingle p (Multiplicative.ofAdd 1)) (opOf_gen hl.out fun j => padicValNat l (qj w j - 1))
     (fun p : Fin q × Fin n => T.act1 (yV A.R p.1 p.2)) (fun p m => (hg p.1 p.2 m).trans (by rw [map_add (f := _), map_one]; rfl)) tr htr
@@ -1060,7 +1060,7 @@ private theorem chi_ofRep {n : ℕ} {A G : Type} [CommRing A] [Group G] (ρ : G 
 private theorem map_ofRep {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Group G] (ρ : G →* Matrix (Fin n) (Fin n) A)
     (f : A →+* B) : (GDet.ofRep ρ).map f = GDet.ofRep (f.mapMatrix.toMonoidHom.comp ρ) := by
   refine GDet.ext fun C _ _ x => ?_
-  letI : Algebra A C := ((algebraMap B C).comp f).toAlgebra
+  let : Algebra A C := ((algebraMap B C).comp f).toAlgebra
   change (GDet.repAlg ρ C x).det = (GDet.repAlg _ C x).det
   congr 2
 
@@ -1068,7 +1068,7 @@ private theorem unip_pow (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLoc
     (M : Matrix (Fin n) (Fin n) O) (hM : (M.map (residue O)).charpoly = (Polynomial.X - 1) ^ n) (i j : Fin n) :
     (M ^ l ^ (n + m) - 1) i j ∈ maximalIdeal O ^ m := by
   have hl : l.Prime := Fact.out
-  haveI : Nonempty (Fin n) := ⟨i⟩
+  have : Nonempty (Fin n) := ⟨i⟩
   have h0 := Matrix.aeval_self_charpoly (M.map (residue O))
   rw [hM] at h0
   simp only [map_pow, map_sub, Polynomial.aeval_X, map_one] at h0
@@ -1112,13 +1112,13 @@ private theorem rhoPLO (l : ℕ) [Fact l.Prime] (F : GFrame l) (O : Type) [CommR
     have ho : IsOpen (Km : Set F.G₀) := by
       have : (Km : Set F.G₀) = ⋂ i, ⋂ j, {a | π (mat ρ a i j) = π ((1 : Matrix (Fin n) (Fin n) O) i j)} := by
         ext a
-        simp only [SetLike.mem_coe, hKm, Set.mem_iInter, Set.mem_setOf_eq]
+        simp only [SetLike.mem_coe, hKm, Set.mem_iInter, Set.mem_ofPred_eq]
       rw [this]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => (hc i j m).isOpen_fiber _
     let K' : Subgroup F.Γ := Km.map F.η.ker.subtype
-    have ho' : IsOpen (K' : Set F.Γ) := F.η_open.isOpenMap_subtype_val _ ho
-    haveI : Finite (F.Γ ⧸ K') := Subgroup.quotient_finite_of_isOpen K' ho'
-    haveI : K'.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have ho' : IsOpen (K' : Set F.Γ) := F.η_open.isOpenMap_subtypeVal _ ho
+    have : Finite (F.Γ ⧸ K') := Subgroup.quotient_finite_of_isOpen K' ho'
+    have : K'.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     have hc : IsOpen (K'.normalCore : Set F.Γ) :=
       Subgroup.isOpen_of_isClosed_of_finiteIndex _ (K'.normalCore_isClosed (K'.isClosed_of_isOpen ho'))
     let U : OpenNormalSubgroup F.Γ := ⟨⟨K'.normalCore, hc⟩, K'.normalCore_normal⟩
@@ -1167,10 +1167,10 @@ theorem UpperTheory.V.Th.coreO :
   intro hN l _ L Ω _ _ _ _ _ _ s V0 c n r B J y x h q sg al hS hn hLev hJ hAr hmap hN4 hsg hdet δ hδ h0
   have hC : Pa.CohP := ⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.gw, hN.coh.pt,
     GlobalTheory.Published.TameLocal_of_duality hN.coh.lt⟩
-  haveI := coef_isCoef l c
-  haveI := IsCoef.char (l := l) (O := c.O)
-  haveI := IsCoef.finite (l := l) (O := c.O)
-  haveI := IsCoef.complete (l := l) (O := c.O)
+  have := coef_isCoef l c
+  have := IsCoef.char (l := l) (O := c.O)
+  have := IsCoef.finite (l := l) (O := c.O)
+  have := IsCoef.complete (l := l) (O := c.O)
   obtain ⟨b, hb, hγ, hctrl⟩ := hLev
   obtain ⟨T, ⟨Pl⟩, rfl, hTs⟩ := (arPl hC l L Ω s V0 c.O n r hS).2 q sg fun j => (hsg j).1
   obtain rfl : T.sg = sg := funext hTs

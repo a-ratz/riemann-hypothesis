@@ -60,8 +60,8 @@ theorem hasSatGL_of_hasSatake : ∀ (E : Type) [Field E] [NumberField E] (w : He
     haveI := GlobalTheory.LocalData.isLocalField w
     HasSatake π α → GlobalTheory.LFun.HasSatGL w π (Finset.univ.val.map α) := by
   intro E _ _ w n V _ _ π α
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   intro h
   exact GlobalTheory.LFun.SatCompare.hasSatGL_of_hasSatakeGL
     ((GlobalTheory.LGrp.SatakeCompare.hasSatakeGL_iff _ _ _ π _).2 ⟨α, rfl, h⟩)

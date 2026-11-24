@@ -137,11 +137,11 @@ theorem dC_eq : dC = qExpansion 1 DD := by
   have hfun : DD = ⇑((1 / 1728 : ℂ) • ((E₄.mul E₄).mul E₄)) - ⇑((1 / 1728 : ℂ) • (E₆.mul E₆)) := by
     funext τ
     simp only [DD, ModularForm.discriminant_eq_E₄_cube_sub_E₆_sq, Pi.sub_apply,
-      ModularForm.coe_smul, ModularForm.coe_mul, Pi.smul_apply, Pi.mul_apply, smul_eq_mul]
+      FunLike.coe_smul, ModularForm.coe_mul, Pi.smul_apply, Pi.mul_apply, smul_eq_mul]
     ring
   have hd := congrArg (PowerSeries.map (Int.castRingHom ℂ)) dZ_mul
   rw [map_mul, map_sub, map_pow, map_pow, PowerSeries.map_C, map_eisensteinFourInt, map_eisensteinSixInt] at hd
-  rw [hfun, ModularForm.qExpansion_sub one_pos (by simp), ModularForm.coe_smul, ModularForm.coe_smul,
+  rw [hfun, ModularForm.qExpansion_sub one_pos (by simp), FunLike.coe_smul, FunLike.coe_smul,
     ModularForm.qExpansion_smul one_pos (by simp), ModularForm.qExpansion_smul one_pos (by simp),
     h4, h6, ← smul_sub, ← hd, PowerSeries.smul_eq_C_mul, ← mul_assoc, ← map_mul]
   rw [show (1 / 1728 : ℂ) * (Int.castRingHom ℂ) 1728 = 1 by norm_num, map_one, one_mul]

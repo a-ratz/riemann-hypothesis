@@ -69,7 +69,7 @@ theorem exists_ne_zero_aeval_eq_zero {K V : Type} [Field K] [AddCommGroup V] [Mo
     refine (injective_iff_map_eq_zero (aeval g p)).2 fun w hw => ?_
     by_contra hw0
     exact hcon ⟨w, hw0, hw⟩
-  haveI : Fact (Irreducible p) := ⟨hp⟩
+  have : Fact (Irreducible p) := ⟨hp⟩
   have hunit : IsUnit (aeval g p) := by
     first
       | exact (Module.End.isUnit_iff _).2 ⟨hinj, LinearMap.injective_iff_surjective.1 hinj⟩
@@ -173,7 +173,7 @@ theorem base_change_cyclic_vector : BCCyclicVector := by
     have hmem := Polynomial.mem_degreeLT.1 x.2
     have hd : g.charpoly ∣ x.1 := he x.1 hx
     exact Subtype.ext (Polynomial.eq_zero_of_dvd_of_degree_lt hd (by rw [hdeg]; exact hmem))
-  haveI : FiniteDimensional K (Polynomial.degreeLT K (Module.finrank K V)) :=
+  have : FiniteDimensional K (Polynomial.degreeLT K (Module.finrank K V)) :=
     LinearEquiv.finiteDimensional (Polynomial.degreeLTEquiv K (Module.finrank K V)).symm
   have hfr : Module.finrank K (Polynomial.degreeLT K (Module.finrank K V)) = Module.finrank K V := by
     rw [(Polynomial.degreeLTEquiv K (Module.finrank K V)).finrank_eq]

@@ -88,23 +88,23 @@ theorem compact_part_closed_orbit :
     intro g z
     obtain ⟨h, hh⟩ := (hZx z).1 z.2
     exact (hZx _).2 ⟨g * h, by rw [hmul, hh]⟩
-  letI : MulAction G Z :=
+  let : MulAction G Z :=
     { smul := fun g z => ⟨a g z, hmem g z⟩
       one_smul := fun z => Subtype.ext (h1 z)
       mul_smul := fun g h z => Subtype.ext (hmul g h z) }
-  haveI : ContinuousSMul G Z :=
+  have : ContinuousSMul G Z :=
     ⟨Continuous.subtype_mk
-      (ha.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))
+      (ha.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)))
       (fun p => hmem p.1 p.2)⟩
-  haveI : MulAction.IsPretransitive G Z := by
+  have : MulAction.IsPretransitive G Z := by
     refine ⟨fun z w => ?_⟩
     obtain ⟨g, hg⟩ := (hZx z).1 z.2
     obtain ⟨h, hh⟩ := (hZx w).1 w.2
     refine ⟨h * g⁻¹, Subtype.ext ?_⟩
     show a (h * g⁻¹) z = w
     rw [← hg, ← hmul, inv_mul_cancel_right, hh]
-  haveI : LocallyCompactSpace Z := hZ.locallyCompactSpace
-  haveI : BaireSpace Z := BaireSpace.of_t2Space_locallyCompactSpace
+  have : LocallyCompactSpace Z := hZ.locallyCompactSpace
+  have : BaireSpace Z := BaireSpace.of_t2Space_locallyCompactSpace
   have hx : x ∈ Z := (hZx x).2 ⟨1, h1 x⟩
   have hopen := isOpenMap_smul_of_sigmaCompact (G := G) (X := Z) ⟨x, hx⟩
   choose K hK hKn using fun g : G => exists_compact_mem_nhds g
@@ -294,17 +294,17 @@ theorem compact_gram_fibre :
           ∃ c ∈ C, actW (AF F) σ J c (ratTup (AF F) X) = Y := by
   intro F E _ _ _ _ _ σ hσ M J hJ n X hX Ω hΩ
   obtain ⟨⟨hlc, hsc, ht2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := hlc
-  haveI := hsc
-  haveI := ht2
+  have := hlc
+  have := hsc
+  have := ht2
   obtain ⟨htg, hlcH, hscH, ht2H, -, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
-  haveI := htg
-  haveI := hlcH
-  haveI := hscH
-  haveI := ht2H
+  have := htg
+  have := hlcH
+  have := hscH
+  have := ht2H
   obtain ⟨-, hlcK, -, ht2K, -, -, -, -, -, hgram⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
-  haveI := hlcK
-  haveI := ht2K
+  have := hlcK
+  have := ht2K
   obtain ⟨hcont, h1, hmul, hinv⟩ := hact n
   obtain ⟨-, hrat, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.FinQ.gram_rational_finite F E σ hσ M J hJ
   have hZ : IsClosed {Y : Fin n → Fin M → AF F ⊗[F] E |

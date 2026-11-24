@@ -363,7 +363,7 @@ theorem refinePlace_stdBlocks : ∀ (s n : ℕ) (d t : Fin s → ℕ) (d' : ∀ 
     fun x y h => stdBlocks_lt D hf h
   have hr : ∀ E : (Σ c, Fin (D c)) ≃ Fin n, Set.range (fun x : Σₗ c, Fin (D c) => E (ofLex x)) = Set.univ :=
     fun E => Set.eq_univ_of_forall fun z => ⟨toLex (E.symm z), by simp⟩
-  have key := (StrictMono.range_inj m1 m2).1 ((hr _).trans (hr _).symm)
+  have key := (StrictMono.range_inj_of_wellFoundedLT m1 m2).1 ((hr _).trans (hr _).symm)
   exact Equiv.ext fun x => congrFun key (toLex x)
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -378,7 +378,7 @@ theorem jmL_eq_jm {L N : ℕ} (W : List (IrrGL (k := k))) (f : Fin L → IrrGL (
     have : W[i.1] = (List.ofFn f)[i.1]'(by simp) := by simp only [← hW]
     simpa using this
   subst hg
-  exact dif_pos hd
+  exact dite_eq_left hd
 
 end Words
 
@@ -402,7 +402,7 @@ theorem jm_mul_prod_jmL_le : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
   have hE : refinePlace e e' = stdBlocks (fun c : Fin (∑ a, t a) => d' (finSigmaFinEquiv.symm c).1 (finSigmaFinEquiv.symm c).2) hf :=
     refinePlace_stdBlocks g N d t d' hy hW hf
   have hjm : jmL (List.ofFn Wb).flatten π = jm f hf π := jmL_eq_jm _ f (flatten_ofFn_eq _ g Wb) hf π
-  have hb : ∀ b, jmL (Wb b) (y b).rep = jm (Wb b).get (hW b) (y b).rep := fun b => dif_pos (hW b)
+  have hb : ∀ b, jmL (Wb b) (y b).rep = jm (Wb b).get (hW b) (y b).rep := fun b => dite_eq_left (hW b)
   simp only [hb]
   rw [hjm]
   let ρ' : ∀ a b, Representation ℂ (GL (Fin (d' a b)) k) _ := fun a b => ((Wb a).get b).rep

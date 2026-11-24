@@ -65,13 +65,13 @@ theorem UpperTheory.V.CA.c3a :
   have gd : ∀ (p : Ideal C) (q : Ideal R), p.IsPrime → q.IsPrime → p ≤ q.comap (algebraMap C R) →
       ∃ Q : Ideal R, Q ≤ q ∧ Q.IsPrime ∧ Q.comap (algebraMap C R) = p := by
     intro p q hp hq hle
-    haveI : q.LiesOver (q.comap (algebraMap C R)) := ⟨rfl⟩
+    have : q.LiesOver (q.comap (algebraMap C R)) := ⟨rfl⟩
     obtain ⟨Q, hQ, hQp, hQo⟩ := Ideal.exists_ideal_le_liesOver_of_le q hle
     exact ⟨Q, hQ, hQp, hQo.over.symm⟩
   have hmin : ∀ (I : Ideal C), ∀ q ∈ (I.map (algebraMap C R)).minimalPrimes,
       q.comap (algebraMap C R) ∈ I.minimalPrimes := by
     intro I q hq
-    haveI : q.IsPrime := hq.1.1
+    have : q.IsPrime := hq.1.1
     refine ⟨⟨Ideal.comap_isPrime _ _, Ideal.map_le_iff_le_comap.1 hq.1.2⟩, ?_⟩
     rintro p ⟨hp, hIp⟩ hle
     obtain ⟨Q, hQ, hQp, hQo⟩ := gd p q hp this hle

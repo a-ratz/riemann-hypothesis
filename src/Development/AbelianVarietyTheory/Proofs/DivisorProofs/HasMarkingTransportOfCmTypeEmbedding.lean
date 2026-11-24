@@ -61,10 +61,10 @@ theorem exists_equiv_of_lattices {La : Type} [AddCommGroup La] {g : ℕ} (P P' :
     ∃ φ : (Fin g → ℂ) ≃ₗ[ℝ] (Fin g → ℂ), ∀ a, φ (P a) = P' a := by
   let L : Submodule ℤ (Fin g → ℂ) := LinearMap.range P.toIntLinearMap
   let L' : Submodule ℤ (Fin g → ℂ) := LinearMap.range P'.toIntLinearMap
-  haveI : DiscreteTopology L := hd
-  haveI : DiscreteTopology L' := hd'
-  haveI : IsZLattice ℝ L := ⟨hs⟩
-  haveI : IsZLattice ℝ L' := ⟨hs'⟩
+  have : DiscreteTopology L := hd
+  have : DiscreteTopology L' := hd'
+  have : IsZLattice ℝ L := ⟨hs⟩
+  have : IsZLattice ℝ L' := ⟨hs'⟩
   let e : La ≃ₗ[ℤ] L := LinearEquiv.ofInjective P.toIntLinearMap hi
   let e' : La ≃ₗ[ℤ] L' := LinearEquiv.ofInjective P'.toIntLinearMap hi'
   let b := Module.Free.chooseBasis ℤ L

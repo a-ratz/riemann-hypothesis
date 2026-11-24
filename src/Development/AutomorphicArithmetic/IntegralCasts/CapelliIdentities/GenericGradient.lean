@@ -108,7 +108,7 @@ private theorem UpperTheory.Reformulated.B.Qf34.taylor {k B : Type*} [CommRing k
       · rw [pderiv_X_of_ne (Ne.symm hl), map_zero]
         ring
     simp only [e, Finset.sum_add_distrib, ← Finset.mul_sum, ← hp, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, map_mul]
+      Finset.mem_univ, ite_true, map_mul]
     linear_combination - h p (X i)
 
 open MvPolynomial in
@@ -202,10 +202,10 @@ theorem UpperTheory.Reformulated.B.Qf34.proof :
     refine ⟨IsLocalization.mk' A a ⟨b, hb'⟩, ?_⟩
     rw [← hg, ← hg, eq_div_iff (hu ⟨b, hb'⟩).ne_zero, ← hπφ, ← hπφ, ← map_mul]
     exact congrArg π (IsLocalization.mk'_spec A a ⟨b, hb'⟩)
-  haveI : Algebra.EssFiniteType (R ⧸ J) K :=
+  have : Algebra.EssFiniteType (R ⧸ J) K :=
     Algebra.EssFiniteType.of_isLocalization K (nonZeroDivisors (R ⧸ J))
-  haveI : Algebra.EssFiniteType ℂ K := Algebra.EssFiniteType.comp ℂ (R ⧸ J) K
-  haveI : Algebra.FormallySmooth ℂ K := Algebra.FormallySmooth.of_perfectField
+  have : Algebra.EssFiniteType ℂ K := Algebra.EssFiniteType.comp ℂ (R ⧸ J) K
+  have : Algebra.FormallySmooth ℂ K := Algebra.FormallySmooth.of_perfectField
   have hker : RingHom.ker π = IsLocalRing.maximalIdeal A :=
     IsLocalRing.ker_eq_maximalIdeal (π : A →+* K) hπ
   have hN : IsLocalRing.maximalIdeal A ≤ (Ideal.span (Set.range f)).map (algebraMap R A) := by

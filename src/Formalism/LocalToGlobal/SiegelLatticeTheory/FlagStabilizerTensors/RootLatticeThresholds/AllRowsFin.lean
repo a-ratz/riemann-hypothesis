@@ -260,7 +260,7 @@ def instFintypeQ : Fintype (KSub X.B.I ⧸ KgN X.B.I X.B.g) := Fintype.ofEquiv _
 
 theorem biInv_conv {f₁ f₂ : X.B.I.Gf → ℂ} (hf₁ : BiInv X f₁) (hf₂ : BiInv X f₂) :
     BiInv X (X.B.I.convF X.B.μf f₁ f₂) := by
-  haveI := instFintypeQ hS
+  have := instFintypeQ hS
   refine ⟨fun x hx => ?_, fun x n hn => ?_, fun x n hn => ?_⟩
   · by_contra hxK
     apply hx
@@ -287,7 +287,7 @@ theorem biInv_conv {f₁ f₂ : X.B.I.Gf → ℂ} (hf₁ : BiInv X f₁) (hf₂ 
 
 theorem conv_hat {f₁ f₂ : X.B.I.Gf → ℂ} (hf₁ : BiInv X f₁) (hf₂ : BiInv X f₂) (γ : G0g D.nd) :
     hat hS (X.B.I.convF X.B.μf f₁ f₂) γ = ∑ δ : G0g D.nd, hat hS f₁ δ * hat hS f₂ (δ⁻¹ * γ) := by
-  haveI := instFintypeQ hS
+  have := instFintypeQ hS
   have key : ∀ q : KSub X.B.I ⧸ KgN X.B.I X.B.g,
       hat hS f₁ (qEquiv hS q) * hat hS f₂ ((qEquiv hS q)⁻¹ * γ) =
         (V X : ℂ) * ((V X : ℂ) * (f₁ ((q.out : KSub X.B.I) : X.B.I.Gf) *

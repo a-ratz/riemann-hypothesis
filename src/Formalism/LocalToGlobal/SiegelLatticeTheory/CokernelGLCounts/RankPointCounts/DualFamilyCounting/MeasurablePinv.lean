@@ -68,11 +68,11 @@ theorem fib2 (Γ : AddSubgroup (V × V)) [Countable Γ] (A₁ A₂ : AddSubgroup
     (K : Set (V × V)) (hK : MeasurableSet K) (hKd : ∀ g, ∃! γ : Γ, (γ : V × V) + g ∈ K) :
     (μ.prod μ) K = μ F₁ * μ F₂ := by
   classical
-  haveI : μ.IsAddLeftInvariant := ⟨fun g => by
+  have : μ.IsAddLeftInvariant := ⟨fun g => by
     have h : (fun x : V => g + x) = fun x => x + g := funext fun x => add_comm g x
     rw [h]
     exact Measure.IsAddRightInvariant.map_add_right_eq_self g⟩
-  haveI : MeasurableAdd (V × V) :=
+  have : MeasurableAdd (V × V) :=
     ⟨fun c => by
       first
         | exact ((measurable_const_add c.1).comp measurable_fst).prodMk ((measurable_const_add c.2).comp measurable_snd)
@@ -81,8 +81,8 @@ theorem fib2 (Γ : AddSubgroup (V × V)) [Countable Γ] (A₁ A₂ : AddSubgroup
       first
         | exact ((measurable_add_const c.1).comp measurable_fst).prodMk ((measurable_add_const c.2).comp measurable_snd)
         | exact ((measurable_add_const c.1).comp measurable_fst).prod_mk ((measurable_add_const c.2).comp measurable_snd)⟩
-  haveI : MeasurableConstVAdd Γ (V × V) := ⟨fun c => measurable_const_add (c : V × V)⟩
-  haveI : VAddInvariantMeasure Γ (V × V) (μ.prod μ) :=
+  have : MeasurableConstVAdd Γ (V × V) := ⟨fun c => measurable_const_add (c : V × V)⟩
+  have : VAddInvariantMeasure Γ (V × V) (μ.prod μ) :=
     ⟨fun c s _ => measure_preimage_add (μ.prod μ) (c : V × V) s⟩
   have hK' : ∀ g : V × V, ∃! γ : Γ, (γ : V × V) + g ∈ F₁ ×ˢ F₂ := by
     rintro ⟨x, y⟩
@@ -212,7 +212,7 @@ theorem Pmap_mp : MeasurePreserving (Pmap X) volume volume := by
       invFun := fun v => ⟨psiP X v, IsTotallyReal.isReal _⟩
       left_inv := fun w => Subtype.ext ((psiP X).apply_symm_apply w.1)
       right_inv := fun v => (psiP X).symm_apply_apply v }
-  haveI : IsProbabilityMeasure (volume : Measure ({w : InfinitePlace D.host.F // w.IsComplex} → ℂ)) := by
+  have : IsProbabilityMeasure (volume : Measure ({w : InfinitePlace D.host.F // w.IsComplex} → ℂ)) := by
     rw [volume_pi, Measure.pi_of_empty]
     infer_instance
   have h1 : MeasurePreserving (Prod.fst : mixedSpace D.host.F → ({w : InfinitePlace D.host.F // w.IsReal} → ℝ))
@@ -302,7 +302,7 @@ theorem realIdealBlock (𝔞 : (FractionalIdeal (nonZeroDivisors (𝓞 D.host.F)
       show a = Pmap X l
       rw [← e]
       exact (Pmap_Pinv X a).symm
-  haveI : VAddInvariantMeasure (Submodule.span ℤ (Set.range b)) (mixedSpace D.host.F) volume :=
+  have : VAddInvariantMeasure (Submodule.span ℤ (Set.range b)) (mixedSpace D.host.F) volume :=
     ⟨fun c s _ => measure_preimage_add volume (c : mixedSpace D.host.F) s⟩
   have hFD : IsAddFundamentalDomain (Submodule.span ℤ (Set.range b)) (ZSpan.fundamentalDomain b) volume :=
     ZSpan.isAddFundamentalDomain b volume

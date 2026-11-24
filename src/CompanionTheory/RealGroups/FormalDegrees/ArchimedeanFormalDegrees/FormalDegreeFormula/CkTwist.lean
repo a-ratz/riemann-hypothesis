@@ -100,9 +100,9 @@ theorem twTau_apply {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
     ((twTau T c k : unitary (T.V →L[ℂ] T.V)) : T.V →L[ℂ] T.V) = twChi c k • T.op k := rfl
 
 theorem twTau_cont {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c : ℤ) : Continuous (twTau T c) := by
-  have hK : Continuous (fun k : KG ε => toMK k) := (continuous_toM _).comp continuous_subtype_val
+  have hK : Continuous (fun k : KG ε => toMK k) := (continuous_toM _).comp continuous_subtypeVal
   have hχc : Continuous (twChi (ε := ε) c) := (hK.matrix_det).zpow₀ c (fun k => Or.inl (twist_det_ne k))
-  have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtype_val.comp T.cont
+  have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtypeVal.comp T.cont
   exact Continuous.subtype_mk (hχc.smul hop) _
 
 def twD {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c : ℤ) : Matrix (Fin n) (Fin n) ℂ →ₗ[ℂ] (T.V →L[ℂ] T.V) :=
@@ -114,7 +114,7 @@ theorem twTau_irred {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
   intro k v hv
   have h := W.smul_mem (twChi c k)⁻¹ (hW k v hv)
   convert h using 1
-  rw [twTau_apply, ContinuousLinearMap.smul_apply, smul_smul, inv_mul_cancel₀ (twChi_ne c k), one_smul]
+  rw [twTau_apply, smul_apply, smul_smul, inv_mul_cancel₀ (twChi_ne c k), one_smul]
 
 theorem twTau_hasDeriv {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c : ℤ) (X : Matrix (Fin n) (Fin n) ℂ)
     (hX : inK ε X) (γ : ℝ → KG ε) (hγ : ∀ t : ℝ, toMK (γ t) = NormedSpace.exp ((t : ℂ) • X)) :
@@ -146,8 +146,8 @@ theorem twD_wt {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c :
     twD T c (Matrix.single a a 1) T.w = (((Λ a + (c : ℝ) : ℝ)) : ℂ) • T.w := by
   show (T.dτ (Matrix.single a a 1) + Matrix.trace (Matrix.single a a (1 : ℂ)) •
     ((c : ℂ) • (1 : T.V →L[ℂ] T.V))) T.w = (((Λ a + (c : ℝ) : ℝ)) : ℂ) • T.w
-  rw [ContinuousLinearMap.add_apply, T.w_wt, Matrix.trace_single_eq_same, one_smul,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply]
+  rw [add_apply, T.w_wt, Matrix.trace_single_eq_same, one_smul,
+    smul_apply, one_apply_eq_self]
   push_cast
   rw [add_smul]
 
@@ -155,8 +155,8 @@ theorem twD_hw {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c :
     (he : ε a = ε b) : twD T c (Matrix.single a b 1) T.w = 0 := by
   show (T.dτ (Matrix.single a b 1) + Matrix.trace (Matrix.single a b (1 : ℂ)) •
     ((c : ℂ) • (1 : T.V →L[ℂ] T.V))) T.w = 0
-  rw [ContinuousLinearMap.add_apply, T.w_hw a b hab he, Matrix.trace_single_eq_of_ne (h := ne_of_lt hab),
-    zero_smul, ContinuousLinearMap.zero_apply, add_zero]
+  rw [add_apply, T.w_hw a b hab he, Matrix.trace_single_eq_of_ne (h := ne_of_lt hab),
+    zero_smul, zero_apply, add_zero]
 
 def twistKType {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c : ℤ) : KType ε (fun a => Λ a + (c : ℝ)) where
   V := T.V
@@ -173,7 +173,7 @@ def twistKType {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c :
 theorem cK_twistKType {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (c : ℤ) (k : KG ε) :
     cK (twistKType T c) k = cK T k := by
   show ‖⟪T.w, ((twTau T c k : unitary (T.V →L[ℂ] T.V)) : T.V →L[ℂ] T.V) T.w⟫_ℂ‖ = ‖⟪T.w, T.op k T.w⟫_ℂ‖
-  rw [twTau_apply, ContinuousLinearMap.smul_apply, inner_smul_right, norm_mul, norm_twChi, one_mul]
+  rw [twTau_apply, smul_apply, inner_smul_right, norm_mul, norm_twChi, one_mul]
 
 theorem ckTwist : CkTwist := fun _ _ _ T c => ⟨twistKType T c, cK_twistKType T c⟩
 

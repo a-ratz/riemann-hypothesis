@@ -165,7 +165,7 @@ theorem continuous_orbit (σ : E →ₐ[F] E) {M a : ℕ} (J : Matrix (Fin M) (F
     (X : Fin a → Fin M → AF F ⊗[F] E) : Continuous (fun g : HA (AF F) σ J => g • X) := by
   have hm : Continuous (fun g : HA (AF F) σ J =>
       ((HA.mat (AF F) σ J g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   refine continuous_pi fun x => ?_
   change Continuous fun g : HA (AF F) σ J =>
     ((HA.mat (AF F) σ J g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) _).mulVec (X x)

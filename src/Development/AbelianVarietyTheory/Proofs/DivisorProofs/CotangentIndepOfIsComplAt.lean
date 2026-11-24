@@ -54,9 +54,9 @@ namespace GlobalTheory.TChart
 theorem cotangent_indep_of_isComplAt : ∀ (W : Type) [CommRing W] [IsLocalRing W] [IsNoetherianRing W] (I : Type) [Fintype I] (R : Type) [CommRing R] [IsLocalRing R] (ψ : MvPolynomial I W →+* R), IsComplAt ψ → IsLocalHom (ψ.comp MvPolynomial.C) → ∀ (m : ℕ) (ι₀ : Fin m ↪ I), (∀ k, ψ (MvPolynomial.X (ι₀ k)) ∈ maximalIdeal R) → ∀ c : Fin m → R, ∑ k, c k * ψ (MvPolynomial.X (ι₀ k)) ∈ maximalIdeal R ^ 2 ⊔ (maximalIdeal W).map (ψ.comp MvPolynomial.C) → ∀ k, c k ∈ maximalIdeal R := by
   intro W _ _ _ I _ R _ _ ψ hψ hloc m ι₀ hX c hc k
   classical
-  letI : Algebra (MvPolynomial I W) R := ψ.toAlgebra
-  haveI hflat : Module.Flat (MvPolynomial I W) R := hψ.2.2.1
-  haveI := hloc
+  let : Algebra (MvPolynomial I W) R := ψ.toAlgebra
+  have hflat : Module.Flat (MvPolynomial I W) R := hψ.2.2.1
+  have := hloc
   have hsmul : ∀ (a : MvPolynomial I W) (r : R), a • r = ψ a * r := fun a r => by
     rw [Algebra.smul_def, RingHom.algebraMap_toAlgebra]
   let P : Ideal (MvPolynomial I W) := (maximalIdeal R).comap ψ

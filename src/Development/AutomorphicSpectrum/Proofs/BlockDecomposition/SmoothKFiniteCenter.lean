@@ -214,9 +214,9 @@ theorem isHaarMeasure_map_restrict (E : Type) [Field E] [NumberField E] [_root_.
     (hUc : IsCompact U) (hU1 : U ∈ 𝓝 (1 : AdelicGLn.FiniteAdelicGL E a)) :
     ((μ.restrict ((fun h : GA E a => (AdelicGLn.prodEquiv E a h).2) ⁻¹' U)).map
       (fun h : GA E a => AutomorphicForm.archEquiv E a (AdelicGLn.prodEquiv E a h).1)).IsHaarMeasure := by
-  haveI : T2Space (AdelicGLn.FiniteAdelicGL E a) := inferInstance
-  haveI : T2Space (AutomorphicForm.archGroup E a) := inferInstance
-  haveI : BorelSpace (GA E a) := inferInstance
+  have : T2Space (AdelicGLn.FiniteAdelicGL E a) := inferInstance
+  have : T2Space (AutomorphicForm.archGroup E a) := inferInstance
+  have : BorelSpace (GA E a) := inferInstance
   set q : GA E a → AdelicGLn.FiniteAdelicGL E a := fun h => (AdelicGLn.prodEquiv E a h).2 with hq_def
   set p : GA E a → AutomorphicForm.archGroup E a :=
     fun h => AutomorphicForm.archEquiv E a (AdelicGLn.prodEquiv E a h).1 with hp_def
@@ -314,14 +314,14 @@ theorem exists_aeval_lapOp_eq_zero_of_finite (φ : Sm E a)
   classical
   set Ω := omegaOp (E := E) (a := a) (⇑b) ε with hΩ
   set W := Submodule.span ℂ (Set.range fun k => cptRep E a k φ) with hWdef
-  haveI : FiniteDimensional ℂ W := hk
+  have : FiniteDimensional ℂ W := hk
   have hZ : Ω ∈ Zalg E a := by
     rw [hΩ, _root_.GlobalTheory.CompanionTheory.HCRep.TraceCas.omegaOp_eq_two_cas E a d b ε hε horth]
     refine Subalgebra.smul_mem _ (Subalgebra.sum_mem _ fun w _ => Subalgebra.add_mem _ ?_ ?_) _
     · exact _root_.GlobalTheory.CompanionTheory.Inh.CapelliCasimir.cas_mem_Zalg E a _
     · exact _root_.GlobalTheory.CompanionTheory.Inh.CapelliCasimir.cas_mem_Zalg E a _
   set Vz := Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z φ) '' Zalg E a) with hVz
-  haveI : FiniteDimensional ℂ Vz := hz
+  have : FiniteDimensional ℂ Vz := hz
   have hVs : ∀ w ∈ Vz, Ω w ∈ Vz := by
     intro w hw
     refine Submodule.span_induction (p := fun w _ => Ω w ∈ Vz) ?_ ?_ ?_ ?_ hw
@@ -684,8 +684,8 @@ theorem count_lattice (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
 theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (μ : Measure (GA E a)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (φ : Sm E a), (∀ γ g, φ.1 (ratGL E a γ * g) = φ.1 g) → (∀ t g, φ.1 (splitCentre E a t * g) = φ.1 g) → IsOpen {k | finRep E a k φ = φ} → FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => cptRep E a k φ)) → FiniteDimensional ℂ (Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z φ) '' Zalg E a)) → MemL2Quotient (latticeGL E a) μ φ.1 → ∀ g, ∃ (C : ℝ) (N : ℕ), ∀ y, ‖φ.1 (g * infGL E a y)‖ ≤ C * height y ^ N := by
   intro E _ _ _ a μ _ _ φ hl hc hlev hK hZ hL g
   classical
-  letI : MeasurableSpace (AutomorphicForm.archGroup E a) := borel _
-  haveI : BorelSpace (AutomorphicForm.archGroup E a) := ⟨rfl⟩
+  let : MeasurableSpace (AutomorphicForm.archGroup E a) := borel _
+  have : BorelSpace (AutomorphicForm.archGroup E a) := ⟨rfl⟩
   have hφc : Continuous φ.1 := ContAut.continuous_of_isOpen_stab E a φ hlev
   have h1O : (1 : AdelicGLn.FiniteAdelicGL E a) ∈ {k | finRep E a k φ = φ} := by
     change finRep E a 1 φ = φ
@@ -713,7 +713,7 @@ theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     exact this.symm.trans (congrArg φ.1 e)
   have hQm : MeasurableSet (q ⁻¹' U) := (hUc.isClosed.preimage hq).measurableSet
   obtain ⟨ν, hν⟩ : ∃ ν : Measure (AutomorphicForm.archGroup E a), ν = (μ.restrict (q ⁻¹' U)).map p := ⟨_, rfl⟩
-  haveI : ν.IsHaarMeasure := by
+  have : ν.IsHaarMeasure := by
     rw [hν, hpdef, hqdef]
     exact _root_.GlobalTheory.CompanionTheory.GrowthHaar.isHaarMeasure_map_restrict E a μ U hUc hU1
   obtain ⟨κ, hκc, hκs, hκ⟩ := _root_.GlobalTheory.CompanionTheory.HCRep.GrowthKernel.exists_kernel_of_finite E a φ hK hZ ν
@@ -742,13 +742,13 @@ theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     have h := (eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top (p := 2) (by norm_num) (by norm_num) hmem.aestronglyMeasurable).1 hmem.eLpNorm_lt_top
     rw [hI]
     simpa using h.ne
-  have hfm : Measurable fun x => ‖φ.1 x‖ₑ ^ 2 := (hφc.enorm.measurable).pow_const 2
+  have hfm : Measurable fun x => ‖φ.1 x‖ₑ ^ 2 := (hφc.eNorm.measurable).pow_const 2
 
   have hA : ∀ x, ∫⁻ s in S, ‖φ.1 (x * AutomorphicForm.infEmb E a s)‖ₑ ^ 2 ∂ν =
       ∫⁻ h in T, ‖φ.1 (x * h)‖ₑ ^ 2 ∂μ := by
     intro x
     have hG : Measurable fun s => ‖φ.1 (x * AutomorphicForm.infEmb E a s)‖ₑ ^ 2 :=
-      ((hφc.comp (continuous_const.mul AutomorphicForm.continuous_infEmb)).enorm.measurable).pow_const 2
+      ((hφc.comp (continuous_const.mul AutomorphicForm.continuous_infEmb)).eNorm.measurable).pow_const 2
     rw [← lintegral_indicator hSm, hν, lintegral_map (hG.indicator hSm) hp.measurable, hT,
       ← Measure.restrict_restrict (hp.measurable hSm), ← lintegral_indicator (hp.measurable hSm)]
     refine lintegral_congr_ae ((ae_restrict_mem hQm).mono fun h hh => ?_)
@@ -795,7 +795,7 @@ theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
   have hker : ∀ x, ‖φ.1 x‖ₑ ≤ ENNReal.ofReal c₀ * (ν S + ∫⁻ s in S, ‖φ.1 (x * AutomorphicForm.infEmb E a s)‖ₑ ^ 2 ∂ν) := by
     intro x
     have hG : Measurable fun s => ‖φ.1 (x * AutomorphicForm.infEmb E a s)‖ₑ ^ 2 :=
-      ((hφc.comp (continuous_const.mul AutomorphicForm.continuous_infEmb)).enorm.measurable).pow_const 2
+      ((hφc.comp (continuous_const.mul AutomorphicForm.continuous_infEmb)).eNorm.measurable).pow_const 2
     have hsq : ∀ u : ℝ≥0∞, u ≤ 1 + u ^ 2 := fun u => by
       rcases le_total u 1 with h | h
       · exact h.trans le_self_add
@@ -804,13 +804,13 @@ theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
           _ = u ^ 2 := (sq u).symm
           _ ≤ 1 + u ^ 2 := le_add_self
     calc ‖φ.1 x‖ₑ = ‖∫ y, φ.1 (x * AutomorphicForm.infEmb E a y) * κ y ∂ν‖ₑ := by rw [← hκ x]
-      _ ≤ ∫⁻ y, ‖φ.1 (x * AutomorphicForm.infEmb E a y) * κ y‖ₑ ∂ν := enorm_integral_le_lintegral_enorm _
+      _ ≤ ∫⁻ y, ‖φ.1 (x * AutomorphicForm.infEmb E a y) * κ y‖ₑ ∂ν := eNorm_integral_le_lintegral_eNorm _
       _ ≤ ∫⁻ y, S.indicator (fun s => ENNReal.ofReal c₀ * (1 + ‖φ.1 (x * AutomorphicForm.infEmb E a s)‖ₑ ^ 2)) y ∂ν := by
         refine lintegral_mono fun y => ?_
         by_cases hy : y ∈ S
-        · rw [Set.indicator_of_mem hy, enorm_mul, mul_comm]
+        · rw [Set.indicator_of_mem hy, eNorm_mul, mul_comm]
           refine mul_le_mul' ?_ (hsq _)
-          rw [← ofReal_norm_eq_enorm]
+          rw [← ofReal_norm]
           exact ENNReal.ofReal_le_ofReal (hc₀ y)
         · have h0 : κ y = 0 := image_eq_zero_of_notMem_tsupport (by rwa [← hS])
           rw [h0]
@@ -836,7 +836,7 @@ theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     rw [ENNReal.ofReal_mul hc₀0, ENNReal.ofReal_add ENNReal.toReal_nonneg (by positivity),
       ENNReal.ofReal_toReal hνS, ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_toReal hItop,
       ENNReal.ofReal_natCast]
-  rw [e2, ← ofReal_norm_eq_enorm] at e1
+  rw [e2, ← ofReal_norm] at e1
   have e3 := (ENNReal.ofReal_le_ofReal_iff (mul_nonneg hc₀0 (by positivity))).1 e1
   refine e3.trans ?_
   rw [mul_assoc]

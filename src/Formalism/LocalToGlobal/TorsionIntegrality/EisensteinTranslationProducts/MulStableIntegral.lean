@@ -167,7 +167,7 @@ lemma num_add (hq : SgStarQuasi) (hst : MulStable L α) (hc : (S.card : ℝ) + 1
   have key : ∀ x y : ℂ, Complex.exp ((Real.pi : ℂ) * (((S.card + 1 : ℕ) : ℂ) * x) +
       (Real.pi : ℂ) * (((S.card + 1 : ℕ) : ℂ) * y) / 2) =
       Complex.exp ((Real.pi : ℂ) * x + (Real.pi : ℂ) * y / 2) ^ (S.card + 1) := by
-    intro x y; rw [← Complex.exp_nat_mul]; congr 1; ring
+    intro x y; rw [← Complex.exp_natCast_mul]; congr 1; ring
   simp only [mlt]
   rw [herm_mul L α z ω, herm_mul L α ω ω, hN, key]
   ring
@@ -620,7 +620,7 @@ theorem translateProduct_of (h : SgStarAdd) : TranslateProduct := by
       * Complex.exp (-(Real.pi : ℂ) * herm L z (P - Q) - (Real.pi : ℂ) * herm L (P - Q) (P - Q) / 2)
       = Complex.exp (-(Real.pi : ℂ) * herm L 0 Q - (Real.pi : ℂ) * herm L Q Q / 2) ^ 2
         * Complex.exp (-(Real.pi : ℂ) * herm L z P - (Real.pi : ℂ) * herm L P P / 2) ^ 2 := by
-    rw [← Complex.exp_add, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+    rw [← Complex.exp_add, ← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_add]
     congr 1
     simp only [herm, map_add (f := _), map_sub]
     push_cast

@@ -68,7 +68,7 @@ theorem map_mul_right_eq_of_fundamentalDomain {H : Type} [Group H] [TopologicalS
     [MeasurableSpace H] [BorelSpace H] (Λ : Subgroup H) [Countable Λ] (ρ : Measure H)
     [ρ.IsHaarMeasure] (𝓡 : Set H) (h𝓡 : IsFundamentalDomain Λ 𝓡 ρ) (hfin : ρ 𝓡 ≠ ⊤) (x₀ : H) :
     ρ.map (· * x₀) = ρ := by
-  haveI : (ρ.map (· * x₀)).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right ρ x₀
+  have : (ρ.map (· * x₀)).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right ρ x₀
   have hc := Measure.isMulLeftInvariant_eq_smul (ρ.map (· * x₀)) ρ
   set c := Measure.haarScalarFactor (ρ.map (· * x₀)) ρ
   have h' : IsFundamentalDomain Λ ((· * x₀) ⁻¹' 𝓡) ρ := by
@@ -81,7 +81,7 @@ theorem map_mul_right_eq_of_fundamentalDomain {H : Type} [Group H] [TopologicalS
   have hmap : (ρ.map (· * x₀)) 𝓡 = ρ ((· * x₀) ⁻¹' 𝓡) :=
     MeasurableEquiv.map_apply (MeasurableEquiv.mulRight x₀) 𝓡
   have h1 : (c : ℝ≥0∞) * ρ 𝓡 = 1 * ρ 𝓡 := by
-    calc (c : ℝ≥0∞) * ρ 𝓡 = (c • ρ) 𝓡 := by simp [Measure.smul_apply]
+    calc (c : ℝ≥0∞) * ρ 𝓡 = (c • ρ) 𝓡 := by simp [smul_apply]
       _ = (ρ.map (· * x₀)) 𝓡 := by rw [hc]
       _ = 1 * ρ 𝓡 := by rw [one_mul]; exact hmap.trans hm
   have hc1 : c = 1 := by
@@ -121,12 +121,12 @@ theorem map_conj_eq_self_of_lattice : ∀ (H : Type) [Group H] [TopologicalSpace
     (∀ x ∈ Λ, β.map (fun b : B => (⟨ι x * b * (ι x)⁻¹, hB x b b.2⟩ : B)) = β) →
     ∀ x : H, β.map (fun b : B => (⟨ι x * b * (ι x)⁻¹, hB x b b.2⟩ : B)) = β := by
   intro H _ _ _ _ _ _ _ _ G _ _ _ _ _ _ _ _ ι hι B hBc hB β hβ Λ _ ρ 𝓡 hρ h𝓡 hfin hΛ
-  haveI := hβ
-  haveI := hρ
-  haveI : LocallyCompactSpace B := hBc.locallyCompactSpace
-  haveI : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology (B : Set G)
-  haveI : SigmaCompactSpace B := inferInstance
-  haveI : SigmaFinite β := inferInstance
+  have := hβ
+  have := hρ
+  have : LocallyCompactSpace B := hBc.locallyCompactSpace
+  have : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology (B : Set G)
+  have : SigmaCompactSpace B := inferInstance
+  have : SigmaFinite β := inferInstance
   have hΛ' : ∀ x ∈ Λ, β.map (conjB ι B hB x) = β := hΛ
   show ∀ x : H, β.map (conjB ι B hB x) = β
   have hφm : ∀ x, Measurable (conjB ι B hB x) := fun x => (conjCME ι B hB x).continuous.measurable
@@ -134,7 +134,7 @@ theorem map_conj_eq_self_of_lattice : ∀ (H : Type) [Group H] [TopologicalSpace
     (conjCME ι B hB x).isHaarMeasure_map β
   obtain ⟨d, hdβ⟩ : ∃ d : H → ℝ≥0, ∀ x, β.map (conjB ι B hB x) = d x • β := ⟨fun x =>
     Measure.haarScalarFactor (β.map (conjB ι B hB x)) β, fun x => by
-      haveI := hHaar x; exact Measure.isMulLeftInvariant_eq_smul _ _⟩
+      have := hHaar x; exact Measure.isMulLeftInvariant_eq_smul _ _⟩
   obtain ⟨K, hKc, hK1⟩ := exists_compact_mem_nhds (1 : B)
   have hK0 : β K ≠ 0 := (Measure.measure_pos_of_mem_nhds β hK1).ne'
   have hKt : β K ≠ ⊤ := hKc.measure_lt_top.ne
@@ -142,7 +142,7 @@ theorem map_conj_eq_self_of_lattice : ∀ (H : Type) [Group H] [TopologicalSpace
     intro a b h
     have h2 : (a : ℝ≥0∞) * β K = (b : ℝ≥0∞) * β K := by
       have := congrArg (fun m : Measure B => m K) h
-      simpa [Measure.smul_apply] using this
+      simpa [smul_apply] using this
     exact_mod_cast (ENNReal.mul_left_inj hK0 hKt).1 h2
   have hmul : ∀ x y, d (x * y) = d x * d y := by
     intro x y
@@ -159,20 +159,20 @@ theorem map_conj_eq_self_of_lattice : ∀ (H : Type) [Group H] [TopologicalSpace
     rw [pos_iff_ne_zero]
     intro h0
     have h1 := congrArg (fun m : Measure B => m Set.univ) (hdβ x)
-    simp only [h0, zero_smul, Measure.coe_zero, Pi.zero_apply] at h1
+    simp only [h0, zero_smul, FunLike.coe_zero, Pi.zero_apply] at h1
     rw [Measure.map_apply (hφm x) MeasurableSet.univ, Set.preimage_univ] at h1
     exact (Measure.measure_univ_pos.2 (NeZero.ne β)).ne' h1
 
   have hΦ : Continuous (fun p : H × B => conjB ι B hB p.1 p.2) :=
     continuous_induced_rng.2 (((hι.comp continuous_fst).mul
-      (continuous_subtype_val.comp continuous_snd)).mul (hι.comp continuous_fst).inv)
+      (continuous_subtypeVal.comp continuous_snd)).mul (hι.comp continuous_fst).inv)
   have hS : MeasurableSet ((fun p : H × B => conjB ι B hB p.1 p.2) ⁻¹' K) :=
     (hKc.isClosed.preimage hΦ).measurableSet
   have hDm : Measurable fun x => β (conjB ι B hB x ⁻¹' K) := measurable_measure_prodMk_left hS
   have hdK : ∀ x, (d x : ℝ≥0∞) = β (conjB ι B hB x ⁻¹' K) / β K := by
     intro x
     rw [ENNReal.eq_div_iff hK0 hKt, ← Measure.map_apply (hφm x) hKc.isClosed.measurableSet, hdβ x]
-    simp [Measure.smul_apply, mul_comm]
+    simp [smul_apply, mul_comm]
   have hdm : Measurable d := by
     apply measurable_coe_nnreal_ennreal_iff.1
     simp_rw [hdK]
@@ -257,7 +257,7 @@ theorem map_eq_self_of_normalises_lattice {B : Type} [Group B] [TopologicalSpace
     [LocallyCompactSpace B] [SecondCountableTopology B] [MeasurableSpace B] [BorelSpace B]
     (Λ : Subgroup B) [Countable Λ] (ν : Measure B) [ν.IsHaarMeasure] (D : Set B) (hD : IsFundamentalDomain Λ D ν)
     (hfin : ν D ≠ ⊤) (φ : B ≃ₜ* B) (h1 : ∀ b ∈ Λ, φ b ∈ Λ) (h2 : ∀ b ∈ Λ, φ.symm b ∈ Λ) : ν.map φ = ν := by
-  haveI : (ν.map φ).IsHaarMeasure := φ.isHaarMeasure_map ν
+  have : (ν.map φ).IsHaarMeasure := φ.isHaarMeasure_map ν
   have hc := Measure.isMulLeftInvariant_eq_smul (ν.map φ) ν
   set c := Measure.haarScalarFactor (ν.map φ) ν
   have hφm : Measurable φ := φ.continuous.measurable
@@ -280,7 +280,7 @@ theorem map_eq_self_of_normalises_lattice {B : Type} [Group B] [TopologicalSpace
   have hmap : (ν.map φ) D = ν (φ ⁻¹' D) :=
     MeasurableEquiv.map_apply φ.toHomeomorph.toMeasurableEquiv D
   have h3 : (c : ℝ≥0∞) * ν D = 1 * ν D := by
-    calc (c : ℝ≥0∞) * ν D = (c • ν) D := by simp [Measure.smul_apply]
+    calc (c : ℝ≥0∞) * ν D = (c • ν) D := by simp [smul_apply]
       _ = (ν.map φ) D := by rw [hc]
       _ = 1 * ν D := by rw [one_mul]; exact hmap.trans hm
   have hc1 : c = 1 := by
@@ -290,18 +290,18 @@ theorem map_eq_self_of_normalises_lattice {B : Type} [Group B] [TopologicalSpace
 
 theorem lintegral_conj_eq_of_semiLat : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] (N M Λ : Subgroup G) [Countable Λ] (ν : Measure N) (π : Measure M) (DN : Set N) (DM : Set M), SemiLat N M Λ ν π DN DM → ∀ m ∈ M, ∀ f : G → ℝ≥0∞, Measurable f → ∫⁻ u : N, f (m * u * m⁻¹) ∂ν = ∫⁻ u : N, f u ∂ν := by
   intro G _ _ _ _ _ _ _ _ N M Λ _ ν π DN DM h m hm f hf
-  haveI := h.haarN
-  haveI : LocallyCompactSpace N := h.closedN.locallyCompactSpace
-  haveI : LocallyCompactSpace M := h.closedM.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set G)
-  haveI : SecondCountableTopology M := TopologicalSpace.Subtype.secondCountableTopology (M : Set G)
+  have := h.haarN
+  have : LocallyCompactSpace N := h.closedN.locallyCompactSpace
+  have : LocallyCompactSpace M := h.closedM.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set G)
+  have : SecondCountableTopology M := TopologicalSpace.Subtype.secondCountableTopology (M : Set G)
   have hcount : ∀ K : Subgroup G, Countable (Λ.subgroupOf K) := fun K =>
     Function.Injective.countable (f := fun g : Λ.subgroupOf K => (⟨g.1.1, g.2⟩ : Λ))
       fun a b hab => Subtype.ext (Subtype.ext (congrArg (fun g : Λ => (g : G)) hab))
-  haveI := hcount N
-  haveI := hcount M
+  have := hcount N
+  have := hcount M
   have hB : ∀ x : M, ∀ b ∈ N, M.subtype x * b * (M.subtype x)⁻¹ ∈ N := fun x b hb => h.norm x x.2 b hb
-  have key := GlobalTheory.ConjModulus.map_conj_eq_self_of_lattice M G M.subtype continuous_subtype_val N h.closedN hB ν h.haarN
+  have key := GlobalTheory.ConjModulus.map_conj_eq_self_of_lattice M G M.subtype continuous_subtypeVal N h.closedN hB ν h.haarN
     (Λ.subgroupOf M) π DM h.haarM h.domM h.finM (fun x hx => by
       have hx' : (x : G) ∈ Λ := hx
       refine map_eq_self_of_normalises_lattice (Λ.subgroupOf N) ν DN h.domN h.finN
@@ -314,7 +314,7 @@ theorem lintegral_conj_eq_of_semiLat : ∀ (G : Type) [Group G] [TopologicalSpac
         exact Λ.mul_mem (Λ.mul_mem (Λ.inv_mem hx') hb') (Λ.inv_mem (Λ.inv_mem hx'))) ⟨m, hm⟩
   have hφm : Measurable (fun b : N => (⟨M.subtype ⟨m, hm⟩ * b * (M.subtype ⟨m, hm⟩)⁻¹, hB ⟨m, hm⟩ b b.2⟩ : N)) :=
     (GlobalTheory.ConjModulus.conjCME M.subtype N hB ⟨m, hm⟩).continuous.measurable
-  have := lintegral_map (μ := ν) (hf.comp measurable_subtype_coe) hφm
+  have := lintegral_map (μ := ν) (hf.comp measurable_subtypeVal) hφm
   rw [key] at this
   exact this.symm
 
@@ -362,12 +362,12 @@ theorem tsum_split_lattice {G : Type} [Group G] (N M Λ : Subgroup G) (disj : �
 
 theorem lintegral_two_step_unfolding : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] (N M Λ : Subgroup G) [Countable Λ] (ν : Measure N) (π : Measure M) (DN : Set N) (DM : Set M), SemiLat N M Λ ν π DN DM → ∀ (μ : Measure G) (D : Set G), μ.IsHaarMeasure → IsFundamentalDomain Λ D μ → ∀ φ : G → ℝ≥0∞, Measurable φ → ∫⁻ x in D, ∫⁻ m : M, ∫⁻ u : N, φ (u * m * x) ∂ν ∂π ∂μ = ν DN * π DM * ∫⁻ x, φ x ∂μ := by
   intro G _ _ _ _ _ _ _ _ N M Λ _ ν π DN DM S μ D hμ hD φ hφ
-  haveI := countable_subgroupOf_of_countable Λ M
-  haveI := countable_subgroupOf_of_countable Λ N
-  haveI : LocallyCompactSpace N := S.closedN.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace M := S.closedM.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI := S.haarN
-  haveI := S.haarM
+  have := countable_subgroupOf_of_countable Λ M
+  have := countable_subgroupOf_of_countable Λ N
+  have : LocallyCompactSpace N := S.closedN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace M := S.closedM.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have := S.haarN
+  have := S.haarM
   have hN := (_root_.GlobalTheory.ResLine.RightUnfold.unimodular_and_unfold N ν (Λ.subgroupOf N) DN S.haarN S.domN S.finN).2
   have hM := (_root_.GlobalTheory.ResLine.RightUnfold.unimodular_and_unfold M π (Λ.subgroupOf M) DM S.haarM S.domM S.finM).2
   have hC := _root_.GlobalTheory.ResLine.lintegral_conj_eq_of_semiLat G N M Λ ν π DN DM S
@@ -438,24 +438,24 @@ theorem right_of_closed {G : Type} [Group G] [TopologicalSpace G] [IsTopological
     (N Λ : Subgroup G) [Countable Λ] (hN : IsClosed (N : Set G)) (ν : Measure N)
     (hν : ν.IsHaarMeasure) (D : Set N) (hD : IsFundamentalDomain (Λ.subgroupOf N) D ν)
     (hfin : ν D ≠ ⊤) : ν.IsMulRightInvariant := by
-  haveI : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set G))
-  haveI : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI := countable_subgroupOf Λ N
+  have : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set G))
+  have : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have := countable_subgroupOf Λ N
   exact RightUnfold.isMulRightInvariant_of_lattice ν (Λ.subgroupOf N) D hD hfin
 
 theorem average_lower : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] (N M Λ : Subgroup G) [Countable Λ] (ν : Measure N) (π : Measure M) (DN : Set N) (DM : Set M), SemiLat N M Λ ν π DN DM → ∀ (μ : Measure G), μ.IsHaarMeasure → ∀ C : Set G, IsCompact C → ∃ (U : Set G) (c : ℝ≥0∞), IsOpen U ∧ μ U ≠ ⊤ ∧ c ≠ 0 ∧ ∀ u₀ ∈ N, ∀ m₀ ∈ M, ∀ y ∈ C, c ≤ ∫⁻ m : M, ∫⁻ u : N, U.indicator 1 ((u : G) * m * (u₀ * m₀ * y)) ∂ν ∂π := by
   intro G _ _ _ _ _ _ _ _ N M Λ _ ν π DN DM H μ hμ C hC
-  haveI : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set G))
-  haveI : BorelSpace M := Subtype.borelSpace (fun x => x ∈ (M : Set G))
-  haveI := H.haarN
-  haveI := H.haarM
-  haveI := right_of_closed N Λ H.closedN ν H.haarN DN H.domN H.finN
-  haveI := right_of_closed M Λ H.closedM π H.haarM DM H.domM H.finM
+  have : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set G))
+  have : BorelSpace M := Subtype.borelSpace (fun x => x ∈ (M : Set G))
+  have := H.haarN
+  have := H.haarM
+  have := right_of_closed N Λ H.closedN ν H.haarN DN H.domN H.finN
+  have := right_of_closed M Λ H.closedM π H.haarM DM H.domM H.finM
   obtain ⟨K, hK, hCK⟩ := exists_compact_superset hC
   obtain ⟨W, hW, hWC⟩ := compact_open_separated_mul_left hC isOpen_interior hCK
   obtain ⟨V, hVo, hV1, hVW⟩ := exists_open_nhds_one_mul_subset hW
-  have hVN : IsOpen ((↑) ⁻¹' V : Set N) := hVo.preimage continuous_subtype_val
-  have hVM : IsOpen ((↑) ⁻¹' V : Set M) := hVo.preimage continuous_subtype_val
+  have hVN : IsOpen ((↑) ⁻¹' V : Set N) := hVo.preimage continuous_subtypeVal
+  have hVM : IsOpen ((↑) ⁻¹' V : Set M) := hVo.preimage continuous_subtypeVal
   refine ⟨interior K, ν ((↑) ⁻¹' V) * π ((↑) ⁻¹' V), isOpen_interior,
     ((measure_mono interior_subset).trans_lt hK.measure_lt_top).ne,
     mul_ne_zero (hVN.measure_ne_zero ν ⟨1, hV1⟩) (hVM.measure_ne_zero π ⟨1, hV1⟩), ?_⟩

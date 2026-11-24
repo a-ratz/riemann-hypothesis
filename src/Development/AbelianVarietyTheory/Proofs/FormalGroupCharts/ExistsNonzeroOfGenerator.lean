@@ -124,8 +124,8 @@ theorem integral_baseChange (T T' : CDVR) (io : c.F →+* T.Fr) (io' : c.F →+*
     letI := io'.toAlgebra
     ∀ (ψ : T.Fr →ₐ[c.F] T'.Fr), (∀ a, ψ (algebraMap T.V T.Fr a) = algebraMap T'.V T'.Fr (f a)) →
       ∀ (y : FrPt Xo c T.Fr) (y' : FrPt Xo c T'.Fr), FrMap ψ y y' → Integral T io y → Integral T' io' y' := by
-  letI := io.toAlgebra
-  letI := io'.toAlgebra
+  let := io.toAlgebra
+  let := io'.toAlgebra
   intro ψ hψ y y' hm hy
   obtain ⟨L₁, L₂, -⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨G, t, m1, m2, ⟨ub, h₁, h₂, h₃, h₄⟩, θ, hθ, w1, w2, σ, s1, θ2, a1, a2, a3, a4, a5, a6⟩ := hy
@@ -233,7 +233,7 @@ theorem exists_ext_chart_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
  letI := H.starRing
  ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (la : HeightOneSpectrum (𝓞 c.F)) (e : ℕ), OverLa la T.V io e → y.IsAlg → ∃ (T' : CDVR) (φ : T.Fr →+* T'.Fr) (y' : IntFr Xo c T' (φ.comp io)) (e' : ℕ), φ.Finite ∧ OverLa la T'.V (φ.comp io) e' ∧ y'.IsAlg ∧ (∀ a : T.V, ∃ b : T'.V, algebraMap T'.V T'.Fr b = φ (algebraMap T.V T.Fr a)) ∧ (letI := io.toAlgebra; letI := (φ.comp io).toAlgebra; FrMap ({ φ with commutes' := fun _ => rfl } : T.Fr →ₐ[c.F] T'.Fr) y.1 y'.1) ∧ (∀ f : Rul Xo c, IsNatural (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) f → evI y' f = φ (evI y f) ∧ nval T'.V e' (evI y' f) = nval T.V e (evI y f)) ∧ ∃ C : IntegralChartA3 Xo c T' (φ.comp io) y', FrTrunc C.I.G (𝟙 (Sp T'.V)) (chD C.ch) C.xT C.eT ∧ ∃ P : PELUnif (maximalIdeal T'.V) C.I.G, P.TorsionIso := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y la e ho hy
   have : Finite (ResidueField T.V) := hy
   obtain ⟨hL, -⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
@@ -243,8 +243,8 @@ theorem exists_ext_chart_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   let T' : Formalism.L2.Pj.CDVR := { V := W }
   obtain ⟨φ, r, hr0, hφ, hv, -⟩ := GlobalTheory.EtaVal.finite_extension_ramification_embedding T T' (algebraMap T.V W) hi
     (RingHom.finite_algebraMap.2 hf)
-  letI := io.toAlgebra
-  letI := (φ.comp io).toAlgebra
+  let := io.toAlgebra
+  let := (φ.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { φ with commutes' := fun _ => rfl }
   obtain ⟨z, hz⟩ := hL.bc _ _ ψ y.1
   let y' : IntFr Xo c T' (φ.comp io) :=
@@ -252,7 +252,7 @@ theorem exists_ext_chart_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   obtain ⟨C, hC⟩ := (GlobalTheory.IntChartExists.intChart_exists E H Dw l Xo c).2.2 (fun _ => rfl) T' _ y'
   refine ⟨T', φ, y', r * e, ?_, ho.bc φ hr0 hv, hr, fun a => ⟨_, (hφ a).symm⟩, hz, fun f hf => ?_, C, hC,
     exists_unif_of_split T T' _ φ hφ m1 m2 hz.1 C.I.m1 C.I.m2 hS⟩
-  · letI := φ.toAlgebra
+  · let := φ.toAlgebra
     exact GlobalTheory.SS.finiteDimensional_of_finite_of_isFractionRing T.V T.Fr W T'.Fr (RingHom.ext fun a => (hφ a).symm)
   · have h : evI y' f = φ (evI y f) := by
       have h1 := y.2.1

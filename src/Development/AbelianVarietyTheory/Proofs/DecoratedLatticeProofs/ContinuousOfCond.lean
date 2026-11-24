@@ -156,7 +156,7 @@ theorem isGL_one {X : Fields} {R : Ranks} {k : Type} [Field k] [ValuativeRel k] 
 
 theorem exists_normal_rep : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X Pr R.m) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S₀ : Set ℕ) (mu : Tup X.F X.E X.K S₀) (cst : LocCst X (rowSG Pr sel mu)) (σ₀ : X.K →+* ℂ) (P : rowSG Pr sel mu) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : X.E →+* k) (s : ℕ) (W : TwData k) [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → cst.Ok → AtTwist (R := R) sel mu cst σ₀ P ι s W → ∀ (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K))) (G : ChGlob X R.m), L.Ok Ch sel mu cst G s → IdxProd sel mu cst L → (∀ j c (h : j + 1 + c = s) (b : L.β (j + 1)) (g' : GL (XIx (Fin R.k) (Fin R.t) (j + 1) ⊕ Fin (c + 1)) k), IsGL ι (L.h (j + 1) b P) g' → ∃ (al : L.β j) (g : GL (XIx (Fin R.k) (Fin R.t) (j) ⊕ Fin (c + 1 + 1)) k), IsGL ι (L.h j al P) g ∧ flat W.ψ ν ((W.T s R).mu (j + 1)) ((W.T s R).Phi j (c + 1) (by omega)) g g' ≠ 0) → ∀ j c (h : j + c = s) (al : L.β j) (g : GL (XIx (Fin R.k) (Fin R.t) (j) ⊕ Fin (c + 1)) k), IsGL ι (L.h j al P) g → ∃ r ∈ GlobalTheory.RootEx.R k (XIx (Fin R.k) (Fin R.t) (j)) (c + 1) 1, GlobalTheory.IndefiniteRowSideFullHecke.NormalRepresentationLattice.IsNormalRep (W.T s R) W.ϖ j c h (r * g) := by
   intro X Pr R Ch sel S₀ mu cst σ₀ P k _ _ _ _ ι s W _ _ ν hν hcst hAt L G hL hIdx hstep
-  haveI := hν.1
+  have := hν.1
   have hϖ := val_unif_of W.unif
   have hb : ∀ j c h, latOf ((W.T s R).bas j c h) = latOf 1 := fun _ _ _ => rfl
   have H : (∀ j c h x, (W.T s R).Phi j c h x ≠ 0 → IntM x) ∧
@@ -324,7 +324,7 @@ theorem exists_bounded_rep : ∀ (R : Ranks) (k : Type) [Field k] [ValuativeRel 
       ∀ κ ∈ ((W.T s R).lev (j + 1) (c + 1) (by omega)).J,
         latOf 1 ≤ latOf (g₁ * κ) ∧ ∀ y ∈ latOf (g₁ * κ), ((W.ϖ : k) ^ (j + 1)) • y ∈ latOf 1 := by
   intro R k _ _ _ _ s W _ _ ν hν j c h g hr h' hf
-  haveI := hν.1
+  have := hν.1
   have hϖ := val_unif W.unif
   have hb : ∀ j c h, latOf ((W.T s R).bas j c h) = latOf 1 := fun _ _ _ => rfl
   have H : (∀ j c h x, (W.T s R).Phi j c h x ≠ 0 → IntM x) ∧
@@ -357,21 +357,21 @@ theorem exists_toLocGL_mem : ∀ (E k : Type) [Field E] [Field k] [ValuativeRel 
     (ι : E →+* k), DenseRange ι → ∀ (A : Type) [Fintype A] [DecidableEq A] (a : ℕ) (e : A ≃ Fin a) (U : Set (GL A k)),
     IsOpen U → U.Nonempty → ∃ γ : (Fin a → E) ≃ₗ[E] (Fin a → E), toLocGL ι e γ ∈ U := by
   intro E k _ _ _ _ _ ι hι A _ _ a e U hU ⟨g₀, hg₀⟩
-  haveI : T2Space k := by
+  have : T2Space k := by
     let := IsTopologicalAddGroup.rightUniformSpace k
     have := isUniformAddGroup_of_addCommGroup (G := k)
     infer_instance
   have hS : IsOpen {M : Matrix A A k | M.det ≠ 0} := isOpen_ne_fun (continuous_id.matrix_det) continuous_const
   let F : {M : Matrix A A k | M.det ≠ 0} → GL A k := fun M => GeneralLinearGroup.mkOfDetNeZero M.1 M.2
   have hF : Continuous F := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have : (fun M => ((F M)⁻¹ : GL A k).val) = fun M => (M.1.det)⁻¹ • M.1.adjugate := by
       funext M
       rw [Matrix.coe_units_inv, Matrix.inv_def, Ring.inverse_eq_inv']
       rfl
     rw [this]
-    exact ((continuous_subtype_val.matrix_det).inv₀ fun M => M.2).smul continuous_subtype_val.matrix_adjugate
-  have hV := hS.isOpenMap_subtype_val _ (hU.preimage hF)
+    exact ((continuous_subtypeVal.matrix_det).inv₀ fun M => M.2).smul continuous_subtypeVal.matrix_adjugate
+  have hV := hS.isOpenMap_subtypeVal _ (hU.preimage hF)
   have hne : (Subtype.val '' (F ⁻¹' U)).Nonempty := by
     refine ⟨_, ⟨g₀.val, g₀.det_ne_zero⟩, ?_, rfl⟩
     have : F ⟨g₀.val, g₀.det_ne_zero⟩ = g₀ := Units.ext rfl
@@ -381,7 +381,7 @@ theorem exists_toLocGL_mem : ∀ (E k : Type) [Field E] [Field k] [ValuativeRel 
   have hd : LinearMap.det x ≠ 0 := by
     intro h0
     have h1 := M.2
-    rw [Set.mem_setOf_eq, hx, toLoc_eq, ← RingHom.mapMatrix_apply, ← RingHom.map_det, Matrix.det_submatrix_equiv_self,
+    rw [Set.mem_ofPred_eq, hx, toLoc_eq, ← RingHom.mapMatrix_apply, ← RingHom.map_det, Matrix.det_submatrix_equiv_self,
       LinearMap.det_toMatrix', h0, map_zero] at h1
     exact h1 rfl
   have hbij : Function.Bijective x := (Module.End.isUnit_iff x).1 ((LinearMap.isUnit_iff_isUnit_det x).2 hd.isUnit)
@@ -414,7 +414,7 @@ theorem bounds_of_isGL : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (P : Heigh
   intro X Pr R P k _ _ _ _ ι ϖ hC hP j c n γ g' ⟨e, _, hg⟩ h1 h2 x hx
   have hmem : ∀ y, y ∈ lamYat (Pr := Pr) (R := R) j P ↔ (fun i => ι (y (e i))) ∈ latOf (1 : GL _ k) := fun y => by
     unfold lamYat LocE.lamY LocE.sclLat stdAt
-    rw [if_neg hP, Submodule.mem_comap, mem_localization_standardLattice, mem_latOf_one]
+    rw [ite_eq_right hP, Submodule.mem_comap, mem_localization_standardLattice, mem_latOf_one]
     simp only [hC.int]
     rw [e.surjective.forall]
     simp [LocE.scE]
@@ -446,7 +446,7 @@ end GlobalTheory.TwBridge.RepsOnto
 open GlobalTheory.TwBridge.RepsOnto GlobalTheory.SymBridge GlobalTheory.TwBridge.MatGL in
 theorem GlobalTheory.TwBridge.repsOnto : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X Pr R.m) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S₀ : Set ℕ) (mu : Tup X.F X.E X.K S₀) (cst : LocCst X (rowSG Pr sel mu)) (σ₀ : X.K →+* ℂ) (P : rowSG Pr sel mu) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : X.E →+* k) (s : ℕ) (W : TwData k) [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → cst.Ok → AtTwist (R := R) sel mu cst σ₀ P ι s W → ∀ (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K))) (G : ChGlob X R.m), L.Ok Ch sel mu cst G s → IdxProd sel mu cst L → ∀ j c (h : j + 1 + c = s) (al : L.β j) (g : GL (XIx (Fin R.k) (Fin R.t) (j) ⊕ Fin (c + 1 + 1)) k), IsGL ι (L.h j al P) g → (∃ r ∈ GlobalTheory.RootEx.R k (XIx (Fin R.k) (Fin R.t) (j)) (c + 1 + 1) 1, GlobalTheory.IndefiniteRowSideFullHecke.NormalRepresentationLattice.IsNormalRep (W.T s R) W.ϖ j (c + 1) (by omega) (r * g)) → ∀ h' : GL (XIx (Fin R.k) (Fin R.t) (j + 1) ⊕ Fin (c + 1)) k, flat W.ψ ν ((W.T s R).mu (j + 1)) ((W.T s R).Phi j (c + 1) (by omega)) g h' ≠ 0 → ∃ γ : AutY X R (j + 1), (∃ g' : GL (XIx (Fin R.k) (Fin R.t) (j + 1) ⊕ Fin (c + 1)) k, IsGL ι γ g' ∧ DoubleCoset.mk (GlobalTheory.RootEx.R k (XIx (Fin R.k) (Fin R.t) (j + 1)) (c + 1) 1) ((W.T s R).lev (j + 1) (c + 1) (by omega)).J g' = DoubleCoset.mk (GlobalTheory.RootEx.R k (XIx (Fin R.k) (Fin R.t) (j + 1)) (c + 1) 1) ((W.T s R).lev (j + 1) (c + 1) (by omega)).J h') ∧ (∀ x ∈ lamYat (Pr := Pr) (R := R) (j + 1) P.1, γ⁻¹ x ∈ lamYat (Pr := Pr) (R := R) (j + 1) P.1 ∧ ((qOf P.1 : X.E) ^ (j + 1)) • γ x ∈ lamYat (Pr := Pr) (R := R) (j + 1) P.1) ∧ FiniteSumNonzeroLargeDepth Ch sel mu cst j P (L.h j al P) γ := by
   intro X Pr R Ch sel S₀ mu cst σ₀ P k _ _ _ _ ι s W _ _ ν hν hc hA L G hL hI j c h al g hg hr h' hf
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   obtain ⟨g₁, hdc, hbd⟩ := exists_bounded_rep R k s W ν hν j c h g hr h' hf
   set J := ((W.T s R).lev (j + 1) (c + 1) (by omega)).J with hJ
   have hreg : (W.T s R).Regular := GlobalTheory.StepData.Chain.ofTwist_regular _ _ _ _ _
@@ -742,7 +742,7 @@ theorem exists_system {σ₀ : X.K →+* ℂ} {P : rowSG Pr sel mu} {k : Type} [
   have hmaps := GlobalTheory.T.completion_representative_mem_previous_index_set X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI
   have hnorm := GlobalTheory.T.completion_representatives_normal_form_mod_unipotent X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI hmaps
   have honto := GlobalTheory.T.exists_rational_double_coset_representative_bounds X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI
-  haveI := hν.1
+  have := hν.1
   have hϖ := val_unif W.unif
   have hb : ∀ j c h, latOf ((W.T s R).bas j c h) = latOf 1 := fun _ _ _ => rfl
   obtain ⟨hs, hp, hJ⟩ := GlobalTheory.Proof.TwistSupportPeriodicLevels.ofTwist_support_periodic_levels k s (Fin R.k ⊕ Fin (s + 1)) (Fin R.t)
@@ -765,9 +765,9 @@ theorem exists_system {σ₀ : X.K →+* ℂ} {P : rowSG Pr sel mu} {k : Type} [
   have hrat : ∀ j c h, Nonempty (L.β j) → A j c h = {g | ∃ b : L.β j, IsGL ι (L.h j b P) g} := by
     rintro (_ | j) c h hne
     · exact (GlobalTheory.T.firstStep_completionRepresentatives_eq_one X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI c h).symm
-    · exact if_pos hne
+    · exact ite_eq_left hne
   have hneg : ∀ j c (h : j + 1 + c = s), ¬ Nonempty (L.β (j + 1)) →
-      A (j + 1) c h = σ (j + 1) c h '' ⋃ g ∈ A j (c + 1) (by omega), (W.T s R).idx W.ψ ν j c h g := fun j c h hne => if_neg hne
+      A (j + 1) c h = σ (j + 1) c h '' ⋃ g ∈ A j (c + 1) (by omega), (W.T s R).idx W.ψ ν j c h g := fun j c h hne => ite_eq_right hne
   have hsys : (W.T s R).IsRepSystem A W.ψ ν := by
     refine ⟨fun _ _ => rfl, fun j c h => ?_⟩
     by_cases hne : Nonempty (L.β (j + 1))

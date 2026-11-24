@@ -105,7 +105,7 @@ theorem flat_quotient_ofList_of_isWeaklyRegular_closedFibre : ∀ (V A : Type) [
     | succ i ih =>
       intro hi
       have hi' : i < rs.length := hi
-      haveI := ih hi'.le
+      have := ih hi'.le
       rw [List.take_succ_eq_append_getElem hi', Ideal.ofList_append, Ideal.ofList_singleton]
       exact flat_quotient_sup_span_singleton V A _ _
         (mem_sup_of_isSMulRegular_quotient_quotient _ _ _ (hreg.regular_mod_prev i hi'))

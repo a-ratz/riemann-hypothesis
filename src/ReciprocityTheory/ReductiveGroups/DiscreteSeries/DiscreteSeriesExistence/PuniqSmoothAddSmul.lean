@@ -64,10 +64,10 @@ end Smooth
 
 theorem puniq_schur {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : S7.KType ε Λ) (A : T.V →ₗ[ℂ] T.V)
     (hA : ∀ (k : S7.KG ε) (v : T.V), A (T.op k v) = T.op k (A v)) : ∃ c : ℂ, ∀ v, A v = c • v := by
-  letI := T.instNACG
-  letI := T.instIPS
-  letI := T.instFD
-  haveI : Nontrivial T.V := ⟨⟨T.w, 0, fun h => by
+  let := T.instNACG
+  let := T.instIPS
+  let := T.instFD
+  have : Nontrivial T.V := ⟨⟨T.w, 0, fun h => by
     have hw := T.w_norm
     rw [h, norm_zero] at hw
     exact zero_ne_one hw⟩⟩
@@ -111,7 +111,7 @@ theorem puniq_isKTypeOf_map {ε : Fin n → Bool} {H₁ H₂ : Type*} [NormedAdd
     rintro x ⟨y, hy, hxy⟩
     rwa [← U.injective hxy]
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · haveI := hfd
+  · have := hfd
     exact (U.toLinearEquiv.submoduleMap S).finiteDimensional
   · rintro g hg _ ⟨x, hx, rfl⟩
     exact ⟨σ₁ g x, hst g hg x hx, hU g hg x⟩

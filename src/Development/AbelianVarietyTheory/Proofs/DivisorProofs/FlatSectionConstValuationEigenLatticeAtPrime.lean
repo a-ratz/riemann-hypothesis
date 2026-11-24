@@ -236,7 +236,7 @@ theorem det_vV_add_eq_zero : ∀ (K : Type) [Field K] [NumberField K] (𝔓 : He
     have hk : ∑ i, algebraMap T.V T.Fr (q i) * (∑ j, C i j • fun k => iK (u j k)) k = iK (b l k) := by
       rw [← congrFun hq k, Finset.sum_apply]
       simp only [Pi.smul_apply, Algebra.smul_def]
-    simp only [Finset.sum_mul, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Finset.sum_mul, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [Finset.sum_comm]
     calc ∑ i, ∑ m, algebraMap T.V T.Fr (q i) * P i m * B m k
         = ∑ i, algebraMap T.V T.Fr (q i) * (∑ j, C i j • fun k => iK (u j k)) k := by
@@ -410,8 +410,8 @@ theorem exOf_flatWt_some (τ : Psi H) (σ : E →+* ℂ) (i : Fin (Dw.mult σ)) 
       · intro e'; apply Subtype.ext; show conjEmb σ = τ.1; rw [e', conjEmb_conjEmb]
     by_cases e : σ = conjEmb τ.1
     · have h2 := hiff.2 e
-      rw [if_neg hne, if_pos e]
-      simp only [flatWt, parWt, if_pos h2]
+      rw [ite_eq_right hne, ite_eq_left e]
+      simp only [flatWt, parWt, ite_eq_left h2]
       norm_num
     · have : (⟨conjEmb σ, h'⟩ : Psi H) ≠ τ := fun e' => e (hiff.1 e')
       simp [flatWt, parWt, this, e, hne]
@@ -431,12 +431,12 @@ theorem flatWt_char (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Reci
     · congr 1
       · rw [← Finset.prod_inv_distrib]
         refine Finset.prod_congr rfl fun i _ => ?_
-        rw [exOf_flatWt_some, if_pos rfl, zpow_neg_one]
+        rw [exOf_flatWt_some, ite_eq_left rfl, zpow_neg_one]
       · refine Finset.prod_congr rfl fun i _ => ?_
-        rw [exOf_flatWt_some, if_neg hne.symm, if_pos rfl, zpow_one]
+        rw [exOf_flatWt_some, ite_eq_right hne.symm, ite_eq_left rfl, zpow_one]
     · rintro σ ⟨h1, h2⟩
       refine Finset.prod_eq_one fun i _ => ?_
-      rw [exOf_flatWt_some, if_neg h1, if_neg h2, zpow_zero]
+      rw [exOf_flatWt_some, ite_eq_right h1, ite_eq_right h2, zpow_zero]
   rw [key, ← Units.coe_prod, ← Units.coe_prod, ← Units.val_mul]
   congr 1
   rw [mul_comm, mul_inv_cancel_left]
@@ -662,8 +662,8 @@ theorem exists_isLieBasis_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hq : IsGrpPullback G.t.G GR (spMap ψ') (hp.1.lift _ _ w₂) :=
     IsGrpPullback.cancel hp (hn.congr es₂ (hp.1.lift_fst _ _ w₂).symm) (hp.1.lift_snd _ _ w₂)
   have hsm : Smooth GR.hom := by
-    haveI := B.dim
-    haveI : Smooth B.t.G.hom := SmoothOfRelativeDimension.smooth B.g _
+    have := B.dim
+    have : Smooth B.t.G.hom := SmoothOfRelativeDimension.smooth B.g _
     exact MorphismProperty.of_isPullback (P := @Smooth) hp.1 inferInstance
   obtain ⟨v', hb, hv'⟩ := GlobalTheory.exists_isLieBasis_baseChange R T.V ψ' GR G.t.G _ hq hsm _ e he
   refine ⟨v', hb, fun k => ⟨M i k, e₀ k, hM₀ k, ?_, ?_⟩⟩
@@ -878,8 +878,8 @@ theorem over_of_fib {K : Type} [Field K] [NumberField K] {B : GlobalTheory.CM.PA
     (m2 : SABMap t₀ B.t (spMap (algebraMap (𝓞 K) K))) (F : GlobalTheory.CM.GenFib B.pol)
     (u₀ : Sp (DualNumber K) ⟶ t₀.G.left) (w : epsR K ⟶ F.P₀.A) (h : u₀ ≫ m2.φ = w.left ≫ F.φ) :
     u₀ ≫ t₀.G.hom = spMap (algebraMap K (DualNumber K)) := by
-  haveI : Epi (CommRingCat.ofHom (algebraMap (𝓞 K) K)) := IsLocalization.epi (nonZeroDivisors (𝓞 K)) K
-  haveI : Mono (spMap (algebraMap (𝓞 K) K)) := Scheme.Spec.map_mono (CommRingCat.ofHom _).op
+  have : Epi (CommRingCat.ofHom (algebraMap (𝓞 K) K)) := IsLocalization.epi (nonZeroDivisors (𝓞 K)) K
+  have : Mono (spMap (algebraMap (𝓞 K) K)) := Scheme.Spec.map_mono (CommRingCat.ofHom _).op
   rw [← cancel_mono (spMap (algebraMap (𝓞 K) K)), Category.assoc, ← m2.cart.1.w, ← Category.assoc, h,
     Category.assoc]
   have := F.fib.2.1.1.w
@@ -966,7 +966,7 @@ namespace GlobalTheory.PtDeg
 open GlobalTheory.PtDeg.FrameGen in
 theorem frame_genFib_coords : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [NumberField K] [Algebra c.F K] (y : FrPt Xo c K) (B : GlobalTheory.CM.PAT H (Sp (𝓞 K))) (t₀ : SAB H (Sp K)) (m1 : SABMap t₀ Xo.univ.t y.x) (m2 : SABMap t₀ B.t (spMap (algebraMap (𝓞 K) K))) (F : GlobalTheory.CM.GenFib B.pol) (ρ : E →+* ℂ) (u : Fin (Dw.mult ρ) → Fin F.P₀.g → K), GlobalTheory.PtDeg.FrameCoord y m1 m2 F ρ u → ∀ (T : CDVR) (iK : K →+* T.Fr), letI := (iK.comp (algebraMap c.F K)).toAlgebra; ∀ (yT : FrPt Xo c T.Fr), FrMap ({ iK with commutes' := fun _ => rfl } : K →ₐ[c.F] T.Fr) y yT → ∀ (t' : SAB H (Sp T.Fr)) (n' : SABMap t' t₀ (spMap iK)) (m1' : SABMap t' Xo.univ.t yT.x), m1'.φ = n'.φ ≫ m1.φ → ∀ (v' : Fin F.P₀.g → (epsR T.Fr ⟶ t'.G)), IsLieBasis v' → (∀ k, (v' k).left ≫ n'.φ ≫ m2.φ = spMap (Formalism.L2.Pj.dualMap iK) ≫ (F.v k).left ≫ F.φ) → ∀ (C : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) T.Fr) (a : T.Fr) (y' : FrPt Xo c T.Fr), FrChg C a yT y' → ∀ (i : Fin (Dw.mult ρ)) (u'' : Sp (DualNumber T.Fr) ⟶ t'.G.left), u'' ≫ t'.G.hom = spMap (algebraMap T.Fr (DualNumber T.Fr)) → u'' ≫ m1'.φ = y'.u ρ i → ∃ w'' : epsR T.Fr ⟶ t'.G, w''.left = u'' ∧ IsLieComb (∑ j, C ρ i j • fun k => iK (u j k)) v' w'' := by
   intro E _ _ _ H Dw l Xo c K _ _ _ y B t₀ m1 m2 F ρ u hF T iK
-  letI : Algebra c.F T.Fr := (iK.comp (algebraMap c.F K)).toAlgebra
+  let : Algebra c.F T.Fr := (iK.comp (algebraMap c.F K)).toAlgebra
   intro yT hyT t' n' m1' h1 v' hv' hv'φ C a y' hchg i u'' hu''0 hu''1
   choose u₀ w hu₁ hu₂ hw using hF
   have hover : ∀ j, u₀ j ≫ t₀.G.hom = spMap (algebraMap K (DualNumber K)) :=
@@ -1098,7 +1098,7 @@ open AlgebraicGeometry CategoryTheory ReciprocityTheory.ChartRestriction.G.Semi 
 
 theorem GlobalTheory.PtDeg.intFrame_mem_span_eigLat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [NumberField K] [Algebra c.F K] (y : FrPt Xo c K) (B : GlobalTheory.CM.PAT H (Sp (𝓞 K))) (t₀ : SAB H (Sp K)) (m1 : SABMap t₀ Xo.univ.t y.x) (m2 : SABMap t₀ B.t (spMap (algebraMap (𝓞 K) K))) (F : GlobalTheory.CM.GenFib B.pol) (ρ : E →+* ℂ) (tt : 𝓞 E →+* 𝓞 K), (∀ a, ((tt a : 𝓞 K) : K) = algebraMap c.F K (embK c ρ a)) → ∀ (u : Fin (Dw.mult ρ) → Fin F.P₀.g → K), GlobalTheory.PtDeg.FrameCoord y m1 m2 F ρ u → ∀ (𝔓 : HeightOneSpectrum (𝓞 K)) (T : CDVR) (iK : K →+* T.Fr), (∀ z : K, iK z ∈ Set.range (algebraMap T.V T.Fr) ↔ 𝔓.valuation K z ≤ 1) → ∀ (ρV : 𝓞 K →+* T.V), (algebraMap T.V T.Fr).comp ρV = iK.comp (algebraMap (𝓞 K) K) → letI := (iK.comp (algebraMap c.F K)).toAlgebra; ∀ (yT : FrPt Xo c T.Fr), FrMap ({ iK with commutes' := fun _ => rfl } : K →ₐ[c.F] T.Fr) y yT → ∀ (G : GlobalTheory.CM.PAT H (Sp T.V)) (t' : SAB H (Sp T.Fr)) (n : SABMap G.t B.t (spMap ρV)) (n' : SABMap t' t₀ (spMap iK)) (m1' : SABMap t' Xo.univ.t yT.x) (m2' : SABMap t' G.t (spMap (algebraMap T.V T.Fr))), m1'.φ = n'.φ ≫ m1.φ → m2'.φ ≫ n.φ = n'.φ ≫ m2.φ → ∀ (C : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) T.Fr) (a : T.Fr) (y' : FrPt Xo c T.Fr), FrChg C a yT y' → GlobalTheory.LamT.LieInt T (iK.comp (algebraMap c.F K)) m1' m2' y'.u → (∀ i, (∑ j, C ρ i j • fun k => iK (u j k)) ∈ Submodule.span T.V ((fun (v : Fin F.P₀.g → K) k => iK (v k)) '' (F.eigLat B.t.act tt : Set (Fin F.P₀.g → K)))) := by
   intro E _ _ _ H Dw l Xo c K _ _ _ y B t₀ m1 m2 F ρ tt htt u hu 𝔓 T iK hiK ρV hρV
-  letI := (iK.comp (algebraMap c.F K)).toAlgebra
+  let := (iK.comp (algebraMap c.F K)).toAlgebra
   intro yT hyT G t' n n' m1' m2' h1 h2 C a y' hchg hint i
   obtain ⟨v', hv', hv'φ⟩ := _root_.GlobalTheory.LieLatGen.exists_isLieBasis_fibre E H K B t₀ m2 F T iK t' n'
   obtain ⟨vV, hvV, hvVM⟩ := _root_.GlobalTheory.LieSpan.exists_isLieBasis_span E H K B F 𝔓 T iK hiK ρV hρV G n
@@ -1203,8 +1203,8 @@ theorem baseChange_basis {K : Type} [Field K] [NumberField K] (B : GlobalTheory.
     ∃ e : Fin F.P₀.g → (epsR L ⟶ t'.G), IsLieBasis e ∧
       ∀ (d : Fin F.P₀.g → K) (w : epsR K ⟶ F.P₀.A) (z : epsR L ⟶ t'.G), IsLieComb d F.v w →
         z.left ≫ n'.φ ≫ m2.φ = spMap (Formalism.L2.Pj.dualMap iK) ≫ w.left ≫ F.φ → IsLieComb (fun k => iK (d k)) e z := by
-  haveI : IsCommMonObj F.P₀.A := F.P₀.isAb.comm
-  haveI := F.P₀.smoothDim
+  have : IsCommMonObj F.P₀.A := F.P₀.isAb.comm
+  have := F.P₀.smoothDim
   have hs : Smooth F.P₀.A.hom := SmoothOfRelativeDimension.smooth F.P₀.g _
   have hF := F.fib.2.1
   have hc : (n'.φ ≫ m2.φ) ≫ B.pol.A.hom = (t'.G.hom ≫ spMap iK) ≫ spMap (algebraMap (𝓞 K) K) := by
@@ -1340,7 +1340,7 @@ theorem dualMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f :
 
 theorem eigLat_le_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [NumberField K] [Algebra c.F K] (y : FrPt Xo c K) (B : GlobalTheory.CM.PAT H (Sp (𝓞 K))) (t₀ : SAB H (Sp K)) (m1 : SABMap t₀ Xo.univ.t y.x) (m2 : SABMap t₀ B.t (spMap (algebraMap (𝓞 K) K))) (F : GlobalTheory.CM.GenFib B.pol) (ρ : E →+* ℂ) (tt : 𝓞 E →+* 𝓞 K), (∀ a, ((tt a : 𝓞 K) : K) = algebraMap c.F K (embK c ρ a)) → ∀ (u : Fin (Dw.mult ρ) → Fin F.P₀.g → K), GlobalTheory.PtDeg.FrameCoord y m1 m2 F ρ u → ∀ (𝔓 : HeightOneSpectrum (𝓞 K)) (T : CDVR) (iK : K →+* T.Fr), (∀ z : K, iK z ∈ Set.range (algebraMap T.V T.Fr) ↔ 𝔓.valuation K z ≤ 1) → ∀ (ρV : 𝓞 K →+* T.V), (algebraMap T.V T.Fr).comp ρV = iK.comp (algebraMap (𝓞 K) K) → letI := (iK.comp (algebraMap c.F K)).toAlgebra; ∀ (yT : FrPt Xo c T.Fr), FrMap ({ iK with commutes' := fun _ => rfl } : K →ₐ[c.F] T.Fr) y yT → ∀ (G : GlobalTheory.CM.PAT H (Sp T.V)) (t' : SAB H (Sp T.Fr)) (n : SABMap G.t B.t (spMap ρV)) (n' : SABMap t' t₀ (spMap iK)) (m1' : SABMap t' Xo.univ.t yT.x) (m2' : SABMap t' G.t (spMap (algebraMap T.V T.Fr))), m1'.φ = n'.φ ≫ m1.φ → m2'.φ ≫ n.φ = n'.φ ≫ m2.φ → ∀ (C : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) T.Fr) (a : T.Fr) (y' : FrPt Xo c T.Fr), FrChg C a yT y' → GlobalTheory.LamT.LieInt T (iK.comp (algebraMap c.F K)) m1' m2' y'.u → ∀ v ∈ F.eigLat B.t.act tt, (fun k => iK (v k)) ∈ Submodule.span T.V (Set.range fun i => ∑ j, C ρ i j • fun k => iK (u j k)) := by
   intro E _ _ _ H Dw l Xo c K _ _ _ y B t₀ m1 m2 F ρ tt htt u hu 𝔓 T iK hval ρV hρV
-  letI := (iK.comp (algebraMap c.F K)).toAlgebra
+  let := (iK.comp (algebraMap c.F K)).toAlgebra
   intro yT hmap G t' n n' m1' m2' h1 h2 C a y' hchg hint
   obtain ⟨e, he, htr⟩ := baseChange_basis B t₀ m2 F iK t' n'
   have hA := GlobalTheory.LieComb.lieComb_algebra T.Fr t'.G _ e he.1
@@ -1510,7 +1510,7 @@ lemma integral_of_val_le (x y : F) (hy : y ≠ 0)
     ∃ q : V, algebraMap V F q = x / y := by
   rw [← ValuationRing.mem_integer_iff, Valuation.mem_integer_iff, Valuation.map_div]
   have : ValuationRing.valuation V F y ≠ 0 := by simpa using hy
-  exact (div_le_one₀ (zero_lt_iff.mpr this)).mpr h
+  exact (div_le_one₀ (pos_iff_ne_zero.mpr this)).mpr h
 
 lemma clear_last_column {n : ℕ} (A : Matrix (Fin (n+1)) (Fin (n+1)) F) :
     ∃ P : Matrix (Fin (n+1)) (Fin (n+1)) V, IsUnit P.det ∧
@@ -1524,7 +1524,7 @@ lemma clear_last_column {n : ℕ} (A : Matrix (Fin (n+1)) (Fin (n+1)) F) :
   have h0 : A i0 (Fin.last n) ≠ 0 := by
     intro h
     have := hmax i1
-    simp only [h, map_zero, le_zero_iff, map_eq_zero] at this
+    simp only [h, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     exact hi1 this
   have hq : ∀ i, ∃ q : V, algebraMap V F q = A i (Fin.last n) / A i0 (Fin.last n) :=
     fun i => integral_of_val_le V F _ _ h0 (hmax i)
@@ -1535,7 +1535,7 @@ lemma clear_last_column {n : ℕ} (A : Matrix (Fin (n+1)) (Fin (n+1)) F) :
   refine ⟨E * σ.permMatrix V, ?_, fun i => ?_⟩
   · rw [Matrix.det_mul]
     refine IsUnit.mul ?_ (isUnit_det_permMatrix V σ)
-    rw [Matrix.det_of_upperTriangular]
+    rw [det_of_isUpperTriangular]
     · simp [E]
     · intro a b hab
       have hne : a ≠ b := ne_of_gt hab
@@ -1543,8 +1543,8 @@ lemma clear_last_column {n : ℕ} (A : Matrix (Fin (n+1)) (Fin (n+1)) F) :
       simp [E, hne, hb]
   · rw [Matrix.map_mul, Matrix.mul_assoc, permMatrix_map, Matrix.mul_apply,
       Fintype.sum_eq_add i.castSucc (Fin.last n) (Fin.castSucc_lt_last i).ne]
-    · simp only [permMatrix_mul_apply, E, Matrix.map_apply, Matrix.of_apply, if_true,
-        (Fin.castSucc_lt_last i).ne, if_false, map_one, map_neg, hq]
+    · simp only [permMatrix_mul_apply, E, Matrix.map_apply, Matrix.of_apply, ite_true,
+        (Fin.castSucc_lt_last i).ne, ite_false, map_one, map_neg, hq]
       have : σ (Fin.last n) = i0 := by simp [hσ]
       rw [this]
       field_simp
@@ -1644,7 +1644,7 @@ private theorem integral_of_eq {E : Type} [Field E] [NumberField E] [IsCMField E
 
 theorem intPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [NumberField K] [Algebra c.F K] (y : FrPt Xo c K) (B : GlobalTheory.CM.PAT H (Sp (𝓞 K))) (t₀ : SAB H (Sp K)) (m1 : SABMap t₀ Xo.univ.t y.x) (m2 : SABMap t₀ B.t (spMap (algebraMap (𝓞 K) K))) (𝔓 : HeightOneSpectrum (𝓞 K)) (T : CDVR) (iK : K →+* T.Fr), (∀ z : K, iK z ∈ Set.range (algebraMap T.V T.Fr) ↔ 𝔓.valuation K z ≤ 1) → letI := (iK.comp (algebraMap c.F K)).toAlgebra; ∀ (yT : FrPt Xo c T.Fr), FrMap ({ iK with commutes' := fun _ => rfl } : K →ₐ[c.F] T.Fr) y yT → ∃ (ρV : 𝓞 K →+* T.V) (_ : (algebraMap T.V T.Fr).comp ρV = iK.comp (algebraMap (𝓞 K) K)) (G : GlobalTheory.CM.PAT H (Sp T.V)) (t' : SAB H (Sp T.Fr)) (n : SABMap G.t B.t (spMap ρV)) (n' : SABMap t' t₀ (spMap iK)) (m1' : SABMap t' Xo.univ.t yT.x) (m2' : SABMap t' G.t (spMap (algebraMap T.V T.Fr))) (_ : m1'.φ = n'.φ ≫ m1.φ) (_ : m2'.φ ≫ n.φ = n'.φ ≫ m2.φ) (C : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) T.Fr) (td : Ix Dw → T.Frˣ) (y' : FrPt Xo c T.Fr), (∀ σ i j, i < j → C σ i j = 0) ∧ (∀ σ i, C σ i i = (td (some ⟨σ, i⟩) : T.Fr)) ∧ FrChg C (td none : T.Fr) yT y' ∧ GlobalTheory.LamT.LieInt T (iK.comp (algebraMap c.F K)) m1' m2' y'.u ∧ Integral T (iK.comp (algebraMap c.F K)) y' := by
   intro E _ _ _ H Dw l Xo c K _ _ _ y B t₀ m1 m2 𝔓 T iK hiK yT hyT
-  letI := (iK.comp (algebraMap c.F K)).toAlgebra
+  let := (iK.comp (algebraMap c.F K)).toAlgebra
   have hinj : Function.Injective (algebraMap T.V T.Fr) := IsFractionRing.injective _ _
   obtain ⟨ρV, hρV⟩ := exists_restrict_ringHom (algebraMap (𝓞 K) K) (algebraMap T.V T.Fr) hinj iK
     (fun r => (hiK _).2 (HeightOneSpectrum.valuation_le_one 𝔓 r))
@@ -1669,7 +1669,7 @@ theorem intPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Reci
   have hlow : ∀ σ i j, i < j → C σ i j = 0 := fun σ i j hij => (hk σ).2 i j hij
   have hdiag : ∀ σ i, C σ i i ≠ 0 := fun σ i => by
     have hd : (C σ).det = ∏ j, C σ j j :=
-      Matrix.det_of_lowerTriangular _ (fun a b hab => hlow σ a b hab)
+      Matrix.det_of_isLowerTriangular _ (fun a b hab => hlow σ a b hab)
     have hne : (C σ).det ≠ 0 := (hCdet σ).ne_zero
     rw [hd] at hne
     exact Finset.prod_ne_zero_iff.1 hne i (Finset.mem_univ _)
@@ -1711,7 +1711,7 @@ theorem rho_eq_vAdd_at_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     · exact h
   obtain ⟨T, iK, hFin, hT⟩ := _root_.GlobalTheory.exists_cdvr_completion_integral_iff K 𝔓
   obtain ⟨e, he, hv⟩ := _root_.GlobalTheory.CdvrPlaceVal.vV_eq_mul_vAdd K 𝔓 T iK hT
-  letI := (iK.comp (algebraMap c.F K)).toAlgebra
+  let := (iK.comp (algebraMap c.F K)).toAlgebra
   let φ : K →ₐ[c.F] T.Fr := { iK with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := GlobalTheory.FlagTan.exists_frMap φ y
   have htri := _root_.GlobalTheory.PtDegInt.intPt E H Dw l Xo c K y B t₀ m1 m2 𝔓 T iK hT yT hyT
@@ -1750,7 +1750,7 @@ theorem rho_eq_vAdd_at_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   obtain ⟨-, hCdet, hvC⟩ := _root_.GlobalTheory.TwoBasesDet.det_vV_add_eq_zero K 𝔓 T iK hT F.P₀.g _ _ b hb M u hM (C τ.1) hA1 hA2
   obtain ⟨-, -, hvC'⟩ := _root_.GlobalTheory.TwoBasesDet.det_vV_add_eq_zero K 𝔓 T iK hT F.P₀.g _ _ b' hb' M' u' hM' (C (conjEmb τ.1)) hB1 hB2
   have hdet : ∀ σ, (C σ).det = ∏ i, (td (some ⟨σ, i⟩) : T.Fr) := fun σ => by
-    rw [Matrix.det_of_lowerTriangular (C σ) (fun i j hij => hlow σ i j hij)]
+    rw [Matrix.det_of_isLowerTriangular (C σ) (fun i j hij => hlow σ i j hij)]
     exact Finset.prod_congr rfl fun i _ => hdiag σ i
   have hφ : ∀ z, φ z = iK z := fun _ => rfl
   have hprod : evR Xo c s.sig y' * (C τ.1).det = (C (conjEmb τ.1)).det * iK (evR Xo c s.sig y) := by

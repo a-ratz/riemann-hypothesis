@@ -278,13 +278,13 @@ theorem transport_denom : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
   choose K2 hK2f hK21 hK2 using fun i => GlobalTheory.LinFormBound.main (f2 i)
   choose KY hKYf hKY1 hKY using fun j => GlobalTheory.FixedBound.exists_entry_absFin_bound (Y j)
   have prod_one : ∀ (K : Fin n × Fin d → HeightOneSpectrum (𝓞 F) → ℝ≥0), (∀ i v, 1 ≤ K i v) →
-      ∀ v, 1 ≤ ∏ i, K i v := fun K hK v => Finset.one_le_prod' fun i _ => hK i v
+      ∀ v, 1 ≤ ∏ i, K i v := fun K hK v => Finset.one_le_prod fun i _ => hK i v
   have prod_fin : ∀ (K : Fin n × Fin d → HeightOneSpectrum (𝓞 F) → ℝ≥0), (∀ i, (Function.mulSupport (K i)).Finite) →
       (Function.mulSupport fun v => ∏ i, K i v).Finite := fun K hK =>
     ((Finset.univ : Finset (Fin n × Fin d)).finite_toSet.biUnion fun i _ => hK i).subset
       (Finset.mulSupport_prod _ _)
   have single_le : ∀ (K : Fin n × Fin d → HeightOneSpectrum (𝓞 F) → ℝ≥0), (∀ i v, 1 ≤ K i v) →
-      ∀ i v, K i v ≤ ∏ i, K i v := fun K hK i v => Finset.single_le_prod' (fun j _ => hK j v) (Finset.mem_univ i)
+      ∀ i v, K i v ≤ ∏ i, K i v := fun K hK i v => Finset.single_le_prod (fun j _ => hK j v) (Finset.mem_univ i)
   set Ka : HeightOneSpectrum (𝓞 F) → ℝ≥0 := fun v => (∏ i, K1 i v) * (∏ i, K2 i v) * ∏ j, KY j v with hKa
   have hKa1 : ∀ v, 1 ≤ Ka v := fun v => one_le_mul_of_one_le_of_one_le
     (one_le_mul_of_one_le_of_one_le (prod_one K1 hK11 v) (prod_one K2 hK21 v)) (prod_one KY hKY1 v)
@@ -315,7 +315,7 @@ theorem transport_denom : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
   have hfin : ∀ {m : ℕ} (k : GL (Fin m) (AF F ⊗[F] E)), ∏ᶠ v, htFin F v (bc (compFin F E v) k) ≤ heightGL F k :=
     fun k => by
       unfold heightGL
-      exact le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => one_le_htOf _ _)
+      exact le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => one_le_htOf _ _)
   refine ⟨N, hN, ?_, ?_⟩
   · have e1 : ∏ᶠ v, B v = (∏ᶠ v, Ka v) * (∏ᶠ v, htFin F v (bc (compFin F E v) g)) *
         ∏ᶠ v, htFin F v (bc (compFin F E v) h) := by

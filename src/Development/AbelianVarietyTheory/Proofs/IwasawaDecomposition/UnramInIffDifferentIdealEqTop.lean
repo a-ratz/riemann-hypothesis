@@ -56,7 +56,7 @@ variable (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algeb
 theorem not_dvd_iff_inertia (P : Ideal (𝓞 L)) [P.IsPrime] (hP : P ≠ ⊥) :
     ¬ P ∣ differentIdeal (𝓞 K) (𝓞 L) ↔ P.inertia (L ≃ₐ[K] L) = ⊥ := by
   let _ : Algebra (FractionRing (𝓞 K)) (FractionRing (𝓞 L)) := FractionRing.liftAlgebra _ _
-  haveI : P.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hP
+  have : P.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hP
   rw [not_dvd_differentIdeal_iff, ← Ideal.ramificationIdx_eq_one_iff,
     ← Ideal.ramificationIdxIn_eq_ramificationIdx (P.under (𝓞 K)) P (L ≃ₐ[K] L),
     ← Ideal.card_inertia_eq_ramificationIdxIn (G := L ≃ₐ[K] L) (P.under (𝓞 K)) P,
@@ -71,19 +71,19 @@ theorem unramIn_iff_differentIdeal_eq_top :
   · intro h
     by_contra hD
     obtain ⟨M, hM, hDM⟩ := Ideal.exists_le_maximal _ hD
-    haveI := hM
+    have := hM
     have hMb : M ≠ ⊥ := by
       rintro rfl
       exact hD0 (le_bot_iff.mp hDM)
-    have hMu : M.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot hMb
+    have hMu : M.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_under_eq_bot hMb
     have hb : M.inertia (L ≃ₐ[K] L) = ⊥ := by
       rw [Subgroup.eq_bot_iff_forall]
       intro σ hσ
       exact h ⟨M.under (𝓞 K), inferInstance, hMu⟩ σ ⟨M, inferInstance, ⟨rfl⟩, fun x => hσ x⟩
     exact (not_dvd_iff_inertia K L M hMb).mpr hb (Ideal.dvd_iff_le.mpr hDM)
   · rintro hD 𝔭 σ ⟨P, hP, hPo, hσ⟩
-    haveI := hP
-    haveI := hPo
+    have := hP
+    have := hPo
     have hPb : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot 𝔭.ne_bot P
     have hnd : ¬ P ∣ differentIdeal (𝓞 K) (𝓞 L) := by
       rw [hD]

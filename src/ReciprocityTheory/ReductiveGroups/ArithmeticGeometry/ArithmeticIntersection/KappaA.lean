@@ -69,7 +69,7 @@ theorem cone_preimage (L : E3 ≃ₗᵢ[ℝ] E3) (s : Set S2) :
       simp
 
 theorem measurable_sphereMap (L : E3 ≃ₗᵢ[ℝ] E3) :
-    Measurable (fun n : S2 => (⟨L n, by simp⟩ : S2)) := ((L.continuous.comp continuous_subtype_val).subtype_mk _).measurable
+    Measurable (fun n : S2 => (⟨L n, by simp⟩ : S2)) := ((L.continuous.comp continuous_subtypeVal).subtype_mk _).measurable
 
 theorem toSphere_measurePreserving (L : E3 ≃ₗᵢ[ℝ] E3) :
     MeasurePreserving (fun n : S2 => (⟨L n, by simp⟩ : S2))
@@ -91,7 +91,7 @@ theorem sphereInv_thm : SphereInvStatement := by
       exact (Metric.measure_ball_pos _ _ one_pos).ne'
     have h2 : (volume : Measure E3).toSphere Set.univ ≠ ⊤ := measure_ne_top _ _
     constructor
-    rw [sphereMeasure, Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h1 h2]
+    rw [sphereMeasure, smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h1 h2]
   · have hL := toSphere_measurePreserving L
     refine ⟨hL.measurable, ?_⟩
     rw [sphereMeasure, Measure.map_smul _ hL.measurable.aemeasurable, hL.map_eq]

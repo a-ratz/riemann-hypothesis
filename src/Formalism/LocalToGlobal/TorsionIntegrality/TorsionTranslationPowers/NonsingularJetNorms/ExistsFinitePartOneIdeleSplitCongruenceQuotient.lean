@@ -66,14 +66,14 @@ variable (L : PeriodPair)
 
 theorem hasDerivAt_P (z : ℂ) (hz : z ∉ L.lattice) :
     HasDerivAt L.weierstrassP (L.derivWeierstrassP z) z := by
-  haveI : DiscreteTopology L.lattice.toAddSubgroup := inferInstanceAs (DiscreteTopology L.lattice)
+  have : DiscreteTopology L.lattice.toAddSubgroup := inferInstanceAs (DiscreteTopology L.lattice)
   have ho := ((L.lattice.toAddSubgroup).isClosed_of_discreteTopology).isOpen_compl.mem_nhds hz
   have hd := (L.differentiableOn_weierstrassP z hz).differentiableAt ho
   rw [← L.deriv_weierstrassP]
   exact hd.hasDerivAt
 
 theorem notMem_nhds (z : ℂ) (hz : z ∉ L.lattice) : ∀ᶠ w in nhds z, w ∉ L.lattice := by
-  haveI : DiscreteTopology L.lattice.toAddSubgroup := inferInstanceAs (DiscreteTopology L.lattice)
+  have : DiscreteTopology L.lattice.toAddSubgroup := inferInstanceAs (DiscreteTopology L.lattice)
   exact ((L.lattice.toAddSubgroup).isClosed_of_discreteTopology).isOpen_compl.mem_nhds hz
 
 theorem P_sub_ne (z w : ℂ) (hz : z ∉ L.lattice) (hw : w ∉ L.lattice) (hp : z + w ∉ L.lattice)
@@ -195,7 +195,7 @@ theorem disc_ne : (curveL l L ι).Δ ≠ 0 := by
 
 theorem nonsing (t : ℂ) (ht : t ∉ L.lattice) :
     (curveL l L ι).toAffine.Nonsingular (ι (L.weierstrassP t)) (ι (L.derivWeierstrassP t) / 2) := by
-  haveI : (curveL l L ι).IsElliptic := ⟨(disc_ne l L ι).isUnit⟩
+  have : (curveL l L ι).IsElliptic := ⟨(disc_ne l L ι).isUnit⟩
   rw [← WeierstrassCurve.Affine.equation_iff_nonsingular, WeierstrassCurve.Affine.equation_iff]
   have h := congrArg ι (L.derivWeierstrassP_sq t ht)
   simp only [map_sub, map_mul, map_pow, map_ofNat, map_add (f := _)] at h
@@ -213,7 +213,7 @@ theorem ptOf_some (t : ℂ) (ht : t ∉ L.lattice) :
 
 theorem ptOf_lattice (t : ℂ) (ht : t ∈ L.lattice) : ptOf l L ι t = 0 := by
   unfold ptOf
-  exact dif_neg (fun h => h.1 ht)
+  exact dite_eq_right (fun h => h.1 ht)
 
 theorem ptOf_add_lattice (t ω : ℂ) (hω : ω ∈ L.lattice) : ptOf l L ι (t + ω) = ptOf l L ι t := by
   have h1 : L.weierstrassP (t + ω) = L.weierstrassP t := L.weierstrassP_add_coe t ⟨ω, hω⟩

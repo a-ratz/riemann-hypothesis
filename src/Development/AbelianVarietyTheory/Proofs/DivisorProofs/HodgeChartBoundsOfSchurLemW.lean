@@ -126,7 +126,7 @@ theorem gnorm_one_eq (v : Fin g → ℂ) : gnorm 1 v = √(∑ a, ‖v a‖ ^ 2)
   rw [gnorm, form_eq_sum]
   congr 1
   simp only [Matrix.one_apply, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, re_sum]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, re_sum]
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Complex.mul_conj, Complex.normSq_eq_norm_sq, ofReal_re]
 
@@ -560,7 +560,7 @@ theorem uniform_posDef {X : Type} [TopologicalSpace X] {ι : Type} [Fintype ι] 
     rcases eq_or_ne y 0 with rfl | hy
     · simp
     have h1 := hmin (hmem z hz y hy)
-    simp only [Set.mem_setOf_eq] at h1
+    simp only [Set.mem_ofPred_eq] at h1
     rw [hscale z y hy] at h1
     have hn : 0 < ‖y‖ ^ 2 := by positivity
     have h2 : (p.2 ⬝ᵥ F p.1 *ᵥ p.2) * ‖y‖ ^ 2 ≤ y ⬝ᵥ F z *ᵥ y := by
@@ -615,7 +615,7 @@ theorem dot_self_nonneg {m : Type} [Fintype m] (x : m → ℝ) : 0 ≤ x ⬝ᵥ 
 theorem uniform_consts : ∀ (n a g rk : ℕ) (τ₀ : (Fin n → ℂ) → Matrix (Fin g) (Fin g) ℂ) (B : Fin a → Matrix (Fin g) (Fin g) ℤ), (∀ (k l : ℕ) (a bt : Matrix (Fin k) (Fin k) ℝ) (b : Matrix (Fin k) (Fin l) ℝ) (d : Matrix (Fin l) (Fin l) ℝ) (C₀ c₀ b₀ : ℝ), 0 ≤ C₀ → 0 < c₀ → 0 < b₀ → a.IsSymm → d.IsSymm → bt.IsSymm → (∀ x, |x ⬝ᵥ a.mulVec x| ≤ C₀ * (x ⬝ᵥ x)) → (∀ y, (b.mulVec y) ⬝ᵥ (b.mulVec y) ≤ C₀ ^ 2 * (y ⬝ᵥ y)) → (∀ y, c₀ * (y ⬝ᵥ y) ≤ y ⬝ᵥ d.mulVec y) → (∀ x, b₀ * (x ⬝ᵥ x) ≤ x ⬝ᵥ bt.mulVec x) → ∀ z : Fin k ⊕ Fin l → ℝ, ((1 + C₀ / c₀) ^ 2 * max 1 (1 / c₀))⁻¹ * (z ⬝ᵥ z) ≤ z ⬝ᵥ (Matrix.fromBlocks (a + ((1 + C₀ + C₀ ^ 2 / c₀) / b₀) • bt) b b.transpose d).mulVec z) → IsPeriodChart rk τ₀ B → ∃ T₀ c₁ C₁ M β : ℝ, 0 < T₀ ∧ 0 < c₁ ∧ 0 ≤ M ∧ 0 ≤ β ∧ (∀ i (x : Fin g → ℝ), x ⬝ᵥ ((B i).map (Int.cast : ℤ → ℝ)) *ᵥ x ≤ β * (x ⬝ᵥ x)) ∧ ∀ z ∈ polydisc n (1 / 2), ((τ₀ z).map Complex.im + T₀ • ∑ i, (B i).map (Int.cast : ℤ → ℝ)).IsSymm ∧ (∀ x, c₁ * (x ⬝ᵥ x) ≤ x ⬝ᵥ ((τ₀ z).map Complex.im + T₀ • ∑ i, (B i).map (Int.cast : ℤ → ℝ)) *ᵥ x) ∧ (∀ x, x ⬝ᵥ ((τ₀ z).map Complex.im + T₀ • ∑ i, (B i).map (Int.cast : ℤ → ℝ)) *ᵥ x ≤ C₁ * (x ⬝ᵥ x)) ∧ ∀ (j k : Fin g) (ξ : Fin n → ℂ), ‖fderiv ℂ (fun x => τ₀ x j k) z ξ‖ ≤ M * ‖ξ‖ := by
   intro n a g rk τ₀ B hS h
   have hopen : IsOpen (polydisc n 1) := by
-    simp only [polydisc, Set.setOf_forall]
+    simp only [polydisc, Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun k => isOpen_lt (by fun_prop) continuous_const
   set K := Metric.closedBall (0 : Fin n → ℂ) (1 / 2) with hKdef
   have hKc : IsCompact K := isCompact_closedBall _ _
@@ -804,7 +804,7 @@ theorem gnorm_diag_sq {n : ℕ} (d : Fin n → ℝ) (hd : ∀ k, 0 ≤ d k) (ξ 
     rw [posSemidef_diagonal_iff]; intro k; exact_mod_cast hd k
   rw [gnorm_sq hP, form_eq_sum]
   simp only [diagonal_apply, mul_ite, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, re_sum]
+    Finset.mem_univ, ite_true, re_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [mul_comm (ξ k), mul_assoc, mul_conj, ← ofReal_mul, ofReal_re, normSq_eq_norm_sq]
 
@@ -860,7 +860,7 @@ theorem poincare_bounds : ∀ (n a : ℕ) (ha : a ≤ n) (ρ : ℝ), ρ ≤ 1 �
     obtain ⟨hp, -⟩ := norm_mul_tlog_lt h0 (lt_of_lt_of_le (hz.1 k) hρ)
     have h1 := pdiag_term_le a z ξ k
     have hd : pdiag a z k = 1 / (2 * (‖z k‖ * tlog (z k)) ^ 2) := by
-      unfold pdiag; rw [if_pos hk]; ring
+      unfold pdiag; rw [ite_eq_left hk]; ring
     rw [hd] at h1
     set s := ‖z k‖ * tlog (z k)
     set G := gnorm (poincareGram a z) ξ
@@ -904,7 +904,7 @@ theorem quad_decomp {g a : ℕ} (A : Matrix (Fin g) (Fin g) ℝ) (Bs : Fin a →
   rw [smulMulVec, dotProduct_smul, smul_eq_mul]
 
 theorem isOpen_polydisc (n : ℕ) (ρ : ℝ) : IsOpen (polydisc n ρ) := by
-  simp only [polydisc, Set.setOf_forall]
+  simp only [polydisc, Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun k => isOpen_lt (by fun_prop) continuous_const
 
 theorem isOpen_punctured {n a : ℕ} (ha : a ≤ n) (ρ : ℝ) : IsOpen (punctured ha ρ) := by

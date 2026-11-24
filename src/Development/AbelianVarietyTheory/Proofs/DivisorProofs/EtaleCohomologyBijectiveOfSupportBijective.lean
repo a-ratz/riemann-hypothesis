@@ -268,13 +268,13 @@ namespace GlobalTheory.EtC.ConeLocalization
 
 theorem cone_kinj (R : Type) [CommRing R] {F G : Shv R} (φ : F ⟶ G) :
     (mappingCone (resMap R φ)).IsKInjective := by
-  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.1
-  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R G).2.1
-  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.2.1
-  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R G).2.2.1
-  haveI : ∀ n, Injective ((mappingCone (resMap R φ)).X n) := fun n =>
+  have := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.1
+  have := (_root_.GlobalTheory.EtC.ResBasic.res_basic R G).2.1
+  have := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.2.1
+  have := (_root_.GlobalTheory.EtC.ResBasic.res_basic R G).2.2.1
+  have : ∀ n, Injective ((mappingCone (resMap R φ)).X n) := fun n =>
     Injective.of_iso (HomologicalComplex.homotopyCofiber.XIsoBiprod (resMap R φ) n (n + 1) rfl).symm inferInstance
-  haveI : (mappingCone (resMap R φ)).IsStrictlyGE (-1) := CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1)
+  have : (mappingCone (resMap R φ)).IsStrictlyGE (-1) := CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1)
   exact isKInjective_of_injective _ (-1)
 
 theorem cone_loc (R : Type) [CommRing R] (E : Spc) {F G : Shv R} (φ : F ⟶ G)
@@ -290,7 +290,7 @@ end GlobalTheory.EtC.ConeLocalization
 
 theorem GlobalTheory.EtC.a10 : GlobalTheory.EtC.A10 := by
   intro R _ E F G φ hφ
-  haveI := GlobalTheory.EtC.ConeLocalization.cone_kinj R φ
+  have := GlobalTheory.EtC.ConeLocalization.cone_kinj R φ
   have hC := GlobalTheory.T.subsingleton_hypercohomology_of_locallyExact_on_support R E (mappingCone (resMap R φ)) (GlobalTheory.EtC.ConeLocalization.cone_loc R E φ hφ)
   have ex := GlobalTheory.T.hypercohomology_mappingCone_second_variable_exact R ((chains R).obj E) (resMap R φ)
   intro n

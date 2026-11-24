@@ -73,9 +73,9 @@ theorem mem_max_iff {A B : Type} [CommRing A] [CommRing B] [IsLocalRing A] [IsLo
 
 theorem henselian_of_equiv {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) [hA : HenselianLocalRing A] :
     HenselianLocalRing B := by
-  haveI : Nontrivial A := inferInstance
-  haveI : Nontrivial B := e.injective.nontrivial
-  haveI : IsLocalRing B := IsLocalRing.of_surjective' (e : A →+* B) e.surjective
+  have : Nontrivial A := inferInstance
+  have : Nontrivial B := e.injective.nontrivial
+  have : IsLocalRing B := IsLocalRing.of_surjective' (e : A →+* B) e.surjective
   refine { is_henselian := ?_ }
   intro f hf a₀ h1 h2
   have hev : ∀ (p : B[X]) (b : B), (p.map (e.symm : B →+* A)).eval (e.symm b) = e.symm (p.eval b) := by
@@ -106,10 +106,10 @@ theorem sepClosed_of_equiv {K L : Type} [Field K] [Field L] (e : K ≃+* L) [IsS
 
 theorem SH_of_equiv {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) (h : SH A) : SH B := by
   obtain ⟨hA, hs⟩ := h
-  haveI := hA
-  haveI := henselian_of_equiv e
+  have := hA
+  have := henselian_of_equiv e
   refine ⟨inferInstance, ?_⟩
-  haveI := hs
+  have := hs
   exact sepClosed_of_equiv (IsLocalRing.ResidueField.mapEquiv e)
 
 end LateralTheory.KummerTheory.TwSecPfGamma

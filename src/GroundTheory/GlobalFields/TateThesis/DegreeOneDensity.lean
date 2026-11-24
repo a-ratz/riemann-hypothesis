@@ -79,7 +79,7 @@ theorem primeIdealZetaSum_union {A B : Set (HeightOneSpectrum (𝓞 K))} (hd : D
     {s : ℝ} (hs : 1 < s) :
     (A ∪ B).primeIdealZetaSum s = A.primeIdealZetaSum s + B.primeIdealZetaSum s := by
   simp only [Set.primeIdealZetaSum_def]
-  exact Summable.tsum_union_disjoint
+  exact Summable.tsum_union_of_disjoint
     (f := fun w : HeightOneSpectrum (𝓞 K) => (absNorm w.asIdeal : ℝ) ^ (-s)) hd
     (summable_absNorm_rpow_neg_subtype A hs) (summable_absNorm_rpow_neg_subtype B hs)
 
@@ -378,7 +378,7 @@ theorem dvd_differentIdeal_of_ramificationIdx_ne_one {w : HeightOneSpectrum (�
     have := Ideal.ramificationIdx_pos (R := 𝓞 K) w.asIdeal
     omega
   set v := w.asIdeal.under (𝓞 K)
-  have hv0 : v ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot w.ne_bot
+  have hv0 : v ≠ ⊥ := mt eq_bot_of_under_eq_bot w.ne_bot
   have : v.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hv0
   have hmap : v.map (algebraMap (𝓞 K) (𝓞 L)) ≠ ⊥ :=
     (Ideal.map_eq_bot_iff_of_injective

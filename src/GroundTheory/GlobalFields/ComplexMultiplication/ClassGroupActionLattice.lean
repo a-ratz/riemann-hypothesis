@@ -96,7 +96,7 @@ theorem mem_of_map_mem_idealLattice {I : FractionalIdeal (𝓞 K)⁰ K} {x : K}
 
 theorem idealLattice_mul (I J : FractionalIdeal (𝓞 K)⁰ K) :
     idealLattice σ (I * J) = idealLattice σ I * idealLattice σ J := by
-  rw [idealLattice, FractionalIdeal.coe_mul, Submodule.restrictScalars_mul, Submodule.map_mul]
+  rw [idealLattice, FractionalIdeal.coeToSubmodule_mul, Submodule.restrictScalars_mul, Submodule.map_mul]
   rfl
 
 def cmRing : Subring ℂ := (σ.comp (algebraMap (𝓞 K) K)).range
@@ -224,10 +224,10 @@ theorem lattice_idealPeriodPair (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
   constructor
   · rintro ⟨m, n, rfl⟩
     refine ⟨m • idealBasis hK I 0 + n • idealBasis hK I 1, ?_, ?_⟩
-    · rw [← FractionalIdeal.mem_coe]
+    · rw [← FractionalIdeal.mem_coeToSubmodule]
       exact Submodule.add_mem _
-        (Submodule.smul_of_tower_mem _ m (FractionalIdeal.mem_coe.2 (idealBasis_mem hK I 0)))
-        (Submodule.smul_of_tower_mem _ n (FractionalIdeal.mem_coe.2 (idealBasis_mem hK I 1)))
+        (Submodule.smul_of_tower_mem _ m (FractionalIdeal.mem_coeToSubmodule.2 (idealBasis_mem hK I 0)))
+        (Submodule.smul_of_tower_mem _ n (FractionalIdeal.mem_coeToSubmodule.2 (idealBasis_mem hK I 1)))
     · simp [idealPeriodPair, zsmul_eq_mul]
   · rintro ⟨x, hx, rfl⟩
     rw [← mem_span_idealBasis hK (I := I), Submodule.mem_span_range_iff_exists_fun] at hx
@@ -302,11 +302,11 @@ theorem exists_idealLattice_of_latticeEnd_eq (L : PeriodPair) (hL : periodLattic
   let M : Submodule (𝓞 K) K :=
     { carrier := {x | σ x * L.ω₁ ∈ L.lattice}
       add_mem' := fun {a b} ha hb ↦ by
-        simp only [Set.mem_setOf_eq, map_add (f := _), add_mul] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _), add_mul] at *
         exact add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun a x hx ↦ by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Algebra.smul_def, map_mul, mul_assoc]
         have ha : σ (algebraMap (𝓞 K) K a) ∈ periodLatticeEnd L := by rw [hL]; exact ⟨a, rfl⟩
         exact ha _ hx }
@@ -422,7 +422,7 @@ theorem classGroup_mk_eq_iff (I J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
         apply FractionalIdeal.coeToSubmodule_injective
         show ((↑(I⁻¹ * J) : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) =
           ((FractionalIdeal.spanSingleton (𝓞 K)⁰ k : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K)
-        rw [FractionalIdeal.coe_spanSingleton]
+        rw [FractionalIdeal.coeToSubmodule_spanSingleton]
         exact hk
       calc (J : FractionalIdeal (𝓞 K)⁰ K)
           = (I : FractionalIdeal (𝓞 K)⁰ K) * ((I⁻¹ * J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
@@ -476,7 +476,7 @@ theorem classGroup_mk_eq_iff (I J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
       rw [Units.val_mul, coe_toPrincipalIdeal, Units.val_mk0, hJk]
     rw [hJ', map_mul]
     have : ClassGroup.mk K (toPrincipalIdeal (𝓞 K) K (Units.mk0 k hk0)) = 1 := by
-      rw [ClassGroup.mk_eq_one_iff, coe_toPrincipalIdeal, FractionalIdeal.coe_spanSingleton]
+      rw [ClassGroup.mk_eq_one_iff, coe_toPrincipalIdeal, FractionalIdeal.coeToSubmodule_spanSingleton]
       exact ⟨⟨k, rfl⟩⟩
     rw [this, one_mul]
 

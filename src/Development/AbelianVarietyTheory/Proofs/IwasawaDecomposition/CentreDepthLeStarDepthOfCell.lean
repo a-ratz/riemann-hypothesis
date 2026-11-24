@@ -286,7 +286,7 @@ theorem mem_depthSet_of_rcone : ∀ (O : Type) [CommRing O] (bar : O → O) (ψ 
   let R : Submodule O X :=
     { carrier := {x | ∀ y, B x y = 0}
       add_mem' := fun {x x'} hx hx' y => by
-        simp only [Set.mem_setOf_eq, map_add (f := _), LinearMap.add_apply, hx y, hx' y, add_zero]
+        simp only [Set.mem_ofPred_eq, map_add (f := _), LinearMap.add_apply, hx y, hx' y, add_zero]
       zero_mem' := fun y => by simp
       smul_mem' := fun c x hx y => by
         show B (c • x) y = 0

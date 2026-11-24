@@ -186,7 +186,7 @@ theorem det_ptMatN_app (c : ℂ) (H : C.LPt) (n : ℕ) (hn : D.ptSize H = n) :
   have hsub : (D.ptMatN (H ++ [(1, c)]) (D.ptSize H + 1)).submatrix Fin.castSucc Fin.castSucc =
       D.ptMatN H (D.ptSize H) := by
     ext a b
-    simp only [Matrix.submatrix_apply, D.ptMatN, Fin.coe_castSucc]
+    simp only [Matrix.submatrix_apply, D.ptMatN, Fin.val_castSucc]
     exact ptEntry_app_lt c H a b a.isLt b.isLt
   refine ⟨?_, ?_⟩
   · rw [Matrix.det_succ_row _ (Fin.last _), Finset.sum_eq_single (Fin.last _)]
@@ -249,17 +249,17 @@ theorem cutWord_of_adm (S : C.HidaSetting E Wp Wq) (hG : C.GridsOK S) (hC : KB.C
     rw [hget]
     have hcut : ∀ Y ∈ (S.G.place (S.pl v)).cutI S.l, Y ∈ Set.Icc (S.cutLo v) (S.cutHi v) := by
       intro Y hY
-      simp only [Sz.Cfg.cutI, Set.mem_setOf_eq] at hY
+      simp only [Sz.Cfg.cutI, Set.mem_ofPred_eq] at hY
       simp only [C.HidaSetting.cutLo, C.HidaSetting.cutHi, Set.mem_Icc]
       constructor <;> linarith [hY.1, hY.2]
     by_cases hp : x.1
-    · rw [if_pos hp] at h1
+    · rw [ite_eq_left hp] at h1
       have hy : (∃ a, x.2 ∈ S.grid v a) ∨ x.2 ∈ S.grid1 v := by
         rcases Finset.mem_union.1 h1 with h | h
         · exact Or.inl ⟨_, h⟩
         · exact Or.inr h
       exact hcut _ (hnode _ hy).1
-    · rw [if_neg hp] at h1
+    · rw [ite_eq_right hp] at h1
       have hy : (∃ a, x.2 - 1 ∈ S.grid v a) ∨ x.2 - 1 ∈ S.grid1 v := by
         rcases Finset.mem_union.1 h1 with h | h
         · exact Or.inl ⟨_, h⟩

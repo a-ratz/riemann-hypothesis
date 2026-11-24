@@ -148,7 +148,7 @@ theorem definite_datum_form_pos :
     have key : ∀ τ, Nat.card {i // (e i).1 = τ} = n τ := fun τ => by
       rw [Nat.card_congr ((e.subtypeEquiv (q := fun s => s.1 = τ) fun _ => Iff.rfl).trans (Equiv.sigmaSubtype τ))]
       simp
-    exact ⟨_, fun i => (e i).1, fun τ => ⟨fun h => (key τ).trans (if_pos h), fun h => (key τ).trans (if_neg h)⟩⟩
+    exact ⟨_, fun i => (e i).1, fun τ => ⟨fun h => (key τ).trans (ite_eq_left h), fun h => (key τ).trans (ite_eq_right h)⟩⟩
   obtain ⟨Pe, hP⟩ := datum_exists_period E H D g ty hty
   have hcard : ∀ i, Nat.card {j // ty j = ty i} ≠ 0 := fun i =>
     haveI : Nonempty {j // ty j = ty i} := ⟨⟨i, rfl⟩⟩
@@ -216,8 +216,8 @@ variable {O M : Type} [CommRing O] [Algebra O ℂ] [AddCommGroup M] [Module O M]
 theorem exists_lift {V : Type} [AddCommGroup V] [Module ℂ V] (f : M →+ V)
     (hf : ∀ (o : O) a, f (o • a) = algebraMap O ℂ o • f a) :
     ∃ F : ℂ ⊗[O] M →ₗ[ℂ] V, ∀ z a, F (z ⊗ₜ a) = z • f a := by
-  letI : Module O V := Module.compHom V (algebraMap O ℂ)
-  haveI : IsScalarTower O ℂ V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module O V := Module.compHom V (algebraMap O ℂ)
+  have : IsScalarTower O ℂ V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let f' : M →ₗ[O] V := { f with map_smul' := hf }
   exact ⟨f'.liftBaseChange ℂ, fun z a => rfl⟩
 
@@ -244,7 +244,7 @@ theorem tensor_unif {X Y V : Type} [AddCommGroup X] [Module O X]
     obtain ⟨t, ht⟩ := (eqv.surjective.comp ((TensorProduct.comm O X M).surjective.comp
       (LinearMap.rTensor_surjective M hs))) (ex (z • v))
     refine ⟨z • v - Φ t, ?_, t, by simp⟩
-    simp only [Set.mem_setOf_eq, map_sub, hc, ← ht]
+    simp only [Set.mem_ofPred_eq, map_sub, hc, ← ht]
     exact sub_self _
   have hinj : Function.Injective Φ := (injective_iff_map_eq_zero _).2 fun t ht => by
     obtain ⟨a, rfl⟩ := hker t (by rw [ht, map_zero])
@@ -305,9 +305,9 @@ theorem card_type {M : Type} [AddCommGroup M] [Module (𝓞 E) M] [Module.Finite
   have ext : ∀ F F' : (Fin g → ℂ) →ₗ[ℂ] ℂ, (∀ a, F (P a) = F' (P a)) → F = F' := fun F F' h =>
     LinearMap.ext_on_range hs h
   refine ⟨fun hτ => ?_, fun hτ => ?_⟩
-  · letI : Algebra (𝓞 E) ℂ := (τ.comp (algebraMap (𝓞 E) E)).toAlgebra
+  · let : Algebra (𝓞 E) ℂ := (τ.comp (algebraMap (𝓞 E) E)).toAlgebra
     have hsm : ∀ (s : 𝓞 E) (z : ℂ), s • z = τ s * z := fun _ _ => rfl
-    haveI : FaithfulSMul (𝓞 E) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2
+    have : FaithfulSMul (𝓞 E) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2
       (τ.injective.comp (IsFractionRing.injective (𝓞 E) E))
     let f : {i // ty i = τ} → (M →ₗ[𝓞 E] ℂ) := fun i =>
       { toFun := fun a => P a i, map_add' := fun a b => by simp, map_smul' := fun s a => by simp [hP, hsm, i.2] }
@@ -474,7 +474,7 @@ theorem exists_isExp (T : PAT H (Sp ℂ)) (D : Datum H) (u : HolUnif T.t.G T.t.P
     · have := u.discrete
       refine DiscreteTopology.of_continuous_injective
         (f := fun z : (B.toAddEquiv.toAddMonoidHom.comp P).range => (⟨B.symm z, (hrange _).1 z.2⟩ : u.Λ))
-        ((B.symm.toLinearMap.continuous_of_finiteDimensional.comp continuous_subtype_val).subtype_mk _)
+        ((B.symm.toLinearMap.continuous_of_finiteDimensional.comp continuous_subtypeVal).subtype_mk _)
         fun z w h => Subtype.ext (B.symm.injective (congrArg Subtype.val h))
     · have e : Set.range (B.toAddEquiv.toAddMonoidHom.comp P) = (B.restrictScalars ℝ).toLinearMap '' u.Λ := by
         ext z

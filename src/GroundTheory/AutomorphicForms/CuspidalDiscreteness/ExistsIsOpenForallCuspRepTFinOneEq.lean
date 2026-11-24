@@ -89,7 +89,7 @@ theorem exists_isOpen_forall_eq_of_finiteDimensional (σ : BanachRep L E) (v : E
   let _ : MeasurableSpace L := borel L
   have _ : BorelSpace L := ⟨rfl⟩
   set W := Submodule.span ℂ (Set.range fun g : L => σ g v) with hWdef
-  have hWc : IsClosed (W : Set E) := Submodule.closed_of_finiteDimensional W
+  have hWc : IsClosed (W : Set E) := Submodule.isClosed_of_finiteDimensional W
   have hσW : ∀ g, σ g v ∈ W := fun g => Submodule.subset_span ⟨g, rfl⟩
   set F : Subgroup L → Submodule ℂ E := fun U => fixedIn σ W U with hFdef
   have hFle : ∀ U, F U ≤ W := fun U w hw => hw.1
@@ -111,7 +111,7 @@ theorem exists_isOpen_forall_eq_of_finiteDimensional (σ : BanachRep L E) (v : E
     have _ := hFfin U
     exact (Submodule.eq_of_le_of_finrank_le (hFanti hle) (hmax U hU)).symm
   have _ := hFfin U₀
-  have hclosed : IsClosed (F U₀ : Set E) := Submodule.closed_of_finiteDimensional (F U₀)
+  have hclosed : IsClosed (F U₀ : Set E) := Submodule.isClosed_of_finiteDimensional (F U₀)
 
   have hvF : v ∈ F U₀ := by
     change v ∈ (F U₀ : Set E)
@@ -129,7 +129,7 @@ theorem exists_isOpen_forall_eq_of_finiteDimensional (σ : BanachRep L E) (v : E
     have _ : CompactSpace U := isCompact_iff_compactSpace.1 (U.isClosed_of_isOpen hU).isCompact
     set ρ : Measure U := CuspidalSpectrum.haarProb U with hρ
     have hcont : Continuous fun u : U => σ (u : L) v :=
-      (σ.continuous_orbit v).comp continuous_subtype_val
+      (σ.continuous_orbit v).comp continuous_subtypeVal
     have hint : Integrable (fun u : U => σ (u : L) v) ρ :=
       integrableOn_univ.1 (hcont.continuousOn.integrableOn_compact isCompact_univ)
     set e : E := ∫ u : U, σ (u : L) v ∂ρ with hedef

@@ -113,7 +113,7 @@ private lemma finiteDimensional_homog' [Fintype σ] (n : ℕ) :
            rw [hi]
            exact Nat.zero_le _
        simpa [c] using h1.trans hsum
-     haveI : FiniteDimensional ℂ (Submodule.span ℂ
+     have : FiniteDimensional ℂ (Submodule.span ℂ
          ((fun d => MvPolynomial.monomial d (1 : ℂ)) '' Set.Icc (0 : σ →₀ ℕ) c)) :=
        FiniteDimensional.span_of_finite ℂ (hS.image _)
      exact Submodule.finiteDimensional_of_le hle)
@@ -124,17 +124,17 @@ lemma exists_orth [Fintype σ] (K : Submodule ℂ (MvPolynomial σ ℂ)) (n : �
     (hK : K ≤ FockH1Action.homog σ n) (f : MvPolynomial σ ℂ) :
     ∃ y ∈ K, ∀ x ∈ K, FockH1Action.fockInner x (f - y) = 0 := by
   classical
-  haveI : FiniteDimensional ℂ (FockH1Action.homog σ n) := finiteDimensional_homog' n
+  have : FiniteDimensional ℂ (FockH1Action.homog σ n) := finiteDimensional_homog' n
   have hfin : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le hK
   let K' : Submodule ℂ (FockV σ) := K
-  haveI : FiniteDimensional ℂ K' := hfin
-  letI : NormedAddCommGroup (FockV σ) := (fockCore (σ := σ)).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ (FockV σ) := by
+  have : FiniteDimensional ℂ K' := hfin
+  let : NormedAddCommGroup (FockV σ) := (fockCore (σ := σ)).toNormedAddCommGroup
+  let : InnerProductSpace ℂ (FockV σ) := by
     first
     | exact InnerProductSpace.ofCore (fockCore (σ := σ)).toCore
     | exact InnerProductSpace.ofCore (fockCore (σ := σ)).toPreInnerProductSpaceCore
     | exact InnerProductSpace.ofCore (fockCore (σ := σ))
-  haveI hproj : K'.HasOrthogonalProjection := inferInstance
+  have hproj : K'.HasOrthogonalProjection := inferInstance
   let g : FockV σ := f
   let P := K'.orthogonalProjection g
   have hP : ∀ x ∈ K', inner ℂ x (g - (P : FockV σ)) = 0 := by

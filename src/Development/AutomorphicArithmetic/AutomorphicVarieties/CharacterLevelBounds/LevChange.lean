@@ -69,16 +69,16 @@ private theorem change (E F K : Type) [Field E] [NumberField E] [Field F] [Numbe
     (∃ j : E →ₐ[ℚ] K, ∀ τ : K ≃ₐ[ℚ] K,
       (∀ x : E, τ (j x) = j x) ↔
         IsCyclotomicExtension.Rat.galEquivZMod N K τ ∈ H.comap (ZMod.unitsMap h)) := by
-  haveI : IsGalois ℚ F := IsCyclotomicExtension.isGalois {M} ℚ F
-  haveI : IsGalois ℚ K := IsCyclotomicExtension.isGalois {N} ℚ K
+  have : IsGalois ℚ F := IsCyclotomicExtension.isGalois {M} ℚ F
+  have : IsGalois ℚ K := IsCyclotomicExtension.isGalois {N} ℚ K
   obtain ⟨c, hc⟩ := id h
   have hη : IsPrimitiveRoot (IsCyclotomicExtension.zeta N ℚ K ^ c) M :=
     (IsCyclotomicExtension.zeta_spec N ℚ K).pow (NeZero.pos N) (hc.trans (mul_comm _ _))
   let i : F →ₐ[ℚ] K := ((IsCyclotomicExtension.zeta_spec M ℚ F).embeddingsEquivPrimitiveRoots K
     (Polynomial.cyclotomic.irreducible_rat (NeZero.pos M))).symm ⟨_, (mem_primitiveRoots (NeZero.pos M)).2 hη⟩
-  letI : Algebra F K := i.toRingHom.toAlgebra
-  haveI : IsGalois F K := IsGalois.tower_top_of_isGalois ℚ F K
-  haveI : FiniteDimensional F K := Module.Finite.of_restrictScalars_finite ℚ F K
+  let : Algebra F K := i.toRingHom.toAlgebra
+  have : IsGalois F K := IsGalois.tower_top_of_isGalois ℚ F K
+  have : FiniteDimensional F K := Module.Finite.of_restrictScalars_finite ℚ F K
   have hinj := (algebraMap F K).injective
   constructor
   · rintro ⟨j, hj⟩
@@ -122,7 +122,7 @@ theorem UpperTheory.V.Chr.levChange :
     ∀ (E : Type) [Field E] [NumberField E] (N : ℕ) [NeZero N], (Nonempty (E →ₐ[ℚ] CyclotomicField N ℚ) → ∃ H : Subgroup (ZMod N)ˣ, HasLevel E N H) ∧
           ∀ (M : ℕ) [NeZero M] (h : M ∣ N) (H : Subgroup (ZMod M)ˣ), HasLevel E M H ↔ HasLevel E N (H.comap (ZMod.unitsMap h)) := by
   intro E _ _ N _
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
   constructor
   · rintro ⟨j⟩
     refine ⟨j.fieldRange.fixingSubgroup.map
@@ -136,6 +136,6 @@ theorem UpperTheory.V.Chr.levChange :
     · intro h x
       exact h _ ⟨x, rfl⟩
   · intro M _ h H
-    haveI : IsCyclotomicExtension {M} ℚ (CyclotomicField M ℚ) := CyclotomicField.isCyclotomicExtension M ℚ
+    have : IsCyclotomicExtension {M} ℚ (CyclotomicField M ℚ) := CyclotomicField.isCyclotomicExtension M ℚ
     rw [level_iff, level_iff]
     exact change E _ _ M N h H

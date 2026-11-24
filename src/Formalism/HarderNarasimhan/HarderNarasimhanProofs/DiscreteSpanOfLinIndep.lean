@@ -171,7 +171,7 @@ theorem linIndep_real (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι �
     have h1 := congrFun (hV v) p.2
     simp only [smul_smul, vecAt_smul_basis, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply,
       Fintype.sum_prod_type, Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true, map_mul] at h1
+      ite_true, map_mul] at h1
     have hc' : v.embedding c ≠ 0 := by simpa using hc
     have h2 : (∑ k, (t (k, p.2) : ℂ) * v.embedding (integralBasis K k)) * v.embedding c = 0 := by
       rw [Finset.sum_mul]
@@ -184,7 +184,7 @@ theorem discrete_span_of_linIndep {E : Type*} [NormedAddCommGroup E] [InnerProdu
     [FiniteDimensional ℝ E] {ι' : Type*} {f : ι' → E} (hf : LinearIndependent ℝ f) :
     DiscreteTopology (Submodule.span ℤ (Set.range f)) := by
   classical
-  haveI : Finite ι' := hf.finite
+  have : Finite ι' := hf.finite
   obtain ⟨ψ, hψ⟩ := LinearMap.exists_extend (Basis.span hf).equivFun.toLinearMap
   have hψW : ∀ w : Submodule.span ℝ (Set.range f), ψ w = (Basis.span hf).equivFun w :=
     fun w => LinearMap.congr_fun hψ w
@@ -207,7 +207,7 @@ theorem discrete_span_of_linIndep {E : Type*} [NormedAddCommGroup E] [InnerProdu
     exact hle ⟨x, hx, rfl⟩
   have hW : ∀ z ∈ Submodule.span ℤ (Set.range f), z ∈ Submodule.span ℝ (Set.range f) :=
     fun z hz => Submodule.span_le_restrictScalars ℤ ℝ _ hz
-  haveI := ZSpan.discreteTopology_pi_basisFun (ι := ι')
+  have := ZSpan.discreteTopology_pi_basisFun (ι := ι')
   refine DiscreteTopology.of_continuous_injective
     (f := fun x : Submodule.span ℤ (Set.range f) =>
       (⟨ψ x, hmem x x.2⟩ : Submodule.span ℤ (Set.range (Pi.basisFun ℝ ι')))) ?_ ?_
@@ -334,9 +334,9 @@ theorem place_lattice_structure : PlLat := by
       (Set.inclusion_injective (place_lattice_structure_lemma_2 ρ hyL))
   refine ⟨⟨hinj.injOn, hdL⟩, ?_, ?_⟩
   · obtain ⟨t, htL, hspan, hli⟩ := exists_linearIndependent K (L : Set V)
-    haveI : Module.Finite K V := Module.Finite.of_basis b
+    have : Module.Finite K V := Module.Finite.of_basis b
     have htf : t.Finite := hli.setFinite
-    haveI : Fintype t := htf.fintype
+    have : Fintype t := htf.fintype
     have hcard : rkK L = Fintype.card t := by
       have hc := finrank_span_eq_card hli
       rw [Subtype.range_coe] at hc
@@ -359,10 +359,10 @@ theorem place_lattice_structure : PlLat := by
     have h2 : rk ρ (Submodule.span (𝓞 K) (Set.range fun a : t => ((z : K))⁻¹ • (a : V))) =
         Module.finrank ℚ K * Fintype.card t :=
       (rk_span_eq ρ hinj _ hli').trans (congrArg _ (Fintype.card_congr (Equiv.refl _)))
-    haveI : Module.Finite ℤ (zl ρ (Submodule.span (𝓞 K) (Set.range fun a : t => ((z : K))⁻¹ • (a : V)))) := by
+    have : Module.Finite ℤ (zl ρ (Submodule.span (𝓞 K) (Set.range fun a : t => ((z : K))⁻¹ • (a : V)))) := by
       rw [zl_span_eq]
       exact Module.Finite.span_of_finite ℤ (Set.finite_range _)
-    haveI : Module.Finite ℤ (zl ρ L) :=
+    have : Module.Finite ℤ (zl ρ L) :=
       Module.Finite.of_injective (Submodule.inclusion (place_lattice_structure_lemma_2 ρ hzL))
         (Submodule.inclusion_injective _)
     have hA : Module.finrank ℤ (zl ρ (Submodule.span (𝓞 K) (Set.range ((↑) : t → V)))) ≤
@@ -373,7 +373,7 @@ theorem place_lattice_structure : PlLat := by
     rw [hcard]
     exact le_antisymm (hB.trans h2.le) (h1.symm.le.trans hA)
   · unfold ht
-    haveI := hdL
+    have := hdL
     have hd : (0 : ℝ) < |((discr K : ℤ) : ℝ)| := abs_pos.mpr (Int.cast_ne_zero.mpr (discr_ne_zero K))
     exact mul_pos (mul_pos (pow_pos two_pos _) (Real.rpow_pos_of_pos hd _)) (F.covol_pos _)
 

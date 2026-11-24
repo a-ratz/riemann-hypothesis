@@ -117,7 +117,7 @@ theorem lintegral_sq_eq {X : Type} [MeasurableSpace X] {μ : Measure X} {g : X �
     ofReal_integral_eq_lintegral_ofReal hi (Filter.Eventually.of_forall fun x => by positivity)]
   congr 1
   funext x
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
 
 theorem integrable_mul_conj [MeasurableSpace (κ → mixedEmbedding.mixedSpace F)] [BorelSpace (κ → mixedEmbedding.mixedSpace F)]
     (μi : Measure (κ → mixedEmbedding.mixedSpace F)) [μi.IsAddHaarMeasure] (f f' : SInf F κ) :
@@ -193,13 +193,13 @@ theorem exists_const_tensor : ∀ (F : Type) [Field F] [NumberField F] (κ : Typ
     ∀ μ : @Measure (κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
       ∃ c : ℝ≥0∞, ∀ Φ ∈ schA F κ, ∫⁻ x, ‖e Φ x‖ₑ ^ 2 ∂μ = c * ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ := by
   intro F _ _ κ _ e vac vac₁ ei ev hvSB hvac hvac₁ hevv hevSB he hinf hloc μ hμ
-  letI mA : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
-  letI mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
-  haveI bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
-  haveI := hμ
+  let mA : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
+  let mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
+  have bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
+  have := hμ
   obtain ⟨μi, hμi⟩ : ∃ μ : Measure (κ → mixedEmbedding.mixedSpace F), μ.IsAddHaarMeasure :=
     ⟨Measure.addHaar, inferInstance⟩
   obtain ⟨μv, hμv, hμv1⟩ : ∃ μv : ∀ v : Pl (F := F), Measure (κ → Fv F v), (∀ v, (μv v).IsAddHaarMeasure) ∧
@@ -215,7 +215,7 @@ theorem exists_const_tensor : ∀ (F : Type) [Field F] [NumberField F] (κ : Typ
       ext x; simp [K]
     rw [e]
     exact Measure.addHaarMeasure_self
-  haveI := hμv
+  have := hμv
   obtain ⟨c₀, -, hpure⟩ := _root_.GlobalTheory.AdelicHaarPure.integral_pure_haar F κ μ μi μv hμv1
   obtain ⟨cI, hcI0, hcI⟩ := hinf
   choose C hC0 hC using hloc

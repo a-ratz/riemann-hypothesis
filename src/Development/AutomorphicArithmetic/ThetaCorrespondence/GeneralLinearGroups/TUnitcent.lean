@@ -54,13 +54,13 @@ open MeasureTheory in
 theorem UpperTheory.Lit.Cas.unitcent :
     ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V) (p : ℝ), IsSmooth π → π.IsIrreducible → CoeffLp p π → UnitaryCentral π := by
   intro k _ _ _ _ N V _ _ π p hs hirr hLp t c hc
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hirr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hirr
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   obtain ⟨K, hKo, hKc, -⟩ := GlobalTheory.SqIntUnit.compactOpen_basis k N Set.univ Filter.univ_mem
   obtain ⟨l, hl⟩ := GlobalTheory.ContraRefl.exists_smooth_form_ne hs (GlobalTheory.SqIntUnit.compactOpen_basis k N) hv
-  haveI hQ : IsTopologicalGroup (GL (Fin N) k ⧸ Subgroup.center (GL (Fin N) k)) := inferInstance
-  letI : MeasurableSpace (AdGL k N) := borel _
-  haveI : BorelSpace (AdGL k N) := ⟨rfl⟩
+  have hQ : IsTopologicalGroup (GL (Fin N) k ⧸ Subgroup.center (GL (Fin N) k)) := inferInstance
+  let : MeasurableSpace (AdGL k N) := borel _
+  have : BorelSpace (AdGL k N) := ⟨rfl⟩
   let q : GL (Fin N) k → AdGL k N := QuotientGroup.mk
   have hqc : Continuous q := continuous_quot_mk
   have hqo : IsOpenMap q := QuotientGroup.isOpenMap_coe

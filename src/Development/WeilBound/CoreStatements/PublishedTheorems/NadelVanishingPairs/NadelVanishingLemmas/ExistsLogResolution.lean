@@ -75,7 +75,7 @@ theorem exists_logRes : GlobalTheory.Published.Principalisation → ∀ (k : Typ
   obtain ⟨-, A, hA⟩ := isProper_and_exists_isAmpleLB_of_isProjOver hproj
   obtain ⟨Y, hY, t, ht, K, B, hres, hB, -⟩ :=
     _root_.GlobalTheory.exists_logRes_ample hP k X p n η m G hη Y₀ s₀ hsm hproj hbij Z₀ hZ₀ A hA
-  haveI := ht
+  have := ht
   exact ⟨Y, hY, t ≫ s₀, inferInstance, K, B, hres, fun y hy => hB y (by simpa [Z₀] using hy)⟩
 
 end GlobalTheory.LogResExist

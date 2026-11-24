@@ -65,9 +65,9 @@ theorem fd_sub (μ : Measure G) (R : Set G) (hR : μ Rᶜ = 0) (A B : Subgroup G
     ∃ KC : Set G, MeasurableSet KC ∧ (∀ r ∈ R, ∃! s, s ∈ A ⊓ B ∧ s * r ∈ KC) ∧
       μ KC = (B.relIndex A : ℝ≥0∞) * μ KA := by
   classical
-  haveI : Finite (A ⧸ B.subgroupOf A) :=
+  have : Finite (A ⧸ B.subgroupOf A) :=
     Nat.finite_of_card_ne_zero (by rw [← Subgroup.index_eq_card]; exact hfin)
-  letI : Fintype (A ⧸ B.subgroupOf A) := Fintype.ofFinite _
+  let : Fintype (A ⧸ B.subgroupOf A) := Fintype.ofFinite _
   have hmk : ∀ q : A ⧸ B.subgroupOf A, ((Quotient.out q : A) : A ⧸ B.subgroupOf A) = q :=
     fun q => QuotientGroup.out_eq' q
   refine ⟨⋃ q : A ⧸ B.subgroupOf A, (fun x => ((Quotient.out q : A) : G) * x) ⁻¹' KA,
@@ -133,13 +133,13 @@ theorem covol_commens (μ : Measure G) (R : Set G) (hR : μ Rᶜ = 0) (A B : Sub
   obtain ⟨K1, hK1m, hK1u, hK1μ⟩ := fd_sub μ R hR A B hinvA hAR KA hKA hKAu hfinA
   obtain ⟨K2, hK2m, hK2u, hK2μ⟩ := fd_sub μ R hR B A hinvB hBR KB hKB hKBu hfinB
   rw [inf_comm] at hK2u
-  haveI : Countable ↥(A ⊓ B) :=
+  have : Countable ↥(A ⊓ B) :=
     Function.Injective.countable (Subgroup.inclusion_injective (inf_le_left : A ⊓ B ≤ A))
-  letI : MeasurableSpace ↥(A ⊓ B) := ⊤
-  haveI : MeasurableSMul ↥(A ⊓ B) G :=
+  let : MeasurableSpace ↥(A ⊓ B) := ⊤
+  have : MeasurableSMul ↥(A ⊓ B) G :=
     { measurable_const_smul := fun c => measurable_const_mul (c : G)
       measurable_smul_const := fun _ => measurable_from_top }
-  haveI : SMulInvariantMeasure ↥(A ⊓ B) G μ := ⟨fun c s hs => by
+  have : SMulInvariantMeasure ↥(A ⊓ B) G μ := ⟨fun c s hs => by
     show μ ((fun x => (c : G) * x) ⁻¹' s) = μ s
     rw [← Measure.map_apply (measurable_const_mul _) hs, hinvA _ c.2.1]⟩
   have hRa : ∀ᵐ x ∂μ, x ∈ R := ae_iff.mpr hR

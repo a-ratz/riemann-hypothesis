@@ -77,7 +77,7 @@ theorem exists_form {L V₀ V₁ : Type} [Field L] [AddCommGroup V₀] [Module L
 
 theorem coboundary_iff_isCrys : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V₀ : Type) [AddCommGroup V₀] [Module ↥LL.1 V₀] [Module ℚ_[l] V₀] [IsScalarTower ℚ_[l] ↥LL.1 V₀] [FiniteDimensional ↥LL.1 V₀] (ρ₀ : Representation ↥LL.1 ↥(GK K) V₀) (V₁ : Type) [AddCommGroup V₁] [Module ↥LL.1 V₁] [Module ℚ_[l] V₁] [IsScalarTower ℚ_[l] ↥LL.1 V₁] [FiniteDimensional ↥LL.1 V₁] (ρ₁ : Representation ↥LL.1 ↥(GK K) V₁) (ι : V₀ →ₗ[↥LL.1] V₁), (∀ g x, ι (ρ₀ g x) = ρ₁ g (ι x)) → Function.Injective ι → finrank ↥LL.1 V₁ = finrank ↥LL.1 V₀ + 1 → IsCrys (P.PD K) ρ₀ → ∀ x : V₁, x ∉ LinearMap.range ι → ∀ c : ↥(GK K) → V₀, (∀ g, ι (c g) = ρ₁ g x - x) → ((∃ y : V₀ ⊗[ℚ_[l]] P.R.B, ∀ g, c g ⊗ₜ[ℚ_[l]] (1 : P.R.B) = actVB (P.PD K) ρ₀ g y - y) ↔ IsCrys (P.PD K) ρ₁) := by
   intro l _ P AI _ K LL V₀ _ _ _ _ _ ρ₀ V₁ _ _ _ _ _ ρ₁ ι hιρ hι hd hV x hx c hc
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   obtain ⟨p, hpx, hk⟩ := exists_form ι hι hd x hx
   have hex : Function.Exact ι p := LinearMap.exact_iff.2 hk
   have hs : Function.Surjective p := fun a => ⟨a • x, by simp [hpx]⟩

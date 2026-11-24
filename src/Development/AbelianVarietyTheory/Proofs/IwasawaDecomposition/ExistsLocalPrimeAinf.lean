@@ -164,7 +164,7 @@ theorem exists_abstract (R : LocRings l) (K : FinExt l)
   have aD0 : ∀ c : ↥(K0 K), algebraMap ↥(K0 K) R.BdR c = algebraMap (Om l) R.BdR (c : Om l) := fun _ => rfl
   have aQ : ∀ c : ℚ_[l], algebraMap ℚ_[l] R.B c = algebraMap ↥(MaximalUnramifiedExtension l) R.B (algebraMap ℚ_[l] ↥(MaximalUnramifiedExtension l) c) :=
     fun c => IsScalarTower.algebraMap_apply _ _ _ c
-  haveI := finiteDimensional_maxUnramifiedSubfield K
+  have := finiteDimensional_maxUnramifiedSubfield K
   refine ⟨{
     p := l
     hp := Fact.out

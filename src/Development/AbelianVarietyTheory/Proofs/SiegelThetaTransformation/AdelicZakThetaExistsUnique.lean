@@ -141,9 +141,9 @@ theorem exists_extension {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ 
     (hq : ∀ δ ∈ ratL T S, δ ∈ O → ∀ w ∈ O, F (p (w + δ)) = ψ (-symplOH S T δ w) * F (p w))
     (hl : ∀ u ∈ O, IsFinPt u → p u = 0 ∧ ∀ w ∈ O, ψ (symplOH S T w u) = 1) :
     ∃ f, IsThetaFunO ψ S T f ∧ ∀ w, IsRealPt w → f w = F (p w) := by
-  haveI : IsTopologicalAddGroup (Formalism.L2.Theta.AE D) := IsTopologicalRing.to_topologicalAddGroup
-  haveI : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
-  haveI : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
+  have : IsTopologicalAddGroup (Formalism.L2.Theta.AE D) := IsTopologicalRing.isTopologicalAddGroup
+  have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
+  have : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
   choose c hc hcO using hcov
   let f : WO S T → ℂ := fun w => ψ (-symplOH S T (c w) w) * F (p (w - c w))
   have key : ∀ γ ∈ ratL T S, ∀ w, w - γ ∈ O → f w = ψ (-symplOH S T γ w) * F (p (w - γ)) := by
@@ -256,7 +256,7 @@ theorem psi_hat (C : Ctx S T) {u u' : WO S T} (hu : u ∈ hatA S T (tens (Global
       rw [LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply] at this
       exact ⟨-_, this.trans (Int.cast_neg _).symm⟩
     choose m hm using this
-    rw [s3, ← Complex.exp_nat_mul, ← Complex.exp_int_mul_two_pi_mul_I (-∑ k, m k)]
+    rw [s3, ← exp_natCast_mul, ← Complex.exp_int_mul_two_pi_mul_I (-∑ k, m k)]
     simp only [hm]
     congr 1
     push_cast

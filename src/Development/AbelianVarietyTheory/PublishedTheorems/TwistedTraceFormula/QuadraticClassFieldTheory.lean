@@ -200,7 +200,7 @@ theorem _root_.GlobalTheory.QuadSymbol.mem_normGroup_iff_form (e : Module.Basis 
     [Algebra K A] {x : Aˣ} :
     x ∈ _root_.GlobalTheory.QuadSymbol.normGroup K L A ↔
       ∃ a b : A, (x : A) = a ^ 2 - algebraMap K A δ * b ^ 2 := by
-  haveI : FiniteDimensional K L := Module.Finite.of_basis e
+  have : FiniteDimensional K L := Module.Finite.of_basis e
   set f := Algebra.TensorProduct.basis A e
   have hf0 : f 0 = 1 := by
     rw [Algebra.TensorProduct.basis_apply, h0]

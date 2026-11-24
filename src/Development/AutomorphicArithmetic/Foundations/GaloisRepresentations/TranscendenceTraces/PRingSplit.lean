@@ -72,7 +72,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.ringSplit_of :
     FinSec → IndDesc → RingSplit := by
   intro hF hI A B C _ _ _ _ _ _ _ _ P
   obtain ⟨O, _, _, _, hSH, hInd, hP⟩ := GlobalTheory.T.exists_strictlyHenselian_indEtale_over_prime A P.asIdeal
-  letI : Algebra B (O ⊗[A] B) := (Algebra.TensorProduct.includeRight : B →ₐ[A] O ⊗[A] B).toRingHom.toAlgebra
+  let : Algebra B (O ⊗[A] B) := (Algebra.TensorProduct.includeRight : B →ₐ[A] O ⊗[A] B).toRingHom.toAlgebra
   obtain ⟨s⟩ := hF O (O ⊗[A] B) ((O ⊗[A] B) ⊗[B] C) hSH
   have t0 : C →ₐ[B] O ⊗[A] B :=
     (s.restrictScalars B).comp (Algebra.TensorProduct.includeRight : C →ₐ[B] (O ⊗[A] B) ⊗[B] C)
@@ -83,7 +83,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.ringSplit_of :
         simp }
   obtain ⟨E, _, _, hE, ⟨φ⟩, hC⟩ := hI A O B C hInd ⟨c.comp t0⟩
   refine ⟨E, inferInstance, inferInstance, hE, ?_, hC⟩
-  haveI : (Ideal.comap (φ : E →+* O) (IsLocalRing.maximalIdeal O)).IsPrime := Ideal.comap_isPrime _ _
+  have : (Ideal.comap (φ : E →+* O) (IsLocalRing.maximalIdeal O)).IsPrime := Ideal.comap_isPrime _ _
   refine ⟨⟨Ideal.comap (φ : E →+* O) (IsLocalRing.maximalIdeal O), inferInstance⟩, ?_⟩
   ext1
   show Ideal.comap (algebraMap A E) (Ideal.comap (φ : E →+* O) (IsLocalRing.maximalIdeal O)) = P.asIdeal

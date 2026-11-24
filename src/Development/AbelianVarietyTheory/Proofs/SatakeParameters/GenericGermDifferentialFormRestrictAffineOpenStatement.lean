@@ -58,10 +58,10 @@ theorem formGermI_res : ∀ (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ),
       (h : V' ≤ V) (y : sectionsOn (Omega p j) V),
       formGermI p j hV' hη' hinst (sectionsOn.res ℂ (Omega p j) h y) = formGermI p j hV hη hinst y := by
   intro Z _ p
-  letI := algΓ p
+  let := algΓ p
   intro inst hinst j V V' hV hV' hη hη' h y
   subst hinst
-  letI := ffAlg p
+  let := ffAlg p
   have key : (toOmEquiv p j hV').symm (sectionsOn.toΓ _ _ (sectionsOn.res ℂ (Omega p j) h y)) =
       formRes p h j ((toOmEquiv p j hV).symm (sectionsOn.toΓ _ _ y)) := by
     apply (toOmEquiv p j hV').injective

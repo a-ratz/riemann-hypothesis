@@ -180,12 +180,12 @@ theorem stepW (hT : TAll) (hA : AuxiliaryPrimeFunction) (ε : ℤˣ) (w : d.G) (
   obtain ⟨⟨ν, hν⟩, -, -⟩ := hA F E σ d
   have := hν.1
   obtain ⟨i1, i2, i3, i4⟩ := (PositivityTheory.ThKCT.ideleTop F E).1
-  haveI : BorelSpace (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
-  haveI : LocallyCompactSpace (Mx F E d.m d.n) := inferInstanceAs (LocallyCompactSpace (Fin d.m → Fin d.n → AE F E))
-  haveI : SecondCountableTopology (Mx F E d.m d.n) :=
+  have : BorelSpace (AE F E) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
+  have : LocallyCompactSpace (Mx F E d.m d.n) := inferInstanceAs (LocallyCompactSpace (Fin d.m → Fin d.n → AE F E))
+  have : SecondCountableTopology (Mx F E d.m d.n) :=
     inferInstanceAs (SecondCountableTopology (Fin d.m → Fin d.n → AE F E))
-  haveI : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
+  have : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
   have hsm : ∀ c : AF F, Continuous fun Z : Mx F E d.m d.n => c • Z := fun c =>
     continuous_pi fun i => continuous_pi fun j =>
       Continuous.fun_smul (f := fun _ : Mx F E d.m d.n => c) (g := fun Z : Mx F E d.m d.n => Z i j) continuous_const
@@ -193,33 +193,33 @@ theorem stepW (hT : TAll) (hA : AuxiliaryPrimeFunction) (ε : ℤˣ) (w : d.G) (
   let VI : AddSubgroup (Mx F E d.m d.n) :=
     { carrier := {Z | finOne F • Z = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_add, ha, hb, add_zero]
       zero_mem' := by simp
       neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_neg, ha, neg_zero] }
   let VF : AddSubgroup (Mx F E d.m d.n) :=
     { carrier := {Z | eInf F • Z = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_add, ha, hb, add_zero]
       zero_mem' := by simp
       neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_neg, ha, neg_zero] }
   have hVI : IsClosed ((VI : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)) :=
     isClosed_eq (hsm (finOne F)) continuous_const
   have hVF : IsClosed ((VF : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)) :=
     isClosed_eq (hsm (eInf F)) continuous_const
-  haveI : LocallyCompactSpace VI := hVI.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace VF := hVF.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology VI :=
+  have : LocallyCompactSpace VI := hVI.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace VF := hVF.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology VI :=
     TopologicalSpace.Subtype.secondCountableTopology ((VI : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n))
-  haveI : SecondCountableTopology VF :=
+  have : SecondCountableTopology VF :=
     TopologicalSpace.Subtype.secondCountableTopology ((VF : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n))
-  haveI : BorelSpace VI := Subtype.borelSpace (fun x' => x' ∈ ((VI : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)))
-  haveI : BorelSpace VF := Subtype.borelSpace (fun x' => x' ∈ ((VF : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)))
+  have : BorelSpace VI := Subtype.borelSpace (fun x' => x' ∈ ((VI : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)))
+  have : BorelSpace VF := Subtype.borelSpace (fun x' => x' ∈ ((VF : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)))
   have h₁ : ∀ Z : Mx F E d.m d.n, eInf F • Z ∈ VI := fun Z => by
     show finOne F • eInf F • Z = 0
     rw [smul_smul, finOne_mul_eInf, zero_smul]
@@ -248,7 +248,7 @@ theorem stepW (hT : TAll) (hA : AuxiliaryPrimeFunction) (ε : ℤˣ) (w : d.G) (
       map_add' := fun p q => by
         show p.1.1 + q.1.1 + (p.2.1 + q.2.1) = p.1.1 + p.2.1 + (q.1.1 + q.2.1)
         abel
-      continuous_toFun := (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
+      continuous_toFun := (continuous_subtypeVal.comp continuous_fst).add (continuous_subtypeVal.comp continuous_snd)
       continuous_invFun := ((hsm (eInf F)).subtype_mk h₁).prodMk ((hsm (finOne F)).subtype_mk h₂) }
   obtain ⟨C, -, hC⟩ := KFock.integral_split ν (Measure.addHaar : Measure VI) (Measure.addHaar : Measure VF) Φs
   refine ⟨fun f X => (C : ℂ) * ∫ a : VI, d.B.ψ (((ε : ℤ) : AF F) * d.tt (d.gram X a.1)) * f a.1 ∂Measure.addHaar,

@@ -109,7 +109,7 @@ theorem SectionsHaveFiniteDimension.trivial_point (K : Type) [Field K] : Section
 
 theorem Vol.trivial_point (K : Type) [Field K] : Vol (𝟙 (Sp K)) (Out.Inh.trivLB (Sp K)) 0 1 := by
   refine ⟨fun _ => 1, fun e => ?_, by simp⟩
-  haveI : Unique (lbPow (Out.Inh.trivLB (Sp K)) e).ι := inferInstanceAs (Unique (PUnit → PUnit))
+  have : Unique (lbPow (Out.Inh.trivLB (Sp K)) e).ι := inferInstanceAs (Unique (PUnit → PUnit))
   exact SectionsHaveFiniteDimension.one_of_isIso _ (top_unique fun _ _ => Set.mem_iInter.2 fun _ => trivial)
     fun i j => Out.Inh.linComb_triv_g _ _ i j
 
@@ -153,9 +153,9 @@ theorem MapDeg.of_isFinite {ψ : X ⟶ Y} [IsFinite ψ] {D : ℕ}
     (h : ∀ U : Y.Opens, IsAffineOpen U → (U : Set Y).Nonempty →
       letI := (ψ.app U).hom.toAlgebra
       Module.finrank Γ(Y, U) Γ(X, ψ ⁻¹ᵁ U) = D) : MapDeg ψ D := fun U hU hne => by
-  letI := (ψ.app U).hom.toAlgebra
-  haveI : Nonempty U := hne.to_subtype
-  haveI : Module.Finite Γ(Y, U) Γ(X, ψ ⁻¹ᵁ U) := ψ.finite_app U hU
+  let := (ψ.app U).hom.toAlgebra
+  have : Nonempty U := hne.to_subtype
+  have : Module.Finite Γ(Y, U) Γ(X, ψ ⁻¹ᵁ U) := ψ.finite_app U hU
   exact (Module.finrank_eq_rank _ _).symm.trans (congrArg _ (h U hU hne))
 
 theorem MapDeg.id_one (X : Scheme.{0}) : MapDeg (𝟙 X) 1 := fun U _ hne =>

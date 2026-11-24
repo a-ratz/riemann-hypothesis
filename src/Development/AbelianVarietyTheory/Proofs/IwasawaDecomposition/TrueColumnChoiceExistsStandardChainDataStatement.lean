@@ -327,7 +327,7 @@ theorem ptC_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
       rw [hyk, hact]
       exact hp
     exact hR.chr c κ κ0 hgam hq
-  letI : Algebra (I.rec7 l Z).host.F B.fields.E := (inferInstance : Algebra (I.rec7 l Z).host.F (I.rec7 l Z).host.E)
+  let : Algebra (I.rec7 l Z).host.F B.fields.E := (inferInstance : Algebra (I.rec7 l Z).host.F (I.rec7 l Z).host.E)
   exact mem_Fi_iff (I.stX a) B.fields.emb B.embLL (I.perIn u a).sgT K.lev hemb hsg K.y K.y_bij K.stabI
     (fun c γ => K.stabI_range c γ) (fun c s => hR.stab c s) hc z
 
@@ -420,7 +420,7 @@ open GlobalTheory.Mem.Col2.RowTie
 theorem natW_shW' {N : ℕ} (l : DomWeight N) (c : ℤ) : (GlobalTheory.Mem.Col2.shW l c).natW = l.natW := by
   funext i
   have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) i.2
-  simp only [DomWeight.natW, DomWeight.detShift, dif_pos hN, GlobalTheory.Mem.Col2.shW]
+  simp only [DomWeight.natW, DomWeight.detShift, dite_eq_left hN, GlobalTheory.Mem.Col2.shW]
   congr 1
   ring
 
@@ -466,7 +466,7 @@ theorem locW_lat_iff (hS : S.Ok) {G : ι → Matrix (Fin n) (Fin n) ℂ} {sh : �
   unfold locW
   simp only [Formalism.L2.Col.vl_mem_span_intW_iff Pl pw hval w]
   refine ⟨fun H c B hB => (key c B hB).1 (H c), fun H c => ?_⟩
-  haveI : Fact (Pl.resChar w).Prime := ⟨Pl.resChar_prime w⟩
+  have : Fact (Pl.resChar w).Prime := ⟨Pl.resChar_prime w⟩
   obtain ⟨B, hB⟩ := Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.LocB.exists_isLocBasis (Pl.resChar w) E _ (hL c).fg (hspan c)
   exact (key c B hB).2 (H c B hB)
 
@@ -825,7 +825,7 @@ theorem tuplePrimedSpace_classes : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X
     hQv hTQ hQp (fun _ => rfl) (one_mem _) (fun _ => map_one _) (one_mem _) hU1 hlatS hy1 hinj
     (fun p => orbit_surj I.Ch I.sel (I.tup a) I.Ps p) (fun c => (RowTie.L_empty _).symm)
     (fun c s t e => by
-      letI := (I.stX a).actD c.1
+      let := (I.stX a).actD c.1
       have h1 := MulAction.mem_stabilizer_iff.1 (s⁻¹ * t).2
       have e' : s.1.1 = t.1.1 := e
       have h2 : (I.stX a).gam c.1 (s⁻¹ * t).1 = 1 := by

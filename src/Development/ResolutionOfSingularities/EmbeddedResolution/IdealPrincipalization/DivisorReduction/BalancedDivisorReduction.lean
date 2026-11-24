@@ -721,7 +721,7 @@ private theorem span_eq_top_of_basicOpen_cover {X : Scheme.{u}} (W : X.affineOpe
     Ideal.span S = ⊤ := by
   rw [← W.2.iSup_basicOpen_eq_self_iff]
   refine le_antisymm (iSup_le fun f => X.basicOpen_le (f : Γ(X, (W : X.Opens)))) ?_
-  rw [SetLike.le_def]
+  rw [IsConcreteLE.le_iff]
   intro x hx
   obtain ⟨f, hfS, hxf⟩ := hcov x hx
   exact TopologicalSpace.Opens.mem_iSup.mpr ⟨⟨f, hfS⟩, hxf⟩

@@ -57,8 +57,8 @@ theorem exists_etale_factor_of_indEt : ∀ (A O : Type) [CommRing A] [CommRing O
   obtain ⟨j, q, hq1, hq2⟩ := MorphismProperty.exists_hom_of_isFinitelyPresentable hs hp t
     (CommRingCat.ofHom φ.toRingHom) (fun j => by
       rw [(hst j).2]; ext a; simp)
-  letI : Algebra A (D.obj j) := (t.app j).hom.toAlgebra
-  haveI : Algebra.Etale A (D.obj j) := (hst j).1
+  let : Algebra A (D.obj j) := (t.app j).hom.toAlgebra
+  have : Algebra.Etale A (D.obj j) := (hst j).1
   have h1 : ∀ a : A, q.hom (algebraMap A B a) = algebraMap A (D.obj j) a := fun a =>
     congrArg (fun f => f.hom a) hq1
   have h2 : ∀ a : A, (s.app j).hom (algebraMap A (D.obj j) a) = algebraMap A O a := fun a =>

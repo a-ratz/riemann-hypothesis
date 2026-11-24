@@ -123,7 +123,7 @@ theorem irrUnitary_trace_ne_zero_copyFinDS : GlobalTheory.Published.DiscreteSeri
   have hU : GlobalTheory.AutomorphicL2Unitary.IsSubrep π ⊤ := GlobalTheory.AutomorphicL2Unitary.isSubrep_top
   have hcopy := GlobalTheory.T.irreducibleUnitaryRep_eq_finiteSmoothPart_tensor_discreteSeries D V S M H π hπ hcomp hU
   obtain ⟨hirr, hadm⟩ := GlobalTheory.T.finite_part_irreducible_admissible hFl D V S M H π hπ hcomp hU
-  haveI : ν.IsHaarMeasure := hν.1
+  have : ν.IsHaarMeasure := hν.1
   have hfam : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
   obtain ⟨⟨c', hc'⟩, -⟩ := GlobalTheory.T.admissibleRep_hasTrace_finiteAdelicPureTensorFunction D V ν ff hfam _ (finPartDSSm M hU) hadm
   have hπc' := GlobalTheory.T.test_data_haar_factorization D V lam S M T U μa μf μ fa ff hTD ν hν H π hπ _ (finPartDSSm M hU) hirr hadm hcopy c' hc'
@@ -192,7 +192,7 @@ theorem isCopyFinDS_of_equiv {H : Type} [NormedAddCommGroup H] [InnerProductSpac
   · rw [← hspan]
     congr 2
     ext v
-    simp only [LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe, Set.mem_setOf_eq]
+    simp only [LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe, mem_ofPred_eq]
     exact ⟨fun ⟨w, y, hv⟩ => ⟨_, y, hv⟩, fun ⟨w, y, hv⟩ => ⟨f.toLinearEquiv w, y, by simpa using hv⟩⟩
 
 
@@ -217,7 +217,7 @@ theorem isCopyFinDS_of_uEquiv {H H' : Type} [NormedAddCommGroup H] [InnerProduct
     rw [← hC, ← hC, e]
   · have hS : {v | ∃ w y, v = (C ∘ₗ T) w y} = A '' {v | ∃ w y, v = T w y} := by
       ext v
-      simp only [hC, Set.mem_setOf_eq, Set.mem_image]
+      simp only [hC, mem_ofPred_eq, Set.mem_image]
       exact ⟨fun ⟨w, y, hv⟩ => ⟨_, ⟨w, y, rfl⟩, hv.symm⟩, fun ⟨_, ⟨w, y, rfl⟩, hv⟩ => ⟨w, y, hv.symm⟩⟩
     rw [hS]
     have hd : Dense ((Submodule.span ℂ {v | ∃ w y, v = T w y} : Submodule ℂ H) : Set H) :=

@@ -155,7 +155,7 @@ theorem isCompact_G (R : ℝ) : IsCompact {y : G n | lg y.val ≤ R} := by
   have hc : Continuous fun y : G n => lg y.val :=
     contDiffOn_lg.continuousOn.comp_continuous Units.continuous_val mem_GLs_val
   have hcl : IsClosed {y : G n | lg y.val ≤ R} := isClosed_le hc continuous_const
-  haveI : ProperSpace (Mat n) := FiniteDimensional.proper_real _
+  have : ProperSpace (Mat n) := FiniteDimensional.proper_real _
   have hB : IsCompact (Metric.closedBall (0 : Mat n) (Real.exp R)) := isCompact_closedBall _ _
   have hK : IsCompact ((Metric.closedBall (0 : Mat n) (Real.exp R)) ×ˢ
       (MulOpposite.op '' Metric.closedBall (0 : Mat n) (Real.exp R))) :=
@@ -191,7 +191,7 @@ theorem fderiv_hs_sq_le (x v : Mat n) : (fderiv ℝ hs x v) ^ 2 ≤ 4 * hs x * h
   have h0 : (∑ a, ∑ b, (2 : ℕ) • (innerSL ℝ (x a b)).comp (ent a b)) v =
       2 * ∑ p ∈ univ ×ˢ univ, inner ℝ (x p.1 p.2) (v p.1 p.2) := by
     rw [sum_product, mul_sum]
-    simp [ContinuousLinearMap.sum_apply, mul_sum, ent_apply, mul_add]
+    simp [sum_apply, mul_sum, ent_apply, mul_add]
   rw [h0]
   have h1 : |∑ p ∈ (univ : Finset (Fin n)) ×ˢ (univ : Finset (Fin n)), inner ℝ (x p.1 p.2) (v p.1 p.2)| ≤
       ∑ p ∈ (univ : Finset (Fin n)) ×ˢ (univ : Finset (Fin n)), ‖x p.1 p.2‖ * ‖v p.1 p.2‖ :=
@@ -232,9 +232,9 @@ theorem fderiv_inv_mul {x : Mat n} (hx : x ∈ GLs n) (v : Mat n) :
       rw [← Matrix.mul_apply, Matrix.mul_nonsing_inv y (isUnit_det_of_mem hy)]
     have h3 := h1.unique ((hasFDerivAt_const ((1 : Mat n) a b) x).congr_of_eventuallyEq h2)
     have h4 := congrArg (fun L : Mat n →L[ℝ] ℂ => L w) h3
-    simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, ent_apply,
-      ContinuousLinearMap.zero_apply, smul_eq_mul, sum_add_distrib] at h4
+    simp only [sum_apply, add_apply,
+      smul_apply, ContinuousLinearMap.comp_apply, ent_apply,
+      zero_apply, smul_eq_mul, sum_add_distrib] at h4
     simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.zero_apply]
     rw [← h4]
     congr 1

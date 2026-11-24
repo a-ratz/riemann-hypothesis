@@ -102,7 +102,7 @@ theorem isAdicComplete_map_eval {A ι : Type} [CommRing A] (T : ι → Type) [�
     (e : A ≃+* Π i, T i) (J : Ideal A) (h : IsAdicComplete J A) (i : ι) :
     IsAdicComplete (J.map ((Pi.evalRingHom T i).comp e.toRingHom)) (T i) := by
   classical
-  letI : Algebra A (T i) := ((Pi.evalRingHom T i).comp e.toRingHom).toAlgebra
+  let : Algebra A (T i) := ((Pi.evalRingHom T i).comp e.toRingHom).toAlgebra
   let s : T i →ₗ[A] A :=
     { toFun t := e.symm (Pi.single i t)
       map_add' x y := by rw [Pi.single_add, map_add (f := _)]
@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.AdicColimit.isAdicColimit_of_disjoint_cover (R : Typ
       have : pullback.fst (𝒰.f i) (𝒰.f i) = pullback.snd (𝒰.f i) (𝒰.f i) :=
         (cancel_mono (𝒰.f i)).1 pullback.condition
       rw [this]
-    · haveI : IsEmpty ↥(pullback (𝒰.f i) (𝒰.f j)) := ⟨fun x =>
+    · have : IsEmpty ↥(pullback (𝒰.f i) (𝒰.f j)) := ⟨fun x =>
         Set.disjoint_left.1 (hd i j hij) ⟨pullback.fst (𝒰.f i) (𝒰.f j) x, rfl⟩
           ⟨pullback.snd (𝒰.f i) (𝒰.f j) x, by
             rw [← Scheme.Hom.comp_apply, ← pullback.condition, Scheme.Hom.comp_apply]⟩⟩
@@ -269,8 +269,8 @@ variable {S S' : Scheme.{0}} (f : S' ⟶ S)
 
 theorem exists_isGt (hG : GlobalFnsSt) (E : SplitExt S) :
     ∃ (H : Over S) (_ : GrpObj H), IsCommMonObj H ∧ E.IsGt H := by
-  letI := E.free
-  letI := E.finite
+  let := E.free
+  let := E.finite
   have hN : ∀ k, (E.O (E.basis k)).L.IsLB := fun k => (E.O (E.basis k)).isLB
   obtain ⟨G, q, u, hu⟩ := exists_generatorScheme E.B.left _ (fun k => (E.O (E.basis k)).L) hN
   obtain ⟨h₁, h₂, h₃, -, -⟩ :=
@@ -380,7 +380,7 @@ theorem isAdicColimit_of_finite_flat {R O : Type} [CommRing R] [CommRing O] [IsL
 
 theorem main : Laws → Laws4 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] (t : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) t) (O : Type) [CommRing O] [IsLocalRing O] (f : V →+* O), IsLocalHom f → IsAdicComplete ((maximalIdeal V).map f) O → (∀ a ∈ maximalIdeal O, ∃ n : ℕ, a ^ n ∈ (maximalIdeal V).map f) → ∃ (Ex : SplitExt (Spec (CommRingCat.of O))) (B : PolAV (Spec (CommRingCat.of O))) (_ : B.A = Ex.B) (_ : HEq B.grp Ex.grpB) (Gt : Over (Spec (CommRingCat.of O))) (_ : GrpObj Gt) (_ : IsCommMonObj Gt) (ρ : RingAct Gt (𝓞 E)) (J : ∀ (A : Type) [CommRing A] [Algebra O A], ((Module.Finite O A ∧ Module.Free O A) ∨ ∃ n : ℕ, ∀ a ∈ maximalIdeal V ^ n, algebraMap O A (f a) = 0) → (specO O A ⟶ Gt) → (Over.mk (Spec.map (CommRingCat.ofHom ((algebraMap O A).comp f))) ⟶ t.G)), Ex.IsGt Gt ∧ (∀ N : ℕ, 1 ≤ N → IsFinite (torsion Ex.B N).hom ∧ Flat (torsion Ex.B N).hom) ∧ (∀ (A A' : Type) [CommRing A] [Algebra O A] [CommRing A'] [Algebra O A'] (hA : ((Module.Finite O A ∧ Module.Free O A) ∨ ∃ n : ℕ, ∀ a ∈ maximalIdeal V ^ n, algebraMap O A (f a) = 0)) (hA' : ((Module.Finite O A' ∧ Module.Free O A') ∨ ∃ n : ℕ, ∀ a ∈ maximalIdeal V ^ n, algebraMap O A' (f a) = 0)) (φ : A →ₐ[O] A') (x : specO O A ⟶ Gt), (J A' hA' (ptMap φ ≫ x)).left = Spec.map (CommRingCat.ofHom φ.toRingHom) ≫ (J A hA x).left) ∧ ∀ (A : Type) [CommRing A] [Algebra O A] (hA : ((Module.Finite O A ∧ Module.Free O A) ∨ ∃ n : ℕ, ∀ a ∈ maximalIdeal V ^ n, algebraMap O A (f a) = 0)), (∀ x x', J A hA (x * x') = J A hA x * J A hA x') ∧ (∀ x (a : 𝓞 E), J A hA (x ≫ ρ.act a) = J A hA x ≫ t.act.act a) ∧ Function.Injective (J A hA) ∧ ((∃ n : ℕ, ∀ a ∈ maximalIdeal V ^ n, algebraMap O A (f a) = 0) → Function.Surjective (J A hA)) ∧ ∀ (I : Ideal A) (g : Over.mk (Spec.map (CommRingCat.ofHom ((algebraMap O A).comp f))) ⟶ t.G), IsNilpotent I → Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I)) ≫ g.left = Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I)) ≫ (1 : Over.mk (Spec.map (CommRingCat.ofHom ((algebraMap O A).comp f))) ⟶ t.G).left → ∃ x, J A hA x = g := by
   intro hL _ E _ _ _ H V _ _ _ _ t P O _ _ f _ hO hm
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨Gt, _, _, ρ, J, h₁, h₂, h₃⟩ := exists_model hL.globalFns P.U.toUnifPre P.lin (spMap f)
   have hs : ∀ (A : Type) [CommRing A] [Algebra O A],
       Spec.map (CommRingCat.ofHom ((algebraMap O A).comp f)) = (specO O A).hom ≫ spMap f := fun A _ _ => by

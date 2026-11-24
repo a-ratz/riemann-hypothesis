@@ -198,12 +198,12 @@ theorem rescale_smul' (s c : C) (f : PowerSeries C) :
 theorem frob_mem_tySet : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I : Fin 2 → Type) [∀ g, Fintype (I g)] (κ : Type) [Fintype κ] (X : RawChart C d I κ), RLaw X V → ∀ g, ∀ x ∈ X.TySet V g, Fs V.l x ∈ X.TySet V g := by
   classical
   intro C _ V d _ I _ κ _ X hX g x hx
-  haveI := hX.charZero
-  haveI := hX.closed
+  have := hX.charZero
+  have := hX.closed
   have hl := V.l_prime
-  haveI : NeZero (V.l : C) := ⟨VF.l_ne_zero⟩
-  haveI : NeZero V.l := ⟨hl.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C V.l
+  have : NeZero (V.l : C) := ⟨VF.l_ne_zero⟩
+  have : NeZero V.l := ⟨hl.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C V.l
   obtain ⟨h0, hadd, -, hres⟩ := _root_.GlobalTheory.RowLaw.cv_group C V d I κ X hX g
   let lo : (I g ⊕ JJ I g → PowerSeries C) → (κ → PowerSeries C) × (JJ I g → PowerSeries C) := fun A =>
     (fun i => ∑ c : I g, X.u g c i • A (Sum.inl c),

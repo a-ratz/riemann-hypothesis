@@ -71,7 +71,7 @@ theorem dim_closure_le_of_specializes : ∀ (X : AlgebraicGeometry.Scheme) (z w 
     closure_minimal (Set.singleton_subset_iff.mpr (specializes_iff_mem_closure.mp hzw))
       isClosed_closure
   have hind : IsInducing (Set.inclusion hsub) := (IsEmbedding.inclusion hsub).isInducing
-  haveI : IrreducibleSpace (closure ({z} : Set X)) :=
+  have : IrreducibleSpace (closure ({z} : Set X)) :=
     Subtype.irreducibleSpace isIrreducible_singleton.closure
   let top : IrreducibleCloseds (closure ({z} : Set X)) :=
     ⟨Set.univ, IrreducibleSpace.isIrreducible_univ _, isClosed_univ⟩
@@ -83,7 +83,7 @@ theorem dim_closure_le_of_specializes : ∀ (X : AlgebraicGeometry.Scheme) (z w 
         (IrreducibleCloseds.map (Set.inclusion hsub) hind.continuous a : Set _) := by
       rw [h]; exact Set.mem_univ _
     have hcl : IsClosed {x : closure ({z} : Set X) | x.1 ∈ closure ({w} : Set X)} :=
-      isClosed_closure.preimage continuous_subtype_val
+      isClosed_closure.preimage continuous_subtypeVal
     have hsub' : (IrreducibleCloseds.map (Set.inclusion hsub) hind.continuous a : Set _) ⊆
         {x : closure ({z} : Set X) | x.1 ∈ closure ({w} : Set X)} := by
       rw [IrreducibleCloseds.coe_map]

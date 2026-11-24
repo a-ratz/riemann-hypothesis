@@ -167,9 +167,9 @@ namespace GlobalTheory.AbCoh
 
 theorem finrank_HO1_descend_field : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] (A : Over (Sp K)) [GrpObj A] (B : Over (Sp L)) [GrpObj B] (φ : B.left ⟶ A.left), IsGrpPullback B A (spMap (algebraMap K L)) φ → IsAbelianScheme A → ∀ g : ℕ, Module.Finite L (HO1 B.hom) → Module.finrank L (HO1 B.hom) = g → Module.Finite K (HO1 A.hom) ∧ Module.finrank K (HO1 A.hom) = g := by
   intro K L _ _ _ A _ B _ φ hpb hA g hfin hrank
-  haveI := hA.proper
+  have := hA.proper
   obtain ⟨⟨e, -⟩, -⟩ := flat_baseChange_HO K L A.left B.left A.hom B.hom φ hpb.1 inferInstance inferInstance
-  haveI : Module.Finite L (L ⊗[K] HO1 A.hom) := Module.Finite.equiv e.symm
+  have : Module.Finite L (L ⊗[K] HO1 A.hom) := Module.Finite.equiv e.symm
   have hr : Module.rank L (L ⊗[K] HO1 A.hom) = Cardinal.lift (Module.rank K (HO1 A.hom)) :=
     Module.rank_baseChange
   have hfinA : Module.Finite K (HO1 A.hom) := by
@@ -246,7 +246,7 @@ theorem exteriorSquare_equiv_of_baseChange : ∀ (K L : Type) [Field K] [Field L
   have hφ : ∀ w : Fin 2 → M, φ (exteriorPower.ιMulti K 2 w) = c (w 0) (w 1) := fun w =>
     exteriorPower.alternatingMapLinearEquiv_apply_ιMulti f w
   let b := Module.Basis.ofVectorSpace K M
-  letI : LinearOrder (Module.Basis.ofVectorSpaceIndex K M) := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder (Module.Basis.ofVectorSpaceIndex K M) := linearOrderOfSTO WellOrderingRel
   let B := b.exteriorPower 2
   let b' := (Algebra.TensorProduct.basis L b).map e₁
   have hb' : ∀ i, b' i = e₁ (1 ⊗ₜ b i) := fun i => by
@@ -277,7 +277,7 @@ theorem exteriorSquare_equiv_of_baseChange : ∀ (K L : Type) [Field K] [Field L
       exact ⟨1 ⊗ₜ ⟨φ (B s), Submodule.subset_span ⟨s, rfl⟩⟩, rfl⟩
     intro x
     obtain ⟨y, hy⟩ := LinearMap.range_eq_top.mp hr x
-    exact ⟨y, by rw [← LinearMap.baseChange_eq_ltensor]; exact hy⟩
+    exact ⟨y, by rw [← LinearMap.baseChange_eq_lTensor]; exact hy⟩
   have hW : Function.Surjective W.subtype :=
     (Module.FaithfullyFlat.lTensor_surjective_iff_surjective K L W.subtype).mp hs
   have hspan : ⊤ ≤ W := fun x _ => by

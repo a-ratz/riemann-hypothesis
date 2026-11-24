@@ -284,7 +284,7 @@ theorem mem_NW {ε : Fin n → Bool} {W : Submodule ℂ (Fin n → ℂ)} {P : Ma
       rw [Matrix.mul_assoc (Jm ε) P (Jm ε), ← Matrix.mulVec_mulVec, hz, Matrix.mulVec_zero]
     · intro hz
       rw [e2, ← Matrix.mulVec_mulVec, hz, Matrix.mulVec_zero]
-  simp only [NW, Set.mem_setOf_eq]
+  simp only [NW, Set.mem_ofPred_eq]
   unfold herm
   constructor
   · rintro ⟨h1, h2, h3⟩

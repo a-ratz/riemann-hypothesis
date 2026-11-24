@@ -122,7 +122,7 @@ theorem finsum_dosetInd_out (hK : IsCommensurated K) (a : G) :
   have hS : S.Finite := finite_left_cosets_of_isCommensurated hK a
   have hind : ∀ c : G ⧸ K, dosetInd ℂ K a c.out = S.indicator (fun _ => (1 : ℂ)) c := by
     intro c
-    simp only [dosetInd, Set.indicator_apply, out_mem_doubleCoset_iff, hSdef, Set.mem_setOf_eq, Pi.one_apply]
+    simp only [dosetInd, Set.indicator_apply, out_mem_doubleCoset_iff, hSdef, Set.mem_ofPred_eq, Pi.one_apply]
   rw [finsum_congr hind, ← finsum_mem_def, finsum_mem_eq_finite_toFinset_sum _ hS, Finset.sum_const,
     nsmul_eq_mul, mul_one]
   have hcard : Nat.card S = hS.toFinset.card := Nat.card_eq_card_finite_toFinset hS

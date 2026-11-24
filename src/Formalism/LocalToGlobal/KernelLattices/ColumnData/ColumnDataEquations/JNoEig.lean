@@ -369,7 +369,7 @@ theorem J1at_mul (hL : B.LatAll) (hTL : Tr0L D B.tor) {N N' : ℕ} (hN : Even N)
     (h0 : B.ThZeroMem N N') :
     letI := D.host.cmStar
     ∀ γ₁ γ₂ : Matrix.unitaryGroup (Fin N) D.host.E, J1at B N N' γ₁ → J1at B N N' γ₂ → J1at B N N' (γ₁ * γ₂) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ₁ γ₂ h1 h2
   have hθ : B.thZero N N' ∈ TaylorLogMetric.Th D B.tor (StandardLatticesGL3.stdL D N) (StandardLatticesGL3.stdL D N') :=
     mem_ThSp_of' D B.tor _ _ h0
@@ -397,7 +397,7 @@ theorem J2at_mul (hL : B.LatAll) (hTR : Tr0R D B.tor) {N N' : ℕ} (hN : Even N)
     (h0 : B.ThZeroMem N N') :
     letI := D.host.cmStar
     ∀ γ₁ γ₂ : Matrix.unitaryGroup (Fin N') D.host.E, J2at B N N' γ₁ → J2at B N N' γ₂ → J2at B N N' (γ₁ * γ₂) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ₁ γ₂ h1 h2
   have hθ : B.thZero N N' ∈ TaylorLogMetric.Th D B.tor (StandardLatticesGL3.stdL D N) (StandardLatticesGL3.stdL D N') :=
     mem_ThSp_of' D B.tor _ _ h0

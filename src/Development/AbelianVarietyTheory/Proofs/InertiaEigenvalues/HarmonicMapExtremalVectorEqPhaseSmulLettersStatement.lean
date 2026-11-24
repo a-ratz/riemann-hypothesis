@@ -253,7 +253,7 @@ theorem coord_mem_fieldRange {ι K J : Type} [Field K] [Fintype J] (σ : K →+*
     a j ∈ σ.fieldRange := by
   classical
   by_contra hj
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   let p : Submodule K ℂ := LinearMap.range (Algebra.linearMap K ℂ)
   have hp : ∀ z ∈ σ.fieldRange, z ∈ p := fun z hz => by
     obtain ⟨y, rfl⟩ := RingHom.mem_fieldRange.1 hz
@@ -362,8 +362,8 @@ theorem io_eq_phase_smul_letters : ∀ (D : D7) (G : Type) [Group G] [Fintype G]
     exact congrArg (fun T : Module.End ℂ _ => T _) (map_one (R.ωP i A.μ0))
   have hn₁ : ‖(R.cV i).ρ g⁻¹ (χ • w₀)‖ = 1 := by
     rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), hcV.2.1, ← norm_eq_sqrt_re_inner, norm_smul, hχ, hw₀, mul_one]
-  haveI := hcV.2.2.2.1
-  haveI : FiniteDimensional T.Q.c.F (VsV D i T.Q.c.F) := Module.Finite.of_basis (Formalism.L2.DIV.bVV T.Q.c.F (lamV D i))
+  have := hcV.2.2.2.1
+  have : FiniteDimensional T.Q.c.F (VsV D i T.Q.c.F) := Module.Finite.of_basis (Formalism.L2.DIV.bVV T.Q.c.F (lamV D i))
   let c0' : VsV D i T.Q.c.F →ₛₗ[inC T.Q.c] (R.cV i).W :=
     { toFun := fun v => c0 (GlobalTheory.AdTh.CoefExt.up (inC T.Q.c) (lamV D i) v)
       map_add' := fun v w => by
@@ -394,9 +394,9 @@ theorem io_eq_phase_smul_letters : ∀ (D : D7) (G : Type) [Group G] [Fintype G]
     refine toF_pG T.Q.c hl hty i1 _ _ _ _ _ (fun τ => by rw [hsig, d1]) (fun τ => by rw [hsig, d2]) (fun τ k hk => ?_)
       fun τ k hk => ?_
     · rw [d1] at hk
-      exact (w3 τ k).1.trans ((dif_pos hk).trans ((hT.kap i τ).1 ⟨k, hk⟩))
+      exact (w3 τ k).1.trans ((dite_eq_left hk).trans ((hT.kap i τ).1 ⟨k, hk⟩))
     · rw [d2] at hk
-      exact (w3 τ k).2.trans ((dif_pos hk).trans ((hT.kap i τ).2.1 ⟨k, hk⟩))
+      exact (w3 τ k).2.trans ((dite_eq_left hk).trans ((hT.kap i τ).2.1 ⟨k, hk⟩))
   have hne : PT (B₀ (c0' hw)) ≠ 0 := fun h => by
     rw [hB₀, map_eq_zero_iff _ hinj, map_eq_zero_iff _ (toF_injective T.Q.c hl hty), map_eq_zero_iff _ i2] at h
     rw [h, map_zero, norm_zero] at n1'
@@ -458,7 +458,7 @@ namespace GlobalTheory.SerLetters
 theorem map_mem_HHa {T0 : Type} {r : T0 → ℕ} {n : ℕ} {k K : Type} [Field k] [CharZero k] [Field K] (φ : k →+* K)
     {cc : T0 → T0} {isX : T0 → Prop} {a : T0 → ℕ → ℕ} {P : MvPolynomial (Letter T0 r n) k} (h : P ∈ HHa r n k cc isX a) :
     MvPolynomial.map φ P ∈ HHa r n K cc isX a := by
-  haveI : Infinite k := Infinite.of_injective (fun m : ℕ => (m : k)) Nat.cast_injective
+  have : Infinite k := Infinite.of_injective (fun m : ℕ => (m : k)) Nat.cast_injective
   exact ⟨ReciprocityTheory.ChartRestriction.G.PullbackSections.harmK_map φ h.1, ReciprocityTheory.ChartRestriction.G.PullbackSections.rowInv_map φ h.2.1, ReciprocityTheory.ChartRestriction.G.PullbackSections.rowDeg_map φ h.2.2⟩
 
 end GlobalTheory.SerLetters

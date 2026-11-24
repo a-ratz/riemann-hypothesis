@@ -254,7 +254,7 @@ open StackedExceptionalCoordinates in
 theorem DualStackedExcCoords.proof : DualStackedExcCoords.Statement := by
   intro K _ _ i F F' T _ _ b b' a _ hlt hcov _
   have hle := hlt.le
-  obtain ⟨y₀, hyF, hy⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨y₀, hyF, hy⟩ := IsConcreteLE.exists_of_lt hlt
   have hmax : (ann F'.lattice y₀).IsMaximal := ann_isMaximal hle hcov hyF hy
   set 𝔪 := ann F'.lattice y₀ with h𝔪
   have hbot : 𝔪 ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hmax (RingOfIntegers.not_isField K)

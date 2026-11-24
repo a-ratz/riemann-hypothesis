@@ -142,8 +142,8 @@ theorem UpperTheory.adelic_cohomology_finite_orbit_bound :
     UpperTheory.V.Af.CohB.FinOrbAbs := by
   classical
   intro G H _ _ ι Γ U K hΓ hU ⟨T, hT⟩
-  haveI : Fintype (H ⧸ Γ) := Subgroup.fintypeOfIndexNeZero hΓ.index_ne_zero
-  haveI : Fintype (K ⧸ U.subgroupOf K) := Subgroup.fintypeOfIndexNeZero hU
+  have : Fintype (H ⧸ Γ) := Subgroup.fintypeOfIndexNeZero hΓ.index_ne_zero
+  have : Fintype (K ⧸ U.subgroupOf K) := Subgroup.fintypeOfIndexNeZero hU
   refine ⟨((Finset.univ : Finset (H ⧸ Γ)) ×ˢ T ×ˢ (Finset.univ : Finset (K ⧸ U.subgroupOf K))).image
     (fun x => ι (x.1.out)⁻¹ * x.2.1 * ((x.2.2.out : K) : G)), fun g => ?_⟩
   obtain ⟨h, t, ht, k, hk, rfl⟩ := hT g
@@ -214,9 +214,9 @@ section -- clump:auto
 open UpperTheory.V.Af UpperTheory.V.Af.CohB GlobalTheory.CuspRep in
 private theorem relIndex_open_compact {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     (U K : Subgroup G) (hU : IsOpen (U : Set G)) (hK : IsCompact (K : Set G)) : U.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : Finite (K ⧸ U.subgroupOf K) :=
-    Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : Finite (K ⧸ U.subgroupOf K) :=
+    Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 private theorem comm_comap {G H : Type} [Group G] [Group H] (f : H →* G) (U K : Subgroup G)
@@ -297,7 +297,7 @@ theorem UpperTheory.card_ohat_quotient_natCast :
     refine (Ideal.Quotient.eq.2 (Ideal.mem_span_singleton.2 ⟨⟨c, (hm _).2 hc⟩, Subtype.ext ?_⟩)).symm
     change y.1 - algebraMap F (Af F) (algebraMap (𝓞 F) F s) = (N : Af F) * c
     exact sub_eq_of_eq_add' e
-  haveI : Finite (𝓞 F ⧸ Ideal.span {(N : 𝓞 F)}) :=
+  have : Finite (𝓞 F ⧸ Ideal.span {(N : 𝓞 F)}) :=
     Nat.finite_of_card_ne_zero (by rw [card_int_mod]; exact pow_ne_zero _ (by omega))
   exact ⟨Finite.of_surjective g hg, (Nat.card_le_card_of_surjective g hg).trans (card_int_mod F N).le⟩
 end -- clump:auto
@@ -491,9 +491,9 @@ theorem UpperTheory.level_subgroup_index_bound_of_card_ohat :
   have hj : Function.Injective (Matrix.GeneralLinearGroup.map (n := Fin n) (UpperTheory.V.Af.Ohat F).subtype) := fun x y h =>
     Units.ext (Matrix.ext fun a b => Subtype.ext
       (congrArg (fun z : GL (Fin n) (GlobalTheory.CuspRep.Af F) => z a b) h))
-  haveI : Finite (Matrix (Fin n) (Fin n) (↥(UpperTheory.V.Af.Ohat F) ⧸ Ideal.span {(N : ↥(UpperTheory.V.Af.Ohat F))})) :=
+  have : Finite (Matrix (Fin n) (Fin n) (↥(UpperTheory.V.Af.Ohat F) ⧸ Ideal.span {(N : ↥(UpperTheory.V.Af.Ohat F))})) :=
     inferInstanceAs (Finite (Fin n → Fin n → _))
-  haveI : Finite (GL (Fin n) (↥(UpperTheory.V.Af.Ohat F) ⧸ Ideal.span {(N : ↥(UpperTheory.V.Af.Ohat F))})) :=
+  have : Finite (GL (Fin n) (↥(UpperTheory.V.Af.Ohat F) ⧸ Ideal.span {(N : ↥(UpperTheory.V.Af.Ohat F))})) :=
     Finite.of_injective _ Units.val_injective
   obtain ⟨h0, h1⟩ := index_closed_dyadic_subgroup _ hj
     (Matrix.GeneralLinearGroup.map (n := Fin n) (Ideal.Quotient.mk (Ideal.span {(N : ↥(UpperTheory.V.Af.Ohat F))})))
@@ -581,7 +581,7 @@ private theorem gen (hE : BddEquiv) (hA : AbsBound) (hF : FibCard) {G H : Type} 
       ∀ (d : ℕ) (ξ : ↥Γ →* Matrix (Fin d) (Fin d) ℂ),
         totCoh (Rep.of (@funRep ↥Γ _ (G ⧸ U') (act ι Γ U') d ξ)) ≤ (c * D * d : ℕ) := by
   classical
-  letI := act ι Γ U
+  let := act ι Γ U
   have hsm : ∀ (γ : ↥Γ) (g : G), γ • (g : G ⧸ U) = ((ι γ.1 * g : G) : G ⧸ U) := fun _ _ => rfl
   obtain ⟨T, hT'⟩ := hT
   obtain ⟨c, hc⟩ := hA ↥Γ (G ⧸ U)
@@ -601,7 +601,7 @@ private theorem gen (hE : BddEquiv) (hA : AbsBound) (hF : FibCard) {G H : Type} 
       exact hE ↥(Γ ⊓ S g) _
         ⟨((MulEquiv.subgroupCongr e).trans (Subgroup.subgroupOfEquivOfLe inf_le_left)).symm⟩ (hB g))
   refine ⟨c, fun U' hle h0 D hD d ξ => ?_⟩
-  letI := act ι Γ U'
+  let := act ι Γ U'
   exact hc (G ⧸ U') (Subgroup.quotientMapOfLE hle)
     (fun γ x => by
       obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective x

@@ -161,7 +161,7 @@ theorem isIntegral_of_mul_idem {K : UQ} (B : InvAlg K) {f : B.A} (hf : f * f = f
     obtain ⟨r, hr⟩ := Ideal.mem_span_singleton'.1 this
     apply h0
     linear_combination (-f) * hr - r * hf
-  haveI : Nontrivial (B.A ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hJ
+  have : Nontrivial (B.A ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hJ
   let φ : K.E →ₐ[K.O] B.A ⧸ J := (Ideal.Quotient.mkₐ K.O J).comp (IsScalarTower.toAlgHom K.O K.E B.A)
   have hinj : Function.Injective φ := φ.toRingHom.injective
   rw [← isIntegral_algHom_iff φ hinj]
@@ -370,8 +370,8 @@ theorem finite_integralClosure :
   intro K B hsep
   classical
   let bs := Module.finBasis K.E B.A
-  haveI : Algebra.IsAlgebraic K.O K.E := IsLocalization.isAlgebraic K.E (nonZeroDivisors K.O)
-  haveI : Algebra.IsAlgebraic K.O B.A := Algebra.IsAlgebraic.trans K.O K.E B.A
+  have : Algebra.IsAlgebraic K.O K.E := IsLocalization.isAlgebraic K.E (nonZeroDivisors K.O)
+  have : Algebra.IsAlgebraic K.O B.A := Algebra.IsAlgebraic.trans K.O K.E B.A
   obtain ⟨y, hy, hint⟩ := Algebra.IsAlgebraic.exists_integral_multiples K.O (Finset.univ.image bs)
   have hy' : algebraMap K.O K.E y ≠ 0 := by
     intro h
@@ -395,9 +395,9 @@ theorem finite_integralClosure :
     obtain ⟨c, hc⟩ := trace_mem_range B (hx'.mul (hbint i))
     rw [LinearMap.BilinForm.dualBasis_repr_apply, Algebra.traceForm_apply, ← hc, algebraMap_smul]
     exact Submodule.smul_mem _ c (Submodule.subset_span ⟨i, rfl⟩)
-  haveI : IsNoetherian K.O (Submodule.span K.O (Set.range d)) :=
+  have : IsNoetherian K.O (Submodule.span K.O (Set.range d)) :=
     isNoetherian_span_of_finite K.O (Set.finite_range d)
-  haveI : IsNoetherian K.O (Subalgebra.toSubmodule (integralClosure K.O B.A)) := isNoetherian_of_le hle
+  have : IsNoetherian K.O (Subalgebra.toSubmodule (integralClosure K.O B.A)) := isNoetherian_of_le hle
   exact Module.IsNoetherian.finite K.O (Subalgebra.toSubmodule (integralClosure K.O B.A))
 
 end GlobalTheory.UnitLemma.IntegralFinite
@@ -422,14 +422,14 @@ theorem finite_between (O A : Type) [CommRing O] [IsDomain O] [IsDiscreteValuati
     (a : O) (ha : a ≠ 0) : Finite {N : Submodule O A // N ≤ R ∧ ∀ x ∈ R, a • x ∈ N} := by
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨k, hk⟩ := IsDiscreteValuationRing.associated_pow_irreducible ha hϖ
-  haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
-  haveI : Finite (O ⧸ Ideal.span {a}) := by
+  have : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
+  have : Finite (O ⧸ Ideal.span {a}) := by
     rw [Ideal.span_singleton_eq_span_singleton.2 hk, ← Ideal.span_singleton_pow,
       ← hϖ.maximalIdeal_eq]
     exact Ideal.finite_quotient_pow (IsNoetherian.noetherian _) k
-  haveI : Module.Finite O R := Module.Finite.iff_fg.2 hR
+  have : Module.Finite O R := Module.Finite.iff_fg.2 hR
   set J : Submodule O R := Ideal.span {a} • (⊤ : Submodule O R) with hJ
-  haveI hQ : Finite (R ⧸ J) := Submodule.finite_quotient_smul (Ideal.span {a}) (N := ⊤) Module.Finite.fg_top
+  have hQ : Finite (R ⧸ J) := Submodule.finite_quotient_smul (Ideal.span {a}) (N := ⊤) Module.Finite.fg_top
   have hJle : ∀ N : {N : Submodule O A // N ≤ R ∧ ∀ x ∈ R, a • x ∈ N}, J ≤ N.1.comap R.subtype := by
     intro N x hx
     rw [hJ, Submodule.ideal_span_singleton_smul, Submodule.mem_smul_pointwise_iff_exists] at hx
@@ -583,15 +583,15 @@ theorem card_badWinBox_le {ι : Type} (S I : Finset ι) (L k : ℕ) (i₀ i : ι
   unfold badWinBox
   by_cases hS : i ∈ S
   · have : i ∈ insert i₀ S := Finset.mem_insert_of_mem hS
-    rw [if_pos hS, if_pos this]
+    rw [ite_eq_left hS, ite_eq_left this]
     split_ifs <;> simp [Int.card_Icc] <;> omega
-  · rw [if_neg hS]
+  · rw [ite_eq_right hS]
     by_cases h0 : i = i₀
     · subst h0
-      rw [if_pos rfl, if_pos (Finset.mem_insert_self _ _)]
+      rw [ite_eq_left rfl, ite_eq_left (Finset.mem_insert_self _ _)]
       refine (Finset.card_union_le _ _).trans ?_
       simp [Int.card_Ico, Int.card_Ioc]; omega
-    · rw [if_neg h0, if_neg (by simp [h0, hS])]
+    · rw [ite_eq_right h0, ite_eq_right (by simp [h0, hS])]
       simp [Int.card_Icc]
       nlinarith
 
@@ -650,21 +650,21 @@ theorem tendsto_badWindow_div_rho : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fin
       obtain ⟨h1, h2, h3, h4⟩ := hw i
       unfold badWinBox
       by_cases hS : i ∈ S
-      · rw [if_pos hS]
+      · rw [ite_eq_left hS]
         by_cases hiI : i ∈ I
-        · rw [if_pos hiI]; simp only [Finset.mem_Icc]; exact ⟨h3 hiI, h2⟩
-        · rw [if_neg hiI]
+        · rw [ite_eq_left hiI]; simp only [Finset.mem_Icc]; exact ⟨h3 hiI, h2⟩
+        · rw [ite_eq_right hiI]
           have := (hI i hS).resolve_left hiI
           simp only [Finset.mem_Icc]; exact ⟨h1, h4 this⟩
-      · rw [if_neg hS]
+      · rw [ite_eq_right hS]
         by_cases h0 : i = i₀
         · subst h0
-          rw [if_pos rfl]
+          rw [ite_eq_left rfl]
           simp only [Finset.mem_union, Finset.mem_Ico, Finset.mem_Ioc]
           by_cases hl : (L : ℤ) ≤ p i
           · exact Or.inr ⟨h₀ hl, h2⟩
           · exact Or.inl ⟨h1, lt_of_not_ge hl⟩
-        · rw [if_neg h0]; simp only [Finset.mem_Icc]; exact ⟨h1, h2⟩
+        · rw [ite_eq_right h0]; simp only [Finset.mem_Icc]; exact ⟨h1, h2⟩
     let T : Finset (Submodule K.O B.A) := W.biUnion fun p => (hC p).1.toFinset
     have hTcard : T.card ≤ W.card * C := by
       refine Finset.card_biUnion_le.trans ?_
@@ -674,12 +674,12 @@ theorem tendsto_badWindow_div_rho : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fin
     have hfs : ∑ᶠ M ∈ B.Lin, f k M = ∑ M ∈ T.filter (· ∈ B.Lin), f k M := by
       apply finsum_mem_eq_sum_of_inter_support_eq
       ext M
-      simp only [Set.mem_inter_iff, Function.mem_support, Finset.coe_filter, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, Function.mem_support, Finset.coe_filter, Set.mem_ofPred_eq]
       constructor
       · rintro ⟨hM, hf⟩
         refine ⟨⟨?_, hM⟩, hf⟩
         obtain ⟨p, hpW, hp⟩ := hmem M hM hf
-        simp only [T, Finset.mem_biUnion, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+        simp only [T, Finset.mem_biUnion, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
         exact ⟨p, hpW, hp⟩
       · rintro ⟨⟨_, hM⟩, hf⟩
         exact ⟨hM, hf⟩

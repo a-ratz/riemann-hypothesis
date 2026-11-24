@@ -707,7 +707,7 @@ open Complex
 
 theorem upd_mem {n a : ℕ} {p : Fin n → ℂ} (hp : p ∈ logDom n a) (i : Fin n) {z : ℂ}
     (hz : if (i : ℕ) < a then z.re < 0 else ‖z‖ < 1) : Function.update p i z ∈ logDom n a := by
-  simp only [logDom, Set.mem_setOf_eq] at hp ⊢
+  simp only [logDom, Set.mem_ofPred_eq] at hp ⊢
   intro k
   by_cases hk : k = i
   · subst hk; simpa using hz
@@ -741,12 +741,12 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
   have hs₀mem : s₀ ∈ logDom n a := by simpa [logDom] using hs₀'
   have hPmem : ∀ j, P j ∈ logDom n a := by
     intro j
-    simp only [logDom, Set.mem_setOf_eq]
+    simp only [logDom, Set.mem_ofPred_eq]
     intro k
     by_cases hk : (k : ℕ) < j
-    · have e : P j k = s k := if_pos hk
+    · have e : P j k = s k := ite_eq_left hk
       rw [e]; exact hs' k
-    · have e : P j k = s₀ k := if_neg hk
+    · have e : P j k = s₀ k := ite_eq_right hk
       rw [e]; exact hs₀' k
   have hco : ∀ k : Fin n, ‖logExp a s k‖ ≤ 1 / 2 := fun k => (norm_le_pi_norm (logExp a s) k).trans hse
   have hsk : ∀ k : Fin n, ‖s k‖ ≤ ‖s‖ := fun k => norm_le_pi_norm s k
@@ -762,7 +762,7 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
         funext k
         by_cases hk : k = i
         · rw [hk, Function.update_self]
-          exact if_pos (show (i : ℕ) < j + 1 by simp [hi])
+          exact ite_eq_left (show (i : ℕ) < j + 1 by simp [hi])
         · rw [Function.update_of_ne hk]
           have hkj : (k : ℕ) ≠ j := fun h => hk (Fin.ext h)
           have e : ((k : ℕ) < j + 1 ↔ (k : ℕ) < j) := by omega
@@ -770,7 +770,7 @@ theorem upper_half_growth : ∀ (n a : ℕ) (F : (Fin n → ℂ) → ℂ), Diffe
       have hPj : Function.update (P j) i (s₀ i) = P j := by
         rw [Function.update_eq_self_iff]
         have hn : ¬ ((i : ℕ) < j) := by simp [hi]
-        exact (if_neg hn).symm
+        exact (ite_eq_right hn).symm
       by_cases ha : j < a
       · have hai : (i : ℕ) < a := ha
         have hre : (s i).re ≤ -1 / 2 := by
@@ -1424,7 +1424,7 @@ theorem core : ∀ (n a g r₀ : ℕ) (K : (Fin n → ℂ) → Set (Fin g → �
   have hlamDi : ∀ i, DifferentiableOn ℂ (fun s => lam s i) (logDom n a) := fun i => differentiableOn_pi.1 hlamD i
   let s₀ : Fin n → ℂ := fun _ => (-1 / 2 : ℂ)
   have hs₀ : s₀ ∈ logDom n a := by
-    simp only [logDom, Set.mem_setOf_eq]
+    simp only [logDom, Set.mem_ofPred_eq]
     intro k
     split_ifs <;> norm_num [s₀]
   obtain ⟨Hm₀, -, hpos₀, hspan₀, hint₀, hpair₀⟩ := hin s₀ hs₀

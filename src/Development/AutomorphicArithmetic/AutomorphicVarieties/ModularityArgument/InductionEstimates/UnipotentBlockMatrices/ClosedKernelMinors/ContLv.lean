@@ -217,7 +217,7 @@ private theorem cont_lv {K : Type} [Field K] [NumberField K] : Continuous fun p 
 
 private theorem cont_w {K : Type} [Field K] [NumberField K] :
     Continuous fun p : KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K]) => w0 K * nn p.2 * p.1.1 :=
-  (continuous_const.mul ((continuous_unipOne 2).comp continuous_snd)).mul (continuous_subtype_val.comp continuous_fst)
+  (continuous_const.mul ((continuous_unipOne 2).comp continuous_snd)).mul (continuous_subtypeVal.comp continuous_fst)
 
 private theorem cont_b {K Z : Type} [Field K] [NumberField K] [TopologicalSpace Z] {f f' : G1 K (2 + 2) → ℂ} (hf : Continuous f)
     (hf' : Continuous f') {i j : Z → G1 K (2 + 2)} (hi : Continuous i) (hj : Continuous j) :
@@ -262,19 +262,19 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.pairF :
   obtain ⟨hP', hB', hD'⟩ := bfFun f' β' hf' hβ' hβs'
   obtain ⟨-, hc', hi', -⟩ := thBasic μ _ hP'.cont hP'.rat hB'
   obtain ⟨hI, hE⟩ := (master μ μ₂ κ c hU _ hP.cont hP.rat hB hD v v' hv).2.2 _ hc' hi' hv'
-  haveI := isFiniteMeasure_quotientMeasure μ₂
-  haveI : IsFiniteMeasure (fd μ₂) := isFiniteMeasure_restrict.2 (measure_fundamentalDomain_pos_lt_top (Gam K 2) μ₂).2.ne
-  haveI : SigmaFinite (fd μ₂) := IsFiniteMeasure.toSigmaFinite _
-  haveI : SFinite (fd μ₂) := by
+  have := isFiniteMeasure_quotientMeasure μ₂
+  have : IsFiniteMeasure (fd μ₂) := isFiniteMeasure_restrict.2 (measure_fundamentalDomain_pos_lt_top (Gam K 2) μ₂).2.ne
+  have : SigmaFinite (fd μ₂) := IsFiniteMeasure.toSigmaFinite _
+  have : SFinite (fd μ₂) := by
     set_option synthInstance.maxHeartbeats 400000 in
       exact inferInstance
-  haveI : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
-  haveI : IsFiniteMeasure κ := CompactSpace.isFiniteMeasure
-  haveI : SigmaFinite κ := IsFiniteMeasure.toSigmaFinite _
-  haveI : SFinite κ := by
+  have : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
+  have : IsFiniteMeasure κ := CompactSpace.isFiniteMeasure
+  have : SigmaFinite κ := IsFiniteMeasure.toSigmaFinite _
+  have : SFinite κ := by
     set_option synthInstance.maxHeartbeats 400000 in
       exact inferInstance
-  haveI : SecondCountableTopology (KG K (2 + 2)) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (KG K (2 + 2)) := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨C, hC⟩ := hf.bdd
   obtain ⟨C', hC'⟩ := hf'.bdd
   have hbd : ∀ g g', ‖conj (f g) * f' g'‖ ≤ C * C' := fun g g' => by
@@ -284,9 +284,9 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.pairF :
     ((hpSpec (K := K)).2.2.2.1.comp' cont_w) fun R => by
       obtain ⟨S, hS, hS'⟩ := (longCell (K := K)).2 R
       exact ⟨S, hS, fun X k => hS' X k.1 k.2⟩
-  have hb := (cont_b hf.cont hf'.cont (Z := KG K (2 + 2)) continuous_subtype_val continuous_subtype_val).1
+  have hb := (cont_b hf.cont hf'.cont (Z := KG K (2 + 2)) continuous_subtypeVal continuous_subtypeVal).1
   have hb' := (cont_b hf.cont hf'.cont (Z := KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K]))
-    (continuous_subtype_val.comp' continuous_fst) cont_w).2
+    (continuous_subtypeVal.comp' continuous_fst) cont_w).2
   have key := twoC (fd μ₂) κ (unipMeasure K (2 + 2) 2) (fun t => volN K * (conj (β t) * β' t))
     (continuous_const.mul ((Complex.continuous_conj.comp hβ).mul hβ')) hβs'.mul_left.mul_left
     (fun x y k => conj (f (lv x y 0 * k.1)) * f' (lv x y 0 * k.1)) hb (C * C') (fun _ _ _ => hbd _ _)

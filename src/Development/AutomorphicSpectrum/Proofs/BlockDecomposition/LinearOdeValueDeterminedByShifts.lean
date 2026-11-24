@@ -106,7 +106,7 @@ theorem lower_eq_zero {p : Polynomial ℂ} (hp : p.Monic) {F : ℕ → ℝ → �
     exact hF i s
   have hA : LipschitzWith ‖LinearMap.toContinuousLinearMap (companion p p.natDegree)‖₊
       (companion p p.natDegree) := by
-    have := (LinearMap.toContinuousLinearMap (companion p p.natDegree)).lipschitz
+    have := (LinearMap.toContinuousLinearMap (companion p p.natDegree)).lipschitzWith
     simpa using this
   have hzero : ∀ s, X s = 0 := by
     intro s
@@ -187,7 +187,7 @@ theorem deriv_zero_eq_sum :
       (∀ s : ℝ, ∑ k ∈ Finset.range (p.natDegree + 1), p.coeff k * F k s = 0) →
       F 1 0 = ∑ t ∈ T, w t * F 0 t := by
   intro p hp
-  haveI := finiteDimensional_solSpace hp
+  have := finiteDimensional_solSpace hp
   let ev : ℝ → Module.Dual ℂ (solSpace p) := fun t =>
     { toFun := fun F => (F : ℕ → ℝ → ℂ) 0 t
       map_add' := fun F G => rfl

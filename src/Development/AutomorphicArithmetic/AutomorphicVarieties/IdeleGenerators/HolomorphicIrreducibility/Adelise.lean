@@ -109,7 +109,7 @@ private theorem scalar_mem (w : Pl F) (x : (w.adicCompletion F)ˣ) (hx : IsUnitA
   obtain ⟨u, hu⟩ : IsUnit (⟨(x : w.adicCompletion F), hx'.le⟩ : w.adicCompletionIntegers F) :=
     HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one.2 hx'
   refine ⟨GeneralLinearGroup.scalar (Fin 2) u, ?_, ?_⟩
-  · haveI : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) := by
+  · have : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) := by
       rw [pow_zero, Ideal.one_eq_top]; infer_instance
     exact Subsingleton.elim (α := Fin 2 → _) _ _
   · have hu' : ((u : w.adicCompletionIntegers F) : w.adicCompletion F) = x := congrArg Subtype.val hu
@@ -165,7 +165,7 @@ private theorem lev_eq (M : ℕ) (hM : 1 ≤ M) (w : Pl ℚ) : lev M w = M.facto
   simp
 
 private theorem dvd_of_norm (w : Pl ℚ) (𝔪 : Ideal (𝓞 ℚ)) (h : normV w ∣ Ideal.absNorm 𝔪) : w.asIdeal ∣ 𝔪 := by
-  haveI : IsPrincipalIdealRing (𝓞 ℚ) :=
+  have : IsPrincipalIdealRing (𝓞 ℚ) :=
     IsPrincipalIdealRing.of_surjective Rat.ringOfIntegersEquiv.symm Rat.ringOfIntegersEquiv.symm.surjective
   obtain ⟨x, rfl⟩ : ∃ x, 𝔪 = Ideal.span {x} := (IsPrincipalIdealRing.principal 𝔪).principal
   obtain ⟨z, rfl⟩ : ∃ z : ℤ, x = algebraMap ℤ (𝓞 ℚ) z :=
@@ -182,20 +182,20 @@ private theorem hk_coef {k N : ℕ} (hN : 1 ≤ N) {χ : DirichletCharacter ℂ 
   have hχ : chiI ω (lev N) w.asIdeal = χ (normV w : ZMod N) := by
     rw [chi_prime, lev_eq N hN]
     by_cases hd : normV w ∣ N
-    · rw [if_neg (hp.factorization_pos_of_dvd (by omega) hd).ne', MulChar.map_nonunit]
+    · rw [ite_eq_right (hp.factorization_pos_of_dvd (by omega) hd).ne', MulChar.map_nonunit]
       rw [ZMod.isUnit_prime_iff_not_dvd hp]
       exact not_not.2 hd
-    · rw [if_pos (Nat.factorization_eq_zero_of_not_dvd hd), hval w hd]
+    · rw [ite_eq_left (Nat.factorization_eq_zero_of_not_dvd hd), hval w hd]
   have hd : coefDiv (icoef g.f) w.asIdeal 𝔪 =
       if normV w ∣ Ideal.absNorm 𝔪 then coef g.f (Ideal.absNorm 𝔪 / normV w) else 0 := by
     unfold coefDiv
     by_cases h : ∃ 𝔫, 𝔪 = w.asIdeal * 𝔫
     · have e := congrArg Ideal.absNorm h.choose_spec
       rw [map_mul, hn] at e
-      rw [dite_eq_left h, if_pos ⟨_, e⟩, icoef]
+      rw [dite_eq_left h, ite_eq_left ⟨_, e⟩, icoef]
       congr 1
       exact (Nat.div_eq_of_eq_mul_right hp.pos e).symm
-    · rw [dite_eq_right h, if_neg fun h' => h (dvd_of_norm w 𝔪 h')]
+    · rw [dite_eq_right h, ite_eq_right fun h' => h (dvd_of_norm w 𝔪 h')]
   rw [hkCoef, hχ, hd, icoef, icoef, map_mul, hn]
   exact g.eig _ hp _ h1
 

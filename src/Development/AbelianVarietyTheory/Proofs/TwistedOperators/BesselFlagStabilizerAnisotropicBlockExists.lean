@@ -137,7 +137,7 @@ theorem flagN_le_goodSub (T : Subgroup (GA D A)) : flagN d ≤ goodSub d o T := 
     ext k i
     exact congrFun (hb i) k
   have hdet : (1 + U).det = 1 := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [det_of_isUpperTriangular]
     · refine Finset.prod_eq_one fun i _ => ?_
       simp [U, ha1 i i le_rfl]
     · intro i j hji
@@ -192,7 +192,7 @@ theorem exists_continuous_proj : ∀ (D : D7) (S S₀ A L : HSp D) (ρ : ℕ) (d
   refine ⟨fun g => ofMat A (matP d o g.1) (anisotropicBlock_unitary d o g.2), ?_, fun h n => ?_⟩
   · refine continuous_of_mt A ?_
     show Continuous fun g : (flagN d ⊔ (embA d o).range : Subgroup (GA D S)) => matP d o g.1
-    exact (continuous_const.matrix_mul ((continuous_const.matrix_mul ((continuous_mt S).comp continuous_subtype_val)).matrix_mul
+    exact (continuous_const.matrix_mul ((continuous_const.matrix_mul ((continuous_mt S).comp continuous_subtypeVal)).matrix_mul
       continuous_const)).matrix_mul continuous_const
   · exact mt_injective A (by rw [mt_ofMat]; exact anisotropicBlock_mul_embA d o n h)
 

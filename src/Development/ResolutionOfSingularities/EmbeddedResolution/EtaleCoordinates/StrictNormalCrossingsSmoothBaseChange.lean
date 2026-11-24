@@ -208,11 +208,11 @@ private theorem exists_etale_mvPolynomialHom_castAdd_coord (p : X ⟶ Spec (Comm
     ?_, ?_⟩
   · intro a
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
-      AlgEquiv.coe_ringEquiv, MvPolynomial.renameEquiv_apply, MvPolynomial.rename_C]
+      AlgEquiv.coe_toRingEquiv, MvPolynomial.renameEquiv_apply, MvPolynomial.rename_C]
     exact hCval a
   · intro j
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
-      AlgEquiv.coe_ringEquiv, MvPolynomial.renameEquiv_apply, MvPolynomial.rename_X]
+      AlgEquiv.coe_toRingEquiv, MvPolynomial.renameEquiv_apply, MvPolynomial.rename_X]
     rw [sumEquiv_castAdd_eq_inl]
     exact hXval j
 

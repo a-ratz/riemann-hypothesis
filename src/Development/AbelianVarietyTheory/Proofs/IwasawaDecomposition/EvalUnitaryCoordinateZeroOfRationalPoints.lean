@@ -139,7 +139,7 @@ theorem exists_normOne_det_one_add_ne_zero : ∀ (L : Type) [Field L] [NumberFie
     refine Set.finite_iUnion fun σ => ?_
     exact (finite_det_one_add_smul_eq_zero (X σ)).preimage
       (fun t _ s _ h => hinj (σ.injective h))
-  obtain ⟨t, ht⟩ := (Set.infinite_univ (α := ℚ)).diff hfin |>.nonempty
+  obtain ⟨t, ht⟩ := (Set.infinite_univ (α := ℚ)).sdiff hfin |>.nonempty
   refine ⟨a t, hnorm t, fun σ hσ => ht.2 ?_⟩
   exact Set.mem_iUnion.mpr ⟨σ, hσ⟩
 
@@ -250,7 +250,7 @@ theorem eval_upt_eq_zero_of_skew (L : Type) [Field L] [NumberField L] [IsCMField
       simp only [apply_ite σ, map_zero, hσc]
     simp only [e1, mul_sub, Finset.sum_sub_distrib, mul_ite, mul_zero]
     rw [Fintype.sum_prod_type, Fintype.sum_prod_type]
-    simp only [Fintype.sum_prod_type, ite_and, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [Fintype.sum_prod_type, ite_and, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     have e2 : ∀ (f : Fin n → Fin n → Module.Free.ChooseBasisIndex ℤ (𝓞 L) → ℂ) (p q : Fin n),
         (∑ x, ∑ x_1, ∑ x_2, if p = x then if q = x_1 then f x x_1 x_2 else 0 else 0) = ∑ k, f p q k := by
       intro f p q

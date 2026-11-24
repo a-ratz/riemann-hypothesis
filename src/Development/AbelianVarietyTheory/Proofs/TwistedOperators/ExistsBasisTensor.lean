@@ -127,7 +127,7 @@ theorem carries_of_basis {L L' V V' : Type} [Field L] [Field L'] [AddCommGroup V
   have : Module.Finite L V := Module.Finite.of_basis B
   have : Module.Finite L' V' := Module.Finite.of_basis C
   have : Finite ι := Module.Finite.finite_basis b
-  haveI : Fintype ι := Fintype.ofFinite ι
+  have : Fintype ι := Fintype.ofFinite ι
   have hspan : ⊤ ≤ Submodule.span L' (Set.range fun i => e (b i)) := by
     rw [← C.span_eq, Submodule.span_le]
     rintro _ ⟨k, rfl⟩

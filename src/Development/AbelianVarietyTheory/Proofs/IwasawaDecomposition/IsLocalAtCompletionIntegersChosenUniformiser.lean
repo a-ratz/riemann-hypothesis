@@ -59,7 +59,7 @@ theorem isLocalAt_adicCompletionIntegers_uniformizer (L : Type) [Field L] [Numbe
   have mem : ∀ x : P.adicCompletion L, x ∈ OP P ↔ Valued.v x ≤ 1 := fun x =>
     HeightOneSpectrum.mem_adicCompletionIntegers (R := 𝓞 L) (K := L) (v := P)
   have hexp : (0 : WithZero (Multiplicative ℤ)) < WithZero.exp (-1 : ℤ) :=
-    zero_lt_iff.2 WithZero.exp_ne_zero
+    pos_iff_ne_zero.2 WithZero.exp_ne_zero
   refine ⟨?_, ?_⟩
   · intro h
     have h1 := (mem _).1 h

@@ -123,7 +123,7 @@ theorem typePl_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
   intro N ε Λ H _ _ σ S hσ hS
   obtain ⟨hB1, hB2, hB3, hB4, hB5⟩ := hB N ε
   have hσP := (hB5 H σ hσ).1
-  haveI : FiniteDimensional ℂ S := hS.1
+  have : FiniteDimensional ℂ S := hS.1
   obtain ⟨v, hvS, hv0, hvw⟩ := hS.2.2.2.1
   have hstP : IsKStableOn (allPos (nPl ε)) (sPl ε σ) S := fun h hh u hu => hS.2.1 _ (hB1 h hh) u hu
   obtain ⟨X, hXS, hXst, hXirr, x, hxX, hx0, hxw⟩ := hM (nPl ε) H (sPl ε σ) S
@@ -164,7 +164,7 @@ theorem typePl_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
     rw [h] at hwW
     exact hw0 ((Submodule.mem_bot ℂ).1 hwW)
   have hWS : Wμ ≤ S := fun u hu => ((hmem u).1 hu).1
-  haveI : FiniteDimensional ℂ Wμ := Submodule.finiteDimensional_of_le hWS
+  have : FiniteDimensional ℂ Wμ := Submodule.finiteDimensional_of_le hWS
   obtain ⟨ν, u, huW, hu0, huw⟩ := hT N ε H σ Wμ hσ inferInstance hW0 hWst
   have hCD := hS.2.2.2.2 ν u (hWS huW) hu0 huw
   have hres := (hC N ε ν Λ hCD).1
@@ -178,7 +178,7 @@ theorem typeMi_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
   intro N ε Λ H _ _ σ S hσ hS
   obtain ⟨hB1, hB2, hB3, hB4, hB5⟩ := hB N ε
   have hσP := (hB5 H σ hσ).2
-  haveI : FiniteDimensional ℂ S := hS.1
+  have : FiniteDimensional ℂ S := hS.1
   obtain ⟨v, hvS, hv0, hvw⟩ := hS.2.2.2.1
   have hstP : IsKStableOn (allPos (nMi ε)) (sMi ε σ) S := fun h hh u hu => hS.2.1 _ (hB2 h hh) u hu
   obtain ⟨X, hXS, hXst, hXirr, x, hxX, hx0, hxw⟩ := hM (nMi ε) H (sMi ε σ) S
@@ -219,7 +219,7 @@ theorem typeMi_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
     rw [h] at hwW
     exact hw0 ((Submodule.mem_bot ℂ).1 hwW)
   have hWS : Wμ ≤ S := fun u hu => ((hmem u).1 hu).1
-  haveI : FiniteDimensional ℂ Wμ := Submodule.finiteDimensional_of_le hWS
+  have : FiniteDimensional ℂ Wμ := Submodule.finiteDimensional_of_le hWS
   obtain ⟨ν, u, huW, hu0, huw⟩ := hT N ε H σ Wμ hσ inferInstance hW0 hWst
   have hCD := hS.2.2.2.2 ν u (hWS huW) hu0 huw
   have hres := (hC N ε ν Λ hCD).2
@@ -528,11 +528,11 @@ theorem count (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j 
     (hXS : X ≤ S) (hXs : Stab ρ X) (hXi : Irr ρ X) {x₀ : H} (hx₀ : x₀ ∈ X) (h0 : x₀ ≠ 0) :
     ∀ n, ∀ W : Submodule ℂ H, W ≤ S → Stab ρ W → finrank ℂ W = n →
       finrank ℂ W = finrank ℂ X * finrank ℂ ↥(slice ρ x₀ ⊓ W) := by
-  haveI : FiniteDimensional ℂ X := Submodule.finiteDimensional_of_le hXS
+  have : FiniteDimensional ℂ X := Submodule.finiteDimensional_of_le hXS
   intro n
   refine Nat.strong_induction_on n fun n ih => ?_
   intro W hWS hWs hWn
-  haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
+  have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
   by_cases hW0 : W = ⊥
   · subst hW0
     simp
@@ -542,7 +542,7 @@ theorem count (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j 
     rintro _ ⟨x, hx, rfl⟩
     exact hcX x hx
   have hYs : Stab ρ (X.map c) := stab_map hc hXs
-  haveI : FiniteDimensional ℂ (X.map c) := Submodule.finiteDimensional_of_le hYW
+  have : FiniteDimensional ℂ (X.map c) := Submodule.finiteDimensional_of_le hYW
   have hinj : Function.Injective (c.domRestrict X) := by
     intro a b hab
     by_contra hne
@@ -608,7 +608,7 @@ theorem count (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j 
       exact Submodule.zero_mem _
     · exact absurd (inner_self_eq_zero.1 ha) hc0
   have hrk1 : finrank ℂ (ℂ ∙ c x₀) = 1 := finrank_span_singleton hc0
-  haveI : FiniteDimensional ℂ ↥(slice ρ x₀ ⊓ ((X.map c)ᗮ ⊓ W)) :=
+  have : FiniteDimensional ℂ ↥(slice ρ x₀ ⊓ ((X.map c)ᗮ ⊓ W)) :=
     Submodule.finiteDimensional_of_le (inf_le_right.trans inf_le_right)
   have hsup := Submodule.finrank_sup_add_finrank_inf_eq (ℂ ∙ c x₀) (slice ρ x₀ ⊓ ((X.map c)ᗮ ⊓ W))
   rw [hdisj, finrank_bot, add_zero, ← hsl, hrk1] at hsup
@@ -622,8 +622,8 @@ theorem main (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j v
     (hXS : X ≤ S) (hX0 : X ≠ ⊥) (hXs : Stab ρ X) (hXi : Irr ρ X)
     (hYS : Y ≤ S) (hY0 : Y ≠ ⊥) (hYs : Stab ρ' Y) (hYi : Irr ρ' Y) :
     finrank ℂ S = finrank ℂ X * finrank ℂ Y := by
-  haveI : FiniteDimensional ℂ X := Submodule.finiteDimensional_of_le hXS
-  haveI : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le hYS
+  have : FiniteDimensional ℂ X := Submodule.finiteDimensional_of_le hXS
+  have : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le hYS
   obtain ⟨x₀, hx₀, h0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hX0
   obtain ⟨y₀, hy₀, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hY0
   have hc1 := count hρ hρ' hcomm hSρ' hSirr hXS hXs hXi hx₀ h0 (finrank ℂ S) S le_rfl hSρ rfl
@@ -631,7 +631,7 @@ theorem main (hρ : Good ρ) (hρ' : Good ρ') (hcomm : ∀ i j v, ρ i (ρ' j v
   congr 1
   set U := slice ρ x₀ ⊓ S with hUdef
   have hUS : U ≤ S := inf_le_right
-  haveI : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le hUS
+  have : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le hUS
   have hρ'c : ∀ j, Comm ρ (ρ' j : H →ₗ[ℂ] H) := fun j i v => (hcomm i j v).symm
   have hUs : Stab ρ' U := by
     rintro j _ ⟨⟨d, hd, rfl⟩, hS'⟩
@@ -1283,7 +1283,7 @@ theorem minimal_irreducible_exists : MinIrr := by
   refine ⟨X, hXS, hXst, ?_, x, hxX, hx0, hxw⟩
   intro X' hX'X hX'st
   have : FiniteDimensional ℂ X' := Submodule.finiteDimensional_of_le hX'X
-  have : CompleteSpace X' := FiniteDimensional.complete ℂ X'
+  have : CompleteSpace X' := FiniteDimensional.completeSpace ℂ X'
   have hX''st := wt_perp_stable (allPos p) σ₁ hσ X' X hX'st hXst
   have hxsup : x ∈ X' ⊔ X'ᗮ := by rw [Submodule.sup_orthogonal_of_hasOrthogonalProjection]; trivial
   obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.mem_sup.mp hxsup

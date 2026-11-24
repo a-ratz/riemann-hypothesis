@@ -115,12 +115,12 @@ theorem isUnimodularLC_of_equiv {G H : Type} [Group G] [TopologicalSpace G] [IsT
     IsUnimodularLC G := by
   obtain ⟨_, _, _, _, _, -, hH⟩ := hH
   let e' : G ≃ₜ H := ⟨e.toEquiv, h1, h2⟩
-  haveI := e'.isEmbedding.t2Space
-  haveI := e'.isClosedEmbedding.locallyCompactSpace
-  haveI := e'.secondCountableTopology
+  have := e'.isEmbedding.t2Space
+  have := e'.isClosedEmbedding.locallyCompactSpace
+  have := e'.secondCountableTopology
   refine ⟨inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     ⟨Measure.haar, inferInstance⟩, fun μ hμ => ⟨fun g => ?_⟩⟩
-  haveI := hH _ (MulEquiv.isHaarMeasure_map μ e h1 h2)
+  have := hH _ (MulEquiv.isHaarMeasure_map μ e h1 h2)
   have h3 := congrArg (Measure.map e.symm) (map_mul_right_eq_self (μ.map e) (e g))
   rw [Measure.map_map h2.measurable h1.measurable,
     Measure.map_map (measurable_mul_const _) h1.measurable,
@@ -137,7 +137,7 @@ theorem unimodularOver_of_forall (h : IsCMExt F E σ) (R : Type) [CommRing R] [A
     (hR : ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J →
       ∀ μ : Measure (HA R σ J), μ.IsHaarMeasure → μ.IsMulRightInvariant)
     (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (hJ : IsHermND σ J) : UnimodularOver R σ J := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have key : ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → IsUnimodularLC (HA R σ J) :=
     fun M J hJ => ⟨inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
       ⟨Measure.haar, inferInstance⟩, hR M J hJ⟩

@@ -98,7 +98,7 @@ lemma exists_elim {R L : Type} [CommRing R] [Field L] (e : R →+* L) (a b : R[X
       rw [eval₂_mul, eval₂_X]
       by_cases hx : x = 0
       · simp [hx]
-      · letI : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx)
+      · let : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx)
         have := (eval₂_reflect_eq_zero_iff c x⁻¹ n b le_rfl).2 (h2 hx)
         rw [invOf_eq_inv, inv_inv] at this
         rw [this, mul_zero]
@@ -113,7 +113,7 @@ lemma natDegree_eq_zero_of_inv {F : Type} [Field F] (a b : F[X])
   set x := algebraMap F[X] (FractionRing F[X]) X with hxd
   have hx : x ≠ 0 := fun h0 => X_ne_zero (IsFractionRing.injective F[X] (FractionRing F[X])
     (h0.trans (map_zero _).symm))
-  letI : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx)
+  let : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx)
   have h1 := eval₂_reflect_mul_pow (algebraMap F (FractionRing F[X])) x⁻¹ b.natDegree b le_rfl
   rw [invOf_eq_inv, inv_inv, ← h] at h1
   have h2 : ∀ p : F[X], eval₂ (algebraMap F (FractionRing F[X])) x p =
@@ -192,7 +192,7 @@ lemma exists_extension {W Z Y S : Scheme.{0}} [IsIntegral Z]
 
 lemma valuationRing_stalk (R : Type) [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
     (x : Spec (CommRingCat.of R)) : ValuationRing ((Spec (CommRingCat.of R)).presheaf.stalk x) := by
-  letI : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk x) :=
+  let : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk x) :=
     StructureSheaf.stalkAlgebra R x
   have : x.asIdeal.IsPrime := PrimeSpectrum.isPrime (R := R) x
   have : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk x) x.asIdeal :=
@@ -442,7 +442,7 @@ lemma comp_ev {A A' : Type} [CommRing A] [Algebra K A] [CommRing A'] [Algebra K 
       (ev (g.comp c) (Units.map (g : A →* A') x)).comp (inc K L) := by
     rw [AlgHom.comp_assoc, ev_comp_inc, ev_comp_inc, comp_aevalTower]
     rfl
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   apply IsLocalization.ringHom_ext (Submonoid.powers (X : L[X]))
   exact RingHom.ext fun p => AlgHom.congr_fun h p
 

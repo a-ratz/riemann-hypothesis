@@ -145,11 +145,11 @@ namespace GlobalTheory.PD
 
 theorem IsFinCover.trace_wedge_perfect : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → ∀ (τ : DR k K →ₗ[K] K), IsTop k K x τ → ∀ p q : ℕ, p + q = d → (∀ y ∈ ⋀[K]^q Ω[K⁄k], (∀ a ∈ ⋀[K]^p Ω[K⁄k], Algebra.trace F K (τ (a * y)) = 0) → y = 0) ∧ Module.finrank K (⋀[K]^p Ω[K⁄k]) = Module.finrank K (⋀[K]^q Ω[K⁄k]) ∧ FiniteDimensional K (⋀[K]^p Ω[K⁄k]) := by
   intro k _ _ F K _ _ _ _ _ _ d x h τ hτ p q hpq
-  haveI := h.fin
-  haveI := h.sep
+  have := h.fin
+  have := h.sep
   obtain ⟨b, hb⟩ := h.exists_basis
-  haveI : Module.Finite K Ω[K⁄k] := Module.Finite.of_basis b
-  haveI : Module.Free K Ω[K⁄k] := Module.Free.of_basis b
+  have : Module.Finite K Ω[K⁄k] := Module.Finite.of_basis b
+  have : Module.Free K Ω[K⁄k] := Module.Free.of_basis b
   have hfr : Module.finrank K Ω[K⁄k] = d := by rw [Module.finrank_eq_card_basis b, Fintype.card_fin]
   refine ⟨fun y hy hy0 => ?_, ?_, inferInstance⟩
   · have hτb : τ (ExteriorAlgebra.ιMulti K d b) ≠ 0 := by
@@ -220,9 +220,9 @@ theorem UpperTheory.Gal.productCup_of_system.dualForm_of :
   intro F K _ _ _ _ _ _ d x hc τ ht a ha ψ
   obtain ⟨hinj, hrk, hfdP⟩ := GlobalTheory.T.trace_wedge_pairing_perfect_rational_forms ℂ F K d (xv x) hc τ ht (d - a) a (by omega)
   obtain ⟨-, -, hfdQ⟩ := GlobalTheory.T.trace_wedge_pairing_perfect_rational_forms ℂ F K d (xv x) hc τ ht a (d - a) (by omega)
-  haveI : FiniteDimensional F K := hc.fin
-  haveI : FiniteDimensional F (⋀[K]^(d - a) Ω[K⁄ℂ]) := Module.Finite.trans K _
-  haveI : FiniteDimensional F (⋀[K]^a Ω[K⁄ℂ]) := Module.Finite.trans K _
+  have : FiniteDimensional F K := hc.fin
+  have : FiniteDimensional F (⋀[K]^(d - a) Ω[K⁄ℂ]) := Module.Finite.trans K _
+  have : FiniteDimensional F (⋀[K]^a Ω[K⁄ℂ]) := Module.Finite.trans K _
   let T : DR ℂ K →ₗ[F] F := (Algebra.trace F K) ∘ₗ (τ.restrictScalars F)
   let B : (⋀[K]^a Ω[K⁄ℂ]) →ₗ[F] (⋀[K]^(d - a) Ω[K⁄ℂ]) →ₗ[F] F :=
     LinearMap.mk₂ F (fun w y => T ((y : DR ℂ K) * (w : DR ℂ K)))

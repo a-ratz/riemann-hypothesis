@@ -380,11 +380,11 @@ theorem galPol_lifts_ae : ∀ (D : D7) (cf : CharFrame D) (Rw : GlobalTheory.Hei
     (Sb.finite_toSet.union (GlobalTheory.Mem.UnrAe.finite_ramified _)).preimage hinj.injOn
   refine Filter.eventually_cofinite.2 (hfin.subset ?_)
   intro w hw
-  simp only [Set.mem_setOf_eq] at hw
+  simp only [Set.mem_ofPred_eq] at hw
   by_contra hw'
   apply hw
   intro hsplit
-  simp only [Set.mem_preimage, Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hw'
+  simp only [Set.mem_preimage, Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hw'
   obtain ⟨hSb, hunrμ⟩ := hw'
   obtain ⟨hc, -, hsp⟩ := hbar w
   have hPs : IsSplitPl D.host (bar w) := hsp hsplit
@@ -713,7 +713,7 @@ theorem galPol_lpTw_mem_lifts_eventually : ∀ hL : _root_.UpperTheory.Zero.LLC.
   have hU : ∀ᶠ w in Filter.cofinite, ((2 : ℕ) : 𝓞 D.host.E) ∉ w.asIdeal ∧ D.naut.unr (D.naut.locG π w) :=
     (eventually_natCast_notMem D.host.E 2).and (D.naut.locG_unr_ae π)
   obtain ⟨ρ, hρc, hρ⟩ := _root_.GlobalTheory.GalAllPlaces.exists_rep_uniform_alt_alt hL hF hG C 2 ι ha π hc hr
-  letI : Algebra K ℂ := e.toAlgebra
+  let : Algebra K ℂ := e.toAlgebra
   have key : ∀ γ : ℂ ≃ₐ[K] ℂ, ∀ w, (((2 : ℕ) : 𝓞 D.host.E) ∉ w.asIdeal ∧ D.naut.unr (D.naut.locG π w)) →
       (P w).map (γ : ℂ →+* ℂ) = P w := by
     intro γ

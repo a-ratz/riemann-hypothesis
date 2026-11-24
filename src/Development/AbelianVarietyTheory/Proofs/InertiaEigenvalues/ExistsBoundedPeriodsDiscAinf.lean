@@ -137,7 +137,7 @@ theorem seed_coeff_recurrence : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk 
     have h := ((hsum y).map (Φ : bk.DA bk.ρ₀ →+ bk.DA bk.ρ₀) hΦc).map L hLc
     convert (preTransparency := .reducible) h using 1
     · funext i
-      simp only [Function.comp_apply, AddMonoidHom.coe_coe]
+      simp only [Function.comp_apply, AddMonoidHom.coe_ofClass]
       rw [map_mul Φ, hΦA, hcomm, hLa, hcm, hc, map_mul, hjS]
     · rfl
   have stepA : HasSum (fun i => Φ ((s.W * (s.W'.map (cD i)).map j) a b) * c i)
@@ -147,7 +147,7 @@ theorem seed_coeff_recurrence : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk 
     refine hasSum_sum fun k _ => ?_
     simp_rw [mul_assoc]
     exact (key (s.W' k b)).mul_left (Φ (s.W a k))
-  haveI := hdom
+  have := hdom
   have hphi := _root_.GlobalTheory.BSP.Seed.crystallineDiscPeriods_frobenius_eq_mul l K bk τ hτ d ρ hρ s Φ hΦ
   have hwp := _root_.GlobalTheory.BSP.seed_frob_inverse l K bk τ hτ d ρ hρ s Φ hΦ
   have hmapL : ∀ (M : Matrix (Fin d) (Fin d) bk.S) (Y : Matrix (Fin d) (Fin d) (bk.DA bk.ρ₀)),
@@ -256,7 +256,7 @@ theorem exists_bounded_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
     by_cases e : ab = ab'
     · subst e
       refine ⟨i₁, fun hm => hq ?_, rfl⟩
-      simp only [c, if_pos rfl]
+      simp only [c, ite_eq_left rfl]
       exact Ideal.mem_map_of_mem _ hm
     · exact (hq (by simp [c, e])).elim
   have hj0c : Continuous j0 :=

@@ -145,7 +145,7 @@ theorem eq_zero_of_fixed {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
             show π ((a : G)⁻¹) u = u
             conv_lhs => rw [← ha']
             rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
-      have hK : IsOpen (K : Set H) := (hs u).preimage continuous_subtype_val
+      have hK : IsOpen (K : Set H) := (hs u).preimage continuous_subtypeVal
       have := Subgroup.quotient_finite_of_isOpen K hK
       refine ⟨K, Subgroup.finiteIndex_of_finite_quotient, fun L _ _ hL => ?_⟩
       have := sum_shift (π.comp H.subtype) L u (fun k hk => hL hk) n
@@ -224,9 +224,9 @@ theorem eq_zero_of_fixed (hπ : IsSmooth π) {H : Subgroup G} (hH : IsCompact (H
 
 theorem exists_orbit (hπ : IsSmooth π) {H : Subgroup G} (hH : IsCompact (H : Set G)) (v : V) :
     ∃ S : Finset V, (∀ u, u ∈ S ↔ ∃ h ∈ H, π h v = u) ∧ ∑ u ∈ S, u ∈ fixed π H := by
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hH
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hH
   have hf := ((isLocallyConstant_orbit hπ v).comp_continuous (f := fun h : H => (h : G))
-    continuous_subtype_val).range_finite
+    continuous_subtypeVal).range_finite
   have hS : ∀ u, u ∈ hf.toFinset ↔ ∃ h ∈ H, π h v = u := fun u => by simp
   refine ⟨hf.toFinset, hS, mem_fixed.2 fun g hg => ?_⟩
 
@@ -392,9 +392,9 @@ theorem exists_flip {f : n → n → ℤ} (hf : Chamber f) {i j : n} (hij : i �
   let g : n → n → ℤ := fun a b => if a = i ∧ b = j then f a b - 1 else f a b
   let f' : n → n → ℤ := fun a b => if a = j ∧ b = i then g a b + 1 else g a b
   have g1 : f i j = g i j + 1 := by simp [g]
-  have g2 : ∀ a b, ¬ (a = i ∧ b = j) → f a b = g a b := fun a b h => by simp only [g, if_neg h]
+  have g2 : ∀ a b, ¬ (a = i ∧ b = j) → f a b = g a b := fun a b h => by simp only [g, ite_eq_right h]
   have f1 : f' j i = g j i + 1 := by simp [f']
-  have f2 : ∀ a b, ¬ (a = j ∧ b = i) → f' a b = g a b := fun a b h => by simp only [f', if_neg h]
+  have f2 : ∀ a b, ¬ (a = j ∧ b = i) → f' a b = g a b := fun a b h => by simp only [f', ite_eq_right h]
   have gle : ∀ a b, g a b ≤ f a b := fun a b => by simp only [g]; split_ifs <;> omega
   have fle : ∀ a b, g a b ≤ f' a b := fun a b => by simp only [f']; split_ifs <;> omega
   clear_value f' g
@@ -487,7 +487,7 @@ theorem isCompact_grp {f : n → n → ℤ} (hf : Conc f) : IsCompact (grp k hf 
     (hK.prod (hK.image MulOpposite.continuous_op))
   convert h using 1
   ext g
-  simp only [SetLike.mem_coe, Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply,
+  simp only [SetLike.mem_coe, Set.mem_ofPred_eq, Set.mem_preimage, Units.embedProduct_apply,
     Set.mem_prod, (MulOpposite.op_injective).mem_set_image]
   rfl
 
@@ -668,7 +668,7 @@ theorem eventually_mem_ray {u : GL n k} (hu : u ∈ unipB k n) :
           ⟨i, by simpa using h, by simp⟩))
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha ⊢
         exact ha.trans h
-      simp only [ray, if_neg h.not_gt]
+      simp only [ray, ite_eq_right h.not_gt]
       nlinarith
     · simp [((mem_unipB k).1 hu).2, ray, deep_zero_iff]
     · simp [((mem_unipB k).1 hu).1 i j h, deep_zero]

@@ -233,7 +233,7 @@ theorem exists_forms_idealOfVars_le_radical (n : ℕ) :
         h.trans (Ideal.radical_mono le_sup_left)⟩
     · exfalso
       obtain ⟨m, hm, f, hf, h1, h2, h3⟩ := step J hJ hJ' h
-      haveI := Ideal.Quotient.nontrivial_iff.mpr h2
+      have := Ideal.Quotient.nontrivial_iff.mpr h2
       have h4 := (add_le_add_left (ringKrullDim_nonneg_of_nontrivial
         (R := MvPolynomial σ k ⧸ (J.radical ⊔ Ideal.span {f}))) 1).trans (h3.trans hdim)
       rw [zero_add, Nat.cast_zero] at h4
@@ -302,8 +302,8 @@ theorem finite_aeval_of_forms_eq_sum [Finite σ] (π : MvPolynomial σ R →ₐ[
         (∀ i, (G i).IsHomogeneous (d - e)) ∧ π p = ∑ i, f i * π (G i)) :
     (aeval f : MvPolynomial ι R →ₐ[R] S).Finite := by
   classical
-  letI : Algebra (MvPolynomial ι R) S := (aeval f : MvPolynomial ι R →ₐ[R] S).toRingHom.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial ι R) S :=
+  let : Algebra (MvPolynomial ι R) S := (aeval f : MvPolynomial ι R →ₐ[R] S).toRingHom.toAlgebra
+  have : IsScalarTower R (MvPolynomial ι R) S :=
     IsScalarTower.of_algebraMap_eq fun r => ((aeval f : MvPolynomial ι R →ₐ[R] S).commutes r).symm
   obtain ⟨t, ht⟩ : (restrictTotalDegree σ R d₀).FG := Module.Finite.iff_fg.mp inferInstance
   let M : Submodule (MvPolynomial ι R) S := Submodule.span _ (π '' t)
@@ -344,8 +344,8 @@ theorem injective_of_finite_of_ringKrullDim_eq {k S : Type*} [Field k] [CommRing
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro r hr
   by_contra hne
-  letI := φ.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin δ) k) S := hφ
+  let := φ.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin δ) k) S := hφ
   have h1 := ReciprocityTheory.CA.ringKrullDim_quotient_eq_quotient_comap_of_isIntegral
     (A := MvPolynomial (Fin δ) k) (⊥ : Ideal S)
   rw [ringKrullDim_eq_of_ringEquiv (RingEquiv.quotientBot S), hdim] at h1
@@ -364,7 +364,7 @@ variable {σ : Type*} [Finite σ] {k : Type*} [Field k]
 
 theorem exists_ringKrullDim_quotient_mvPolynomial_eq_nat {I : Ideal (MvPolynomial σ k)}
     (hI : I ≠ ⊤) : ∃ δ : ℕ, ringKrullDim (MvPolynomial σ k ⧸ I) = δ := by
-  haveI := Ideal.Quotient.nontrivial_iff.mpr hI
+  have := Ideal.Quotient.nontrivial_iff.mpr hI
   have h0 := ringKrullDim_nonneg_of_nontrivial (R := MvPolynomial σ k ⧸ I)
   have h1 := ringKrullDim_quotient_le I
   rw [MvPolynomial.ringKrullDim_of_isNoetherianRing, ringKrullDim_eq_zero_of_field,
@@ -393,7 +393,7 @@ theorem exists_forms_algebraicIndependent_finite {I : Ideal (MvPolynomial σ k)}
     rw [ringKrullDim_eq_bot_of_subsingleton] at hdim
     exact absurd hdim (WithBot.bot_ne_coe (a := (δ : ℕ∞)))
   obtain ⟨e, he, F, hF, hle⟩ := exists_forms_idealOfVars_le_radical δ I hI hI' hdim.le
-  obtain ⟨N, hN⟩ := Ideal.exists_pow_le_of_le_radical_of_fg hle (idealOfVars_fg σ k)
+  obtain ⟨N, hN⟩ := Ideal.exists_pow_le_of_le_radical_of_fg hle (fg_idealOfVars σ k)
   have hgen : ∀ d, max N e ≤ d → ∀ p : MvPolynomial σ k, p.IsHomogeneous d →
       ∃ G : Fin δ → MvPolynomial σ k,
         (∀ i, (G i).IsHomogeneous (d - e)) ∧ p - ∑ i, F i * G i ∈ I := fun d hd p hp =>

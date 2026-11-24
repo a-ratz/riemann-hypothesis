@@ -154,15 +154,15 @@ theorem span_ev (K : Type) [Field K] (x : KeyIn K) (m N : ℕ) (b : Fin N → RR
     intro s
     have hW : LB.wchart x.P.L (K := Fin 0) (fun c => (Out.powPr x.P.A c).left) Fin.elim0 = ⊤ :=
       top_le_iff.1 fun _ _ => Set.mem_iInter.2 fun k => k.elim0
-    haveI : IsIso (Out.powObj x.P.A 0).hom := inferInstanceAs (IsIso (𝟙 (Sp K)))
+    have : IsIso (Out.powObj x.P.A 0).hom := inferInstanceAs (IsIso (𝟙 (Sp K)))
     obtain ⟨c, hc⟩ := (cst_bijective (Out.powObj x.P.A 0).hom hW).2 (s.f Fin.elim0)
     refine ⟨fun _ => c, fun Z r z J hJ => ?_⟩
     rw [sval_of s r z J Fin.elim0 (fun k => k.elim0), ← hc, Fintype.sum_unique, Fin.prod_univ_zero, _root_.mul_one]
     exact gs_cst _ r z _ (Set.mem_iInter.2 fun k => k.elim0) c
   | succ n ih =>
     intro s
-    haveI := x.P.isAb.proper
-    haveI := isProper_powObj x.P.A x.P.isAb n
+    have := x.P.isAb.proper
+    have := isProper_powObj x.P.A x.P.isAb n
     have hF : FormEq (K := Fin (n + 1)) (K' := PUnit ⊕ Fin n) (fun c => (Out.powPr x.P.A c).left) (fun _ => (m : ℤ))
         (Sum.elim (fun _ => (fst x.P.A (Out.powObj x.P.A n)).left ≫ 𝟙 x.P.A.left)
           (fun k => (snd x.P.A (Out.powObj x.P.A n)).left ≫ (Out.powPr x.P.A k).left))
@@ -233,13 +233,13 @@ namespace GlobalTheory.KeyKa
 theorem exists_enum_ker_transpose : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (x : KeyIn K) (m : ℕ) (al : Matrix (Fin 4) (Fin 4) ℤ), (m : K) ≠ 0 → al.transpose * al = (m : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ) → ∃ ξ : (Fin 4 → Fin (m ^ x.P.g)) → Fin 4 → Pt x, (∀ I I', I ≠ I' → ∀ p : Sp K, ∃ r, (ξ I r).left p ≠ (ξ I' r).left p) ∧ (∀ I c, (List.ofFn fun r : Fin 4 => ξ I r ^ al r c).prod = 1) := by
   intro laws K _ _ x m al hm hal
   classical
-  haveI := x.P.isAb.comm
-  haveI := x.P.isAb.smooth
-  haveI : LocallyOfFiniteType x.P.A.hom := inferInstance
+  have := x.P.isAb.comm
+  have := x.P.isAb.smooth
+  have : LocallyOfFiniteType x.P.A.hom := inferInstance
   have hm0 : m ≠ 0 := by
     rintro rfl
     exact hm Nat.cast_zero
-  letI : CommGroup (Pt x) := Hom.commGroup
+  let : CommGroup (Pt x) := Hom.commGroup
   have hG : ∀ k : ℕ, k ∣ m → Nat.card {y : Pt x // y ^ k = 1} = k ^ (2 * x.P.g) := by
     rintro k ⟨l, rfl⟩
     have hk : (k : K) ≠ 0 := fun h => hm (by rw [Nat.cast_mul, h, zero_mul])
@@ -412,7 +412,7 @@ variable {R : Type} [CommRing R] (x : KeyIn R) (al : Matrix (Fin 4) (Fin 4) ℤ)
 
 theorem mul_comp_alMap {Z : Over (Sp R)} (a b : Z ⟶ Out.powObj x.P.A 4) (r : Fin 4) (ζ : Pt x) :
     (a * b) ≫ alMap x al r ζ = (a ≫ alMap x al r 1) * (b ≫ alMap x al r ζ) := by
-  haveI := x.P.isAb.comm
+  have := x.P.isAb.comm
   have e : ∀ (a : Z ⟶ Out.powObj x.P.A 4) (ζ : Pt x), a ≫ alMap x al r ζ =
       (∏ c, (a ≫ Out.powPr x.P.A c) ^ al r c) * (toUnit Z ≫ ζ) := fun a ζ => by
     simp only [alMap, List.ofFn_succ, List.ofFn_zero, List.prod_cons, List.prod_nil, MonObj.comp_mul,
@@ -475,8 +475,8 @@ theorem exists_l2Val : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (x 
     refine hc ?_
     let S : Over (Sp K) := 𝟙_ _
     let T := Out.powObj x.P.A 4
-    haveI : IsIntegral S.left := inferInstanceAs (IsIntegral (Spec (CommRingCat.of K)))
-    haveI : Subsingleton S.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+    have : IsIntegral S.left := inferInstanceAs (IsIntegral (Spec (CommRingCat.of K)))
+    have : Subsingleton S.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
     let p : S.left := IsLocalRing.closedPoint K
     choose J hJ using fun χ : S.left ⟶ x.P.A.left => exists_chart hL (χ p)
     replace hJ : Good x.P.L p J := hJ

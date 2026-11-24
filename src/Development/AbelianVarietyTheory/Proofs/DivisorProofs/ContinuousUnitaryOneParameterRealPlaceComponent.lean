@@ -69,8 +69,8 @@ theorem piInf_smul {w : InfinitePlace F} (τ : EmbOver E w) (a : AF F) (x : AE F
   simp [piInf, compInf, infEmb, phiW, Algebra.TensorProduct.algebraMap_apply]
 
 theorem continuous_piInf {w : InfinitePlace F} (τ : EmbOver E w) : Continuous (piInf (E := E) τ) := by
-  letI : Module (AF F) ℂ := Module.compHom ℂ (phiW (F := F) w)
-  haveI : ContinuousSMul (AF F) ℂ := ⟨by
+  let : Module (AF F) ℂ := Module.compHom ℂ (phiW (F := F) w)
+  have : ContinuousSMul (AF F) ℂ := ⟨by
     show Continuous (fun p : AF F × ℂ => phiW w p.1 * p.2)
     exact ((continuous_phiW w).comp continuous_fst).mul continuous_snd⟩
   let L : AE F E →ₗ[AF F] ℂ :=
@@ -83,7 +83,7 @@ theorem contmap {σ : E →ₐ[F] E} {β : Type} [Fintype β] [DecidableEq β] {
     (γ : Multiplicative ℝ →* UG (cA σ) J) (hγ : Continuous γ) (w : InfinitePlace F) (τ : EmbOver E w) :
     Continuous (fun t : ℝ => ((γ (Multiplicative.ofAdd t)).1 : Matrix β β (AE F E)).map (piInf τ)) := by
   have h1 : Continuous (fun t : ℝ => ((γ (Multiplicative.ofAdd t)).1 : Matrix β β (AE F E))) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp (hγ.comp continuous_ofAdd))
+    Units.continuous_val.comp (continuous_subtypeVal.comp (hγ.comp continuous_ofAdd))
   exact h1.matrix_map (continuous_piInf τ)
 
 end GlobalTheory.ContMapReal

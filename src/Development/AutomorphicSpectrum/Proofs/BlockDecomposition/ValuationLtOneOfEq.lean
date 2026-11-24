@@ -231,7 +231,7 @@ theorem continuous_gal (K : FinExt l) : Continuous (gal K) := by
     (Module.Finite.trans ↥K.1 E : FiniteDimensional ℚ_[l] E)
   have hO : IsOpen ((Subtype.val : ↥(GK K) → GQ l) ⁻¹'
       ((E.restrictScalars ℚ_[l]).fixingSubgroup : Set (GQ l))) :=
-    (IntermediateField.fixingSubgroup_isOpen _).preimage continuous_subtype_val
+    (IntermediateField.fixingSubgroup_isOpen _).preimage continuous_subtypeVal
   have h1 : (1 : ↥(GK K)) ∈ (Subtype.val : ↥(GK K) → GQ l) ⁻¹'
       ((E.restrictScalars ℚ_[l]).fixingSubgroup : Set (GQ l)) :=
     one_mem (E.restrictScalars ℚ_[l]).fixingSubgroup
@@ -280,7 +280,7 @@ theorem continuous_coe_field (K : FinExt l) : Continuous (fun x : ↥K.1 => (x :
 
 theorem continuous_coe_unit (K : FinExt l) :
     Continuous fun u : 𝒪[↥K.1]ˣ => (((u : 𝒪[↥K.1]) : ↥K.1) : Om l) :=
-  (continuous_coe_field K).comp (continuous_subtype_val.comp Units.continuous_val)
+  (continuous_coe_field K).comp (continuous_subtypeVal.comp Units.continuous_val)
 
 theorem hasSum_of_series (K : FinExt l) {π : 𝒪[↥K.1]} (hπ : Irreducible π) {z : ℕ → Om l}
     (h0 : z 0 = 0) (hv : ∀ n, valuation (Om l) (z n) < 1)

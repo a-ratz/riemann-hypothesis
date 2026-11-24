@@ -132,7 +132,7 @@ theorem finChar_eq_finprod (ψ : AddChar (AF F) ℂ) (hψ : Continuous ψ) (z : 
   have hsub : (Function.mulSupport fun v : Pl F => GlobalTheory.LatVac.psiAt ψ v (evalV F v z)) ⊆ hT.toFinset := by
     intro v hv
     by_contra hn
-    simp only [Set.Finite.coe_toFinset, Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at hn
+    simp only [Set.Finite.coe_toFinset, Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at hn
     refine hv ((hloc v _).trans (h _ (fun u => ?_) fun u hu => ?_))
     · by_cases huv : u = v
       · subst huv
@@ -154,9 +154,9 @@ theorem finChar_eq_finprod (ψ : AddChar (AF F) ℂ) (hψ : Continuous ψ) (z : 
     · rw [map_sub, hev]
       split_ifs with hu
       · rw [sub_self]; exact zero_mem _
-      · simp only [Set.Finite.mem_toFinset, Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at hu
+      · simp only [Set.Finite.mem_toFinset, Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at hu
         rw [sub_zero]; exact hu.2
-    · rw [map_sub, hev, if_pos (hT.mem_toFinset.2 (Or.inl hu)), sub_self]
+    · rw [map_sub, hev, ite_eq_left (hT.mem_toFinset.2 (Or.inl hu)), sub_self]
   have h2 : ∀ T : Finset (Pl (F := F)), finChar ψ (∑ v ∈ T, singleFin v (evalV F v z)) =
       ∏ v ∈ T, GlobalTheory.LatVac.psiAt ψ v (evalV F v z) := by
     intro T

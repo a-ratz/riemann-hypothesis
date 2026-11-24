@@ -180,7 +180,7 @@ theorem rRep_apply {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) (g
 theorem sum_rRep {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) (B : Finset (GA D V)) :
     ∑ γ ∈ B, rRep M γ = heckeOn M B := by
   ext U v h
-  rw [LinearMap.sum_apply, MultilinearMap.sum_apply, Finset.sum_apply]
+  rw [LinearMap.sum_apply, sum_apply, Finset.sum_apply]
   rfl
 
 theorem mult_lev {V : HSp D} {S : D.what₂.Tau → SPar} (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ))

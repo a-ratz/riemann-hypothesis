@@ -123,7 +123,7 @@ theorem mt_conjEquiv (V W : HSp D) (e : Fin V.rank ≃ Fin W.rank) (h : V.gram�
 
 theorem continuous_conjEquiv (V W : HSp D) (e : Fin V.rank ≃ Fin W.rank) (h : V.gramᵀ = -(W.gram.submatrix e e)) :
     Continuous (conjEquiv V W e h) := by
-  have h1 : Continuous (matHom V) := continuous_subtype_val
+  have h1 : Continuous (matHom V) := continuous_subtypeVal
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
   · exact ((Units.continuous_val.comp h1).matrix_map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conj D)).matrix_submatrix _ _
   · exact ((Units.continuous_coe_inv.comp h1).matrix_map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conj D)).matrix_submatrix _ _

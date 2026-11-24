@@ -152,7 +152,7 @@ theorem continuous_levK : Continuous (levK E r s) := by
   · exact continuous_const
   · exact continuous_const
   · change Continuous fun k : Kinf E s => k.val a b
-    exact (continuous_apply b).comp ((continuous_apply a).comp continuous_subtype_val)
+    exact (continuous_apply b).comp ((continuous_apply a).comp continuous_subtypeVal)
 
 def lev2 (R : Type) [CommRing R] (r s : ℕ) : GL (Fin s) R →* GL (Fin (r + s)) R :=
   (lev R r s).comp (MonoidHom.inr _ _)
@@ -251,7 +251,7 @@ theorem kfin_of_coeff {a : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] [Fini
     (h : ∀ g : GA E a, (fun k : Kinf E a => (cptRep E a k φ).1 g) ∈ GlobalTheory.Published.AutFin.coeffSpan ρ) :
     FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => cptRep E a k φ)) := by
   classical
-  haveI := GlobalTheory.CompanionTheory.CTFin.UniSol.finiteDimensional_coeffSpan ρ
+  have := GlobalTheory.CompanionTheory.CTFin.UniSol.finiteDimensional_coeffSpan ρ
   obtain ⟨S, lam, key⟩ := exists_interp (GlobalTheory.Published.AutFin.coeffSpan ρ)
   have hle : Submodule.span ℂ (Set.range fun k => cptRep E a k φ) ≤
       Submodule.span ℂ ((fun κ : Kinf E a => cptRep E a κ φ) '' (S : Set (Kinf E a))) := by
@@ -265,7 +265,7 @@ theorem kfin_of_coeff {a : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] [Fini
     beta_reduce
     rw [e]
     exact Submodule.sum_mem _ fun κ _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨κ.1, κ.2, rfl⟩)
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ ((fun κ : Kinf E a => cptRep E a κ φ) '' (S : Set (Kinf E a)))) :=
+  have : FiniteDimensional ℂ (Submodule.span ℂ ((fun κ : Kinf E a => cptRep E a κ φ) '' (S : Set (Kinf E a)))) :=
     FiniteDimensional.span_of_finite ℂ (S.finite_toSet.image _)
   exact Submodule.finiteDimensional_of_le hle
 

@@ -111,7 +111,7 @@ variable {p : ℕ} [Fact p.Prime] {C : Type} [Field C] {v : Valuation C ℝ≥0}
   [Algebra O C] {Λ : Type} [CommRing Λ] [StarRing Λ] (P : Point p v O Λ)
 
 theorem smoothDim_model : SmoothOfRelativeDimension P.A.g P.G.hom := by
-  haveI : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
+  have : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
   have := P.semi.smooth
   have := P.semi.geomConnected
   have : ConnectedSpace P.G.left := GeometricallyConnected.connectedSpace P.G.hom P.G.hom.isOpenMap
@@ -186,8 +186,8 @@ theorem exists_lieEquiv [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p 
     ∃ e : LieG P.G ≃ LieG P.Gt, (∀ x y z : LieG P.G, z.1 = x.1 * y.1 → (e z).1 = (e x).1 * (e y).1) ∧
       ∀ (a : O) (x z : LieG P.G), z.1 = ptMap (dualScale a) ≫ x.1 →
         (e z).1 = ptMap (dualScale a) ≫ (e x).1 := by
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
+  have := P.isLocalRing
+  have := HodgeTateCompare.isLocalRing_dualNumber (O := O)
   have hp₀ : ¬ IsUnit (p : O) := Fact.out
   have hp : ¬ IsUnit (p : DualNumber O) := fun h => hp₀ (by
     simpa using h.map (TrivSqZeroExt.fstHom O O O))

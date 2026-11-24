@@ -202,7 +202,7 @@ theorem weilUnit_level (c : CubicalStr G L) (N M n : ℕ) (hn : n = N * M) {T : 
   rw [wq_level (isCub_cubV c hJ) N M hx] at h2
   have h3 := congrArg Units.val (h1.trans h2.symm)
   simp only [gm_val (𝟙 T.left) z ⊤ trivial] at h3
-  simp only [gs, dif_pos (show (𝟙 T.left : T.left ⟶ T.left) z ∈ (⊤ : T.left.Opens) from trivial)]
+  simp only [gs, dite_eq_left (show (𝟙 T.left : T.left ⟶ T.left) z ∈ (⊤ : T.left.Opens) from trivial)]
   exact h3
 
 end PositivityTheory.Xgn.TestGroupPoint
@@ -236,9 +236,9 @@ theorem exists_der_ext (h1 : Function.Injective (algebraMap R RC)) (h2 : Functio
     ∃ Dv : M →ₗ[RC] W, IsDerAt0 M Dv ∧
       ∀ (a : A) (f : M), (∀ x, f.1 x = φ (a.1 (Multiplicative.ofAdd x))) → Dv f = d a := by
   classical
-  haveI : Fintype N := Fintype.ofFinite N
+  have : Fintype N := Fintype.ofFinite N
   obtain ⟨d₀, hd₀, hfull⟩ := hA.full
-  haveI : Module.Projective R A := hA.projective
+  have : Module.Projective R A := hA.projective
   let lam : A →ₗ[R] (N → RC) :=
     { toFun := fun a x => algebraMap R RC (a.1 (Multiplicative.ofAdd x))
       map_add' := fun a b => by
@@ -697,7 +697,7 @@ theorem exists_der_gen {R RC C N L U : Type} [CommRing R] [IsDomain R] [CommRing
     ∃ Dv : M →ₗ[RC] ReciprocityTheory.PGsh.Up.LieDualModP p RC g, IsDerAt0 M Dv ∧
       ∀ (a : A) (f : M) (w : L), (∀ x, f.1 x = φ (a.1 (Multiplicative.ofAdd x))) → cotMap A a = θ w →
         Dv f = Submodule.Quotient.mk (io (j w)) := by
-  letI : Algebra R RC := σ.toAlgebra
+  let : Algebra R RC := σ.toAlgebra
   let k₀ : L →ₗ[R] ReciprocityTheory.PGsh.Up.LieDualModP p RC g :=
     { toFun := fun w => Submodule.Quotient.mk (io (j w))
       map_add' := fun a b => by rw [map_add (f := _), map_add (f := _), Submodule.Quotient.mk_add]
@@ -756,7 +756,7 @@ theorem bichar_mem {C RC : Type} [Field C] [IsAlgClosed C] [CommRing RC] [IsDoma
     (β : T →* T →* RCˣ) (s : Γ((Γ.G ⊗ Γ.G).left, ⊤))
     (hs : ∀ a b, valAt (lift (Γ.pt a) (Γ.pt b)).left ⊤ le_top s = algebraMap RC _ ((β a b : RCˣ) : RC)) :
     (fun z : T × T => ((β z.1 z.2 : RCˣ) : RC)) ∈ prodSpan (Γ.btOrder ⊤) := by
-  haveI : ValuationRing RC := ValuationRing.of_integers v hv
+  have : ValuationRing RC := ValuationRing.of_integers v hv
   exact PositivityTheory.HtPt.Twpair.bichar_mem_prodSpan (PositivityTheory.HtPt.Twpair.henselian hv)
     (fun P => (PositivityTheory.HtPt.Twpair.prime_eq_bot_or_maximal hv P.asIdeal).imp id fun h => PrimeSpectrum.ext h)
     Γ β s hs
@@ -859,17 +859,17 @@ theorem kernel_mem [Fact p.Prime] (hpS : p ∈ S) [CharZero Ω] [IsLocallyNoethe
   have hp : p.Prime := Fact.out
   have hR1 : 1 ≤ 𝔐.R p := le_trans (by norm_num) (𝔐.R_ge p hpS)
   have hpow : p ^ 𝔐.R p = p * p ^ (𝔐.R p - 1) := by rw [← pow_succ', Nat.sub_add_cancel hR1]
-  haveI : NeZero (p ^ 𝔐.R p) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (p ^ 𝔐.R p) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hvI : v.Integers RC :=
     ⟨Subtype.val_injective, fun x => (hv x).1 x.2, fun r hr => ⟨⟨r, (hv r).2 hr⟩, rfl⟩⟩
-  haveI : IsFractionRing RC C := hvI.isFractionRing
-  haveI := FunctionFamilyIdempotent.finite_tors (E := E) (D.p + D.q) hp.ne_zero
-  letI : Algebra (CR O y c') RC := (toRC _ RC hR).toAlgebra
+  have : IsFractionRing RC C := hvI.isFractionRing
+  have := FunctionFamilyIdempotent.finite_tors (E := E) (D.p + D.q) hp.ne_zero
+  let : Algebra (CR O y c') RC := (toRC _ RC hR).toAlgebra
   have hφ : Function.Injective (algebraMap (CR O y c') RC) := fun a b h =>
     Subtype.ext ((algebraMap Ω C).injective (congrArg Subtype.val h))
   let κ : FractionRing RC ≃+* C := (FractionRing.algEquiv RC C).toRingEquiv
   have hκ : ∀ r : RC, κ (algebraMap RC _ r) = r := (FractionRing.algEquiv RC C).commutes
-  haveI : IsAlgClosed (FractionRing RC) := IsAlgClosed.of_ringEquiv C _ κ.symm
+  have : IsAlgClosed (FractionRing RC) := IsAlgClosed.of_ringEquiv C _ κ.symm
   let ik : Ω →+* FractionRing RC := κ.symm.toRingHom.comp (algebraMap Ω C)
   have hik : ∀ r : CR O y c', ik r = algebraMap RC _ (algebraMap (CR O y c') RC r) := fun r =>
     (RingEquiv.symm_apply_eq κ).2 (hκ (algebraMap (CR O y c') RC r)).symm
@@ -944,7 +944,7 @@ theorem kernel_mem [Fact p.Prime] (hpS : p ∈ S) [CharZero Ω] [IsLocallyNoethe
       change _ = κ (algebraMap RC _ ((bi (qmk p x) (qmk p x') : RCˣ) : RC))
       rw [hκ, hbi, Units.val_pow_eq_pow_val, Subalgebra.coe_pow, hζ', map_pow]
     have k2 := (G.weil (p ^ (𝔐.R p - 1) • x) x' _ ik (ψ ≫ G.t₂.pt (qmk _ _)) (ψ ≫ G.t₂.pt (qmk _ _)) u rfl rfl).2 hu
-    haveI : Subsingleton (Over.mk (spMap ik ≫ 𝔐.ξ)).left :=
+    have : Subsingleton (Over.mk (spMap ik ≫ 𝔐.ξ)).left :=
       inferInstanceAs (Subsingleton (PrimeSpectrum (FractionRing RC)))
     have k3 := PositivityTheory.HtPt.Weilfun.weilUnit_eq_of_weilIs 𝔐.t.cub (p ^ 𝔐.R p) (t2 _) (t2 _) (unitOn u)
       (by rw [Nat.cast_pow]; exact k2)
@@ -975,10 +975,10 @@ theorem exists_der [Fact p.Prime] (hpS : p ∈ S) [CharZero Ω]
         Dv f = Submodule.Quotient.mk (io ⟨P.Dh.h x, P.Dh.h_mem x⟩) := by
   have hp : p.Prime := Fact.out
   have hR1 : 1 ≤ 𝔐.R p := le_trans (by norm_num) (𝔐.R_ge p hpS)
-  haveI : NeZero (p ^ 𝔐.R p) := ⟨pow_ne_zero _ hp.ne_zero⟩
-  haveI := FunctionFamilyIdempotent.finite_tors (E := E) (D.p + D.q) hp.ne_zero
-  haveI : Finite (TestPt.NAdd E (D.p + D.q) p) := this
-  haveI := FunctionFamilyIdempotent.frac_epi (CR O y c')
+  have : NeZero (p ^ 𝔐.R p) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have := FunctionFamilyIdempotent.finite_tors (E := E) (D.p + D.q) hp.ne_zero
+  have : Finite (TestPt.NAdd E (D.p + D.q) p) := this
+  have := FunctionFamilyIdempotent.frac_epi (CR O y c')
   have hφ : Function.Injective (toRC (CR O y c') RC hR) := fun a b h =>
     Subtype.ext ((algebraMap Ω C).injective (congrArg Subtype.val h))
   have hBT := _root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ _ 𝔐.t.G P.x p P.i₁ P.tors₁ 𝔐.t.semi.smooth
@@ -1024,9 +1024,9 @@ theorem act_mem [Fact p.Prime]
     (P : ChartPack G O c') (a : 𝓞 E) (f : TestPt.NAdd E (D.p + D.q) p → C) (hf : f ∈ TestPt.testOrd P RC) :
     (fun x : TestPt.NAdd E (D.p + D.q) p => f fun i => Ideal.Quotient.mk _ a * x i) ∈ TestPt.testOrd P RC := by
   have hp : p.Prime := Fact.out
-  haveI := FunctionFamilyIdempotent.finite_tors (E := E) (D.p + D.q) hp.ne_zero
-  haveI := FunctionFamilyIdempotent.frac_epi (CR O y c')
-  haveI := 𝔐.t.act.hom a
+  have := FunctionFamilyIdempotent.finite_tors (E := E) (D.p + D.q) hp.ne_zero
+  have := FunctionFamilyIdempotent.frac_epi (CR O y c')
+  have := 𝔐.t.act.hom a
   have h4 := (_root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ _ 𝔐.t.G P.x p P.i₁ P.tors₁
     𝔐.t.semi.smooth).2.2.2.1 (𝔐.t.act.act a) (FunctionFamilyIdempotent.mulT _ p a) (by
       intro t

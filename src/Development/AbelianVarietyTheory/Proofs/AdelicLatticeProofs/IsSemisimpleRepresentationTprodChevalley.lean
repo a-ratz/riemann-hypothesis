@@ -158,11 +158,11 @@ theorem isClosed_isLog : ∀ (ι : Type) [Fintype ι] [DecidableEq ι],
     Set.pi Set.univ (fun _ => Set.pi Set.univ (fun _ => Metric.closedBall (0 : ℂ) 1))
   have hK : IsCompact K :=
     isCompact_univ_pi (fun _ => isCompact_univ_pi (fun _ => isCompact_closedBall _ _))
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   let D : K × (Matrix ι ι ℂ × Matrix ι ι ℂ) → ι → ℝ :=
     fun q i => (((q.1 : Matrix ι ι ℂ)ᴴ * q.2.1 * (q.1 : Matrix ι ι ℂ)) i i).re
   have hU : Continuous (fun q : K × (Matrix ι ι ℂ × Matrix ι ι ℂ) => (q.1 : Matrix ι ι ℂ)) :=
-    continuous_subtype_val.comp continuous_fst
+    continuous_subtypeVal.comp continuous_fst
   have hD : ∀ i, Continuous (fun q => D q i) := by
     intro i
     refine Complex.continuous_re.comp ?_
@@ -373,7 +373,7 @@ theorem GlobalTheory.ClassFin.exists_energy_min : ∀ (ι : Type) [Fintype ι] [
         have h2 : Continuous fun p : Matrix ι ι ℂ × (σ → Matrix ι ι ℂ) => p.1 * g s * p.1.adjugate :=
           (continuous_fst.matrix_mul continuous_const).matrix_mul continuous_fst.matrix_adjugate
         exact (_root_.GlobalTheory.ClassFin.isClosed_isLog ι).preimage (h.prodMk (h2.matrix_conjTranspose.matrix_mul h2))
-      rw [← Set.setOf_forall] at this
+      rw [← Set.ofPred_forall] at this
       exact this
     have heq : Z = ({p | p.1.det = 1} ∩
         ({p | ∀ s, IsLog (p.2 s) ((p.1 * g s * p.1.adjugate)ᴴ * (p.1 * g s * p.1.adjugate))} ∩
@@ -1761,7 +1761,7 @@ theorem _root_.GlobalTheory.ClassFin.isIrreducible_toRepresentation_of_isAtom (�
       apply Subrepresentation.ext
       exact Submodule.map_bot _
     rw [← h1, ← he, h2]
-  haveI : Nontrivial (Subrepresentation σ.toRepresentation) := ⟨⟨⊥, ⊤, hne⟩⟩
+  have : Nontrivial (Subrepresentation σ.toRepresentation) := ⟨⟨⊥, ⊤, hne⟩⟩
   exact ⟨fun τ => (hF τ).imp (hbot τ) (htop τ)⟩
 
 end
@@ -1772,11 +1772,11 @@ private theorem iSup_atoms_toSubmodule_eq_whole_of_semisimple {G : Type} [Group 
     [Module ℂ V] [FiniteDimensional ℂ V] (ρ : Representation ℂ G V)
     (hρ : ρ.IsSemisimpleRepresentation) :
     ⨆ σ : {σ : Subrepresentation ρ // IsAtom σ}, σ.1.toSubmodule = ⊤ := by
-  haveI : ComplementedLattice (Subrepresentation ρ) := hρ
-  haveI : WellFoundedLT (Subrepresentation ρ) :=
+  have : ComplementedLattice (Subrepresentation ρ) := hρ
+  have : WellFoundedLT (Subrepresentation ρ) :=
     StrictMono.wellFoundedLT (f := Subrepresentation.toSubmodule) fun a b hab =>
       lt_of_le_of_ne hab.le fun he => hab.ne (Subrepresentation.toSubmodule_injective he)
-  haveI : IsAtomic (Subrepresentation ρ) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
+  have : IsAtomic (Subrepresentation ρ) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
   set A := ⨆ σ : {σ : Subrepresentation ρ // IsAtom σ}, σ.1.toSubmodule with hA
   let α : Subrepresentation ρ := ⟨A, by
     intro g v hv

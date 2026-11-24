@@ -141,7 +141,7 @@ theorem torus_orthogonality : ∀ (F : Type) [Field F] [Finite F] (θ : Algebrai
     rw [Nat.cast_add, h, zero_add, Nat.cast_one] at h1
     exact one_ne_zero h1
   have : NeZero (N : F) := ⟨hNF⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (AlgebraicClosure F) N
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (AlgebraicClosure F) N
   have hζ0 : ζ ≠ 0 := hζ.ne_zero hN.ne'
 
   have hω : IsPrimitiveRoot (θ ζ) N :=

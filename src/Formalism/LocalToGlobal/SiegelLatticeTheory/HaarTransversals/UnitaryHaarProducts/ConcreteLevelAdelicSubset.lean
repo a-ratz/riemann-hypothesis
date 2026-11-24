@@ -342,7 +342,7 @@ theorem srat_eq : Srat X u = Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I �
 
 theorem srat_discrete [DiscreteTopology (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I)] : DiscreteTopology (Srat X u) :=
   DiscreteTopology.of_continuous_injective (f := Subgroup.inclusion (inf_le_left : Srat X u ≤ _))
-    (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective _)
+    (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective _)
 
 theorem exists_fund_srat (hR : Formalism.L2.SG.Count.FoldReady X.B.I) :
     ∃ Fs : Set X.B.I.GA, MeasurableSet Fs ∧ ∀ μ : Measure X.B.I.GA, IsFundamentalDomain (Srat X u) Fs μ := by
@@ -676,7 +676,7 @@ theorem gf_discrete : DiscreteTopology (Formalism.MainNotions.LeviCoordinates.rr
   have hΨc : ∀ v l i, Continuous (Ψ v l i) := by
     intro v l i
     have hu : Continuous fun y : I.Ginf => uMat (y v) :=
-      Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v))
+      Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v))
     have hm : Continuous fun y : I.Ginf => I.P v * (uMat (y v) - 1) * (I.P v)⁻¹ :=
       (continuous_const.matrix_mul (hu.sub continuous_const)).matrix_mul continuous_const
     exact continuous_const.mul ((continuous_apply i).comp (hm.matrix_mulVec continuous_const))
@@ -742,7 +742,7 @@ theorem gf_discrete : DiscreteTopology (Formalism.MainNotions.LeviCoordinates.rr
     · intro h
       exact Subtype.ext (key x hx h)
   rw [e]
-  exact hUo.preimage continuous_subtype_val
+  exact hUo.preimage continuous_subtypeVal
 
 end Disc
 
@@ -757,7 +757,7 @@ theorem wz_lemma (γ δ : WithZero (Multiplicative ℤ)) (h : γ < 1) (hδ : ∀
   rcases eq_or_ne γ 0 with hγ | hγ
   · have := hδ 1
     rw [hγ, pow_one] at this
-    exact WithZero.coe_ne_zero (le_antisymm this zero_le')
+    exact WithZero.coe_ne_zero (le_antisymm this zero_le)
   obtain ⟨t, rfl⟩ := WithZero.ne_zero_iff_exists.1 hγ
   have ht : Multiplicative.toAdd t < 0 := by
     have h1 : t < 1 := by exact_mod_cast h
@@ -842,7 +842,7 @@ theorem trC_nondeg (u : I.E ⊗[I.F] Af I.F) (h : ∀ x : 𝓞 I.E, trC I x u = 
       have := LinearMap.BilinForm.apply_dualBasis_left hB b j i
       rw [Algebra.traceForm_apply, mul_comm] at this
       exact this
-    simp only [e, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
+    simp only [e, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h1
     exact h1
   simp [ha]
 
@@ -1097,7 +1097,7 @@ theorem ginf_disc_of_lat (Sg : Subgroup I.Ginf) (s : Finset (Fin I.n → I.E))
   have hΨc : ∀ v l i, Continuous (Ψ v l i) := by
     intro v l i
     have hu : Continuous fun y : I.Ginf => uMat (y v) :=
-      Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v))
+      Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v))
     have hm : Continuous fun y : I.Ginf => I.P v * (uMat (y v) - 1) * (I.P v)⁻¹ :=
       (continuous_const.matrix_mul (hu.sub continuous_const)).matrix_mul continuous_const
     exact continuous_const.mul ((continuous_apply i).comp (hm.matrix_mulVec continuous_const))
@@ -1109,11 +1109,11 @@ theorem ginf_disc_of_lat (Sg : Subgroup I.Ginf) (s : Finset (Fin I.n → I.E))
     isOpen_iInter_of_finite fun v => isOpen_biInter_finset fun l _ => isOpen_iInter_of_finite fun i =>
       isOpen_lt (hΨc v l i).norm continuous_const
   have h1U : (1 : I.Ginf) ∈ U := by
-    simp only [U, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [U, Set.mem_iInter, mem_ofPred_eq]
     intro v l _ i; rw [hΨ1]; simp
   have key : ∀ y ∈ Sg, y ∈ U → y = 1 := by
     intro y hy hU
-    simp only [U, Set.mem_iInter, Set.mem_setOf_eq] at hU
+    simp only [U, Set.mem_iInter, mem_ofPred_eq] at hU
     obtain ⟨M, h1, hint⟩ := hS y hy
     have hfix : ∀ l ∈ (s : Set (Fin I.n → I.E)), M *ᵥ l = l := by
       intro l hl
@@ -1143,7 +1143,7 @@ theorem ginf_disc_of_lat (Sg : Subgroup I.Ginf) (s : Finset (Fin I.n → I.E))
     · intro h
       exact Subtype.ext (key x hx h)
   rw [e]
-  exact hUo.preimage continuous_subtype_val
+  exact hUo.preimage continuous_subtypeVal
 
 theorem isSFund_of_discrete (Sg : Subgroup I.Ginf) [DiscreteTopology Sg] :
     ∃ Ω, Formalism.L2.SG.HidaSetting.IsSFund I (Sg : Set I.Ginf) Ω := by
@@ -1276,7 +1276,7 @@ theorem gf_key : ∃ W : Set I.Ginf, IsOpen W ∧ (1 : I.Ginf) ∈ W ∧
   have hΨc : ∀ v l i, Continuous (Ψ v l i) := by
     intro v l i
     have hu : Continuous fun y : I.Ginf => uMat (y v) :=
-      Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v))
+      Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v))
     have hm : Continuous fun y : I.Ginf => I.P v * (uMat (y v) - 1) * (I.P v)⁻¹ :=
       (continuous_const.matrix_mul (hu.sub continuous_const)).matrix_mul continuous_const
     exact continuous_const.mul ((continuous_apply i).comp (hm.matrix_mulVec continuous_const))
@@ -1286,10 +1286,10 @@ theorem gf_key : ∃ W : Set I.Ginf, IsOpen W ∧ (1 : I.Ginf) ∈ W ∧
   refine ⟨⋂ v, ⋂ l ∈ s, ⋂ i, {y : I.Ginf | ‖Ψ v l i y‖ < 1},
     isOpen_iInter_of_finite fun v => isOpen_biInter_finset fun l _ => isOpen_iInter_of_finite fun i =>
       isOpen_lt (hΨc v l i).norm continuous_const, ?_, ?_⟩
-  · simp only [Set.mem_iInter, Set.mem_setOf_eq]
+  · simp only [Set.mem_iInter, mem_ofPred_eq]
     intro v l _ i; rw [hΨ1]; simp
   rintro γ ⟨M, -, h1, h2⟩ hU hK
-  simp only [Set.mem_iInter, Set.mem_setOf_eq] at hU
+  simp only [Set.mem_iInter, mem_ofPred_eq] at hU
   have hLf : ∀ l ∈ I.L, incl I l ∈ I.Lf := fun l hl => Submodule.subset_span ⟨⟨l, hl⟩, rfl⟩
   have hML : ∀ l ∈ I.L, incl I ((M : Matrix (Fin I.n) (Fin I.n) I.E) *ᵥ l) ∈ I.Lf := by
     intro l hl
@@ -1383,7 +1383,7 @@ def NOsub (hK : X.LevelSubgroupCharacter) : Subgroup X.B.I.Ginf := (NOA X u hK).
 theorem NOsub_coe (hK : X.LevelSubgroupCharacter) : ((NOsub X u hK : Subgroup X.B.I.Ginf) : Set X.B.I.Ginf) = NOinf X u := by
   ext s
   simp only [NOsub, NOA, Subgroup.coe_map, Set.mem_image, SetLike.mem_coe, Subgroup.mem_inf,
-    Subgroup.mem_prod, Subgroup.mem_map, MonoidHom.coe_fst, NOinf, Set.mem_setOf_eq]
+    Subgroup.mem_prod, Subgroup.mem_map, MonoidHom.coe_fst, NOinf, mem_ofPred_eq]
   constructor
   · rintro ⟨γ, ⟨hγ, h1, h2, k, hk, hkγ⟩, rfl⟩
     refine ⟨γ, hγ, rfl, h1, h2, ?_⟩
@@ -1424,7 +1424,7 @@ theorem NOsub_discrete (hK : X.LevelSubgroupCharacter) : DiscreteTopology (NOsub
       have := hW γ hγ h hγK
       simp [this]
   rw [e]
-  exact hWo.preimage continuous_subtype_val
+  exact hWo.preimage continuous_subtypeVal
 
 theorem fundNC_holds : ∀ (D : Formalism.BasicNotions.D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D), X.LevelSubgroupCharacter →
     ∀ u : D.what₂.Word, ∃ FN : Set X.B.I.Ginf, IsSFund X.B.I (NOinf X u) FN := by

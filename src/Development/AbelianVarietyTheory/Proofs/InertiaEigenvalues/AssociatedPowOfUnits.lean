@@ -111,8 +111,8 @@ theorem core_dvr (l : ℕ) [Fact l.Prime] (C : Core l) : C.DVR := by
   have hx0 : x ≠ 0 := fun h => one_ne_zero (hreg 1 (by rw [h, zero_mul]))
   have hxu : ¬ IsUnit x := fun h => (h.map (Per.θD l)).ne_zero ((hθ x).2 dvd_rfl)
   have hirr : Irreducible x := irreducible_of_units hx0 hxu hu
-  haveI : IsHausdorff (Ideal.span {x}) (Per.BdRp l) := hcomp.toIsHausdorff
-  haveI hdvr : IsDiscreteValuationRing (Per.BdRp l) :=
+  have : IsHausdorff (Ideal.span {x}) (Per.BdRp l) := hcomp.toIsHausdorff
+  have hdvr : IsDiscreteValuationRing (Per.BdRp l) :=
     IsDiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
       ⟨x, hirr, fun hy => associated_pow_of_units hu hy⟩
   have hmax : IsLocalRing.maximalIdeal (Per.BdRp l) = Ideal.span {x} := hirr.maximalIdeal_eq

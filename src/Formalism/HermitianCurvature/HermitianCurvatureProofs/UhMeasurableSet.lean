@@ -124,7 +124,7 @@ theorem ae_UH_of_quot {μG μS νq : Measure (Formalism.QuantumDeterminants.Mt k
       · have hsB : s ∉ Bᶜ := fun h => h hs
         rw [Set.indicator_of_notMem hsB]
         exact zero_le
-    · rw [Set.indicator_apply, if_neg hx, mul_zero]
+    · rw [Set.indicator_apply, ite_eq_right hx, mul_zero]
       exact zero_le
   have h0 : μS Bᶜ * νq B = 0 := by
     rw [← lintegral_indicator_one hBm, ← lintegral_const_mul _ (measurable_one.indicator hBm)]
@@ -142,8 +142,8 @@ theorem muSof_facts {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Formal
     muSof μW μN ≠ 0 ∧ muSof μW μN {x | Matrix.of x ∉ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r)} = 0 := by
   obtain ⟨hWs, hW0, hWb, -⟩ := hW
   obtain ⟨hNs, hN0, hNb, -⟩ := hN
-  haveI := hWs
-  haveI := hNs
+  have := hWs
+  have := hNs
   have hcont : Continuous (fun p : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r =>
       fun i j => (Matrix.of p.1 * Matrix.of p.2) i j) := by
     refine continuous_pi fun i => continuous_pi fun j => ?_
@@ -154,7 +154,7 @@ theorem muSof_facts {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Formal
   · intro h0
     unfold muSof at h0
     rw [Measure.map_eq_zero_iff hmeas.aemeasurable] at h0
-    have h1 : (μW.prod μN) Set.univ = 0 := by rw [h0, Measure.coe_zero, Pi.zero_apply]
+    have h1 : (μW.prod μN) Set.univ = 0 := by rw [h0, FunLike.coe_zero, Pi.zero_apply]
     rw [← Set.univ_prod_univ, Measure.prod_prod, mul_eq_zero] at h1
     rcases h1 with h | h
     · exact hW0 (Measure.measure_univ_eq_zero.mp h)
@@ -165,7 +165,7 @@ theorem muSof_facts {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Formal
       Set.univ ×ˢ {x : Formalism.QuantumDeterminants.Mt k r | Matrix.of x ∉ Formalism.QuantumDeterminants.Nset k r}) ?_ ?_
     · rintro ⟨a, b⟩ hab
       by_contra hno
-      simp only [Set.mem_union, Set.mem_prod, Set.mem_univ, and_true, true_and, Set.mem_setOf_eq, not_or,
+      simp only [Set.mem_union, Set.mem_prod, Set.mem_univ, and_true, true_and, Set.mem_ofPred_eq, not_or,
         not_not] at hno
       exact hab (uh_mul hno.1.1 hno.2.1)
     · refine measure_union_null ?_ ?_

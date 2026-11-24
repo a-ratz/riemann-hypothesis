@@ -381,7 +381,7 @@ theorem TubeCollarMass.proof (hC : TubeCollarCompare.Statement) (hM : ChartMassC
       (PiLp.antilipschitzWith_ofLp 2 fun _ : Fin n => ℂ).isBounded_preimage Metric.isBounded_closedBall
     obtain ⟨R', hR'⟩ := (Metric.isBounded_iff_subset_ball 0).1 hbd
     have h1 := hle (fun _ => 1) measurable_const
-    simp only [enorm_one, setLIntegral_one] at h1
+    simp only [eNorm_one, setLIntegral_one] at h1
     refine h1.trans_lt (ENNReal.mul_lt_top hK ?_)
     exact (measure_mono (Set.inter_subset_inter_right _ hR')).trans_lt (hF n (d + 1) J hJ hdim R')
 
@@ -590,7 +590,7 @@ theorem BlockResolutionFormsIndependent.proof (hND : NonvanishingDense.Statement
     BlockResolutionFormsIndependent.Statement := by
   intro D K _ _ ι _ Ω _ _ d n r b hb a ha
   choose f hf hbf using hb.1
-  obtain ⟨g, hgJ, hgP⟩ := SetLike.not_le_iff_exists.1 d.R.nondeg
+  obtain ⟨g, hgJ, hgP⟩ := IsConcreteLE.not_le_iff_exists.1 d.R.nondeg
 
   set F : ((Σ k, ι k) → ℂ) → ℂ := fun z => ∑ k, a k * eval z (map (Int.castRingHom ℂ) (f k)) with hF
   have ha' : ∀ x : d.R.X, F (blockPt d x) = 0 := by
@@ -1052,14 +1052,14 @@ theorem proof : ProjFrameGenPtTransc.Statement := by
     by_cases hm : m ∈ q.support
     · have h1 := congrArg (AddMonoidAlgebra.coeff · (Finsupp.single () m)) hFΓ
       rw [coeff_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, Finset.sum_eq_single m] at h1
-      · rw [coeff_C_mul, coeff_X_pow, if_pos rfl, mul_one] at h1
+      · rw [coeff_C_mul, coeff_X_pow, ite_eq_left rfl, mul_one] at h1
         have h2 := (mul_eq_zero.1 h1).resolve_right (pow_ne_zero _ hX)
         rw [Ideal.Quotient.eq_zero_iff_mem] at h2
         have h3 := aeval_inl_eq_zero G h2
         rw [hg m] at h3
         exact Subtype.ext h3
       · intro n _ hn
-        rw [coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
+        rw [coeff_C_mul, coeff_X_pow, ite_eq_right, mul_zero]
         intro h
         exact hn (Finsupp.single_injective () h)
       · intro h
@@ -1166,7 +1166,7 @@ noncomputable section
 theorem ResolutionFormsIndependent.proof (hND : NonvanishingDense.Statement) :
     ResolutionFormsIndependent.Statement := by
   intro D Ω _ _ κ _ d n r b hb a ha
-  obtain ⟨g, hgJ, hgP⟩ := SetLike.not_le_iff_exists.1 d.R.nondeg
+  obtain ⟨g, hgJ, hgP⟩ := IsConcreteLE.not_le_iff_exists.1 d.R.nondeg
   set F : (Ix κ → ℂ) → ℂ := fun z => ∑ k, a k * secFun (b k) z with hF
   have hFc : Continuous F :=
     continuous_finsetSum _ fun k _ => continuous_const.mul (continuous_secFun _)
@@ -1275,8 +1275,8 @@ theorem segreMap_weightedHomogeneousComponent [Nonempty K] (b : Unit → ℕ)
       · rintro rfl; rfl
       · intro h; funext u; cases u; exact congr_fun h (Classical.arbitrary K)
     by_cases h : b = Finsupp.weight (blockWeight (fun _ : Unit => ∀ k, ι k)) d
-    · rw [if_pos h, if_pos (key.mp h)]
-    · rw [if_neg h, if_neg (mt key.mpr h), map_zero]
+    · rw [ite_eq_left h, ite_eq_left (key.mp h)]
+    · rw [ite_eq_right h, ite_eq_right (mt key.mpr h), map_zero]
   | add p p' hp hp' => simp only [map_add (f := _), hp, hp']
 
 theorem SegrePrime.proof : SegrePrime.Statement := by
@@ -1340,10 +1340,10 @@ theorem proof : ShiftIntersectionPolynomial.Statement := by
   · rw [Polynomial.finsetSum_coeff, Finset.sum_eq_single (fun _ => 0)]
     · rw [Polynomial.coeff_C_mul_X_pow]
       have hc : (Finset.univ.filter fun j : Fin n => (fun _ : Fin n => (0 : Fin 2)) j = 0).card = n := by simp
-      rw [if_pos hc.symm]
+      rw [ite_eq_left hc.symm]
       rfl
     · intro s _ hs
-      rw [Polynomial.coeff_C_mul_X_pow, if_neg]
+      rw [Polynomial.coeff_C_mul_X_pow, ite_eq_right]
       intro hc
       apply hs
       have hu : (Finset.univ.filter fun j => s j = 0) = Finset.univ :=
@@ -1369,7 +1369,7 @@ theorem proof : ShiftIntersectionPolynomial.Statement := by
         simpa [e] using h
     have key := ZCombLimit.eq_famExt_of_position (J := II K ι) (P := P) IsSmoothHerm e Z ![(q : ℝ), 1] he hZ hposition
       Finset.univ (fun _ => 0)
-    simp only [Finset.mem_univ, if_true] at key
+    simp only [Finset.mem_univ, ite_true] at key
     rw [key, famExt_apply, Polynomial.eval_finsetSum]
     refine Finset.sum_congr rfl fun s _ => ?_
     rw [prod_weights, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X]

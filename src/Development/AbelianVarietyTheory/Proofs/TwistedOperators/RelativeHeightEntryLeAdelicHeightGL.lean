@@ -88,7 +88,7 @@ theorem htE_entry_le_heightGL (F E : Type) [Field F] [NumberField F] [Field E] [
   unfold htE heightGL
   refine mul_le_mul' (Finset.prod_le_prod fun w _ => hinf w) ?_
   have hg' := finite_mulSupport_htFin F g
-  refine finprod_le_finprod' (hg'.subset fun v hv hv' => hv ?_) hg' hfin
+  refine finprod_le_finprod (hg'.subset fun v hv hv' => hv ?_) hg' hfin
   exact le_antisymm ((hfin v).trans (le_of_eq hv')) (le_max_left _ _)
 
 end GlobalTheory.RatCount

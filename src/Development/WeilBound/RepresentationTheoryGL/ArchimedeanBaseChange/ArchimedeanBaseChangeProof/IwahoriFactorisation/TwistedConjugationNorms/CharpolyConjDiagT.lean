@@ -347,7 +347,7 @@ private theorem mem_TO_of_mem_iwGL_inf_tor (w : Pl E) (n : ℕ) (κ : GLw n w)
     calc (1 : ValuativeRel.ValueGroupWithZero _) = _ := hm.symm
       _ ≤ _ * 1 := by gcongr
       _ = _ := mul_one _
-  haveI := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion E) _)
+  have := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion E) _)
   exact (ValuativeRel.isEquiv (Valued.v : Valuation (w.adicCompletion E) _)
     (ValuativeRel.valuation _)).eq_one_iff_eq_one.2 hv
 

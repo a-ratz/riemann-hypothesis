@@ -57,8 +57,8 @@ private theorem quadEx_jac (p q : ℕ) (s : ℤˣ) (hq : q.Prime) (h8 : (p : ℤ
   rcases hq.eq_two_or_odd' with rfl | hq2
   · rw [Nat.cast_ofNat, jacobiSym.at_two hp, ZMod.χ₈_nat_eq_if_mod_eight]
     rcases Int.units_eq_one_or s with rfl | rfl <;> simp only [Int.ModEq, Units.val_one, Units.val_neg] at h8
-    · rw [if_neg (by omega), if_pos (by omega)]
-    · rw [if_neg (by omega), if_pos (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_left (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_left (by omega)]
   · have e : jacobiSym p q = jacobiSym s q := jacobiSym.mod_left' hpq
     rcases Int.units_eq_one_or s with rfl | rfl <;> simp only [Int.ModEq, Units.val_one, Units.val_neg] at h8 e
     · rw [jacobiSym.quadratic_reciprocity_one_mod_four' hq2 (by omega), e, jacobiSym.one_left]
@@ -75,7 +75,7 @@ private theorem quadEx_prime (s : ℤˣ) (S : Finset ℕ) (hS : ∀ q ∈ S, q.P
   have hc : IsCoprime (s : ℤ) ((8 * ∏ q ∈ S, q : ℕ) : ℤ) := ⟨(s⁻¹ : ℤˣ), 0, by simp⟩
   obtain ⟨p, hpn, hp, hps⟩ := Nat.forall_exists_prime_gt_and_zmodEq (S.sup id) h0 hc
   have h8 : (p : ℤ) ≡ s [ZMOD 8] := hps.of_dvd (by exact_mod_cast Int.natCast_dvd_natCast.2 (dvd_mul_right 8 _))
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have h2 : p ≠ 2 := by
     rcases Int.units_eq_one_or s with rfl | rfl <;> simp only [Int.ModEq, Units.val_one, Units.val_neg] at h8 <;> omega
   refine ⟨p, inferInstance, fun h => absurd (Finset.le_sup (f := id) h) (not_le.2 hpn), h2, ?_, fun q hq => ?_⟩

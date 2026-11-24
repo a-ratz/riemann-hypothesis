@@ -1094,9 +1094,9 @@ theorem length_bound_of_hypotheses [NeZero n] (h3 : Formalism.MainNotions.DeltaI
   intro d T₁ T₂ F b S η m hset
   have hset' := hset
   obtain ⟨hCA, hl, hn, ⟨hDom, hDVR, hFrac⟩, ⟨ζ₀, hζ₀⟩, hSur, -, -, -, -⟩ := hset'
-  haveI := hDom
-  haveI := hDVR
-  haveI := hFrac
+  have := hDom
+  have := hDVR
+  have := hFrac
   obtain ⟨hbij, hs, hp2⟩ := hCA
   have hK1 : Module.finrank K₀ K = 1 := Formalism.MainNotions.UnusedSlot80.SatW.finrank_one_of_bij' hbij
   obtain ⟨-, -, h9₁⟩ := h9 T₁ hSur.1 hs hp2
@@ -1143,8 +1143,8 @@ theorem length_bound_of_hypotheses [NeZero n] (h3 : Formalism.MainNotions.DeltaI
     rw [sub_add_cancel] at this
     omega
   have hc2m : c - 1 - 1 ∈ Formalism.MainNotions.RamifiedCoefficientChains.S9.evens n d := Finset.mem_filter.2 ⟨Finset.mem_univ _, hc2⟩
-  have hMc : boxM d b S η c = b c + S := if_pos hcD
-  have hMc2 : boxM d b S η (c - 1 - 1) = b (c - 1 - 1) + S := if_pos hc2
+  have hMc : boxM d b S η c = b c + S := ite_eq_left hcD
+  have hMc2 : boxM d b S η (c - 1 - 1) = b (c - 1 - 1) + S := ite_eq_left hc2
   have hM₂ : ∀ z ∈ W.Nl T₂ (c - 1), W.Q ^ (b c + S) • W.φD T₂ z ∈ W.N T₂ := by
     rw [← hMc]; exact h5₂.1 c
   have hM₂' : ∀ z ∈ W.Nl T₂ (c - 1 - 1 - 1), W.Q ^ (b (c - 1 - 1) + S) • W.φD T₂ z ∈ W.N T₂ := by
@@ -1210,17 +1210,17 @@ theorem length_bound_of_hypotheses [NeZero n] (h3 : Formalism.MainNotions.DeltaI
     rw [hsc, hsc2, ← smul_smul, ← smul_sub]
     exact Fη.smul_mem _ hxF
 
-  haveI := rk_fd_letter₂ W hset (c - 1)
+  have := rk_fd_letter₂ W hset (c - 1)
   have hRk := rk_corankQ₂ W hE hC hQ hset (c - 1) hc1
   have hDN := hD d T₁ T₂ F b S η m hset (c - 1 - 1) hc2m
   obtain ⟨F3, hF3, ch3, hell⟩ := pass3 W T₂ hs hR h3₂ hmod₂ c η hM₂' hDN
     (FilCris PD T₂.ρ (b (c - 1) : ℤ)) hRk Fs (fun f => dd f 0)
     (fun f g => by rw [hdda]; rfl) (fun o f => by rw [hdds]; rfl) hex
 
-  haveI : FiniteDimensional LL ↥(Formalism.MainNotions.DeltaInvariantLattices.ιDi W T₂ c) := by
-    haveI := rk_fd_letter₂ W hset c
+  have : FiniteDimensional LL ↥(Formalism.MainNotions.DeltaInvariantLattices.ιDi W T₂ c) := by
+    have := rk_fd_letter₂ W hset c
     exact Module.Finite.map _ _
-  haveI : FiniteDimensional LL ↥Fη := by
+  have : FiniteDimensional LL ↥Fη := by
     have hle : Fη ≤ Formalism.MainNotions.DeltaInvariantLattices.ιDi W T₂ c := by
       rw [hFη, Formalism.MainNotions.UnusedSlot80.LevR.filLev_zero]; exact inf_le_left
     exact Submodule.finiteDimensional_of_le hle

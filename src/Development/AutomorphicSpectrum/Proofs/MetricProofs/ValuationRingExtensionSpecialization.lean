@@ -77,20 +77,20 @@ theorem exists_ringHom_of_finiteType {A B : Type} [CommRing A] [CommRing B] [Alg
     [Algebra.FiniteType A B] (v : A →+* ℂ) (hv : (RingHom.ker v).IsMaximal) (M : Ideal B)
     (hMm : M.IsMaximal) (hM : ∀ a, v a = 0 → algebraMap A B a ∈ M) :
     ∃ ψ : B →+* ℂ, ∀ a, ψ (algebraMap A B a) = v a := by
-  letI κF : Field (A ⧸ RingHom.ker v) := Ideal.Quotient.field _
-  letI KF : Field (B ⧸ M) := Ideal.Quotient.field _
+  let κF : Field (A ⧸ RingHom.ker v) := Ideal.Quotient.field _
+  let KF : Field (B ⧸ M) := Ideal.Quotient.field _
   let φ : A ⧸ RingHom.ker v →+* B ⧸ M :=
     Ideal.quotientMap M (algebraMap A B) (fun a ha => hM a (RingHom.mem_ker.mp ha))
-  letI : Algebra (A ⧸ RingHom.ker v) (B ⧸ M) := φ.toAlgebra
-  haveI : IsScalarTower A (A ⧸ RingHom.ker v) (B ⧸ M) :=
+  let : Algebra (A ⧸ RingHom.ker v) (B ⧸ M) := φ.toAlgebra
+  have : IsScalarTower A (A ⧸ RingHom.ker v) (B ⧸ M) :=
     IsScalarTower.of_algebraMap_eq (fun a => rfl)
-  haveI : Algebra.FiniteType A (B ⧸ M) :=
+  have : Algebra.FiniteType A (B ⧸ M) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ A M) (Ideal.Quotient.mkₐ_surjective A M)
-  haveI : Algebra.FiniteType (A ⧸ RingHom.ker v) (B ⧸ M) :=
+  have : Algebra.FiniteType (A ⧸ RingHom.ker v) (B ⧸ M) :=
     Algebra.FiniteType.of_restrictScalars_finiteType A (A ⧸ RingHom.ker v) (B ⧸ M)
-  haveI : Module.Finite (A ⧸ RingHom.ker v) (B ⧸ M) :=
+  have : Module.Finite (A ⧸ RingHom.ker v) (B ⧸ M) :=
     finite_of_finite_type_of_isJacobsonRing _ _
-  letI : Algebra (A ⧸ RingHom.ker v) ℂ := (RingHom.kerLift v).toAlgebra
+  let : Algebra (A ⧸ RingHom.ker v) ℂ := (RingHom.kerLift v).toAlgebra
   let g : (B ⧸ M) →ₐ[A ⧸ RingHom.ker v] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -150,7 +150,7 @@ theorem exists_valuationSubring_place (L : Type) [Field L] (O : Subring L) (v : 
   let VA : Subalgebra O L :=
     { V.toSubring with algebraMap_mem' := fun s => hV s }
   have hBV : B ≤ VA := Algebra.adjoin_le (fun x hx => hSV x hx)
-  haveI : Algebra.FiniteType O B :=
+  have : Algebra.FiniteType O B :=
     (Subalgebra.fg_iff_finiteType B).1 (Subalgebra.fg_adjoin_finset S)
   let f : B →+* V :=
     { toFun := fun x => ⟨x.1, hBV x.2⟩

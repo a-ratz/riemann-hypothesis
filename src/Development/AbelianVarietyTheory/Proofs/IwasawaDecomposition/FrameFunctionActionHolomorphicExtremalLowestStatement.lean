@@ -82,9 +82,9 @@ theorem vhol_diff_inv {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {n :
   simp only [Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul, Matrix.adjugate_apply]
   refine ((vhol_diff_det A h).inv h0).mul (vhol_diff_det _ fun a b => ?_)
   by_cases ha : a = j
-  · simp only [Matrix.updateRow_apply, if_pos ha]
+  · simp only [Matrix.updateRow_apply, ite_eq_left ha]
     exact differentiableOn_const _
-  · simp only [Matrix.updateRow_apply, if_neg ha]
+  · simp only [Matrix.updateRow_apply, ite_eq_right ha]
     exact h a b
 
 variable {ι : Type} [Fintype ι] {n : ℕ}
@@ -268,7 +268,7 @@ theorem vact_isHolFam_isBotFam : ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : �
     rw [Complex.ofReal_sum, Finset.sum_mul, Complex.exp_sum, Units.coe_prod]
     refine Finset.prod_congr rfl fun a _ => ?_
     simp only [t, Pi.inv_apply, Units.val_zpow_eq_zpow_val, Units.val_inv_eq_inv_val, Units.val_mk0,
-      ← Complex.exp_neg, ← Complex.exp_int_mul]
+      ← Complex.exp_neg, ← Complex.exp_intCast_mul]
     congr 1
     push_cast
     ring

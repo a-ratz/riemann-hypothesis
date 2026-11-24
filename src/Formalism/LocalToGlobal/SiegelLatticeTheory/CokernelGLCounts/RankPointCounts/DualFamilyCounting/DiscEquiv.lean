@@ -110,7 +110,7 @@ theorem disc_equiv (hF : IsFixF K F) (h𝔭 : 𝔭.IsMaximal) (hL : IsLatIn X L)
     (hdiag : ∀ i, h (b i) (b i) = algebraMap F K ((a i : 𝓞 F) : F)) (ha : ∀ i, a i ≠ 0) :
     Nonempty (DiscMod h X L 𝔭 ≃ₗ[𝓞 K] ∀ i : Fin n, 𝓞 K ⧸ extP K 𝔭 ^ vF 𝔭 (a i)) := by
   classical
-  haveI := h𝔭.isPrime
+  have := h𝔭.isPrime
   have hA : ∀ z, phi b a z ∈ locF 𝔭 (dualIn h X L) := fun z =>
     (mem_locF_dualIn_iff hbX hloc horth hdiag ha hF h𝔭 hL _).mpr
       ⟨phi_mem hbX z, fun i => by rw [h_phi horth hdiag ha]; exact HU.jK_mem_SP _⟩

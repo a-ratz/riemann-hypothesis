@@ -124,7 +124,7 @@ theorem continuous_matrixEntryAbsSum : Continuous (l1 : Matrix (Fin P ⊕ Fin Q)
 
 theorem continuous_gauge : Continuous (gauge : UpqT P Q → ℝ) :=
   continuous_matrixEntryAbsSum.comp
-    ((Units.continuous_val.comp continuous_subtype_val : Continuous UpqT.mat).sub continuous_const)
+    ((Units.continuous_val.comp continuous_subtypeVal : Continuous UpqT.mat).sub continuous_const)
 
 theorem ptGauge_nonneg (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q)) (y : Sp P Q) :
     0 ≤ ptGauge e y := by

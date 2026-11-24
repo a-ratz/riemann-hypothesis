@@ -107,7 +107,7 @@ theorem UpperTheory.V.HV.cmDatum_char_two_adic_order_bounds :
       (h.R1 l ψ ≤ 2 ^ c2 ψ → 12 ≤ c2 ψ ∧ ∀ v ∈ Tb l ψ, 8 * h.o * v ^ 2 < 2 ^ c2 ψ) := by
   intro h O _ _ ψ hψ l hl hl2
   have ho : 0 < h.o := by
-    haveI := h.chi.ne
+    have := h.chi.ne
     exact orderOf_pos _
   have hq : 0 < h.q := Nat.pos_of_neZero h.q
   have hl3 : 3 ≤ l := by

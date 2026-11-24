@@ -299,7 +299,7 @@ theorem exists_reps {G : Type} [AddCommGroup G] (A : AddSubgroup G) (p : G → P
   classical
   let s : G ⧸ A → G := fun q => if hq : ∃ u, p u ∧ (u : G ⧸ A) = q then hq.choose else 0
   have hs : ∀ q, (∃ u, p u ∧ (u : G ⧸ A) = q) → p (s q) ∧ (s q : G ⧸ A) = q := fun q hq => by
-    simp only [s, dif_pos hq]
+    simp only [s, dite_eq_left hq]
     exact hq.choose_spec
   refine ⟨((R₀.image fun r : G => (QuotientAddGroup.mk r : G ⧸ A)).filter fun q => ∃ u, p u ∧ (u : G ⧸ A) = q).image s, fun u hu => ?_,
     fun u hu => ⟨s u, ⟨?_, ?_⟩, ?_⟩⟩
@@ -560,7 +560,7 @@ theorem mem_span_vacGen (hW : IsWeilDatumO ψ S T χS χT om) (hr : T.rank ≤ S
   classical
   have hψ := hW.std
   obtain ⟨v, τ, c1, c2, c3, c4, c5⟩ := exists_coord S T he
-  haveI : Finite (IsLocalRing.ResidueField (Ov D v)) := Formalism.UG.P.glint_finite_residueField v
+  have : Finite (IsLocalRing.ResidueField (Ov D v)) := Formalism.UG.P.glint_finite_residueField v
   let M : {ℓ // InvForm ψ S T e ℓ} → (WO S T → ℂ) →ₗ[ℂ] (Matrix (Fin S.rank) (Fin T.rank) (Fv D.host.F v) → ℂ) :=
     fun ℓ => LinearMap.pi fun m => ℓ.1 ∘ₗ heisL ψ S T (τ m)
   have hM : ∀ ℓ φ m, M ℓ φ m = ℓ.1 (heisO ψ S T (τ m) φ) := fun _ _ _ => rfl

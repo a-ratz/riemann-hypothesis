@@ -77,7 +77,7 @@ theorem span_values [IsCommMonObj G] (hξ : IsCptGen ξ) (hs : Smooth G.hom) (M 
         (Smooth G.hom → ∀ (n : ℕ) (b : Module.Basis (Fin n) A E),
           ∃ b' : Module.Basis (Fin n) R F, ∀ k, b' k = j (b k)) := by
     subst hz
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     obtain ⟨j, h1, h2, h3⟩ := PositivityTheory.HtPt.Htat.lie_bc S G A R x E F M N
     refine ⟨j, h1, h2, fun hs n b => ?_⟩
     exact ⟨Module.Basis.mk (h3 hs n b).1 (h3 hs n b).2.ge, fun k => Module.Basis.mk_apply _ _ _⟩

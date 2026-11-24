@@ -67,9 +67,9 @@ variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq
 theorem norm_orthonormalBasis_det_le (b : OrthonormalBasis ι 𝕜 E) (x : ι → E) :
     ‖b.toBasis.det x‖ ≤ ∏ k, ‖x k‖ := by
   classical
-  haveI : FiniteDimensional 𝕜 E := b.toBasis.finiteDimensional_of_finite
-  letI : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
-  letI : LocallyFiniteOrderBot ι :=
+  have : FiniteDimensional 𝕜 E := b.toBasis.finiteDimensional_of_finite
+  let : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
+  let : LocallyFiniteOrderBot ι :=
     LocallyFiniteOrderBot.ofIic ι (fun a => Finset.univ.filter (· ≤ a)) (by simp)
   have h : finrank 𝕜 E = Fintype.card ι := finrank_eq_card_basis b.toBasis
   set c := InnerProductSpace.gramSchmidtOrthonormalBasis h x with hc
@@ -133,7 +133,7 @@ theorem re_det_gram_sum_smul (e : ι → E) (m : Matrix ι ι 𝕜) :
 theorem exists_orthonormal_of_linearIndependent {x : ι → E} (hx : LinearIndependent 𝕜 x) :
     ∃ (e : ι → E) (m : Matrix ι ι 𝕜), Orthonormal 𝕜 e ∧ ∀ j, x j = ∑ i, m i j • e i := by
   set S := Submodule.span 𝕜 (Set.range x)
-  haveI : FiniteDimensional 𝕜 S := FiniteDimensional.span_of_finite 𝕜 (Set.finite_range x)
+  have : FiniteDimensional 𝕜 S := FiniteDimensional.span_of_finite 𝕜 (Set.finite_range x)
   have h : finrank 𝕜 S = Fintype.card ι := finrank_span_eq_card hx
   let b : OrthonormalBasis ι 𝕜 S :=
     (stdOrthonormalBasis 𝕜 S).reindex (Fintype.equivFinOfCardEq h.symm).symm

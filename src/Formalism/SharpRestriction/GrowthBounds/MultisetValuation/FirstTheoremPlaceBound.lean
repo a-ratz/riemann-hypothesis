@@ -171,9 +171,9 @@ theorem ea_Exp_eq (v : X.Pl) (j i : ℕ) (I : X.ColCh j)
   unfold Sys.colExp
   have hv : ((ea_e X v).symm s').val = s'.val := rfl
   by_cases hodd : s'.val % 2 = 0
-  · rw [if_pos hodd, if_neg (by unfold IsOddPos; rw [hv]; omega)]
+  · rw [ite_eq_left hodd, ite_eq_right (by unfold IsOddPos; rw [hv]; omega)]
     rfl
-  · rw [if_neg hodd, if_pos (by unfold IsOddPos; rw [hv]; omega)]
+  · rw [ite_eq_right hodd, ite_eq_left (by unfold IsOddPos; rw [hv]; omega)]
 
 theorem ea_brScale : ea_BrScale X := by
   intro v j i K' _ F I n
@@ -206,9 +206,9 @@ theorem ea_brScale : ea_BrScale X := by
       unfold Sys.colExp
       have hv : ((ea_e X v).symm s').val = s'.val := rfl
       by_cases hodd : s'.val % 2 = 0
-      · rw [if_pos hodd, if_neg (by unfold IsOddPos; rw [hv]; omega)]
+      · rw [ite_eq_left hodd, ite_eq_right (by unfold IsOddPos; rw [hv]; omega)]
         rfl
-      · rw [if_neg hodd, if_pos (by unfold IsOddPos; rw [hv]; omega)]
+      · rw [ite_eq_right hodd, ite_eq_left (by unfold IsOddPos; rw [hv]; omega)]
   · left
     push Not at h
     obtain ⟨s, c, hc, h0⟩ := h
@@ -296,8 +296,8 @@ theorem ea_resV_C (c : R) : resV f (MvPowerSeries.C c : MvPowerSeries ι R) = Mv
     · rintro rfl
       exact Finsupp.mapDomain_zero
   by_cases hn : n = 0
-  · rw [if_pos (h.2 hn), if_pos hn]
-  · rw [if_neg (mt h.1 hn), if_neg hn]
+  · rw [ite_eq_left (h.2 hn), ite_eq_left hn]
+  · rw [ite_eq_right (mt h.1 hn), ite_eq_right hn]
 
 def ea_resHom : MvPowerSeries ι R →+* MvPowerSeries κ R where
   toFun := resV f
@@ -376,8 +376,8 @@ theorem ea_res_sSA (K' : Type) [Field K'] (v : X.Pl) (j : ℕ) (s : Fin (X.G.P.n
     rw [hs]
     exact (Finsupp.mapDomain_injective (ea_eps_inj X v j)).eq_iff
   by_cases h : n = Finsupp.single (ea_e X v s - 2 * (l : ZMod _), (a, b)) ((p ^ 2) ^ l)
-  · rw [if_pos (hiff.2 h), if_pos h]
-  · rw [if_neg (mt hiff.1 h), if_neg h]
+  · rw [ite_eq_left (hiff.2 h), ite_eq_left h]
+  · rw [ite_eq_right (mt hiff.1 h), ite_eq_right h]
 
 theorem ea_res_hhA (K' : Type) [Field K'] (v : X.Pl) (j : ℕ) (u : Fin (X.G.P.n' v) → K') :
     resV (ea_eps X v j) (X.hhA K' j v u) = Formalism.InvariantFactorPaths.G7.hhS p fun s => u ((ea_e X v).symm s) := by
@@ -881,8 +881,8 @@ variable {p : ℕ} [hp : Fact p.Prime] {X : Sys p}
 
 theorem nm_restNorm (Y : Pend X) (h : (p : Y.Kc)⁻¹ ∉ Y.Oc) : ea_RestNorm Y := by
   obtain ⟨K', nf, ac, um, -, hpn, hball, vp, hvp⟩ := nm_ext Y h
-  letI : Algebra (K0 p) K' := ((algebraMap Y.Kc K').comp (algebraMap (K0 p) Y.Kc)).toAlgebra
-  haveI : IsScalarTower (K0 p) Y.Kc K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra (K0 p) K' := ((algebraMap Y.Kc K').comp (algebraMap (K0 p) Y.Kc)).toAlgebra
+  have : IsScalarTower (K0 p) Y.Kc K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   exact ⟨ea_NormExt.mk K' vp hvp hpn hball⟩
 
 theorem nm_restNorm_of_place (Y : Pend X) (v : X.Pl) : ea_RestNorm Y := nm_restNorm Y (nm_pinv_of_place Y v)

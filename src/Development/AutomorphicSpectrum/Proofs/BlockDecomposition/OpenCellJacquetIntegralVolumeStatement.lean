@@ -94,13 +94,13 @@ theorem conj_measurePreserving : ∀ {G : Type} [Group G] [TopologicalSpace G] [
     fun_prop
   let e : U ≃* U :=
     { toFun := c, invFun := d, left_inv := hdc, right_inv := hcd, map_mul' := hcmul }
-  haveI hH : (μ.map c).IsHaarMeasure := e.isHaarMeasure_map μ hcc hdc'
-  haveI : LocallyCompactSpace U := hU.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology U := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have hH : (μ.map c).IsHaarMeasure := e.isHaarMeasure_map μ hcc hdc'
+  have : LocallyCompactSpace U := hU.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology U := Topology.IsEmbedding.subtypeVal.secondCountableTopology
   obtain ⟨L, hnL, -, hLc⟩ := hL n hn
   obtain ⟨Q, hQc, hQn⟩ := exists_compact_mem_nhds (1 : U)
   let K : Set G := (fun p : G × G => p.1 * p.2 * p.1⁻¹) '' ((L : Set G) ×ˢ (Subtype.val '' Q))
-  have hK : IsCompact K := (hLc.prod (hQc.image continuous_subtype_val)).image (by fun_prop)
+  have hK : IsCompact K := (hLc.prod (hQc.image continuous_subtypeVal)).image (by fun_prop)
   let Q' : Set U := Subtype.val ⁻¹' K
   have hQ'c : IsCompact Q' := hU.isClosedEmbedding_subtypeVal.isCompact_preimage hK
   have hQQ' : Q ⊆ Q' := fun q hq =>
@@ -132,7 +132,7 @@ theorem conj_measurePreserving : ∀ {G : Type} [Group G] [TopologicalSpace G] [
   have h2 : ((MeasureTheory.Measure.haarScalarFactor (μ.map c) μ : NNReal) : ENNReal) * μ Q'
       = 1 * μ Q' := by
     have h3 := congrArg (fun ν : MeasureTheory.Measure U => ν Q') heq
-    simp only [MeasureTheory.Measure.smul_apply, h1] at h3
+    simp only [smul_apply, h1] at h3
     rw [one_mul]
     exact h3.symm.trans (by simp [ENNReal.smul_def])
   have hκ : MeasureTheory.Measure.haarScalarFactor (μ.map c) μ = 1 := by
@@ -198,11 +198,11 @@ theorem isLocallyConstant_phi {ψ : AddChar k Circle} (hψ : Continuous ψ) (f :
   have h1 : IsOpen {g | parInd (stdBlocks d hd) ρ g f = f} := isSmooth_parInd _ _ f
   have h2 : IsOpen ((whitChar ψ N).ker : Set (unipB k (Fin N))) := GlobalTheory.Whittaker.isSmoothChar_whitChar hψ
   have hi : Continuous (Subgroup.inclusion (unipU_le (k := k) (d := d) (hd := hd))) :=
-    continuous_subtype_val.subtype_mk _
+    continuous_subtypeVal.subtype_mk _
   refine isLocallyConstant_of_right _
     ((Subtype.val ⁻¹' {g | parInd (stdBlocks d hd) ρ g f = f}) ∩
       (Subgroup.inclusion (unipU_le (k := k) (d := d) (hd := hd)) ⁻¹' ((whitChar ψ N).ker : Set _)))
-    ((h1.preimage continuous_subtype_val).inter (h2.preimage hi)) ?_ ?_
+    ((h1.preimage continuous_subtypeVal).inter (h2.preimage hi)) ?_ ?_
   · refine ⟨?_, ?_⟩
     · simp
     · simp [one_mem]
@@ -364,7 +364,7 @@ theorem radInt_indicator {ψ : AddChar k Circle} (hψ : Continuous ψ) (hρ : Is
       simp only [hA, Set.mem_preimage, SetLike.mem_coe, ← e, Set.mem_inter_iff]
       exact ⟨fun h => h.1, fun h => ⟨h, x.2⟩⟩
     rw [this]
-    exact hO.preimage continuous_subtype_val
+    exact hO.preimage continuous_subtypeVal
   refine ⟨?_, fun f v h1 h2 => ?_⟩
   · have hne : A.Nonempty := ⟨1, one_mem L₀⟩
     exact ENNReal.toReal_pos (hAo.measure_pos μ hne).ne' hAc.measure_lt_top.ne
@@ -388,9 +388,9 @@ end GlobalTheory.CompanionTheory.Rodier.RadInt
 
 theorem GlobalTheory.CompanionTheory.Rodier.radical_integral : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ψ : AddChar k Circle), Continuous ψ → ∀ (h N : ℕ) (d : Fin h → ℕ) (hd : ∑ a, d a = N) {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (Levi k fun a => Fin (d a)) W), IsSmooth ρ → ∃ (J : openFns d hd ρ →ₗ[ℂ] W) (vol : Subgroup (GL (Fin N) k) → ℝ), (∀ (u : GL (Fin N) k) (hu : u ∈ unipU k d hd) (hb : u ∈ unipB k (Fin N)) (f f' : openFns d hd ρ), (f' : IndSp (stdBlocks d hd) ρ) = parInd (stdBlocks d hd) ρ u f → J f' = (whitChar ψ N ⟨u, hb⟩ : ℂ) • J f) ∧ (∀ (a : GL (Fin N) k) (ha : a ∈ unipL k d hd) (m : unipM k d), pm k (wOpen d hd) * a * (pm k (wOpen d hd))⁻¹ = leviEmb k (stdBlocks d hd) m.1 → ∀ f f' : openFns d hd ρ, (f' : IndSp (stdBlocks d hd) ρ) = parInd (stdBlocks d hd) ρ a f → J f' = ρ m.1 (J f)) ∧ ∀ L₀ : Subgroup (GL (Fin N) k), L₀ ≤ unipU k d hd → IsCompact (L₀ : Set (GL (Fin N) k)) → (∃ O : Set (GL (Fin N) k), IsOpen O ∧ O ∩ (unipU k d hd : Set (GL (Fin N) k)) = L₀) → 0 < vol L₀ ∧ ∀ (f : openFns d hd ρ) (v : W), (∀ (u : GL (Fin N) k) (hb : u ∈ unipB k (Fin N)), u ∈ L₀ → f.1.1.1 (pm k (wOpen d hd) * u) = (whitChar ψ N ⟨u, hb⟩ : ℂ) • v) → (∀ u ∈ unipU k d hd, u ∉ L₀ → f.1.1.1 (pm k (wOpen d hd) * u) = 0) → J f = (vol L₀ : ℂ) • v := by
   intro k _ _ _ _ ψ hψ h N d hd W _ _ ρ hρ
-  letI : MeasurableSpace (unipU k d hd) := borel _
-  haveI : BorelSpace (unipU k d hd) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (unipU k d hd) :=
+  let : MeasurableSpace (unipU k d hd) := borel _
+  have : BorelSpace (unipU k d hd) := ⟨rfl⟩
+  have : LocallyCompactSpace (unipU k d hd) :=
     (RadInt.isClosed_unipU (k := k) (d := d) (hd := hd)).isClosedEmbedding_subtypeVal.locallyCompactSpace
   let μ : MeasureTheory.Measure (unipU k d hd) := MeasureTheory.Measure.haar
   exact ⟨RadInt.radInt hψ hρ μ, RadInt.volU μ,
@@ -453,9 +453,9 @@ end GlobalTheory.CompanionTheory.Rodier.RadInt
 
 theorem _root_.GlobalTheory.T.open_cell_jacquet_integral_volume : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ψ : AddChar k Circle), Continuous ψ → ∀ (h N : ℕ) (d : Fin h → ℕ) (hd : ∑ a, d a = N) {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (Levi k fun a => Fin (d a)) W), IsSmooth ρ → ∃ (J : openFns d hd ρ →ₗ[ℂ] W) (vol : Subgroup (GL (Fin N) k) → ℝ), (∀ (u : GL (Fin N) k) (hu : u ∈ unipU k d hd) (hb : u ∈ unipB k (Fin N)) (f f' : openFns d hd ρ), (f' : IndSp (stdBlocks d hd) ρ) = parInd (stdBlocks d hd) ρ u f → J f' = (whitChar ψ N ⟨u, hb⟩ : ℂ) • J f) ∧ (∀ (a : GL (Fin N) k) (ha : a ∈ unipL k d hd) (m : unipM k d), pm k (wOpen d hd) * a * (pm k (wOpen d hd))⁻¹ = leviEmb k (stdBlocks d hd) m.1 → ∀ f f' : openFns d hd ρ, (f' : IndSp (stdBlocks d hd) ρ) = parInd (stdBlocks d hd) ρ a f → J f' = ρ m.1 (J f)) ∧ ∀ L₀ : Subgroup (GL (Fin N) k), L₀ ≤ unipU k d hd → IsCompact (L₀ : Set (GL (Fin N) k)) → (∃ O : Set (GL (Fin N) k), IsOpen O ∧ O ∩ (unipU k d hd : Set (GL (Fin N) k)) = L₀) → 0 < vol L₀ ∧ ∀ (f : openFns d hd ρ) (v : W), (∀ (u : GL (Fin N) k) (hb : u ∈ unipB k (Fin N)), u ∈ L₀ → f.1.1.1 (pm k (wOpen d hd) * u) = (whitChar ψ N ⟨u, hb⟩ : ℂ) • v) → (∀ u ∈ unipU k d hd, u ∉ L₀ → f.1.1.1 (pm k (wOpen d hd) * u) = 0) → J f = (vol L₀ : ℂ) • v := by
   intro k _ _ _ _ ψ hψ h N d hd W _ _ ρ hρ
-  letI : MeasurableSpace (unipU k d hd) := borel _
-  haveI : BorelSpace (unipU k d hd) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (unipU k d hd) :=
+  let : MeasurableSpace (unipU k d hd) := borel _
+  have : BorelSpace (unipU k d hd) := ⟨rfl⟩
+  have : LocallyCompactSpace (unipU k d hd) :=
     (RadInt.isClosed_unipU (k := k) (d := d) (hd := hd)).isClosedEmbedding_subtypeVal.locallyCompactSpace
   let μ : MeasureTheory.Measure (unipU k d hd) := MeasureTheory.Measure.haar
   exact ⟨RadInt.radInt hψ hρ μ, RadInt.volU μ,

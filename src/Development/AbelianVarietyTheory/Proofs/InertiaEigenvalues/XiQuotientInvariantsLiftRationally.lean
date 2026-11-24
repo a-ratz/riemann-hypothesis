@@ -439,12 +439,12 @@ theorem exists_bases {R F T V : Type} [CommRing R] [IsDomain R] [IsPrincipalIdea
     (hi : ∀ (c : R) t, i (c • t) = algebraMap R F c • i t) (hinj : Function.Injective i)
     (hsp : Submodule.span F (Set.range i) = ⊤) :
     ∃ (n : ℕ) (bT : Basis (Fin n) R T) (bV : Basis (Fin n) F V), ∀ k, i (bT k) = bV k := by
-  letI : Module R V := Module.compHom V (algebraMap R F)
-  haveI : IsScalarTower R F V := ⟨fun c x v => by
+  let : Module R V := Module.compHom V (algebraMap R F)
+  have : IsScalarTower R F V := ⟨fun c x v => by
     rw [Algebra.smul_def, mul_smul]; rfl⟩
   let j : T →ₗ[R] V := { toFun := i, map_add' := map_add i, map_smul' := hi }
-  haveI : Module.IsTorsionFree R V := Module.IsTorsionFree.trans_faithfulSMul R F V
-  haveI : Module.IsTorsionFree R T := Function.Injective.moduleIsTorsionFree j hinj (map_smul j)
+  have : Module.IsTorsionFree R V := Module.IsTorsionFree.trans_faithfulSMul R F V
+  have : Module.IsTorsionFree R T := Function.Injective.moduleIsTorsionFree j hinj (map_smul j)
   let bT := Module.finBasis R T
   have hli : LinearIndependent F (j ∘ bT) :=
     (LinearIndependent.iff_fractionRing R F).mp
@@ -486,11 +486,11 @@ theorem lat_bases [IsDomain R] [IsPrincipalIdealRing R] [IsFractionRing R F] [Mo
     letI : Module R ↥T.L.T := Module.compHom ↥T.L.T (algebraMap R O)
     ∃ (n : ℕ) (bT : Basis (Fin n) R ↥T.L.T) (bV : Basis (Fin n) F T.V),
       ∀ k, T.L.T.subtype.toAddMonoidHom (bT k) = bV k := by
-  letI : Module R ↥T.L.T := Module.compHom ↥T.L.T (algebraMap R O)
-  haveI : IsScalarTower R O ↥T.L.T := ⟨fun c x v => by
+  let : Module R ↥T.L.T := Module.compHom ↥T.L.T (algebraMap R O)
+  have : IsScalarTower R O ↥T.L.T := ⟨fun c x v => by
     rw [Algebra.smul_def, mul_smul]; rfl⟩
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
-  haveI : Module.Finite R ↥T.L.T := Module.Finite.trans O _
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
+  have : Module.Finite R ↥T.L.T := Module.Finite.trans O _
   refine exists_bases _ (lat_smul hc T) Subtype.val_injective ?_
   rw [eq_top_iff]
   have key : ∀ v ∈ Submodule.span LL (T.L.T : Set T.V), ∀ c : LL,
@@ -512,7 +512,7 @@ theorem lat_bases [IsDomain R] [IsPrincipalIdealRing R] [IsFractionRing R F] [Mo
 theorem modTop_trans [TopologicalSpace F] [IsTopologicalRing LL] [IsModuleTopology F LL] (V : Type)
     [AddCommGroup V] [Module LL V] [Module F V] [IsScalarTower F LL V] [FiniteDimensional LL V]
     [TopologicalSpace V] [IsModuleTopology LL V] : IsModuleTopology F V := by
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
   let e := (Module.finBasis LL V).equivFun
   let e' : (Fin (finrank LL V) → LL) ≃L[F] V :=
     { e.symm.restrictScalars F with
@@ -549,7 +549,7 @@ variable {l : ℕ} [Fact l.Prime]
 
 theorem denom (LL : FinExt l) (c : ↥LL.1) :
     ∃ (z : ℚ_[l]) (a : ↥(OL LL)), c = z • algebraMap ↥(OL LL) ↥LL.1 a := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have halg : IsAlgebraic ℤ_[l] c :=
     (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] ↥LL.1).mpr (Algebra.IsAlgebraic.isAlgebraic c)
   obtain ⟨z, hz, hint⟩ := halg.exists_integral_multiple
@@ -725,7 +725,7 @@ theorem lift_of_isDR {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P
     ∀ z : ↥T.L.T ⊗[ℤ_[l]] Qab (AinfSub l) (xiU AI) a e, (∀ g, repQ AI (GK K') ρT a e g z = z) →
       ∃ (k : ℕ) (x : ↥T.L.T ⊗[ℤ_[l]] Qab (AinfSub l) (xiU AI) a b),
         (∀ g, repQ AI (GK K') ρT a b g x = x) ∧ LinearMap.lTensor ↥T.L.T p x = (l : ℤ_[l]) ^ k • z := by
-  letI : Module ℤ_[l] ↥T.L.T := Module.compHom ↥T.L.T (algebraMap ℤ_[l] O)
+  let : Module ℤ_[l] ↥T.L.T := Module.compHom ↥T.L.T (algebraMap ℤ_[l] O)
   intro ρT hρ z hz
   obtain ⟨β, b1, b2, b3, b4, b5⟩ := exists_beta AI LT J K' a
   obtain ⟨n, bT, bV, hb⟩ := lat_bases hc hd T
@@ -765,12 +765,12 @@ theorem lift_lev {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (L
         (∀ g, repQ AI (Gj K j) ((actTZ LL T).comp (Subgroup.inclusion hle)) a b g x = x) ∧
         LinearMap.lTensor ↥T.L.T p x = (l : ℤ_[l]) ^ k • z := by
   obtain ⟨J⟩ := J
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI := modTopLL LL
-  haveI := finOL LL
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have := modTopLL LL
+  have := finOL LL
   have hle' : GK (lev K j) ≤ GK K := hle
   have hdR := isDR_lev P HW K s LL h j hj hle' T h7 hcr
-  letI := zlMod LL T
+  let := zlMod LL T
   exact lift_of_isDR AI LT J (lev K j) (LL := ↥LL.1) (O := ↥(OL LL)) (G := ↥(GK K))
     (fun _ => rfl) (denom LL) (Subgroup.inclusion hle') (continuous_inclusion hle') T
     h5 hdR a e b hae heb p hp ((actTZ LL T).comp (Subgroup.inclusion hle'))

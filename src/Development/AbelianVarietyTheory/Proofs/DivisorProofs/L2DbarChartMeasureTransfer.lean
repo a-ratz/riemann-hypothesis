@@ -149,7 +149,7 @@ theorem exists_evenly_covered_closed
       have hpre : ∀ z ∈ F, ∃ z', z' ∈ M z ∧ m z' = m w := fun z hz => by
         obtain ⟨z', h₁, h₂⟩ := mem_iInter₂.1 hWx.1 z hz
         exact ⟨z', h₁, h₂⟩
-      haveI : Nonempty B := ⟨w⟩
+      have : Nonempty B := ⟨w⟩
       choose! f hfM hfm using hpre
       have hinj : InjOn f F := fun z₁ h₁ z₂ h₂ h12 => by
         by_contra hne
@@ -195,7 +195,7 @@ theorem map_glueMeas_closed
     exists_evenly_covered_closed hd hρ hd' hρ' hm hT hfib hch x.2
   choose W hWo hxW hWQ using hW
   obtain ⟨C, hC, hCW⟩ := TopologicalSpace.isOpen_iUnion_countable W hWo
-  haveI : Countable C := hC.to_subtype
+  have : Countable C := hC.to_subtype
   refine Measure.ext_of_iUnion_eq_univ
     (s := fun o : Option C => o.elim T fun c => W c.1) ?_ fun o => ?_
   · refine eq_univ_of_forall fun x => ?_

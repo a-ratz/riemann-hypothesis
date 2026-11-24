@@ -141,7 +141,7 @@ theorem GlobalTheory.HomFixTransport.homFixRep_basicOpen : ∀ (Rg : Type) [Comm
   have hr : Set.range U.ι = Set.range (spMap (algebraMap Rg (Localization.Away f))) := by
     rw [Scheme.Opens.range_ι, hU]
     exact (PrimeSpectrum.localization_away_comap_range (Localization.Away f) f).symm
-  haveI : IsOpenImmersion (spMap (algebraMap Rg (Localization.Away f))) :=
+  have : IsOpenImmersion (spMap (algebraMap Rg (Localization.Away f))) :=
     inferInstanceAs (IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap Rg (Localization.Away f)))))
   let e := IsOpenImmersion.isoOfRangeEq U.ι (spMap (algebraMap Rg (Localization.Away f))) hr
   have he : e.hom ≫ spMap (algebraMap Rg (Localization.Away f)) = U.ι := IsOpenImmersion.isoOfRangeEq_hom_fac _ _ _

@@ -109,7 +109,7 @@ theorem chiDet_lev_absC {r s : ℕ} (z : ℂ) (m : GA E r × GA E s) :
 
 theorem mulChi_mem_finVec {n : ℕ} (χ : HChar E) {φ : Sm E n} (h : φ ∈ finVec (cptRep E n)) :
     mulChi n χ φ ∈ finVec (cptRep E n) := by
-  haveI h' : FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => cptRep E n k φ)) := h
+  have h' : FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => cptRep E n k φ)) := h
   change FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => cptRep E n k (mulChi n χ φ)))
   refine Submodule.finiteDimensional_of_le
     (S₂ := (Submodule.span ℂ (Set.range fun k => cptRep E n k φ) ⊔ Submodule.span ℂ {φ}).map

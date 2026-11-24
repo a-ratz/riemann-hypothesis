@@ -113,15 +113,15 @@ end Coord
 theorem modulus_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ τ : Multiplicative ℝ →* (AF F ⊗[F] E)ˣ, IsFlow τ → ∀ (n M : ℕ) (μ : Measure (Fin n → Fin M → AF F ⊗[F] E)), μ.IsAddHaarMeasure → ∀ x : ℝ, μ.map (fun X => ((τ (Multiplicative.ofAdd (x)) : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E) • X) = ENNReal.ofReal (Real.exp (-(2 * Module.finrank ℚ F * n * M * x))) • μ := by
   intro F E _ _ _ _ _ σ hcm τ hτ n M μ hμ x
   obtain ⟨⟨hAlc, hAsc, hAt2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := hAlc
-  haveI := hAsc
-  haveI := hAt2
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have := hAlc
+  have := hAsc
+  have := hAt2
+  have : BorelSpace (AF F) := ⟨rfl⟩
   obtain ⟨hTR, -, -, -, -, -, hHom, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (AF F)
-  haveI := hTR
-  haveI := hBor n M
+  have := hTR
+  have := hBor n M
   have hd : Module.finrank F E = 2 := hcm.2.2.1
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   let b : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E hd
   obtain ⟨-, θ, hθ, hτx⟩ := hτ
   have hh := hHom 2 b
@@ -156,7 +156,7 @@ theorem modulus_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     have := GlobalTheory.CompanionTheory.AdelicFlow.map_scalar F hcm.1 θ hθ (Fin n × Fin M × Fin 2) ν (Real.exp x) ht
     rw [this]
     congr 2
-    rw [← Real.exp_nat_mul, ← Real.exp_neg]
+    rw [← Real.exp_natCast_mul, ← Real.exp_neg]
     congr 1
     simp only [Fintype.card_prod, Fintype.card_fin]
     push_cast

@@ -108,7 +108,7 @@ theorem avg_of_invariant {H X M ι : Type*} [Group H] [Fintype H] [MulAction H X
       ∑ i ∈ s, ((Fintype.card (orbit H (y i)) : ℂ)⁻¹ • ∑ z : orbit H (y i), F i z) := by
   have hH : (Fintype.card H : ℂ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
   have hO : ∀ i, (Fintype.card (orbit H (y i)) : ℂ) ≠ 0 := fun i => by
-    haveI : Nonempty (orbit H (y i)) := ⟨⟨y i, mem_orbit_self _⟩⟩
+    have : Nonempty (orbit H (y i)) := ⟨⟨y i, mem_orbit_self _⟩⟩
     exact_mod_cast Fintype.card_ne_zero
   have key : ∀ i, ∑ h : H, F i (h • y i) = (Fintype.card H : ℂ) •
       ((Fintype.card (orbit H (y i)) : ℂ)⁻¹ • ∑ z : orbit H (y i), F i z) := by
@@ -147,14 +147,14 @@ theorem sum_translates_eq_avg : ∀ {G M : Type} [Group G] [AddCommGroup M] [Mod
     refine Finset.mem_coe.mpr (Finset.mem_biUnion.mpr ⟨i, hi, Finset.mem_image.mpr ⟨γ, hγ, ?_⟩⟩)
     rw [hsm, QuotientGroup.eq]
     exact hγk
-  haveI : Finite Y := (Set.Finite.subset (Finset.finite_toSet _) hYsub).to_subtype
-  letI : Fintype Y := Fintype.ofFinite Y
+  have : Finite Y := (Set.Finite.subset (Finset.finite_toSet _) hYsub).to_subtype
+  let : Fintype Y := Fintype.ofFinite Y
   let φ := MulAction.toPermHom K Y
   let H := φ.range
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   have hy : ∀ i ∈ s, ((a i : G) : G ⧸ K) ∈ Y := fun i hi => ⟨i, hi, 1, by simp⟩
   let y : s → Y := fun i => ⟨((a i : G) : G ⧸ K), hy i i.2⟩
-  letI : ∀ i, Fintype (orbit H (y i)) := fun i => Fintype.ofFinite _
+  let : ∀ i, Fintype (orbit H (y i)) := fun i => Fintype.ofFinite _
   let F : s → Y → M := fun i q => ρ (q : G ⧸ K).out (w i)
   have hF : ∀ (i : s) (q : Y) (g : G), (q : G ⧸ K) = (g : G ⧸ K) → F i q = ρ g (w i) := by
     intro i q g hq
@@ -444,7 +444,7 @@ def ext0 (Q : principalLevelFrame.RowPsi V n) : (Formalism.AUTREP.GAf D.host.E n
 theorem extendByZeroThroughUnitaryFrame_psi (Q : principalLevelFrame.RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ) (h : Formalism.AUTREP.GAf D.host.E n) :
     ext0 Q x (Q.ψ h) = x h := by
   simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk]
-  rw [if_pos ⟨h, rfl⟩, pre_psi]
+  rw [ite_eq_left ⟨h, rfl⟩, pre_psi]
 
 theorem extendByZeroThroughUnitaryFrame_right_translate (Q : principalLevelFrame.RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ) (h : Formalism.AUTREP.GAf D.host.E n) :
     ext0 Q (Formalism.L2.NG.rt D.host.E n h x) = rtA V (Q.ψ h) (ext0 Q x) := by
@@ -456,7 +456,7 @@ theorem extendByZeroThroughUnitaryFrame_right_translate (Q : principalLevelFrame
       hg ⟨y * h⁻¹, by rw [map_mul, hy, map_inv, mul_inv_cancel_right]⟩
     rw [rtA_apply]
     simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk]
-    rw [if_neg hg, if_neg hg']
+    rw [ite_eq_right hg, ite_eq_right hg']
 
 theorem extendByZeroThroughUnitaryFrame_injective (Q : principalLevelFrame.RowPsi V n) {x x' : Formalism.AUTREP.GAf D.host.E n → ℂ} (H : ext0 Q x = ext0 Q x') :
     x = x' := funext fun h => by

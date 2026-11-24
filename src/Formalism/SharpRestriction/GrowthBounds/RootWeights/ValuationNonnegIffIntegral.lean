@@ -66,7 +66,7 @@ def dvrOrderNat (x : O) : ℕ := (IsDiscreteValuationRing.addVal O x).toNat
 theorem dvr_order_coe_addVal {a : O} (ha : a ≠ 0) : ((dvrOrderNat a : ℕ) : ℕ∞) = IsDiscreteValuationRing.addVal O a := by
   unfold dvrOrderNat
   first
-    | exact ENat.coe_toNat (by rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff])
+    | exact ENat.natCast_toNat (by rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff])
     | exact ENat.coe_toNat ((AddValuation.top_iff _).not.mpr ha)
 
 theorem dvr_order_mul {a b : O} (ha : a ≠ 0) (hb : b ≠ 0) : dvrOrderNat (a * b) = dvrOrderNat a + dvrOrderNat b := by
@@ -88,12 +88,12 @@ theorem dvr_order_add_ge_min {a b : O} (ha : a ≠ 0) (hb : b ≠ 0) (hab : a + 
   have h := (IsDiscreteValuationRing.addVal O).map_add a b
   rw [← dvr_order_coe_addVal ha, ← dvr_order_coe_addVal hb, ← dvr_order_coe_addVal hab] at h
   rcases le_total (dvrOrderNat a) (dvrOrderNat b) with hle | hle
-  · rw [min_eq_left (ENat.coe_le_coe.mpr hle)] at h
+  · rw [min_eq_left (ENat.natCast_le_natCast.mpr hle)] at h
     rw [min_eq_left hle]
-    exact ENat.coe_le_coe.mp h
-  · rw [min_eq_right (ENat.coe_le_coe.mpr hle)] at h
+    exact ENat.natCast_le_natCast.mp h
+  · rw [min_eq_right (ENat.natCast_le_natCast.mpr hle)] at h
     rw [min_eq_right hle]
-    exact ENat.coe_le_coe.mp h
+    exact ENat.natCast_le_natCast.mp h
 
 theorem dvr_order_neg (a : O) : dvrOrderNat (-a) = dvrOrderNat a := by
   unfold dvrOrderNat
@@ -114,7 +114,7 @@ theorem ord_eq_order_sub_of_fraction (x : KK O) (a b : O) (ha : a ≠ 0) (hb : b
     rw [zero_mul] at h
     exact ha (hinj (by rw [← h, map_zero]))
   unfold ordW
-  simp only [if_neg hx]
+  simp only [ite_eq_right hx]
   generalize_proofs hp
   have hs := Classical.choose_spec hp
   generalize Classical.choose hp = ab at hs ⊢
@@ -139,7 +139,7 @@ theorem ramification_index_ne_zero {p : ℕ} (S : UniformizedDVR p O) : ramE p O
     rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
   intro h
   apply h0
-  rw [← ENat.coe_toNat htop, h]
+  rw [← ENat.natCast_toNat htop, h]
   simp
 
 theorem valuation_zero_alt (p : ℕ) : vK p (0 : KK O) = ⊤ := by
@@ -262,7 +262,7 @@ theorem dvr_ring_charZero {p : ℕ} (hp : p.Prime) (S : UniformizedDVR p O) : Ch
   exact natCast_ne_zero_in_dvr hp S m h hm
 
 theorem dvr_fraction_field_char_zero {p : ℕ} (hp : p.Prime) (S : UniformizedDVR p O) : CharZero (KK O) := by
-  haveI := dvr_ring_charZero hp S
+  have := dvr_ring_charZero hp S
   refine charZero_of_inj_zero fun n hn => ?_
   have h' : algebraMap O (KK O) (n : O) = 0 := by rw [map_natCast]; exact hn
   have h'' : (n : O) = 0 := IsFractionRing.injective O (KK O) (by rw [h', map_zero])
@@ -280,7 +280,7 @@ theorem valuation_natCast_padicVal {p : ℕ} (hp : p.Prime) (S : UniformizedDVR 
   rw [hcast, valuation_algebraMap_eq_alt p _ (mul_ne_zero (pow_ne_zero _ hpO) hnU.ne_zero),
     dvr_order_mul (pow_ne_zero _ hpO) hnU.ne_zero, dvr_order_pow hpO, dvr_order_unit_eq_zero hnU]
   have hval : padicValNat p (p ^ k * n) = k := by
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     rw [Nat.padicValNat_def, Nat.multiplicity_mul (pow_ne_zero _ hp.ne_zero) hn0,
       Nat.multiplicity_prime_pow, multiplicity_eq_zero_of_not_dvd hn, add_zero]
   have hr : dvrOrderNat (p : O) = ramE p O := rfl
@@ -304,7 +304,7 @@ theorem valuation_nonneg_iff_integral {p : ℕ} (S : UniformizedDVR p O) (x : KK
     have h3 : (0 : ℤ) ≤ (dvrOrderNat a : ℤ) - (dvrOrderNat b : ℤ) := by exact_mod_cast h1
     have h2 : dvrOrderNat b ≤ dvrOrderNat a := by omega
     have hdvd : b ∣ a := IsDiscreteValuationRing.addVal_le_iff_dvd.1
-      (by rw [← dvr_order_coe_addVal hb, ← dvr_order_coe_addVal ha]; exact ENat.coe_le_coe.2 h2)
+      (by rw [← dvr_order_coe_addVal hb, ← dvr_order_coe_addVal ha]; exact ENat.natCast_le_natCast.2 h2)
     obtain ⟨c, rfl⟩ := hdvd
     have hb' : algebraMap O (KK O) b ≠ 0 :=
       (map_ne_zero_iff _ (IsFractionRing.injective O (KK O))).2 hb

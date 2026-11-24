@@ -102,17 +102,17 @@ theorem isFinite_of_isFinite_geomFibres :
     (∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ S), IsFinite ((Over.pullback t).map φ).left) →
     IsFinite φ.left := by
   intro S A _ hA φ hgeo
-  haveI : IsProper A.hom := hA.proper
-  haveI : IsProper (φ.left ≫ A.hom) := by rw [Over.w φ]; infer_instance
-  haveI : IsProper φ.left := IsProper.of_comp φ.left A.hom
-  haveI : LocallyQuasiFinite φ.left := by
+  have : IsProper A.hom := hA.proper
+  have : IsProper (φ.left ≫ A.hom) := by rw [Over.w φ]; infer_instance
+  have : IsProper φ.left := IsProper.of_comp φ.left A.hom
+  have : LocallyQuasiFinite φ.left := by
     refine LocallyQuasiFinite.of_finite_preimage_singleton φ.left fun y => ?_
     let K := AlgebraicClosure (A.left.residueField y)
     let u : Spec (CommRingCat.of K) ⟶ A.left :=
       Spec.map (CommRingCat.ofHom (algebraMap (A.left.residueField y) K)) ≫
         A.left.fromSpecResidueField y
     let t := u ≫ A.hom
-    haveI := hgeo K t
+    have := hgeo K t
     let φ' := ((Over.pullback t).map φ).left
     let p : Spec (CommRingCat.of K) := (⊥ : PrimeSpectrum K)
     have hup : u p = y := Scheme.fromSpecResidueField_apply y _
@@ -207,9 +207,9 @@ theorem GlobalTheory.UPel.HT.TateIsoO.card_pow_eq_one : ∀ (p : ℕ) [Fact p.Pr
     (act : D.O → Q → Q) (e : ℕ → Q → Q → kˣ → Prop) (I : GlobalTheory.UPel.HT.TateIsoO D k Q act e) (l : ℕ),
     l.Prime → l ≠ p → Nat.card {q : Q // q ^ l = 1} = l ^ (D.m * D.n * Module.finrank ℚ D.F) := by
   intro p hp D k _ Q _ act e I l hl hne
-  haveI := D.freeLa
-  haveI := D.finLa
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have := D.freeLa
+  have := D.finLa
+  have : NeZero l := ⟨hl.ne_zero⟩
   have hl0 : 0 < l := hl.pos
   have hcop : l.Coprime p := (Nat.coprime_primes hl hp.out).mpr hne
   let b := Module.finBasisOfFinrankEq ℤ D.La D.rankLa

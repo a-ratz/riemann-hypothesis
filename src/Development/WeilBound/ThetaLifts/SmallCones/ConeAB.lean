@@ -92,16 +92,16 @@ theorem LineOK.fin [SFinite μ] [SFinite M₀.μ] (h : LineOK B M om M₀ om₀ 
     simp only [e1]
     have hi : Integrable (fun x => ∑ i, c i k * J i x) (μ.prod (M₀.μ.restrict M₀.dom)) :=
       integrable_finsetSum _ fun i _ => (hJi i).const_mul _
-    rw [← lintegral_prod (fun x => ‖∑ i, c i k * J i x‖ₑ) hi.1.enorm]
+    rw [← lintegral_prod (fun x => ‖∑ i, c i k * J i x‖ₑ) hi.1.eNorm]
     calc _ ≤ ∫⁻ x, ∑ i, ‖c i k‖ₑ * ‖J i x‖ₑ ∂(μ.prod (M₀.μ.restrict M₀.dom)) :=
-          lintegral_mono fun x => (enorm_sum_le _ _).trans (Finset.sum_le_sum fun i _ => (enorm_mul _ _).le)
+          lintegral_mono fun x => (eNorm_sum_le _ _).trans (Finset.sum_le_sum fun i _ => (eNorm_mul _ _).le)
       _ = _ := by
-          rw [lintegral_finsetSum' _ fun i _ => (hJi i).1.enorm.const_mul _]
-          exact Finset.sum_congr rfl fun i _ => lintegral_const_mul'' _ (hJi i).1.enorm
+          rw [lintegral_finsetSum' _ fun i _ => (hJi i).1.eNorm.const_mul _]
+          exact Finset.sum_congr rfl fun i _ => lintegral_const_mul'' _ (hJi i).1.eNorm
   refine (lintegral_mono key).trans_lt ?_
-  rw [lintegral_finsetSum' _ fun i _ => (hc i).1.enorm.mul_const _]
+  rw [lintegral_finsetSum' _ fun i _ => (hc i).1.eNorm.mul_const _]
   refine ENNReal.sum_lt_top.2 fun i _ => ?_
-  rw [lintegral_mul_const'' _ (hc i).1.enorm]
+  rw [lintegral_mul_const'' _ (hc i).1.eNorm]
   exact ENNReal.mul_lt_top (hc i).2 (hJi i).2
 
 theorem LineOK.unf [SFinite μ] [SFinite M₀.μ] (h : LineOK B M om M₀ om₀ e μ u ν z S) {K : Subgroup (UA σ X.J)} (μK : Measure K)
@@ -216,7 +216,7 @@ theorem cone_core (hUn : Unfold) (hU : UnipEx) (hD : StabDec) (hTB : ThetaBasic)
   have hιc : Continuous ι := by rcases hι with rfl | rfl; exacts [continuous_id, continuous_inv]
   have habs : Continuous fun l : (AE F E)ˣ => (absE F E l : ℝ) := NNReal.continuous_coe.comp GlobalTheory.Doubling.continuous_absE
   have hw : Continuous fun l : (AE F E)ˣ => (ν l : ℂ) * ((absE F E l : ℝ) : ℂ) ^ z :=
-    (continuous_subtype_val.comp hν).mul ((Complex.continuous_ofReal.comp habs).pow z)
+    (continuous_subtypeVal.comp hν).mul ((Complex.continuous_ofReal.comp habs).pow z)
   have hw0 : ∀ l : (AE F E)ˣ, (ν l : ℂ) * ((absE F E l : ℝ) : ℂ) ^ z ≠ 0 := fun l =>
     mul_ne_zero (Circle.coe_ne_zero _) (pow_ne_zero _ (by exact_mod_cast absE_ne l))
   have hOK : LineOK B M om M₀ om₀ e μ u ν z S := by
@@ -282,7 +282,7 @@ theorem domSo (hS : SoSemi) (hV : FinVolU) (hE : EpsOf) {n d : ℕ} {X : Spc F E
   refine ⟨p, k, fun _ => 1, hc, measurable_const, ?_, fun f g y => ?_⟩
   · rw [setLIntegral_one]
     exact hV F E σ hp.base.cm n X.J (hE F E σ B hp.base n X r s (Or.inl hp.herm)).1 M.μ M.dom hp.good.haar hp.good.dom
-  · rw [mul_one, ← ofReal_norm_eq_enorm]
+  · rw [mul_one, ← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (by simpa using h f g y)
 
 theorem incM_vecMulVec {n d : ℕ} (x : Fin n → E) (y : Fin d → E) :

@@ -117,7 +117,7 @@ lemma tay_const (c : ℂ) : tay (fun _ => c) = PowerSeries.C c := by
 
 lemma tay_deriv (f : ℂ → ℂ) : tay (deriv f) = PowerSeries.derivativeFun (tay f) := by
   ext n
-  refine Eq.trans ?_ (PowerSeries.coeff_derivativeFun (tay f) n).symm
+  refine Eq.trans ?_ (PowerSeries.coeff_derivative (tay f) n).symm
   simp only [PowerSeries.coeff_mk, coef1, iteratedDeriv_succ', Nat.factorial_succ]
   have h1 : (n.factorial : ℂ) ≠ 0 := Nat.cast_ne_zero.2 n.factorial_ne_zero
   have h2 : ((n : ℂ) + 1) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero n
@@ -152,7 +152,7 @@ lemma sqWp_eq (L : PeriodPair) {z : ℂ} (hz : z ≠ 0) : sqWp L z = z ^ 2 * L.w
   ring
 
 lemma eventually_notMem (L : PeriodPair) : ∀ᶠ z in 𝓝[≠] (0 : ℂ), z ∉ L.lattice := by
-  have h := L.compl_lattice_diff_singleton_mem_nhds 0
+  have h := L.compl_lattice_sdiff_singleton_mem_nhds 0
   filter_upwards [nhdsWithin_le_nhds h, self_mem_nhdsWithin] with z h1 h2 h3
   exact h1 ⟨h3, h2⟩
 

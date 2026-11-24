@@ -58,8 +58,8 @@ variable {R R' M M' : Type*} [CommRing R] [CommRing R'] [AddCommGroup M] [Module
 
 theorem length_eq_of_bijective (φ : R ≃+* R') (f : M →ₛₗ[(φ : R →+* R')] M') (hf : Function.Bijective f) :
     Module.length R' M' = Module.length R M := by
-  letI := RingHomInvPair.of_ringEquiv φ
-  letI := RingHomInvPair.symm (φ : R →+* R') (φ.symm : R' →+* R)
+  let := RingHomInvPair.of_ringEquiv φ
+  let := RingHomInvPair.symm (φ : R →+* R') (φ.symm : R' →+* R)
   let e : M ≃ₛₗ[(φ : R →+* R')] M' := LinearEquiv.ofBijective f hf
   rw [Module.length_eq_height, Module.length_eq_height,
     ← Order.height_orderIso (Submodule.orderIsoMapComap e) ⊤, OrderIso.map_top]
@@ -87,7 +87,7 @@ theorem length_quot_map (φ : R ≃+* R') (f : M →ₛₗ[(φ : R →+* R')] M'
     haveI := RingHomInvPair.of_ringEquiv φ
     Module.length R' (↥(p.map f) ⧸ (q.map f).comap (p.map f).subtype) =
       Module.length R (↥p ⧸ q.comap p.subtype) := by
-  letI := RingHomInvPair.of_ringEquiv φ
+  let := RingHomInvPair.of_ringEquiv φ
   let g : ↥p →ₛₗ[(φ : R →+* R')] ↥(p.map f) :=
     { toFun := fun x => ⟨f x, Submodule.mem_map_of_mem x.2⟩
       map_add' := fun x y => Subtype.ext (map_add f (x : M) (y : M))

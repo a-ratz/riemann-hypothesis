@@ -258,7 +258,7 @@ theorem UpperTheory.Kd.L.small :
   intro l _ w L₀
   refine ⟨2 * L₀ + (eB l (w + 1) + L₀ * eD (w + 1)) + (eB l 1 + L₀ * eD 1), ?_⟩
   intro Ω _ _ _ _ ε N _ c d gm hP A hA x m hm1 hmL β t a i
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hl : l.Prime := Fact.out
   have hl0 : (l : Ω) ≠ 0 := Nat.cast_ne_zero.2 hl.ne_zero
   have hz : eOm ε (1 / ((N : ℚ) * (l : ℚ) ^ m)) ^ β ∈ A := pow_mem (GlobalTheory.UlCusp.eOm_mem ε A _) β

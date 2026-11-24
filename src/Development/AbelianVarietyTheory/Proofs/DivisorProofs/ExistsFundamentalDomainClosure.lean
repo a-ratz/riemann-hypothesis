@@ -56,7 +56,7 @@ theorem isFundamentalDomain_inf {G : Type} [Group G] [MeasurableSpace G] {μ : M
     ∃ 𝓓 : Set G, IsFundamentalDomain ↥(Γ ⊓ S) 𝓓 μ := by
   classical
   let Q' : Subgroup Γ := (Γ ⊓ S).subgroupOf Γ
-  haveI : Countable (Γ ⧸ Q') := Function.Surjective.countable QuotientGroup.mk_surjective
+  have : Countable (Γ ⧸ Q') := Function.Surjective.countable QuotientGroup.mk_surjective
   let rep : Γ ⧸ Q' → Γ := fun c => (Quotient.out c)⁻¹
   have hmp : ∀ g : G, MeasurePreserving (g * ·) μ μ := fun g => ⟨hm g, hinv g⟩
   have himg : ∀ (g : G) (s : Set G), g • s = (g⁻¹ * ·) ⁻¹' s := by
@@ -124,8 +124,8 @@ theorem countable_numberField : Countable E :=
 
 theorem countable_ratU (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) : Countable (ratU σ J) := by
   classical
-  haveI := countable_numberField (E := E)
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have := countable_numberField (E := E)
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
   have hmat : Countable (GL (Fin n) E) := Function.Injective.countable (f := fun A : GL (Fin n) E => (A : Matrix (Fin n) (Fin n) E)) Units.val_injective
   have hpre : ∀ x : ratU σ J, ∃ A : GL (Fin n) E, Matrix.GeneralLinearGroup.map (inclR (AF F)) A = ((x : UA σ J) : GL (Fin n) (AE F E)) := by
     intro x
@@ -142,17 +142,17 @@ theorem countable_ratU (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n
 
 theorem measurable_mul_left (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (g : UA σ J) :
     Measurable (g * ·) := by
-  haveI : BorelSpace (UA σ J) := ⟨rfl⟩
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  have : BorelSpace (UA σ J) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
   apply Continuous.measurable
   apply Continuous.subtype_mk
   rw [Units.continuous_iff]
   constructor
   · simp only [Function.comp_def, Subgroup.coe_mul, Units.val_mul]
-    exact continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)
+    exact continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)
   · simp only [Subgroup.coe_mul, mul_inv_rev, Units.val_mul]
-    exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_mul continuous_const
+    exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_mul continuous_const
 
 end GlobalTheory.QDom
 
@@ -162,9 +162,9 @@ theorem exists_fundamentalDomain_ratStab : ∀ (F E : Type) [Field F] [NumberFie
     (H : Plane E (b + 2) b) (H' : Plane E (b + 2 + a') (b + a')), CfgA B G G₁ H H' → ∀ (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W), IsTriple B G X om om' →
     ∃ 𝓓 : Set (UA σ G.V.J), IsFundamentalDomain ↥(ratU σ G.V.J ⊓ Subgroup.closure {g : UA σ G.V.J | mat g *ᵥ incV F H.x = incV F H.x}) 𝓓 G.M.μ := by
   intro F E _ _ _ _ _ σ B b a' G G₁ H H' _ X om om' hT
-  haveI := countable_ratU σ G.V.J
+  have := countable_ratU σ G.V.J
   have hgood := hT.geo.hM
-  haveI := hgood.haar
+  have := hgood.haar
   exact isFundamentalDomain_inf (measurable_mul_left σ G.V.J) (fun g => map_mul_left_eq_self G.M.μ g) hgood.dom _
 
 end GlobalTheory.QDom

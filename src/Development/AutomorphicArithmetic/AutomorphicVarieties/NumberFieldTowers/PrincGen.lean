@@ -71,7 +71,7 @@ private theorem pg_emult {l : ℕ} [Fact l.Prime] {c : ℕ} (h1 : 1 ≤ c) (h2 :
 private theorem pg_index {l : ℕ} [Fact l.Prime] {a : ℕ} (ha : 0 < a) :
     (KStar.TotallyRealRoots.princ l a).index = l ^ (a - 1) * (l - 1) := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ a) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ a) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hker : KStar.TotallyRealRoots.princ l a = (KStar.TotallyRealRoots.redPow l a).ker := rfl
   rw [hker, Subgroup.index_ker, MonoidHom.range_eq_top.mpr (KStar.TotallyRealRoots.redPow_surjective a),
     Subgroup.card_top, Nat.card_eq_fintype_card, ZMod.card_units_eq_totient, Nat.totient_prime_pow hl ha]

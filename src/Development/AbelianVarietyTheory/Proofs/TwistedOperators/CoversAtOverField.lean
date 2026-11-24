@@ -89,7 +89,7 @@ theorem prim_prod {L : Type} [Field L] (s : Finset ℕ) (hp : ∀ q ∈ s, q.Pri
 theorem mem_range_of_pow {L : Type} [Field L] (σ : L →+* ℂ) {n : ℕ} (hn : 0 < n) (hz : ∃ z : L, IsPrimitiveRoot z n)
     {w : ℂ} (hw : w ^ n = 1) : w ∈ σ.fieldRange := by
   obtain ⟨z, hz⟩ := hz
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   obtain ⟨i, -, hi⟩ := (hz.map_of_injective σ.injective).eq_pow_of_pow_eq_one hw
   exact ⟨z ^ i, by rw [map_pow]; exact hi⟩
 

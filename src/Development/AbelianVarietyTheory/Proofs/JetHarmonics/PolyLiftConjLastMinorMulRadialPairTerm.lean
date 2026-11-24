@@ -239,7 +239,7 @@ theorem lead_std {p t : ℕ} (μ : R →ₐ[ℂ] A) (E : Fin (p + t) → Fin (p 
     rw [hf]
     refine der_det_zero M fun i j => ?_
     unfold Der
-    rw [hM, Matrix.of_apply, hY, if_neg, map_zero]
+    rw [hM, Matrix.of_apply, hY, ite_eq_right, map_zero]
     intro h
     have := congrArg Fin.val h
     simp at this
@@ -341,7 +341,7 @@ theorem lead_conj_qdet {n p t : ℕ} (hn : n = p + t) (μ : R →ₐ[ℂ] A) (E 
   subst hn
   obtain ⟨γ, hγ, e⟩ := exists_completion β hβ t (by simp)
   let Q : Matrix (Fin (p + t)) (Fin (p + t)) ℂ := Matrix.of γ
-  have hQ : IsUnit Q.det := (Matrix.isUnit_iff_isUnit_det Q).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hγ)
+  have hQ : IsUnit Q.det := (Matrix.isUnit_iff_isUnit_det Q).1 (linearIndependent_row_iff_isUnit.1 hγ)
   have h1 : Q * Q⁻¹ = 1 := Matrix.mul_nonsing_inv Q hQ
   have h2 : Q⁻¹ * Q = 1 := Matrix.nonsing_inv_mul Q hQ
   obtain ⟨F, c, hF, hs, hc⟩ := lead_std μ (Econj E Q⁻¹ Q) (Formalism.QuantumDeterminants.gl_relation_adjoint_holds A _ E _ _ hE h1)
@@ -552,7 +552,7 @@ theorem inv_leibniz (v : Fin (2 * r + k + 1) → ℂ) {i : Fin (r + 1)} (a b c :
       rw [hZdef, Matrix.single_mulVec, Function.update_apply]
       by_cases hac : a = c
       · subst hac; simp [invL_apply]
-      · rw [if_neg (fun h => hac ((QnYLeibnizW.posL_inj c a).1 h).symm), if_neg hac]; rfl
+      · rw [ite_eq_right (fun h => hac ((QnYLeibnizW.posL_inj c a).1 h).symm), ite_eq_right hac]; rfl
     rw [hv X1 hX1.1, hv X2 hX2.1, ← hz, ← h2]
     ring
   show RdV X1 (fun x => invL k r v (posL k r i c) x • f x) g +

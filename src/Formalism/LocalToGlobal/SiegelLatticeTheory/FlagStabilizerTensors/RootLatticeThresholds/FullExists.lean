@@ -105,14 +105,14 @@ theorem puLinear (Dt : Set X.B.I.GA) : PuLinear X u hK Dt := by
       simp only [Pser, Formalism.L2.SG.PoincareSeriesSquareIntegrable.poinc, Pi.add_apply, Ph_add]
       exact (hS T x).tsum_add (hS T' x)
     unfold PuFun
-    rw [dif_pos (hM _), dif_pos (hM T), dif_pos (hM T'), ← MemLp.toLp_add]
+    rw [dite_eq_left (hM _), dite_eq_left (hM T), dite_eq_left (hM T'), ← MemLp.toLp_add]
     exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall fun x => congrFun he x)
   · have he : Pser X u hK Dt (c • T) = c • Pser X u hK Dt T := by
       funext x
       simp only [Pser, Formalism.L2.SG.PoincareSeriesSquareIntegrable.poinc, Pi.smul_apply, smul_eq_mul, Ph_smul]
       exact tsum_mul_left
     unfold PuFun
-    rw [dif_pos (hM _), dif_pos (hM T), ← MemLp.toLp_const_smul]
+    rw [dite_eq_left (hM _), dite_eq_left (hM T), ← MemLp.toLp_const_smul]
     exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall fun x => congrFun he x)
 
 end Lin
@@ -313,8 +313,8 @@ theorem rowsCols_of (hK : X.LevelSubgroupCharacter) (h0 : EqvEquiv X u) (h1 : La
   let hq : Quotient (dcSetoid X u hK) → Hfin X u := fun q => q.out
   let e : Setoid (Quotient (dcSetoid X u hK)) :=
     ⟨fun q q' => Eqv X u (L (hq q)) (L (hq q')), ⟨fun _ => h0.refl _, fun h => h0.symm h, fun h h' => h0.trans h h'⟩⟩
-  haveI : Fintype (Quotient e) := Fintype.ofFinite _
-  haveI : Fintype (Quotient (dcSetoid X u hK)) := Fintype.ofFinite _
+  have : Fintype (Quotient e) := Fintype.ofFinite _
+  have : Fintype (Quotient (dcSetoid X u hK)) := Fintype.ofFinite _
   let qc : Quotient (dcSetoid X u hK) → Quotient (dcSetoid X u hK) := fun q => (Quotient.mk e q).out
   have hqc : ∀ q, Eqv X u (L (hq (qc q))) (L (hq q)) := fun q => Quotient.mk_out (s := e) q
   have hadj : ∀ q, ∃ (g : Gam X u) (k : Hfin X u), hq q = iotaF X u g * hq (qc q) * k ∧
@@ -339,7 +339,7 @@ theorem rowsCols_of (hK : X.LevelSubgroupCharacter) (h0 : EqvEquiv X u) (h1 : La
       base_lam := by
         intro Λ hΛ
         have hΛ' := (hmem Λ).1 hΛ
-        simp only [dif_pos hΛ', hqcc]
+        simp only [dite_eq_left hΛ', hqcc]
         exact hΛ'.choose_spec
       lat_eq := by
         intro ρ y
@@ -745,12 +745,12 @@ theorem af_nontriv (F : Type) [Field F] [NumberField F] : Nontrivial (Af F) := b
   exact zero_ne_one (α := v.adicCompletion F) h'
 
 theorem inclInj_holds {D : D7} (X : HidaSetting D) : InclInj X := by
-  haveI := af_nontriv X.B.I.F
+  have := af_nontriv X.B.I.F
   exact Algebra.TensorProduct.includeLeft_injective (S := X.B.I.F) (algebraMap X.B.I.F (Af X.B.I.F)).injective
 
 theorem noCount {D : D7} (X : HidaSetting D) (u : D.what₂.Word) : NOCount X u := by
   have hK := Formalism.L2.SG.Closed.level_subgroup_is_group X
-  haveI := NOsub_discrete X u hK
+  have := NOsub_discrete X u hK
   have hc : Countable (NOsub X u hK) := countable_of_discrete (NOsub X u hK)
   rw [NOCount, ← NOsub_coe X u hK]
   exact Set.countable_coe_iff.1 hc
@@ -761,7 +761,7 @@ theorem volPosC_of'' (h3 : NOCofiniteC) (h4 : HFiniteC) : VolPosC := volPosC_of'
 
 theorem classFin_of {D : D7} (X : HidaSetting D) (u : D.what₂.Word) (hK : X.LevelSubgroupCharacter)
     (h : Formalism.L2.SG.PoincareInHH.Cut.ClassFin X u hK) : ClassFin X u hK := by
-  haveI : Finite (Formalism.L2.SG.ColsDim.Classes (iotaF X u) (Ku X u hK)) := h
+  have : Finite (Formalism.L2.SG.ColsDim.Classes (iotaF X u) (Ku X u hK)) := h
   let f : Formalism.L2.SG.ColsDim.Classes (iotaF X u) (Ku X u hK) → Quotient (dcSetoid X u hK) :=
     Quotient.lift (fun a => Quotient.mk (dcSetoid X u hK) a) (fun a b hab => Quotient.sound (by
       obtain ⟨x, hx, k, hk, rfl⟩ := DoubleCoset.rel_iff.1 hab

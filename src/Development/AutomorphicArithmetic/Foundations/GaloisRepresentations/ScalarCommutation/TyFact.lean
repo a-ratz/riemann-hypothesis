@@ -68,8 +68,8 @@ theorem UpperTheory.Reformulated.B.Qk68.exists_prime_mem :
     ∀ {E : Type} [inst : Field E] [inst_1 : NumberField E] [NumberField.IsCMField E] (w : UpperTheory.Reformulated.B.Qk68.Plc E),
       ∃ (q : ℕ), Nat.Prime q ∧ (↑q : NumberField.RingOfIntegers E) ∈ w.asIdeal := by
   intro E _ _ _ w
-  haveI : w.asIdeal.IsPrime := w.isPrime
-  haveI : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
+  have : w.asIdeal.IsPrime := w.isPrime
+  have : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
     Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
   refine ⟨ringChar (NumberField.RingOfIntegers E ⧸ w.asIdeal), ?_, ?_⟩
   · exact (CharP.char_is_prime_or_zero (NumberField.RingOfIntegers E ⧸ w.asIdeal) _).resolve_right
@@ -103,7 +103,7 @@ variable {x : E} {U : Submodule ℂ (UA E n → ℂ)} {w₀ : Plc E} {Up : Plc E
 
 private theorem cont_comp (w : Plc E) : Continuous (comp w : GUf E n → GL (Fin n) (w.adicCompletion E)) :=
   (Continuous.units_map _ (continuous_id.matrix_map (RestrictedProduct.continuous_eval w))).comp
-    (continuous_fst.comp continuous_subtype_val)
+    (continuous_fst.comp continuous_subtypeVal)
 
 private theorem th_eq (F : Frame S) (g : GUf E n) : F.th g = UpperTheory.Gal.CertificateRingHomMap.th g :=
   Subtype.ext (Prod.ext (Units.ext ((F.th_mat g).trans (UpperTheory.Gal.CertificateRingHomMap.invT_val _).symm)) (F.th_sim g))
@@ -184,7 +184,7 @@ private theorem bound (F : Frame S) (V : Vec x U w₀ Up) :
   · have := h2 w hw _ hg i k
     rw [UpperTheory.Gal.CertificateRingHomMap.th_th] at this
     exact mul_mem_of_dvd (Finset.dvd_prod_of_mem _ hB) this
-  · simp only [B, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not, Finset.mem_image] at hB
+  · simp only [B, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or, not_not, Finset.mem_image] at hB
     obtain ⟨⟨ha, hS⟩, hc⟩ := hB
     have hg' := (UpperTheory.Gal.CertificateRingHomMap.mem_lev.1 (UpperTheory.Gal.CertificateRingHomMap.th_mem_lev.1 hg)).2.2 w hS
       fun h => hc ⟨_, h, GlobalTheory.SplitPts.conjSrc_conjSrc_cm w⟩
@@ -211,7 +211,7 @@ theorem UpperTheory.Gal.Spc.tyFact :
     UpperTheory.Gal.Spc.TyFact := by
   intro E _ _ _ A n p _ S F x U w₀ Up V _ _ _ _ _ r W aux N _ _ L hw Ty h
   refine ⟨fun w hwW => ?_, fun w h1 h2 h3 => ⟨⟨fun y hy => ?_, fun g hg => ?_⟩, ?_⟩, ?_⟩
-  · haveI : Fact r.Prime := ⟨aux.prime⟩
+  · have : Fact r.Prime := ⟨aux.prime⟩
     have hoff : ∀ u ∈ V.S, GlobalTheory.Cong.Apart w.1 u := fun u hu =>
       apart_of_not_mem (p := r) (aux.off u hu) (aux.half.above w hwW)
     obtain ⟨-, hap, -⟩ := UpperTheory.Gal.CertificateRingHomMap.pLocComm_of E n w.1 w.2.1

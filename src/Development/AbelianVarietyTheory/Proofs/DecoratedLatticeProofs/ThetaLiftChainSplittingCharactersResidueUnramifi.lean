@@ -105,7 +105,7 @@ theorem hatC_phiHat {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     obtain ⟨k, hk⟩ : l.M ∣ l.M' := Nat.dvd_lcm_left _ _
     have hk0 : (k : ℂ) ≠ 0 := by exact_mod_cast (by rintro rfl; simp at hk; exact hM' hk : k ≠ 0)
     simp only [zetaM, SubmonoidClass.coe_pow, zeta]
-    rw [← Complex.exp_nat_mul, hk, Nat.mul_div_cancel_left _ (by have := l.three_le; omega)]
+    rw [← Complex.exp_natCast_mul, hk, Nat.mul_div_cancel_left _ (by have := l.three_le; omega)]
     congr 1; push_cast; field_simp
   have := Fintype.ofFinite (Fin n → LevQc Dw l)
   unfold hatC phiHat

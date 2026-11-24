@@ -270,7 +270,7 @@ theorem exists_isLiftFrame : ∀ (D : D7) (g : ℕ), g ≠ 0 → ∀ b : ℕ →
   intro D g hg b hb hs
   obtain ⟨e, t, he, ht, hu⟩ := idem_subring (IntAf (instOf D).F (instOf D).E) (g := g) (exists_idem_over D hg)
   generalize instOf D = I at *
-  letI : Submodule.IsLattice I.E I.L := Submodule.IsLattice.of_fg I.E I.L_fg
+  let : Submodule.IsLattice I.E I.L := Submodule.IsLattice.of_fg I.E I.L_fg
   obtain ⟨β₀, h₀⟩ := GlobalTheory.latticeFrame.exists_frame I.F I.E I.n I.L ⟨I.L_span⟩
   obtain ⟨β, h1, h2⟩ := exists_lift (IntAf I.F I.E) g he ht hu I.Lf β₀ (fun x => hatL_eq_Lf I ▸ h₀ x)
     (fun j => b j.val) (fun j => hb j.val) hs

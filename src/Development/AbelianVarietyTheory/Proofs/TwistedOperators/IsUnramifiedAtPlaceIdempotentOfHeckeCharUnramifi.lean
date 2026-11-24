@@ -102,7 +102,7 @@ theorem unramAt_of_unrAt : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formali
     have hα : α (P.under (𝓞 D.host.F)) = 0 := hα0 _ hP
     apply GlobalTheory.PlaceIdem.eq_zero_of_val
     intro n
-    have h := happ α 0 P n (by rw [hα, map_zero, sub_zero, Valuation.map_zero]; exact zero_le')
+    have h := happ α 0 P n (by rw [hα, map_zero, sub_zero, Valuation.map_zero]; exact zero_le)
     rwa [map_zero, map_zero, sub_zero] at h
 
   obtain ⟨S, k, hS, hS'⟩ := GlobalTheory.finiteIdele_exists_local_approx D.host.E N hN
@@ -123,7 +123,7 @@ theorem unramAt_of_unrAt : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formali
 
   obtain ⟨k', hk'1, hk'2⟩ : ∃ k' : HeightOneSpectrum (𝓞 D.host.E) → D.host.Eˣ,
       (∀ P, P.under (𝓞 D.host.F) = v → k' P = k P) ∧ (∀ P, P.under (𝓞 D.host.F) ≠ v → k' P = 1) :=
-    ⟨fun P => if P.under (𝓞 D.host.F) = v then k P else 1, fun _ h => if_pos h, fun _ h => if_neg h⟩
+    ⟨fun P => if P.under (𝓞 D.host.F) = v then k P else 1, fun _ h => ite_eq_left h, fun _ h => ite_eq_right h⟩
   have hcx := hmain x hx1 S k' ?_ ?_
   · have hprod : ∏ P ∈ S, ((χ.locK P (k' P) : ℂˣ) : ℂ) = 1 := by
       apply Finset.prod_eq_one
@@ -147,7 +147,7 @@ theorem unramAt_of_unrAt : ∀ (D : D7) (c : (AE D)ˣ →* Circle) (χ : Formali
       refine ⟨?_, ?_⟩
       · rw [Units.val_one, Valuation.map_one, map_one]
       · rw [Units.val_one, map_one, sub_self, Valuation.map_zero]
-        exact zero_le'
+        exact zero_le
   · intro P hPS
     exact hS'2 P hPS
 

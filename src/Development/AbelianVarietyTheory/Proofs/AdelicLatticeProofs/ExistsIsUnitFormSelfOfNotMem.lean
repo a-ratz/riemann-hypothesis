@@ -91,7 +91,7 @@ theorem isUnit_or_mem_of_fixed (hfix : ∀ x, σ x = x → x ∈ (algebraMap R S
 theorem exists_isUnit_add_mul (hσ : ∀ x, σ (σ x) = x)
     (hfix : ∀ x, σ x = x → x ∈ (algebraMap R S).range) (hgal : ∃ ω, IsUnit (ω - σ ω))
     {u : S} (hu : u * σ u = 1) : ∃ a, IsUnit (a + u * σ a) := by
-  haveI := isIntegral_of_involution σ hσ hfix
+  have := isIntegral_of_involution σ hσ hfix
   rcases subsingleton_or_nontrivial S with hS | hS
   · exact ⟨0, isUnit_of_subsingleton _⟩
   obtain ⟨n, hn⟩ := Ideal.exists_maximal S
@@ -145,8 +145,8 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 
 theorem exists_basis_one [IsLocalRing R] [Module.Free R S] (hrank : finrank R S = 2) :
     ∃ B : Basis (Fin 2) R S, B 0 = 1 := by
-  haveI : Module.Finite R S := Module.finite_of_finrank_pos (by omega)
-  haveI : Nontrivial S := Module.nontrivial_of_finrank_pos (R := R) (by omega)
+  have : Module.Finite R S := Module.finite_of_finrank_pos (by omega)
+  have : Nontrivial S := Module.nontrivial_of_finrank_pos (R := R) (by omega)
   have aux : ∀ b : Basis (Fin 2) R S, IsUnit (b.repr 1 0) → ∃ B : Basis (Fin 2) R S, B 0 = 1 := by
     intro b hb
     have h1 : (1 : S) = b.repr 1 0 • b 0 + b.repr 1 1 • b 1 := by
@@ -224,7 +224,7 @@ theorem trace_coord (B : Basis (Fin 2) R S) (hB : B 0 = 1) {a b : R}
 theorem isUnit_different [Algebra.FormallyUnramified R S] (B : Basis (Fin 2) R S) (hB : B 0 = 1)
     {a b : R} (hab : B 1 * B 1 = algebraMap R S b + algebraMap R S a * B 1) :
     IsUnit (2 * B 1 - algebraMap R S a) := by
-  haveI : Module.Finite R S := Module.Finite.of_basis B
+  have : Module.Finite R S := Module.Finite.of_basis B
   let L : S ⊗[R] S →ₗ[R] S :=
     LinearMap.mul' R S ∘ₗ LinearMap.lTensor S (Algebra.linearMap R S ∘ₗ B.coord 1)
   have hL : ∀ x y, L (x ⊗ₜ y) = x * algebraMap R S (B.repr y 1) := fun x y => by simp [L]
@@ -259,8 +259,8 @@ theorem apply_eq_of_ne_one [IsLocalRing R] [Algebra.FormallyUnramified R S]
     (B : Basis (Fin 2) R S) (hB : B 0 = 1)
     {a b : R} (hab : B 1 * B 1 = algebraMap R S b + algebraMap R S a * B 1)
     (σ : S ≃ₐ[R] S) (hσ : σ ≠ 1) : σ (B 1) = algebraMap R S a - B 1 := by
-  haveI : Module.Finite R S := Module.Finite.of_basis B
-  haveI : Nontrivial S := ⟨⟨B 0, 0, B.ne_zero 0⟩⟩
+  have : Module.Finite R S := Module.Finite.of_basis B
+  have : Nontrivial S := ⟨⟨B 0, 0, B.ne_zero 0⟩⟩
   have hD : IsUnit (a ^ 2 + 4 * b) := by
     by_contra hD
     obtain ⟨n, hn⟩ := Ideal.exists_maximal S
@@ -356,7 +356,7 @@ theorem add_apply_eq_trace (hrank : finrank R S = 2) (σ : S ≃ₐ[R] S) (hσ :
   ring
 
 theorem existsUnique_ne_one (hrank : finrank R S = 2) : ∃! σ : S ≃ₐ[R] S, σ ≠ 1 := by
-  haveI : Nontrivial S := Module.nontrivial_of_finrank_pos (R := R) (by omega)
+  have : Nontrivial S := Module.nontrivial_of_finrank_pos (R := R) (by omega)
   refine existsUnique_of_exists_of_unique ?_ fun σ τ hσ hτ => ?_
   swap
   · ext x

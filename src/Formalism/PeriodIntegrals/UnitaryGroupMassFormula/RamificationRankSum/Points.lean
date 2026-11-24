@@ -51,7 +51,7 @@ open Formalism.MainNotions.Gaps.EtaleWeightGaps IsLocalRing
 theorem mem_primesOver (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     (A : Type) [CommRing A] [Algebra O A] (ζ : Pts O A) :
     ζ.asIdeal ∈ (maximalIdeal O).primesOver ↥(As O A) := by
-  haveI := ζ.isMaximal
+  have := ζ.isMaximal
   refine ⟨inferInstance, ⟨?_⟩⟩
   exact (IsLocalRing.eq_maximalIdeal
     (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := O) ζ.asIdeal)).symm
@@ -79,7 +79,7 @@ theorem ptsEquiv_apply (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
 theorem finite_pts (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     (A : Type) [CommRing A] [Algebra O A] [Module.Finite O ↥(As O A)] : Finite (Pts O A) := by
   classical
-  haveI : Finite ((maximalIdeal O).primesOver ↥(As O A)) := by
+  have : Finite ((maximalIdeal O).primesOver ↥(As O A)) := by
     have hfin : ((maximalIdeal O).primesOver ↥(As O A)).Finite :=
       Algebra.QuasiFinite.finite_primesOver (maximalIdeal O)
     exact hfin.to_subtype

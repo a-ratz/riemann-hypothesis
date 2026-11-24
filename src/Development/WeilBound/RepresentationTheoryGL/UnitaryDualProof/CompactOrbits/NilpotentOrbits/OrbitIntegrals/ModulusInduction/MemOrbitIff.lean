@@ -125,7 +125,7 @@ theorem sig_act (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (t : kˣ) (h : GL 
 theorem reg_in (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) {c : Matrix (Fin n) (Fin n) k}
     (hc : c ∈ Z) : ∃ g ∈ Z, c * g * c = c := by
   obtain ⟨hcomm, hred⟩ := hZ
-  haveI := hred
+  have := hred
   have hint : IsIntegral k c := Algebra.IsIntegral.isIntegral c
   have hp0 : minpoly k c ≠ 0 := minpoly.ne_zero hint
   obtain ⟨q, hpq, hnd⟩ := Polynomial.exists_eq_pow_rootMultiplicity_mul_and_not_dvd (minpoly k c) hp0 0

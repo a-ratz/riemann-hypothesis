@@ -79,7 +79,7 @@ def GzS (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) : Subgroup (GL (Fin n) k) 
 theorem isClosed_GzS (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) : IsClosed (GzS Z : Set (GL (Fin n) k)) := by
   have hset : (GzS Z : Set (GL (Fin n) k)) = ⋂ a ∈ Z, {g : GL (Fin n) k | a * g.val = g.val * a} := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     rfl
   rw [hset]
   exact isClosed_biInter fun a _ =>

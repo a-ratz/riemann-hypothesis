@@ -248,7 +248,7 @@ theorem witness_data_iso : Laws → Laws2 → Laws5 → ∀ (E : Type) [Field E]
   let F := AlgebraicClosure (FractionRing R)
   have hi : Function.Injective (((algebraMap (FractionRing R) F).comp (algebraMap R (FractionRing R))).comp f) :=
     ((algebraMap (FractionRing R) F).injective.comp (IsFractionRing.injective R _)).comp hf
-  letI : Algebra (FractionRing O') F := (IsFractionRing.lift (K := FractionRing O') hi).toAlgebra
+  let : Algebra (FractionRing O') F := (IsFractionRing.lift (K := FractionRing O') hi).toAlgebra
   have hF : ∀ x, algebraMap (FractionRing O') F (algebraMap O' _ x) =
       algebraMap (FractionRing R) F (algebraMap R _ (f x)) := fun x => IsFractionRing.lift_algebraMap hi x
   obtain ⟨hD, h₁, w', h₂, h₃, h₄⟩ := exists_isPullDeg_pre W.he W'.he W.e.toAddEquiv W'.e.toAddEquiv s1 s1' s2 s2'

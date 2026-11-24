@@ -428,7 +428,7 @@ lemma term_ofReal_add_mul_I {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
   rcases eq_or_ne n 0 with rfl | hn
   · simp [LSeries.term_def]
   · have hn' : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hn
-    rw [LSeries.term_def, if_neg hn, Complex.cpow_add _ _ hn']
+    rw [LSeries.term_def, ite_eq_right hn, Complex.cpow_add _ _ hn']
     push_cast
     rw [Complex.ofReal_cpow (Nat.cast_nonneg n)]
     push_cast
@@ -440,7 +440,7 @@ lemma term_ofReal {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (σ : ℝ
     term (↗χ * ↗Λ) (σ : ℂ) n = ((Λ n / (n : ℝ) ^ σ : ℝ) : ℂ) * χ n := by
   rcases eq_or_ne n 0 with rfl | hn
   · simp [LSeries.term_def]
-  · rw [LSeries.term_def, if_neg hn]
+  · rw [LSeries.term_def, ite_eq_right hn]
     push_cast
     rw [Complex.ofReal_cpow (Nat.cast_nonneg n)]
     push_cast

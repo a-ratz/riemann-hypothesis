@@ -58,7 +58,7 @@ private theorem flow {S : Type*} [NormedAddCommGroup S] [NormedSpace ℝ S] [Com
     have he := (hasDerivAt_exp_smul_const (𝕂 := ℝ) D (1 - t)).comp_const_sub 1 t
     have h := he.clm_apply (hc t)
     convert h using 1
-    simp [ContinuousLinearMap.mul_apply]
+    simp [mul_apply_eq_comp]
   have hconst := is_const_of_deriv_eq_zero
     (fun u => (hψ u).differentiableAt) (fun u => (hψ u).deriv) 1 0
   simpa using hconst
@@ -73,7 +73,7 @@ private theorem exp_mem {S : Type*} [NormedAddCommGroup S] [NormedSpace ℝ S] [
     induction m with
     | zero => simpa using hx
     | succ m ih =>
-      rw [pow_succ', ContinuousLinearMap.mul_apply]
+      rw [pow_succ', mul_apply_eq_comp]
       exact hD _ ih
   refine hM.mem_of_tendsto hs2 (Filter.Eventually.of_forall fun s => ?_)
   refine M.sum_mem fun m _ => ?_
@@ -110,8 +110,8 @@ theorem UpperTheory.V.Z.GSp4Splitting.lieStab :
   intro n V _ _ σ Kf hder N hN k x hx
   obtain ⟨X, hX, hXk⟩ := (UpperTheory.RealTr.skewExp n).2 k
   obtain ⟨S, hfd, hxS, hσS, hKS, hd⟩ := hder.2 x
-  haveI : FiniteDimensional ℂ S := hfd
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : FiniteDimensional ℂ S := hfd
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
 
   let L : Module.End ℂ V := ∑ a, ∑ b, X a b • Kf a b
   have hLapp : ∀ w, L w = ∑ a, ∑ b, X a b • Kf a b w := by
@@ -146,7 +146,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.lieStab :
     exact hDapp _
   have h1 := flow D c hc
   let M : Submodule ℂ S := N.comap S.subtype
-  have hMc : IsClosed (M : Set S) := Submodule.closed_of_finiteDimensional M
+  have hMc : IsClosed (M : Set S) := Submodule.isClosed_of_finiteDimensional M
   have hc0 : c 0 ∈ M.restrictScalars ℝ := by
     show σ (γ 0) x ∈ N
     have : γ 0 = 1 := curve_zero X hX

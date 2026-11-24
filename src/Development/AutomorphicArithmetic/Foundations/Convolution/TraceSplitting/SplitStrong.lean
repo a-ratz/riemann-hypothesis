@@ -103,7 +103,7 @@ private theorem loc_eq_one {F E : Type} [Field F] [NumberField F] [Field E] [Num
       exact loc_one_of ψ w this.1 this.2 y
   obtain ⟨⟨w, hw⟩⟩ := GroundTheory.Global.nonempty_placesOver E v
   obtain rfl : GroundTheory.Global.AdeleBaseChange.below F w = v := (GroundTheory.Global.AdeleBaseChange.below_eq_iff w v).2 hw
-  haveI := hw
+  have := hw
   have hsurj := hs ⟨w, hw⟩
   obtain ⟨y, hn⟩ := norm_surj (A := (GroundTheory.Global.AdeleBaseChange.below F w).adicCompletion F) (B := w.adicCompletion E) hsurj x
   have h2 := GroundTheory.Global.ideleNorm_finiteEmbedding (K := F) w y

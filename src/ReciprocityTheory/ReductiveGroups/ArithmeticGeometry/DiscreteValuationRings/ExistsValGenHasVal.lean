@@ -112,7 +112,7 @@ theorem val_genHasVal {X : Scheme.{0}} {L : LB X} {Ix : Type} [Fintype Ix]
   erw [he, ← gs_unit _ _ _ hz, ← gs_unit _ _ _ hz', hte, gs_mul _ _ _ hz]
   congr 1
   · exact gs_res r z le_top hz _
-  · simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  · simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
     erw [gs_res r z _ hz, gs_pull r (jK V) z _ hz']
 
 theorem exists_val_genHasVal {X : Scheme.{0}} {L : LB X} {Ix : Type} [Fintype Ix]

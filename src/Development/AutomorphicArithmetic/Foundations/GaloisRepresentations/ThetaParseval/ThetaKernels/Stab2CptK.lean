@@ -65,7 +65,7 @@ theorem stab2Cpt_k : _root_.GlobalTheory.ThK.Dbl.Stab2Cpt_k := by
   choose R hR using fun w => cartan_bound2 (hc w)
   have hD : IsCompact (Φ '' Set.univ.pi fun w => Metric.closedBall (0 : ℂ) (R w)) :=
     (isCompact_univ_pi fun w => isCompact_closedBall _ _).image hΦ
-  have hm : Continuous fun g : G2 σ Y => mat2 g := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous fun g : G2 σ Y => mat2 g := Units.continuous_val.comp continuous_subtypeVal
   have hp : ∀ w, Continuous (piInf (B.emb w)) := fun w => GlobalTheory.Grow.continuous_infEmb_compInf F w (B.emb w)
   have cc : Continuous (cA (F := F) σ) := IsModuleTopology.continuous_of_linearMap (cA (F := F) σ).toLinearMap
   have cl := (isCompact_latHat Y hL.fg).isClosed
@@ -96,7 +96,7 @@ theorem stab2Cpt_k : _root_.GlobalTheory.ThK.Dbl.Stab2Cpt_k := by
     (isCompact_univ_pi fun i => isCompact_univ_pi fun j => hD.add (hC _ _)) fun k hk => ⟨key k hk, key _ (inv_mem hk)⟩
   rw [show (K : Set (G2 σ Y)) = {k | _} from Set.ext hK]
   simp only [Set.forall_mem_insert, Set.mem_singleton_iff, forall_eq]
-  simp only [Set.setOf_and, Set.setOf_forall]
+  simp only [Set.ofPred_and, Set.ofPred_forall]
   have v : ∀ {f : G2 σ Y → G2 σ Y}, Continuous f → ∀ z, IsClosed ({k | (mat2 (f k) *ᵥ z) ∘ Sum.inl ∈ latHat Y} ∩
       {k | (mat2 (f k) *ᵥ z) ∘ Sum.inr ∈ latHat Y}) := fun hf z =>
     have t := (hm.comp hf).matrix_mulVec (continuous_const (y := z))

@@ -71,7 +71,7 @@ theorem _root_.GlobalTheory.exists_strict_measurable_fundamental_set_of_discrete
         exact Subtype.ext (hΓU x x.2 (htU hx))
       · rintro rfl
         exact h1t
-    haveI : DiscreteTopology Γ := discreteTopology_of_isOpen_singleton_one hopen
+    have : DiscreteTopology Γ := discreteTopology_of_isOpen_singleton_one hopen
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   · obtain ⟨V, hVo, hV1, hVU⟩ := exists_open_nhds_one_split hU
     let C : G → Set G := fun x => {y | y * x⁻¹ ∈ V ∧ x * y⁻¹ ∈ V}
@@ -113,7 +113,7 @@ theorem _root_.GlobalTheory.exists_strict_measurable_fundamental_set_of_discrete
       have hmemF : ∀ y, y ∈ (⋃ n : ℕ, W n \ ⋃ m : Fin n, S m) ↔
           ∃ n, y ∈ W n ∧ ∀ m < n, y ∉ S m := by
         intro y
-        simp only [Set.mem_iUnion, Set.mem_diff, not_exists]
+        simp only [Set.mem_iUnion, Set.mem_sdiff, not_exists]
         constructor
         · rintro ⟨n, hy, hm⟩
           exact ⟨n, hy, fun m hm' => hm ⟨m, hm'⟩⟩

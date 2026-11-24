@@ -115,7 +115,7 @@ private theorem step [Module.Finite Q A] {G : Type} (u : G → A) (hu : ∀ g, I
     (hT : ∀ b ∈ F, (∀ g, s g b - b ∈ F') → b ∈ F') (x : A ⊗[Q] B)
     (hx : ∀ g, AlgebraTensorModule.map (u g • (LinearMap.id : A →ₗ[A] A)) (s g) x = x)
     (hF : ∀ lam : A →ₗ[Q] Q, ctr lam x ∈ F) (lam : A →ₗ[Q] Q) : ctr lam x ∈ F' := by
-  haveI : IsNoetherianRing A := isNoetherian_of_tower Q inferInstance
+  have : IsNoetherianRing A := isNoetherian_of_tower Q inferInstance
   obtain ⟨k, hk⟩ := IsNoetherianRing.isNilpotent_nilradical A
   have key : ∀ (j : ℕ) (lam : A →ₗ[Q] Q), (∀ a ∈ nilradical A ^ j, lam a = 0) → ctr lam x ∈ F' := by
     intro j
@@ -230,11 +230,11 @@ theorem UpperTheory.V.Loc.crUnipChar :
   intro l _ G _ _ _ φ hφ A _ _ _ _ _ _ κ hc hκ H hH hcr g hg
   have hφ' : IsOpenEmbedding (φ.comp H.subtype) := hφ.comp hH.isOpenEmbedding_subtypeVal
   obtain ⟨K, -, -, -, -, hK, hi, -⟩ := openField (φ.comp H.subtype) hφ'
-  haveI := K.2
+  have := K.2
   obtain ⟨f0, f1⟩ := fil (φ.comp H.subtype) K hK (κ.comp H.subtype) fun h => hκ h
   have hca : ReciprocityTheory.Gal.ContAction (chRep (κ.comp H.subtype)) := by
     unfold ReciprocityTheory.Gal.ContAction
-    exact ((hc.comp continuous_subtype_val).comp continuous_fst).mul continuous_snd
+    exact ((hc.comp continuous_subtypeVal).comp continuous_fst).mul continuous_snd
   have hw := crWt0 (φ.comp H.subtype) hφ' (chRep (κ.comp H.subtype)) hca hcr f0 f1
   obtain ⟨n, hn, -, h, hh⟩ := (φ.comp H.subtype).range.exists_pow_mem_of_index_ne_zero
     (by rw [hi]; exact finrank_pos.ne') (φ g)
@@ -354,9 +354,9 @@ private theorem cr_transport {l : ℕ} [Fact l.Prime] {G G' A V : Type} [Group G
 theorem UpperTheory.V.Loc.triDiag :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing O E] (B : Type) [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra O B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] O B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower O E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (u : GQ l →* GG (m := 3) (R := B)), Dat3.InDtri D (π : B →+* E) u → ∀ s ∈ Iq l, ∀ a, (u s).mat a a = algebraMap O B (UpperTheory.V.UnitaryThreeInertia.psi D.Ψ a s) := by
   intro l _ O _ _ _ _ _ _ _ D E _ _ _ _ _ _ _ _ B _ _ _ _ _ _ _ _ _ _ π hπ u hu s hs a
-  letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-  haveI : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
+  let : TopologicalSpace B := moduleTopology ℚ_[l] B
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  have : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
   have hG : IsOpen (D.η.ker : Set (GQ l)) := by
     have : D.η.ker = GK D.Kv := Subgroup.ext fun g => D.η_ker g
     rw [this]
@@ -364,7 +364,7 @@ theorem UpperTheory.V.Loc.triDiag :
     exact IntermediateField.fixingSubgroup_isOpen D.Kv.1
   have hφ : IsOpenEmbedding D.η.ker.subtype := hG.isOpenEmbedding_subtypeVal
   let H : Subgroup ↥D.η.ker := D.HL.subgroupOf D.η.ker
-  have hH : IsOpen (H : Set ↥D.η.ker) := (hG.inter D.τ_open).preimage continuous_subtype_val
+  have hH : IsOpen (H : Set ↥D.η.ker) := (hG.inter D.τ_open).preimage continuous_subtypeVal
   have hφH : IsOpenEmbedding (D.η.ker.subtype.comp H.subtype) := hφ.comp hH.isOpenEmbedding_subtypeVal
   let r : ↥D.η.ker →* GL (Fin 3) B := glPart D.η u hu.mult
   have hr : ∀ g a b, (r g : Matrix (Fin 3) (Fin 3) B) a b = (u g).mat a b := fun _ _ _ => rfl
@@ -385,7 +385,7 @@ theorem UpperTheory.V.Loc.triDiag :
   let κ : Fin 3 → ↥D.η.ker →* Bˣ := fun a => (k a).toHomUnits
   have hκ : ∀ a g, (κ a g : B) = (u g).mat a a := fun _ _ => rfl
   have hc : ∀ a b, Continuous fun g => (r g : Matrix (Fin 3) (Fin 3) B) a b := fun a b =>
-    Continuous.comp (hu.cont a b) continuous_subtype_val
+    Continuous.comp (hu.cont a b) continuous_subtypeVal
   have hcκ : Continuous fun g => (κ a g : B) := hc a a
   let σ : B →ₐ[ℚ_[l]] B := (IsScalarTower.toAlgHom ℚ_[l] E B).comp (π.restrictScalars ℚ_[l])
   have hσ : Continuous σ := IsModuleTopology.continuous_of_linearMap σ.toLinearMap
@@ -417,9 +417,9 @@ theorem UpperTheory.V.Loc.triDiag :
     rfl
   have c2 : IsCr (D.η.ker.subtype.comp H.subtype) (chRep ((κ a).comp H.subtype)) :=
     cr_diag _ hφH (r.comp H.subtype) (fun a => (κ a).comp H.subtype) (fun g => ⟨hlow g, fun _ => rfl⟩)
-      (fun a b => (hc a b).comp continuous_subtype_val) c1 a
+      (fun a b => (hc a b).comp continuous_subtypeVal) c1 a
   have c3 : IsCr (D.η.ker.subtype.comp H.subtype) (chRep (ψ.comp H.subtype)) := by
-    refine crUnr _ hφH _ (cont_ch _ (hcψ.comp continuous_subtype_val)) (D.e * wt1 a) fun g hg x => ?_
+    refine crUnr _ hφH _ (cont_ch _ (hcψ.comp continuous_subtypeVal)) (D.e * wt1 a) fun g hg x => ?_
     have hτ : D.τ g = 1 := g.2.2
     have h1 : Units.map (algebraMap O B : O →* B) (cycA l l O g) = cycA l l B g := by
       apply Units.ext
@@ -430,8 +430,8 @@ theorem UpperTheory.V.Loc.triDiag :
     rw [h2]
     rfl
   have c4 : IsCr (D.η.ker.subtype.comp H.subtype) (chRep ((κ a * ψ⁻¹).comp H.subtype)) :=
-    cr_div _ hφH _ _ _ (hcψ.comp continuous_subtype_val) (hcκ.comp continuous_subtype_val)
-      (hcq.comp continuous_subtype_val) (fun g => by simp) c3 c2
+    cr_div _ hφH _ _ _ (hcψ.comp continuous_subtypeVal) (hcκ.comp continuous_subtypeVal)
+      (hcq.comp continuous_subtypeVal) (fun g => by simp) c3 c2
   have key := crUnipChar D.η.ker.subtype hφ (κ a * ψ⁻¹) hcq (fun g => hπ _ (by
       have h1 : ((κ a * ψ⁻¹) g : B) - 1 = ((κ a g : B) - ψ g) * (((ψ g)⁻¹ : Bˣ) : B) := by
         simp [sub_mul]

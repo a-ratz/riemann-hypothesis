@@ -100,19 +100,19 @@ theorem UpperTheory.V.X.soFin :
     have := (Fact.out : l.Prime).two_le
     rw [hN]
     split_ifs with h <;> omega
-  haveI : NeZero N := ⟨by omega⟩
-  haveI : Fact (1 < N) := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
+  have : Fact (1 < N) := ⟨by omega⟩
   obtain ⟨L, hfin, hab, hgal, hmem⟩ := exists_ab k Ω (ψ.prod (Chr.cls k Ω N)) (by
     rw [MonoidHom.ker_prod, Subgroup.coe_inf]
     exact hψ.inter (Chr.clsFacts k Ω N).1)
-  haveI := hfin
-  haveI := hab
-  haveI : NumberField L := NumberField.of_module_finite k L
-  haveI : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := k) L
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed k, inferInstance⟩
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap k Ω).injective).1 inferInstance
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have := hfin
+  have := hab
+  have : NumberField L := NumberField.of_module_finite k L
+  have : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := k) L
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed k, inferInstance⟩
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap k Ω).injective).1 inferInstance
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   have hζL : ζ ∈ L := by
     apply hmem
     intro g hg
@@ -120,7 +120,7 @@ theorem UpperTheory.V.X.soFin :
     rw [Chr.cls_spec N g ζ hζ.pow_eq_one, h1, Units.val_one, ZMod.val_one, pow_one]
   have hζ' : IsPrimitiveRoot (⟨ζ, hζL⟩ : L) N :=
     IsPrimitiveRoot.of_map_of_injective (f := algebraMap L Ω) hζ (algebraMap L Ω).injective
-  haveI htc : IsTotallyComplex L := NumberField.nrRealPlaces_eq_zero_iff.1
+  have htc : IsTotallyComplex L := NumberField.nrRealPlaces_eq_zero_iff.1
     (NumberField.InfinitePlace.IsPrimitiveRoot.nrRealPlaces_eq_zero_of_two_lt hN2 hζ')
   have hmu : HasMuQ l L := ⟨⟨ζ, hζL⟩, hζ'⟩
   obtain ⟨D⟩ := Formalism.GaloisCohomology.ldata_nonempty (F := L) (Ω := Ω) l
@@ -147,4 +147,4 @@ theorem UpperTheory.V.X.soFin :
       ((Chr.h0Nu k Ω l O e ψ ψ.ker).2 le_rfl))
     exact WithTop.mul_ne_top (KStar.TotallyRealRoots.nu_ne_top hopen (by omega)) heO
   refine ne_top_of_le_ne_top ?_ hup
-  exact WithTop.add_ne_top.2 ⟨WithTop.mul_ne_top hsha heO, WithTop.mul_ne_top (ENat.coe_ne_top _) hh0⟩
+  exact WithTop.add_ne_top.2 ⟨WithTop.mul_ne_top hsha heO, WithTop.mul_ne_top (ENat.natCast_ne_top _) hh0⟩

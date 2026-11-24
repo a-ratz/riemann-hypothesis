@@ -69,7 +69,7 @@ lemma mean_smul {α : Type*} [MeasurableSpace α] (μ : Measure α) (c : ENNReal
     (((c • μ) s).toReal : ℂ)⁻¹ * ∫ y in s, F y ∂(c • μ) = ((μ s).toReal : ℂ)⁻¹ * ∫ y in s, F y ∂μ := by
   have hc : c.toReal ≠ 0 := ENNReal.toReal_ne_zero.mpr ⟨hc0, hct⟩
   have hc' : ((c.toReal : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hc
-  rw [Measure.restrict_smul, integral_smul_measure, Measure.smul_apply, smul_eq_mul,
+  rw [Measure.restrict_smul, integral_smul_measure, smul_apply, smul_eq_mul,
     ENNReal.toReal_mul, Complex.ofReal_mul, mul_inv, Complex.real_smul]
   calc _ = ((μ s).toReal : ℂ)⁻¹ * (∫ y in s, F y ∂μ) *
         (((c.toReal : ℝ) : ℂ)⁻¹ * ((c.toReal : ℝ) : ℂ)) := by ring
@@ -79,7 +79,7 @@ lemma mean_haar {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDi
     [MeasurableSpace G] [BorelSpace G] (μ ν : Measure G) [μ.IsAddHaarMeasure] [ν.IsAddHaarMeasure]
     (s : Set G) (F : G → ℂ) :
     ((μ s).toReal : ℂ)⁻¹ * ∫ y in s, F y ∂μ = ((ν s).toReal : ℂ)⁻¹ * ∫ y in s, F y ∂ν := by
-  haveI : ProperSpace G := FiniteDimensional.proper_real G
+  have : ProperSpace G := FiniteDimensional.proper_real G
   have h := Measure.isAddLeftInvariant_eq_smul ν μ
   have hpos := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure ν μ
   rw [h, ENNReal.smul_def]
@@ -220,9 +220,9 @@ theorem fj_eq_fourCoeff (P : Frame X.Ψ r → ℂ) (hP : X.IsSec la P) {ξ : Fin
     (Set.countable_range (fun c : Fin n → ℤ => ∑ j, c j • ω j)).mono fun p hp => by
       rw [hper] at hp
       exact (Submodule.mem_span_range_iff_exists_fun ℤ).mp hp
-  haveI : Countable (X.periods la) := hcount.to_subtype
+  have : Countable (X.periods la) := hcount.to_subtype
   unfold Data.fj
-  rw [if_pos hcond, dite_eq_left hex]
+  rw [ite_eq_left hcond, dite_eq_left hex]
   obtain ⟨-, hD, -, -⟩ := hex.choose_spec
   show ((volume hex.choose).toReal : ℂ)⁻¹ * ∫ s in hex.choose, fjI X ξ ν P x s = _
 
@@ -230,7 +230,7 @@ theorem fj_eq_fourCoeff (P : Frame X.Ψ r → ℂ) (hP : X.IsSec la P) {ξ : Fin
     (fun g s => fjI_periodic X la P hP hξ.1 hξ.2.1 ν hcond hx g g.2 s)]
 
   set T := ω.equivFunL.symm with hTdef
-  haveI : (Measure.map T volume).IsAddHaarMeasure := T.isAddHaarMeasure_map volume
+  have : (Measure.map T volume).IsAddHaarMeasure := T.isAddHaarMeasure_map volume
   rw [mean_haar volume (Measure.map T volume) (ZSpan.fundamentalDomain ω) (fjI X ξ ν P x)]
   have hmp : MeasurePreserving T volume (Measure.map T volume) :=
     T.continuous.measurable.measurePreserving volume

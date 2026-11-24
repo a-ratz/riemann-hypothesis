@@ -200,7 +200,7 @@ theorem sizes : ∀ (D : D7) (i : Fin D.R.m) (b : ℝ), Sizes D i b → (5.5 : �
   have he6 : Real.exp (5.5 : ℝ) ≤ 729 := by
     have h1 : Real.exp (5.5 : ℝ) ≤ Real.exp 6 := Real.exp_le_exp.mpr (by norm_num)
     have h2 : Real.exp 6 = Real.exp 1 ^ 6 := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       norm_num
     have h3 : Real.exp 1 ^ 6 ≤ (3 : ℝ) ^ 6 :=
       pow_le_pow_left₀ (Real.exp_pos 1).le (by linarith [Real.exp_one_lt_d9]) 6

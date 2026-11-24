@@ -118,7 +118,7 @@ theorem exists_of_family {p : ℕ} {k : Type} [Field k] (G : PDivGroup p k)
     (h : ∀ n : ℕ, Module.finrank k (B n) = p ^ (n * h₀)) :
     ∃ (K : PDivGroup p k) (i : K ⟶ G), ∀ n : ℕ, Function.Surjective (i.app n) ∧
       RingHom.ker (i.app n) = kerIdeal (u.app n) := by
-  haveI : ∀ n, IsCocomm k (B n) := fun n => isCocomm_of_surjective (π n) (hπ n)
+  have : ∀ n, IsCocomm k (B n) := fun n => isCocomm_of_surjective (π n) (hπ n)
   have hle : ∀ n, RingHom.ker (π (n + 1)) ≤ RingHom.ker ((π n).comp (G.res n)) := fun n a ha => by
     have : G.res n a ∈ RingHom.ker (π n) := by
       rw [hk, ← map_res_kerIdeal]
@@ -169,14 +169,14 @@ theorem _root_.GlobalTheory.PDivGroup.KerGrp.exists_kernel (p : ℕ) [Fact p.Pri
   classical
   obtain ⟨I, hIdef⟩ : ∃ I : ∀ n, Ideal (G.A n),
       ∀ n, I n = _root_.GlobalTheory.PDiv.kerIdeal (u.app n) := ⟨_, fun n => rfl⟩
-  haveI hH : ∀ n, (I n).IsHopfIdeal k := fun n => by
+  have hH : ∀ n, (I n).IsHopfIdeal k := fun n => by
     rw [hIdef]
     exact _root_.GlobalTheory.T.isHopfIdeal_kerIdeal_of_bialgHom' k _ _ (u.app n)
   have hq : ∀ n, Function.Surjective (Bialgebra.Quotient.mkBialgHom (R := k) (I n)) := by
     intro n x
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact ⟨a, by simp⟩
-  haveI hcoc : ∀ n, IsCocomm k (G.A n ⧸ I n) := fun n =>
+  have hcoc : ∀ n, IsCocomm k (G.A n ⧸ I n) := fun n =>
     _root_.GlobalTheory.PDivGroup.KerGrp.isCocomm_of_surjective _ (hq n)
   have hmapI : ∀ n, Ideal.map (G.res n : G.A (n + 1) →ₐ[k]
       G.A n) (I (n + 1)) = I n := by

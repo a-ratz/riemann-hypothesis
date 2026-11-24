@@ -143,8 +143,8 @@ end Abstract
 open Formalism.BasicNotions Formalism.MainNotions NumberField
 
 theorem exists_skew (D : D7) : letI := D.host.cmStar; ∃ s : D.host.E, star s = -s ∧ s ≠ 0 := by
-  letI := D.host.cmStar
-  haveI := D.host.isCMField_hostE
+  let := D.host.cmStar
+  have := D.host.isCMField_hostE
   by_contra hno
   push Not at hno
   apply NumberField.IsCMField.complexConj_ne_one D.host.E
@@ -157,7 +157,7 @@ theorem split_host (D : D7) {n : ℕ} :
     ∀ γ : Matrix.unitaryGroup (Fin n) D.host.E,
     ∃ γ₁ γ₂ : Matrix.unitaryGroup (Fin n) D.host.E, γ = γ₁ * γ₂ ∧
       (1 - (γ₁ : Matrix (Fin n) (Fin n) D.host.E)).det ≠ 0 ∧ (1 - (γ₂ : Matrix (Fin n) (Fin n) D.host.E)).det ≠ 0 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ
   obtain ⟨s, hs, hs0⟩ := exists_skew D
   exact split_unitary s hs hs0 γ

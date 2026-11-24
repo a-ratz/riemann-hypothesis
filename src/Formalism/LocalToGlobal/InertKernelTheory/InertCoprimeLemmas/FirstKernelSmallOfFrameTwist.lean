@@ -579,7 +579,7 @@ theorem charZero_WW : CharZero (WW p) := by
     have h2 : p ∣ q := (CharP.cast_eq_zero_iff (kb p) p q).mp h1
     have h3 : p = q := (Nat.prime_dvd_prime_iff_eq (Fact.out : p.Prime) h).mp h2
     have h4 : ((p : ℕ) : WW p) = ((q : ℕ) : WW p) := congrArg (Nat.cast) h3
-    exact WittVector.p_nonzero p (kb p) (h4.trans h0)
+    exact WittVector.p_ne_zero p (kb p) (h4.trans h0)
   · subst h
     exact CharP.charP_to_charZero (WW p)
 
@@ -1377,7 +1377,7 @@ theorem taylor_const_mul (D : D7) {N N' : ℕ} (s : ℂ) (hs : s ≠ 0) (G : Tay
   unfold TaylorLogMetric.taylor
   have h := iteratedFDeriv_const_smul' s hs G (Multiset.card α.toMultiset)
   simp only [smul_eq_mul] at h
-  rw [h, Pi.smul_apply, ContinuousMultilinearMap.smul_apply, smul_eq_mul, mul_div_assoc]
+  rw [h, Pi.smul_apply, smul_apply, smul_eq_mul, mul_div_assoc]
 
 theorem lamC_mul {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) {s : ℂ} (hs : s ∈ TaylorLogMetric.Qbar) (hs0 : s ≠ 0) (t : ℂ) :
     TaylorLogMetric.lamC lam (s * t) = TaylorLogMetric.lamC lam s * TaylorLogMetric.lamC lam t := by
@@ -1866,16 +1866,16 @@ theorem first_kernel_small_of_frame_twist (D : D7) (h5 : 5 ≤ p) (X : Sys p) [I
     obtain ⟨S₀, hp, hS⟩ := hXi
     refine ⟨S₀, hp, fun j La La' y => ?_⟩
     by_cases h : j < X.mm ∧ La ∈ repOf X.Lv hfin j ∧ (X.Pj (j + 1)).IsLatTup La'.2
-    · simp only [Ξ₁, if_pos h]
+    · simp only [Ξ₁, ite_eq_left h]
       exact hS j h.1 La h.2.1 La' h.2.2 y
-    · simp only [Ξ₁, if_neg h]
+    · simp only [Ξ₁, ite_eq_right h]
       exact IntOff.zero
   have hK := first_kernel_small_of_frame D h5 X E hfin g hLT pos fd cc δ B χ SS cl Ξ₁ muT ρ hAt hIn hM hcc hδ hχ hLam
     hAdm hCl hXi1 hSc hρ hMI hL
   intro j hj L0 h0 La' hLa' φ
   have hEq : thFOf X pos (FrecG E.toCEmb pos fd B χ g.lam SS cl Ξ₁ muT (ltC g hLT)) j L0 La' =
       thFOf X pos (FrecG E.toCEmb pos fd B χ g.lam SS cl Ξ₀ muT (ltC g hLT)) j L0 La' := by
-    simp only [thFOf, FrecG, Ξ₁, if_pos (And.intro hj (And.intro h0 hLa'))]
+    simp only [thFOf, FrecG, Ξ₁, ite_eq_left (And.intro hj (And.intro h0 hLa'))]
   have := hK j hj L0 h0 La' hLa' φ
   rwa [hEq] at this
 

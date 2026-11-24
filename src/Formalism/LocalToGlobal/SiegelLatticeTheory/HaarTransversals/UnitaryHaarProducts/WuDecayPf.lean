@@ -88,7 +88,7 @@ theorem opn_nonneg {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ opn A := n
 
 theorem continuous_uMat {n : ℕ} {ε : Fin n → Bool} :
     Continuous (fun g : Formalism.REAL.UJ ε => uMat g) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem weight_exponent_nonneg : 0 ≤ N1 X := by
   unfold N1; positivity
@@ -129,7 +129,7 @@ theorem isClosed_inS {n r : ℕ} (e : Fin r → Fin n → ℂ) (z : Fin n → �
     IsClosed {M : Matrix (Fin n) (Fin n) ℂ | InS e z M} := by
   have hc : ∀ (x : Fin n → ℂ) (S : Submodule ℂ (Fin n → ℂ)),
       IsClosed {M : Matrix (Fin n) (Fin n) ℂ | (M - 1) *ᵥ x ∈ S} := fun x S =>
-    (Submodule.closed_of_finiteDimensional S).preimage
+    (Submodule.isClosed_of_finiteDimensional S).preimage
       ((continuous_id.sub continuous_const).matrix_mulVec continuous_const)
   unfold InS
   rw [Set.ofPred_and, Set.ofPred_forall]
@@ -150,10 +150,10 @@ theorem muSOn (u : D.what₂.Word) : MuSOn X u := by
       Set.range (fun c => crdOf X.B.I X.ιE X.bas (X.fY c)) ∪ {crdOf X.B.I X.ιE X.bas (X.zu u)}) :=
     ae_iff.2 (X.muH_haar u).2.2.1
   have hN : ∀ᵐ p ∂((X.muN u).prod (X.muH u)), p.1 ∈ X.NinfU u :=
-    Measure.QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst hN0
+    QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst hN0
   have hH : ∀ᵐ p ∂((X.muN u).prod (X.muH u)), p.2 ∈ Hset X.B.I (Set.range (fun c => crdOf X.B.I X.ιE X.bas (X.eX c)) ∪
       Set.range (fun c => crdOf X.B.I X.ιE X.bas (X.fY c)) ∪ {crdOf X.B.I X.ιE X.bas (X.zu u)}) :=
-    Measure.QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_snd hH0
+    QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_snd hH0
   unfold MuSOn muS
   refine (ae_map_iff measurable_mul.aemeasurable ?_).2 ?_
   · exact (isClosed_sinfU X u).measurableSet

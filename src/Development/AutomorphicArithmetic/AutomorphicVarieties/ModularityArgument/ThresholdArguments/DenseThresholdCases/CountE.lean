@@ -218,7 +218,7 @@ theorem UpperTheory.V.Z.Desc.V0.normS :
       exact Or.inr ⟨q, rfl⟩
     rwa [hV] at h)⟩
   have hlev : ∀ K, (hset Q τ₀).lev K = (hset Q τ₀).UQ := fun K => by
-    haveI : IsEmpty (hset Q τ₀).Q := hq
+    have : IsEmpty (hset Q τ₀).Q := hq
     unfold HSet.lev
     rw [iSup_of_empty]
     exact sup_bot_eq _
@@ -680,7 +680,7 @@ private theorem dg_mem_Uo (p : parab k (points (Fin n))) (hp : (p : GL (Fin n) k
   rw [map_inv₀] at a2
   have hnt : Nontrivial (ValueGroupWithZero k) := @GroupWithZero.toNontrivial _ inferInstance
   have hne : valuation k ((dg p i : kˣ) : k) ≠ 0 := by simp
-  exact le_antisymm a1 ((inv_le_one₀ (zero_lt_iff.2 hne)).1 a2)
+  exact le_antisymm a1 ((inv_le_one₀ (pos_iff_ne_zero.2 hne)).1 a2)
 
 open GlobalTheory.SmGL.PrinProd in
 private theorem sB_apply (χ : Fin n → kˣ →* ℂˣ) (p : parab k (points (Fin n))) (v : ℂ) :
@@ -764,7 +764,7 @@ private theorem exists_avg {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V
       (∀ v, (∀ h ∈ H, R h v = v) → ∀ k ∈ K, R k (A v) = A v) ∧
       ∀ M : Submodule ℂ V, (∀ x, ∀ v ∈ M, R x v ∈ M) → ∀ v ∈ M, A v ∈ M := by
   classical
-  letI := Fintype.ofFinite (K ⧸ H.subgroupOf K)
+  let := Fintype.ofFinite (K ⧸ H.subgroupOf K)
   have hc : (Fintype.card (K ⧸ H.subgroupOf K) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   refine ⟨(Fintype.card (K ⧸ H.subgroupOf K) : ℂ)⁻¹ • ∑ q : K ⧸ H.subgroupOf K, R ((q.out : K) : G), ?_, ?_, ?_⟩
   · intro v hv
@@ -813,12 +813,12 @@ private theorem finite_quot {E : Type} [Field E] [NumberField E] [IsCMField E] {
     Finite (globLev S K' ⧸ U.subgroupOf (globLev S K')) := by
   have hK : globLev S K' ≤ globLev S (KL n) := fun k hk =>
     (mem_globLev S _ k).2 fun w hw => hle w ((mem_globLev S _ k).1 hk w hw)
-  haveI : CompactSpace (globLev S (KL n)) := isCompact_iff_compactSpace.1 (is_compact_integral_level hS)
+  have : CompactSpace (globLev S (KL n)) := isCompact_iff_compactSpace.1 (is_compact_integral_level hS)
   have h0 : Finite (globLev S (KL n) ⧸ U.subgroupOf (globLev S (KL n))) :=
-    Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtype_val)
+    Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtypeVal)
   have h1 : U.relIndex (globLev S (KL n)) ≠ 0 := Subgroup.index_ne_zero_of_finite
   have h2 : U.relIndex (globLev S K') ≠ 0 := mt (Subgroup.relIndex_eq_zero_of_le_right hK) h1
-  haveI : (U.subgroupOf (globLev S K')).FiniteIndex := ⟨h2⟩
+  have : (U.subgroupOf (globLev S K')).FiniteIndex := ⟨h2⟩
   exact Subgroup.finite_quotient_of_finiteIndex
 
 private noncomputable def stabG {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (R : Representation ℂ G V) (v : V) : Subgroup G :=
@@ -945,7 +945,7 @@ theorem UpperTheory.V.Z.J.D.unitEv :
   have hi1 : IsIntegral ℤ_[l] (y (a0 - algebraMap c.O A b)) :=
     (UpperTheory.V.Hi.Up.intIff _).2 hm.le
   have hbi : IsIntegral ℤ_[l] b := by
-    haveI := c.fin
+    have := c.fin
     exact IsIntegral.of_finite ℤ_[l] b
   have hi2 : IsIntegral ℤ_[l] (y (algebraMap c.O A b)) := by
     rw [AlgHom.commutes]
@@ -1243,8 +1243,8 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem ce_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
-  haveI : PerfectRing (ResidueField O) l := inferInstance
+  have : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
+  have : PerfectRing (ResidueField O) l := inferInstance
   let j : ResidueField O →+* Perfection (O ⧸ maximalIdeal O) l :=
     Perfection.lift l (ResidueField O) (O ⧸ maximalIdeal O) (RingHom.id (ResidueField O))
   have hj : ∀ x, Perfection.coeff (O ⧸ maximalIdeal O) l 0 (j x) = x := fun x => by
@@ -1255,8 +1255,8 @@ private theorem ce_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Is
 private theorem ce_isTeich {l : ℕ} [hl : Fact l.Prime] {F : W.GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t := by
   obtain ⟨hc, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm
@@ -1349,7 +1349,7 @@ private theorem ce_cnt {M J : Type} [AddCommGroup M] [Module ℂ M] [Fintype J] 
     (Module.finrank ℂ ↥(Z ⊓ E) : Cardinal) = k * b := by
   classical
   have h6 : ∀ i, (Module.finrank ℂ ↥(Y i ⊓ Z ⊓ E) : Cardinal) = if P i then b else 0 := fun i => by
-    haveI : FiniteDimensional ℂ ↥(Y i ⊓ Z ⊓ E) := Submodule.finiteDimensional_of_le (inf_le_left.trans inf_le_right)
+    have : FiniteDimensional ℂ ↥(Y i ⊓ Z ⊓ E) := Submodule.finiteDimensional_of_le (inf_le_left.trans inf_le_right)
     rw [Module.finrank_eq_rank]
     split_ifs with h
     · rw [h2 i h, h3 i h, ha1, one_mul]
@@ -1484,7 +1484,7 @@ private theorem datEnd {O A B M : Type} [CommRing O] [CommRing A] [IsDomain A] [
     [AddCommGroup M] [Module A M] [Module.Free A M] [Module.Finite A M] (j : A →ₐ[O] B) (φ : B →+* Module.End A M)
     (hj : ∀ a, φ (j a) = algebraMap A _ a) (J : Ideal B) (hJ : ∀ b, b ∈ J ↔ φ b = 0) (hr : J.IsRadical) :
     ∃ _ : Module B M, (∀ (b : B) (m : M), b • m = φ b m) ∧ UpperTheory.V.J.Dat j J M := by
-  letI : Module B M := Module.compHom M φ
+  let : Module B M := Module.compHom M φ
   have h0 : ∀ (b : B) (m : M), b • m = φ b m := fun _ _ => rfl
   have h1 : Module.annihilator B M = J := by
     ext b
@@ -1641,7 +1641,7 @@ private theorem val_eq {M : Type} [AddCommGroup M] [Module ℂ M] (T : Module.En
   · exact absurd h1 h0
 private theorem chi_map {n : ℕ} {R S G : Type} [CommRing R] [CommRing S] [Group G] (D : W.GDet n R G) (f : R →+* S) (g : G) :
     (D.map f).chi (MonoidAlgebra.single g 1) = (D.chi (MonoidAlgebra.single g 1)).map f := by
-  letI : Algebra R (Polynomial S) := ((algebraMap S (Polynomial S)).comp f).toAlgebra
+  let : Algebra R (Polynomial S) := ((algebraMap S (Polynomial S)).comp f).toAlgebra
   let φ : Polynomial R →ₐ[R] Polynomial S :=
     { Polynomial.mapRingHom f with commutes' := fun b => Polynomial.map_C f }
   refine Eq.trans ?_ (D.nat (Polynomial R) (Polynomial S) φ
@@ -1768,7 +1768,7 @@ theorem spherical_same_of_z_eq : ZEq → _root_.UpperTheory.V.Z.J.D.SphSameAlt :
   have hYB : YOf Q ι τ₀ e ξ σ' ≤ (hset Q τ₀).Big ι ξ := inf_le_left
   rw [hZ L Ω l n c (hset Q τ₀) hAx A θ hWt ι x lam d ξ c0 sp hSp K ev hev]
   refine lat hYB ?_ ?_
-  · haveI : IsEmpty (hset Q τ₀).Q := ⟨fun q => Q.notS q (by
+  · have : IsEmpty (hset Q τ₀).Q := ⟨fun q => Q.notS q (by
       have h : (Q.wq q).under (𝓞 (Lp L)) ∈ V.S' := by
         rw [Q.range]
         exact Or.inr ⟨q, rfl⟩
@@ -1879,7 +1879,7 @@ theorem z_eq_dim_e_of_count_e_res_eq_inv_loc_kir : _root_.UpperTheory.V.Z.Desc.V
     rintro _ ⟨x, d, ξ, c0, sp, ev, hs, hu, hz, hall, rfl⟩
     obtain ⟨e, he⟩ := hs.alg
     obtain ⟨π, σ, C, h1, h2, h3, h4, h5⟩ := ha Q c r m τ₀ hτ d e ξ he A θ x c0 sp hθ hs K ev hu hz hall
-    haveI : FiniteDimensional ℂ (zPart (hset Q τ₀) θ ι x.toRingHom lam ξ K c0 ev) :=
+    have : FiniteDimensional ℂ (zPart (hset Q τ₀) θ ι x.toRingHom lam ξ K c0 ev) :=
       haveI := hs.fin K c0 le_rfl
       Submodule.finiteDimensional_of_le (S₂ := (hset Q τ₀).ClAt θ ι x.toRingHom lam ξ K c0)
         (inf_le_left.trans (iSup_le fun _ => inf_le_left))

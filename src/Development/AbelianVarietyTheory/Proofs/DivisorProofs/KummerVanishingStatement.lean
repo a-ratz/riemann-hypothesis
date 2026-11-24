@@ -235,9 +235,9 @@ theorem kummer_vanishing : B6h1 := by
   intro x
   obtain ⟨Y, f, hfe, hfs, hx⟩ := _root_.GlobalTheory.EtC.classes_die_on_etale_cover (ZMod q) (Spec (CommRingCat.of A)) (tw q 1) 1 one_pos x
   obtain ⟨B, g, h, hg, hhf⟩ := GlobalTheory.T.exists_etaleFaithfullyFlat_refining_etale_surjection (CommRingCat.of A) Y f hfe hfs
-  letI : Algebra A B := g.hom.toAlgebra
-  haveI : Algebra.Etale A B := hg.1
-  haveI : Module.FaithfullyFlat A B := hg.2
+  let : Algebra A B := g.hom.toAlgebra
+  have : Algebra.Etale A B := hg.1
+  have : Module.FaithfullyFlat A B := hg.2
   have hxB : pull (ZMod q) (spMap (algebraMap A B)) (tw q 1) 1 x = 0 := by
     have : spMap (algebraMap A B) = sch.map h ≫ sch.map f := by
       rw [← sch.map_comp, hhf]; rfl
@@ -260,7 +260,7 @@ theorem kummer_vanishing : B6h1 := by
     simp only [AddMonoidHom.add_apply, map_add (f := _), toMul_add, Subgroup.coe_mul, LinearMap.toAddMonoidHom_coe] at h3
     rw [he _ _ _ hqBB hqBBB, he _ _ _ hqBB hqBBB, he _ _ _ hqBB hqBBB] at h3
     have h4 := congrArg Units.val h3
-    simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, AlgHom.coe_toRingHom] at h4
+    simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, AlgHom.coe_toRingHom] at h4
     exact h4
 
   set U := ((Additive.toMul (e _ hqBB u.1) : rootsOfUnity q (B ⊗[A] B)) : (B ⊗[A] B)ˣ) with hUdef

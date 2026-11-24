@@ -108,7 +108,7 @@ private theorem isSmooth_fibBase (κ : ℕ) : IsSmooth (fibBase (k := k) a c κ)
     Units.continuous_val.comp (continuous_inv.comp (continuous_snd.comp continuous_snd))
   have hx : Continuous fun p : GlobalTheory.IndefiniteRowSideFullHecke.OpenClosedSequences.RankIn k a c {κ} × (GL a k × GL c k) =>
       (p.1 : Matrix c a k) :=
-    continuous_subtype_val.comp continuous_fst
+    continuous_subtypeVal.comp continuous_fst
   have hg : Continuous fun p : GlobalTheory.IndefiniteRowSideFullHecke.OpenClosedSequences.RankIn k a c {κ} × (GL a k × GL c k) =>
       ((p.2.1 : GL a k) : Matrix a a k) :=
     Units.continuous_val.comp (continuous_fst.comp continuous_snd)

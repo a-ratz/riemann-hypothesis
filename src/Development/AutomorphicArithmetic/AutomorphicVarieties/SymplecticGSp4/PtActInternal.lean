@@ -89,15 +89,15 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.ptAct :
   intro Ω _ _ _ l _ c D hD M K _ _ ξ t
   let 𝒜' : ℤ × ℤ → Submodule c.O M.SS := fun j => (M.sPart j).comap M.SS.val.toLinearMap
   have hint : DirectSum.IsInternal 𝒜' := UpperTheory.V.GradeZeroInterpolatingElement.ptAct_internal M.sPart (sInternal D hD M).1
-  letI hgm : SetLike.GradedMonoid 𝒜' :=
+  let hgm : SetLike.GradedMonoid 𝒜' :=
     { one_mem := by
         show ((1 : M.SS) : M.S) ∈ M.sPart 0
         exact SetLike.GradedOne.one_mem
       mul_mem := fun i j a b ha hb => by
         show ((a * b : M.SS) : M.S) ∈ M.sPart (i + j)
         exact SetLike.GradedMul.mul_mem ha hb }
-  letI : DirectSum.Decomposition 𝒜' := hint.chooseDecomposition
-  letI : GradedAlgebra 𝒜' := { hgm, (inferInstance : DirectSum.Decomposition 𝒜') with }
+  let : DirectSum.Decomposition 𝒜' := hint.chooseDecomposition
+  let : GradedAlgebra 𝒜' := { hgm, (inferInstance : DirectSum.Decomposition 𝒜') with }
   have key : ∀ w (f : M.SS), f.1 ∈ M.sPart w →
       act 𝒜' (UpperTheory.V.GradeZeroInterpolatingElement.ptAct_chr t) ξ f = (wv t w : K) * ξ f :=
     fun w f hf => act_of_mem 𝒜' (UpperTheory.V.GradeZeroInterpolatingElement.ptAct_chr t) ξ (j := w) hf

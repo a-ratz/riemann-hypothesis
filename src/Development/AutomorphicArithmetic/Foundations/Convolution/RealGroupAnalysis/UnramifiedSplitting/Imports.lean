@@ -91,8 +91,8 @@ theorem UpperTheory.ConvolutionTheory.R2.H.avg :
         rw [← hmul]
         simp }
   have hSo : IsOpen (S : Set H) := Subgroup.isOpen_of_mem_nhds S hx
-  haveI : Finite (H ⧸ S) := Subgroup.quotient_finite_of_isOpen S hSo
-  haveI : Fintype (H ⧸ S) := Fintype.ofFinite _
+  have : Finite (H ⧸ S) := Subgroup.quotient_finite_of_isOpen S hSo
+  have : Fintype (H ⧸ S) := Fintype.ofFinite _
   have key : ∀ k k' : H, (k : H ⧸ S) = k' → ρ k x = ρ k' x := by
     intro k k' h
     have h2 : ρ (k⁻¹ * k') x = x := QuotientGroup.eq.mp h

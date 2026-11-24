@@ -106,7 +106,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem ae_ring : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
 
 theorem ae_t2 : T2Space (AE F E) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
   exact e.isEmbedding.t2Space
 
@@ -133,11 +133,11 @@ def intF : AddSubgroup (AF F) where
     fun v => by rw [map_neg]; exact neg_mem (ha.2 v)⟩
 
 theorem isCompact_intF : IsCompact (intF F : Set (AF F)) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F
   let s : (∀ v : Pl F, (v.adicCompletionIntegers F : Set (v.adicCompletion F))) → Af F :=
     RestrictedProduct.structureMap (fun v : Pl F => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) cofinite
-  haveI : ∀ v : Pl F, CompactSpace (v.adicCompletionIntegers F : Set (v.adicCompletion F)) := this
+  have : ∀ v : Pl F, CompactSpace (v.adicCompletionIntegers F : Set (v.adicCompletion F)) := this
   have hs : Continuous s := RestrictedProduct.isEmbedding_structureMap.continuous
   have hc : Continuous fun x => pairA F 0 (s x) := continuous_const.prodMk hs
   convert isCompact_range hc using 1
@@ -159,7 +159,7 @@ theorem isCompact_latHat (X : Spc F E n) (hX : X.L.FG) : IsCompact (latHat X : S
   have hsL : ∀ j, s j ∈ X.L := fun j => by
     have : s j ∈ X.L.restrictScalars ℤ := hs ▸ Submodule.subset_span ⟨j, rfl⟩
     exact this
-  haveI : CompactSpace (intF F) := isCompact_iff_compactSpace.1 isCompact_intF
+  have : CompactSpace (intF F) := isCompact_iff_compactSpace.1 isCompact_intF
   let f : (Fin m → intF F) →+ (Fin n → AE F E) :=
     AddMonoidHom.mk' (fun a => ∑ j, (a j : AF F) • incV F (s j)) fun a b => by
       rw [← Finset.sum_add_distrib]
@@ -169,7 +169,7 @@ theorem isCompact_latHat (X : Spc F E n) (hX : X.L.FG) : IsCompact (latHat X : S
   have hf : Continuous f := by
     change Continuous fun a : Fin m → intF F => ∑ j, (a j : AF F) • incV F (s j)
     refine continuous_finsetSum _ fun j _ => ?_
-    have h1 : Continuous fun a : Fin m → intF F => (a j : AF F) := Continuous.subtype_val (continuous_apply j)
+    have h1 : Continuous fun a : Fin m → intF F => (a j : AF F) := Continuous.subtypeVal (continuous_apply j)
     exact h1.fun_smul continuous_const
   have e : latHat X = f.range := by
     refine le_antisymm ((AddSubgroup.closure_le _).2 ?_) ?_
@@ -255,7 +255,7 @@ theorem compFin_smul (v : Pl F) {a : AF F} (ha : a.2 = 0) (z : AE F E) : compFin
 
 theorem exists_section (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w) :
     ∃ Φ : (InfinitePlace F → ℂ) → AE F E, Continuous Φ ∧ ∀ z, z = Φ (fun w => piInf (τ w) z) + eF F • z := by
-  haveI := h.1
+  have := h.1
   have hr : ∀ w : InfinitePlace F, w.IsReal := fun w => IsTotallyReal.isReal w
   let ρ : (InfinitePlace F → ℝ) → AF F := fun t =>
     pairA F (fun w => (InfinitePlace.Completion.isometryEquivRealOfIsReal (hr w)).symm (t w)) 0

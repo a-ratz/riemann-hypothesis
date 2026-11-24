@@ -106,7 +106,7 @@ theorem det_eq_corner_mul {K : Type} [CommRing K] {n : ℕ} (S : Matrix (Fin (n 
   let Wm : Matrix Unit Unit K := fun _ _ => w
   have h2 : S.submatrix e e = Matrix.fromBlocks A B C D := by
     ext (_ | i) (_ | j) <;> rfl
-  letI : Invertible A :=
+  let : Invertible A :=
     ⟨Wm, by ext i j; rw [Matrix.mul_apply]; simp [A, Wm]; rw [mul_comm]; exact hw,
       by ext i j; rw [Matrix.mul_apply]; simp [A, Wm, hw]⟩
   have hA : A.det = S 0 0 := by rw [Matrix.det_unique]
@@ -367,7 +367,7 @@ theorem fibre_block_stages : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       convert this using 1
       ext x
       simp [IsUnit]
-    exact hop.preimage (Continuous.matrix_det continuous_subtype_val)
+    exact hop.preimage (Continuous.matrix_det continuous_subtypeVal)
   have hWn := hW (n + 1) (M + 1)
   have hHn := hH (n + 1)
   have hBn := hBorel (n + 1) (M + 1)

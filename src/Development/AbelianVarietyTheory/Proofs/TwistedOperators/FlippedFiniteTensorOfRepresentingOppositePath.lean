@@ -467,7 +467,7 @@ theorem pathArgs_opp (B : Frames G) (w : Pl D.host.E) (x y) :
         cases hk'
       refine (hc.2 h1).trans ?_
       rw [pathArgs_zero B t w _ _ _ h2]
-      simp only [oppArgs, dif_neg h]
+      simp only [oppArgs, dite_eq_right h]
   | ex i j =>
     have h1 : GlobalTheory.SplitFlip.Edge.ex i j ∉ edges (downPath t D.R.m D.R.m) := by
       rw [mem_edges_down]
@@ -485,7 +485,7 @@ theorem pathArgs_opp (B : Frames G) (w : Pl D.host.E) (x y) :
         simp only [GlobalTheory.SplitFlip.Edge.ex.injEq] at hk'
         exact h ⟨hk'.1 ▸ hk, hk'.2⟩
       rw [pathArgs_zero B t w _ _ _ h2]
-      simp only [oppArgs, dif_neg h]
+      simp only [oppArgs, dite_eq_right h]
 
 theorem zip_opp (W : G.Weil) (P : PolE G) (d : SchRow G × SchDown G t) :
     Path.Fam.zip (fun a (f : Sch G a) Q => W.fock a.pair f Q) (oppFam t d) (restrictPol P (oppPath t D.R.m)) =

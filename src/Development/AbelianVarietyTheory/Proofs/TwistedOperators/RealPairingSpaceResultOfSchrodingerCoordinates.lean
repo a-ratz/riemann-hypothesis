@@ -112,7 +112,7 @@ theorem haar_coords {n : ℕ} [MeasurableSpace V] [BorelSpace V] [FiniteDimensio
     ∃ k : ℝ, 0 < k ∧ ∀ F : V → ℝ, ∫ y, F y ∂μ = k * ∫ x, F (C.symm x) := by
   let e : V ≃ᵐ EuclideanSpace ℝ (Fin n) := C.toHomeomorph.toMeasurableEquiv
   have he : ∀ y, e y = C y := fun y => rfl
-  haveI : (μ.map e).IsAddHaarMeasure := C.isAddHaarMeasure_map μ
+  have : (μ.map e).IsAddHaarMeasure := C.isAddHaarMeasure_map μ
   have hk := Measure.isAddLeftInvariant_eq_smul (μ.map e) (volume : Measure (EuclideanSpace ℝ (Fin n)))
   refine ⟨(Measure.addHaarScalarFactor (μ.map e) volume : ℝ),
     NNReal.coe_pos.2 (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _), fun F => ?_⟩
@@ -210,8 +210,8 @@ theorem transport : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [F
   have e2 : toE f (C y) = f y := by simp [htoE]
   rw [e2, quad_eq_sum]
   congr 1
-  simp only [h2, ContinuousLinearMap.coe_sum', Finset.sum_apply, SchwartzMap.sum_apply,
-    ContinuousLinearMap.coe_smul', Pi.smul_apply, SchwartzMap.smul_apply, ContinuousLinearMap.mul_apply, smul_eq_mul]
+  simp only [h2, FunLike.coe_sum, Finset.sum_apply, sum_apply,
+    FunLike.coe_smul, Pi.smul_apply, smul_apply, mul_apply_eq_comp, smul_eq_mul]
   exact Equiv.sum_comp eq (fun p => (4 * Real.pi * Complex.I : ℂ)⁻¹ * (((S p.1 p.2 + S p.2 p.1) / 2 : ℝ) : ℂ) *
     dRho (Pi.single p.1 1) (dRho (Pi.single p.2 1) (toE f)) (C y))
 

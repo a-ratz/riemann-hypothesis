@@ -410,18 +410,18 @@ theorem card_eq_of_away {K A L : Type} [Field K] [CommRing A] [CommRing L] [Nont
     (t : A) [IsLocalization.Away t L] (g : K →+* A) (φ : MvPolynomial (Fin m) K →+* A)
     (hφ : ∀ r, φ (MvPolynomial.C r) = g r) (hE : φ.Etale)
     (hf : RingHom.IsStandardSmoothOfRelativeDimension n ((algebraMap A L).comp g)) : m = n := by
-  letI iPA : Algebra (MvPolynomial (Fin m) K) A := φ.toAlgebra
-  letI iKL : Algebra K L := ((algebraMap A L).comp g).toAlgebra
-  letI iPL : Algebra (MvPolynomial (Fin m) K) L := ((algebraMap A L).comp φ).toAlgebra
-  haveI : IsScalarTower (MvPolynomial (Fin m) K) A L := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower K (MvPolynomial (Fin m) K) L :=
+  let iPA : Algebra (MvPolynomial (Fin m) K) A := φ.toAlgebra
+  let iKL : Algebra K L := ((algebraMap A L).comp g).toAlgebra
+  let iPL : Algebra (MvPolynomial (Fin m) K) L := ((algebraMap A L).comp φ).toAlgebra
+  have : IsScalarTower (MvPolynomial (Fin m) K) A L := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower K (MvPolynomial (Fin m) K) L :=
     IsScalarTower.of_algebraMap_eq fun r => by
       change algebraMap A L (g r) = algebraMap A L (φ (MvPolynomial.C r))
       rw [hφ]
-  haveI : Algebra.Etale (MvPolynomial (Fin m) K) A := hE
-  haveI : Algebra.FormallyEtale A L := Algebra.FormallyEtale.of_isLocalization (Submonoid.powers t)
-  haveI : Algebra.FormallyEtale (MvPolynomial (Fin m) K) L := Algebra.FormallyEtale.comp _ A _
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension n K L := hf
+  have : Algebra.Etale (MvPolynomial (Fin m) K) A := hE
+  have : Algebra.FormallyEtale A L := Algebra.FormallyEtale.of_isLocalization (Submonoid.powers t)
+  have : Algebra.FormallyEtale (MvPolynomial (Fin m) K) L := Algebra.FormallyEtale.comp _ A _
+  have : Algebra.IsStandardSmoothOfRelativeDimension n K L := hf
   exact card_eq_of_etale (K := K) (L := L)
 
 theorem main : ∀ {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) (n : ℕ)
@@ -485,9 +485,9 @@ theorem exists_coord_basicOpen {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ 
       (fun k => algebraMap Γ(X, W) (Localization.Away g) (s k)) :
         MvPolynomial (Fin d) K →+* Localization.Away g).Etale →
     ∃ c : Coord q (X.basicOpen g) d, ∀ k, c.t k = resO (X.basicOpen_le g) (s k) := by
-  letI := (strV q W).toAlgebra
+  let := (strV q W).toAlgebra
   intro h
-  haveI := hW.isLocalization_basicOpen g
+  have := hW.isLocalization_basicOpen g
   let φ := IsLocalization.algEquiv (Submonoid.powers g) (Localization.Away g) Γ(X, X.basicOpen g)
   have hφ : ∀ x, φ (algebraMap Γ(X, W) (Localization.Away g) x) = resO (X.basicOpen_le g) x :=
     fun x => φ.commutes x
@@ -550,7 +550,7 @@ theorem exists_etale_away_pf {K A : Type} [Field K] [CharZero K] [CommRing A] [I
     ∃ g : A, g ≠ 0 ∧ (MvPolynomial.eval₂Hom (algebraMap K (Localization.Away g))
       (fun k => algebraMap A (Localization.Away g) (s k)) : MvPolynomial (Fin d) K →+* Localization.Away g).Etale := by
   classical
-  letI : Algebra (MvPolynomial (Fin d) K) A := (MvPolynomial.aeval s).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin d) K) A := (MvPolynomial.aeval s).toRingHom.toAlgebra
   have hRA : algebraMap (MvPolynomial (Fin d) K) A = (MvPolynomial.aeval s).toRingHom := rfl
   have : IsScalarTower K (MvPolynomial (Fin d) K) A := IsScalarTower.of_algebraMap_eq fun x => by
     rw [hRA, MvPolynomial.algebraMap_eq]
@@ -572,12 +572,12 @@ theorem exists_etale_away_pf {K A : Type} [Field K] [CharZero K] [CommRing A] [I
     · simp [hRA]
   have hL : IsFractionRing A (Localization.AtPrime (⊥ : Ideal A)) := by
     simpa [Ideal.primeCompl_bot] using Localization.isLocalization (M := (⊥ : Ideal A).primeCompl)
-  letI : Field (Localization.AtPrime (⊥ : Ideal A)) := IsFractionRing.toField A
+  let : Field (Localization.AtPrime (⊥ : Ideal A)) := IsFractionRing.toField A
   have : FaithfulSMul (MvPolynomial (Fin d) K) (Localization.AtPrime (⊥ : Ideal A)) := by
     rw [faithfulSMul_iff_algebraMap_injective,
       IsScalarTower.algebraMap_eq (MvPolynomial (Fin d) K) A (Localization.AtPrime ⊥)]
     exact (IsFractionRing.injective A _).comp hinj
-  letI := FractionRing.liftAlgebra (MvPolynomial (Fin d) K) (Localization.AtPrime (⊥ : Ideal A))
+  let := FractionRing.liftAlgebra (MvPolynomial (Fin d) K) (Localization.AtPrime (⊥ : Ideal A))
   have : Algebra.IsAlgebraic A (Localization.AtPrime (⊥ : Ideal A)) :=
     IsLocalization.isAlgebraic _ (nonZeroDivisors A)
   have : Algebra.IsAlgebraic (MvPolynomial (Fin d) K) (Localization.AtPrime (⊥ : Ideal A)) :=
@@ -757,13 +757,13 @@ theorem exists_away_isDomain_of_smooth {K A : Type} [Field K] [CommRing A] [Alge
     ∃ r ∉ p, ∀ (S : Type) [CommRing S] [Algebra A S] [IsLocalization.Away r S], IsDomain S := by
   obtain ⟨g, hg, hstd⟩ := Algebra.IsSmoothAt.exists_notMem_isStandardSmooth K p
   obtain ⟨ι, σ, _, _, ⟨Pr⟩⟩ := hstd.out
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension Pr.dimension K (Localization.Away g) :=
+  have : Algebra.IsStandardSmoothOfRelativeDimension Pr.dimension K (Localization.Away g) :=
     ⟨⟨ι, σ, ‹_›, ‹_›, Pr, rfl⟩⟩
   obtain ⟨φ, hφ⟩ := Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolynomial
     (n := Pr.dimension) (R := K) (S := Localization.Away g)
-  letI : Algebra (MvPolynomial (Fin Pr.dimension) K) (Localization.Away g) := φ.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin Pr.dimension) K) (Localization.Away g) := hφ
-  haveI hq : (p.map (algebraMap A (Localization.Away g))).IsPrime := by
+  let : Algebra (MvPolynomial (Fin Pr.dimension) K) (Localization.Away g) := φ.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin Pr.dimension) K) (Localization.Away g) := hφ
+  have hq : (p.map (algebraMap A (Localization.Away g))).IsPrime := by
     apply IsLocalization.isPrime_of_isPrime_disjoint (.powers g) _ _ ‹_›
     rwa [Ideal.disjoint_powers_iff_notMem_of_isPrime]
   obtain ⟨g', hg', hdom⟩ := exists_away_isDomain_of_etale
@@ -774,7 +774,7 @@ theorem exists_away_isDomain_of_smooth {K A : Type} [Field K] [CommRing A] [Alge
     rw [Ideal.mem_iff_of_associated (IsLocalization.Away.associated_sec_fst g g').symm]
     exact Ideal.mem_map_of_mem (algebraMap A (Localization.Away g)) hmem
   · intro S _ _ _
-    haveI : IsLocalization.Away (g * (IsLocalization.Away.sec g g').1) (Localization.Away g') :=
+    have : IsLocalization.Away (g * (IsLocalization.Away.sec g g').1) (Localization.Away g') :=
       .mul_of_associated _ _ g' <| IsLocalization.Away.associated_sec_fst g g'
     let e : S ≃ₐ[A] Localization.Away g' :=
       IsLocalization.algEquiv (Submonoid.powers (g * (IsLocalization.Away.sec g g').1)) S
@@ -910,7 +910,7 @@ theorem isIntegral_of_smooth_pf {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶
     have := hW x
     have hi := irreducibleSpace_of_isIntegral (W x : Scheme)
     have h2 := (IrreducibleSpace.isIrreducible_univ (↥(W x : Scheme))).image Subtype.val
-      continuous_subtype_val.continuousOn
+      continuous_subtypeVal.continuousOn
     rwa [Set.image_univ, Subtype.range_coe] at h2
   exact isIntegral_of_irreducibleSpace_of_isReduced X
 
@@ -964,9 +964,9 @@ theorem exists_frac_basicOpen {X : Scheme.{0}} {W : X.Opens} (hW : IsAffineOpen 
     ∀ r : Γ(X, X.basicOpen g), ∃ b ∈ Set.range (resO (X.basicOpen_le g)), ∃ b' ∈ Set.range (resO (X.basicOpen_le g)),
       b' ≠ 0 ∧ r * b' = b := by
   intro r
-  letI := (resO (X.basicOpen_le g)).toAlgebra
-  haveI := hW.isLocalization_basicOpen g
-  haveI : Nonempty (X.basicOpen g) := hne.to_subtype
+  let := (resO (X.basicOpen_le g)).toAlgebra
+  have := hW.isLocalization_basicOpen g
+  have : Nonempty (X.basicOpen g) := hne.to_subtype
   obtain ⟨k, a, hk⟩ := IsLocalization.Away.surj g r
   refine ⟨resO (X.basicOpen_le g) a, ⟨a, rfl⟩, resO (X.basicOpen_le g) (g ^ k), ⟨g ^ k, rfl⟩, ?_, ?_⟩
   · rw [map_pow]
@@ -1004,7 +1004,7 @@ theorem finiteType_affine {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec 
     have : strV q W = (q.appLE ⊤ W le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom := rfl
     rw [this]
     exact h1.comp h2
-  letI := (strV q W).toAlgebra
+  let := (strV q W).toAlgebra
   exact RingHom.finiteType_algebraMap.1 h3
 
 end GlobalTheory.CompanionTheory.GeoFT
@@ -1092,8 +1092,8 @@ theorem X_mem_of_finite {K : Type} [Field K] {n m : ℕ}
   let φ : (MvPolynomial (Fin n) K ⧸ I) →+* (MvPolynomial (Fin n) K ⧸ P) := Ideal.Quotient.factor hIP
   have hφ : ∀ g, φ (Ideal.Quotient.mk I g) = Ideal.Quotient.mk P g := fun g => rfl
   let Q : Ideal (MvPolynomial (Fin n) K ⧸ I) := RingHom.ker φ
-  haveI : Q.IsPrime := RingHom.ker_isPrime φ
-  haveI : Algebra.IsIntegral (Algebra.adjoin K (Set.range fun k => Ideal.Quotient.mk I (y k)))
+  have : Q.IsPrime := RingHom.ker_isPrime φ
+  have : Algebra.IsIntegral (Algebra.adjoin K (Set.range fun k => Ideal.Quotient.mk I (y k)))
       (MvPolynomial (Fin n) K ⧸ I) := Algebra.IsIntegral.of_finite _ _
   have hc0 : ∀ r ∈ Algebra.adjoin K (Set.range fun k => Ideal.Quotient.mk I (y k)),
       ∃ c : K, φ r = Ideal.Quotient.mk P (MvPolynomial.C c) := by
@@ -1210,7 +1210,7 @@ theorem iSup_preimage_eq_top : ∀ {K : Type} [Field K] {X : Scheme.{0}} {N : �
     rw [homIdeal, Ideal.span_le]
     rintro f ⟨d, hf, hv⟩
     exact mem_of_evV_eq_zero i p j hj hf (hv j)
-  haveI : (ProjectiveSpectrum.asHomogeneousIdeal (i p : ProjectiveSpectrum (grK K N))).toIdeal.IsPrime :=
+  have : (ProjectiveSpectrum.asHomogeneousIdeal (i p : ProjectiveSpectrum (grK K N))).toIdeal.IsPrime :=
     (i p : ProjectiveSpectrum (grK K N)).isPrime
   exact hj (X_mem_of_finite _ _ hle
     (ProjectiveSpectrum.asHomogeneousIdeal (i p : ProjectiveSpectrum (grK K N))).isHomogeneous y hy hfin j)
@@ -1268,7 +1268,7 @@ theorem biInf_preimage {m : ℕ} (y : Fin m → MvPolynomial (Fin (N + 1)) K) (S
 
 theorem isAffineOpen_preimage (hci : IsClosedImmersion i) {g : MvPolynomial (Fin (N + 1)) K} {e : ℕ}
     (hg : g ∈ grK K N e) (he : 0 < e) : IsAffineOpen (i ⁻¹ᵁ Proj.basicOpen (grK K N) g) := by
-  haveI := hci
+  have := hci
   exact (Proj.isAffineOpen_basicOpen (grK K N) g hg he).preimage i
 
 theorem evV_surjective (hci : IsClosedImmersion i) {g : MvPolynomial (Fin (N + 1)) K} {e : ℕ}
@@ -1442,7 +1442,7 @@ theorem constantCoeff_gen {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (i : X
   rw [MvPolynomial.homogeneousComponent_zero] at hc
   rw [MvPolynomial.constantCoeff_eq]
   by_cases hd : 0 = d • 1
-  · rw [if_pos hd] at hc
+  · rw [ite_eq_left hd] at hc
     have hd0 : d = 0 := by simpa using hd.symm
     subst hd0
     obtain ⟨c, rfl⟩ : ∃ c, f = MvPolynomial.C c := ⟨_, hc.symm⟩
@@ -1450,14 +1450,14 @@ theorem constantCoeff_gen {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (i : X
     by_contra hne
     obtain ⟨x⟩ := hX
     obtain ⟨j, hj⟩ := exists_chart i x
-    haveI : Nonempty (i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j)) := ⟨⟨x, hj⟩⟩
-    haveI := Scheme.component_nontrivial X (i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j))
+    have : Nonempty (i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j)) := ⟨⟨x, hj⟩⟩
+    have := Scheme.component_nontrivial X (i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j))
     have hb : MvPolynomial.C c⁻¹ ∈ grK K N (0 • 1) := by
       simpa using MvPolynomial.isHomogeneous_C (Fin (N + 1)) c⁻¹
     have e := congrArg (evV i (MvPolynomial.X j) _ le_rfl) (mk_C_mul_inv j c hne hf hb)
     rw [map_mul, map_one, h0 j, zero_mul] at e
     exact zero_ne_one e
-  · rw [if_neg hd, MvPolynomial.C_eq_zero] at hc
+  · rw [ite_eq_right hd, MvPolynomial.C_eq_zero] at hc
     exact hc
 
 theorem homIdeal_ne_top : ∀ {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (i : X ⟶ PSpace K N),
@@ -1570,9 +1570,9 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
             (∀ j, B (Finset.univ.erase j) ≤ B Finset.univ) ∧
             (∀ r : Γ(X, V), ∃ b ∈ B Finset.univ, ∃ b' ∈ B Finset.univ, b' ≠ 0 ∧ r * b' = b) := by
   classical
-  haveI : IsClosedImmersion i := hci
-  haveI hXi : IsIntegral X := isIntegral_of_smooth q (n + 1)
-  haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+  have : IsClosedImmersion i := hci
+  have hXi : IsIntegral X := isIntegral_of_smooth q (n + 1)
+  have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
   obtain ⟨e, m, y, he, hy, halg, hfin⟩ :=
     _root_.GlobalTheory.CompanionTheory.ConeNoether.main K N (homIdeal i) (homIdeal_ne_top i) (homIdeal_homog i)
   have hcov := iSup_preimage_eq_top i he y hy hfin
@@ -1605,11 +1605,11 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
       exact Finset.prod_ne_zero_iff.2 (fun k _ => MvPolynomial.X_ne_zero k) h2
     have := preimage_basicOpen_nonempty i (hpos _ Finset.univ_nonempty) (yS_mem y hy Finset.univ) hne0
     rwa [← biInf_preimage i y Finset.univ] at this
-  letI algW : Algebra K Γ(X, W) := (strV q W).toAlgebra
+  let algW : Algebra K Γ(X, W) := (strV q W).toAlgebra
   have htW : ∀ k, IsUnit (tV i y hy W hWV k) := tV_isUnit i y hy hWV
   have hindW : AlgebraicIndependent K (tV i y hy W hWV) :=
     algebraicIndependent_tV i y hy hWV he q hiq halg hWne
-  haveI : Nonempty W := hWne.to_subtype
+  have : Nonempty W := hWne.to_subtype
   have hintW : ∀ r : Γ(X, W), IsIntegral (torusS K (fun k => (htW k).unit) Finset.univ) r := by
     intro r
     have hr : r ∈ Set.range (resO (le_refl W)) := ⟨r, by simp [resO]⟩
@@ -1618,12 +1618,12 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
     exact isIntegral_torusS i y hy hWV he q hiq hfin Finset.univ hWS htW a
   have halgW : Algebra.IsAlgebraic (Algebra.adjoin K (Set.range (tV i y hy W hWV))) Γ(X, W) :=
     isAlgebraic_of_integral_torusS (fun k => (htW k).unit) hintW
-  haveI hlft : LocallyOfFiniteType q := by
+  have hlft : LocallyOfFiniteType q := by
     first
       | infer_instance
-      | (haveI : Smooth q := SmoothOfRelativeDimension.smooth (n + 1) q; infer_instance)
+      | (have : Smooth q := SmoothOfRelativeDimension.smooth (n + 1) q; infer_instance)
       | (haveI : Smooth q := inferInstance; haveI : LocallyOfFinitePresentation q := inferInstance; infer_instance)
-  haveI : Algebra.FiniteType K Γ(X, W) := finiteType_affine q hWaff
+  have : Algebra.FiniteType K Γ(X, W) := finiteType_affine q hWaff
   obtain ⟨g, hg0, het⟩ := exists_etale_away (tV i y hy W hWV) hindW halgW
   obtain ⟨c, hc⟩ := exists_coord_basicOpen q hWaff g (tV i y hy W hWV) het
   have hVne : ((X.basicOpen g : X.Opens) : Set X).Nonempty := by
@@ -1645,8 +1645,8 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
       have h := c.etale
       rwa [show c.t = tV i y hy (X.basicOpen g) hV from funext hct] at h⟩
   refine ⟨hcov, fun S hS => haff S hS, X.basicOpen g, hV, c', ?_⟩
-  letI algV : Algebra K Γ(X, X.basicOpen g) := (strV q _).toAlgebra
-  haveI : Nonempty (X.basicOpen g) := hVne.to_subtype
+  let algV : Algebra K Γ(X, X.basicOpen g) := (strV q _).toAlgebra
+  have : Nonempty (X.basicOpen g) := hVne.to_subtype
   refine ⟨inferInstance, fun k => rfl, tV_isUnit i y hy hV, algebraicIndependent_tV i y hy hV he q hiq halg hVne, ?_⟩
   let B : Finset (Fin (n + 2)) → Subalgebra K Γ(X, X.basicOpen g) := fun S =>
     { (resO (le_biInf_of_le hV S)).range with
@@ -1665,8 +1665,8 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
     rw [← range_resO_eq i hci (yS_mem y hy S) (hpos S hS) (biInf_preimage i y S) (le_biInf_of_le hV S) hS'] at h1
     exact (memB S _).2 h1
   · intro S hS
-    letI : Algebra K Γ(X, ⨅ k ∈ S, U k) := (strV q _).toAlgebra
-    haveI : Algebra.FiniteType K Γ(X, ⨅ k ∈ S, U k) := finiteType_affine q (haff S hS)
+    let : Algebra K Γ(X, ⨅ k ∈ S, U k) := (strV q _).toAlgebra
+    have : Algebra.FiniteType K Γ(X, ⨅ k ∈ S, U k) := finiteType_affine q (haff S hS)
     let φ : Γ(X, ⨅ k ∈ S, U k) →ₐ[K] Γ(X, X.basicOpen g) :=
       { resO (le_biInf_of_le hV S) with
         commutes' := fun a => (RingHom.congr_fun (strV_res q (le_biInf_of_le hV S)) a).symm }

@@ -273,7 +273,7 @@ theorem hasFDerivAt_orb (π : CuspSub E a) (hπ : IsNormalised π) (ψ : π.V) :
   have e : (orb (repI E a) (toXB π hπ ψ) M - orb (repI E a) (toXB π hπ ψ) (oneL E a) -
       (LinearMap.toContinuousLinearMap (dL π hπ ψ)) (M - oneL E a)) g =
       chart ψ.1.1 g M - chart ψ.1.1 g (oneL E a) - fderiv ℝ (chart ψ.1.1 g) (oneL E a) (M - oneL E a) := by
-    simp only [BoundedContinuousFunction.coe_sub, Pi.sub_apply, orb_apply]
+    simp only [FunLike.coe_sub, Pi.sub_apply, orb_apply]
     rfl
   rw [e]
   exact hM g M hMb

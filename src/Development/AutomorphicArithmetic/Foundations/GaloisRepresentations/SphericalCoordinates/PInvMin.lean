@@ -52,14 +52,14 @@ open UpperTheory.Gal.W2
 private theorem aeval_inv_reverse_eq_zero_iff {K A : Type} [Field K] [Ring A] [Algebra K A] (u : Aˣ) (f : K[X]) :
     Polynomial.aeval (↑u⁻¹ : A) f.reverse = 0 ↔ Polynomial.aeval (u : A) f = 0 := by
   let S : Subalgebra K A := Algebra.adjoin K {(u : A), ↑u⁻¹}
-  letI : IsMulCommutative S := Algebra.isMulCommutative_adjoin K (by
+  let : IsMulCommutative S := Algebra.isMulCommutative_adjoin K (by
     intro a ha b hb _
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha hb
     rcases ha with rfl | rfl <;> rcases hb with rfl | rfl <;> simp)
-  letI : CommRing S := { mul_comm := isMulCommutative_iff.mp inferInstance }
+  let : CommRing S := { mul_comm := isMulCommutative_iff.mp inferInstance }
   let x : S := ⟨u, Algebra.subset_adjoin (by simp)⟩
   let y : S := ⟨↑u⁻¹, Algebra.subset_adjoin (by simp)⟩
-  letI : Invertible x := ⟨y, Subtype.ext (by simp [x, y]), Subtype.ext (by simp [x, y])⟩
+  let : Invertible x := ⟨y, Subtype.ext (by simp [x, y]), Subtype.ext (by simp [x, y])⟩
   have key := Polynomial.eval₂_reverse_eq_zero_iff (algebraMap K S) x f
   have h1 : Polynomial.aeval (↑u⁻¹ : A) f.reverse = S.val (Polynomial.aeval y f.reverse) :=
     Polynomial.aeval_algHom_apply S.val y f.reverse

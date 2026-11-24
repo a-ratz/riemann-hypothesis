@@ -83,7 +83,7 @@ theorem dgU_val (J : Matrix β β A) (g : UG c J) : (dgU c J g).1.1 = Matrix.fro
 
 theorem dgU_cont [TopologicalSpace A] (J : Matrix β β A) : Continuous (dgU c J) :=
   continuous_induced_rng.2 ((Continuous.units_map (dgM (A := A) (β := β))
-    (continuous_id.matrix_fromBlocks continuous_const continuous_const continuous_id)).comp continuous_subtype_val)
+    (continuous_id.matrix_fromBlocks continuous_const continuous_const continuous_id)).comp continuous_subtypeVal)
 
 theorem actB_dgU {α : Type} (J : Matrix β β A) (g : UG c J) (w w' : Matrix α β A) :
     actB c (dgU c J g) (Matrix.fromCols w w') = Matrix.fromCols (actB c g w) (actB c g w') := by
@@ -124,7 +124,7 @@ theorem modu_det {n : ℕ} {J : Matrix (Fin n) (Fin n) E} (hJ : J.det ≠ 0) (f 
   have h1 : g.1.1.det * sigR (AF F) σ g.1.1.det = 1 := u.mul_left_cancel (by linear_combination h)
   have h2 := congrArg (Algebra.norm (AF F)) h1
   rw [map_mul, GlobalTheory.Doubling.norm_sigR, map_one] at h2
-  refine (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 ?_
+  refine (pow_eq_one_iff_of_nonneg zero_le two_ne_zero).1 ?_
   rw [sq, ← map_mul, ← map_one f]
   exact congrArg f (Units.ext h2)
 
@@ -252,11 +252,11 @@ theorem dbl_main {A : Spc F E a} {Y : Spc F E b} {d : Darboux (symp (R := AF F) 
   · obtain ⟨T, hT⟩ := hw'.2.1.adm (dgU _ _ g) l hl f hf
     exact ⟨detInv χ' g • T, fun f => by simp [hS, ← hT]⟩
   · rw [← hw'.2.1.unit μ hμ (dgU _ _ g) Φ hΦ]
-    simp only [hS, Pi.smul_apply, enorm_smul, detInv, ← ofReal_norm_eq_enorm (_ : Circle).1, Circle.norm_coe,
+    simp only [hS, Pi.smul_apply, eNorm_smul, detInv, ← ofReal_norm (_ : Circle).1, Circle.norm_coe,
       ENNReal.ofReal_one, one_mul]
   · simp only [hS, map_smul, smul_eq_mul]
-    exact (continuous_subtype_val.comp ((hχ.comp (Matrix.GeneralLinearGroup.continuous_det.comp
-      continuous_subtype_val)).inv)).mul ((hw'.2.1.cont l hl Φ hΦ).comp (dgU_cont _ _))
+    exact (continuous_subtypeVal.comp ((hχ.comp (Matrix.GeneralLinearGroup.continuous_det.comp
+      continuous_subtypeVal)).inv)).mul ((hw'.2.1.cont l hl Φ hΦ).comp (dgU_cont _ _))
   · rw [hS, map_smul, dbl_fix hψ hA h' hw' g hΦ, smul_eq_mul, ← mul_assoc, c1, one_mul]
   · convert e.hasSum_iff.2 (lD_theta hψ hΦ) using 3 with y
     rw [show incM F (Matrix.fromCols y (-y)) = Matrix.fromCols (incM F y) (-incM F y) by

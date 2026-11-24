@@ -371,7 +371,7 @@ theorem th0TransAll_of (hP : PTorsAll) (hK : KleinAll) : PeriodTranscendenceAllL
 
 theorem pTorsAlg_of (L : PeriodPair) (hg2 : L.g₂ ∈ Formalism.MainNotions.TaylorLogMetric.Qbar) (hg3 : L.g₃ ∈ Formalism.MainNotions.TaylorLogMetric.Qbar) : PTorsAlg L := by
   rintro u ⟨N, hN, hNu⟩ hu
-  haveI : Algebra.IsAlgebraic ℚ Formalism.MainNotions.TaylorLogMetric.Qbar :=
+  have : Algebra.IsAlgebraic ℚ Formalism.MainNotions.TaylorLogMetric.Qbar :=
     ⟨fun x => IntermediateField.isAlgebraic_iff.2 (mem_algebraicClosure_iff.1 x.2)⟩
   have hx : IsAlgebraic ℚ (L.weierstrassP u) :=
     (PI.GalTorsConj.W.wp_isAlgebraic L Formalism.MainNotions.TaylorLogMetric.Qbar hg2 hg3 N u hN hNu hu).restrictScalars ℚ
@@ -455,7 +455,7 @@ theorem expAltE_mem (L : PeriodPair) (x y : ℂ) (N : ℕ) (hN : 0 < N) (h : ∃
   obtain ⟨k, hk⟩ := h
   have hk' : (N : ℂ) * (altE L x y : ℂ) = (k : ℂ) := by exact_mod_cast hk
   refine rootOfUnity_mem_Qbar (k := 2 * N) (Nat.mul_pos two_pos hN) ?_
-  rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+  rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
   refine ⟨-k, ?_⟩
   push_cast
   linear_combination (-2 * (Real.pi : ℂ) * Complex.I) * hk'

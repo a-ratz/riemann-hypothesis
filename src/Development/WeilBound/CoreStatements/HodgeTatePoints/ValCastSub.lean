@@ -296,7 +296,7 @@ theorem small_gen (hv : v.Integers R) (hp1 : v (p : C) < 1) (AA : HopfOrder (C :
   · obtain ⟨c, rfl⟩ := hexp g
     have hU : ∀ x α : I → ZMod p, v (∏ j, u j x ^ (α j).val) ≤ 1 := fun x α => by
       rw [map_prod]
-      exact Finset.prod_le_one' fun j _ => by rw [map_pow]; exact pow_le_one₀ zero_le (hu1 j x)
+      exact Finset.prod_le_one fun j _ => by rw [map_pow]; exact pow_le_one₀ zero_le (hu1 j x)
     choose U hU using fun x α => hv.exists_of_le_one (hU x α)
     have hUm : (Matrix.of U).map (algebraMap R C) = Matrix.of fun (x α : I → ZMod p) => ∏ j, u j x ^ (α j).val := by
       ext x α; exact hU x α
@@ -899,7 +899,7 @@ theorem core_pull {p : ℕ} [Fact p.Prime] [IsAlgClosed C] [CharZero C] (hv : v.
         (∀ l ∈ afLat p (hopfPull φ AA).carrier, v (∑ j, algebraMap R C (l j) * x j) ≤ 1) ∧
         Hm.map (algebraMap R C) *ᵥ x = fun k => algebraMap R C (u k) := by
   subst hM
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   obtain ⟨cA, cN, cO, hA, hN, hO, hAN, hON⟩ := ht
   have hcardN : Fintype.card (Ix E n → ZMod p) = Fintype.card (TestPt.NAdd E n p) :=
     Fintype.card_congr φ.toEquiv

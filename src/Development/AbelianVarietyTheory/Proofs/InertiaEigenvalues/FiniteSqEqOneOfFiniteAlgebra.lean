@@ -53,11 +53,11 @@ namespace GlobalTheory
 
 theorem finite_sq_eq_one_of_finite_algebra (k : Type) [Field k] [CharZero k] (A : Type) [CommRing A]
     [Algebra k A] [Module.Finite k A] : Set.Finite {x : A | x ^ 2 = 1} := by
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
-  haveI : Finite (TopologicalSpace.Clopens (PrimeSpectrum A)) :=
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : Finite (TopologicalSpace.Clopens (PrimeSpectrum A)) :=
     Finite.of_injective (fun s : TopologicalSpace.Clopens (PrimeSpectrum A) => (s : Set (PrimeSpectrum A)))
       SetLike.coe_injective
-  haveI : Finite {e : A // IsIdempotentElem e} :=
+  have : Finite {e : A // IsIdempotentElem e} :=
     Finite.of_equiv _ (PrimeSpectrum.isIdempotentElemEquivClopens (R := A)).symm.toEquiv
   set c : A := algebraMap k A (2⁻¹ : k) with hc
   have hc2 : c * 2 = 1 := by

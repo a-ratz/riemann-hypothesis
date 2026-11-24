@@ -497,7 +497,7 @@ namespace GlobalTheory.GenCxPt
 open Cardinal
 
 theorem mk_le_aleph0 (K : IntermediateField ℚ ℂ) [FiniteDimensional ℚ K] : #K ≤ ℵ₀ := by
-  haveI : Algebra.IsAlgebraic ℚ K := Algebra.IsAlgebraic.of_finite ℚ K
+  have : Algebra.IsAlgebraic ℚ K := Algebra.IsAlgebraic.of_finite ℚ K
   have h := Algebra.IsAlgebraic.cardinalMk_le_max ℚ K
   rw [Cardinal.mkRat, max_self] at h
   exact h
@@ -512,7 +512,7 @@ theorem transcendental_complex (K : IntermediateField ℚ ℂ) [FiniteDimensiona
 
 theorem infinite_of_isTranscendenceBasis (K : IntermediateField ℚ ℂ) [FiniteDimensional ℚ K] {κ : Type}
     {w : κ → ℂ} (hw : IsTranscendenceBasis K w) : Infinite κ := by
-  haveI : Nonempty κ := hw.nonempty_iff_transcendental.2 (transcendental_complex K)
+  have : Nonempty κ := hw.nonempty_iff_transcendental.2 (transcendental_complex K)
   have h := hw.lift_cardinalMk_eq_max_lift
   simp only [Cardinal.lift_id, Cardinal.mk_complex] at h
   by_contra hfin
@@ -526,9 +526,9 @@ theorem nonempty_algHom_complex (K : IntermediateField ℚ ℂ) [FiniteDimension
     [Algebra K L] (n : ℕ) (hn : Algebra.trdeg K L = n) : Nonempty (L →ₐ[K] ℂ) := by
   obtain ⟨ι, v, hv⟩ := exists_isTranscendenceBasis' K L
   obtain ⟨κ, w, hw⟩ := exists_isTranscendenceBasis' K ℂ
-  haveI := infinite_of_isTranscendenceBasis K hw
+  have := infinite_of_isTranscendenceBasis K hw
   have hι : #ι < ℵ₀ := by rw [hv.cardinalMk_eq_trdeg, hn]; exact Cardinal.natCast_lt_aleph0
-  haveI : Finite ι := Cardinal.lt_aleph0_iff_finite.1 hι
+  have : Finite ι := Cardinal.lt_aleph0_iff_finite.1 hι
   have hle : #ι ≤ #κ := hι.le.trans (Cardinal.infinite_iff.1 inferInstance)
   obtain ⟨f⟩ := hle
   obtain ⟨j, -⟩ := GlobalTheory.GenericValue.exists_algHom_of_isTranscendenceBasis hv (hw.1.comp f f.injective)
@@ -557,7 +557,7 @@ theorem GlobalTheory.GenCxPt.exists_frPt_ptF_eq_genPt : ∀ (E : Type) [Field E]
     (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (Z : Comp Xo c),
     ∃ y : FrPt Xo c ℂ, ∀ s, ptF y s = genPt Z := by
   intro E _ _ _ H Dw l Xo c Z
-  haveI := c.fin
+  have := c.fin
   obtain ⟨e⟩ := nonempty_algHom_complex c.F (kap Z) Dw.dim ((GlobalTheory.Reg.kap_fg_trdeg E H Dw l Xo c).2 Z)
   have hsnd : spMap (e : kap Z →+* ℂ) ≫ genSp Z ≫ strK = spMap (algebraMap c.F ℂ) := by
     rw [genSp_strK, spMap_comp_spMap, AlgHom.comp_algebraMap]
@@ -770,7 +770,7 @@ theorem isNilpotent_sub_one_of_unitri {r : ℕ} {k : Type} [Field k] {u : GL (Fi
     IsNilpotent ((u : Matrix (Fin r) (Fin r) k) - 1) := by
   have ht : ((u : Matrix (Fin r) (Fin r) k) - 1).BlockTriangular id := hu.1.sub Matrix.blockTriangular_one
   have hc : ((u : Matrix (Fin r) (Fin r) k) - 1).charpoly = Polynomial.X ^ r := by
-    rw [Matrix.charpoly_of_upperTriangular _ ht]
+    rw [Matrix.charpoly_of_isUpperTriangular _ ht]
     simp [hu.2]
   refine ⟨r, ?_⟩
   have := Matrix.aeval_self_charpoly ((u : Matrix (Fin r) (Fin r) k) - 1)
@@ -904,7 +904,7 @@ theorem exists_combination_delta (F V S J : Type) [Field F] [Algebra F ℂ] [Add
       rintro rfl
       obtain ⟨j, hj⟩ := h1
       exact hr ⟨j, hj⟩
-    rw [if_neg h1']
+    rw [ite_eq_right h1']
     exact Finset.sum_eq_zero fun k _ => by rw [h2 _ (hw k) h hr, mul_zero]
 
 theorem exists_vec_det_ne_zero (F : Type) [Field F] [CharZero F] [Algebra F ℂ] (V : Type) [AddCommGroup V] [Module F V]
@@ -999,7 +999,7 @@ theorem eq_zero_of_mul_eq_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   obtain ⟨a, ha, rfl⟩ := (Submodule.mem_iSup_iff_exists_finsupp _ f).1 hf'
   have key : ∀ Z : Comp Xo c, ∀ d ∈ a.support, genVal Z (a d) = 0 := by
     intro Z
-    haveI : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
+    have : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
     let χ : (Ix Dw → ℤ) → ((Ix Dw → (Om Z)ˣ) →* Om Z) := fun d =>
       { toFun := fun t => ((∏ i, t i ^ d i : (Om Z)ˣ) : Om Z)
         map_one' := by simp
@@ -1506,7 +1506,7 @@ theorem free : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
     fun u hu => htor (B u) fun a ha => by rw [← B_act, hu a ha, B_one]
   obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.natCard_quot_smul_top_le_pow_finrank E Dw.La Dw.fin Dw.proj I g hg hnorm
   classical
-  haveI : Fintype (Dw.La ⧸ I • (⊤ : Submodule (𝓞 E) Dw.La)) := Fintype.ofFinite _
+  have : Fintype (Dw.La ⧸ I • (⊤ : Submodule (𝓞 E) Dw.La)) := Fintype.ofFinite _
   let rep := Function.surjInv (Submodule.Quotient.mk_surjective (I • (⊤ : Submodule (𝓞 E) Dw.La)))
   let S' : Finset (Over.mk x ⟶ G) := Finset.univ.image fun q => et (t • rep q)
   have et_t : ∀ c', et (t • c') ∈ S' := fun c' => by
@@ -1720,11 +1720,11 @@ theorem hodgeLineBundle_isBig : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
   let w : AllWt.Weight Dw := ∑ τ : Psi H, NefWt.unitWt τ (-1)
   have ew : 2 • hodgeWt Dw - χ = w := by
     funext τ i
-    simp only [w, Finset.sum_apply, NefWt.unitWt_apply, Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.sub_apply,
+    simp only [w, Finset.sum_apply, NefWt.unitWt_apply, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.sub_apply,
       Pi.smul_apply, hodgeWt, CompHt.barWt, χ, smul_eq_mul]
     split_ifs <;> norm_num
   have hwnef : (letI := algebraΓOfHom (str₀ TF.X Z); IsNef c.F (L₀ TF.X Z w)) := by
-    letI := algebraΓOfHom (str₀ TF.X Z)
+    let := algebraΓOfHom (str₀ TF.X Z)
     obtain ⟨A, hA⟩ := exists_isAmpleLB_of_isProjOver hprojY
     refine IsNef.of_cls_eq_sum Finset.univ
       (fun τ : Psi H => (_root_.GlobalTheory.NefUnit.isNef_hodgeBundle_unitWeight (_root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems.toClassicalTheorems hP) hN E H Dw l Xo c TF Z hF τ).2) (fun _ => 1) hA
@@ -1732,7 +1732,7 @@ theorem hodgeLineBundle_isBig : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
 
     rw [hφ, map_sum]
     exact Finset.sum_congr rfl fun τ _ => (one_smul _ _).symm
-  letI := algebraΓOfHom (s₀ TF.Y Z)
+  let := algebraΓOfHom (s₀ TF.Y Z)
   have hf : ∀ r : c.F, algebraMap c.F Γ(X₀ TF.Y Z, ⊤) r =
       (s₀ TF.Y Z).appTop ((Scheme.ΓSpecIso (.of c.F)).inv r) := fun _ => rfl
   have hp' : IsProjOver (strHom c.F (X := (X₀ TF.Y Z))) := by rw [strHom_eq hf]; exact hproj

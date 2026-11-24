@@ -141,7 +141,7 @@ variable {Ω : Type} [Field Ω] [Algebra E Ω] {Gw : Subgroup (Ω ≃ₐ[E] Ω)}
 
 theorem kw_le (M : IntermediateField ℚ_[l] (Om l)) (h : ∀ x : E, Bw.j (algebraMap E Ω x) ∈ M) : Bw.Kw.1 ≤ M := by
   have hfin := GlobalTheory.PlaceBridge.finiteDimensional_adjoin_range (Bw.j.comp (algebraMap E Ω))
-  have hcl := Submodule.closed_of_finiteDimensional (𝕜 := ℚ_[l])
+  have hcl := Submodule.isClosed_of_finiteDimensional (𝕜 := ℚ_[l])
     (IntermediateField.adjoin ℚ_[l] (Set.range (Bw.j.comp (algebraMap E Ω)))).toSubmodule
   refine le_trans (fun y hy => ?_) (IntermediateField.adjoin_le_iff.2 (Set.range_subset_iff.2 h))
   exact closure_minimal (IntermediateField.subset_adjoin ℚ_[l] _) hcl (Bw.j_dense hy)
@@ -162,7 +162,7 @@ theorem caseA (hl : l ≠ 2) (hE : ¬ (l : ℤ) ∣ discr E) (LL : FinExt l) (h�
     have hy' : g y ^ l = 1 := by
       have : y ^ l = 1 := by simpa using hy
       rw [← map_pow, this, map_one]
-    haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+    have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
     obtain ⟨i, -, hi⟩ := hζ'.eq_pow_of_pow_eq_one hy'
     change g y ∈ LL.1
     rw [← hi]
@@ -257,7 +257,7 @@ theorem exists_place : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAi
       ⟨hLL, by ext g a b; rfl⟩
     refine ⟨fun a b => ?_, (hM.isCrysAt_iff P).1 hc, fun i τ hτ a => ?_⟩
     · have h1 : Continuous fun g : ↥(GK Bw.Kw) => ((Bw.e.symm g : ↥(ReciprocityTheory.Gal.Dec (F := E) A)) : Ω ≃ₐ[E] Ω) :=
-        continuous_subtype_val.comp Bw.e_symm_cont
+        continuous_subtypeVal.comp Bw.e_symm_cont
       have h2 := (Units.continuous_val.comp (hr.1.comp h1)).matrix_elem a b
       exact continuous_induced_rng.2 h2
     · have hτ' := isInduced_embOf Bw hK0 (emb i) τ hτ

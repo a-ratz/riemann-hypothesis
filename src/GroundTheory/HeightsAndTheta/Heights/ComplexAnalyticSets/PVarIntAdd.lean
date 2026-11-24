@@ -74,9 +74,9 @@ theorem ringKrullDim_eq_of_injective_finite {R S : Type*} [CommRing R] [CommRing
   · have hg : StrictMono (PrimeSpectrum.comap (algebraMap R S)) := by
       intro q₁ q₂ hq
       have hlt : q₁.asIdeal < q₂.asIdeal := hq
-      obtain ⟨hle, x, hx2, hx1⟩ := SetLike.lt_iff_le_and_exists.mp hlt
+      obtain ⟨hle, x, hx2, hx1⟩ := IsConcreteLE.lt_iff_le_and_exists.mp hlt
       show q₁.asIdeal.comap (algebraMap R S) < q₂.asIdeal.comap (algebraMap R S)
-      exact Ideal.comap_lt_comap_of_integral_mem_sdiff hle ⟨hx2, hx1⟩
+      exact Ideal.under_lt_under_of_integral_mem_sdiff hle ⟨hx2, hx1⟩
         (Algebra.IsIntegral.isIntegral x)
     exact Order.krullDim_le_of_strictMono _ hg
   · refine iSup_le fun l => ?_

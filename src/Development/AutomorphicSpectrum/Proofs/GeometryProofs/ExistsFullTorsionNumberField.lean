@@ -265,7 +265,7 @@ theorem exists_finite_algebra (T : Over (Sp L)) (hT : IsFinite T.hom) :
   have hfin : IsFinite (Spec.map f) := by
     rw [← hf]; infer_instance
   rw [IsFinite.SpecMap_iff] at hfin
-  letI : Algebra L R := f.hom.toAlgebra
+  let : Algebra L R := f.hom.toAlgebra
   refine ⟨R, inferInstance, inferInstance, ?_, ⟨Over.isoMk i ?_⟩⟩
   · exact RingHom.finite_algebraMap.1 hfin
   · show i.hom ≫ Spec.map f = T.hom

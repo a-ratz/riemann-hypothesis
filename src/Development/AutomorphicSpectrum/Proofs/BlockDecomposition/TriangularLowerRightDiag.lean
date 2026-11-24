@@ -84,7 +84,7 @@ theorem tri_one {i : ι} (hi : ∀ x, x = i) : (tri 1 0 : Matrix (ι ⊕ ι) (ι
   ext2 hi (by simp [tri]) (by simp [tri]) (by simp [tri]) (by simp [tri])
 
 theorem tri_det {i : ι} (hi : ∀ x, x = i) (a b : K) : (tri a b : Matrix (ι ⊕ ι) (ι ⊕ ι) K).det = a := by
-  haveI : Unique ι := ⟨⟨i⟩, fun x => hi x⟩
+  have : Unique ι := ⟨⟨i⟩, fun x => hi x⟩
   rw [tri, Matrix.det_fromBlocks_zero₂₁, Matrix.det_unique, Matrix.det_one, mul_one]
   rfl
 
@@ -392,10 +392,10 @@ theorem sec_mem (hg : A.Good) (hb : Base A ε ν r δ α ω) {i : ι} (hi : ∀ 
         · rw [← hw', map_mul, n3, hy, map_mul, t2, zero_mul]
 
 theorem cont_pm (a b : ι ⊕ ι) : Continuous fun p : A.uQ ε (Set.univ : Set ι) => pm p a b :=
-  (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_elem a b
+  (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_elem a b
 
 theorem cont_qm (a b : ι ⊕ ι) : Continuous fun p : A.uQ ε (Set.univ : Set ι) => qm p a b :=
-  (Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_elem a b
+  (Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_elem a b
 
 end Main
 

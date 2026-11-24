@@ -228,7 +228,7 @@ theorem finite_gen (hsm : ∀ (a : A) (e : E), a • e = ι a • e) (hAR : ∀ 
     intro q
     by_contra hn
     push_neg at hn
-    letI := hloc q
+    let := hloc q
     let φ : A →+* R q := ι.codRestrict (R q) (hAR q)
     have hmem : (1 : A) ∈ (IsLocalRing.maximalIdeal (R q)).comap φ := by
       rw [← hc]

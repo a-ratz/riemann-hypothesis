@@ -222,7 +222,7 @@ theorem sum_mem_fil {p : ℕ} [Fact p.Prime] {D : GlobalTheory.UPel.HT.Datum p} 
   set act := GlobalTheory.HTSummand.crysAct (dp0 C) (𝟙 _) o.act with hact
   set u := (act (algebraMap (𝓞 D.F) D.O D.ω) - ((D.tr : C) - β b.ρ) • 1) y with hu
   have hfil : ∀ (x : D.O) {h : HdR o.A}, h ∈ Fil o.A → act x h ∈ Fil o.A := fun x h hh => by
-    haveI := o.act.hom x
+    have := o.act.hom x
     exact push_mem_Fil (o.act.act x) hh
   have hρ : β b.ρ ^ 2 - D.tr * β b.ρ + D.nm = 0 := by
     have := congrArg β b.ρ_root
@@ -286,8 +286,8 @@ theorem lieZ_mem_fil_and_lift : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.U
     have hE : ∀ (x : D.O) (h : HdR o₀.A), crysToDR (epsDP k) m'.cart (hbc.bcMap (crysAct o₀ x h)) =
         GlobalTheory.HTSummand.crysAct (dp0 (DualNumber k)) (𝟙 _) o'.act x (crysToDR (epsDP k) m'.cart (hbc.bcMap h)) := by
       intro x h
-      haveI := o₀.act.hom x
-      haveI := o'.act.hom x
+      have := o₀.act.hom x
+      have := o'.act.hom x
       have e1 : hbc.bcMap (crysAct o₀ x h) =
           push (epsDP k) (GlobalTheory.DeRham.epsRed k) (o₀.act.act x) (hbc.bcMap h) := by
         rw [← hbc.corr_iff]
@@ -305,7 +305,7 @@ theorem lieZ_mem_fil_and_lift : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.U
           ((algebraMap k (DualNumber k)).comp β) (b.t i (c l)) = 0 := fun i => by
 
         simp only [RingHom.comp_apply, ← map_mul, ← map_sum, hlam i, map_zero]
-      haveI : IsLocalRing (DualNumber k) := dualNumber_local k
+      have : IsLocalRing (DualNumber k) := dualNumber_local k
       have key := sum_mem_fil ((algebraMap k (DualNumber k)).comp β) hs o' (fun l => algebraMap k _ (lam l)) c hlam'
         (crysToDR (epsDP k) m'.cart (hbc.bcMap y'))
       rw [liftFil, Submodule.mem_comap]
@@ -417,11 +417,11 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (
   let g : HdR o₀.A →ₗ[k] HdR o₀.A := f ∘ₗ Submodule.linearProjOfIsCompl _ _ hC
   have hg : ∀ x ∈ Fil o₀.A, IsFilLift m'.cart x (g x) := fun x hx ↦ by
     have : Submodule.linearProjOfIsCompl _ _ hC x = ⟨x, hx⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hC ⟨x, hx⟩
+      Submodule.projectionOnto_apply_left hC ⟨x, hx⟩
     simpa [g, this] using hf ⟨x, hx⟩
   refine ⟨g, ⟨fun a x hx ↦ ?_, fun z hz ↦ ?_, fun x hx y hy ↦ ?_⟩, hg⟩
-  · haveI := o₀.act.hom a
-    haveI := o'.act.hom a
+  · have := o₀.act.hom a
+    have := o'.act.hom a
     have hax : GlobalTheory.HTCount.crysAct o₀ a x ∈ Fil o₀.A := by
       rw [GlobalTheory.HTCount.crysAct_apply]; exact push_mem_Fil _ hx
     have e1 : IsFilLift m'.cart (GlobalTheory.HTCount.crysAct o₀ a x) (GlobalTheory.HTCount.crysAct o₀ a (g x)) := by
@@ -595,7 +595,7 @@ namespace GlobalTheory.UPel.HT.PolIsoLift
 
 theorem pol_iso : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (N : ℕ) (k : Type) [Field k] (t : Sp k ⟶ Sp R) (o₀ : GlobalTheory.UPel.HT.Obj b N t) (s₁ s₂ : Sp (DualNumber k) ⟶ Sp R) (o₁ : GlobalTheory.UPel.HT.Obj b N s₁) (o₂ : GlobalTheory.UPel.HT.Obj b N s₂) (m₁ : GlobalTheory.UPel.HT.ObjMap o₀ o₁ (spMap (TrivSqZeroExt.fstHom k k k).toRingHom)) (m₂ : GlobalTheory.UPel.HT.ObjMap o₀ o₂ (spMap (TrivSqZeroExt.fstHom k k k).toRingHom)) (e : o₁.A ≅ o₂.A), IsMonHom e.hom → m₁.φ ≫ e.hom.left = m₂.φ → ∀ φ₂ : (G2 o₁.A).left ⟶ (G2 o₂.A).left, IsSquare e.hom.left φ₂ → LBIso o₁.P (o₂.P.pull φ₂) := by
   intro p _ D R _ b N k _ t o₀ s₁ s₂ o₁ o₂ m₁ m₂ e he hφ φ₂ hsq
-  haveI := he
+  have := he
   have hκ : IsNilDP (GlobalTheory.DeRham.epsDP k) := isDPNilpotent_squareZero _
   have hπ : Function.Surjective (TrivSqZeroExt.fstHom k k k).toRingHom := fun x ↦ ⟨TrivSqZeroExt.inl x, rfl⟩
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim (DualNumber k) o₁.A o₁.ab
@@ -785,7 +785,7 @@ theorem henselian_of_artinian (C : Type) [CommRing C] [IsLocalRing C] [IsArtinia
     rwa [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top] at this
   have hz : ∀ k, n ≤ k → (IsLocalRing.maximalIdeal C) ^ k = ⊥ := fun k hk => by
     rw [← Nat.add_sub_cancel' hk, pow_add, hn, zero_mul]; rfl
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal C) C := by
+  have : IsAdicComplete (IsLocalRing.maximalIdeal C) C := by
     refine { haus' := fun x hx => ?_, prec' := fun f hf => ⟨f n, fun k => ?_⟩ }
     · have := SModEq.zero.1 (hx n)
       rw [hz n le_rfl, Submodule.bot_smul] at this
@@ -838,9 +838,9 @@ theorem objMap_of_filLift : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.
   obtain ⟨e, he, em⟩ := ((liftHom_eps k).exists_iso_iff m₁.cart o₁.ab hd₁ m₂.cart o₂.ab hd₂).2 hF
   have hact : ∀ c : D.O, (o₁.act.act c).left ≫ e.hom.left = e.hom.left ≫ (o₂.act.act c).left := by
     intro c
-    haveI := o₁.act.hom c
-    haveI := o₂.act.hom c
-    haveI := o₀.act.hom c
+    have := o₁.act.hom c
+    have := o₂.act.hom c
+    have := o₀.act.hom c
     have := (liftHom_eps k).unique m₁.cart o₁.ab hd₁ m₂.cart o₂.ab hd₂ (o₀.act.act c)
       (f := o₁.act.act c ≫ e.hom) (f' := e.hom ≫ o₂.act.act c)
       (by rw [Over.comp_left, ← Category.assoc, ← m₁.act c, Category.assoc, em])
@@ -850,7 +850,7 @@ theorem objMap_of_filLift : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.
   have hNu : IsUnit (N : DualNumber k) := by simpa using (b.unit N hNp).map (Spec.preimage s₂).hom
   have heta : ∀ y : D.La, (o₁.eta y).left ≫ e.hom.left = 𝟙 _ ≫ (o₂.eta y).left := by
     intro a
-    haveI := henselian_of_artinian (DualNumber k)
+    have := henselian_of_artinian (DualNumber k)
     let π : DualNumber k →+* k := (TrivSqZeroExt.fstHom k k k).toRingHom
     have hπ : Function.Surjective π := fun r => ⟨TrivSqZeroExt.inl r, rfl⟩
     have h2 : RingHom.ker π ^ 2 = 0 := GlobalTheory.FODef.sqZero k k
@@ -1037,7 +1037,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (
   have hNc := crysToDR_corr (divided₂ (GlobalTheory.FODef.sqZero k (Fin d → k))) m.cart m'.cart M Nm
     (by rw [hrig]; simp) hMc
   refine ⟨d', ?_, fun q => ?_⟩
-  · letI : Algebra (TrivSqZeroExt k (Fin d → k)) (DualNumber k) := σ.toAlgebra
+  · let : Algebra (TrivSqZeroExt k (Fin d → k)) (DualNumber k) := σ.toAlgebra
     obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim (TrivSqZeroExt k (Fin d → k)) o.A o.ab
     have hF := (GlobalTheory.abelianDeRham.2.2.1 _ o.A g o.ab hg (DualNumber k) o'.A n.φ n.cart).2
     exact mem_Fil_of_corr (hφ := n.cart) hF hNc hdd

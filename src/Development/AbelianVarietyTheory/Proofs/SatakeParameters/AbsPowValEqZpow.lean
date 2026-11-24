@@ -59,7 +59,7 @@ theorem absPow_val_eq_zpow (s : ℂ) (x : kˣ) :
   have hq' : (resCard k : ℂ) ≠ 0 := by exact_mod_cast hq.ne'
   rw [val_absPow, LGrp.nabs_eq_zpow, Complex.cpow_def_of_ne_zero (by exact_mod_cast (zpow_pos hq _).ne'),
     Complex.cpow_def_of_ne_zero hq', ← Complex.ofReal_log (zpow_pos hq _).le, Real.log_zpow,
-    ← Complex.exp_int_mul, ← Complex.natCast_log]
+    ← Complex.exp_intCast_mul, ← Complex.natCast_log]
   congr 1
   push_cast
   ring

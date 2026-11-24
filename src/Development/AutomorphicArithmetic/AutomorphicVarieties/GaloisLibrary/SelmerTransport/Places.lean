@@ -87,12 +87,12 @@ theorem UpperTheory.V.Base.places :
       { carrier := {x | A.valuation (algebraMap k Ω (x : k)) < 1}
         add_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+          simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
           exact lt_of_le_of_lt (A.valuation.map_add _ _) (max_lt ha hb)
         zero_mem' := by simp
         smul_mem' := by
           intro c x hx
-          simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul] at *
+          simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul] at *
           exact lt_of_le_of_lt (mul_le_of_le_one_left' (hOk c)) hx }
     have hprime : p.IsPrime := by
       refine ⟨?_, ?_⟩
@@ -196,8 +196,8 @@ theorem UpperTheory.V.Base.places :
         exact lt_of_le_of_lt (mul_le_of_le_one_right' (hint c hcI)) hval
       rw [hNv] at hlt
       exact lt_irrefl _ hlt
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
     rw [MonoidHom.mem_ker]
     change cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G k Ω) Ω σ) = 1
     apply Units.ext
@@ -213,5 +213,5 @@ theorem UpperTheory.V.Base.places :
     · subst hn
       simp at ht'
       simp [ht']
-    · haveI : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow hn.ne' (Fact.out : l.Prime).one_lt⟩
+    · have : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow hn.ne' (Fact.out : l.Prime).one_lt⟩
       rw [ZMod.val_one, pow_one]

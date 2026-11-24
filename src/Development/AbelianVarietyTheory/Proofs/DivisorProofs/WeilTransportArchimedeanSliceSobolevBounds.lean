@@ -110,7 +110,7 @@ theorem GlobalTheory.continuousMultilinear_norm_le_basis_sum : ∀ (E : Type) [N
     ∃ K : ℝ, 0 ≤ K ∧ ∀ M : ContinuousMultilinearMap ℝ (fun _ : Fin j => E) ℂ,
       ‖M‖ ≤ K * ∑ cs : Fin j → ι, ‖M (fun r => b (cs r))‖ := by
   intro E _ _ ι _ b j
-  haveI : FiniteDimensional ℝ E := Module.Finite.of_basis b
+  have : FiniteDimensional ℝ E := Module.Finite.of_basis b
   set C := ‖(b.equivFunL : E →L[ℝ] (ι → ℝ))‖ with hC
   have hC0 : 0 ≤ C := norm_nonneg _
   have hcoord : ∀ (x : E) (c : ι), ‖b.repr x c‖ ≤ C * ‖x‖ := by
@@ -217,7 +217,7 @@ theorem sq_le_sum_enorm_sq_lintegral_bound
   · rw [MeasureTheory.ofReal_integral_eq_lintegral_ofReal hi
       (MeasureTheory.ae_of_all _ (fun x => sq_nonneg (f x)))]
     have hm : ∀ a, Measurable (fun x => ‖g a x‖ₑ ^ 2) := fun a =>
-      ((hg a).measurable.enorm).pow_const 2
+      ((hg a).measurable.eNorm).pow_const 2
     calc ∫⁻ x, ENNReal.ofReal (f x ^ 2) ∂μ
         ≤ ∫⁻ x, ENNReal.ofReal C * ∑ a, ‖g a x‖ₑ ^ 2 ∂μ := by
           refine MeasureTheory.lintegral_mono (fun x => ?_)
@@ -229,7 +229,7 @@ theorem sq_le_sum_enorm_sq_lintegral_bound
                 rw [ENNReal.ofReal_sum_of_nonneg (fun a _ => sq_nonneg _)]
                 congr 1
                 refine Finset.sum_congr rfl (fun a _ => ?_)
-                rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+                rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
       _ = ENNReal.ofReal C * ∑ a, ∫⁻ x, ‖g a x‖ₑ ^ 2 ∂μ := by
           rw [MeasureTheory.lintegral_const_mul _ (Finset.measurable_sum _ (fun a _ => hm a))]
           congr 1
@@ -270,7 +270,7 @@ theorem iteratedFDeriv_apply_eq_foldr_fderiv :
       exact (ih (Fin.tail m) z).symm
     simp only [hfun]
     have hd : DifferentiableAt ℝ (iteratedFDeriv ℝ n g) x :=
-      (hg.differentiable_iteratedFDeriv (by first | exact_mod_cast ENat.coe_lt_top n | simp | exact WithTop.coe_lt_coe.2 (ENat.coe_lt_top n))) x
+      (hg.differentiable_iteratedFDeriv (by first | exact_mod_cast ENat.natCast_lt_top n | simp | exact WithTop.coe_lt_coe.2 (ENat.coe_lt_top n))) x
     rw [fderiv_continuousMultilinear_apply_const_apply hd]
 
 end GlobalTheory
@@ -748,11 +748,11 @@ open MeasureTheory
 theorem enorm_sum_mul_sq_le {m : ℕ} (a b : Fin m → ℂ) :
     ‖∑ i, a i * b i‖ₑ ^ 2 ≤ (∑ i, ‖b i‖ₑ ^ 2) * ∑ i, ‖a i‖ₑ ^ 2 := by
   have h1 : ‖∑ i, a i * b i‖₊ ≤ ∑ i, ‖b i‖₊ * ‖a i‖₊ := by
-    refine (nnnorm_sum_le _ _).trans (le_of_eq ?_)
-    simp [nnnorm_mul, mul_comm]
+    refine (nnNorm_sum_le _ _).trans (le_of_eq ?_)
+    simp [nnNorm_mul, mul_comm]
   have h2 : ‖∑ i, a i * b i‖₊ ^ 2 ≤ (∑ i, ‖b i‖₊ ^ 2) * ∑ i, ‖a i‖₊ ^ 2 :=
     (pow_le_pow_left₀ (by positivity) h1 2).trans (Finset.sum_mul_sq_le_sq_mul_sq _ _ _)
-  simp only [enorm_eq_nnnorm]
+  simp only [eNorm_eq_nnNorm]
   exact_mod_cast h2
 
 theorem slice_le_l2A (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] (m : ℕ)
@@ -766,11 +766,11 @@ theorem slice_le_l2A (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype �
         C * GlobalTheory.WeilL2Words.l2A F μ (∑ i, GlobalTheory.WeilM.pureA F (f i) (g i)) := by
   have hmeas : ∀ f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ, Measurable fun x => ‖f x‖ₑ ^ 2 :=
     fun f => by
-      haveI : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-      exact (f.continuous.measurable.enorm).pow_const 2
-  letI : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI := hμ
+      have : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+      exact (f.continuous.measurable.eNorm).pow_const 2
+  let : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have := hμ
   have hev : ∀ (f : Fin m → SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ) x y',
       (∑ i, GlobalTheory.WeilM.pureA F (f i) (g i)) (GlobalTheory.WeilCont.adeleJoin F x y') = ∑ i, f i x * g i y' := by
     intro f x y'
@@ -788,9 +788,9 @@ theorem slice_le_l2A (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype �
     refine ne_top_of_le_ne_top ((hg j).2.isCompact.measure_lt_top).ne (measure_mono ?_)
     intro y' hy'
     apply subset_tsupport
-    rw [Function.mem_support, hUv j y' hy' j, if_pos rfl]
+    rw [Function.mem_support, hUv j y' hy' j, ite_eq_left rfl]
     exact one_ne_zero
-  have hB : (∑ i, ‖g i y‖ₑ ^ 2) ≠ ⊤ := ENNReal.sum_ne_top.2 fun i _ => ENNReal.pow_ne_top enorm_ne_top
+  have hB : (∑ i, ‖g i y‖ₑ ^ 2) ≠ ⊤ := ENNReal.sum_ne_top.2 fun i _ => ENNReal.pow_ne_top eNorm_ne_top
   refine ⟨(∑ i, ‖g i y‖ₑ ^ 2) * ∑ j, (μ (U j))⁻¹, ENNReal.mul_ne_top hB
     (ENNReal.sum_ne_top.2 fun j _ => ENNReal.inv_ne_top.2 (hU0 j)), ?_⟩
   intro f
@@ -802,9 +802,9 @@ theorem slice_le_l2A (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype �
       refine setLIntegral_congr_fun (hUo j).measurableSet (fun y' hy' => ?_)
       refine lintegral_congr fun x => ?_
       rw [hev, Finset.sum_eq_single j]
-      · rw [hUv j y' hy' j, if_pos rfl, mul_one]
+      · rw [hUv j y' hy' j, ite_eq_left rfl, mul_one]
       · intro i _ hij
-        rw [hUv j y' hy' i, if_neg hij, mul_zero]
+        rw [hUv j y' hy' i, ite_eq_right hij, mul_zero]
       · intro h
         exact absurd (Finset.mem_univ j) h
     rw [setLIntegral_const] at e
@@ -895,7 +895,7 @@ theorem negSum_nondeg (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (z 
 theorem cmTypeComponents_sum_eq_realCoordinates_sum (D : D7) (x : Ainf D.host.F) :
     ∑ ρ, Formalism.L2.Fam.ThC.th0 D ρ (x ⊗ₜ[D.host.F] (1 : D.host.E)) =
       ((∑ w, (InfiniteAdeleRing.ringEquiv_mixedSpace D.host.F x).1 w : ℝ) : ℂ) := by
-  haveI := D.sp.cm.totReal
+  have := D.sp.cm.totReal
   have e1 : ∀ ρ, Formalism.L2.Fam.ThC.th0 D ρ (x ⊗ₜ[D.host.F] (1 : D.host.E)) =
       InfinitePlace.Completion.extensionEmbedding (GlobalTheory.AdelicU.placeOf D ρ) (x (GlobalTheory.AdelicU.placeOf D ρ)) := by
     intro ρ
@@ -913,7 +913,7 @@ theorem cmTypeComponents_sum_eq_realCoordinates_sum (D : D7) (x : Ainf D.host.F)
 theorem isStdInf_of_isStdChar : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) →
     GlobalTheory.WeilL2Words.IsStdInf D.host.F ψ := by
   intro D ψ hψ
-  haveI := D.sp.cm.totReal
+  have := D.sp.cm.totReal
   have h := Formalism.L2.Fam.ThC.allSome_fam.1 hψ.2
   refine ⟨negSum D.host.F, negSum_nondeg D.host.F, fun z => ?_⟩
   have hx := h ((InfiniteAdeleRing.ringEquiv_mixedSpace D.host.F).symm z)
@@ -1127,8 +1127,8 @@ theorem eq_zero_of_l2A_eq_zero : ∀ (F : Type) [Field F] [NumberField F] (κ : 
     (μ : @MeasureTheory.Measure (κ → FiniteAdeleRing (𝓞 F) F) (borel _)), @MeasureTheory.Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
     ∀ D ∈ GlobalTheory.WeilM.schA F κ, GlobalTheory.WeilL2Words.l2A F μ D = 0 → D = 0 := by
   intro F _ _ κ _ μ hμ D hD h0
-  letI : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
   funext a
   by_contra ha
   set x0 := archPart F a
@@ -1147,17 +1147,17 @@ theorem eq_zero_of_l2A_eq_zero : ∀ (F : Type) [Field F] [NumberField F] (κ : 
     rw [hs, hDs, Finset.sum_apply, Finset.sum_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [GlobalTheory.WeilCont.pureA_adeleJoin, GlobalTheory.WeilCont.pureA_adeleJoin, hy i]
-  have hsc : Continuous fun x => ‖s x‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp (continuous_enorm.comp s.continuous)
-  haveI : BorelSpace (mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace F) := inferInstance
-  haveI h1 : (volume : Measure (mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := inferInstance
-  haveI h2 : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have hsc : Continuous fun x => ‖s x‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp (continuous_eNorm.comp s.continuous)
+  have : BorelSpace (mixedEmbedding.mixedSpace F) := inferInstance
+  have : MeasurableAdd (mixedEmbedding.mixedSpace F) := inferInstance
+  have h1 : (volume : Measure (mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := inferInstance
+  have h2 : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hc : (∫⁻ x, ‖s x‖ₑ ^ 2) ≠ 0 := by
     intro hc
     have hae := (lintegral_eq_zero_iff' hsc.aemeasurable).1 hc
     have heq := (Continuous.ae_eq_iff_eq volume hsc continuous_const).1 hae
     have : ‖s x0‖ₑ ^ 2 = 0 := congrFun heq x0
-    rw [pow_eq_zero_iff two_ne_zero, enorm_eq_zero, hs] at this
+    rw [pow_eq_zero_iff two_ne_zero, eNorm_eq_zero, hs] at this
     exact ha0 this
   have hμV : μ V ≠ 0 := hVo.measure_ne_zero μ ⟨y0, fun i => rfl⟩
   have hle : (∫⁻ x, ‖s x‖ₑ ^ 2) * μ V ≤ l2A F μ D := by
@@ -1222,10 +1222,10 @@ theorem l2A_eq_zero_of_tendsto (F : Type) [Field F] [NumberField F] (κ : Type) 
     (D : (κ → AdeleRing (𝓞 F) F) → ℂ) (G : ℕ → (κ → AdeleRing (𝓞 F) F) → ℂ) (hG : ∀ n, G n ∈ GlobalTheory.WeilM.schA F κ)
     (hD : ∀ a, Filter.Tendsto (fun n => G n a) Filter.atTop (nhds (D a)))
     (h0 : Filter.Tendsto (fun n => GlobalTheory.WeilL2Words.l2A F μ (G n)) Filter.atTop (nhds 0)) : GlobalTheory.WeilL2Words.l2A F μ D = 0 := by
-  letI : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := Pi.opensMeasurableSpace
-  have hc : Continuous fun z : ℂ => ‖z‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp continuous_enorm
+  let : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := Pi.opensMeasurableSpace
+  have hc : Continuous fun z : ℂ => ‖z‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp continuous_eNorm
   have hin : ∀ y, (∫⁻ x, ‖D (GlobalTheory.WeilCont.adeleJoin F x y)‖ₑ ^ 2) ≤
       liminf (fun n => ∫⁻ x, ‖G n (GlobalTheory.WeilCont.adeleJoin F x y)‖ₑ ^ 2) atTop := by
     intro y
@@ -1324,7 +1324,7 @@ theorem rem_apply (a : V) (L : V →L[ℝ] ℝ) (c : ℝ) (f : 𝓢(V, ℂ)) (t 
       (t : ℂ) * (fderiv ℝ f x a - (2 * Real.pi * Complex.I) * ((L x : ℝ) * f x)) := by
   have htg : Function.HasTemperateGrowth fun x : V => ((L x : ℝ) : ℂ) :=
     (Complex.ofRealCLM.comp L).hasTemperateGrowth
-  simp only [rem, SchwartzMap.sub_apply, SchwartzMap.smul_apply, LineDeriv.lineDerivOpCLM_apply,
+  simp only [rem, sub_apply, smul_apply, LineDeriv.lineDerivOpCLM_apply,
     SchwartzMap.lineDerivOp_apply_eq_fderiv, SchwartzMap.smulLeftCLM_apply_apply htg,
     SchwartzMap.smulLeftCLM_apply_apply (GlobalTheory.HeisDer.hasTemperateGrowth_phase L c t),
     SchwartzMap.compSubConstCLM_apply, smul_eq_mul, sub_neg_eq_add]
@@ -1402,11 +1402,11 @@ theorem tendsto_lintegral_sq [MeasurableSpace V] [OpensMeasurableSpace V] [Secon
     Filter.Tendsto (fun n => ∫⁻ x, ‖u n x‖ₑ ^ 2 ∂μ) Filter.atTop (nhds 0) := by
   have h1 := ((SchwartzMap.toLpCLM ℂ ℂ 2 μ).continuous.tendsto 0).comp hu
   rw [map_zero] at h1
-  have h2 := (ENNReal.continuous_pow 2).tendsto _ |>.comp (continuous_enorm.tendsto _ |>.comp h1)
-  simp only [enorm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow] at h2
+  have h2 := (ENNReal.continuous_pow 2).tendsto _ |>.comp (continuous_eNorm.tendsto _ |>.comp h1)
+  simp only [eNorm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow] at h2
   refine h2.congr fun n => ?_
   simp only [Function.comp_apply, SchwartzMap.toLpCLM_apply]
-  rw [Lp.enorm_def, eLpNorm_congr_ae (SchwartzMap.coeFn_toLp (u n) 2 μ)]
+  rw [Lp.eNorm_def, eLpNorm_congr_ae (SchwartzMap.coeFn_toLp (u n) 2 μ)]
   have := eLpNorm_nnreal_pow_eq_lintegral (f := (u n : V → ℂ)) (μ := μ) (p := 2)
     (by norm_num) (u n).continuous.aestronglyMeasurable
   simpa using this
@@ -1421,16 +1421,16 @@ theorem tendsto_l2A_diffQuot : ∀ (F : Type) [Field F] [NumberField F] [Inverti
         (GlobalTheory.WeilM.schr ψ (GlobalTheory.WeilL2Words.archPair F (((n : ℝ) + 1)⁻¹ • h)) φ a - φ a) - GlobalTheory.WeilL2Words.dS F ψ h φ a))
         Filter.atTop (nhds 0) := by
   intro F _ _ _ κ _ ψ hψ μ hμ h φ hφ
-  haveI hO : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI := GlobalTheory.WeilAdm.HaarSplit.volume_isAddHaar F κ
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).HasTemperateGrowth := inferInstance
+  have hO : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have := GlobalTheory.WeilAdm.HaarSplit.volume_isAddHaar F κ
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).HasTemperateGrowth := inferInstance
   obtain ⟨ℓ, -, hℓ⟩ := hψ
   obtain ⟨m, f, g, hg, rfl⟩ := GlobalTheory.WeilL2Words.schA_exists_sum F hφ
   have hgc : ∀ i, Continuous (g i) := fun i => (hg i).1.continuous
-  letI : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have := hμ
   have hG : ∀ i, ∫⁻ y, ‖g i y‖ₑ ^ 2 ∂μ ≠ ⊤ := by
     intro i
     have h := ((hgc i).memLp_of_hasCompactSupport (p := 2) (μ := μ) (hg i).2).eLpNorm_lt_top
@@ -1466,7 +1466,7 @@ theorem tendsto_l2A_diffQuot : ∀ (F : Type) [Field F] [NumberField F] [Inverti
     rw [e0, GlobalTheory.WeilL2Words.schr_archPair_adeleJoin F ψ ℓ hℓ, GlobalTheory.WeilL2Words.dS_sum_adeleJoin F ψ ℓ hℓ, hev, hev,
       Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.mul_sum, ← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [u, SchwartzMap.smul_apply, rem_apply, smul_eq_mul]
+    simp only [u, smul_apply, rem_apply, smul_eq_mul]
     set t : ℝ := ((n : ℝ) + 1)⁻¹ with ht
     have e1 : ∑ k, x k * (t • h).2 k = t • ∑ k, x k * h.2 k := by
       rw [Finset.smul_sum]

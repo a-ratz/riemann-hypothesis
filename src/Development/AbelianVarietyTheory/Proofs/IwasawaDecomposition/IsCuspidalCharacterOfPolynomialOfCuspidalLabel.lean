@@ -69,7 +69,7 @@ theorem isCuspOf_of_hasCuspLabel : ∀ (g : ℕ) [Fact g.Prime] (L : GlobalTheor
   have hx1 : x ^ (g ^ d - 1) = 1 := GlobalTheory.GLq.LabelUnique.pow_sub_one_eq_one hPl hx
   have hprim : IsPrimitiveRoot (L.gen d) (g ^ d - 1) := by
     rw [← L.gen_order d hd0]; exact IsPrimitiveRoot.orderOf _
-  haveI : NeZero (g ^ d - 1) := ⟨by
+  have : NeZero (g ^ d - 1) := ⟨by
     have := Nat.one_lt_pow hd0.ne' (Fact.out : g.Prime).one_lt
     omega⟩
   obtain ⟨m, -, hmz⟩ := hprim.eq_pow_of_pow_eq_one hz1

@@ -103,12 +103,12 @@ def swapE (P : PPol σ r) : Fld P ⊗[F] AF F ≃ₐ[F] AF F ⊗[F] Fld P := Alg
 theorem continuous_swapE (P : PPol σ r) :
     @Continuous _ _ (Formalism.BasicNotions.tensTopL (F := F) (E := Fld P) (AF F)) (topTens (F := F) (E := Fld P) (AF F))
       (swapE P) := by
-  letI : Algebra (AF F) (Fld P ⊗[F] AF F) := Algebra.TensorProduct.rightAlgebra
-  letI : TopologicalSpace (Fld P ⊗[F] AF F) := Formalism.BasicNotions.tensTopL (F := F) (E := Fld P) (AF F)
-  haveI : IsModuleTopology (AF F) (Fld P ⊗[F] AF F) := ⟨rfl⟩
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] Fld P) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] Fld P) := ModuleTopology.continuousAdd (AF F) (AF F ⊗[F] Fld P)
-  haveI : ContinuousSMul (AF F) (AF F ⊗[F] Fld P) := ModuleTopology.continuousSMul (AF F) (AF F ⊗[F] Fld P)
+  let : Algebra (AF F) (Fld P ⊗[F] AF F) := Algebra.TensorProduct.rightAlgebra
+  let : TopologicalSpace (Fld P ⊗[F] AF F) := Formalism.BasicNotions.tensTopL (F := F) (E := Fld P) (AF F)
+  have : IsModuleTopology (AF F) (Fld P ⊗[F] AF F) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] Fld P) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] Fld P) := ModuleTopology.continuousAdd (AF F) (AF F ⊗[F] Fld P)
+  have : ContinuousSMul (AF F) (AF F ⊗[F] Fld P) := ModuleTopology.continuousSMul (AF F) (AF F ⊗[F] Fld P)
   let f : (Fld P ⊗[F] AF F) →ₗ[AF F] (AF F ⊗[F] Fld P) :=
     { toFun := swapE P
       map_add' := map_add _
@@ -130,7 +130,7 @@ theorem swapE_inclE (P : PPol σ r) (β : Fld P) :
 
 theorem scalar_mem_UJ {S : Type} [CommRing S] (s : S →+* S) (w : Sˣ) (hw : s w * w = 1) :
     Matrix.GeneralLinearGroup.scalar (Fin 1) w ∈ Formalism.UG.UJ s (1 : Matrix (Fin 1) (Fin 1) S) := by
-  simp only [Formalism.UG.UJ, Subgroup.mem_mk, Set.mem_setOf_eq, Submonoid.mem_mk, Subsemigroup.mem_mk]
+  simp only [Formalism.UG.UJ, Subgroup.mem_mk, mem_ofPred_eq, Submonoid.mem_mk, Subsemigroup.mem_mk]
   ext i j
   fin_cases i
   fin_cases j
@@ -203,14 +203,14 @@ theorem torUnit_ratOf (P : PPol σ r) (β : Fld P) (hβ : β * star' P β = 1) :
 theorem exists_compact (h : IsCMExt F E σ) (P : PPol σ r) :
     ∃ C : Set (Tor P (AF F)), IsCompact C ∧ ∀ t : Tor P (AF F), ∃ γ ∈ ratPts (star' P) (one₁ P), γ * t ∈ C := by
   obtain ⟨D, hD, hDu⟩ := normBounded h P
-  letI tL : TopologicalSpace (Fld P ⊗[F] AF F) := Formalism.BasicNotions.tensTopL (F := F) (E := Fld P) (AF F)
+  let tL : TopologicalSpace (Fld P ⊗[F] AF F) := Formalism.BasicNotions.tensTopL (F := F) (E := Fld P) (AF F)
   obtain ⟨hTR, -, hT2, -, -, -, -⟩ := GlobalTheory.RegSSLattice.tensorLattice F (Fld P)
-  haveI := hTR
-  haveI := hT2
-  letI : Algebra (AF F) (Fld P ⊗[F] AF F) := Algebra.TensorProduct.rightAlgebra
-  haveI : IsModuleTopology (AF F) (Fld P ⊗[F] AF F) := ⟨rfl⟩
-  haveI : ContinuousAdd (Fld P ⊗[F] AF F) := ModuleTopology.continuousAdd (AF F) (Fld P ⊗[F] AF F)
-  haveI : ContinuousSMul (AF F) (Fld P ⊗[F] AF F) := ModuleTopology.continuousSMul (AF F) (Fld P ⊗[F] AF F)
+  have := hTR
+  have := hT2
+  let : Algebra (AF F) (Fld P ⊗[F] AF F) := Algebra.TensorProduct.rightAlgebra
+  have : IsModuleTopology (AF F) (Fld P ⊗[F] AF F) := ⟨rfl⟩
+  have : ContinuousAdd (Fld P ⊗[F] AF F) := ModuleTopology.continuousAdd (AF F) (Fld P ⊗[F] AF F)
+  have : ContinuousSMul (AF F) (Fld P ⊗[F] AF F) := ModuleTopology.continuousSMul (AF F) (Fld P ⊗[F] AF F)
   have hsig : Continuous (Formalism.UG.sigR (star' P) (AF F)) := by
     let f : (Fld P ⊗[F] AF F) →ₗ[AF F] (Fld P ⊗[F] AF F) :=
       { toFun := Formalism.UG.sigR (star' P) (AF F)
@@ -247,7 +247,7 @@ theorem exists_compact (h : IsCMExt F E σ) (P : PPol σ r) :
           fin_cases j
           simp [uN, Matrix.GeneralLinearGroup.scalar]
         rw [he]
-        exact (continuous_pi fun _ => hsw.comp continuous_subtype_val).matrix_diagonal
+        exact (continuous_pi fun _ => hsw.comp continuous_subtypeVal).matrix_diagonal
       · have he : (fun x : N => (((Matrix.GeneralLinearGroup.scalar (Fin 1) (uN x))⁻¹ : GL (Fin 1) _) :
               Matrix (Fin 1) (Fin 1) _)) =
             fun x => Matrix.diagonal fun _ => swapE P (Formalism.UG.sigR (star' P) (AF F) x.1) := by
@@ -257,7 +257,7 @@ theorem exists_compact (h : IsCMExt F E σ) (P : PPol σ r) :
           fin_cases j
           simp [uN, Matrix.GeneralLinearGroup.scalar]
         rw [he]
-        exact (continuous_pi fun _ => hsw.comp (hsig.comp continuous_subtype_val)).matrix_diagonal
+        exact (continuous_pi fun _ => hsw.comp (hsig.comp continuous_subtypeVal)).matrix_diagonal
     exact hsc.subtype_mk _
   let Ks : Set N := Subtype.val ⁻¹' (D ∩ N)
   have hKs : IsCompact Ks := by
@@ -297,7 +297,7 @@ theorem torus_compact_finiteVol : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   refine ⟨exists_compact h P, fun dt hdt => ?_⟩
   obtain ⟨C, hC, hCt⟩ := exists_compact h P
   have hs := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom (ratPts (star' P) (one₁ P)) dt
-  haveI : Countable (ratPts (star' P) (one₁ P)) :=
+  have : Countable (ratPts (star' P) (one₁ P)) :=
     TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   rw [torVol, GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ hs]
   refine ne_top_of_le_ne_top (hC.measure_lt_top (μ := dt)).ne ?_

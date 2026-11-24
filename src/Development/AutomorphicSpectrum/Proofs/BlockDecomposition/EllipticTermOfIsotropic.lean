@@ -59,7 +59,7 @@ namespace GlobalTheory.CompanionTheory.EllIso
 
 theorem exists_eigvec {n : ℕ} (G : Matrix (Fin n) (Fin n) ℂ) (S : Submodule ℂ (Fin n → ℂ)) (hS : S ≠ ⊥)
     (hst : ∀ x ∈ S, G *ᵥ x ∈ S) : ∃ (z : ℂ) (v : Fin n → ℂ), v ∈ S ∧ v ≠ 0 ∧ G *ᵥ v = z • v := by
-  haveI : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS
+  have : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS
   let f : Module.End ℂ S := (Matrix.toLin' G).restrict (fun x hx => by simpa using hst x hx)
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue f
   obtain ⟨v, hv⟩ := hc.exists_hasEigenvector
@@ -84,10 +84,10 @@ theorem eig_line {n : ℕ} (G : Matrix (Fin n) (Fin n) ℂ) (hs : G.charpoly.Sep
   let u' : Module.End.eigenspace f z := ⟨u, hmem u hGu⟩
   have hv' : v' ≠ 0 := fun h => hv (congrArg Subtype.val h)
   have h2 : Module.finrank ℂ (Module.End.eigenspace f z) = 1 := by
-    haveI : Nontrivial (Module.End.eigenspace f z) := ⟨v', 0, hv'⟩
+    have : Nontrivial (Module.End.eigenspace f z) := ⟨v', 0, hv'⟩
     have := Module.finrank_pos (R := ℂ) (M := Module.End.eigenspace f z)
     omega
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' v' hv').1 h2 u'
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' v' hv').1 h2 u'
   exact ⟨c, (congrArg Subtype.val hc).symm⟩
 
 

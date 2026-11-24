@@ -93,11 +93,11 @@ theorem exists_mem_ind_apply_one {G W : Type} [Group G] [TopologicalSpace G] [Is
   have hF : ∀ (p : P) (c : G), c ∈ K → F ((p : G) * c) = σ p u := by
     intro p c hc
     have h : ∃ p' : P, ∃ c' ∈ K, (p : G) * c = (p' : G) * c' := ⟨p, c, hc, rfl⟩
-    simp only [F, dif_pos h]
+    simp only [F, dite_eq_left h]
     obtain ⟨c', hc', e⟩ := h.choose_spec
     exact wd _ _ _ _ hc' hc e.symm
   have hF0 : ∀ g, (¬ ∃ p : P, ∃ c ∈ K, g = (p : G) * c) → F g = 0 := fun g h => by
-    simp only [F, dif_neg h]
+    simp only [F, dite_eq_right h]
   have hmem : F ∈ indSpace P σ := by
     intro h g
     by_cases hg : ∃ p : P, ∃ c ∈ K, g = (p : G) * c
@@ -138,14 +138,14 @@ theorem continuous_leviProj (e : (Σ a, m a) ≃ n) : Continuous (leviProj k e) 
   refine continuous_pi fun a => Units.continuous_iff.2 ⟨?_, ?_⟩
   · refine continuous_matrix fun i j => ?_
     simp only [Function.comp_def, leviProj_apply]
-    exact (Units.continuous_val.comp continuous_subtype_val).matrix_elem _ _
+    exact (Units.continuous_val.comp continuous_subtypeVal).matrix_elem _ _
   · have : (fun p : parab k e => (((leviProj k e p a)⁻¹ : GL (m a) k) : Matrix (m a) (m a) k)) =
         fun p => ((leviProj k e p⁻¹ a : GL (m a) k) : Matrix (m a) (m a) k) := by
       funext p; rw [map_inv]; rfl
     rw [this]
     refine continuous_matrix fun i j => ?_
     simp only [leviProj_apply]
-    exact ((Units.continuous_val.comp continuous_subtype_val).comp continuous_inv).matrix_elem _ _
+    exact ((Units.continuous_val.comp continuous_subtypeVal).comp continuous_inv).matrix_elem _ _
 
 theorem exists_openSubgroup_GL :
     ∀ N ∈ 𝓝 (1 : GL n k), ∃ K : Subgroup (GL n k), IsOpen (K : Set (GL n k)) ∧ ∀ g ∈ K, g ∈ N := by

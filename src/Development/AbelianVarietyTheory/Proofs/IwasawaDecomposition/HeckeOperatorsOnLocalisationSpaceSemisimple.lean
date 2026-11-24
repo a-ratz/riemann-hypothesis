@@ -182,15 +182,15 @@ open Module
 
 theorem finiteDimensional_MtL (D : D7) (μ : D.what₂.Tup) (j : ℕ) : FiniteDimensional D.what₂.LL (D.what₂.MtL μ j) := by
   have hli := (D.what₂.jMt_basis μ j (Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL μ j))).1
-  haveI := hli.finite
+  have := hli.finite
   exact Module.Finite.of_basis (Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL μ j))
 
 theorem jMt_injective (D : D7) (μ : D.what₂.Tup) (j : ℕ) : Function.Injective (D.what₂.jMt μ j) := by
   classical
   set b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL μ j)
   have hli := (D.what₂.jMt_basis μ j b).1
-  haveI := hli.finite
-  haveI := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL μ j))
+  have := hli.finite
+  have := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL μ j))
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro x hx
   have e : D.what₂.jMt μ j x = ∑ i, D.what₂.embLL (b.repr x i) • D.what₂.jMt μ j (b i) := by
@@ -225,9 +225,9 @@ theorem semisimpleTw_base : ∀ (D : D7) (M : MtFam D) (C : NChoice D) (hR : Hec
       map_smul' := fun c f => Subtype.ext (by
         have e := hst.2.1 f f.2 0 (zero_mem _) c
         simpa [t0] using e) }
-  haveI : FiniteDimensional ℂ (NG.TypeSp Mr.wt.ρ Mr.J Mr.χ) := by
+  have : FiniteDimensional ℂ (NG.TypeSp Mr.wt.ρ Mr.J Mr.χ) := by
     rw [← Mr.real_range]; infer_instance
-  haveI := finiteDimensional_MtL D (D.what₂.muTw w) j
+  have := finiteDimensional_MtL D (D.what₂.muTw w) j
   have hmem : ∀ x, Mr.real (D.what₂.jMt (D.what₂.muTw w) j x) ∈ NG.TypeSp Mr.wt.ρ Mr.J Mr.χ := fun x => by
     rw [← Mr.real_range]; exact LinearMap.mem_range_self _ _
   let φ : D.what₂.MtL (D.what₂.muTw w) j →ₛₗ[D.what₂.embLL] NG.TypeSp Mr.wt.ρ Mr.J Mr.χ :=
@@ -244,6 +244,6 @@ theorem semisimpleTw_base : ∀ (D : D7) (M : MtFam D) (C : NChoice D) (hR : Hec
     rw [Submodule.coe_sub, Submodule.coe_smul] at e
     exact hjo u u.2 μ e))
   have hsq := GlobalTheory.HeckeSemis.squarefree_minpoly φ hφ (hLC (mt0 M) C.Q hR j w v k) S hcomm hSs
-  haveI : CharZero D.what₂.LL := RingHom.charZero D.what₂.embLL
+  have : CharZero D.what₂.LL := RingHom.charZero D.what₂.embLL
   exact GlobalTheory.HeckeSemis.isSemisimple_baseChange _ hsq (FractionRing (OcC X j w))
 end GlobalTheory.HeckeLocN

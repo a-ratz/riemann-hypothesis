@@ -81,7 +81,7 @@ theorem norm_lminor_inv {r p : ℕ} (hp : p ≤ r) {g : Matrix (Fin r) (Fin r) �
     have ha : ((Fin.castLE hp a : Fin r) : ℕ) < p := a.isLt
     have hb : ((Fin.castLE hp b : Fin r) : ℕ) < p := b.isLt
     simp only [Matrix.submatrix_apply, Matrix.diagonal_mul, Matrix.mul_diagonal, sgnMat,
-      Matrix.conjTranspose_apply, sgn, if_pos ha, if_pos hb]
+      Matrix.conjTranspose_apply, sgn, ite_eq_left ha, ite_eq_left hb]
     simp
   unfold lminor
   rw [hinv]
@@ -274,7 +274,7 @@ theorem muF_ball_ne_zero (X : Data E r) {x0 : Frame X.Ψ r} (h0 : IsOrth X x0) {
 theorem orbitSum_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (x0 : Frame X.Ψ r), IsOrth X x0 → PropDisc X → ∀ s : ℝ, 0 < s → (∃ I : ℝ≥0∞, I < ⊤ ∧ ∀ x1 : Frame X.Ψ r, IsOrth X x1 → ∫⁻ z, ENNReal.ofReal (Real.exp (-(s * rhF X x1 z))) ∂muF X x1 ≤ I) → ∃ C : ℝ≥0∞, C < ⊤ ∧ ∀ x, IsOrth X x → ∑' γ : X.Γ, ENNReal.ofReal (Real.exp (-(s * GlobalTheory.Up.rhX X x0 (lact γ.1 x)))) ≤ C := by
   intro E _ _ _ r X x0 h0 hPD s hs ⟨I, hI, hIb⟩
   classical
-  haveI := FundSetPf.countable_GL (E := E) (r := r)
+  have := FundSetPf.countable_GL (E := E) (r := r)
   obtain ⟨ρ1, hρ1, K, hH⟩ := harnack X h0
   obtain ⟨ρ2, hρ2, hfin⟩ := finite_mult X h0 hPD
   obtain ⟨FF, hFF⟩ := fundSet_holds r X x0 h0 hPD

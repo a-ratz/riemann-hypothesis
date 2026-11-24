@@ -140,7 +140,7 @@ theorem integrable_fibre (n d : ℕ) (ν : kˣ →* ℂˣ) (hν : GlobalTheory.S
     have hli : LinearIndependent k (X * R).row := by
       rw [linearIndependent_iff_card_eq_finrank_span]
       exact h2.symm.trans (Matrix.rank_eq_finrank_span_row _)
-    exact Matrix.linearIndependent_rows_iff_isUnit.1 hli
+    exact Matrix.linearIndependent_row_iff_isUnit.1 hli
   classical
   let φ : Matrix (Fin n) (Fin d) k → GL (Fin n) k := fun X =>
     if h : IsUnit (X * R) then h.unit else 1
@@ -161,8 +161,8 @@ theorem integrable_fibre (n d : ℕ) (ν : kˣ →* ℂˣ) (hν : GlobalTheory.S
       hlc.continuous.comp (Units.continuous_val.matrix_mul continuous_const)
     refine (h1.mul (continuous_char_apow n ν hν ((Fintype.card (Fin d) : ℂ) / 2))).congr fun g => ?_
     simp only [Pi.mul_apply]; ring
-  letI : MeasurableSpace (GL (Fin n) k) := Units.instMeasurableSpace
-  haveI : BorelSpace (GL (Fin n) k) := borel_GL
+  let : MeasurableSpace (GL (Fin n) k) := Units.instMeasurableSpace
+  have : BorelSpace (GL (Fin n) k) := borel_GL
   refine hcont.integrable_of_hasCompactSupport (μ := haarVol (GlobalTheory.SplitWeil.KO k (Fin n)))
     (HasCompactSupport.intro hS fun g hg => ?_)
   rw [image_eq_zero_of_notMem_tsupport hg]; simp

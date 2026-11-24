@@ -98,8 +98,8 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [
   [Algebra F E] [TopologicalSpace E] (L : Formalism.MainNotions.S.Loc.LocE F E)
 
 theorem exists_quad (L : Formalism.MainNotions.S.Loc.LocE F E) (d : E) : ∃ t n : F, d * d - algebraMap F E t * d + algebraMap F E n = 0 := by
-  haveI := L.free
-  haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
+  have := L.free
+  have : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
   set f : E →ₗ[F] E := Algebra.lmul F E d with hf
   have hmon : f.charpoly.Monic := LinearMap.charpoly_monic f
   have hdeg : f.charpoly.natDegree = 2 := by rw [LinearMap.charpoly_natDegree, L.rank]
@@ -145,7 +145,7 @@ theorem inv_mem_O_of_quad (u : E) (t n : F) (h : u * u - algebraMap F E t * u + 
       simp only [map_mul]
       linear_combination (algebraMap F E n⁻¹ * algebraMap F E n⁻¹) * h - algebraMap F E n⁻¹ * e
     · rw [map_mul, map_inv₀]
-      exact mul_inv_le_one_of_le₀ ht zero_le'
+      exact mul_inv_le_one_of_le₀ ht zero_le
     · rw [map_inv₀]; exact inv_le_one_of_one_le₀ hn
   · have e : algebraMap F E n * algebraMap F E n⁻¹ = 1 := by
       rw [← map_mul, mul_inv_cancel₀ hn0, map_one]
@@ -244,7 +244,7 @@ theorem mkW_mem_of_mem_img : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologi
         Finset.sum_eq_zero (fun i _ => by
           rw [show H.h (Fr.e i) (Fr.e b) = 0 from Fr.h_iso _ _ (Or.inl (Fin.castSucc_lt_last i).ne), mul_zero])
       have z2 : ∑ i, H.h a (Fr.e i) * H.h (Fr.es i) (Fr.e b) = H.h a (Fr.e b) := by
-        simp only [hes_e, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        simp only [hes_e, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         rw [Finset.sum_ite_eq]; simp
       rw [z1, z2]; ring
     | zero => exact h_zero_right' H _
@@ -703,7 +703,7 @@ theorem local_gen {R : Type*} [CommRing R] [IsDedekindDomain R]
     have heq : J * P.asIdeal = J * ⊤ := by
       rw [Ideal.mul_top]; exact le_antisymm Ideal.mul_le_left h
     exact hP (mul_left_cancel₀ hJ heq)
-  obtain ⟨d, hdJ, hdn⟩ := SetLike.not_le_iff_exists.mp hlt
+  obtain ⟨d, hdJ, hdn⟩ := IsConcreteLE.not_le_iff_exists.mp hlt
   have hd0 : d ≠ 0 := by
     rintro rfl; exact hdn (Submodule.zero_mem _)
   have hdvd : J ∣ Ideal.span {d} :=
@@ -714,7 +714,7 @@ theorem local_gen {R : Type*} [CommRing R] [IsDedekindDomain R]
     apply hdn
     have : Ideal.span {d} ≤ J * P.asIdeal := hK ▸ Ideal.mul_mono_right h
     exact this (Ideal.mem_span_singleton_self d)
-  obtain ⟨s, hsK, hsP⟩ := SetLike.not_le_iff_exists.mp hKP
+  obtain ⟨s, hsK, hsP⟩ := IsConcreteLE.not_le_iff_exists.mp hKP
   refine ⟨d, hdJ, hd0, s, hsP, ?_⟩
   intro y hy
   have hm : s * y ∈ Ideal.span {d} := by

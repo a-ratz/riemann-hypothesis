@@ -81,7 +81,7 @@ theorem isOpen_US (S : Finset (HeightOneSpectrum (𝓞 E))) : IsOpen (US E n S :
         (fun g : GA E n => (((g⁻¹ : GA E n) : Matrix (Fin n) (Fin n) (Ad E)) i j).2) ⁻¹' A) := by
     ext g
     simp only [SetLike.mem_coe, US, Subgroup.mem_iInf, Subgroup.mem_comap, Set.mem_iInter, Set.mem_inter_iff,
-      Set.mem_preimage, A, Set.mem_setOf_eq, GlobalTheory.LFun.KGL, mem_GLint_iff_entries_cell, ← map_inv]
+      Set.mem_preimage, A, Set.mem_ofPred_eq, GlobalTheory.LFun.KGL, mem_GLint_iff_entries_cell, ← map_inv]
     constructor
     · intro h i j
       exact ⟨fun v hv => (h v hv).1 i j, fun v hv => (h v hv).2 i j⟩
@@ -99,7 +99,7 @@ theorem isOpen_adelicUnipotentTimesIntegralOutsideSet : ∀ (E : Type) [Field E]
   intro E _ _ n S
   have e : C0 E n S = ⋃ u ∈ (NA E n : Set (GA E n)), (fun k => u * k) '' (US E n S : Set (GA E n)) := by
     ext g
-    simp only [C0, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_image, SetLike.mem_coe, exists_prop]
+    simp only [C0, Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_image, SetLike.mem_coe, exists_prop]
     constructor
     · rintro ⟨u, hu, k, hk, rfl⟩; exact ⟨u, hu, k, hk, rfl⟩
     · rintro ⟨u, hu, k, hk, rfl⟩; exact ⟨u, hu, k, hk, rfl⟩

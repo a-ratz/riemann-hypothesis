@@ -180,14 +180,14 @@ theorem _root_.GlobalTheory.T.adaptedHyperbolicPlane_rescale_rebasis : ∀ (F E 
     intro z hz
     obtain ⟨s, t, u, hs, ht, hu, rfl⟩ := hH.split z hz
     exact ⟨s * c⁻¹, t * σ c, u, by rw [ex]; exact hs, by rw [ey]; exact ht, hu, by rw [ex, ey]⟩
-  haveI : Y₁.L.IsFullLattice E := hL₁
+  have : Y₁.L.IsFullLattice E := hL₁
   have hcomap : Y.L.comap ((Matrix.mulVecLin H₀.ι).restrictScalars (𝓞 E)) = Y₁.L :=
     Submodule.ext fun u => (hH.low u).symm
   have hb₁ : ∀ v : B.P, ∃ β, GlobalTheory.AdelicU.IsSplitBasis (B.τ v) Y₁.L β := fun v =>
     GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) Y₁.L hcm
   choose β₁ hβ₁ using hb₁
   let bas₁ : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), GL (Fin n₁) (Fv F v) := fun v => if h : v ∈ B.P then β₁ ⟨v, h⟩ else Y₁.bas v
-  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dif_pos v.2]
+  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dite_eq_left v.2]
   have hb : ∀ v : B.P, ∃ β : GL (Fin n) (Fv F v), (∀ i : Fin n, (i.1 = i₀ → ∀ r, β.1 r i = B.τ v (x r)) ∧
       (i.1 = i₁ → ∀ r, β.1 r i = B.τ v (y r)) ∧
       ∀ j : Fin n₁, i.1 = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.skip i₀ i₁ j → ∀ r, β.1 r i = (H₀.ι.map (B.τ v) * (β₁ v).1) r j) ∧
@@ -201,7 +201,7 @@ theorem _root_.GlobalTheory.T.adaptedHyperbolicPlane_rescale_rebasis : ∀ (F E 
       (by rw [hcomap]; exact hβ₁ v)
   choose β hβ using hb
   let bas : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), GL (Fin n) (Fv F v) := fun v => if h : v ∈ B.P then β ⟨v, h⟩ else Y.bas v
-  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dif_pos v.2]
+  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dite_eq_left v.2]
   let Y' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n := ⟨Y.J, Y.L, Y.θ, bas⟩
   let Y₁' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n₁ := ⟨Y₁.J, Y₁.L, Y₁.θ, bas₁⟩
   refine ⟨Y', Y₁', ⟨x, y, H₀.ι, 𝔟⟩, rfl, rfl, fun v => ?_, fun v => ?_, ?_⟩
@@ -265,7 +265,7 @@ theorem eq_or_eq_comp {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     (h : IsCMExt F E σ) (e τ : E →+* ℂ) (heτ : e.comp (algebraMap F E) = τ.comp (algebraMap F E)) :
     τ = e ∨ ∀ x, τ x = star (e x) := by
   obtain ⟨-, hc, h2, hσ⟩ := h
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
   obtain ⟨g, hg⟩ := NumberField.ComplexEmbedding.exists_comp_symm_eq_of_comp_eq (k := F) e τ heτ
   have hσσ : ∀ x, σ (σ x) = x := fun x => e.injective (by rw [hσ, hσ, star_star])
   let s : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (AlgHom.ext hσσ) (AlgHom.ext hσσ)
@@ -454,7 +454,7 @@ theorem hasSig_map_conj {m a b : ℕ} {M : Matrix (Fin m) (Fin m) ℂ} (h : HasS
 theorem hasSignature_all (hG : B.IsGood D.sp.cm.sig) {m a b : ℕ} (J : Matrix (Fin m) (Fin m) D.host.E)
     (hs : ∀ w, HasSig (J.map (B.emb w).1) a b) (φ : D.host.E →+* ℂ) : Formalism.UG.HasSignature (J.map φ) a b := by
   have h := hG.cm
-  haveI := h.1
+  have := h.1
   set w := InfinitePlace.mk (φ.comp (algebraMap D.host.F D.host.E)) with hw
   have hreal : ComplexEmbedding.IsReal (φ.comp (algebraMap D.host.F D.host.E)) :=
     IsTotallyReal.complexEmbedding_isReal _
@@ -1160,7 +1160,7 @@ theorem theta_tower_step_norm_identity : _root_.GlobalTheory.FunPr.ThetaLocalInp
   obtain ⟨Y, hY, y1, y2, y3⟩ := qs W hψ i j p 0 B A' WW₁ ΛB X.rA'.Λ ΛW sB s8.rigA'.1 sW (by omega) s2 (by omega) s4
     (by simpa using nB) s6 (by simpa using nW) oW.1.symm
   obtain ⟨c, hc⟩ := qf W S hψ hN i j p 0 B A' WW₁ Y hY
-  haveI : Nonempty T := ⟨μ₀⟩
+  have : Nonempty T := ⟨μ₀⟩
   refine ⟨B, A', WW₁, Y, c, hY, hc.isConst, fun t => ?_⟩
   obtain ⟨Bs, hes, f⟩ := hemb t
   have hee : Bs.emb = B₀.emb := hes.trans he₀.symm

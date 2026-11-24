@@ -79,7 +79,7 @@ theorem cuspDiscreteDecompositionGL_of_compact
   have hpos : 0 < ‖v‖ := norm_pos_iff.mpr hv
   have cc : Continuous fun g => inner ℂ v ((Rcusp μ g) v) := continuous_const.inner (hU.continuous_apply v)
   have h1pos : 0 < (inner ℂ v ((Rcusp μ 1) v)).re := by
-    rw [map_one, ContinuousLinearMap.one_apply]
+    rw [map_one, one_apply_eq_self]
     have h3 : RCLike.re (inner ℂ v v) = ‖v‖ ^ 2 := inner_self_eq_norm_sq v
     have h4 : (inner ℂ v v).re = ‖v‖ ^ 2 := h3
     rw [h4]
@@ -98,7 +98,7 @@ theorem cuspDiscreteDecompositionGL_of_compact
   simp only [Complex.reCLM_apply, Complex.re_ofReal_mul] at h8
   rw [← key, Complex.zero_re] at h8
   have h9 : 0 < ∫ g, φ g * (inner ℂ v ((Rcusp μ g) v)).re ∂μ := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
       (hφc.mul (Complex.continuous_re.comp cc)) hφs.mul_right (fun g => ?_) (mul_ne_zero hφ1 h1pos.ne')
     by_cases hg : φ g = 0
     · simp [hg]

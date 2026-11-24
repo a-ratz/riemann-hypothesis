@@ -168,7 +168,7 @@ private theorem exists_char {z : WD h} (hz : IsIrrWD z) {n : ℕ} (η : Fin n �
     rcases hirr.eq_bot_or_eq_top ⟨S, fun g v hv => hS g v hv⟩ with h | h
     · exact Or.inl (congrArg Subrepresentation.toSubmodule h)
     · exact Or.inr (congrArg Subrepresentation.toSubmodule h)
-  haveI : Nontrivial (Fin m → ℂ) := nontrivial_of_irreducible hirr
+  have : Nontrivial (Fin m → ℂ) := nontrivial_of_irreducible hirr
   have hsc : ∀ g, ∃ c : ℂ, ∀ v, b.ρ g v = c • v := fun g => by
     obtain ⟨c, hcv⟩ := Module.End.exists_eigenvalue (b.ρ g)
     refine ⟨c, fun v => ?_⟩
@@ -301,7 +301,7 @@ theorem UpperTheory.V.Z.Win.T2.psRec_alt :
     obtain ⟨art, hart⟩ := P.aut.art L Ω
     have hinj := GlobalTheory.ArtinLocalInj.artin_localIdele_injective P.loc.chev L Ω art hart w
     exact MonoidHom.ext fun σ => hinj ((ha'.glob art hart _).trans (ha.glob art hart _).symm)
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hμ : ∀ i, IsSmoothChar (ω i * absPow (w.adicCompletion L) (((n : ℂ) - 1) / 2)) :=
     fun i => (hω i).mul (isSmoothChar_absPow _)
   have e0 : ((n : ℂ) - 1) / 2 + (((1 - (n : ℝ)) / 2 : ℝ) : ℂ) = 0 := by push_cast; ring
@@ -356,7 +356,7 @@ private theorem core0 {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSp
     (hμ : ∀ j k, j ≠ k → ∃ s, μ j (ineIncl h s) ≠ μ k (ineIncl h s))
     (hP : ∀ σ, (wdPst P ι Bw h hj ρ).charPol σ = ∏ j, (X - C (μ j σ : ℂ))) :
     wdN P ι ρ = 0 ∧ ∀ j, μ j = 1 → ∃ z : ↥(Dpst P ρ), z ≠ 0 ∧ phiD P ρ z = z ∧ ∀ g, actD P ρ g z = z := by
-  haveI := hV.finite
+  have := hV.finite
   have hc : ∀ σ, (wdRho P ι Bw h hj ρ σ).charpoly = ∏ j, (X - C (μ j σ : ℂ)) :=
     fun σ => (DpstMap.charPol_wdPst P ι Bw h hj ρ hV σ).symm.trans (hP σ)
   obtain ⟨hN, hL⟩ := UpperTheory.inertia_eigenvector_extends_of_distinct_characters (ineIncl h) (wdRho P ι Bw h hj ρ) μ
@@ -546,7 +546,7 @@ theorem UpperTheory.V.Z.Ord.core_hecke_of_automorphic_hecke_dense_weight :
   have hdr := _root_.UpperTheory.V.Z.Ord.useAtL' (Y.atL v) (ω v) (hsm v) hdist ⟨φ⟩ rc hrc ((UpperTheory.V.Lev.ssCalc L Ω _ _ (H.ovr v)).1 n _ (fun j => (ω v j).comp (H.art v)) hpol)
   rw [funext hpol] at hdr
   refine _root_.UpperTheory.V.Loc.ordFlag_alt hL L Ω l hA.odd ι n (H.Sl v) (hA.Sl_over v) (H.pl v) (H.ovr v) (H.art v) (hA.art_spec v)
-    _ (Y.cont.comp (hA.prj_cont.comp continuous_subtype_val)) (htW lam) (fun τ i j hij => ?_) (ω v) _ hO
+    _ (Y.cont.comp (hA.prj_cont.comp continuous_subtypeVal)) (htW lam) (fun τ i j hij => ?_) (ω v) _ hO
     (fun i j hij => ?_) hdr
   · have h1 := (lam τ).anti (Fin.rev_le_rev.2 hij.le)
     have h2 : (i : ℕ) < j := hij

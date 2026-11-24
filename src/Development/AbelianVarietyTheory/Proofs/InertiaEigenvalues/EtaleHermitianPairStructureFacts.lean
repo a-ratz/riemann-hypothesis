@@ -95,10 +95,10 @@ theorem addHaar_submodule_eq_zero (F : Type) [NontriviallyNormedField F] [Locall
     (V : Type) [AddCommGroup V] [Module F V] [Module.Finite F V] [TopologicalSpace V]
     [IsModuleTopology F V] [MeasurableSpace V] [BorelSpace V] (μ : Measure V)
     (hμ : μ.IsAddHaarMeasure) (s : Submodule F V) (hs : s ≠ ⊤) : μ (s : Set V) = 0 := by
-  haveI := hμ
-  haveI : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd F V
-  haveI : ContinuousSMul F V := inferInstance
+  have := hμ
+  have : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd F V
+  have : ContinuousSMul F V := inferInstance
 
   let e₀ : V ≃ₗ[F] (Fin (Module.finrank F V) → F) := (Module.finBasis F V).equivFun
   have hc : Continuous e₀ := IsModuleTopology.continuous_of_linearMap e₀.toLinearMap
@@ -108,7 +108,7 @@ theorem addHaar_submodule_eq_zero (F : Type) [NontriviallyNormedField F] [Locall
 
   have hcl : IsClosed (s : Set V) := by
     have h1 : IsClosed ((s.map e₀.toLinearMap : Submodule F _) : Set (Fin (Module.finrank F V) → F)) :=
-      Submodule.closed_of_finiteDimensional _
+      Submodule.isClosed_of_finiteDimensional _
     have h2 : (s : Set V) = h ⁻¹' ((s.map e₀.toLinearMap : Submodule F _) : Set _) := by
       ext v
       simp [h, Submodule.mem_map]
@@ -245,7 +245,7 @@ theorem finite_units_quot_sq_normed (F : Type) [NontriviallyNormedField F] [Comp
           (hcu.unit⁻¹).isUnit
       exact (isUnit_pow_iff two_ne_zero).mp this
     refine ⟨c, hct, ?_⟩
-    simp only [f, dif_pos hcu]
+    simp only [f, dite_eq_left hcu]
     rw [QuotientGroup.eq, MonoidHom.mem_range]
     let bu : Rˣ := Units.map (algebraMap F R).toMonoidHom (Units.mk0 _ hβ0)
     have hs' : hsU.unit ^ 2 = bu ^ 2 * u * hcu.unit⁻¹ := by
@@ -285,7 +285,7 @@ theorem finite_units_quot_sq_reduced (F : Type) [NontriviallyNormedField F] [Com
     [IsReduced K] : Finite (Kˣ ⧸ (powMonoidHom 2 : Kˣ →* Kˣ).range) := by
   classical
   have : IsArtinianRing K := IsArtinianRing.of_finite F K
-  letI (I : MaximalSpectrum K) : Field (K ⧸ I.asIdeal) :=
+  let (I : MaximalSpectrum K) : Field (K ⧸ I.asIdeal) :=
     @Ideal.Quotient.field _ _ I.asIdeal I.isMaximal
   have hfin (I : MaximalSpectrum K) :
       Finite ((K ⧸ I.asIdeal)ˣ ⧸ (powMonoidHom 2 : (K ⧸ I.asIdeal)ˣ →* (K ⧸ I.asIdeal)ˣ).range) :=
@@ -320,7 +320,7 @@ theorem finite_units_quot_sq_reduced (F : Type) [NontriviallyNormedField F] [Com
       apply e.injective
       funext I
       have := congrArg Units.val (hs I)
-      simp only [Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_coe] at this
+      simp only [Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_ofClass] at this
       simp [x, this] <;> rfl
     · rintro ⟨w, rfl⟩
       funext I
@@ -413,10 +413,10 @@ namespace GlobalTheory.JR.OKCompact
 theorem okCompact : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A : Et F E), IsCompact A.OK := by
   intro F E _ _ _ _ hU A
-  haveI : CharZero F := hU.charZero
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : Infinite F := Infinite.of_injective (Nat.cast : ℕ → F) Nat.cast_injective
+  have : CharZero F := hU.charZero
+  have : LocallyCompactSpace F := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : Infinite F := Infinite.of_injective (Nat.cast : ℕ → F) Nat.cast_injective
   obtain ⟨n, hn⟩ : ∃ n, Module.finrank F A.K = n := ⟨_, rfl⟩
   let e : A.K ≃ₗ[F] (Fin n → F) := (Module.finBasisOfFinrankEq F A.K hn).equivFun
   have hes : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -432,11 +432,11 @@ theorem okCompact : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNo
       ext k
       rw [Polynomial.coeff_X_pow]
       rcases lt_trichotomy k n with hk | hk | hk
-      · rw [if_neg hk.ne]; exact hz k hk
-      · rw [if_pos hk]
+      · rw [ite_eq_right hk.ne]; exact hz k hk
+      · rw [ite_eq_left hk]
         have := (LinearMap.charpoly_monic (Algebra.lmul F A.K z)).coeff_natDegree
         rwa [LinearMap.charpoly_natDegree, hn, ← hk] at this
-      · rw [if_neg hk.ne']
+      · rw [ite_eq_right hk.ne']
         apply Polynomial.coeff_eq_zero_of_natDegree_lt
         rw [LinearMap.charpoly_natDegree, hn]; exact hk
     have hCH := LinearMap.aeval_self_charpoly (Algebra.lmul F A.K z)
@@ -556,11 +556,11 @@ theorem continuous_coeff {F E : Type} [NontriviallyNormedField F] [NontriviallyN
 theorem isOpen_OK : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A : Et F E), IsOpen A.OK := by
   intro F E _ _ _ _ hU A
-  haveI : IsUltrametricDist F := hU.ultraF
+  have : IsUltrametricDist F := hU.ultraF
   have hset : A.OK = ⋂ i : Fin (Module.finrank F A.K + 1),
       (fun z : A.K => (LinearMap.charpoly (Algebra.lmul F A.K z)).coeff i) ⁻¹' Metric.closedBall 0 1 := by
     ext z
-    simp only [Et.OK, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, Metric.mem_closedBall, dist_zero_right]
+    simp only [Et.OK, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, Metric.mem_closedBall, dist_zero_right]
     constructor
     · intro h i; exact h i
     · intro h i
@@ -613,11 +613,11 @@ theorem eta_NL [U : Unram F E] (A : Et F E) (y : A.L) : A.etaK (A.NL y) = 1 := b
   obtain ⟨x, hx⟩ := U.unram (Algebra.norm E y)
   have hx2 : ‖Algebra.norm F (Algebra.norm E y)‖ = ‖x‖ ^ 2 := by
     rw [← norm_algebraMap' E, normE, norm_mul, U.norm_star, hx, sq]
-  rw [if_pos ⟨x, hx2⟩]
+  rw [ite_eq_left ⟨x, hx2⟩]
 
 theorem eta_neg_one [Unram F E] (A : Et F E) : A.etaK (-1) = 1 := by
   rw [Et.etaK, eta]
-  refine if_pos ⟨1, ?_⟩
+  refine ite_eq_left ⟨1, ?_⟩
   have h : Algebra.norm F (-1 : A.K) * Algebra.norm F (-1 : A.K) = 1 := by
     rw [← map_mul]; simp
   have h' := congrArg norm h

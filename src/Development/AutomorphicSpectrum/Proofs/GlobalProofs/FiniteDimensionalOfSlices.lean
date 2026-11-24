@@ -151,7 +151,7 @@ theorem finiteDimensional_of_slices {ι : Type} [Fintype ι] [DecidableEq ι] {X
       simpa using congrFun this (x a)
   have hinj : Function.Injective ev := (injective_iff_map_eq_zero ev).2 fun f hf =>
     Subtype.ext (funext fun x => key f hf Finset.univ x (by simp))
-  haveI : FiniteDimensional ℂ P := FiniteDimensional.of_injective ev hinj
+  have : FiniteDimensional ℂ P := FiniteDimensional.of_injective ev hinj
   exact Submodule.finiteDimensional_of_le (S₂ := P) (Submodule.span_le.2 fun f hf i x => h f hf i x)
 
 end Slices

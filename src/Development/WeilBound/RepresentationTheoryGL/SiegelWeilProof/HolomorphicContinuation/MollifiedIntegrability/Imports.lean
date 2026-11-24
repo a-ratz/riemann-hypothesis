@@ -836,7 +836,7 @@ theorem pr_apply (a b : Fin n) (w : E n) : pr a b w = w a b := rfl
 def Lc (q : E n) : E n →L[ℝ] ℂ := ∑ a, ∑ b, q a b • (Complex.ofRealCLM.comp (pr a b))
 
 theorem Lc_apply (q w : E n) : Lc q w = ((ip w q : ℝ) : ℂ) := by
-  simp only [Lc, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [Lc, sum_apply, smul_apply, ContinuousLinearMap.comp_apply,
     Complex.ofRealCLM_apply, pr_apply, ip, Complex.ofReal_sum, Complex.ofReal_mul, Complex.real_smul]
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
   ring
@@ -981,13 +981,13 @@ theorem fderiv_FP_apply (hI : IntG) (hq : Continuous (qX (n := n) ε)) (hc : 0 <
     fderiv ℝ (FP ε c t P) y w = ∫ x, Fi ε c t P y x * (Complex.I * t) * ((ip w (qX ε x) : ℝ) : ℂ) := by
   rw [(hasFDerivAt_FP hI hq hc P y).fderiv, ContinuousLinearMap.integral_apply (integrable_Fd hI hq hc P y)]
   refine integral_congr_ae (ae_of_all _ fun x => ?_)
-  simp only [Fd, ContinuousLinearMap.smul_apply, Lc_apply, smul_eq_mul, Fi]
+  simp only [Fd, smul_apply, Lc_apply, smul_eq_mul, Fi]
 
 theorem integrable_Fi_mul (hI : IntG) (hq : Continuous (qX (n := n) ε)) (hc : 0 < c) (P : PX m n) (y w : E n) :
     Integrable fun x => Fi ε c t P y x * (Complex.I * t) * ((ip w (qX ε x) : ℝ) : ℂ) := by
   have h := (integrable_Fd (t := t) hI hq hc P y).apply_continuousLinearMap w
   refine h.congr (ae_of_all _ fun x => ?_)
-  simp only [Fd, ContinuousLinearMap.smul_apply, Lc_apply, smul_eq_mul, Fi]
+  simp only [Fd, smul_apply, Lc_apply, smul_eq_mul, Fi]
 
 theorem dirC_FP (hI : IntG) (hq : Continuous (qX (n := n) ε)) (hc : 0 < c) (P : PX m n)
     (v : Fin n → Fin n → ℂ) (y : E n) :
@@ -1154,7 +1154,7 @@ variable {m n : ℕ}
 theorem gramX_apply (ε : Fin m → Bool) (x : Fin m → Fin n → ℂ) (i j : Fin n) :
     gramX ε x i j = ∑ a, sgn ε a * star (x a i) * x a j := by
 
-  simp only [gramX, Qp, Qb, map_sub, map_sum, map_mul, evX, eval_X, if_true, Bool.false_eq_true, if_false]
+  simp only [gramX, Qp, Qb, map_sub, map_sum, map_mul, evX, eval_X, ite_true, Bool.false_eq_true, ite_false]
   rw [Finset.sum_filter, Finset.sum_filter, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun a _ => ?_
   cases h : ε a <;> simp [sgn, h]
@@ -1280,8 +1280,8 @@ theorem hasFDerivAt_evX (P : PX m n) (x : Fin m → Fin n → ℂ) : HasFDerivAt
     have h : evX (p * X k) = fun y => evX p y * crd k y := by funext y; simp [evX_eq]
     rw [h]; refine (hp.mul (crd k).hasFDerivAt).congr_fderiv ?_
     ext v
-    simp only [dEv, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
-      ContinuousLinearMap.coe_sum', Finset.sum_apply, smul_eq_mul, evX_pderiv_mul_X, add_mul,
+    simp only [dEv, add_apply, FunLike.coe_smul, Pi.smul_apply,
+      FunLike.coe_sum, Finset.sum_apply, smul_eq_mul, evX_pderiv_mul_X, add_mul,
       Finset.sum_add_distrib]
     have e1 : ∑ b, evX (pderiv b p) x * crd k x * crd b v = crd k x * ∑ b, evX (pderiv b p) x * crd b v := by
       rw [Finset.mul_sum]; refine Finset.sum_congr rfl fun b _ => ?_; ring
@@ -1364,13 +1364,13 @@ theorem dEv_wirt (P : PX m n) (x : Fin m → Fin n → ℂ) (a : Fin m) (j : Fin
     dEv P x (fun a' i' => if a' = a ∧ i' = j then (1 : ℂ) else 0) -
       Complex.I * dEv P x (fun a' i' => if a' = a ∧ i' = j then Complex.I else 0) =
       2 * evX (pderiv (a, j, false) P) x := by
-  simp only [dEv, ContinuousLinearMap.coe_sum', ContinuousLinearMap.coe_smul', Finset.sum_apply, Pi.smul_apply,
+  simp only [dEv, FunLike.coe_sum, FunLike.coe_smul, Finset.sum_apply, Pi.smul_apply,
     smul_eq_mul, Finset.mul_sum, ← Finset.sum_sub_distrib]
   rw [Finset.sum_eq_single (a, j, false)]
-  · have := crd_wirt a j (a, j, false); simp only [if_true] at this
+  · have := crd_wirt a j (a, j, false); simp only [ite_true] at this
     rw [← this]; ring
   · intro k _ hk
-    have := crd_wirt a j k; rw [if_neg hk] at this
+    have := crd_wirt a j k; rw [ite_eq_right hk] at this
     calc _ = evX (pderiv k P) x * (crd k (fun a' i' => if a' = a ∧ i' = j then (1 : ℂ) else 0) -
           Complex.I * crd k (fun a' i' => if a' = a ∧ i' = j then Complex.I else 0)) := by ring
       _ = 0 := by rw [this, mul_zero]
@@ -1384,7 +1384,7 @@ theorem evX_pderiv_phiP (ε : Fin m → Bool) (c t : ℝ) (b : Matrix (Fin n) (F
 
   simp only [evX, map_neg, map_sum, map_mul, Prod.ext_iff]
   simp only [mul_zero, mul_one, zero_mul, Pi.single_apply, Prod.mk.injEq, and_true, Bool.false_eq_true, and_false,
-    if_false, map_zero, add_zero, zero_add]
+    ite_false, map_zero, add_zero, zero_add]
   rw [neg_inj, Finset.sum_eq_single a]
   · refine Finset.sum_congr rfl fun k _ => ?_
     rw [Finset.sum_eq_single j]
@@ -1429,7 +1429,7 @@ theorem wick_of (hI : IntegP) : Wick := by
       rw [hx, ← mul_assoc, norm_mul _ (Complex.exp _), norm_exp_tr ε t b hb x, mul_one]
   have hE : ∀ x, HasFDerivAt E (E x • dEv (phiP ε c t b) x) x := fun x => (hasFDerivAt_evX (phiP ε c t b) x).cexp
   have hfd : ∀ x v, fderiv ℝ E x v = E x * evX (∑ k, C (crd k v) * pderiv k (phiP ε c t b)) x := by
-    intro x v; rw [(hE x).fderiv, ContinuousLinearMap.smul_apply, smul_eq_mul, dEv_apply]
+    intro x v; rw [(hE x).fderiv, smul_apply, smul_eq_mul, dEv_apply]
   have hPd : ∀ (P : PX m n) x v, fderiv ℝ (evX P) x v = evX (∑ k, C (crd k v) * pderiv k P) x := by
     intro P x v; rw [(hasFDerivAt_evX P x).fderiv, dEv_apply]
   have hintD : ∀ (P : PX m n) v, Integrable (fun x => evX P x * fderiv ℝ E x v) := by
@@ -1450,7 +1450,7 @@ theorem wick_of (hI : IntegP) : Wick := by
         Complex.I * fderiv ℝ E x (fun a' i' => if a' = a ∧ i' = j then Complex.I else 0) =
         2 * (E x * evX (pderiv (a, j, false) (phiP ε c t b)) x) := by
       intro x
-      rw [(hE x).fderiv, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, smul_eq_mul]
+      rw [(hE x).fderiv, smul_apply, smul_apply, smul_eq_mul, smul_eq_mul]
       have := dEv_wirt (phiP ε c t b) x a j
       linear_combination (E x) * this
     have hpt : ∀ x, evX M x * (E x * evX (pderiv (a, j, false) (phiP ε c t b)) x) =
@@ -1484,8 +1484,8 @@ theorem wick_of (hI : IntegP) : Wick := by
       refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun j _ => ?_
       ring
     rw [h2]
-    simp only [h1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, neg_neg]
-    simp only [evX, map_mul, eval_X, if_true]
+    simp only [h1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, neg_neg]
+    simp only [evX, map_mul, eval_X, ite_true]
     ring
   rw [hsec]
   simp_rw [key]

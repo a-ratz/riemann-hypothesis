@@ -124,10 +124,10 @@ theorem adjoint_eq_of_iso {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 
     (ContinuousLinearMap.norm_map_iff_adjoint_comp_self A).1 hA
   ext x
   have e1 : A (B x) = x := by
-    rw [← ContinuousLinearMap.comp_apply, hAB, ContinuousLinearMap.one_apply]
+    rw [← ContinuousLinearMap.comp_apply, hAB, one_apply_eq_self]
   calc ContinuousLinearMap.adjoint A x = ContinuousLinearMap.adjoint A (A (B x)) := by rw [e1]
     _ = ((ContinuousLinearMap.adjoint A).comp A) (B x) := rfl
-    _ = B x := by rw [h1, ContinuousLinearMap.one_apply]
+    _ = B x := by rw [h1, one_apply_eq_self]
 
 theorem beF_aesm (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) (π : Mx k r → (Wp →L[ℂ] Wp))
     (μW μN : Measure (Mt k r)) [SFinite μN] (σ : Mx k r → (H →L[ℂ] H)) (w v : H)

@@ -54,7 +54,7 @@ open GlobalTheory.SmGL GlobalTheory.PRep ValuativeRel
 theorem valuation_units_map_eq_one {g : ℕ} [Fact g.Prime] (u : ℤ_[g]ˣ) :
     valuation ℚ_[g] ((Units.map (algebraMap ℤ_[g] ℚ_[g]).toMonoidHom u : ℚ_[g]ˣ) : ℚ_[g]) = 1 := by
   have hn : ‖((u : ℤ_[g]) : ℚ_[g])‖ = 1 := by
-    rw [PadicInt.padic_norm_e_of_padicInt]; exact PadicInt.isUnit_iff.1 u.isUnit
+    rw [PadicInt.norm_coe]; exact PadicInt.isUnit_iff.1 u.isUnit
   have e : ((Units.map (algebraMap ℤ_[g] ℚ_[g]).toMonoidHom u : ℚ_[g]ˣ) : ℚ_[g]) = ((u : ℤ_[g]) : ℚ_[g]) := rfl
   rw [e]
   refine le_antisymm (not_lt.1 fun hlt => ?_) (not_lt.1 fun hlt => ?_)
@@ -99,7 +99,7 @@ theorem mapsToProd_of_jac₂ : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ) (h : a
         have hi : (i : ℕ) < n := by omega
         have hj : (j : ℕ) < n := by omega
         rw [hx]
-        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dif_pos]
+        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dite_eq_left]
         rfl
       · refine Units.ext (Matrix.ext fun i j => ?_)
         rw [leviProj_apply]
@@ -107,7 +107,7 @@ theorem mapsToProd_of_jac₂ : ∀ (g : ℕ) [Fact g.Prime] (a b n : ℕ) (h : a
         have hi : a + (i : ℕ) < n := by omega
         have hj : a + (j : ℕ) < n := by omega
         rw [hy]
-        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dif_pos]
+        simp only [Formalism.MainNotions.ArithmeticCylinders.entN, hi, hj, and_self, dite_eq_left]
         rfl
     obtain ⟨u, hu, hpu⟩ := exists_levi_mul_unip ℚ_[g] (two (stdSum h)) ⟨p, hp⟩
     rw [hl] at hpu

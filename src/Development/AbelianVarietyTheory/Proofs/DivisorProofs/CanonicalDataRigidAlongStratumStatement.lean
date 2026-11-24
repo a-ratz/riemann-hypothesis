@@ -165,7 +165,7 @@ theorem pts_eps_of_mul : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
   have ex₂ := fun y => exists_pt m₂.cart.1 L.ab.1.1 (L.D.c y).left (hc y)
   choose x hx₁ hxG using ex₁
   choose x₂ hx₂ hx₂G using ex₂
-  haveI : IsCommMonObj o'.t.G := o'.t.comm
+  have : IsCommMonObj o'.t.G := o'.t.comm
   have hAb : IsAbelianScheme o'.t.G := ⟨o'.t.comm, o'.t.semi.smooth, o'.proper, o'.t.semi.geomConnected⟩
   let r : Sp k ⟶ Sp (DualNumber k) := spMap (TrivSqZeroExt.fstHom k k k).toRingHom
   have hr : r ≫ spMap f = r ≫ spMap (GlobalTheory.RigChart.constHom f) := by
@@ -511,8 +511,8 @@ theorem exists_objMaps : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
   have hA' : IsAbelianScheme o'.t.G :=
     ⟨o'.t.semi.comm, o'.t.semi.smooth, o'.proper, o'.t.semi.geomConnected⟩
   have hact : ∀ a, (o'.t.act.act a).left ≫ io.hom ≫ π₂ = (io.hom ≫ π₂) ≫ (o.t.act.act a).left := fun a => by
-    haveI := o'.t.act.hom a
-    haveI := o.t.act.hom a
+    have := o'.t.act.hom a
+    have := o.t.act.hom a
     exact act_comm_eps k o'.t.G hA' o.t.G _ _ _ hψc h0' (o'.t.act.act a) (o.t.act.act a) (m₀.act a)
   have hLB : LBIso o'.t.PP.L (o.t.PP.L.pull (io.hom ≫ π₂)) := by
     obtain ⟨w, hw, -⟩ := m₀.lin
@@ -617,7 +617,7 @@ theorem const_on_base : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
   intro E _ _ _ H Dw l Xo c φ R _ _ _ _ C Cn k _ ρ a hC
   obtain ⟨B', _, π₁, π₂, w, c', h₁, h₂, h0, hw, hc', -⟩ := hC
   obtain ⟨g, hD, -, hxe, -⟩ := Cn.data
-  haveI := hD.e_hom
+  have := hD.e_hom
   have hβ : IsGrpPullback C.P.D.toPre.P.A Cn.L.D.P.A (specOf (Cn.ψ.comp MvPolynomial.C))
       (hD.e.hom.left ≫ pullback.fst Cn.L.D.P.A.hom (specOf (Cn.ψ.comp MvPolynomial.C))) :=
     ((isGrpPullback_of_iso hD.e).comp (isGrpPullback_pullback _ _)).congr (Category.id_comp _) rfl
@@ -1243,7 +1243,7 @@ theorem snd_eq_zero_of_isConstAlong : ∀ {E : Type} [Field E] [NumberField E] [
   obtain ⟨B', iG, π₁, π₂, w, c', h₁, h₂, h₃, h₄, h₅, h₆⟩ := hC
   have hA : GlobalTheory.TautRigid.AbConst C.P.D.toPre ρ B' π₁ π₂ w c' := ⟨h₁, h₂, h₃, h₄, h₅⟩
   have hB1 := val_const_of_fromBase C.P.D.toPre τ₀ (Cn.ψ.comp MvPolynomial.C) hFB k ρ hconst B' iG π₁ π₂ w c' hA
-  haveI : CharZero k := by
+  have : CharZero k := by
     let f : c.F →+* k := (TrivSqZeroExt.fstHom k k k).toRingHom.comp (ρ.comp C.b)
     exact (f.charZero_iff f.injective).1 inferInstance
   set M : ℕ := l.M' with hMdef
@@ -1274,7 +1274,7 @@ theorem snd_eq_zero_of_isConstAlong : ∀ {E : Type} [Field E] [NumberField E] [
       · have hfv : ((f v : (FractionRing R)ˣ) : FractionRing R) =
             ∏ j, algebraMap R (FractionRing R) (u j : R) ^ ((M : ℤ) * ε j y z) := by
           simp only [f, v, map_prod, map_zpow, Units.coe_prod, Units.val_zpow_eq_zpow_val, Units.coe_map,
-            MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+            MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
         have hne : ((f v : (FractionRing R)ˣ) : FractionRing R) ≠ 0 := (f v).ne_zero
         rw [Units.val_mul, hk, Units.val_inv_eq_inv_val, Fin.prod_univ_add]
         simp only [finSumFinEquiv_symm_apply_castAdd, finSumFinEquiv_symm_apply_natAdd, LinearMap.smul_apply, smul_eq_mul,

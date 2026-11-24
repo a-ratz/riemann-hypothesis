@@ -135,7 +135,7 @@ private theorem exists_expK_neg_eq_map_of_expK_eq_one_add {ι : Type} (z : MvPow
     (h : MvPowerSeries ι (WW p)) (hh : MvPowerSeries.constantCoeff h = 0)
     (hz : expK z = 1 + MvPowerSeries.map (algebraMap (WW p) (K0 p)) h) :
     ∃ w : MvPowerSeries ι (WW p), expK (-z) = MvPowerSeries.map (algebraMap (WW p) (K0 p)) w := by
-  haveI := charZero_K' p (K0 p)
+  have := charZero_K' p (K0 p)
   refine ⟨MvPowerSeries.invOfUnit (1 + h) 1, ?_⟩
   have h1 : (1 + h) * MvPowerSeries.invOfUnit (1 + h) 1 = 1 :=
     MvPowerSeries.mul_invOfUnit _ _ (by simp [hh])
@@ -163,7 +163,7 @@ theorem ea_reduce {σ τ A : Type} [Finite σ] [Fintype A] (a b : A → σ) (be 
         MvPowerSeries.subst (tOf vp μ L) (expK (-(MvPowerSeries.map (algebraMap (K0 p) K')
           (∑ x : A, ren ![a x, b x] (Gser p c c'))))) * V' := by
   classical
-  haveI := charZero_K' p (K0 p)
+  have := charZero_K' p (K0 p)
   have hlog : PowerSeries.constantCoeff (logF p) = 0 := by
     have h2 := lgF_const p K'
     rw [← map_logF p K', ← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_map] at h2

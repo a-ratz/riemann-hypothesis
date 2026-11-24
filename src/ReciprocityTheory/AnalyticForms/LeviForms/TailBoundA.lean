@@ -80,14 +80,14 @@ theorem levi_smul' {f : (Fin e → ℂ) → ℝ} {z : Fin e → ℂ} (c : ℝ) (
     exact (hdd.hasFDerivAt.const_smul c).fderiv
   unfold levi
   rw [h3]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 private theorem levi_rsmul_lemma (φ : (Fin e → ℂ) → ℝ) (z w : Fin e → ℂ) (t : ℝ) :
     levi φ z (t • w) = t ^ 2 * levi φ z w := by
   unfold levi
   rw [smul_comm Complex.I t w]
-  simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_smul, smul_apply, smul_eq_mul]
   ring
 
 theorem chern_local (A : FinHolAtlas e X) (Θ L : LocPot X) (hΘ : IsPotential A Θ)
@@ -194,7 +194,7 @@ theorem levi_lin {f g : (Fin e → ℂ) → ℝ} {z : Fin e → ℂ} (a b : ℝ)
     exact ((hddf.hasFDerivAt.const_smul a).add (hddg.hasFDerivAt.const_smul b)).fderiv
   unfold levi
   rw [h3]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   ring
 
 theorem base_change (A : FinHolAtlas e X) (P : LocPot X) (hP : IsPotential A P) (x p q : X)

@@ -144,8 +144,8 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Seco
 
 theorem summable_of_tsum_enorm_lt_top {Y : Type*} {f : Y → ℂ} (h : ∑' y, ‖f y‖ₑ < ⊤) : Summable f := by
   have h' : Summable (fun y => ‖f y‖₊) :=
-    ENNReal.tsum_coe_ne_top_iff_summable.1 (by simpa only [enorm_eq_nnnorm] using h.ne)
-  exact Summable.of_norm ((NNReal.summable_coe.2 h').congr fun y => coe_nnnorm _)
+    ENNReal.tsum_coe_ne_top_iff_summable.1 (by simpa only [eNorm_eq_nnNorm] using h.ne)
+  exact Summable.of_norm ((NNReal.summable_coe.2 h').congr fun y => coe_nnNorm _)
 
 theorem hasSum_average_descend (e : (Σ i, κ i) ≃ X) (a : G → X → ℂ) (ha : ∀ x, Measurable fun g => a g x)
     (hA : LeftInv Γ fun g => ∑' x, ‖a g x‖ₑ)
@@ -171,7 +171,7 @@ theorem hasSum_average_descend (e : (Σ i, κ i) ≃ X) (a : G → X → ℂ) (h
     exact Quotient.out_eq q
   have hNm : Measurable (descend Γ fun g => ∑' x, ‖a g x‖ₑ) := by
     rw [hdescE _ hA]
-    exact (Measurable.tsum fun x => (ha x).enorm).comp hsec
+    exact (Measurable.tsum fun x => (ha x).eNorm).comp hsec
   have hFm : ∀ i, AEStronglyMeasurable (descend Γ fun g => ∑' k : κ i, a g (e ⟨i, k⟩))
       (GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ) := by
     intro i
@@ -180,7 +180,7 @@ theorem hasSum_average_descend (e : (Σ i, κ i) ≃ X) (a : G → X → ℂ) (h
   have hbound : ∀ g, ∑' i, ‖∑' k : κ i, a g (e ⟨i, k⟩)‖ₑ ≤ ∑' x, ‖a g x‖ₑ := by
     intro g
     calc ∑' i, ‖∑' k : κ i, a g (e ⟨i, k⟩)‖ₑ ≤ ∑' i, ∑' k : κ i, ‖a g (e ⟨i, k⟩)‖ₑ :=
-          ENNReal.tsum_le_tsum fun i => enorm_tsum_le_tsum_enorm
+          ENNReal.tsum_le_tsum fun i => eNorm_tsum_le_tsum_eNorm
       _ = ∑' p : Σ i, κ i, ‖a g (e p)‖ₑ := (ENNReal.tsum_sigma' fun p => ‖a g (e p)‖ₑ).symm
       _ = ∑' x, ‖a g x‖ₑ := e.tsum_eq fun x => ‖a g x‖ₑ
   have hpt : ∀ g, ∑' x, ‖a g x‖ₑ < ⊤ →
@@ -191,12 +191,12 @@ theorem hasSum_average_descend (e : (Σ i, κ i) ≃ X) (a : G → X → ℂ) (h
     exact (e.hasSum_iff.2 hs.hasSum).sigma fun i => (hse.sigma_factor i).hasSum
   have hlin : ∑' i, ∫⁻ q, ‖descend Γ (fun g => ∑' k : κ i, a g (e ⟨i, k⟩)) q‖ₑ
       ∂GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ < ⊤ := by
-    rw [← lintegral_tsum fun i => (hFm i).enorm]
+    rw [← lintegral_tsum fun i => (hFm i).eNorm]
     exact lt_of_le_of_lt (lintegral_mono fun q => hbound q.out) hfin
   have hsI : Summable fun i =>
       ∫ q, descend Γ (fun g => ∑' k : κ i, a g (e ⟨i, k⟩)) q ∂GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ :=
     summable_of_tsum_enorm_lt_top
-      (lt_of_le_of_lt (ENNReal.tsum_le_tsum fun i => enorm_integral_le_lintegral_enorm _) hlin)
+      (lt_of_le_of_lt (ENNReal.tsum_le_tsum fun i => eNorm_integral_le_lintegral_eNorm _) hlin)
   have hae : ∀ᵐ q ∂GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ, descend Γ (fun g => ∑' x, ‖a g x‖ₑ) q < ⊤ :=
     ae_lt_top hNm hfin.ne
   have hint : ∫ q, descend Γ (fun g => ∑' x, a g x) q ∂GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ =
@@ -319,10 +319,10 @@ theorem pull_mt (V : HSp D) {r n : ℕ} (φ : Mx D V.rank n → ℂ) (c : Matrix
 
 theorem thetaOrbits : ThetaOrbits := by
   intro D n V θ hθ ν hν Φ hfin c hc
-  haveI := hν
-  haveI : Countable D.host.E := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableE
-  haveI : Countable (Submodule D.host.E (Fin n → D.host.E)) := countable_submodule n
-  haveI : ∀ r : ℕ, Countable (Matrix (Fin V.rank) (Fin r) D.host.E) := fun r =>
+  have := hν
+  have : Countable D.host.E := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableE
+  have : Countable (Submodule D.host.E (Fin n → D.host.E)) := countable_submodule n
+  have : ∀ r : ℕ, Countable (Matrix (Fin V.rank) (Fin r) D.host.E) := fun r =>
     inferInstanceAs (Countable (Fin V.rank → Fin r → D.host.E))
   have hcont : Continuous Φ.1 :=
     (GlobalTheory.CompanionTheory.WeilTheta.schwartzA_continuous_and_dominated D θ hθ V.rank n Φ.1 Φ.2).1

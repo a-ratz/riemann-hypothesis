@@ -57,7 +57,7 @@ namespace GlobalTheory.ZJ.SplitPull
 
 theorem free_of_isField {R M : Type} [CommRing R] (hR : IsField R) [AddCommGroup M] [Module R M] :
     Module.Free R M := by
-  letI := hR.toField
+  let := hR.toField
   exact Module.Free.of_divisionRing R M
 
 theorem exists_basis_pushout {R R' : CommRingCat.{0}} (hR : IsField R) (b : R ⟶ R') :
@@ -65,16 +65,16 @@ theorem exists_basis_pushout {R R' : CommRingCat.{0}} (hR : IsField R) (b : R �
       IsPushout a b p q →
       (∀ u : A', ∃ (s : Finset J) (x : J → A), u = ∑ l ∈ s, p.hom (x l) * q.hom (e l)) ∧
       ∀ (s : Finset J) (x : J → A), ∑ l ∈ s, p.hom (x l) * q.hom (e l) = 0 → ∀ l ∈ s, x l = 0 := by
-  letI := b.hom.toAlgebra
-  haveI : Module.Free R R' := free_of_isField hR
+  let := b.hom.toAlgebra
+  have : Module.Free R R' := free_of_isField hR
   let e := Module.Free.chooseBasis R R'
   refine ⟨_, e, fun A A' a p q h => ?_⟩
-  letI := a.hom.toAlgebra
-  letI := p.hom.toAlgebra
-  letI := q.hom.toAlgebra
-  letI := (p.hom.comp a.hom).toAlgebra
-  haveI : IsScalarTower R A A' := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower R R' A' := IsScalarTower.of_algebraMap_eq' (congrArg CommRingCat.Hom.hom h.w)
+  let := a.hom.toAlgebra
+  let := p.hom.toAlgebra
+  let := q.hom.toAlgebra
+  let := (p.hom.comp a.hom).toAlgebra
+  have : IsScalarTower R A A' := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower R R' A' := IsScalarTower.of_algebraMap_eq' (congrArg CommRingCat.Hom.hom h.w)
   have hp : Algebra.IsPushout R A R' A' := CommRingCat.isPushout_iff_isPushout.mp h
   let B := hp.out.basis e
   have hB : ∀ l, B l = q.hom (e l) := fun l => hp.out.basis_apply e l

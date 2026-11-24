@@ -55,9 +55,9 @@ open IsLocalRing MvPowerSeries UpperTheory.V.Alg
 private theorem UpperTheory.V.Alg.gordan_dickson (σ : Type) [Finite σ] (S : Set (σ →₀ ℕ)) :
     ∃ μ : Finset (σ →₀ ℕ), (∀ m ∈ μ, m ∈ S) ∧ ∀ n ∈ S, ∃ m ∈ μ, m ≤ n := by
   classical
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   have hfin : {m : σ →₀ ℕ | Minimal (· ∈ S) m}.Finite :=
-    WellQuasiOrderedLE.finite_of_isAntichain (setOf_minimal_antichain _)
+    WellQuasiOrderedLE.finite_of_isAntichain (setOfPred_minimal_antichain _)
   refine ⟨hfin.toFinset, fun m hm => ((Set.Finite.mem_toFinset hfin).1 hm).1, fun n hn => ?_⟩
   obtain ⟨b, hb, hmin⟩ := (Set.isPWO_of_wellQuasiOrderedLE S).exists_le_minimal hn
   exact ⟨b, (Set.Finite.mem_toFinset hfin).2 hmin, hb⟩

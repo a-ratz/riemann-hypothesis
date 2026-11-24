@@ -149,11 +149,11 @@ open Polynomial
 
 theorem exists_pow_of_finite_field (p : ℕ) [Fact p.Prime] {F k : Type} [Field F] [Finite F]
     [Field k] [CharP k p] (f g : F →+* k) : ∃ i : ℕ, ∀ a : F, g a = f a ^ p ^ i := by
-  haveI : CharP F p := f.charP f.injective p
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
-  letI : Algebra F k := f.toAlgebra
-  haveI : IsScalarTower (ZMod p) F k := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : CharP F p := f.charP f.injective p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) k := ZMod.algebra k p
+  let : Algebra F k := f.toAlgebra
+  have : IsScalarTower (ZMod p) F k := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   let g' : F →ₐ[ZMod p] k :=
     { g with commutes' := fun z =>
         RingHom.congr_fun (Subsingleton.elim (g.comp (algebraMap (ZMod p) F)) (algebraMap _ k)) z }
@@ -206,8 +206,8 @@ theorem exists_frobenius_pow : ∀ (p : ℕ) [Fact p.Prime] (OE : Type) [CommRin
     τ ∈ ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.Emb (O := R) w.e →
     ∃ i : ℕ, ∀ a : OE, v (algebraMap R C (τ a - σ a ^ (p ^ i))) < 1 := by
   intro p _ OE _ _ _ _ C _ v R _ _ _ hv hp w σ τ hσ hτ
-  haveI : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
-  haveI : ValuationRing R := ValuationRing.of_integers v hv
+  have : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
+  have : ValuationRing R := ValuationRing.of_integers v hv
   let w' : Place p OE := ⟨w.e, w.idem, w.ne_zero, w.prim⟩
   obtain ⟨P, hPm, hpP, -, hP⟩ := GlobalTheory.OnePrime.exists_prime_under p OE w'
   have h1 := comap_eq hp w' hP σ hσ
@@ -215,9 +215,9 @@ theorem exists_frobenius_pow : ∀ (p : ℕ) [Fact p.Prime] (OE : Type) [CommRin
   have hP0 : P ≠ ⊥ := fun h => by
     rw [h, Ideal.mem_bot] at hpP
     exact (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero) hpP
-  haveI : Finite (OE ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
-  letI : Field (OE ⧸ P) := Ideal.Quotient.field P
-  haveI : CharP (IsLocalRing.ResidueField R) p := by
+  have : Finite (OE ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
+  let : Field (OE ⧸ P) := Ideal.Quotient.field P
+  have : CharP (IsLocalRing.ResidueField R) p := by
     refine (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 ?_
     rw [← map_natCast (IsLocalRing.residue R), IsLocalRing.residue_eq_zero_iff]
     exact hp
@@ -282,7 +282,7 @@ theorem exists_placeU_mem_emb (p : ℕ) [Fact p.Prime] (OE : Type) [CommRing OE]
     [Module.Finite ℤ OE] (R : Type) [CommRing R] [IsDomain R] [Algebra ℤ_[p] R] (σ : OE →+* R) :
     ∃ w : ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.PlaceU p OE,
       σ ∈ ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.Emb (O := R) w.e := by
-  haveI : IsNoetherianRing (ℤ_[p] ⊗[ℤ] OE) :=
+  have : IsNoetherianRing (ℤ_[p] ⊗[ℤ] OE) :=
     IsNoetherianRing.of_finite ℤ_[p] _
   obtain ⟨e, h1, h2, h3, h4⟩ := exists_primitive_idempotent_map_eq_one
     (ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.tauExt (p := p) σ).toRingHom
@@ -307,7 +307,7 @@ namespace GlobalTheory
 theorem ringOfIntegers_hom_injective (E : Type) [Field E] [NumberField E] (C : Type) [Field C]
     [CharZero C] (f : 𝓞 E →+* C) : Function.Injective f := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   rw [eq_bot_iff]
   intro n hn
   simp only [Ideal.mem_comap, RingHom.mem_ker, eq_intCast, map_intCast, Int.cast_eq_zero] at hn
@@ -510,7 +510,7 @@ theorem mem_emb_of_congr_pow (A : Type) [CommRing A] (p : ℕ) [Fact p.Prime] (O
 
 theorem exists_placeU_of_frobenius_orbit : ∀ (E : Type) [Field E] [NumberField E] (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [IsLocalRing O] [Algebra ℤ_[p] O], ¬ IsUnit (p : O) → ¬ (p : ℤ) ∣ NumberField.discr E → ∀ (d : ℕ) [NeZero d] (τ : ZMod d → (𝓞 E →+* O)), Function.Injective τ → (∀ s x, τ (s + 1) x - τ s x ^ p ∈ IsLocalRing.maximalIdeal O) → ∃ (w : ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.PlaceU p (𝓞 E)) (_ : w.n = d) (t : Fin w.n ≃ ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.Emb (O := O) w.e), (∀ j : Fin w.n, ((t j : ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.Emb (O := O) w.e) : 𝓞 E →+* O) = τ ((j.val : ℕ) : ZMod d)) ∧ ∃ b : Module.Basis (Fin w.n) ℤ_[p] (LinearMap.range (LinearMap.mulLeft ℤ_[p] w.e)), IsUnit (Matrix.det (Matrix.of fun i j => ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.tauExt ((t j : ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.Emb (O := O) w.e) : 𝓞 E →+* O) (b i : ℤ_[p] ⊗[ℤ] 𝓞 E))) := by
   intro E _ _ p hpp C _ _ _ v O _ _ hv _ _ hp hd d _ τ hτ hfr
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
   obtain ⟨w, hw⟩ := GlobalTheory.exists_placeU_mem_emb p (𝓞 E) O (τ 0)
   have hsep := GlobalTheory.ringOfIntegers_hom_eq_of_congr_maximalIdeal E p hpp.out hd C v O hv hp
   have hmem : ∀ k : ℕ, τ (k : ZMod d) ∈ ReciprocityTheory.ChartRestriction.G.Pdiv.AvDefs.Emb (O := O) w.e := by
@@ -693,7 +693,7 @@ theorem isAdicComplete (V : VF C)
 
 theorem exists_mulVal : ∀ (C : Type) [Field C] (V : VF C) [Fact V.l.Prime], (∀ s : ℕ → C, (∀ n : ℕ, V.Ge n (s (n + 1) - s n)) → ∃ x, ∀ n : ℕ, V.Ge n (x - s n)) → ∃ vm : Valuation C NNReal, ValuationFitting.ValTie V vm ∧ 0 < (vm (V.l : C) : ℝ) ∧ (vm (V.l : C) : ℝ) < 1 ∧ (∀ x : C, vm x ≤ 1 ↔ V.Ge 0 x) ∧ (∀ x : C, vm x < 1 ↔ V.MM x) ∧ IsAdicComplete (Ideal.span {((V.l : ℕ) : vm.integer)}) vm.integer ∧ Nonempty (Algebra ℤ_[V.l] vm.integer) := by
   intro C _ V _ hc
-  haveI := isAdicComplete V hc
+  have := isAdicComplete V hc
   refine ⟨mulVal V, fun x hx => ?_, ?_, ?_, mulVal_le_one_iff V, mulVal_lt_one_iff V, this, ?_⟩
   · obtain ⟨t, ht⟩ := WithTop.ne_top_iff_exists.1 ((AddValuation.ne_top_iff V.v).2 hx)
     refine ⟨t, ht.symm, ?_⟩
@@ -792,7 +792,7 @@ theorem colength_bound (p : ℕ) [Fact p.Prime] (hU : UpFSt p) (hp2 : p ≠ 2) (
       (fun (i : Fin (Dw.mult (tau s))) j => X.ι (Ch.uvecT ⟨tau s, i⟩ j)) xs ∧
       (X.v (p : X.C) : ℝ) ^ (∑' i : ℕ, ((p : ℝ) ^ (-((i : ℝ) + 1))) *
         (Dw.mult (ComplexEmbedding.conjugate (tau (s + ((i + 1 : ℕ) : ZMod d)))) : ℝ)) ≤ xs := by
-  letI := H.starRing
+  let := H.starRing
   intro T io y Ch X hy hdisc d _ tau htau hfrob s
   obtain ⟨U⟩ := GlobalTheory.CharDepth.nonempty_unifChart E H Dw l Xo c T io y Ch hy p X
   obtain ⟨τT, -, hty, hinj, -, hconj⟩ := exists_types_valuationRing E H l c T io p X
@@ -800,7 +800,7 @@ theorem colength_bound (p : ℕ) [Fact p.Prime] (hU : UpFSt p) (hp2 : p ≠ 2) (
   have heig := fun τ => (isEigBasis_valExt E H Dw l Xo c T io y Ch p X τO hty τ).1
   have hcard := (GlobalTheory.EmbCount.card_emb E p X.C X.v X.O X.ints 0 (by simp)).2
   have hpos : 0 < Module.finrank ℚ E := Module.finrank_pos
-  haveI : Finite (𝓞 E →+* X.O) := Nat.finite_of_card_ne_zero (by omega)
+  have : Finite (𝓞 E →+* X.O) := Nat.finite_of_card_ne_zero (by omega)
   have hbij : Function.Bijective τO := by
     refine hinj.bijective_of_nat_card_le ?_
     rw [hcard, Nat.card_eq_fintype_card, NumberField.Embeddings.card E ℂ]
@@ -858,10 +858,10 @@ end SlopeTestRemainingChoices
 theorem exists_chars_minor_le : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.UpFSt p) → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], (∀ x : 𝓞 E, star x = H.bar x) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C3 : IntChart T io y) (C : Type) [Field C] [CharZero C] (V : VF C) (ι : T.Fr →+* C), EmbOK T V ι → ∀ (k : ℕ) (Y : FBChart C V (𝓞 E) (chD C3.ch)), IsBC C3 ι k Y → y.IsAlg → ¬ (V.l : ℤ) ∣ NumberField.discr E → ∀ (d : ℕ) [NeZero d] (tau : ZMod d → (E →+* ℂ)), Function.Injective tau → FrobOrd V io ι tau → ∀ (s : ZMod d) (n : ℕ) (w : Fin n → Fin (Dw.mult (tau s)) → C), IsSat V w → ∃ χ : Fin n → PS C 1 (chD C3.ch), (∀ ρ, IntS V (χ ρ) ∧ ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.IsCh Y.B.G.F (χ ρ)) ∧ V.v (Matrix.of fun ρ q : Fin n => ∑ x, (∑ i, ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.dl (χ ρ) i * ι (chartUnitVectors C3 ⟨tau s, x⟩ i)) * w q x).det ≤ (((∑' i : ℕ, ((V.l : ℝ) ^ (-((i : ℝ) + 1))) * (Dw.mult (ComplexEmbedding.conjugate (tau (s + ((i + 1 : ℕ) : ZMod d)))) : ℝ)) : ℝ) : WithTop ℝ) := by
   intro hU E _ _ _ H Dw lv Xo c inst hstar
   obtain rfl : inst = H.starRing := GlobalTheory.PowGerm.starSt E H inst hstar
-  letI := H.starRing
+  let := H.starRing
   intro T io y C3 C _ _ V ι hι k Y hY hy hdisc d _ tau htau hfrob s n w hw
-  haveI := Y.algClosed
-  haveI : Fact V.l.Prime := ⟨V.l_prime⟩
+  have := Y.algClosed
+  have : Fact V.l.Prime := ⟨V.l_prime⟩
   obtain ⟨vm, hT, h0, h1, hle, hlt, hcpl, ⟨hzp⟩⟩ := GlobalTheory.ValExp.exists_mulVal C V Y.cpl
   have hv := Valuation.integer.integers vm
   let ιO : T.V →+* vm.integer := (ι.comp (algebraMap T.V T.Fr)).codRestrict vm.integer

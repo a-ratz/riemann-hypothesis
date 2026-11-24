@@ -68,30 +68,30 @@ theorem euler_int_integrable : ∀ (F E : Type) [Field F] [NumberField F] [Field
   classical
   obtain ⟨hpi, hpf, hpv, hlat, hint, hae, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d b n M
   obtain ⟨⟨lcA, scA, t2A⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := lcA
-  haveI := scA
-  haveI := t2A
-  haveI : T2Space (Ainf F) := GlobalTheory.CompanionTheory.SW.EulerInt.infinite_adeles_t2Space F
-  haveI : SecondCountableTopology (Ainf F) := GlobalTheory.CompanionTheory.SW.EulerInt.sc_ainf F scA
+  have := lcA
+  have := scA
+  have := t2A
+  have : T2Space (Ainf F) := GlobalTheory.CompanionTheory.SW.EulerInt.infinite_adeles_t2Space F
+  have : SecondCountableTopology (Ainf F) := GlobalTheory.CompanionTheory.SW.EulerInt.sc_ainf F scA
   have KA := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
   have KI := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
-  haveI : SecondCountableTopology (Ainf F ⊗[F] E) := KI.2.2.1
-  haveI : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) := KA.2.2.2.2.2.2.2.1 n M
-  haveI : BorelSpace (Fin n → Fin M → Ainf F ⊗[F] E) := KI.2.2.2.2.2.2.2.1 n M
+  have : SecondCountableTopology (Ainf F ⊗[F] E) := KI.2.2.1
+  have : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) := KA.2.2.2.2.2.2.2.1 n M
+  have : BorelSpace (Fin n → Fin M → Ainf F ⊗[F] E) := KI.2.2.2.2.2.2.2.1 n M
   have KVb : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (Fv F v ⊗[F] E) ∧
       BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := by
     intro v
     obtain ⟨h1, h2, h3, h4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI := h1
-    haveI := h2
-    haveI := h3
-    haveI := h4
+    have := h1
+    have := h2
+    have := h3
+    have := h4
     have K := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
     exact ⟨K.2.2.1, K.2.2.2.2.2.2.2.1 n M⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (Fv F v ⊗[F] E) := fun v => (KVb v).1
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := fun v => (KVb v).2
-  haveI : SigmaFinite minf := inferInstance
-  haveI : ∀ v, SigmaFinite (m v) := fun v => inferInstance
+  have : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (Fv F v ⊗[F] E) := fun v => (KVb v).1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := fun v => (KVb v).2
+  have : SigmaFinite minf := inferInstance
+  have : ∀ v, SigmaFinite (m v) := fun v => inferInstance
   obtain ⟨-, hsum, S₀, hEP⟩ := hEu
   have hbad := hpure.2.1
   let S : Finset (HeightOneSpectrum (𝓞 F)) := S₀ ∪ (Filter.eventually_cofinite.1 hbad).toFinset
@@ -138,7 +138,7 @@ theorem euler_int_integrable : ∀ (F E : Type) [Field F] [NumberField F] [Field
       by_cases h : v ∈ S
       · rw [hφS ⟨v, h⟩]
         exact measurable_one.indicator (hB _)
-      · simp only [φ, dif_neg h]
+      · simp only [φ, dite_eq_right h]
         exact measurable_const
     have e := hEP S hSS φinf φ (measurable_one.indicator hA) hφm
     have hPm : MeasurableSet (P ⁻¹' (A ×ˢ Set.univ.pi B)) :=

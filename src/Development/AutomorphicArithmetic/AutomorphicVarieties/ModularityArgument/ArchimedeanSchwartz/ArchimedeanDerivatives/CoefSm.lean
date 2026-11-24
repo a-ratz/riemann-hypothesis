@@ -201,8 +201,8 @@ private theorem coef_deriv (hn : 1 ≤ n) (μ : Measure (Reduction.normOneGL (K 
     obtain rfl : z = toL u.val := hu.symm
     refine Continuous.aestronglyMeasurable ?_
     simp only [f, chart_val]
-    exact ((cusp_facts hn h v).1.comp ((continuous_subtype_val.mul continuous_const).mul continuous_const)).mul
-      (continuous_star.comp (h2c.comp continuous_subtype_val))
+    exact ((cusp_facts hn h v).1.comp ((continuous_subtypeVal.mul continuous_const).mul continuous_const)).mul
+      (continuous_star.comp (h2c.comp continuous_subtypeVal))
   · intro v
     obtain ⟨C, hC⟩ := (cusp_facts hn h v).2
     refine ⟨C * C₂, fun z hz x => ?_⟩
@@ -214,7 +214,7 @@ private theorem coef_deriv (hn : 1 ≤ n) (μ : Measure (Reduction.normOneGL (K 
   · intro v x z hz
     refine ((chart_deriv v.1 ((x : AdelicGLn.AdelicGL K n) * g) hz).mul_const _).congr_fderiv ?_
     ext1 Z
-    simp only [f, sum_apply, ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.smul_apply,
+    simp only [f, sum_apply, ContinuousLinearMap.smulRight_apply, smul_apply,
       smul_eq_mul, Finset.mul_sum, Complex.real_smul]
     refine Finset.sum_congr rfl fun b _ => ?_
     rw [mul_comm, mul_assoc]
@@ -230,8 +230,8 @@ private theorem coef_int (hn : 1 ≤ n) (μ : Measure (Reduction.normOneGL (K :=
   have h2c : Continuous φ₂.1 := φ₂.2.1.continuous
   obtain ⟨hc, C, hC⟩ := cusp_facts hn h φ
   refine Integrable.of_bound (Continuous.aestronglyMeasurable ?_) (C * C₂) (Filter.Eventually.of_forall fun x => ?_)
-  · exact (hc.comp (continuous_subtype_val.mul continuous_const)).mul
-      (continuous_star.comp (h2c.comp continuous_subtype_val))
+  · exact (hc.comp (continuous_subtypeVal.mul continuous_const)).mul
+      (continuous_star.comp (h2c.comp continuous_subtypeVal))
   · rw [norm_mul, Complex.norm_conj]
     exact mul_le_mul (hC _) (hC₂ _ x.2) (norm_nonneg _) ((norm_nonneg _).trans (hC 1))
 

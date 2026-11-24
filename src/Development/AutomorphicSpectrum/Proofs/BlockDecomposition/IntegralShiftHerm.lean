@@ -58,12 +58,12 @@ theorem integral_mul_right (m : ℕ) (μ : Measure (Mx D m n)) (hμ : μ.IsAddHa
     (f : Mx D m n → ℂ) :
     ∫ y, f (HMul.hMul y a.1 : Mx D m n) ∂μ = npow (absA D (Matrix.GeneralLinearGroup.det a)) (-(m : ℂ)) * ∫ y, f y ∂μ := by
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D m n
-  haveI : IsTopologicalAddGroup (Mx D m n) := i1
-  haveI : LocallyCompactSpace (Mx D m n) := i2
-  haveI : SecondCountableTopology (Mx D m n) := i3
-  haveI : T2Space (Mx D m n) := i4
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsTopologicalAddGroup (Mx D m n) := i1
+  have : LocallyCompactSpace (Mx D m n) := i2
+  have : SecondCountableTopology (Mx D m n) := i3
+  have : T2Space (Mx D m n) := i4
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   let φ := GlobalTheory.ModuLR.lrCE (1 : GL (Fin m) (AE D)) a
   have hc : addEquivAddHaarChar φ = absA D (Matrix.GeneralLinearGroup.det a) ^ m := by
     have := GlobalTheory.ResidueEisenstein.ModMat.addEquivAddHaarChar_lrCE D.host.F D.host.E D.sp.cm.sig (isCMExt_host D) m n
@@ -87,8 +87,8 @@ theorem integral_shift {A : Type} [AddCommGroup A] [TopologicalSpace A] [IsTopol
 theorem integral_shift_herm (lam : Measure (hermA D n)) (hl : lam.IsAddHaarMeasure) (f : hermA D n → ℂ) (g : hermA D n) :
     ∫ x, f (x - g) ∂lam = ∫ x, f x ∂lam := by
   obtain ⟨i1, -, -, -, -, -⟩ := lattice_Mx D n n
-  haveI : IsTopologicalAddGroup (Mx D n n) := i1
-  haveI : BorelSpace (Mx D n n) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx D n n) := i1
+  have : BorelSpace (Mx D n n) := ⟨rfl⟩
   exact integral_shift lam f g
 
 theorem halfTr_add (x y : AE D) : halfTr (x + y) = halfTr x + halfTr y := by

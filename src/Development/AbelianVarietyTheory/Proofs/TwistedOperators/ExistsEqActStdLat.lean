@@ -64,17 +64,17 @@ theorem exists_eq_act_stdLat (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     [IsNonarchimedeanLocalField k] (ι : Type) [Fintype ι] [DecidableEq ι]
     (L : Submodule 𝒪[k] (ι → k)) (hL : Submodule.IsFullLattice k L) :
     ∃ g : GL ι k, L = act g (stdLat k ι) := by
-  haveI := hL
-  haveI : Module.Free 𝒪[k] L := Submodule.IsLattice.free k L
-  haveI : Module.Finite 𝒪[k] L := Module.Finite.iff_fg.mpr hL.fg
+  have := hL
+  have : Module.Free 𝒪[k] L := Submodule.IsLattice.free k L
+  have : Module.Finite 𝒪[k] L := Module.Finite.iff_fg.mpr hL.fg
   have hr : Module.finrank 𝒪[k] L = Fintype.card ι := ((Submodule.IsFullLattice.finrank_eq k L).trans (Module.finrank_fintype_fun_eq_card k))
   let b : Module.Basis ι 𝒪[k] L :=
     (Module.finBasisOfFinrankEq 𝒪[k] L hr).reindex (Fintype.equivFin ι).symm
   let c : Module.Basis ι k (ι → k) := b.extendOfIsLattice k
-  have hc : ∀ i, c i = (b i : ι → k) := fun i => Module.Basis.extendOfIsLattice_apply k b i
+  have hc : ∀ i, c i = (b i : ι → k) := fun i => Module.Basis.extendOfIsFullLattice_apply k b i
   let A : Matrix ι ι k := Matrix.of fun i j => (b j : ι → k) i
   have hA : IsUnit A := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← linearIndependent_col_iff_isUnit]
     have : A.col = c := by
       funext j i
       rw [hc]; rfl

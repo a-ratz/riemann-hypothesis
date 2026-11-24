@@ -222,7 +222,7 @@ theorem isOpen_cayley_domain : IsOpen (cayS (D0 P Q)) := by
   exact isOpen_compl_singleton.preimage ((continuous_mat.add continuous_const).matrix_det)
 
 theorem continuous_adelicGL2_det : Continuous fun X : lieU P Q => ((1 + 1) - ((X : lieU P Q) : Mat)).det := by
-  exact (continuous_const.sub continuous_subtype_val).matrix_det
+  exact (continuous_const.sub continuous_subtypeVal).matrix_det
 
 theorem isOpen_cell_domain : IsOpen (D0 P Q) := by
   have h : D0 P Q = (fun X : lieU P Q => ((1 + 1) - ((X : lieU P Q) : Mat)).det) ⁻¹' {0}ᶜ := by
@@ -261,8 +261,8 @@ theorem continuousOn_cayF : ContinuousOn (cayF P Q) (D0 P Q) := by
         ((1 + 1) + ((x.1 : lieU P Q) : Mat)) * ((1 + 1) - ((x.1 : lieU P Q) : Mat))⁻¹ :=
       funext fun x => cayF_mat x.1 x.2
     rw [h]
-    exact (continuous_const.add (continuous_subtype_val.comp continuous_subtype_val)).mul
-      (continuous_inv_of_det_ne_zero (continuous_const.sub (continuous_subtype_val.comp continuous_subtype_val))
+    exact (continuous_const.add (continuous_subtypeVal.comp continuous_subtypeVal)).mul
+      (continuous_inv_of_det_ne_zero (continuous_const.sub (continuous_subtypeVal.comp continuous_subtypeVal))
         fun x => isUnit_iff_ne_zero.1 x.2)
   have hinv : Continuous fun x : D0 P Q => (UpqT.mat (cayF P Q x))⁻¹ :=
     continuous_inv_of_det_ne_zero hval fun x => (Matrix.isUnits_det_units _).ne_zero

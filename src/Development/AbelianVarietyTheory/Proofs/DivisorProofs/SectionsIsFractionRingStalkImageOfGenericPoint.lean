@@ -65,7 +65,7 @@ theorem sections_isDomain_isFractionRing_stalk : ∀ (Y Z : Scheme.{0}) (π : Y 
     ⟨⟨ζ, h⟩, (isIrreducible_singleton.closure).isPreirreducible.open_subset U.isOpen hcl⟩
   obtain ⟨hD, -⟩ := GlobalTheory.IsNormalScheme.isDomain_and_isIntegrallyClosed_of_isIrreducible hirr
   refine ⟨hD, ?_⟩
-  letI := algAK π U h
+  let := algAK π U h
   have hl := hU.isLocalization_stalk ⟨ζ, h⟩
   have hbot : (hU.primeIdealOf ⟨ζ, h⟩).asIdeal = ⊥ := by
     let q : PrimeSpectrum Γ(Z, U) := ⟨⊥, Ideal.isPrime_bot⟩

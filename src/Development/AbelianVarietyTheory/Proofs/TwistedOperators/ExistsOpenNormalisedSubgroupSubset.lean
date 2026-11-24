@@ -76,12 +76,12 @@ theorem exists_open_normalised_subgroup_subset (k : Type) [Field k] [ValuativeRe
   have : CompactSpace (KO k n) :=
     isCompact_iff_compactSpace.1 (SplitFlip.isCompact_KO (k := k) (n := n))
   have hV : IsOpen ((fun x : KO k n => (x : GL n k)) ⁻¹' interior U) :=
-    isOpen_interior.preimage continuous_subtype_val
+    isOpen_interior.preimage continuous_subtypeVal
   have h1 : (1 : KO k n) ∈ (fun x : KO k n => (x : GL n k)) ⁻¹' interior U :=
     mem_interior_iff_mem_nhds.2 hU
   obtain ⟨H, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hV h1
   refine ⟨H.toSubgroup.map (KO k n).subtype, ?_, ?_, ?_, ?_⟩
-  · exact (SplitFlip.isOpen_KO (k := k) (n := n)).isOpenMap_subtype_val _ H.isOpen
+  · exact (SplitFlip.isOpen_KO (k := k) (n := n)).isOpenMap_subtypeVal _ H.isOpen
   · rintro _ ⟨y, hy, rfl⟩
     exact interior_subset (hH hy)
   · rintro _ ⟨y, -, rfl⟩

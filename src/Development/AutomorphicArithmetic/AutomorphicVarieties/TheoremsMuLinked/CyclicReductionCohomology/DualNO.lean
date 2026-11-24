@@ -273,7 +273,7 @@ theorem UpperTheory.V.Th.ncard_traceZero_twisted_cocycles_le_coboundaries_mul :
   intro l _ L G0 O _ _ _ hO _ n y q sg hΦ hD
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hm : maximalIdeal O = Ideal.span {t} := ht.maximalIdeal_eq
-  haveI : Finite (ResidueField O) := hO.finite
+  have : Finite (ResidueField O) := hO.finite
   have hA : IsAdicComplete (maximalIdeal O) O := hO.complete
   have hk : ∀ (m : ℕ) (a : O), Ideal.Quotient.mk (maximalIdeal O ^ m) a = 0 ↔ ∃ p, t ^ m • p = a := fun m a => by
     rw [Ideal.Quotient.eq_zero_iff_mem, hm, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
@@ -309,8 +309,8 @@ theorem UpperTheory.V.Th.ncard_traceZero_twisted_cocycles_le_coboundaries_mul :
     refine ⟨fun ⟨⟨a1, a2, a3⟩, a4⟩ => ⟨a1, e1.2 ⟨a2, a3, a4⟩⟩, fun ⟨a1, a2⟩ => ?_⟩
     obtain ⟨b1, b2, b3⟩ := e1.1 a2
     exact ⟨⟨a1, b1, b2⟩, b3⟩
-  · haveI := ((omFacts l O).2 m).1
-    haveI : Finite (Mm O n m) := inferInstanceAs (Finite (Fin n → Fin n → Om O m))
+  · have := ((omFacts l O).2 m).1
+    have : Finite (Mm O n m) := inferInstanceAs (Finite (Fin n → Fin n → Om O m))
     refine (Set.finite_range fun (Y : Mm O n m) (g : G0.G₀) =>
       epsm O G0 m g • (y.ρ0 m g * Y * y.ρ0 m g⁻¹) - Y).subset ?_
     rintro _ ⟨Y, -, rfl⟩
@@ -348,7 +348,7 @@ private theorem cnt {R Γ M : Type} [CommRing R] [Group Γ] [AddCommGroup M] [Mo
     (h : {z | z ∈ Z ∧ z c = 0}.ncard ≤ {z | z ∈ Bl ρ ∧ z c = 0}.ncard * K) : Nat.card Z ≤ Nat.card (Bl ρ) * K := by
   obtain ⟨c1, c2, c3⟩ := cCount R Γ M ρ c hc h2
   have c1 := c1 Z hf hB hZ
-  haveI : Nonempty {m : M // ρ c m = m} := ⟨⟨0, map_zero _⟩⟩
+  have : Nonempty {m : M // ρ c m = m} := ⟨⟨0, map_zero _⟩⟩
   have hp : 0 < Nat.card {m : M // ρ c m = m} := Nat.card_pos
   refine Nat.le_of_mul_le_mul_right ?_ hp
   rw [c1, ← c2, ← c3]
@@ -386,8 +386,8 @@ theorem UpperTheory.V.Th.dualNO :
   refine ⟨C, fun m => ?_⟩
   filter_upwards [phEqO l L G0 T O n x m hΦ hPL] with N hN rep hAd hfin
   obtain ⟨h2, hO⟩ := omFacts l O
-  haveI : Finite (Om O m) := (hO m).1
-  haveI : Finite (Mm O n m) := inferInstanceAs (Finite (Fin n → Fin n → Om O m))
+  have : Finite (Om O m) := (hO m).1
+  have : Finite (Mm O n m) := inferInstanceAs (Finite (Fin n → Fin n → Om O m))
   have hLC : LC rep := (adExP l L (T.GN N) G0 (T.h N) O n x m).2.2 rep (Or.inr hAd)
   have r1 : x.ρ0 m 1 = 1 := by
     show red m ((x.ρ 1 : GL (Fin n) O) : Matrix (Fin n) (Fin n) O) = 1

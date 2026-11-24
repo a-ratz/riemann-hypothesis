@@ -161,7 +161,7 @@ theorem exists_commensurable {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E)) (h
   obtain ⟨b, hb, h₂⟩ := exists_zsmul_mem_of_fg (L := L)
     (M := Submodule.span (𝓞 E) (Set.range fun i : Fin n => (Pi.single i 1 : Fin n → E)))
     (fun x => exists_zsmul_mem_of_span (by
-      letI : Submodule.IsFullLattice E L := hL
+      let : Submodule.IsFullLattice E L := hL
       rw [Submodule.IsFullLattice.span_eq_top]; trivial)) (Submodule.fg_span (Set.finite_range _))
   refine ⟨a * b, mul_ne_zero ha hb, fun x hx i => ?_, fun i o => ?_⟩
   · obtain ⟨o, ho⟩ := h₁ (b • x) (zsmul_mem hx b) i trivial

@@ -72,7 +72,7 @@ private theorem toZMod_one_iff {l : ℕ} [Fact l.Prime] (x : ℤ_[l]) :
 
 private theorem exists_kernel_element_nontrivial_cyclotomic {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] (F : Fr.Frame l k) {C₀ : ℕ} (h : F.Ok C₀) :
     ∃ g : F.G0, F.Ψ g = 1 ∧ PadicInt.toZMod ((F.eps g : ℤ_[l]ˣ) : ℤ_[l]) ≠ 1 := by
-  haveI := h.fin
+  have := h.fin
   let χ : F.G0 →* kˣ := F.Ψ.comp F.del.ker.subtype
   let ω : F.G0 →* kˣ := (F.om k).comp F.del.ker.subtype
   obtain ⟨g, h1, h2⟩ := (Loc.v0e (ι := Bool) (fun b => if b then χ else 1) ω).2 fun hm => h.f5 (by
@@ -174,7 +174,7 @@ private theorem cr_set [CharP (ResidueField O) l] (k : GalLink η Ψ σ g₁ B M
     · exact he ⟨v, h1⟩
     · exact h2 ▸ hA0
     · exact isPlaceOver_placeOf Ω v
-  have hAv : A v0 = A0 := by simp only [A, dif_neg fun h => hMv (hlv _ h), if_true]
+  have hAv : A v0 = A0 := by simp only [A, dite_eq_right fun h => hMv (hlv _ h), ite_true]
   choose w hw using fun v => (Base.places L Ω l (A v)).1 (ne_top (hA v))
   have hfin : {v : W.Plc (W.Lp L) | ((M : ℕ) : 𝓞 (W.Lp L)) ∈ v.asIdeal ∧ ((l : ℕ) : 𝓞 (W.Lp L)) ∉ v.asIdeal}.Finite :=
     (Ideal.finite_factors (I := Ideal.span {((M : ℕ) : 𝓞 (W.Lp L))}) (fun h => hM (Nat.cast_eq_zero.1 (Ideal.span_singleton_eq_bot.1 h)))).subset fun v hv =>
@@ -196,7 +196,7 @@ private theorem cr_set [CharP (ResidueField O) l] (k : GalLink η Ψ σ g₁ B M
             p_ne := fun h => hpM' (h ▸ hlM)
             p_unr := fun h => hpM ((Int.natCast_dvd.1 h).mul_left _)
             norm_v0_eq_one := hn
-            split := ?_ }, ⟨⟨hlM, hΨ, hcσ, fun u => hfin.mem_toFinset, e, fun v => dif_pos v.2, ?_, ?_, ?_⟩⟩⟩
+            split := ?_ }, ⟨⟨hlM, hΨ, hcσ, fun u => hfin.mem_toFinset, e, fun v => dite_eq_left v.2, ?_, ?_, ?_⟩⟩⟩
   · rintro v (h | h | rfl)
     · exact cr_split k _ ((natCast_place (hA v) M).2 (hlv v h))
     · exact cr_split k _ ((natCast_place (hA v) M).2 (hfin.mem_toFinset.1 h).1)
@@ -213,7 +213,7 @@ theorem UpperTheory.V.Pr.cRealEx :
     GlobalTheory.Published.GlobalArtinReciprocity → UpperTheory.V.W.LocCFTAll → UpperTheory.V.W.LevEx → UpperTheory.V.W.ProModularRingExists → UpperTheory.V.Pr.CRealEx := by
   intro _ _ hLev hB0 Ω _ _ _ l _ ι c _ N _ e ψ η σ g₁ B M H L _ _ _ _ _ Φ k c₁ _ f n ka C₀ hn ok big hle hf hka hkO
   have hl : l.Prime := Fact.out
-  haveI := ok.fin
+  have := ok.fin
   have hlM : l ∣ M := (dvd_mul_right l N).trans H.dvd
   obtain ⟨s, ⟨a⟩⟩ := cr_set k ok hlM H.M_pos H.atl H.cc (cr_unr e ψ H.dvd)
   have hSfin : s.S.Finite := by
@@ -275,7 +275,7 @@ theorem UpperTheory.V.Pr.cRealEx :
         have hu : ¬ (s.A u.1).valuation (l : Ω) < 1 := fun h => s.St_l u.1 u.2 ((natCast_place (s.hA u.1) l).1 h)
         refine ⟨Nat.card (ResidueField c.O)ˣ * m, fun h => ?_, ?_, hκ g _ ?_⟩
         · refine hm ((hl.dvd_mul.1 h).resolve_left fun h' => ?_)
-          haveI := Fintype.ofFinite (ResidueField c.O)
+          have := Fintype.ofFinite (ResidueField c.O)
           rw [Nat.card_units, ← CharP.cast_eq_zero_iff (ResidueField c.O), Nat.cast_pred Nat.card_pos,
             Nat.card_eq_fintype_card, FiniteField.cast_card_eq_zero] at h'
           simp at h'
@@ -297,7 +297,7 @@ theorem UpperTheory.V.Pr.cRealEx :
         ← RingHom.sub_mem_ker_iff] at h2
       rw [← map_one (PadicInt.toZMod (p := l)), ← RingHom.sub_mem_ker_iff, PadicInt.ker_toZMod]
       exact le_maximalIdeal (RingHom.ker_ne_top _) h2
-  haveI : IsCO c₁.O (ResidueField c₁.O) := (co_res c₁.O).1
+  have : IsCO c₁.O (ResidueField c₁.O) := (co_res c₁.O).1
   obtain ⟨p, -⟩ := W.residual_diagonal_determinant_isPolar l V.frame c₁.O n r (by omega) (UpperTheory.residual_ok_of_local_chars_restrict r (by omega) r2)
   obtain ⟨B₀⟩ := hB0 l L Ω s V c₁ n r _ ⟨p⟩
   obtain ⟨S⟩ := Fr.space_ex ok' hn

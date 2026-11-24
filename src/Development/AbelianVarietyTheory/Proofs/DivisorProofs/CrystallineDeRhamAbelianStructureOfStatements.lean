@@ -174,8 +174,8 @@ theorem abelianDeRham_baseChange_of_smoothLift (H₁ : GlobalTheory.Published.Cr
       Smooth (B.hom ≫ 𝟙 _) ∧ IsSeparated (B.hom ≫ 𝟙 _) ∧ QuasiCompact (B.hom ≫ 𝟙 _) := by
     intro S _ B _ hB
     rw [Category.comp_id]
-    haveI := hB.smooth
-    haveI := hB.proper
+    have := hB.smooth
+    have := hB.proper
     exact ⟨inferInstance, inferInstance, inferInstance⟩
   obtain ⟨sm, se, sq⟩ := geom A hA
   obtain ⟨sm', se', sq'⟩ := geom A' hA'

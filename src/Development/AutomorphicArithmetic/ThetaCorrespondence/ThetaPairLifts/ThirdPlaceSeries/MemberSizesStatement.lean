@@ -220,7 +220,7 @@ theorem member_frame_of_standing_hypotheses_window_three {D : D7} {large₂ : Si
   have hk : 3 * Real.exp 8 ≤ (D.R.k : ℝ) := by
     have e8 : Real.exp 8 ≤ 3 ^ 8 := by
       have h3 : Real.exp 1 ≤ 3 := by have := Real.exp_one_lt_d9; linarith
-      calc Real.exp 8 = Real.exp 1 ^ 8 := by rw [← Real.exp_nat_mul]; norm_num
+      calc Real.exp 8 = Real.exp 1 ^ 8 := by rw [← Real.exp_natCast_mul]; norm_num
         _ ≤ 3 ^ 8 := pow_le_pow_left₀ (Real.exp_pos _).le h3 8
     have hf := Formalism.MainNotions.BridgeLemma.two_le_degree_bis D
     have h5 : (40 : ℝ) ^ 5 ≤ (D.R.m : ℝ) ^ 5 := pow_le_pow_left₀ (by norm_num) hm40 5

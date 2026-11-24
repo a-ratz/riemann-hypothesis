@@ -133,8 +133,8 @@ theorem ker_eq_span_homogeneous {F E : Type} [Field F] [Field E] [Algebra F E]
   set x : P → E := fun p => ∑ c, algebraMap F E (l p c) * u c with hx
   set S : Set (MvPolynomial P F) := {f | f.IsHomogeneous 1 ∧ aeval x f = 0} with hS
   obtain ⟨κ, a, ha, hspan, hli⟩ := exists_linearIndependent' F l
-  haveI : Finite κ := Finite.of_injective a ha
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  have : Fintype κ := Fintype.ofFinite κ
   have hc : ∀ p, ∃ c : κ → F, ∑ i, c i • l (a i) = l p := by
     intro p
     have hp : l p ∈ Submodule.span F (Set.range (l ∘ a)) := by
@@ -443,7 +443,7 @@ theorem indep_eF : AlgebraicIndependent ℚ (eF Ψ N K) := by
     (algebraicIndependent_X _ (ΩFl Ψ N)).map'
       (f := IsScalarTower.toAlgHom (ΩFl Ψ N) (MvPolynomial K (ΩFl Ψ N)) (CF Ψ N K))
       (IsFractionRing.injective _ _)
-  haveI : @IsScalarTower ℚ (ΩFl Ψ N) (CF Ψ N K) Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
+  have : @IsScalarTower ℚ (ΩFl Ψ N) (CF Ψ N K) Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
     .of_algebraMap_eq' (Subsingleton.elim _ _)
   exact hx.sumElim_comp hy
 

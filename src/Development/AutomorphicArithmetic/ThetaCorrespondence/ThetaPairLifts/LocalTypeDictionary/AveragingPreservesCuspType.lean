@@ -95,8 +95,8 @@ theorem hasTypeAt_of_isTypeAt {D : D7} (θ : D.what₂.Tau → (Ainf D.host.F �
     (hφ : IsAutFunSm θ V φ) (hty : IsTypeAt θ V τ S φ) : GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.HasTypeAt θ V τ S φ := by
   obtain ⟨H, i1, i2, σ, lam, ε, P, hE, hD, hP, hJ, hx⟩ := hty
   intro K hK δ hδ
-  haveI : CompleteSpace H := hD.1
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : CompleteSpace H := hD.1
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hσ : Std ε σ := std_of_isDS hHC hD
   have hlam : Formalism.QuantumDeterminants.IsHCParam lam := GlobalTheory.Published.HermitianUnique.isHCParam_of_isDS hE.1 hD
   have hx' : ∀ x, HasTypeAll (lieSet ε) (UJset ε) σ (res θ V τ P φ x) := fun x =>
@@ -299,7 +299,7 @@ theorem isTypeAt_average_same_place : ∀ (D : D7) (θ : InfFam D), IsInfFam θ 
   intro D θ hθ hPr N τ ψ _ hT e he
   obtain ⟨H, i1, i2, σ, lam, ε, P, hE, hD, hP, hJ, hx⟩ := hT
   obtain ⟨rfl, rfl⟩ := GlobalTheory.SignedParTest.isEnum_unique hE (N.M.enum τ)
-  haveI : CompleteSpace H := hD.1
+  have : CompleteSpace H := hD.1
   have hfr : IsUnit (N.M.fr τ) := N.M.fr_unit τ
   have hfrJ := N.M.fr_gram τ
   have dfr := (isUnit_iff_isUnit_det _).1 hfr

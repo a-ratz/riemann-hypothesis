@@ -72,12 +72,12 @@ private theorem sees_mono {n : ℕ} {R G : Type} [CommRing R] [Group G] (D : GDe
 theorem UpperTheory.V.Pa.Core.phSees :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T) (W : RRObj Λ A) (j : ℕ), ∃ V : OpenNormalSubgroup Λ.Ph, V.toSubgroup ≤ Ph0 Λ ∧ Sees W.t.D (V.toSubgroup.subgroupOf (Ph0 Λ)) (maximalIdeal W.R ^ j) := by
   intro l _ L G0 T Λ n O _ _ _ _ _ r B _ _ _ u J D A W j
-  letI := W.ring
-  letI := W.alg
-  haveI := W.co
+  let := W.ring
+  let := W.alg
+  have := W.co
   obtain ⟨V, hV⟩ := dSees n W.R (Ph0 Λ) W.t.D (maximalIdeal W.R) W.t.cont j
   have hUo : IsOpen (Subtype.val '' (V : Set (Ph0 Λ))) :=
-    (Λ.Ph0_open).isOpenMap_subtype_val _ V.toOpenSubgroup.isOpen
+    (Λ.Ph0_open).isOpenMap_subtypeVal _ V.toOpenSubgroup.isOpen
   have h1U : (1 : Λ.Ph) ∈ Subtype.val '' (V : Set (Ph0 Λ)) := ⟨1, V.one_mem, rfl⟩
   obtain ⟨H, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hUo h1U
   have hHle : H.toSubgroup ≤ Ph0 Λ := by

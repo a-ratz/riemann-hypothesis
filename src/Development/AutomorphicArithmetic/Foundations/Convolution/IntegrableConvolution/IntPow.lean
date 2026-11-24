@@ -70,7 +70,7 @@ private theorem int_cv (f e g : TI K n) (hg : ∀ x, g x = cv ν f e x) :
   subst hgg
   rw [h2 H π]
   ext v
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.mul_apply,
+  simp only [ContinuousLinearMap.comp_apply, mul_apply_eq_comp,
     UnitaryRep.integrated_ccToL1_apply, UnitaryRep.compHom_apply]
   rfl
 

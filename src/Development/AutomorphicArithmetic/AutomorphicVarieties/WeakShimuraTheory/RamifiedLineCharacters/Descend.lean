@@ -49,7 +49,7 @@ theorem UpperTheory.V.Ws.Gys.descend :
   have hclosed : IsClosed (ρ.ker : Set (G F Ω)) := by
     have hset : (ρ.ker : Set (G F Ω)) = ⋂ m : M, {g | ρ g m = m} := by
       ext g
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
       constructor
       · intro h m
         rw [h]
@@ -66,7 +66,7 @@ theorem UpperTheory.V.Ws.Gys.descend :
     refine Subgroup.topologicalClosure_minimal _ ?_ hclosed
     refine Subgroup.normalClosure_le_normal ?_
     intro g hg
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hg
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hg
     obtain ⟨v, hv, A, hA, hgA⟩ := hg
     exact hU v hv A hA g (mem_Ine.mpr hgA)
   refine ⟨QuotientGroup.lift _ ρ hle, ?_, ?_⟩

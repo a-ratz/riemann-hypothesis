@@ -395,7 +395,7 @@ theorem psiT_cont_per (T' : nF σ L.Y L.b) :
   · have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
     have htr : Continuous (Algebra.trace (AF F) (AE F E)) :=
       IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF F) (AE F E))
-    exact hstd.1.comp (htr.comp ((continuous_const.matrix_mul continuous_subtype_val).matrix_trace)).neg
+    exact hstd.1.comp (htr.comp ((continuous_const.matrix_mul continuous_subtypeVal).matrix_trace)).neg
   · have h1 := kunf.psi_rat hstd T' ⟨β₀, h₀⟩
     rw [AddSubgroup.coe_add, Matrix.mul_add, Matrix.trace_add, map_add (f := _), neg_add, AddChar.map_add_eq_mul,
       AddChar.map_neg_eq_inv, h1, inv_one, one_mul]
@@ -409,8 +409,8 @@ theorem firstEq_of : AbsConv → FirstEq := by
   have hz₂ : t₂ < z.re := lt_of_le_of_lt (le_max_right _ _) hz
   obtain ⟨hint, hsum⟩ := ht₁ z hz₁ nb lam 𝓖 hc hGc uM ν 𝓤 hU hUc T x
   obtain ⟨e, he'⟩ := cos_bij L
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ, hc.2.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (ν.restrict 𝓤) := ⟨by rw [Measure.restrict_apply_univ, hU.2.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ, hc.2.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (ν.restrict 𝓤) := ⟨by rw [Measure.restrict_apply_univ, hU.2.2.2]; exact ENNReal.one_lt_top⟩
   set ψT : nA σ L.Y L.b → ℂ := fun β' => d.B.ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (T'.1.1 * β'.1))))
     with hψT
   set H : Cs L.sd → nA σ L.Y L.b → ℂ := fun q' β' => phz d f s₁ z (L.j (rep q' * nb' β') * x) * ψT β' with hH
@@ -461,7 +461,7 @@ theorem firstEq_of : AbsConv → FirstEq := by
         (e.tsum_eq (fun q => tm L f s₁ z nb lam 𝓖 T uM ν 𝓤 (rep q.1) x)).symm
     _ = ∑' q', ∫ β in 𝓖, H q' (prj L β) ∂lam := tsum_congr htm
     _ = ∫ β in 𝓖, ∑' q', H q' (prj L β) ∂lam := by
-        haveI : Countable (Cs L.sd) := countableCs L.sd
+        have : Countable (Cs L.sd) := countableCs L.sd
         exact integral_tsum_of_summable_integral_norm hint' hsum'
     _ = ∫ β in 𝓖, G (prj L β) ∂lam := by simp only [hHG]
     _ = ∫ β' in 𝓖', G β' ∂lam' := fiber L hc hc' G hGc hGp
@@ -578,11 +578,11 @@ theorem coordsC_ck (h : Hyp L nb uM nb' w₁ cM δ) {lam : Measure (nA σ d.Y d.
     ∫ p, Ψ (nb p.2 * (uM p.1 * x)) * th T p.2 ∂((ν.restrict 𝓤).prod (lam.restrict 𝓖)) =
       c.toReal • ∫ p, Ψ (sM R L p.2.2.1 * (cM (p.2.1, p.2.2.2) * (L.j (nb' p.1) * x))) * th' T' p.1
         ∂((lam'.restrict 𝓖').prod ((ν.restrict 𝓤).prod ((ν.restrict 𝓤).prod ((lamA F).restrict 𝓐)))) := by
-  haveI : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
-  haveI : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
-  haveI := hc.2.1
-  haveI := hc'.2.1
-  haveI := hU.2.1
+  have : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
+  have : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
+  have := hc.2.1
+  have := hc'.2.1
+  have := hU.2.1
   obtain ⟨-, -, hiff⟩ := pEquiv h
   let PM : (nA σ d.Y d.b) ≃ᵐ (((Fin L.n → AE F E) × AF F) × nA σ L.Y L.b) := P.toHomeomorph.toMeasurableEquiv
   have hPM : ∀ β, PM β = ((pb L β, pa L δ β), C4.prj L β) := hP
@@ -622,11 +622,11 @@ theorem coordsE_ck (h : Hyp L nb uM nb' w₁ cM δ) {lam : Measure (nA σ d.Y d.
     ∫⁻ p, Ψ (nb p.2 * (uM p.1 * x)) * ‖th T p.2‖ₑ ∂((ν.restrict 𝓤).prod (lam.restrict 𝓖)) =
       c * ∫⁻ p, Ψ (sM R L p.2.2.1 * (cM (p.2.1, p.2.2.2) * (L.j (nb' p.1) * x))) * ‖th' T' p.1‖ₑ
         ∂((lam'.restrict 𝓖').prod ((ν.restrict 𝓤).prod ((ν.restrict 𝓤).prod ((lamA F).restrict 𝓐)))) := by
-  haveI : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
-  haveI : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
-  haveI := hc.2.1
-  haveI := hc'.2.1
-  haveI := hU.2.1
+  have : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
+  have : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
+  have := hc.2.1
+  have := hc'.2.1
+  have := hU.2.1
   obtain ⟨-, -, hiff⟩ := pEquiv h
   let PM : (nA σ d.Y d.b) ≃ᵐ (((Fin L.n → AE F E) × AF F) × nA σ L.Y L.b) := P.toHomeomorph.toMeasurableEquiv
   have hPM : ∀ β, PM β = ((pb L β, pa L δ β), C4.prj L β) := hP
@@ -950,7 +950,7 @@ theorem unfqE (h : Hyp L nb uM nb' w₁ cM δ) {s₁ : ℂ} {f : d.G → ℂ} (h
   obtain ⟨Z, hZ, -, hheis⟩ := Heisenberg₂ (R := R) h
   have hg : Continuous fun c => phz d f s₁ z (w₁ * (cM c * (L.j γ' * Y))) :=
     (ComplexParameterFamilyContinuity.continuous_phz d hf.cont s₁ z).comp (continuous_const.mul ((continuous_cM h).mul continuous_const))
-  rw [← UnfoldingIntegralSum.unf_lint hU0 hU1 (fd_prod hU0 hU0) h𝓐 Λ (hΛrat hγ) hQ.measurable hZ.measurable hg.measurable.enorm]
+  rw [← UnfoldingIntegralSum.unf_lint hU0 hU1 (fd_prod hU0 hU0) h𝓐 Λ (hΛrat hγ) hQ.measurable hZ.measurable hg.measurable.eNorm]
   refine lintegral_congr fun p => ?_
   rw [← (rationalCentreEquiv L).symm.tsum_eq]
   exact tsum_congr fun c => by rw [unfolding_rational_point_change h hf z hΛeq hheis]; rfl
@@ -1057,14 +1057,14 @@ theorem unf (R : RD d) {f : d.G → ℂ} {s₁ : ℂ} (hf : IsSec d.K d.χ s₁ 
   have fin2 : ∫⁻ p, ∑' y, ‖G y p‖ₑ ∂μN < ⊤ := by
     have hE := coordsE (R := R) h hc hU hc' hT h𝓐 hP hPc
       (fun g => ∑' q : {q : Cs d // ¬ LagrangianCondition L (rep q)}, ‖phz d f s₁ z (rep q.1 * g)‖ₑ)
-      (Measurable.tsum fun q => (hΦc.comp (continuous_const.mul continuous_id)).enorm.measurable)
+      (Measurable.tsum fun q => (hΦc.comp (continuous_const.mul continuous_id)).eNorm.measurable)
       (fun r hr hx g => eisenstein_norm_sum_rational_invariant hf z hr hx g) x
     have l1 : ∫⁻ p, (∑' q : {q : Cs d // ¬ LagrangianCondition L (rep q)}, ‖phz d f s₁ z (rep q.1 * (nb p.2 * (uM p.1 * x)))‖ₑ) *
         ‖th T p.2‖ₑ ∂μO < ⊤ := by
       refine lt_of_eq_of_lt ?_ fin1
       refine lintegral_congr fun p => ?_
       rw [← ENNReal.tsum_mul_right]
-      exact tsum_congr fun q => (enorm_mul _ _).symm
+      exact tsum_congr fun q => (eNorm_mul _ _).symm
     rw [hE] at l1
     have l2 : ∫⁻ p, (∑' q : {q : Cs d // ¬ LagrangianCondition L (rep q)},
         ‖phz d f s₁ z (rep q.1 * (sM R L p.2.2.1 * (cM (p.2.1, p.2.2.2) * (L.j (nb' p.1) * x))))‖ₑ) * ‖th' (d := d) T' p.1‖ₑ
@@ -1075,15 +1075,15 @@ theorem unf (R : RD d) {f : d.G → ℂ} {s₁ : ℂ} (hf : IsSec d.K d.χ s₁ 
       exact lt_irrefl _ l1
     refine lt_of_eq_of_lt (lintegral_congr fun p => ?_) l2
     rw [(eisenstein_term_expansion h hf z he _).2, ← ENNReal.tsum_mul_right]
-    exact tsum_congr fun y => enorm_mul _ _
+    exact tsum_congr fun y => eNorm_mul _ _
 
-  have hGm : ∀ y, AEMeasurable (fun p => ‖G y p‖ₑ) μN := fun y => (hGc y).enorm.measurable.aemeasurable
+  have hGm : ∀ y, AEMeasurable (fun p => ‖G y p‖ₑ) μN := fun y => (hGc y).eNorm.measurable.aemeasurable
   have hGlt : ∀ y, ∫⁻ p, ‖G y p‖ₑ ∂μN < ⊤ := fun y =>
     lt_of_le_of_lt (lintegral_mono fun p => ENNReal.le_tsum (f := fun y => ‖G y p‖ₑ) y) fin2
   have hGi : ∀ y, Integrable (G y) μN := fun y => ⟨(hGc y).aestronglyMeasurable, hGlt y⟩
   have hGs : Summable fun y => ∫ p, ‖G y p‖ ∂μN := by
     have h1 : ∀ y, ∫ p, ‖G y p‖ ∂μN = (∫⁻ p, ‖G y p‖ₑ ∂μN).toReal := fun y =>
-      integral_norm_eq_lintegral_enorm (hGi y).aestronglyMeasurable
+      integral_norm_eq_lintegral_eNorm (hGi y).aestronglyMeasurable
     simp_rw [h1]
     refine ENNReal.summable_toReal ?_
     rw [← lintegral_tsum hGm]
@@ -1115,7 +1115,7 @@ theorem unf (R : RD d) {f : d.G → ℂ} {s₁ : ℂ} (hf : IsSec d.K d.χ s₁ 
     refine integral_congr_ae ?_
 
     have hmq : Measurable fun p : nA σ L.Y L.b × ((Fin L.n → AE F E) × ((Fin L.n → AE F E) × AF F)) =>
-        ∑' c₀ : Crat L, ‖G ⟨q', c₀⟩ p‖ₑ := Measurable.tsum fun c₀ => (hGc _).enorm.measurable
+        ∑' c₀ : Crat L, ‖G ⟨q', c₀⟩ p‖ₑ := Measurable.tsum fun c₀ => (hGc _).eNorm.measurable
     have hfinq : ∫⁻ p, ∑' c₀ : Crat L, ‖G ⟨q', c₀⟩ p‖ₑ ∂μN < ⊤ := by
       refine lt_of_le_of_lt (lintegral_mono fun p => ?_) fin2
       exact (ENNReal.le_tsum (f := fun q'' => ∑' c₀ : Crat L, ‖G ⟨q'', c₀⟩ p‖ₑ) q').trans
@@ -1131,16 +1131,16 @@ theorem unf (R : RD d) {f : d.G → ℂ} {s₁ : ℂ} (hf : IsSec d.K d.χ s₁ 
     have hjj : L.j (rep q') * (L.j (nb' β) * x) = L.j (rep q' * nb' β) * x := by rw [map_mul, mul_assoc]
     by_cases hθ : th' (d := d) T' β = 0
     · rw [hθ, mul_zero, mul_zero, mul_zero]
-    · have hθe : ‖th' (d := d) T' β‖ₑ ≠ 0 := enorm_ne_zero.2 hθ
+    · have hθe : ‖th' (d := d) T' β‖ₑ ≠ 0 := eNorm_ne_zero.2 hθ
       have hl : ∫⁻ v, ∑' c₀ : Crat L,
           ‖phz d f s₁ z (w₁ * (cM c₀.1 * (L.j (rep q') * (sM R L v.2.1 * (cM (v.1, v.2.2) * (L.j (nb' β) * x))))))‖ₑ ∂μI < ⊤ := by
         have e5 : ∫⁻ v, ∑' c₀ : Crat L, ‖G ⟨q', c₀⟩ (β, v)‖ₑ ∂μI = (∫⁻ v, ∑' c₀ : Crat L,
             ‖phz d f s₁ z (w₁ * (cM c₀.1 * (L.j (rep q') * (sM R L v.2.1 * (cM (v.1, v.2.2) * (L.j (nb' β) * x))))))‖ₑ ∂μI) *
               ‖th' (d := d) T' β‖ₑ := by
-          rw [← lintegral_mul_const' _ _ enorm_ne_top]
+          rw [← lintegral_mul_const' _ _ eNorm_ne_top]
           refine lintegral_congr fun v => ?_
           rw [← ENNReal.tsum_mul_right]
-          exact tsum_congr fun c₀ => enorm_mul _ _
+          exact tsum_congr fun c₀ => eNorm_mul _ _
         rw [e5] at hβ
         by_contra hcon
         rw [not_lt, top_le_iff] at hcon

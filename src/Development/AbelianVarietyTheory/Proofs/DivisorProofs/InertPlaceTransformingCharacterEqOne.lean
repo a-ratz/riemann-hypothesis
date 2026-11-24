@@ -128,9 +128,9 @@ theorem diagW_box_indicator : ∀ (F : Type) [Field F] [NumberField F] (v : Pl (
       ∀ w, diagW (psiAt ψ v) μ (boxFun φ₀ φ₀) w = U.indicator (fun _ => c) w := by
   intro F _ _ v κ _ ψ hψ h2 μ hμ
   classical
-  letI : MeasurableSpace (κ → Fv F v) := borel _
-  haveI : BorelSpace (κ → Fv F v) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (κ → Fv F v) := borel _
+  have : BorelSpace (κ → Fv F v) := ⟨rfl⟩
+  have := hμ
   obtain ⟨S, hS⟩ : ∃ S : Set (κ → Fv F v), S = {x | ∀ k, x k ∈ v.adicCompletionIntegers F} := ⟨_, rfl⟩
   have hmem : ∀ x, x ∈ S ↔ ∀ k, x k ∈ v.adicCompletionIntegers F := fun x => by subst hS; rfl
   have hpi : S = Set.pi Set.univ (fun _ => (v.adicCompletionIntegers F : Set (Fv F v))) := by
@@ -523,7 +523,7 @@ theorem exists_scalar_inv_at : ∀ (F E : Type) [Field F] [NumberField F] [Field
       (1 - mat (g⁻¹ * k)) * b = liftV v (1 : Fv F v) • (1 : Matrix (Fin n) (Fin n) (AE F E)) := by
   intro F E _ _ _ _ _ σ B hB v w hw n J g
   have hK := GlobalTheory.InertTensorField.isField_tensor_of_isInertAt F E σ B hB v w hw
-  haveI : IsDomain (Fv F v ⊗[F] E) := hK.isDomain
+  have : IsDomain (Fv F v ⊗[F] E) := hK.isDomain
   have hunit : ∀ x : Fv F v ⊗[F] E, x ≠ 0 → IsUnit x := fun x hx => by
     obtain ⟨y, hy⟩ := hK.mul_inv_cancel hx
     exact ⟨⟨x, y, hy, by rw [mul_comm]; exact hy⟩, rfl⟩
@@ -535,7 +535,7 @@ theorem exists_scalar_inv_at : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hι : Function.Injective ι := ι.injective
   set gv := (mat g).map (compFin F E v) with hgv
   have hp0 : gv.charpoly ≠ 0 := (Matrix.charpoly_monic gv).ne_zero
-  have hfin := Polynomial.finite_setOf_isRoot hp0
+  have hfin := Polynomial.finite_setOfPred_isRoot hp0
   have hden : ∀ m : ℕ, (m : E) - ξ ≠ 0 := by
     intro m h
     have h1 : ξ = m := (sub_eq_zero.1 h).symm
@@ -691,7 +691,7 @@ theorem evFin_norm_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     evFin F v (Algebra.norm (AF F) x) = Algebra.norm (Fv F v) (compFin F E v x) := by
   intro F E _ _ _ _ _ v x
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let e := Module.finBasis F E
   let b := Algebra.TensorProduct.basis (AF F) e
   let b' := Algebra.TensorProduct.basis (Fv F v) e
@@ -945,8 +945,8 @@ theorem GlobalTheory.integral_indicator_preimage_injective_ne_zero : ∀ (F : Ty
     ∀ c : ℂ, c ≠ 0 → ∀ U : Set ((κ → Fv F v) × (κ → Fv F v)), IsOpen U → IsCompact U → 0 ∈ U →
     ∫ y, U.indicator (fun _ => c) (j y) ∂ν ≠ 0 := by
   intro F _ _ v κ _ N ν hν j hj c hc U hUo hUc h0
-  letI : MeasurableSpace (Fin N → Fv F v) := borel _
-  haveI : BorelSpace (Fin N → Fv F v) := ⟨rfl⟩
+  let : MeasurableSpace (Fin N → Fv F v) := borel _
+  have : BorelSpace (Fin N → Fv F v) := ⟨rfl⟩
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective j (LinearMap.ker_eq_bot.mpr hj)
   have hjc : Continuous j := IsModuleTopology.continuous_of_linearMap j
   have hgc : Continuous g := IsModuleTopology.continuous_of_linearMap g
@@ -1054,8 +1054,8 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (v : Pl (F := F)) (κ : 
   have h1 : ∀ y, diagW ψ μ (boxFun (schr ψ (j y₀) φ₁) φ₂) (j y) = diagW ψ μ (boxFun φ₁ φ₂) (j (y + y₀)) := fun y => by
     rw [diagW_schr F v κ ψ μ _ _ (hj y y₀), map_add (f := _)]
   simp only [h1]
-  letI : MeasurableSpace (Fin N → Fv F v) := borel _
-  haveI : BorelSpace (Fin N → Fv F v) := ⟨rfl⟩
+  let : MeasurableSpace (Fin N → Fv F v) := borel _
+  have : BorelSpace (Fin N → Fv F v) := ⟨rfl⟩
   exact integral_add_right_eq_self (μ := ν) (fun y => diagW ψ μ (boxFun φ₁ φ₂) (j y)) y₀
 
 end GlobalTheory.LagIntTransl
@@ -1328,8 +1328,8 @@ theorem hasCompactSupport_comp_of_leftInverse {X Y M : Type} [TopologicalSpace X
 theorem integrable_of_cont_cs {X : Type} [TopologicalSpace X] (μ : @Measure X (borel X))
     [IsFiniteMeasureOnCompacts μ] {f : X → ℂ} (hf : Continuous f) (hcs : HasCompactSupport f) :
     Integrable f μ := by
-  letI : MeasurableSpace X := borel X
-  haveI : BorelSpace X := ⟨rfl⟩
+  let : MeasurableSpace X := borel X
+  have : BorelSpace X := ⟨rfl⟩
   exact hf.integrable_of_hasCompactSupport hcs
 
 end GlobalTheory.InertLagChar.LinForm
@@ -1829,8 +1829,8 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   obtain ⟨L, hL, hinv, r₀, hr₀, c₀, hc₀, μ, hμ, hLφ, -⟩ := GlobalTheory.T.exists_admitted_diagonal_integral_linearForm F E σ a a' G B.ψ d' dd hdd v
   obtain ⟨hdm, N, j, ζ, hj, hζ, hζs, hT'⟩ := GlobalTheory.T.lagrangianColumns_linear_parametrisation_finitePlace F E σ a' (a + a') G.V' G.W G.M' v m C hC
   obtain ⟨ν, hν⟩ : ∃ ν : @Measure (Fin N → Fv F v) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) ν := by
-    letI : MeasurableSpace (Fin N → Fv F v) := borel _
-    haveI : BorelSpace (Fin N → Fv F v) := ⟨rfl⟩
+    let : MeasurableSpace (Fin N → Fv F v) := borel _
+    have : BorelSpace (Fin N → Fv F v) := ⟨rfl⟩
     exact ⟨Measure.addHaar, inferInstance⟩
   obtain ⟨φ₀, hφ₀, c₁, hc₁, U, hUo, hUc, hU0, hU⟩ := GlobalTheory.T.diagonal_integral_heisenberg_translate_integral_indicator F v _ B.ψ hunr h2 μ hμ
   have hSB := GlobalTheory.T.heisenbergDiagonalIntegral_mem_schwartzBruhat F v _ _ hψc hψ1 μ hμ _ (box_mem_SB hφ₀ hφ₀) c₁ hc₁ U hUo hUc hU0 hU

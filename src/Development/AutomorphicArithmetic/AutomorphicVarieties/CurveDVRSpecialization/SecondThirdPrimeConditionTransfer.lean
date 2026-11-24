@@ -177,7 +177,7 @@ private theorem exists_algClosed_embedding_of_field (F : Type) [Field F] :
 
 private theorem exAlgCl0 (R : Type) [CommRing R] (P : Ideal R) [P.IsPrime] :
     ∃ (K : Type) (_ : Field K) (_ : IsAlgClosed K) (j : R →+* K), RingHom.ker j = P := by
-  haveI : IsDomain (R ⧸ P) := Ideal.Quotient.isDomain P
+  have : IsDomain (R ⧸ P) := Ideal.Quotient.isDomain P
   obtain ⟨K0, hK0, j0, hj0⟩ := exists_field_embedding_of_domain (R ⧸ P)
   obtain ⟨K, hK, hc, j, hj⟩ := exists_algClosed_embedding_of_field K0
   refine ⟨K, hK, hc, (j.comp j0).comp (Ideal.Quotient.mk P), ?_⟩
@@ -187,7 +187,7 @@ private theorem exAlgCl0 (R : Type) [CommRing R] (P : Ideal R) [P.IsPrime] :
 private theorem exAlgCl (O R : Type) [CommRing O] [CommRing R] [Algebra O R] (P : Ideal R) [P.IsPrime] :
     ∃ (K : Type) (_ : Field K) (_ : IsAlgClosed K) (_ : Algebra O K) (j : R →ₐ[O] K), RingHom.ker (j : R →+* K) = P := by
   obtain ⟨K, hK, hc, j, hj⟩ := exAlgCl0 R P
-  letI : Algebra O K := (j.comp (algebraMap O R)).toAlgebra
+  let : Algebra O K := (j.comp (algebraMap O R)).toAlgebra
   exact ⟨K, hK, hc, inferInstance, ⟨j, fun _ => rfl⟩, hj⟩
 
 private theorem ringHom_injective_of_fields {F K : Type} [Field F] [Field K] (g : F →+* K) :
@@ -298,7 +298,7 @@ theorem chi_ofRep (σ : G →* Matrix (Fin n) (Fin n) Q) (y : MonoidAlgebra Q G)
 private theorem gdet_map_chi_mapRingHom {n : ℕ} {A Q G : Type} [CommRing A] [CommRing Q] [Group G]
     (D : GDet n A G) (f : A →+* Q) (y : MonoidAlgebra A G) :
     (D.map f).chi (MonoidAlgebra.mapRingHom G f y) = (D.chi y).map f := by
-  letI : Algebra A Q[X] := ((algebraMap Q Q[X]).comp f).toAlgebra
+  let : Algebra A Q[X] := ((algebraMap Q Q[X]).comp f).toAlgebra
   let φ : A[X] →ₐ[A] Q[X] :=
     { Polynomial.mapRingHom f with
       commutes' := fun a => by simp [RingHom.algebraMap_toAlgebra] }
@@ -382,7 +382,7 @@ theorem th_closure [TopologicalSpace G] [IsTopologicalGroup G] [IsLocalRing Q] [
     have hker : (ψ.ker : Set G) = ⋂ a, ⋂ b, {g | Ideal.Quotient.mk (maximalIdeal Q ^ N) (σ g a b) =
         (1 : Matrix (Fin n) (Fin n) (Q ⧸ maximalIdeal Q ^ N)) a b} := by
       ext g
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
       constructor
       · intro h a b
         rw [← h]
@@ -451,19 +451,19 @@ private theorem repAlg_surjective_of_matIrr_fin_three {κ G : Type} [Field κ] [
   classical
   let α : MonoidAlgebra κ G →ₐ[κ] Module.End κ (Fin 3 → κ) :=
     (Matrix.toLinAlgEquiv' : Matrix (Fin 3) (Fin 3) κ ≃ₐ[κ] _).toAlgHom.comp (GDet.repAlg ρ κ)
-  letI : Module (MonoidAlgebra κ G) (Fin 3 → κ) := Module.compHom (Fin 3 → κ) α.toRingHom
+  let : Module (MonoidAlgebra κ G) (Fin 3 → κ) := Module.compHom (Fin 3 → κ) α.toRingHom
   have hsm : ∀ (r : MonoidAlgebra κ G) (v : Fin 3 → κ), r • v = GDet.repAlg ρ κ r *ᵥ v :=
     fun r v => rfl
-  haveI : IsScalarTower κ (MonoidAlgebra κ G) (Fin 3 → κ) := by
+  have : IsScalarTower κ (MonoidAlgebra κ G) (Fin 3 → κ) := by
     refine ⟨fun c r v => ?_⟩
     simp only [hsm, map_smul, Matrix.smul_mulVec]
-  haveI : Nontrivial (Submodule (MonoidAlgebra κ G) (Fin 3 → κ)) := by
+  have : Nontrivial (Submodule (MonoidAlgebra κ G) (Fin 3 → κ)) := by
     refine ⟨⟨⊥, ⊤, ?_⟩⟩
     intro he
     have hm : (Pi.single 0 1 : Fin 3 → κ) ∈ (⊥ : Submodule (MonoidAlgebra κ G) (Fin 3 → κ)) :=
       he ▸ Submodule.mem_top
     simp at hm
-  haveI : IsSimpleModule (MonoidAlgebra κ G) (Fin 3 → κ) := by
+  have : IsSimpleModule (MonoidAlgebra κ G) (Fin 3 → κ) := by
     refine { eq_bot_or_eq_top := fun N => ?_ }
     have hN := h (N.restrictScalars κ) (fun g _ v hv => by
       have hv' : (MonoidAlgebra.single g (1 : κ)) • v ∈ N := N.smul_mem _ hv
@@ -554,7 +554,7 @@ theorem split_of_ss [IsAlgClosed κ] (j : κ →+* K) (σ : G →* Matrix (Fin 3
   let τ : I.ringCon.Quotient →+* Matrix (Fin 3) (Fin 3) K := I.ringCon.lift (th j σ) hker
   let ψ : I.ringCon.Quotient →+* Module.End K (Fin 3 → K) :=
     (Matrix.toLinAlgEquiv' : Matrix (Fin 3) (Fin 3) K ≃ₐ[K] _).toRingEquiv.toRingHom.comp τ
-  letI : Module I.ringCon.Quotient (Fin 3 → K) := Module.compHom (Fin 3 → K) ψ
+  let : Module I.ringCon.Quotient (Fin 3 → K) := Module.compHom (Fin 3 → K) ψ
   have hsmul : ∀ (y : MonoidAlgebra κ G) (v : Fin 3 → K),
       (I.ringCon.mk' y) • v = th j σ y *ᵥ v := by
     intro y v
@@ -569,7 +569,7 @@ theorem split_of_ss [IsAlgClosed κ] (j : κ →+* K) (σ : G →* Matrix (Fin 3
       smul_mem' := by
         intro r v hv
         obtain ⟨y, rfl⟩ := RingCon.mk'_surjective _ r
-        simp only [Set.mem_setOf_eq] at hv ⊢
+        simp only [Set.mem_ofPred_eq] at hv ⊢
         rw [hsmul, Matrix.mulVec, dotProduct, Fin.sum_univ_three, (th_row j σ hσ y).1,
           (th_row j σ hσ y).2, hv]
         simp }
@@ -608,14 +608,14 @@ variable {l : ℕ} [Fact l.Prime] {G : GFrame l} {O : Type} [CommRing O] [IsLoca
 theorem chi_res {u : G.St} {g : G.G₀} (hg : g ∈ r.Ip u) (f : B.B →+* Q)
     (hf : ∀ a ∈ maximalIdeal B.B, f a ∈ maximalIdeal Q) :
     ((B.u.D.chi (MonoidAlgebra.single g 1)).map f).map (residue Q) = (X - 1) ^ n := by
-  haveI : IsLocalHom f := ⟨fun a ha => by
+  have : IsLocalHom f := ⟨fun a ha => by
     by_contra hna
     exact (IsLocalRing.mem_maximalIdeal _).mp (hf a ((IsLocalRing.mem_maximalIdeal _).mpr hna)) ha⟩
   have hcomp : (residue Q).comp f = ((ResidueField.map f).comp (ResidueField.map (algebraMap O B.B))).comp
       (res O B.B : B.B →+* ResidueField O) := by
     ext x
     simp only [res, RingHom.coe_comp, Function.comp_apply]
-    simp only [AlgHom.coe_ringHom_mk, RingHom.coe_mk, RingEquiv.toRingHom_eq_coe, RingHom.coe_comp,
+    simp only [AlgHom.toRingHom_mk, RingHom.coe_mk, RingEquiv.toRingHom_eq_coe, RingHom.coe_comp,
       RingEquiv.coe_toRingHom, Function.comp_apply]
     rw [← ResidueField.map_residue]
     congr 1
@@ -716,7 +716,7 @@ theorem local_of_finite {B R : Type} [CommRing B] [IsLocalRing B] [CommRing R] [
   classical
   intro a ha
   by_contra hfa
-  letI := Fintype.ofFinite (ResidueField R)
+  let := Fintype.ofFinite (ResidueField R)
   have hne : residue R (f a) ≠ 0 := by
     rwa [Ne, IsLocalRing.residue_eq_zero_iff]
   have hq := FiniteField.pow_card_sub_one_eq_one _ hne
@@ -751,9 +751,9 @@ namespace UpperTheory.V.Pr
 
 private theorem exists_emb' {k κ K : Type} [Field k] [Field κ] [Algebra k κ] [Algebra.IsAlgebraic k κ] [Field K]
     [IsAlgClosed K] (φ : k →+* K) : ∃ j : κ →+* K, ∀ a, j (algebraMap k κ a) = φ a := by
-  letI : Algebra k K := φ.toAlgebra
-  haveI : Module.IsTorsionFree k κ := Module.isTorsionFree_iff_algebraMap_injective.2 (algebraMap k κ).injective
-  haveI : Module.IsTorsionFree k K := Module.isTorsionFree_iff_algebraMap_injective.2 φ.injective
+  let : Algebra k K := φ.toAlgebra
+  have : Module.IsTorsionFree k κ := Module.isTorsionFree_iff_algebraMap_injective.2 (algebraMap k κ).injective
+  have : Module.IsTorsionFree k K := Module.isTorsionFree_iff_algebraMap_injective.2 φ.injective
   let j : κ →ₐ[k] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -886,13 +886,13 @@ theorem UpperTheory.V.Pr.thickOf :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [UpperTheory.V.Fr.IsCoef l O] [Algebra ℤ_[l] O] (F : UpperTheory.V.Fr.Frame l (IsLocalRing.ResidueField O)) (T : UpperTheory.V.Pr.Setup F 3), T.ThickOf := by
   intro l _ O _ _ _ _ _ F T Φ hΦ x L P hP hthick
   obtain ⟨hTE, s, hc, hs⟩ := hthick
-  haveI : IsLocalRing L.R := UpperTheory.V.Alg.IsCO.toIsLocalRing L.O' (R := L.R)
-  haveI : Nontrivial (L.R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
-  haveI : IsLocalRing (L.R ⧸ P) := .of_surjective' _ Ideal.Quotient.mk_surjective
+  have : IsLocalRing L.R := UpperTheory.V.Alg.IsCO.toIsLocalRing L.O' (R := L.R)
+  have : Nontrivial (L.R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
+  have : IsLocalRing (L.R ⧸ P) := .of_surjective' _ Ideal.Quotient.mk_surjective
   have hmax : (maximalIdeal L.R).map (Ideal.Quotient.mk P) = maximalIdeal (L.R ⧸ P) :=
     map_maximalIdeal_of_surjective _ Ideal.Quotient.mk_surjective
   rw [hmax] at hc
-  haveI : Finite (ResidueField L.R) := Finite.of_surjective _ (resMap_bijective L.O' L.R).2
+  have : Finite (ResidueField L.R) := Finite.of_surjective _ (resMap_bijective L.O' L.R).2
   let f : T.B.B →ₐ[O] L.R ⧸ P := ((Ideal.Quotient.mkₐ O P).comp L.ι).comp (T.S.inc.comp Φ)
   have hf : ∀ a ∈ maximalIdeal T.B.B, f a ∈ maximalIdeal (L.R ⧸ P) := fun a ha => by
     rw [← hmax]
@@ -961,18 +961,18 @@ private theorem chain_nat {α : Type} {r : α → α → Prop} {p q : α} (H : R
       by_cases hih : i < h
       · have h1 : i ≤ h := le_of_lt hih
         have h2 : i + 1 ≤ h := hih
-        simp only [h1, h2, if_true]
+        simp only [h1, h2, ite_true]
         exact hs i hih
       · have hie : i = h := by omega
         subst hie
-        simp only [le_refl, if_true, show ¬ (i + 1 ≤ i) from by omega, if_false, hh]
+        simp only [le_refl, ite_true, show ¬ (i + 1 ≤ i) from by omega, ite_false, hh]
         exact hbd
 
 theorem UpperTheory.V.Pr.rankThree_deformationSetup_splitting_condition :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [UpperTheory.V.Fr.IsCoef l O] [Algebra ℤ_[l] O] (F : UpperTheory.V.Fr.Frame l (IsLocalRing.ResidueField O)) (T : UpperTheory.V.Pr.Setup F 3), T.SecondThirdPrimeConditionTransfer := by
   intro l _ O _ _ _ _ _ F T Φ hΦ hN4 J hJ x L p q hp hTE hch hPex P' hP' hP'q hP'TI
-  haveI := L.co
-  haveI : IsLocalRing L.R := UpperTheory.V.Alg.IsCO.toIsLocalRing L.O' (R := L.R)
+  have := L.co
+  have : IsLocalRing L.R := UpperTheory.V.Alg.IsCO.toIsLocalRing L.O' (R := L.R)
   obtain ⟨P, hP, hPp, hPTI, hJP⟩ := hPex
   obtain ⟨h, c, hc0, hch', hs⟩ := chain_nat hch
   have back_le : ∀ (A : Ideal L.R) [A.IsPrime] (w : UpperTheory.V.W.Point T.r)
@@ -1014,7 +1014,7 @@ theorem UpperTheory.V.Pr.rankThree_deformationSetup_splitting_condition :
   let e : Fin h → PrimeSpectrum T.B.B := fun i => @UpperTheory.V.Pr.Setup.back _ _ _ _ _ _ _ _ _ _ T Φ _ L (E i) (hEp i)
   have key := hJ h y (fun i => (j i).comp (T.phi Φ L)) e hNE hIsPt (by
       intro i
-      haveI := hEp i
+      have := hEp i
       refine ⟨UpperTheory.V.Pr.thickOf l O F T Φ hΦ x L (E i) (hEt i), ?_, ?_⟩
       · apply back_le
         rw [hker]
@@ -1023,14 +1023,14 @@ theorem UpperTheory.V.Pr.rankThree_deformationSetup_splitting_condition :
         rw [hker]
         simpa using hE2 i)
     (by
-      haveI := hP
+      have := hP
       refine ⟨T.back Φ L P, UpperTheory.V.Pr.stableOf l O F 3 T Φ hΦ x L P hPTI, ?_, ?_⟩
       · intro z hz
         exact (Ideal.map_le_iff_le_comap.mp hJP) hz
       · apply back_le
         rw [hker]
         simpa [hc0] using hPp)
-  haveI := hP'
+  have := hP'
   have hfin := key (T.back Φ L P') (by
       apply back_le
       rw [hker]

@@ -237,8 +237,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 variable (R : Type) [Field R] [Algebra F R] [TopologicalSpace R]
 
 theorem continuous_hermScal [IsTopologicalRing R] : Continuous (hermScal R σ) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
   have h1 : Continuous fun r : R => r ⊗ₜ[F] (1 : E) := by
     have : (fun r : R => r ⊗ₜ[F] (1 : E)) = (Algebra.linearMap R (R ⊗[F] E) : R → R ⊗[F] E) := by
       funext r
@@ -252,7 +252,7 @@ theorem continuous_qS (htr : Continuous (Algebra.trace R (R ⊗[F] E))) [IsTopol
     Continuous (qS R σ) := by
   unfold qS
   refine continuous_const.mul (htr.comp ?_)
-  exact (continuous_subtype_val.matrix_elem 0 0)
+  exact (continuous_subtypeVal.matrix_elem 0 0)
 
 variable [MeasurableSpace R] [BorelSpace R]
 
@@ -260,8 +260,8 @@ theorem coordHerm_qS (h : IsCMExt F E σ) [IsTopologicalRing R] [SecondCountable
     (htr : Continuous (Algebra.trace R (R ⊗[F] E)))
     {d : ℕ} (b : Module.Basis (Fin d) F E) (lam : Measure R) [SigmaFinite lam] {V : Set R}
     (hV : MeasurableSet V) : coordHerm R σ b lam 1 {S | qS R σ S ∈ V} = lam V := by
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
-  haveI : IsEmpty {p : Fin 1 × Fin 1 // p.1 < p.2} :=
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have : IsEmpty {p : Fin 1 × Fin 1 // p.1 < p.2} :=
     ⟨fun p => by
       have h1 := p.2
       have h2 : p.1.1 = p.1.2 := Subsingleton.elim _ _
@@ -375,14 +375,14 @@ theorem ratio_field (R : Type) [Field R] [Algebra F R] [TopologicalSpace R] [Mea
           Algebra.trace R (R ⊗[F] E) (gramR R σ J X 0 0) ∈ V})).toReal -
         (m (hermScal R σ s) A).toReal * (lam V).toReal| ≤ ε * (lam V).toReal := by
   obtain ⟨h1, h2, h3, h4, -⟩ := id hloc
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
+  have := h1
+  have := h2
+  have := h3
+  have := h4
   obtain ⟨-, -, -, hT2, -, htr, -, hBor, -, hgr⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h R
-  haveI := hT2
-  haveI := hBor 1 M
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have := hT2
+  have := hBor 1 M
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
   have hHaar := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ h R d b lam hlam
   have hμ := hHaar.2.1 1 M
   have hν := hHaar.2.2 1
@@ -395,7 +395,7 @@ theorem ratio_field (R : Type) [Field R] [Algebra F R] [TopologicalSpace R] [Mea
     HasCompactSupport.intro hAc fun x hx => Set.indicator_of_notMem hx _
   obtain ⟨⟨hg, -⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.GramDensity.isContDensityOn_gram F E σ h M J hJ R hloc 1 _ _ m hμ hν hfib φ hφc hφs
   have hfin : ∀ S, m S A < ⊤ := fun S => by
-    haveI := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ h M J hJ R hloc 1 _ _ m hμ hν hfib S).1
+    have := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ h M J hJ R hloc 1 _ _ m hμ hν hfib S).1
     exact hAc.measure_lt_top
   have hint : ∀ S, ∫ X, φ X ∂(m S) = (((m S A).toReal : ℝ) : ℂ) := fun S => by
     rw [hφ, integral_indicator_const _ hAm]
@@ -474,7 +474,7 @@ open scoped TensorProduct ENNReal NNReal Matrix
 
 theorem fibre_mass_ratio : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → ∀ m, IsGramFib (Fv F v) σ J 1 (coordW (Fv F v) b lam 1 M) (coordHerm (Fv F v) σ b lam 1) m → ∀ A : Set (Fin 1 → Fin M → Fv F v ⊗[F] E), IsCompact A → IsOpen A → ∀ s : Fv F v, s ≠ 0 → ∀ ε : ℝ, 0 < ε → ∃ U ∈ 𝓝 s, ∀ V : Set (Fv F v), MeasurableSet V → V ⊆ U → |(coordW (Fv F v) b lam 1 M (A ∩ {X | algebraMap F (Fv F v) (1 / 2) * Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (gramR (Fv F v) σ J X 0 0) ∈ V})).toReal - (m (hermScal (Fv F v) σ s) A).toReal * (lam V).toReal| ≤ ε * (lam V).toReal := by
   intro F E _ _ _ _ _ σ hσ M J hJ d b v lam hlam m hfib A hAc hAo s hs ε hε
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   exact FibreRatio.ratio_field (Fv F v) (_root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v) hσ hJ b lam hlam.1 m hfib A hAc hAo s hs ε hε
 
 end GlobalTheory.CompanionTheory.SW

@@ -115,14 +115,14 @@ theorem rSpec_of (h1 : PeakRun) (h2 : GenSt) (h3 : PtOk) (h4 : HkMul) (h5 : RepA
   exact ⟨_, _, add_nonneg (add_nonneg (le_max_of_le_left hx.T) hR0) A.c_nonneg, h, hn⟩
 
 theorem haarEx (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) : ∃ μ : Measure (GA E n), μ.IsHaarMeasure := by
-  haveI : BorelSpace (GA E n) := ⟨rfl⟩
+  have : BorelSpace (GA E n) := ⟨rfl⟩
   exact ⟨Measure.haar, inferInstance⟩
 
 theorem rEndo_of (h1 : ArEx) (h2 : LvEx) (h3 : PowRep) (h4 : CmbTest) (h5 : CmbEll) (h6 : RepAlg) (h7 : PowNorm) : REndo := by
   intro P hSp E _ _ _ hE a b _ S hS l₁ l₂ Z hZ φ hφ hreg
-  haveI : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
-  haveI : BorelSpace (GA E a) := ⟨rfl⟩
-  haveI : BorelSpace (GA E b) := ⟨rfl⟩
+  have : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
+  have : BorelSpace (GA E a) := ⟨rfl⟩
+  have : BorelSpace (GA E b) := ⟨rfl⟩
   obtain ⟨μ₁, hμ₁⟩ := haarEx E a
   obtain ⟨μ₂, hμ₂⟩ := haarEx E b
   obtain ⟨D, hD⟩ := PositivityTheory.Rg.BcB.E1.growthJ_holds E a b μ₁ μ₂
@@ -132,7 +132,7 @@ theorem rEndo_of (h1 : ArEx) (h2 : LvEx) (h3 : PowRep) (h4 : CmbTest) (h5 : CmbE
   obtain ⟨u₂, hu₂⟩ := PositivityTheory.Rg.BcB.G8.translation_existence_holds E b
   obtain ⟨κ, hκ, hell⟩ := h5 E hE a b l₁ l₂ D A μ₁ μ₂ hμ₁ hμ₂
   obtain ⟨c, hc, htest⟩ := h4 E a b l₁ l₂ D A S Z L hS hZ u₁ u₂ hu₁ hu₂
-  haveI : CompleteSpace (⊤ : Submodule ℂ A.blk.Hb) := (isClosed_univ.completeSpace_coe : CompleteSpace (Set.univ : Set A.blk.Hb))
+  have : CompleteSpace (⊤ : Submodule ℂ A.blk.Hb) := (isClosed_univ.completeSpace_coe : CompleteSpace (Set.univ : Set A.blk.Hb))
   obtain ⟨J, hJ, D₁, D₂, B₁, B₂, a1, a2, a3⟩ := hSp E a b l₁ l₂ D A S Z L hS hZ ∅ Set.subsingleton_empty
     (fun _ h => h.elim) ⊤ (fun _ _ _ _ _ _ => Submodule.mem_top)
     (fun W _ => ⟨fun _ => 0, ⟨fun _ => Submodule.zero_mem _, fun j i M => by

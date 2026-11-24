@@ -104,20 +104,20 @@ theorem lintegral_resS {S A B T : HSp D} (o : OrthDec S A B) (μ : Measure (WO S
     (hA : IsAddFundamentalDomain (ratL T A) FA μA) (hB : IsAddFundamentalDomain (ratL T B) FB μB) :
     ∃ c : ℝ≥0, ∀ Φ : WO A T × WO B T → ℝ≥0∞, (∀ γ ∈ ratL T S, ∀ x, Φ (o.resS T (γ + x)) = Φ (o.resS T x)) →
       ∫⁻ x in 𝓕, Φ (o.resS T x) ∂μ = c • ∫⁻ y, Φ y ∂((μA.restrict FA).prod (μB.restrict FB)) := by
-  haveI := borel_Mx (D := D) T.rank S.rank
-  haveI := borel_Mx (D := D) T.rank A.rank
-  haveI := borel_Mx (D := D) T.rank B.rank
+  have := borel_Mx (D := D) T.rank S.rank
+  have := borel_Mx (D := D) T.rank A.rank
+  have := borel_Mx (D := D) T.rank B.rank
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D T.rank S.rank
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D T.rank A.rank
   obtain ⟨k1, k2, k3, k4, k5, -⟩ := lattice_Mx D T.rank B.rank
-  haveI : Countable (ratL T S) :=
+  have : Countable (ratL T S) :=
     (TopologicalSpace.separableSpace_iff_countable.1 inferInstance : Countable (ratMx D T.rank S.rank))
-  haveI : MeasurableConstVAdd (ratL T S) (WO S T) := ⟨fun _ => (continuous_const.add continuous_id).measurable⟩
-  haveI : VAddInvariantMeasure (ratL T S) (WO S T) μ := ⟨fun c s _ => measure_preimage_add μ (c : WO S T) s⟩
+  have : MeasurableConstVAdd (ratL T S) (WO S T) := ⟨fun _ => (continuous_const.add continuous_id).measurable⟩
+  have : VAddInvariantMeasure (ratL T S) (WO S T) μ := ⟨fun c s _ => measure_preimage_add μ (c : WO S T) s⟩
   let e : WO S T ≃ₜ (WO A T × WO B T) :=
     { (o.resS T).toEquiv with continuous_toFun := o.continuous_resS T, continuous_invFun := o.continuous_resS_symm T }
   let em := e.toMeasurableEquiv
-  haveI : (μ.map em).IsAddHaarMeasure :=
+  have : (μ.map em).IsAddHaarMeasure :=
     (o.resS T).isAddHaarMeasure_map μ (o.continuous_resS T) (o.continuous_resS_symm T)
   obtain ⟨c, hmeq⟩ : ∃ c : ℝ≥0, μ.map em = c • μA.prod μB :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul (μ.map em) (μA.prod μB)⟩
@@ -156,22 +156,22 @@ theorem enorm_sq_periodic {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
 
 theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (o : OrthDec S A B) (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratL T S) 𝓕 μ → ∀ f : WO S T → ℂ, IsThetaFunO ψ S T f → (∀ (χ χ' : (AE D)ˣ →* Circle) (om : Om A T), IsWeilDatumO ψ A T χ χ' om → ∀ p, ∫⁻ x in 𝓕, ‖om p (fun u => f ((o.resS T).symm (u, (o.resS T x).2))) (o.resS T x).1‖ₑ ^ 2 ∂μ = ∫⁻ x in 𝓕, ‖f x‖ₑ ^ 2 ∂μ) ∧ ∀ (χ χ' : (AE D)ˣ →* Circle) (om : Om B T), IsWeilDatumO ψ B T χ χ' om → ∀ p, ∫⁻ x in 𝓕, ‖om p (fun v => f ((o.resS T).symm ((o.resS T x).1, v))) (o.resS T x).2‖ₑ ^ 2 ∂μ = ∫⁻ x in 𝓕, ‖f x‖ₑ ^ 2 ∂μ := by
   intro D ψ S A B T o μ 𝓕 hμ h𝓕 f hf
-  haveI := borel_Mx (D := D) T.rank S.rank
-  haveI := borel_Mx (D := D) T.rank A.rank
-  haveI := borel_Mx (D := D) T.rank B.rank
+  have := borel_Mx (D := D) T.rank S.rank
+  have := borel_Mx (D := D) T.rank A.rank
+  have := borel_Mx (D := D) T.rank B.rank
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D T.rank S.rank
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D T.rank A.rank
   obtain ⟨k1, k2, k3, k4, k5, -⟩ := lattice_Mx D T.rank B.rank
   obtain ⟨μA, FA, hA⟩ := exists_isCovolOne D T.rank A.rank
   obtain ⟨μB, FB, hB⟩ := exists_isCovolOne D T.rank B.rank
-  haveI := hA.1
-  haveI := hB.1
+  have := hA.1
+  have := hB.1
   have hFA : IsAddFundamentalDomain (ratL T A) FA μA := hA.2.1
   have hFB : IsAddFundamentalDomain (ratL T B) FB μB := hB.2.1
   obtain ⟨c, hc⟩ := lintegral_resS o μ 𝓕 h𝓕 μA μB FA FB hFA hFB
   have hslice := GlobalTheory.T.weilOperator_oneVariable_keeps_thetaFunctions D ψ S A B T o f hf
   have hΦ0 : Measurable fun y : WO A T × WO B T => ‖f ((o.resS T).symm y)‖ₑ ^ 2 :=
-    ((ENNReal.continuous_pow 2).comp (continuous_enorm.comp (hf.cont.comp (o.continuous_resS_symm T)))).measurable
+    ((ENNReal.continuous_pow 2).comp (continuous_eNorm.comp (hf.cont.comp (o.continuous_resS_symm T)))).measurable
   have e0 : ∀ hψ : IsStdChar D ψ (-1), ∫⁻ x in 𝓕, ‖f x‖ₑ ^ 2 ∂μ = c • ∫⁻ y, ‖f ((o.resS T).symm y)‖ₑ ^ 2
       ∂((μA.restrict FA).prod (μB.restrict FB)) := by
     intro hψ
@@ -188,7 +188,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (
       funext y; simp only [AddEquiv.apply_symm_apply]
     have hΦ1 : Measurable fun y : WO A T × WO B T => ‖om p (fun u => f ((o.resS T).symm (u, y.2))) y.1‖ₑ ^ 2 := by
       rw [hfun]
-      exact ((ENNReal.continuous_pow 2).comp (continuous_enorm.comp (hF.cont.comp (o.continuous_resS_symm T)))).measurable
+      exact ((ENNReal.continuous_pow 2).comp (continuous_eNorm.comp (hF.cont.comp (o.continuous_resS_symm T)))).measurable
     have e1 := hc (fun y => ‖om p (fun u => f ((o.resS T).symm (u, y.2))) y.1‖ₑ ^ 2)
       (fun γ hγ x => enorm_sq_periodic hψ hF γ hγ x)
     rw [e1, e0 hψ]
@@ -207,7 +207,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S A B T : HSp D) (
       funext y; simp only [AddEquiv.apply_symm_apply]
     have hΦ1 : Measurable fun y : WO A T × WO B T => ‖om p (fun v => f ((o.resS T).symm (y.1, v))) y.2‖ₑ ^ 2 := by
       rw [hfun]
-      exact ((ENNReal.continuous_pow 2).comp (continuous_enorm.comp (hF.cont.comp (o.continuous_resS_symm T)))).measurable
+      exact ((ENNReal.continuous_pow 2).comp (continuous_eNorm.comp (hF.cont.comp (o.continuous_resS_symm T)))).measurable
     have e1 := hc (fun y => ‖om p (fun v => f ((o.resS T).symm (y.1, v))) y.2‖ₑ ^ 2)
       (fun γ hγ x => enorm_sq_periodic hψ hF γ hγ x)
     rw [e1, e0 hψ]

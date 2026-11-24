@@ -340,7 +340,7 @@ def rho [IsTotallyReal F] (w : InfinitePlace F) : mixedEmbedding.mixedSpace F �
 
 theorem trace_rho [IsTotallyReal F] (v : mixedEmbedding.mixedSpace F) :
     Algebra.trace ℝ (mixedEmbedding.mixedSpace F) v = ∑ w, rho w v := by
-  haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+  have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 w.2 (IsTotallyReal.isReal w.1)⟩
   rw [Algebra.trace_prod_apply, PI.ProdFormulaE.Tr.trace_pi, PI.ProdFormulaE.Tr.trace_pi, Finset.univ_eq_empty (α := {w : InfinitePlace F // w.IsComplex}),
     Finset.sum_empty, add_zero]
@@ -402,7 +402,7 @@ theorem trace_symp_neg_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E
         ∑ w, -2 * (∑ i, ∑ j, ∑ k, ∑ l, piInf (τ w) (u i j) * (τ w).1 (JX i k) * (τ w).1 (JW j l) *
           star (piInf (τ w) (v k l))).re := by
   intro F E _ _ _ _ _ σ hCM τ n d JX JW u v
-  haveI : IsTotallyReal F := hCM.1
+  have : IsTotallyReal F := hCM.1
   rw [trace_rho]
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [symp, rho_trace hCM (τ w)]
@@ -775,7 +775,7 @@ theorem exists_gauss_vacuum : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     rw [GlobalTheory.GaussLine.dHeis, hgd x w.1, hQs w.1 x]
     ring
   ext x
-  rw [SchwartzMap.smul_apply, key u' hu' f' hf' x, key u hu f hf x, hJ, hd, hd, hQJ, smul_eq_mul]
+  rw [smul_apply, key u' hu' f' hf' x, key u hu f hf x, hJ, hd, hd, hQJ, smul_eq_mul]
   ring
 
 end GlobalTheory.GaussVacPair
@@ -961,7 +961,7 @@ theorem mem_of_smul {M : Submodule ℂ (SchwartzMap E ℂ)} (c : ℝ) (K : ℂ) 
   intro g hg
   have : g = K⁻¹ • u := by
     ext y
-    rw [SchwartzMap.smul_apply, hu, hg, smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ hK, one_mul]
+    rw [smul_apply, hu, hg, smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ hK, one_mul]
   rw [this]
   exact M.smul_mem _ huM
 
@@ -1028,7 +1028,7 @@ theorem hasWidth_of_lt {M : Submodule ℂ (SchwartzMap E ℂ)} (hconv : ConvStab
     simp only [K, this]
     exact cpow_ne_zero_of_pos _ (div_pos Real.pi_pos (by linarith)) _
   have huM : K • g' ∈ M := hconv (s / 2) c (by linarith) hc hP h (K • g') (fun y => by
-    rw [SchwartzMap.smul_apply, smul_eq_mul, hg', ← hsc, ← integral_gauss_mul_gauss s c hs hc y]
+    rw [smul_apply, smul_eq_mul, hg', ← hsc, ← integral_gauss_mul_gauss s c hs hc y]
     congr 1
     funext a
     rw [hh]
@@ -1036,7 +1036,7 @@ theorem hasWidth_of_lt {M : Submodule ℂ (SchwartzMap E ℂ)} (hconv : ConvStab
     congr 1
     push_cast
     ring)
-  exact mem_of_smul c' K hK (K • g') (fun y => by rw [SchwartzMap.smul_apply, smul_eq_mul, hg']) huM
+  exact mem_of_smul c' K hK (K • g') (fun y => by rw [smul_apply, smul_eq_mul, hg']) huM
 
 theorem hasWidth_fourier {M : Submodule ℂ (SchwartzMap E ℂ)} (hF : ∀ f ∈ M, 𝓕 f ∈ M) (c : ℝ)
     (hc : 0 < c) (hP : HasWidth M c) : HasWidth M (Real.pi ^ 2 / c) := by
@@ -1180,7 +1180,7 @@ theorem fourierInv_gauss_mul_eq (f u : SchwartzMap E ℂ) (b : ℝ) (hb : 0 < b)
   set v : SchwartzMap E ℂ := SchwartzMap.convolution (ContinuousLinearMap.mul ℂ ℂ) f g
   have huv : u = K⁻¹ • (𝓕 v : SchwartzMap E ℂ) := by
     ext ξ
-    rw [SchwartzMap.smul_apply, SchwartzMap.fourier_convolution, SchwartzMap.pairing_apply_apply,
+    rw [smul_apply, SchwartzMap.fourier_convolution, SchwartzMap.pairing_apply_apply,
       ContinuousLinearMap.mul_apply', fourier_gauss, ← hK, hu, smul_eq_mul]
     have e : Complex.exp (-Real.pi ^ 2 * ‖ξ‖ ^ 2 / c) = Complex.exp (-((b * ‖ξ‖ ^ 2 : ℝ) : ℂ)) := by
       congr 1
@@ -1191,7 +1191,7 @@ theorem fourierInv_gauss_mul_eq (f u : SchwartzMap E ℂ) (b : ℝ) (hb : 0 < b)
     field_simp
   refine ⟨c, K⁻¹, hc, fun y ↦ ?_⟩
   rw [huv, FourierTransform.fourierInv_smul, FourierTransform.fourierInv_fourier_eq,
-    SchwartzMap.smul_apply, smul_eq_mul, SchwartzMap.convolution_apply, convolution_def]
+    smul_apply, smul_eq_mul, SchwartzMap.convolution_apply, convolution_def]
   congr 1
   refine integral_congr_ae (Eventually.of_forall fun a ↦ ?_)
   simp only [ContinuousLinearMap.mul_apply', g, gauss_apply]
@@ -1382,7 +1382,7 @@ theorem transport : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [F
       ring
     have hsum : Ψ f₁ = ∂_{v} (Ψ f) + Complex.I • SchwartzMap.smulLeftCLM ℂ (fun x : V => ((lam x : ℝ) : ℂ)) (Ψ f) := by
       ext x
-      rw [SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hlamT,
+      rw [add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hlamT,
         SchwartzMap.lineDerivOp_apply_eq_fderiv, hder, hΨ, hΨ, hf₁, smul_eq_mul, smul_eq_mul]
       ring
     rw [hsum]
@@ -1460,7 +1460,7 @@ theorem dense_of_stdGaussian_mem : ∀ (E : Type) [NormedAddCommGroup E] [InnerP
       · have hu' : ∀ y, (s⁻¹ • u) y = ∫ a, Complex.exp (-((b * ‖a‖ ^ 2 : ℝ) : ℂ)) * h a *
             Complex.exp (-((c * ‖y - a‖ ^ 2 : ℝ) : ℂ)) := by
           intro y
-          rw [SchwartzMap.smul_apply, hu y, smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ hs, one_mul]
+          rw [smul_apply, hu y, smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ hs, one_mul]
           congr 1; funext a; rw [hf a]
         have hmem := _root_.GlobalTheory.ConvSeries.mem_of_conv_gaussian E M hcl hLM b c hb hc (hgauss c hc) h (s⁻¹ • u) hu'
         have : u = s • (s⁻¹ • u) := by rw [smul_smul, mul_inv_cancel₀ hs, one_smul]
@@ -1718,7 +1718,7 @@ theorem continuous_pure_theta_integral : _root_.GlobalTheory.FunPr.ThetaLocalInp
   let T : SInf F (Fin a' × Fin (a + a')) → UA σ G.V'.J → ℂ := fun u g => theta om' (pure u φ) g h
   have hfin : ∀ u, (∫⁻ g, ‖T u g‖ₑ ∂μd) ≠ ⊤ := fun u => (hconv u).2.ne
   have hν : ∀ u, ∫ g, ‖T u g‖ ∂μd = (∫⁻ g, ‖T u g‖ₑ ∂μd).toReal := fun u =>
-    integral_norm_eq_lintegral_enorm (hconv u).1
+    integral_norm_eq_lintegral_eNorm (hconv u).1
   let ν : Seminorm ℂ (SInf F (Fin a' × Fin (a + a'))) :=
     Seminorm.of (fun u => ∫ g, ‖T u g‖ ∂μd)
       (fun u u' => by
@@ -1729,14 +1729,14 @@ theorem continuous_pure_theta_integral : _root_.GlobalTheory.FunPr.ThetaLocalInp
       (fun c u => by
         simp only [T, hsmul, norm_mul]
         exact integral_const_mul _ _)
-  haveI : BarrelledSpace ℂ (SInf F (Fin a' × Fin (a + a'))) := by
+  have : BarrelledSpace ℂ (SInf F (Fin a' × Fin (a + a'))) := by
     classical exact GlobalTheory.schwartzMap_barrelledSpace _
   have hN : LowerSemicontinuous fun u => ∫⁻ g, ‖T u g‖ₑ ∂μd := by
     rw [lowerSemicontinuous_iff_le_liminf]
     intro u
     calc ∫⁻ g, ‖T u g‖ₑ ∂μd ≤ ∫⁻ g, liminf (fun u' => ‖T u' g‖ₑ) (𝓝 u) ∂μd :=
-          lintegral_mono fun g => (((hcontg g).tendsto u).enorm.liminf_eq).ge
-      _ ≤ _ := lintegral_liminf_le' fun u' => (hconv u').1.enorm
+          lintegral_mono fun g => (((hcontg g).tendsto u).eNorm.liminf_eq).ge
+      _ ≤ _ := lintegral_liminf_le' fun u' => (hconv u').1.eNorm
   have hνc : Continuous ν := by
     refine Seminorm.continuous_of_lowerSemicontinuous ν fun u y hy => ?_
     by_cases hy0 : y < 0

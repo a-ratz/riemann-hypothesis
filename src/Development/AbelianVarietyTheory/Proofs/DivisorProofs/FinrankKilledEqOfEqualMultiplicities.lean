@@ -186,7 +186,7 @@ theorem exists_simple {A : Type} [AddCommGroup A] [Module Rg A] [IsSemisimpleMod
   obtain ⟨P, hP, haP⟩ := hj
   obtain ⟨U, hU⟩ := exists_isCompl P
   have e := Submodule.quotientEquivOfIsCompl P U hU
-  haveI : IsSimpleModule Rg (A ⧸ P) := isSimpleModule_iff_isCoatom.2 hP
+  have : IsSimpleModule Rg (A ⧸ P) := isSimpleModule_iff_isCoatom.2 hP
   refine ⟨U, IsSimpleModule.congr e.symm, e (P.mkQ a), ?_, ?_⟩
   · simpa using haP
   · exact map_mem_killed I (e.toLinearMap.comp P.mkQ) hI
@@ -315,10 +315,10 @@ theorem isAdmissible_of_injective {σ : Representation ℂ H W} {ρ : Representa
   refine ⟨fun v => ?_, fun K hK hK' => ?_⟩
   · have : {g : H | σ g v = v} = {g : H | ρ g (f v) = f v} := by
       ext g
-      simp only [Set.mem_setOf_eq, ← hf, hi.eq_iff]
+      simp only [Set.mem_ofPred_eq, ← hf, hi.eq_iff]
     rw [this]
     exact h.1 _
-  · haveI := h.2 K hK hK'
+  · have := h.2 K hK hK'
     refine FiniteDimensional.of_injective
       (f.restrict (p := GlobalTheory.PRep.fixed σ K) (q := GlobalTheory.PRep.fixed ρ K) (fun v hv k => ?_)) ?_
     · rw [← hf, hv k, map_smul]
@@ -359,7 +359,7 @@ theorem semisimple_sSup_pieces (ρ : Representation ℂ H X) (C : Submodule ℂ 
     IsSemisimpleModule (MonoidAlgebra ℂ H) ↥(sSup (pieces ρ C)) := by
   rw [sSup_eq_iSup]
   refine isSemisimpleModule_biSup_of_isSemisimpleModule_submodule fun m hm => ?_
-  haveI := simple_of_mem_pieces hm
+  have := simple_of_mem_pieces hm
   infer_instance
 
 theorem apply_mem_irrSum {σ : Representation ℂ H W} {ρ : Representation ℂ H X} {C : Submodule ℂ X}
@@ -414,9 +414,9 @@ theorem exists_rep {ρ : Representation ℂ H X} {C : Submodule ℂ X}
       GlobalTheory.PRep.IsAdmissible V.toRepresentation ∧
       Nonempty (U ≃ₗ[MonoidAlgebra ℂ H] V.toRepresentation.asModule) := by
   let e := Submodule.equivMapOfInjective _ (sSup (pieces ρ C)).injective_subtype U
-  haveI : IsSimpleModule (MonoidAlgebra ℂ H) (U.map (sSup (pieces ρ C)).subtype) :=
+  have : IsSimpleModule (MonoidAlgebra ℂ H) (U.map (sSup (pieces ρ C)).subtype) :=
     IsSimpleModule.congr e.symm
-  haveI : ∀ m : pieces ρ C, IsSimpleModule (MonoidAlgebra ℂ H) m :=
+  have : ∀ m : pieces ρ C, IsSimpleModule (MonoidAlgebra ℂ H) m :=
     fun m => simple_of_mem_pieces m.2
   obtain ⟨_, ⟨V, hV, rfl⟩, ⟨e'⟩⟩ := (U.map (sSup (pieces ρ C)).subtype).linearEquiv_of_le_sSup
     (pieces ρ C) (Submodule.map_subtype_le _ _)

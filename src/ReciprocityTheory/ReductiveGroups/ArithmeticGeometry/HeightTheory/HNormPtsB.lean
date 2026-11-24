@@ -74,7 +74,7 @@ theorem ST_scale (c : ι) (sg : K →+* ℂ) (t : Fin d.D → Fin (d.N + 1) → 
     (hy : ∀ i, y (Fin.natAdd (d.N + 1) i) ≠ 0) :
     d.ST c sg (fun i j => NPB.gpt (fun q => t q.1 q.2) y (i.succ, j)) = d.ST c sg t := by
   ext P
-  simp only [ST, Set.mem_setOf_eq, NPB.gpt, Fin.cases_succ]
+  simp only [ST, Set.mem_ofPred_eq, NPB.gpt, Fin.cases_succ]
   refine and_congr_right fun _ => forall_congr' fun i => ?_
   simp_rw [mul_assoc]
   rw [← Finset.mul_sum, mul_eq_zero]
@@ -98,13 +98,13 @@ theorem fib (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (sg : K →+* ℂ) (t : Fin d.
       tauPev sg _ hpt (Algebra.norm (KTf K d.D d.N) (d.rationalBaseRow c)) =
         ∏ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg t),
           ∑ j, y (Fin.castAdd d.D j) * P (ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c)) := by
-  letI iA : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  letI iB : Algebra (KTf K d.D d.N) ℂ := (tauPev sg _ hpt).toAlgebra
+  let iA : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let iB : Algebra (KTf K d.D d.N) ℂ := (tauPev sg _ hpt).toAlgebra
   obtain ⟨hfd, hrank⟩ := d.omS_finite hd h c
-  haveI := hfd
-  haveI : CharZero (KTf K d.D d.N) := inferInstance
-  haveI : Algebra.IsIntegral (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := Algebra.IsIntegral.of_finite _ _
-  haveI : Algebra.IsSeparable (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := Algebra.IsSeparable.of_integral _ _
+  have := hfd
+  have : CharZero (KTf K d.D d.N) := inferInstance
+  have : Algebra.IsIntegral (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsSeparable (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := Algebra.IsSeparable.of_integral _ _
   have hy : ∀ i, y (Fin.natAdd (d.N + 1) i) ≠ 0 := by
     intro i h0
     apply hpt (MvPolynomial.X (i.succ, 0)) (MvPolynomial.X_ne_zero _)
@@ -152,7 +152,7 @@ theorem norm_at_sg_B (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (sg : K →+* ℂ) :
           algebraMap (KTp K d.D d.N) (KTf K d.D d.N) a) →
         d.evT sg t0 (d.tOf z) b ≠ 0 → d.evT sg t0 (d.tOf z) a / d.evT sg t0 (d.tOf z) b = ∏ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg (d.tOf z)),
           ∑ j, t0 j * P (ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c))) := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
   have := countable_numberField K
   filter_upwards [NPB.ae_gen (K := K) (D := d.D) (N := d.N) sg] with z hz
   have hG : ∀ (a : Fin d.D → ℕ) (p : MvPolynomial (Fin d.D × Fin (d.N + 1)) K),

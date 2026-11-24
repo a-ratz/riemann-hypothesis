@@ -423,7 +423,7 @@ theorem gmap_extU {U W : Submodule K V} (hUc : IsCompl U W) (g : W ≃ₗ[K] W) 
 
 theorem isomFixOfExp_of (hJ : JordanIsom) : IsomFixOfExp := by
   intro K F V _ _ _ _ _ _ _ _ _ _ _ hK hF h hs hN U hUc hpos T T' hT hT' 𝔭 h𝔭 b a b' a' hb hb' hv
-  haveI := h𝔭.isPrime
+  have := h𝔭.isPrime
   have hs' : (resF h (orthK h U)).IsSymm := by
     exact ⟨fun x y => by simpa only [resF_apply] using hs.eq (x : V) y⟩
   have hd' : IsTotPosDef (resF h (orthK h U)) := by
@@ -867,7 +867,7 @@ theorem jordan_span_holds :
       locF 𝔭 (Submodule.span (𝓞 K) (Set.range b)) = locF 𝔭 L →
         Submodule.span K (Set.range b) = ⊤ := by
   intro K F V _ _ _ _ _ _ _ _ _ _ _ L hL 𝔭 h𝔭 n b hb
-  letI : Submodule.IsFullLattice K L := hL
+  let : Submodule.IsFullLattice K L := hL
   rw [eq_top_iff, ← Submodule.IsFullLattice.span_eq_top (A := K) (M := L), Submodule.span_le]
   intro x hx
   have hx' : x ∈ locF 𝔭 (Submodule.span (𝓞 K) (Set.range b)) := by
@@ -1381,11 +1381,11 @@ theorem rebaseAt_of (hS : IsHermSemilocal S) (hπ : IsUnif S π)
       rw [zero_mul]
       exact S.zero_mem
     · by_cases hi : e i = e i₀
-      · rw [if_pos hi, sub_self, zero_mul]
+      · rw [ite_eq_left hi, sub_self, zero_mul]
         show (0 : K) * π⁻¹ ∈ S
         rw [zero_mul]
         exact S.zero_mem
-      · rw [if_neg hi, star_zero, zero_mul, zero_mul, zero_sub, neg_mul]
+      · rw [ite_eq_right hi, star_zero, zero_mul, zero_mul, zero_sub, neg_mul]
         exact Dv.neg (hterm i hi)
   have hYu : IsUnitIn S (h (∑ i ∈ Finset.univ.filter (fun i => e i = e i₀), x i • b i)
       (∑ i ∈ Finset.univ.filter (fun i => e i = e i₀), x i • b i) * (π ^ e i₀)⁻¹) := by

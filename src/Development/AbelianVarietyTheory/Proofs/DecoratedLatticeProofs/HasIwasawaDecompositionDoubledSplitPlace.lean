@@ -173,7 +173,7 @@ theorem hasIwasawa_split : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L
   intro D A L hL v ⟨P, P', hne, hP, hP'⟩
   obtain ⟨τ, -⟩ := existsUnique_splitPrime_eq (isCMExt_host D) (v := v) hne (HeightOneSpectrum.ext hP)
     (HeightOneSpectrum.ext hP')
-  haveI := Formalism.IndefR.Fin.PDA.selfDual_isFullLattice A L hL
+  have := Formalism.IndefR.Fin.PDA.selfDual_isFullLattice A L hL
   exact hasIwasawa_of_algHom (isCMExt_host D) (gram_hdbl A) (GlobalTheory.Doubling.isHermND_gram A)
     (GlobalTheory.Doubling.isHermND_gram (dblSp A)) τ L (isSelfDualAt_of_isSelfDualC hL v)
 

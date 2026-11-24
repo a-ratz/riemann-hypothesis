@@ -124,13 +124,13 @@ def CutOffExists : Prop :=
         Fc g = D.uwG P.k P.r p.T.base.z p.T.base.z' F (j + 1) hj w e g
 
 theorem det_lowW {p : ℕ} (σ : Equiv.Perm (Fin p)) (v : U.LW σ → ℂ) : (U.lowW σ v).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     simp [U.lowW]
   · intro a b hab
     simp only [U.lowW, Matrix.add_apply, Matrix.one_apply, Matrix.of_apply]
     have hab' : a < b := hab
-    rw [if_neg (ne_of_lt hab'), dite_eq_right (fun h => absurd h.1 (not_lt.mpr hab'.le)), add_zero]
+    rw [ite_eq_right (ne_of_lt hab'), dite_eq_right (fun h => absurd h.1 (not_lt.mpr hab'.le)), add_zero]
 
 theorem zxH_det (h : C.LPt) (j : ℕ) (hh : D.IsLocPt h j) (v : XH h) :
     (zxH h j hh.2 v).det = (U.hMat (D.ptPerm h) (D.ptDiag h)).det := by

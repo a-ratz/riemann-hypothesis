@@ -184,7 +184,7 @@ variable {ζ ι}
 
 theorem phiAt_coe (h : IsUnif A ϖ) (hι : AddValPres ζ ι) (a : ↥(As O A)) :
     phiAt ζ F ι h hι (a : A) = locMap ζ F ι a := by
-  letI := isLocalization_unif h
+  let := isLocalization_unif h
   unfold phiAt
   first
   | exact IsLocalization.lift_eq _ a
@@ -211,7 +211,7 @@ private theorem toE_ordAt_lemma_3 (h : IsUnif A ϖ) (hι : AddValPres ζ ι) (x 
       rw [locMap_eq_zero (F := F) hT] at h1
       exact (mul_eq_zero.mp h1).resolve_left (pow_ne_zero _ hu)
     unfold nval
-    rw [if_pos h0]
+    rw [ite_eq_left h0]
     unfold ordAt
     rw [hT]
     first
@@ -225,7 +225,7 @@ private theorem toE_ordAt_lemma_3 (h : IsUnif A ϖ) (hι : AddValPres ζ ι) (x 
     have hϖT : vL ζ (algebraMap O ↥(As O A) ϖ) ≠ ⊤ := fun ht => hu (locMap_eq_zero (F := F) ht)
     have hvu : vV V (locMap ζ F ι (algebraMap O ↥(As O A) ϖ)) =
         ((vL ζ (algebraMap O ↥(As O A) ϖ)).toNat : ℤ) :=
-      vV_locMap (F := F) hι (ENat.coe_toNat hϖT).symm
+      vV_locMap (F := F) hι (ENat.natCast_toNat hϖT).symm
     have hva : vV V (locMap ζ F ι a) = k := vV_locMap (F := F) hι hk.symm
     have hv : (m : ℤ) * ((vL ζ (algebraMap O ↥(As O A) ϖ)).toNat : ℤ) + vV V (phiAt ζ F ι h hι x) = k := by
       rw [← hva, ← hkey, vV_mul_lemma_4 (V₁ := V) (pow_ne_zero _ hu) hφ, vV_pow_gen (V := V) hu, hvu]
@@ -237,7 +237,7 @@ private theorem toE_ordAt_lemma_3 (h : IsUnif A ϖ) (hι : AddValPres ζ ι) (x 
       rw [← hk, sub_eq_add_neg, WithTop.coe_add]
       congr 1
     unfold nval
-    rw [if_neg hφ, hord, hz]
+    rw [ite_eq_right hφ, hord, hz]
     first
     | (show ((((k : ℤ) - m * (ep ϖ ζ : ℤ) : ℤ) : ℝ) : EReal) = _
        rw [Nat.cast_one, div_one])

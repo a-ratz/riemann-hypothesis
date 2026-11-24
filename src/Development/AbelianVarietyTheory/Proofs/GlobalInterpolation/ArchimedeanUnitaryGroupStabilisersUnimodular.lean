@@ -206,17 +206,17 @@ theorem OrthSplit.exists_equiv [TopologicalSpace A] [IsTopologicalRing A] (h : O
   · refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
     rw [Units.continuous_iff]
     have hu : Continuous fun u : UJ σ (cT σ B * J * B) => ((u : GL m A) : Matrix m m A) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hui : Continuous fun u : UJ σ (cT σ B * J * B) => (((u : GL m A)⁻¹ : GL m A) : Matrix m m A) :=
-      Units.continuous_coe_inv.comp continuous_subtype_val
+      Units.continuous_coe_inv.comp continuous_subtypeVal
     exact ⟨((continuous_const.matrix_mul hu).matrix_mul continuous_const).add continuous_const,
       ((continuous_const.matrix_mul hui).matrix_mul continuous_const).add continuous_const⟩
   · refine Continuous.subtype_mk ?_ _
     rw [Units.continuous_iff]
     have hs : Continuous fun s : S => (((s : UJ σ J) : GL n A) : Matrix n n A) :=
-      Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+      Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
     have hsi' : Continuous fun s : S => ((((s : UJ σ J) : GL n A)⁻¹ : GL n A) : Matrix n n A) :=
-      Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_subtype_val)
+      Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_subtypeVal)
     exact ⟨(continuous_const.matrix_mul hs).matrix_mul continuous_const,
       (continuous_const.matrix_mul hsi').matrix_mul continuous_const⟩
 
@@ -374,7 +374,7 @@ theorem exists_stab_equiv (hss : ∀ x, σ (σ x) = x) {M : ℕ} {J : Matrix (Fi
         Submodule.span_le.mpr (by rintro _ ⟨j, rfl⟩; exact (b j).2)
       exact hx (LinearMap.mem_ker.mp (hle hmem))
   let P : Matrix (Fin (M' + 1)) (Fin (M' + 1)) E := (Matrix.of v)ᵀ
-  have hPu : IsUnit P := Matrix.linearIndependent_cols_iff_isUnit.mp (by simpa [P] using hli)
+  have hPu : IsUnit P := linearIndependent_col_iff_isUnit.mp (by simpa [P] using hli)
   have hQ : P⁻¹ * P = 1 := Matrix.nonsing_inv_mul P ((Matrix.isUnit_iff_isUnit_det P).mp hPu)
   have hP0 : (fun i => P i 0) = x 0 := by
     funext i

@@ -83,12 +83,12 @@ theorem tens_inc_pr_facts (R : Type) [CommRing R] [IsDomain R] (D D' : DegPre R)
     simp only [hp, Category.assoc, T.inc_pr', Tens.act_pr]
     by_cases h : i = i₀
     · subst h
-      rw [if_pos rfl, Category.comp_id, Finset.prod_eq_single i]
+      rw [ite_eq_left rfl, Category.comp_id, Finset.prod_eq_single i]
       · simp [Matrix.single_apply]
       · intro j _ hj
         simp [Matrix.single_apply, Ne.symm hj]
       · simp
-    · rw [if_neg h, comp_one]
+    · rw [ite_eq_right h, comp_one]
       symm
       apply Finset.prod_eq_one
       intro j _
@@ -101,7 +101,7 @@ theorem tens_inc_pr_facts (R : Type) [CommRing R] [IsDomain R] (D D' : DegPre R)
     by_cases h : i = i₀
     · subst h
       simp [Tens.xi]
-    · rw [if_neg h, comp_one]
+    · rw [ite_eq_right h, comp_one]
       simp [Tens.xi, Pi.single_apply, h, degPre_c_zero]
 
 end GlobalTheory.Mum

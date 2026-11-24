@@ -67,7 +67,7 @@ theorem hsVec_contDiff {V W : Type} [NormedAddCommGroup V] [InnerProductSpace �
     { toFun := fun A => B.hsVec A
       map_add' := fun A A' => by ext i; simp [B.hsVec]
       map_smul' := fun c A => by ext i; simp [B.hsVec] }
-  haveI : FiniteDimensional ℝ (W →L[ℂ] V) := FiniteDimensional.complexToReal _
+  have : FiniteDimensional ℝ (W →L[ℂ] V) := FiniteDimensional.complexToReal _
   exact (LinearMap.toContinuousLinearMap L).contDiff
 
 theorem wq_contDiff (k r : ℕ) (TT : ℝ) : ContDiff ℝ ∞ (fun x : MA.E r => MA.wq k x TT) := by

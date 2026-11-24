@@ -79,10 +79,10 @@ theorem cspC_inj : Function.Injective (algebraMap S (S ⊗[P] FractionRing P)) :
   exact (TensorProduct.rid P S).symm.injective (h2 h)
 
 theorem cspC_artinian : IsArtinianRing (S ⊗[P] FractionRing P) := by
-  haveI : Algebra.Etale (FractionRing P) (FractionRing P ⊗[P] S) := inferInstance
-  haveI : Module.Finite (FractionRing P) (FractionRing P ⊗[P] S) :=
+  have : Algebra.Etale (FractionRing P) (FractionRing P ⊗[P] S) := inferInstance
+  have : Module.Finite (FractionRing P) (FractionRing P ⊗[P] S) :=
     Algebra.FormallyUnramified.finite_of_free (FractionRing P) _
-  haveI : IsArtinianRing (FractionRing P ⊗[P] S) := IsArtinianRing.of_finite (FractionRing P) _
+  have : IsArtinianRing (FractionRing P ⊗[P] S) := IsArtinianRing.of_finite (FractionRing P) _
   exact Function.Surjective.isArtinianRing (f := (Algebra.TensorProduct.comm P (FractionRing P) S))
     (Algebra.TensorProduct.comm P (FractionRing P) S).surjective
 
@@ -141,7 +141,7 @@ theorem cspC_minimal_unique {q P1 P2 : Ideal S} [hq : q.IsPrime] (h1 : P1 ∈ mi
     IsLocalization.under_map_of_isPrime_disjoint M _ hP2 (hM P2 h2)
   have hQne : Q1 ≠ Q2 := fun e => hne (by rw [← hc1, ← hc2, e])
   have := cspC_artinian (P := P) (S := S)
-  obtain ⟨r, hr2, hrid, hrall⟩ := IsArtinianRing.exists_not_mem_forall_mem_of_ne Q2
+  obtain ⟨r, hr2, hrid, hrall⟩ := IsArtinianRing.exists_notMem_forall_mem_of_ne Q2
   have hr1 : r ∈ Q1 := hrall Q1 hQ1 hQne
   obtain ⟨s, hs⟩ := cspC_idem_of (P := P) hrid
   have hs1 : s ∈ P1 := by rw [← hc1, Ideal.mem_comap, hs]; exact hr1

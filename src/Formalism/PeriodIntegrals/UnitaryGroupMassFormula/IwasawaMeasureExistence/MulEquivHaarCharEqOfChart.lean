@@ -60,7 +60,7 @@ theorem smul_cancel {Y : Type*} [TopologicalSpace Y] [MeasurableSpace Y] [Locall
   have htop : ρ K ≠ ∞ := hK.measure_lt_top.ne
   have hK' : (a : ℝ≥0∞) * ρ K = (b : ℝ≥0∞) * ρ K := by
     have e := congrArg (fun m : Measure Y => m K) h
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
     exact e
   have hab : (a : ℝ≥0∞) = b := (ENNReal.mul_left_inj h0 htop).mp hK'
   exact_mod_cast hab

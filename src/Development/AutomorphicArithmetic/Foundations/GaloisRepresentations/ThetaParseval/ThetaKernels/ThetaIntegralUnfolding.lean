@@ -79,10 +79,10 @@ theorem continuous_of_level_real_k : ∀ (F E : Type) [Field F] [NumberField F] 
         ∀ w : Formalism.IndefR.DatumF.WOF F E nS nT, ContDiff ℝ ∞ fun x => g (w + L x)) →
       Continuous g := by
   intro F E _ _ _ _ _ σ B _ nS nT JS JT _ _ ξ₀ _ _ hstd g hU hsm
-  haveI := finiteFE (F := F) (E := E)
-  haveI := modTop (F := F) (E := E)
-  haveI := topRing (F := F) (E := E)
-  haveI : IsTopologicalAddGroup (AEF F E) := IsTopologicalRing.to_topologicalAddGroup
+  have := finiteFE (F := F) (E := E)
+  have := modTop (F := F) (E := E)
+  have := topRing (F := F) (E := E)
+  have : IsTopologicalAddGroup (AEF F E) := IsTopologicalRing.isTopologicalAddGroup
   obtain ⟨U, hUo, hUf⟩ := hU
   let φ := (Module.finBasis ℝ (Fin nT × Fin nS × Fin (Module.finrank F E) → mixedEmbedding.mixedSpace F)).equivFunL
   let L : (Fin _ → ℝ) →+ WOF F E nS nT := (realCh F E nS nT).comp φ.symm.toLinearEquiv.toAddMonoidHom

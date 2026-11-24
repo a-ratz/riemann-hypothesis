@@ -99,7 +99,7 @@ theorem exists_norm_actM_pow_le_of_inK {V : Submodule ℂ D} (hE : IsGlRep E)
     (hV : IsKStableSub ε E V) (hVf : FiniteDimensional ℂ V) {Z : Matrix (Fin n) (Fin n) ℂ}
     (hZ : inK ε Z) (k : ℕ) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ x ∈ layer ε E V k, ∀ m : ℕ, ‖((actM E Z) ^ m) x‖ ≤ C ^ m * ‖x‖ := by
-  haveI : FiniteDimensional ℂ (layer ε E V k) := finiteDimensional_layer hVf k
+  have : FiniteDimensional ℂ (layer ε E V k) := finiteDimensional_layer hVf k
   let T : layer ε E V k →ₗ[ℂ] layer ε E V k :=
     (actM E Z).restrict (fun x hx => actM_mem_layer_of_inK hE hV hZ hx)
   let T' := LinearMap.toContinuousLinearMap T
@@ -143,7 +143,7 @@ theorem exp_inK_apply_mem_closure (hσ : IsURepOn (UJset ε) σ) (hD : IsDerived
   have hsum := hasSum_orbit_of_bound hσ hD hZ.1 v (fun m => C ^ m * ‖v‖)
     (fun m => by simpa using hC v hk m) 0 1 hs
   simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1, Complex.ofReal_one,
-    one_smul, ContinuousLinearMap.one_apply, sub_zero, one_pow] at hsum
+    one_smul, one_apply_eq_self, sub_zero, one_pow] at hsum
   rw [← SetLike.mem_coe, Submodule.topologicalClosure_coe]
   refine mem_closure_of_tendsto hsum.tendsto_sum_nat (Filter.Eventually.of_forall fun N => ?_)
   refine Submodule.sum_mem _ fun m _ => Submodule.smul_mem _ _ ?_

@@ -109,7 +109,7 @@ theorem deepPacketP (large₂ : SizeData₂ D) (X : PJ D B P j)
         _ ≤ Real.exp (Real.log N) * Real.exp (mx σ) :=
             mul_le_mul_of_nonneg_right (Real.le_exp_log _) (Real.exp_pos _).le
         _ = _ := (Real.exp_add _ _).symm
-    rw [Real.exp_add, Real.exp_nat_mul]
+    rw [Real.exp_add, Real.exp_natCast_mul]
     exact mul_le_mul (pow_le_pow_left₀ (Finset.sum_nonneg fun i _ => B.supN_nonneg j wL σ _) h4 _)
       (Real.le_exp_log _) (B.supN_nonneg j w0 σ _) (pow_pos (Real.exp_pos _) _).le
   have hC0 : Real.log (max ((d * finrank ℚ B.KO : ℕ) : ℝ) 1) ≤
@@ -187,7 +187,7 @@ theorem deepC (large₂ : SizeData₂ D) (X : PJ D B P j) {ka wL wF : WeightFami
     intro k β
     have : G.zc k β = z' k β := X.inc_inj ka ((hz k β).trans (hz1 k β).symm)
     rw [this]; exact hz2 k β
-  letI := hlat
+  let := hlat
   exact deepPacketP large₂ X ka wL (X.wF0 wL wF) (a0 D j T) hwt G.w G.th0 G.alz (fun k => (hz0 k).2.2.2) G.zc hz _
     (fun la => SizeBoundsAlt.gaussC_nonneg _ G.zc la) (SizeBoundsAlt.gaussC_gaussLe hzM) hWd Hm
     (fun Ctr hC => SizeBoundsAlt.trans_of_minima _root_.transference_successive_minima _ (Submodule.IsFullLattice.span_eq_top (A := B.KO) (M := B.Mlat j ka)) Hm hconj Ctr hC)

@@ -172,12 +172,12 @@ theorem span_tau_commutant : ∀ (L : Type) [Field L] [NumberField L] [IsCMField
         rcases h with h | h
         · right; rw [h]
         · left; rw [h, conj_conj]
-      simp only [R, if_pos h, if_pos h', Matrix.transpose_one, mul_one]
+      simp only [R, ite_eq_left h, ite_eq_left h', Matrix.transpose_one, mul_one]
     · have h' : ¬ (ComplexEmbedding.conjugate σ = τ ∨ ComplexEmbedding.conjugate σ = ComplexEmbedding.conjugate τ) := by
         rintro (h' | h')
         · exact h (Or.inr (by rw [← h', conj_conj]))
         · exact h (Or.inl (by simpa [conj_conj] using congrArg ComplexEmbedding.conjugate h'))
-      simp only [R, if_neg h, if_neg h']
+      simp only [R, ite_eq_right h, ite_eq_right h']
       exact hU σ
   have hinv : ((B⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) = (ratPt γ₀.val (ComplexEmbedding.conjugate τ))ᵀ := by
     apply Units.inv_eq_of_mul_eq_one_right
@@ -190,7 +190,7 @@ theorem span_tau_commutant : ∀ (L : Type) [Field L] [NumberField L] [IsCMField
       simp [tauPt, R, hBv, ratPt]
     · by_cases h2 : σ = ComplexEmbedding.conjugate τ
       · subst h2
-        simp only [tauPt, if_neg h1, if_true, R, or_true, mul_one]
+        simp only [tauPt, ite_eq_right h1, ite_true, R, or_true, mul_one]
         rw [hinv, Matrix.transpose_transpose]
       · simp [tauPt, R, h1, h2]
   have hcomm : ∀ A : GL (Fin n) ℂ, (fun σ => tauPt τ A σ * R σ) = (fun σ => R σ * tauPt τ A σ) := by
@@ -412,7 +412,7 @@ theorem lu : ∀ {n : ℕ} (B : GL (Fin n) ℂ), (∀ (k : ℕ) (hk : k ≤ n), 
     have hij' : i < j := hij
     simp [M, hx0 i j hij'.le, hij'.ne]
   have hMdet : M.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular M hMlow]
+    rw [det_of_isLowerTriangular M hMlow]
     exact Finset.prod_eq_one (fun i _ => by simp [M, hx0 i i le_rfl])
   have hMunit : IsUnit M := (Matrix.isUnit_iff_isUnit_det M).mpr (by rw [hMdet]; exact isUnit_one)
   let Mg : GL (Fin n) ℂ := hMunit.unit
@@ -427,7 +427,7 @@ theorem lu : ∀ {n : ℕ} (B : GL (Fin n) ℂ), (∀ (k : ℕ) (hk : k ≤ n), 
     rw [Matrix.mul_apply]
     have := hx1 i k hik'
     simp only [M, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [add_comm]
     exact this
 
@@ -455,7 +455,7 @@ theorem shift_minors_vanish_finite {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ) :
       ((B + s • (1 : Matrix (Fin n) (Fin n) ℂ)).submatrix (Fin.castLE hk) (Fin.castLE hk)).det
         = (p k).eval s := by
     intro k hk s
-    simp only [p, dif_pos hk, Matrix.eval_charpoly]
+    simp only [p, dite_eq_left hk, Matrix.eval_charpoly]
     congr 1
     ext i j
     simp only [Matrix.submatrix_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply,
@@ -465,15 +465,15 @@ theorem shift_minors_vanish_finite {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ) :
   have hp : ∀ k, p k ≠ 0 := by
     intro k
     by_cases hk : k ≤ n
-    · simp only [p, dif_pos hk]; exact (Matrix.charpoly_monic _).ne_zero
-    · simp [p, dif_neg hk]
+    · simp only [p, dite_eq_left hk]; exact (Matrix.charpoly_monic _).ne_zero
+    · simp [p, dite_eq_right hk]
   refine Set.Finite.subset
     ((Finset.range (n + 1)).finite_toSet.biUnion fun k _ =>
-      Polynomial.finite_setOf_isRoot (hp k)) ?_
+      Polynomial.finite_setOfPred_isRoot (hp k)) ?_
   intro s hs
-  simp only [Set.mem_setOf_eq, not_forall, not_not] at hs
+  simp only [Set.mem_ofPred_eq, not_forall, not_not] at hs
   obtain ⟨k, hk, h0⟩ := hs
-  simp only [Set.mem_iUnion, Finset.coe_range, Set.mem_Iio, Set.mem_setOf_eq]
+  simp only [Set.mem_iUnion, Finset.coe_range, Set.mem_Iio, Set.mem_ofPred_eq]
   exact ⟨k, Nat.lt_succ_of_le hk, by rw [Polynomial.IsRoot, ← key k hk s, h0]⟩
 
 end GlobalTheory
@@ -566,10 +566,10 @@ theorem diagonal_mul_transvection {n : ℕ} {i j : Fin n} (h : i ≠ j) (d : Fin
     Matrix.add_apply, diagonal_mul, mul_diagonal, Matrix.single_apply]
   by_cases h2 : i = a ∧ j = b
   · obtain ⟨rfl, rfl⟩ := h2
-    simp only [and_self, if_true, one_apply_ne h]
+    simp only [and_self, ite_true, one_apply_ne h]
     field_simp
     ring
-  · simp only [h2, if_false, mul_zero, zero_mul, add_zero]
+  · simp only [h2, ite_false, mul_zero, zero_mul, add_zero]
     by_cases hab : a = b
     · subst hab; simp
     · simp [one_apply_ne hab]
@@ -613,7 +613,7 @@ theorem domLE_shiftWt {n : ℕ} {ν lam : Fin n → ℤ} (hν : DomLE ν lam) {i
   constructor
   · rw [← h1]
     simp only [shiftWt, Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.mul_sum,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
   · intro K
     have hK := h2 K
@@ -622,9 +622,9 @@ theorem domLE_shiftWt {n : ℕ} {ν lam : Fin n → ℤ} (hν : DomLE ν lam) {i
     have hji' : (j : ℕ) < i := hji
     by_cases hi : (i : ℕ) < K
     · have hj : (j : ℕ) < K := lt_trans hji' hi
-      simp only [hi, hj, if_true]
+      simp only [hi, hj, ite_true]
       linarith
-    · simp only [hi, if_false, mul_zero, add_zero]
+    · simp only [hi, ite_false, mul_zero, add_zero]
       have : (0 : ℤ) ≤ (k : ℤ) * (if (j : ℕ) < K then 1 else 0) := by
         split_ifs <;> simp
       linarith
@@ -717,9 +717,9 @@ theorem LowerGen.lowerTriangular_elim_step {n : ℕ} (L : Matrix (Fin n) (Fin n)
     rw [transvection_mul_apply_same]
     have hrow : L j b = if b = j then L j j else 0 := by
       rcases lt_trichotomy b j with h | h | h
-      · rw [if_neg h.ne]; exact hmin j b h (Ne.symm h.ne)
+      · rw [ite_eq_right h.ne]; exact hmin j b h (Ne.symm h.ne)
       · subst h; simp
-      · rw [if_neg h.ne']; exact hL (by simpa using h)
+      · rw [ite_eq_right h.ne']; exact hL (by simpa using h)
     rw [hrow]
     by_cases hb : b = j
     · subst hb; simp; field_simp; ring
@@ -747,7 +747,7 @@ theorem GlobalTheory.lowerTriangular_GL_induction : ∀ {n : ℕ} (P : GL (Fin n
     rw [Matrix.det_mul, Matrix.det_one] at h
     exact left_ne_zero_of_mul_eq_one h
   have hdiag0 : ∀ k, L.val k k ≠ 0 := by
-    rw [Matrix.det_of_lowerTriangular _ hL] at hdet
+    rw [det_of_isLowerTriangular _ hL] at hdet
     exact fun k => (Finset.prod_ne_zero_iff.mp hdet) k (Finset.mem_univ _)
   by_cases hS : (LowerGen.offDiagSupport L.val) = ∅
   · apply hdiag
@@ -801,7 +801,7 @@ theorem GlobalTheory.lowerTriangular_GL_induction : ∀ {n : ℕ} (P : GL (Fin n
         Finset.mem_erase, hUL, ne_eq, Prod.mk.injEq]
       by_cases h : a = i ∧ b = j
       · simp [h]
-      · simp only [h, if_false]; tauto
+      · simp only [h, ite_false]; tauto
     have hcard : (LowerGen.offDiagSupport (U * L).val).card < m := by
       rw [hsupp, ← hm]
       apply Finset.card_erase_lt_of_mem
@@ -883,7 +883,7 @@ theorem mulVec_mem_of_cofinite_shift : ∀ {n : ℕ} {ι : Type} [Fintype ι] [D
     filter_upwards [hc.eventually (this.mem_nhds hne)] with s hs
     exact isUnit_iff_ne_zero.2 hs
   have hFev : ∀ᶠ s in nhdsWithin (0:ℂ) {0}ᶜ, s ∉ F := by
-    have hcl : IsClosed (F \ {0}) := (hF.diff).isClosed
+    have hcl : IsClosed (F \ {0}) := (hF.sdiff).isClosed
     have hmem : (F \ {0})ᶜ ∈ nhds (0:ℂ) := hcl.isOpen_compl.mem_nhds (by simp)
     filter_upwards [nhdsWithin_le_nhds hmem, self_mem_nhdsWithin] with s hs1 hs2
     intro hsF
@@ -895,7 +895,7 @@ theorem mulVec_mem_of_cofinite_shift : ∀ {n : ℕ} {ι : Type} [Fintype ι] [D
   have ht : Filter.Tendsto g (nhdsWithin (0:ℂ) {0}ᶜ) (nhds (Φ B *ᵥ v)) := by
     rw [← hg0]
     exact hgc.tendsto.mono_left nhdsWithin_le_nhds
-  exact (Submodule.closed_of_finiteDimensional S).mem_of_tendsto ht hev
+  exact (Submodule.isClosed_of_finiteDimensional S).mem_of_tendsto ht hev
 
 end GlobalTheory.AlgWtHW
 end -- clump:auto
@@ -1088,8 +1088,8 @@ theorem hw_exists_unique_antitone : ∀ (L : Type) [Field L] [NumberField L] [Is
         (_root_.GlobalTheory.isWt_comp_swap n ι _ (_root_.GlobalTheory.AlgWtHW.isPolyRep_evPt L n a ι b P hP τ) lam (isWt_of_beig hv) i j))
   refine ⟨?_, hanti⟩
   obtain ⟨_, ι, _, _, b, P, hP⟩ := a.alg
-  haveI := algWeight_space_nontrivial a
-  haveI := b.index_nonempty
+  have := algWeight_space_nontrivial a
+  have := b.index_nonempty
   obtain ⟨v, lam, hv⟩ := _root_.GlobalTheory.AlgWtHW.exists_isBEig_of_isPolyRep n ι _ (_root_.GlobalTheory.AlgWtHW.isPolyRep_evPt L n a ι b P hP τ)
   refine ⟨lam, ⟨ι, inferInstance, inferInstance, b, P, hP, v, hv.1, hv.2⟩, fun lam' h' => ?_⟩
   obtain ⟨ι', _, _, b', P', v', hP', hv'⟩ := beig_of_hwAt h'

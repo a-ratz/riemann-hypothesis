@@ -76,7 +76,7 @@ namespace GlobalTheory
 theorem eq_of_invariantGen_translates :
     Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Out.PolAV (Sp K)) (m : ℕ) (ξ ξ' : 𝟙_ (Over (Sp K)) ⟶ P.A) (u : LB.Gen (LB.LinComb P.L (K := Fin 2) ![((𝟙 P.A) ^ m * (toUnit P.A ≫ ξ)).left, ((𝟙 P.A) ^ m * (toUnit P.A ≫ ξ')).left] ![1, -1])), (m : K) ≠ 0 → u.IsGen → (∀ δ : 𝟙_ (Over (Sp K)) ⟶ P.A, δ ^ m = 1 → ∀ (y : P.A.left) J, Good P.L y J → val u ((toUnit P.A ≫ δ) * 𝟙 P.A).left y J = val u (𝟙 _) y J) → ξ = ξ' := by
   intro laws K _ _ P m ξ ξ' u hm hu hinv
-  haveI : IsCommMonObj P.A := P.isAb.comm
+  have : IsCommMonObj P.A := P.isAb.comm
   have hmul : ∀ {Z : Over (Sp K)} (y : Z ⟶ P.A), y ≫ Out.mulA P.A m = y ^ m :=
     fun y => by rw [Out.mulA, MonObj.comp_pow, Category.comp_id]
   obtain ⟨v, hv⟩ := exists_isGen_of_invariant P.isLB (K := Fin 2)
@@ -226,9 +226,9 @@ theorem eq_of_similitude_invariant : Out.Laws → ∀ (K : Type) [Field K] [IsAl
         Matrix.cons_val_one, neg_neg]
       simp only [← Finset.prod_mul_distrib]
       rw [Finset.prod_eq_single r₀ (fun r _ hr => ?_) (fun hr => absurd (Finset.mem_univ _) hr)]
-      · simp only [if_true, zpow_zero, _root_.mul_one, zpow_neg]
+      · simp only [ite_true, zpow_zero, _root_.mul_one, zpow_neg]
         rw [_root_.mul_mul_mul_comm, inv_mul_cancel, _root_.mul_one]
-      · simp only [if_neg hr, _root_.one_mul, zpow_one, zpow_neg, e']
+      · simp only [ite_eq_right hr, _root_.one_mul, zpow_one, zpow_neg, e']
         rw [_root_.mul_mul_mul_comm, mul_inv_cancel_comm, inv_mul_cancel_comm, inv_mul_cancel]) _ hu₀
   refine GlobalTheory.eq_of_invariantGen_translates laws K x.P m (ξ r₀) (ξ' r₀) u hm hu fun δ hδ y J hJ => ?_
   have hv := hinv (δ ≫ i) (fun r => by

@@ -214,7 +214,7 @@ theorem hasDerivAt_orbit (hσ : IsURepOn (UJset ε) σ) (hD : IsDer ε σ V E)
     have h := sigma_add hσ hX s (t - s)
     have e : s + (t - s) = t := by ring
     rw [e] at h
-    rw [h, ContinuousLinearMap.mul_apply]
+    rw [h, mul_apply_eq_comp]
   rw [key]
   exact h1
 
@@ -301,7 +301,7 @@ private theorem exp_smul_mem_closure_cyc_of_small [CompleteSpace H] (hσ : IsURe
     have h0' : ∀ m : ℕ,
         ⟪y, σ (NormedSpace.exp (((0 : ℝ) : ℂ) • X)) ((((act E X) ^ m) x : V) : H)⟫_ℂ = 0 := by
       intro m
-      rw [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1, ContinuousLinearMap.one_apply]
+      rw [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1, one_apply_eq_self]
       exact Submodule.inner_left_of_mem_orthogonal (Submodule.mem_map_of_mem (hle _ (hmem m))) hy
     have hM' : ∀ (m : ℕ) (s : ℝ),
         ‖⟪y, σ (NormedSpace.exp ((s : ℂ) • X)) ((((act E X) ^ m) x : V) : H)⟫_ℂ‖ ≤
@@ -354,13 +354,13 @@ theorem exp_stable [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) (hD : IsDer 
     | zero =>
       intro v hv
       rw [Nat.cast_zero, zero_mul, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1,
-        ContinuousLinearMap.one_apply]
+        one_apply_eq_self]
       exact hv
     | succ k ih =>
       intro v hv
       have e : ((k + 1 : ℕ) : ℝ) * (1 / (N : ℝ)) = (k : ℝ) * (1 / (N : ℝ)) + 1 / (N : ℝ) := by
         push_cast; ring
-      rw [e, sigma_add hσ hX, ContinuousLinearMap.mul_apply]
+      rw [e, sigma_add hσ hX, mul_apply_eq_comp]
       exact ih _ (hstep _ hv)
   intro v hv
   have h := hk N v hv
@@ -503,7 +503,7 @@ theorem exists_garding_kMap (n : ℕ) (ε : Fin n → Bool) (μ : Fin n → ℝ)
     simp only [RCLike.re_to_complex, Complex.re_ofReal_mul] at h3
     rw [← h3] at h2
     have h4 : 0 < ∫ g : UJ ε, a (umat g) * (⟪v, σ (umat g) v⟫_ℂ).re ∂(muG ε) := by
-      refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+      refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
         (hacont.mul hre) hac.mul_right ?_ (mul_ne_zero ha1 hone.ne')
       intro g
       by_cases h : a (umat g) = 0
@@ -551,7 +551,7 @@ theorem exists_isDer_kType : ∀ (n : ℕ) (ε : Fin n → Bool) (μ : Fin n →
     | smul c a _ ha => simpa [inner_smul_right] using GlobalTheory.DerEx.smoothOnG_comb c ha hzero
   obtain ⟨E, hE⟩ := GlobalTheory.DerOf.exists_isDer n ε H σ (Submodule.span ℂ G) hσ hder hsm
   obtain ⟨α, T, h1, h2, h3, h4, h5⟩ := exists_garding_kMap n ε μ H σ S hσ hK
-  haveI := hK.1
+  have := hK.1
   refine ⟨_, E, _, hE, GlobalTheory.Dec.FormF.rangeType n ε μ H σ S H σ (LinearMap.toContinuousLinearMap T) hK h4
     (fun h => h5 (LinearMap.ext fun x => DFunLike.congr_fun h x)), ?_⟩
   rintro _ ⟨s, rfl⟩
@@ -584,8 +584,8 @@ theorem form_eq_zero_of_casK (V : Type) [NormedAddCommGroup V] [InnerProductSpac
     (hTs : ∀ F ∈ arrV0 ε E u (j + 1), ∀ s : Equiv.Perm (Fin (j + 1)), T (permArr V n s F) = T F)
     (hTm : ∀ F ∈ arrV0 ε E u (j + 1), (∀ α', sliceLin V n α' F ∈ Vminus ε E (LamOf ε lam) u) → T F = 0) :
     ∀ F ∈ arrV0 ε E u (j + 1), T F = 0 := by
-  haveI : FiniteDimensional ℂ (kSpan ε E u) := hfd
-  haveI hWfd : FiniteDimensional ℂ (arrV0 ε E u (j + 1)) := by
+  have : FiniteDimensional ℂ (kSpan ε E u) := hfd
+  have hWfd : FiniteDimensional ℂ (arrV0 ε E u (j + 1)) := by
     let φ : arrV0 ε E u (j + 1) →ₗ[ℂ] ((Fin (j + 1) → Fin n × Fin n) → kSpan ε E u) :=
       LinearMap.pi fun α => LinearMap.codRestrict (kSpan ε E u)
         ((LinearMap.proj (R := ℂ) (φ := fun _ : Fin (j + 1) → Fin n × Fin n => V) α ∘ₗ
@@ -598,7 +598,7 @@ theorem form_eq_zero_of_casK (V : Type) [NormedAddCommGroup V] [InnerProductSpac
     intro α
     have h' := congrArg (fun f => ((f α : kSpan ε E u) : V)) h
     simpa [φ, arrOf] using h'
-  haveI : CompleteSpace (arrV0 ε E u (j + 1)) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (arrV0 ε E u (j + 1)) := FiniteDimensional.completeSpace ℂ _
   let f : arrV0 ε E u (j + 1) →L[ℂ] ℂ := LinearMap.toContinuousLinearMap (T ∘ₗ (arrV0 ε E u (j + 1)).subtype)
   let G0 : arrV0 ε E u (j + 1) := (InnerProductSpace.toDual ℂ (arrV0 ε E u (j + 1))).symm f
   have hGW : (G0 : Arr V n (j + 1)) ∈ arrV0 ε E u (j + 1) := G0.2
@@ -658,7 +658,7 @@ theorem form_eq_zero_of_casK (V : Type) [NormedAddCommGroup V] [InnerProductSpac
           split_ifs with h
           · rw [h]
           · exact inner_zero_right _
-        simpa only [hterm, Finset.sum_ite_eq', Finset.mem_univ, if_true] using hT0
+        simpa only [hterm, Finset.sum_ite_eq', Finset.mem_univ, ite_true] using hT0
       rw [← hsup] at hP
       obtain ⟨p, hp, m, hm, hpmE⟩ := Submodule.mem_sup.mp hP
       have hmm : ⟪m, m⟫_ℂ = 0 := by
@@ -861,7 +861,7 @@ theorem proj_comm (hU : IsURepOn (Kset ε) σ) {W : Submodule ℂ H} [W.HasOrtho
 theorem orth_of_ne (hU : IsURepOn (Kset ε) σ) {Λ μ : Fin n → ℝ} {S T : Submodule ℂ H}
     (hS : IsKTypeOf ε σ Λ S) (hT : IsKTypeOf ε σ μ T) (hne : μ ≠ Λ) :
     ∀ x ∈ S, ∀ y ∈ T, ⟪x, y⟫_ℂ = 0 := by
-  haveI := hT.1
+  have := hT.1
   let Q : S →L[ℂ] H := T.starProjection.comp S.subtypeL
   by_cases hQ : Q = 0
   · intro x hx y hy
@@ -886,7 +886,7 @@ theorem orth_of_ne (hU : IsURepOn (Kset ε) σ) {Λ μ : Fin n → ℝ} {S T : S
 theorem exists_orth (hU : IsURepOn (Kset ε) σ) {Λ : Fin n → ℝ} {S T : Submodule ℂ H}
     (hS : IsKTypeOf ε σ Λ S) (hT : IsKTypeOf ε σ Λ T) (hne : S ≠ T) :
     ∃ R : Submodule ℂ H, IsKTypeOf ε σ Λ R ∧ ∀ x ∈ R, ∀ y ∈ T, ⟪x, y⟫_ℂ = 0 := by
-  haveI := hT.1
+  have := hT.1
   let Q : S →L[ℂ] H := S.subtypeL - T.starProjection.comp S.subtypeL
   have hQa : ∀ x : S, Q x = (x : H) - T.starProjection (x : H) := fun x => rfl
   have hQ : Q ≠ 0 := by
@@ -978,7 +978,7 @@ theorem isKTypeOf_lowKSub : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n →
     refine hw0 (hdense.eq_zero_of_inner_left ℂ fun y hy => ?_)
     obtain ⟨z, hz, rfl⟩ := hy
     obtain ⟨j, hj⟩ := hcp z hz
-    haveI := hfd hufd j
+    have := hfd hufd j
     obtain ⟨m, x, μ, hx, -, hsup⟩ := kDecomp V n ε E _ (hfd hufd j) (glRel_kRel ε E hD.1)
       (isUnitary_kUnit ε E hD.2.1) (hst j)
     have hle : pfil ε E u j ≤ LinearMap.ker ((innerSL ℂ w : H →L[ℂ] ℂ).toLinearMap ∘ₗ V.subtype) := by

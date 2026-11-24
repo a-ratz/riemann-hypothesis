@@ -254,7 +254,7 @@ noncomputable section
 variable (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (n : ℕ) [NeZero n]
 
 theorem exists_primitive_unit : ∃ ζ : (PadicAlgCl p)ˣ, IsPrimitiveRoot ζ n := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl p) n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl p) n
   exact ⟨_, hζ.isUnit_unit (NeZero.ne n)⟩
 
 theorem isEmbedding_muMap {ζ : (PadicAlgCl p)ˣ} (hζ : IsPrimitiveRoot ζ n) :
@@ -432,7 +432,7 @@ theorem exists_zmodToQZ_eq (n : ℕ) [NeZero n] (x : QZ) (hx : n • x = 0) : �
 
 theorem cycK_eq_one {n : ℕ} [NeZero n] (hμ : ∀ ζ : PadicAlgCl p, ζ ^ n = 1 → ζ ∈ K) (g : GK p K) :
     cycK p K n g = 1 := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl p) n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl p) n
   have h1 : g ζ = ζ := g.commutes ⟨ζ, hμ ζ hζ.pow_eq_one⟩
   rw [cycN_spec (K := K) (L := PadicAlgCl p) (n := n) g ζ hζ.pow_eq_one] at h1
   have h2 : ζ ^ ((cycK p K n g : (ZMod n)ˣ) : ZMod n).val = ζ ^ (1 % n) := by
@@ -550,7 +550,7 @@ theorem exists_conj {K₀ : IntermediateField ℚ_[p] (PadicAlgCl p)} (h₀ : K�
   refine ⟨(e.symm.toMonoidHom.comp (MulAut.conjNormal σ : MulAut (subG p K₀ K)).toMonoidHom).comp e.toMonoidHom, ?_, ?_⟩
   · refine hc'.comp (Continuous.comp ?_ hc)
     refine Continuous.subtype_mk (f := fun h : subG p K₀ K => σ * (h : GK p K₀) * σ⁻¹) ?_ _
-    exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+    exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
   · intro g
     show resGK h₀ (e.symm (MulAut.conjNormal σ (e g))) = _
     rw [← he (e.symm _), e.apply_symm_apply, MulAut.conjNormal_apply, he]
@@ -627,7 +627,7 @@ theorem isSolvable_of_abelian_tower {M : IntermediateField ℚ_[p] (PadicAlgCl p
     intro x hx
     exact h3 x hx
   refine ⟨⟨2, ?_⟩⟩
-  rw [← map_derivedSeries_eq (QuotientGroup.mk'_surjective (subG p K L)), eq_bot_iff, Subgroup.map_le_iff_le_comap]
+  rw [← Subgroup.map_derivedSeries_eq (QuotientGroup.mk'_surjective (subG p K L)), eq_bot_iff, Subgroup.map_le_iff_le_comap]
   intro g hg
   show QuotientGroup.mk' _ g ∈ (⊥ : Subgroup _)
   rw [Subgroup.mem_bot]
@@ -1150,7 +1150,7 @@ theorem exists_artin_hom (hK : FiniteDimensional ℚ_[p] K) : ∃ Art : Kˣ →*
     if h : IsAbLK p K L then (exists_isRecip h a).choose else 1
   have hγ : ∀ L, IsAbLK p K L → ∀ a, IsRecip p K L a (γ L a) := by
     intro L hL a
-    simp only [γ, dif_pos hL]
+    simp only [γ, dite_eq_left hL]
     exact (exists_isRecip hL a).choose_spec
   obtain ⟨f, hf⟩ := exists_hom_GKab hK γ
     (fun L hL a b => IsRecip.unique hL (hγ L hL (a * b)) ((hγ L hL a).mul (hγ L hL b)))
@@ -1341,12 +1341,12 @@ theorem rational_valuation_le_pow (hp : valuation K (p : K) < 1) (q : ℚ) (n : 
     rw [ne_eq, map_eq_zero]; exact hp0
   have h1 : Rat.padicValuation p (q / (p : ℚ) ^ n) ≤ 1 := by
     rw [map_div₀]
-    exact (div_lt_one₀ (zero_lt_iff.2 hpv)).2 hq |>.le
+    exact (div_lt_one₀ (pos_iff_ne_zero.2 hpv)).2 hq |>.le
   have h2 := rational_valuation_le_one (K := K) p hp _ h1
   have hpF : ((p : K) ^ n) ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
   have hvF : valuation K ((p : K) ^ n) ≠ 0 := by rw [ne_eq, map_eq_zero]; exact hpF
   push_cast at h2
-  rw [map_div₀, div_le_one₀ (zero_lt_iff.2 hvF), map_pow] at h2
+  rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.2 hvF), map_pow] at h2
   exact h2
 
 theorem continuous_rational_hom_of_valuation (hp : valuation K (p : K) < 1) : Continuous (transportRatHom p K) := by
@@ -1362,7 +1362,7 @@ theorem continuous_rational_hom_of_valuation (hp : valuation K (p : K) < 1) : Co
   have hU := Valued.isOpen_ball (WithVal (Rat.padicValuation p)) (Valued.v.restrict y)
   have h0 : (0 : WithVal (Rat.padicValuation p)) ∈ {x | Valued.v.restrict x < Valued.v.restrict y} := by
     simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff, map_zero]
-    exact zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hy0)
+    exact pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hy0)
   rw [Filter.mem_map]
   filter_upwards [hU.mem_nhds h0] with x hx
   show transportRatHom p K x ∈ s
@@ -1410,7 +1410,7 @@ theorem padic_hom_mem_integers_iff (f : ℚ_[p] →+* K) (hf : Continuous f) (x 
     exact lt_irrefl _ h3
   · intro h
     have hcl : IsClosed {z : ℤ_[p] | f (z : ℚ_[p]) ∈ (𝒪[K] : Set K)} :=
-      isClosed_valuation_integers.preimage (hf.comp continuous_subtype_val)
+      isClosed_valuation_integers.preimage (hf.comp continuous_subtypeVal)
     have hall : ∀ z : ℤ_[p], f (z : ℚ_[p]) ∈ (𝒪[K] : Set K) := by
       intro z
       refine PadicInt.denseRange_intCast.induction_on (p := fun z : ℤ_[p] => f (z : ℚ_[p]) ∈ (𝒪[K] : Set K)) z hcl ?_
@@ -1437,7 +1437,7 @@ theorem mem_integers_iff_norm_of_homeomorph {K : Type} [Field K] [ValuativeRel K
   · subst hx; simp
   have h := key x⁻¹
   rw [map_inv₀, map_inv₀, norm_inv] at h
-  have hv : 0 < valuation K x := zero_lt_iff.2 (by simpa using hx)
+  have hv : 0 < valuation K x := pos_iff_ne_zero.2 (by simpa using hx)
   have hn : 0 < ‖e x‖ := by rw [norm_pos_iff]; simpa using hx
   rw [inv_lt_one₀ hv, inv_lt_one₀ hn] at h
   rw [← not_lt, ← not_lt, h]

@@ -327,9 +327,9 @@ theorem mem_range_of_tmul_eq_tmul {R A : Type} [CommRing R] [IsDomain R] [IsInte
   have hRL : Function.Injective (algebraMap R (FractionRing A)) := by
     rw [IsScalarTower.algebraMap_eq R A (FractionRing A)]
     exact (IsFractionRing.injective A (FractionRing A)).comp hinj
-  haveI : FaithfulSMul R (FractionRing A) := (faithfulSMul_iff_algebraMap_injective R _).mpr hRL
-  letI : Algebra (FractionRing R) (FractionRing A) := FractionRing.liftAlgebra R (FractionRing A)
-  haveI := FractionRing.isScalarTower_liftAlgebra R (FractionRing A)
+  have : FaithfulSMul R (FractionRing A) := (faithfulSMul_iff_algebraMap_injective R _).mpr hRL
+  let : Algebra (FractionRing R) (FractionRing A) := FractionRing.liftAlgebra R (FractionRing A)
+  have := FractionRing.isScalarTower_liftAlgebra R (FractionRing A)
   obtain ⟨φ, hφ⟩ := LinearMap.exists_leftInverse_of_injective (Algebra.linearMap (FractionRing R) (FractionRing A))
     (LinearMap.ker_eq_bot.mpr (algebraMap (FractionRing R) (FractionRing A)).injective)
   have hφ1 : φ 1 = 1 := by simpa using congr($hφ 1)
@@ -364,12 +364,12 @@ theorem mem_range_appTop_of_fst_eq_snd : ∀ (R : Type) [CommRing R] [IsDomain R
   intro R _ _ _ S π hP hI hinj x hx
   obtain ⟨s⟩ : Nonempty S := hI.nonempty
   obtain ⟨U, hU, hsU, -⟩ := exists_isAffineOpen_mem_and_subset (show s ∈ (⊤ : S.Opens) from trivial)
-  haveI : Nonempty U := ⟨⟨s, hsU⟩⟩
+  have : Nonempty U := ⟨⟨s, hsU⟩⟩
   let res := S.presheaf.map (homOfLE (le_top : U ≤ ⊤)).op
   have hres : Function.Injective res.hom := map_injective_of_isIntegral S _
   have happ : ∀ t, (π.appLE ⊤ U le_top).hom t = res.hom (π.appTop.hom t) := fun t => rfl
   let ρ : R →+* Γ(S, U) := ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ π.appLE ⊤ U le_top).hom
-  letI : Algebra R Γ(S, U) := ρ.toAlgebra
+  let : Algebra R Γ(S, U) := ρ.toAlgebra
   have hρ : ∀ t, (π.appLE ⊤ U le_top).hom t = algebraMap R Γ(S, U) ((Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom t) := by
     intro t
     change _ = ρ _
@@ -382,7 +382,7 @@ theorem mem_range_appTop_of_fst_eq_snd : ∀ (R : Type) [CommRing R] [IsDomain R
       fun c => rfl
     rw [h1, h1] at hab
     exact (Scheme.ΓSpecIso (CommRingCat.of R)).commRingCatIsoToRingEquiv.symm.injective (hinj (hres hab))
-  haveI : UniversallyClosed π := inferInstance
+  have : UniversallyClosed π := inferInstance
   have hxint : IsIntegral R (res.hom x) := by
     obtain ⟨p, hpm, hp⟩ := isIntegral_appTop_of_universallyClosed π x
     refine ⟨p.map (Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom, hpm.map _, ?_⟩

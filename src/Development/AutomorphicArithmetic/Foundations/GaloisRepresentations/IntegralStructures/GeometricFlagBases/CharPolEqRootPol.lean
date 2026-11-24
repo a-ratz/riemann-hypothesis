@@ -116,8 +116,8 @@ theorem UpperTheory.Gal.Int.Geo.twPhi :
     simp [Formalism.MainNotions.SumRepresentations.At.twGL, UpperTheory.V.Af.tw_val, Algebra.algebraMap_eq_smul_one, Matrix.smul_apply]
   rw [e1] at c1 p1
   rw [e2]
-  have cs : Continuous (ρ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hρ.comp continuous_subtype_val
-  have cμ : Continuous (χ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hχ.comp continuous_subtype_val
+  have cs : Continuous (ρ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hρ.comp continuous_subtypeVal
+  have cμ : Continuous (χ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hχ.comp continuous_subtypeVal
   have ck := (UpperTheory.Gal.TP.Sub.contLeft_holds _ (Qbar l) 1 1).2.2.2 _ cμ
   obtain ⟨-, l2⟩ := UpperTheory.Gal.TP.Sub.twLoc_holds l P AI hT E Ω A O Bw dd (ρ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype)
     (χ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype)

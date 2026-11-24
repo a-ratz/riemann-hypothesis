@@ -147,7 +147,7 @@ end UpperTheory.ActionSupremumCommute
 theorem UpperTheory.lattice_generation :
     LatGen := by
   intro q _ D a N 𝔞 hN hG
-  haveI := D.freeLa
+  have := D.freeLa
   have inj : ∀ u v : D.La, N • u = N • v → u = v := by
     intro u v huv
     have h0 : (N : ℤ) • (u - v) = 0 := by

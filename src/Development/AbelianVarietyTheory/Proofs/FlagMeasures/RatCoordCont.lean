@@ -73,7 +73,7 @@ theorem ratCoord_cont (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u' : D.wh
   refine continuous_pi fun τ => continuous_pi fun q => ?_
   refine Continuous.dotProduct continuous_const (Continuous.matrix_mulVec continuous_const ?_)
   refine Continuous.matrix_mulVec ?_ continuous_const
-  exact Units.continuous_val.comp (continuous_subtype_val.comp ((continuous_apply _).comp
+  exact Units.continuous_val.comp (continuous_subtypeVal.comp ((continuous_apply _).comp
     ((continuous_const.mul ((continuous_const.mul continuous_id).mul continuous_const)).mul continuous_const)))
 
 end GlobalTheory.LoopVol

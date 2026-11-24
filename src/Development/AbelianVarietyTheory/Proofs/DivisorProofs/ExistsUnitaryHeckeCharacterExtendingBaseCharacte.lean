@@ -167,8 +167,8 @@ theorem incAF_algebraMap (y : F) :
   rw [AlgHom.commutes, IsScalarTower.algebraMap_apply F (AF F) (AF F ⊗[F] E)]
 
 theorem exists_emb_ext (φ : F →+* ℂ) : ∃ τ : E →+* ℂ, τ.comp (algebraMap F E) = φ := by
-  letI : Algebra F ℂ := φ.toAlgebra
-  haveI : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
+  let : Algebra F ℂ := φ.toAlgebra
+  have : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
   exact ⟨(IsAlgClosed.lift : E →ₐ[F] ℂ).toRingHom, (IsAlgClosed.lift : E →ₐ[F] ℂ).comp_algebraMap⟩
 
 theorem key (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) (M : ℕ) (hM : 0 < M)
@@ -286,7 +286,7 @@ theorem exists_extend_hecke : ∀ (F E : Type) [Field F] [NumberField F] [Field 
         (∀ z : (AF F ⊗[F] E)ˣ, At (evI F) ((z : AF F ⊗[F] E) - 1) → lam' z = 1) ∧
         ∀ a, lam' (idFF F E a) = lam a := by
   intro F E _ _ _ _ _ σ B hB lam hc h1 hinf
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨M, hM, hMk⟩ := GlobalTheory.T.exists_congruence_kernel_ideleCharacter_trivialAtInfinity F lam hc hinf
   let V : Subgroup (AF F ⊗[F] E)ˣ := (Units.map (incAF F E).toMonoidHom).range ⊔ WE F E (8 * M)
   have hkey : ∀ a : (AF F)ˣ, idFF F E a ∈ V → lam a = 1 := key σ hB.cm M hM lam h1 hMk
@@ -302,13 +302,13 @@ theorem exists_extend_hecke : ∀ (F E : Type) [Field F] [NumberField F] [Field 
 
   let ψ0 : (AF F)ˣ →* (AF F ⊗[F] E)ˣ ⧸ V := (QuotientGroup.mk' V).comp (idFF F E)
   have hker : ψ0.ker ≤ lam.ker := fun a ha => hkey a ((QuotientGroup.eq_one_iff _).1 ha)
-  letI : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
+  let : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
     obtain ⟨t, ht⟩ := Circle.exp_surjective u.toMul
     refine ⟨Additive.ofMul (Circle.exp (t / n)), ?_⟩
     show Additive.ofMul (Circle.exp (t / n) ^ n) = u
     rw [← Circle.exp_nsmul, nsmul_eq_mul, mul_div_cancel₀ _ (Nat.cast_ne_zero.2 hn), ht]
     rfl
-  letI : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
+  let : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
   obtain ⟨ρ, hρ⟩ := (Module.Baer.of_divisible (Additive Circle)).extension_property_addMonoidHom
     (MonoidHom.toAdditive (QuotientGroup.kerLift ψ0)) (QuotientGroup.kerLift_injective ψ0)
     (MonoidHom.toAdditive (QuotientGroup.lift ψ0.ker lam hker))

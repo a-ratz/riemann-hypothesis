@@ -350,7 +350,7 @@ theorem taylor_bound [Fintype ι] [DecidableEq ι] (c : R →+* K) (hc : ∀ w, 
         y n * (eval₂ c y p - eval₂ c x p - ∑ j, eval₂ c x (pderiv j p) * (y j - x j)) +
         (y n - x n) * ∑ j, eval₂ c x (pderiv j p) * (y j - x j) := by
       simp only [h1, Finset.sum_add_distrib, ← Finset.sum_mul, eval₂_mul, eval₂_X]
-      simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       ring
     rw [this]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ ?_)
@@ -398,7 +398,7 @@ theorem mem_of_gradient [Fintype ι] [DecidableEq ι] (W : Subring K) (hW : IsCl
           -(eval₂ W.subtype (fun i => (y i : K)) (G i) - eval₂ W.subtype x (G i) -
             ∑ j, eval₂ W.subtype x (pderiv j (G i)) * (y j - x j)) := by
         simp only [sub_mul, Finset.sum_sub_distrib, hG, ite_mul, one_mul, zero_mul,
-          Finset.sum_ite_eq', Finset.mem_univ, if_true]
+          Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         push_cast
         rw [he]; ring
       rw [this]
@@ -434,7 +434,7 @@ theorem subset_of_unramified (K : Type) [NormedField K] [IsUltrametricDist K] (W
       ∀ a : Subring.closure ((W : Set K) ∪ s), (a : K) ∈ s → (φ a).snd = 0) :
     s ⊆ (W : Set K) := by
   classical
-  haveI : Fintype s := hs.fintype
+  have : Fintype s := hs.fintype
   let A := Subring.closure ((W : Set K) ∪ s)
   let O := (NormedField.valuation (K := K)).valuationSubring
   have hO : ∀ z : K, z ∈ O ↔ ‖z‖ ≤ 1 := by
@@ -888,7 +888,7 @@ theorem nsmul_some_map_eq_zero_iff {F K : Type} [Field F] [Field K] [DecidableEq
     (i : F →+* K) (W : WeierstrassCurve F) (x y : F) (N : ℕ)
     (h₀ : W.toAffine.Nonsingular x y) (h : (W.map i).toAffine.Nonsingular (i x) (i y)) :
     N • (Affine.Point.some (i x) (i y) h) = 0 ↔ N • (Affine.Point.some x y h₀) = 0 := by
-  letI : Algebra F K := i.toAlgebra
+  let : Algebra F K := i.toAlgebra
   let φ : W.toAffine.Point →+ (W.map i).toAffine.Point :=
     Affine.Point.map (W' := W.toAffine) (Algebra.ofId F K)
   have hφ : Function.Injective φ := Affine.Point.map_injective (W' := W.toAffine) (Algebra.ofId F K)

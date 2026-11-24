@@ -258,7 +258,7 @@ theorem freeRep_apply {P : Type} [Group P] {N : ℕ} (g : P) (x : Fin N → Mono
 theorem trace_freeRep {P : Type} [Group P] [Finite P] (N : ℕ) {g : P} (hg : g ≠ 1) :
     LinearMap.trace ℂ _ (freeRep P N g) = 0 := by
   classical
-  haveI := Fintype.ofFinite P
+  have := Fintype.ofFinite P
   let b := Pi.basis fun _ : Fin N => MonoidAlgebra.basis P ℂ
   have hb : ∀ (j : Fin N) (q : P), b ⟨j, q⟩ = Pi.single j (MonoidAlgebra.single q 1) := by
     intro j q
@@ -273,14 +273,14 @@ theorem trace_freeRep {P : Type} [Group P] [Finite P] (N : ℕ) {g : P} (hg : g 
     · subst hk
       simp [MonoidAlgebra.single_mul_single]
     · simp [hk]
-  rw [Matrix.diag_apply, LinearMap.toMatrix_apply, hmove, b.repr_self, Finsupp.single_apply, if_neg]
+  rw [Matrix.diag_apply, LinearMap.toMatrix_apply, hmove, b.repr_self, Finsupp.single_apply, ite_eq_right]
   intro h
   rw [Sigma.mk.inj_iff, heq_iff_eq] at h
   exact hg (mul_right_cancel (h.2.trans (one_mul p).symm))
 
 theorem finrank_free (P : Type) [Group P] [Finite P] (N : ℕ) :
     Module.finrank ℂ (Fin N → MonoidAlgebra ℂ P) = Nat.card P * N := by
-  haveI := Fintype.ofFinite P
+  have := Fintype.ofFinite P
   rw [Module.finrank_eq_card_basis (Pi.basis fun _ : Fin N => MonoidAlgebra.basis P ℂ),
     Fintype.card_sigma, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul,
     Nat.card_eq_fintype_card, mul_comm]
@@ -288,9 +288,9 @@ theorem finrank_free (P : Type) [Group P] [Finite P] (N : ℕ) :
 theorem free_of_trace_eq_zero : ∀ (P M : Type) [Group P] [Finite P] [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M] (ρ : Representation ℂ P M), (∀ g : P, g ≠ 1 → LinearMap.trace ℂ M (ρ g) = 0) → ∃ N : ℕ, Nat.card P * N = Module.finrank ℂ M ∧ Nonempty (ρ.asModule ≃ₗ[MonoidAlgebra ℂ P] (Fin N → MonoidAlgebra ℂ P)) := by
   intro P M _ _ _ _ _ ρ hρ
   classical
-  haveI := Fintype.ofFinite P
+  have := Fintype.ofFinite P
   have hcard : (Nat.card P : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
-  haveI : Invertible (Nat.card P : ℂ) := invertibleOfNonzero hcard
+  have : Invertible (Nat.card P : ℂ) := invertibleOfNonzero hcard
 
   have hz : ∀ g : P, g ≠ 1 → ρ.character g = 0 := hρ
   have havg := Representation.card_inv_mul_sum_char_eq_finrank ρ
@@ -304,7 +304,7 @@ theorem free_of_trace_eq_zero : ∀ (P M : Type) [Group P] [Finite P] [AddCommGr
       rw [← havg, ← mul_assoc, mul_inv_cancel₀ hcard, one_mul]
     exact_mod_cast hc
   refine ⟨N, hN, ?_⟩
-  haveI : FiniteDimensional ℂ (MonoidAlgebra ℂ P) :=
+  have : FiniteDimensional ℂ (MonoidAlgebra ℂ P) :=
     Module.Finite.of_basis (MonoidAlgebra.basis P ℂ)
 
   have hχ : ρ.character = (freeRep P N).character := by

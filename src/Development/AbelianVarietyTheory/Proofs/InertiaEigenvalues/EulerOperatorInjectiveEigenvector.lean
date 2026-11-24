@@ -246,7 +246,7 @@ theorem eulerOp_Zbound : ∀ (ι : Type) [DecidableEq ι] (X : ι → Type) (x0 
   · by_cases hx : x = x0 v
     · rw [hx]; simp [g]
     · rw [Function.update_of_ne hx]
-      simp only [g, if_neg hx, norm_smul]
+      simp only [g, ite_eq_right hx, norm_smul]
       exact (mul_le_mul_of_nonneg_left (hB _) (norm_nonneg _)).trans (by simp)
 
 theorem eulerOp_rec : ∀ (ι : Type) [DecidableEq ι] (X : ι → Type) (x0 : ∀ v, X v) (H : Type) [NormedAddCommGroup H] [NormedSpace ℂ H] [CompleteSpace H] (a : ∀ v, X v → ℂ) (s : ι → ℝ) (B : (∀ v, X v) → (H →L[ℂ] H)) (Z : ι → (H →L[ℂ] H)), (∀ v, a v (x0 v) = 1) → (∀ v (f : ∀ v, X v), {w | f w ≠ x0 w}.Finite → f v = x0 v → HasSum (fun x => a v x • B (Function.update f v x)) (B f * Z v)) → Summable (fun f : {f : ∀ v, X v // {w | f w ≠ x0 w}.Finite} => (∏ᶠ u, a u (f.1 u)) • B f.1) → ∀ (S : Finset ι) (v : ι), v ∉ S → HasSum (fun f : {f : {f : ∀ v, X v // {w | f w ≠ x0 w}.Finite} // ∀ w ∉ insert v S, f.1 w = x0 w} => (∏ᶠ u, a u (f.1.1 u)) • B f.1.1) ((∑' f : {f : {f : ∀ v, X v // {w | f w ≠ x0 w}.Finite} // ∀ w ∉ S, f.1 w = x0 w}, (∏ᶠ u, a u (f.1.1 u)) • B f.1.1) * Z v) := by
@@ -341,13 +341,13 @@ theorem eulerOp_normSummable (ι : Type) [DecidableEq ι] (X : ι → Type) (x0 
     apply finprod_eq_prod_of_mulSupport_subset
     intro w hw
     rw [Function.mem_mulSupport] at hw
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h; exact hw (by simp [h, ha0])
   have e2 : (∏ᶠ v, ‖a v (f.1 v)‖) = ∏ v ∈ hfin.toFinset, ‖a v (f.1 v)‖ := by
     apply finprod_eq_prod_of_mulSupport_subset
     intro w hw
     rw [Function.mem_mulSupport] at hw
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h; exact hw (by simp [h, ha0])
   rw [e1, e2, norm_prod]
   calc (∏ v ∈ hfin.toFinset, ‖a v (f.1 v)‖) * ‖B f.1‖ ≤ (∏ v ∈ hfin.toFinset, ‖a v (f.1 v)‖) * 1 :=
@@ -392,7 +392,7 @@ theorem eulerOp_injective_eigen : ∀ (ι : Type) [DecidableEq ι] (X : ι → T
     | empty => intro y; simp [hbase]
     | insert v S hv ih =>
       intro y
-      rw [hrec S v hv, Finset.prod_insert hv, ContinuousLinearMap.mul_apply]
+      rw [hrec S v hv, Finset.prod_insert hv, mul_apply_eq_comp]
       have h1 : ‖(Z v - 1) y‖ ≤ s v * ‖y‖ :=
         ((Z v - 1).le_opNorm y).trans (mul_le_mul_of_nonneg_right (hZb v) (norm_nonneg _))
       have h2 : ‖y‖ ≤ ‖Z v y‖ + ‖(Z v - 1) y‖ := by
@@ -409,7 +409,7 @@ theorem eulerOp_injective_eigen : ∀ (ι : Type) [DecidableEq ι] (X : ι → T
     | empty => intro y z _; simp [hbase]
     | insert v S hv ih =>
       intro y z hyz
-      rw [hrec S v hv, ContinuousLinearMap.mul_apply, hyz v, map_smul, ih y z hyz, Finset.prod_insert hv, smul_smul]
+      rw [hrec S v hv, mul_apply_eq_comp, hyz v, map_smul, ih y z hyz, Finset.prod_insert hv, smul_smul]
   have hWy : ∀ y, Tendsto (fun S => WS S y) atTop (𝓝 ((∑' f, t f) y)) := fun y =>
     ((ContinuousLinearMap.apply ℂ H y).continuous.tendsto _).comp hlim
   have hlowW : ∀ y, δ * ‖y‖ ≤ ‖(∑' f, t f) y‖ := fun y =>

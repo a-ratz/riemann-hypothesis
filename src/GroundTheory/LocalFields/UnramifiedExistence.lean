@@ -147,7 +147,7 @@ theorem exists_isPrimitiveRoot_card_pow_sub_one [IsSepClosed Ksep] {n : ℕ} (hn
   have : NeZero ((Nat.card 𝓀[K] ^ n - 1 : ℕ) : Ksep) := ⟨by
     rw [← map_natCast (algebraMap K Ksep)]
     exact (map_ne_zero_iff _ (algebraMap K Ksep).injective).mpr hK⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot Ksep _
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ksep _
 
 theorem isUnramifiedSubextension_adjoin {n : ℕ} (hn : n ≠ 0) {ζ : Ksep}
     (hζ : IsPrimitiveRoot ζ (Nat.card 𝓀[K] ^ n - 1)) :

@@ -46,11 +46,11 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem charpoly_smul_scale {K : Type} [Field K] [CharZero K] {n : ℕ} (M : Matrix (Fin n) (Fin n) K) {c : K}
     (hc : c ≠ 0) : (c • M).charpoly = M.charpoly.scaleRoots c := by
-  haveI : Infinite K := CharZero.infinite K
+  have : Infinite K := CharZero.infinite K
   apply Polynomial.eq_of_infinite_eval_eq
   refine Set.infinite_univ.mono ?_
   intro t _
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   have ht : t = c * (c⁻¹ * t) := by field_simp
   rw [ht, Polynomial.scaleRoots_eval_mul, Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin,
     Matrix.eval_charpoly, Matrix.eval_charpoly]
@@ -73,7 +73,7 @@ private theorem chi_comap_single {n : ℕ} {A G H : Type} [CommRing A] [Group G]
 
 private theorem chi_map_single {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Group G] (D : W.GDet n A G) (f : A →+* B)
     (g : G) : (D.map f).chi (MonoidAlgebra.single g 1) = (D.chi (MonoidAlgebra.single g 1)).map f := by
-  letI : Algebra A B[X] := ((algebraMap B B[X]).comp f).toAlgebra
+  let : Algebra A B[X] := ((algebraMap B B[X]).comp f).toAlgebra
   let F : A[X] →ₐ[A] B[X] :=
     { Polynomial.mapRingHom f with commutes' := fun a => by simp [RingHom.algebraMap_toAlgebra] }
   have h := D.nat A[X] B[X] F (MonoidAlgebra.single 1 X - MonoidAlgebra.single g 1)
@@ -90,7 +90,7 @@ private theorem chi_map_single {n : ℕ} {A B G : Type} [CommRing A] [CommRing B
 private theorem scale_point {A B K : Type} [CommRing A] [CommRing B] [Field K] [CharZero K] {n : ℕ} (i : B →+* A)
     (hi : Function.Injective i) (y : A →+* K) (p : B[X]) (M : Matrix (Fin n) (Fin n) A) (hp : p.map i = M.charpoly)
     (b : B) (hb : y (i b) ≠ 0) : (p.scaleRoots b).map (y.comp i) = (y (i b) • M.map y).charpoly := by
-  haveI : Nontrivial A := y.domain_nontrivial
+  have : Nontrivial A := y.domain_nontrivial
   have hlc : i p.leadingCoeff = 1 := by
     rw [← Polynomial.leadingCoeff_map_of_injective hi, hp]
     exact (Matrix.charpoly_monic M).leadingCoeff

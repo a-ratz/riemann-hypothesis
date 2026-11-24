@@ -118,7 +118,7 @@ theorem conv_finDosetSupp {k : Type} [CommRing k] {K : Subgroup G} (hK : IsComme
   obtain ⟨c, hc⟩ := QuotientGroup.mk_out_eq_mul K ((a : G) * t)
   refine ⟨x.out * (QuotientGroup.mk ((a : G) * t) : G ⧸ K).out, ?_, 1, c⁻¹ * b, ?_⟩
   · rw [Set.Finite.mem_toFinset, hTdef]
-    simp only [Set.mem_iUnion, Set.mem_singleton_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_singleton_iff, Set.mem_ofPred_eq]
     exact ⟨t, ht, x, h1, _, ⟨a, c, hc⟩, rfl⟩
   · rw [hc]
     have e : g = x.out * (x.out⁻¹ * g) := by group
@@ -145,16 +145,16 @@ theorem convolution_count_holds : Formalism.UG.ConvCount := by
   have hterm : ∀ x : G ⧸ K, dosetInd k K a x.out * dosetInd k K b (x.out⁻¹ * g) =
       if x ∈ S then 1 else 0 := by
     intro x
-    simp only [dosetInd, Set.indicator_apply, Pi.one_apply, hSdef, Set.mem_setOf_eq]
+    simp only [dosetInd, Set.indicator_apply, Pi.one_apply, hSdef, Set.mem_ofPred_eq]
     split_ifs <;> simp_all
   show ∑ᶠ x : G ⧸ K, dosetInd k K a x.out * dosetInd k K b (x.out⁻¹ * g) = _
   rw [finsum_congr hterm, finsum_eq_sum_of_support_subset _ (s := hfin.toFinset) ?_]
-  · rw [Finset.sum_congr rfl (fun x hx => if_pos (hfin.mem_toFinset.1 hx))]
+  · rw [Finset.sum_congr rfl (fun x hx => ite_eq_left (hfin.mem_toFinset.1 hx))]
     simp [Nat.card_coe_set_eq, Set.ncard_eq_toFinset_card _ hfin]
   · intro x hx
     rw [Function.mem_support] at hx
     rw [Set.Finite.coe_toFinset]
     by_contra h
-    exact hx (if_neg h)
+    exact hx (ite_eq_right h)
 
 end Formalism.UG.P

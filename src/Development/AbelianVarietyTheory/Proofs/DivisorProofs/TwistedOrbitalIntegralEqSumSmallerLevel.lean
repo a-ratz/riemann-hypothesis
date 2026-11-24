@@ -115,7 +115,7 @@ theorem cptPart_map_conj (T : Subgroup G) {γ : G} (hγ : γ ∈ T) :
 omit [TopologicalSpace G] [IsTopologicalGroup G] in
 theorem finsum_sigma_of_finite {ι : Type} {β : ι → Type} [∀ i, Finite (β i)] (h : (Σ i, β i) → ℂ)
     (hh : (support h).Finite) : ∑ᶠ p, h p = ∑ᶠ i, ∑ᶠ b, h ⟨i, b⟩ := by
-  letI : ∀ i, Fintype (β i) := fun i => Fintype.ofFinite _
+  let : ∀ i, Fintype (β i) := fun i => Fintype.ofFinite _
   set I := hh.toFinset.image Sigma.fst
   have h1 : support h ⊆ ((I.sigma fun _ => Finset.univ : Finset (Σ i, β i)) : Set _) := by
     intro p hp
@@ -136,9 +136,9 @@ omit [TopologicalSpace G] [IsTopologicalGroup G] in
 theorem finsum_orbits {H X : Type} [Group H] [MulAction H X] [Finite X] (φ : X → ℂ)
     (hφ : ∀ (h : H) y, φ (h • y) = φ y) :
     ∑ᶠ y, φ y = ∑ᶠ ω : orbitRel.Quotient H X, ((orbit H ω.out).ncard : ℂ) * φ ω.out := by
-  letI : Fintype X := Fintype.ofFinite X
-  haveI : Finite (orbitRel.Quotient H X) := Quotient.finite _
-  letI : Fintype (orbitRel.Quotient H X) := Fintype.ofFinite _
+  let : Fintype X := Fintype.ofFinite X
+  have : Finite (orbitRel.Quotient H X) := Quotient.finite _
+  let : Fintype (orbitRel.Quotient H X) := Fintype.ofFinite _
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype,
     ← Finset.sum_fiberwise Finset.univ (fun y => (Quotient.mk'' y : orbitRel.Quotient H X)) φ]
   refine Finset.sum_congr rfl fun ω _ => ?_
@@ -187,20 +187,20 @@ theorem twOrb_eq_sum_smallerLevel : ∀ (G : Type) [Group G] [TopologicalSpace G
   rw [hsecond]
   set S := K'.subgroupOf K with hSdef
   have hn : K'.relIndex K ≠ 0 := by
-    haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+    have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
     have ho : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := by
-      rw [Subgroup.coe_subgroupOf]; exact hK'o.preimage continuous_subtype_val
-    haveI := Subgroup.quotient_finite_of_isOpen _ ho
+      rw [Subgroup.coe_subgroupOf]; exact hK'o.preimage continuous_subtypeVal
+    have := Subgroup.quotient_finite_of_isOpen _ ho
     exact Subgroup.index_ne_zero_of_finite
-  haveI : S.FiniteIndex := ⟨hn⟩
-  haveI : Finite (K ⧸ S) := Subgroup.finite_quotient_of_finiteIndex
+  have : S.FiniteIndex := ⟨hn⟩
+  have : Finite (K ⧸ S) := Subgroup.finite_quotient_of_finiteIndex
   have avgK : ∀ x : G, avg (fun k : K => F (x * k)) = ((K'.relIndex K : ℕ) : ℂ)⁻¹ * ∑ᶠ y : K ⧸ S, F (x * (Quotient.out y : K)) := by
     intro x
     refine _root_.GlobalTheory.BCT.avg_eq_of_le_rStab K _ S (fun k hk => show ∀ z : K, F (x * ((z * k : K) : G)) = F (x * z) from fun z => ?_) hn
     rw [Subgroup.coe_mul, ← mul_assoc]
     exact FK _ _ (Subgroup.mem_subgroupOf.1 hk)
   let e := fib (Γ := T) (K := K) hK'K
-  haveI hfo : ∀ c : DoubleCoset.Quotient (T : Set G) (K : Set G), Finite (orbitRel.Quotient (Gam T K (Quotient.out c)) (K ⧸ S)) :=
+  have hfo : ∀ c : DoubleCoset.Quotient (T : Set G) (K : Set G), Finite (orbitRel.Quotient (Gam T K (Quotient.out c)) (K ⧸ S)) :=
     fun c => Quotient.finite _
   have hc : ∀ c : DoubleCoset.Quotient (T : Set G) (K : Set G),
       (((T ⊓ K.map (MulAut.conj (Quotient.out c)).toMonoidHom).relIndex C : ℕ) : ℂ) *
@@ -254,7 +254,7 @@ theorem twOrb_eq_sum_smallerLevel : ∀ (G : Type) [Group G] [TopologicalSpace G
   have hsupp : (support fun p => g (e.symm p)).Finite := by
     refine (hfin.preimage e.symm.injective.injOn).subset ?_
     intro p hp
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     intro h0
     exact hp (by simp only [g]; rw [show F (Quotient.out (e.symm p)) = 0 from h0, mul_zero])
   calc twOrb θ K δ f

@@ -71,7 +71,7 @@ namespace GlobalTheory.ValBoundDenom
 
 theorem exists_nat_le_exp (a : WithZero (Multiplicative ℤ)) : ∃ n : ℕ, a ≤ WithZero.exp (n : ℤ) := by
   induction a using WithZero.recZeroCoe with
-  | zero => exact ⟨0, zero_le'⟩
+  | zero => exact ⟨0, zero_le⟩
   | coe m =>
     refine ⟨(Multiplicative.toAdd m).toNat, ?_⟩
     show (m : WithZero (Multiplicative ℤ)) ≤ ((Multiplicative.ofAdd ((Multiplicative.toAdd m).toNat : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ))
@@ -247,7 +247,7 @@ theorem valuation_coeff_le {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {γ : P
   by_cases hi : i ≤ n
   swap
   · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by omega), Valuation.map_zero]
-    exact zero_le'
+    exact zero_le
   have hci : P.coeff i = P.coeff 0 * GlobalTheory.SplitPts.conjE E (P.coeff (n - i)) := by
     have := hrec (n - i) (Nat.sub_le n i)
     rwa [Nat.sub_sub_self hi] at this
@@ -260,7 +260,7 @@ theorem valuation_coeff_le {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {γ : P
   have hw0 : w.valuation E (P.coeff 0) ≤ γ u := by
     rw [eq_inv_of_mul_eq_one_left hv0]
     have hu0 : u.valuation E (P.coeff 0) ≠ 0 := right_ne_zero_of_mul_eq_one hv0
-    exact (inv_le_comm₀ (zero_lt_iff.2 hu0) (zero_lt_iff.2 (hγ0 u))).2 (hv u hu).2
+    exact (inv_le_comm₀ (pos_iff_ne_zero.2 hu0) (pos_iff_ne_zero.2 (hγ0 u))).2 (hv u hu).2
   rw [hci, Valuation.map_mul, valuation_conjE, sq]
   exact mul_le_mul' hw0 ((hv u hu).1 _)
 

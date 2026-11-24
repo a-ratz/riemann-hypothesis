@@ -383,7 +383,7 @@ theorem mR_inv_kE (hK : KIso) (a b : unitaryGroup (Fin n) ℂ) : mR (kE hK a b)�
   rw [h2, mR_kE]
 
 theorem continuous_mR : Continuous (fun g : GR n => mR g) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_kM : Continuous (fun ab : Matrix (Fin n) (Fin n) ℂ × Matrix (Fin n) (Fin n) ℂ => kM ab.1 ab.2) := by
   unfold kM
@@ -391,10 +391,10 @@ theorem continuous_kM : Continuous (fun ab : Matrix (Fin n) (Fin n) ℂ × Matri
 
 theorem continuous_kE (hK : KIso) (a : unitaryGroup (Fin n) ℂ) : Continuous (fun b : unitaryGroup (Fin n) ℂ => kE hK a b) := by
   refine continuous_induced_rng.2 ((Units.continuous_iff).2 ⟨?_, ?_⟩)
-  · exact (continuous_kM.comp (continuous_const.prodMk continuous_subtype_val)).congr
+  · exact (continuous_kM.comp (continuous_const.prodMk continuous_subtypeVal)).congr
       fun b => (mR_kE hK a b).symm
   · exact (continuous_kM.comp (continuous_const.prodMk
-      (continuous_subtype_val.comp continuous_inv))).congr fun b => (mR_inv_kE hK a b).symm
+      (continuous_subtypeVal.comp continuous_inv))).congr fun b => (mR_inv_kE hK a b).symm
 
 theorem continuous_second_cayley_block_map : Continuous (fun M : M2 n => u2 M) := by
   have h21 : Continuous (fun M : M2 n => M.toBlocks₂₁) := by
@@ -412,8 +412,8 @@ theorem lower_left_block_mul {X Y : M2 n} (hX : X.toBlocks₂₁ = 0) (hY : Y.to
 
 theorem projOp_of (hK : KIso) (hR : RepKer) (hI : Iwa) (hM : Mult) : ProjOp := by
   intro m n ε c t p q e sL ρ hL _ _ W hW hWinv
-  letI : MeasurableSpace (unitaryGroup (Fin n) ℂ) := borel _
-  haveI : BorelSpace (unitaryGroup (Fin n) ℂ) := ⟨rfl⟩
+  let : MeasurableSpace (unitaryGroup (Fin n) ℂ) := borel _
+  have : BorelSpace (unitaryGroup (Fin n) ℂ) := ⟨rfl⟩
   let μ : Measure (unitaryGroup (Fin n) ℂ) := Measure.haar
   let L : PX m n →ₗ[ℂ] (unitaryGroup (Fin n) ℂ → ℂ) :=
     LinearMap.funLeft ℂ ℂ (fun c : unitaryGroup (Fin n) ℂ => kE hK 1 c) ∘ₗ sL
@@ -455,7 +455,7 @@ theorem projOp_of (hK : KIso) (hR : RepKer) (hI : Iwa) (hM : Mult) : ProjOp := b
     rw [mR_kE]
     exact ((hK n).2.2.2.1 1 v.1).2
   have hκc : Continuous κ :=
-    hκ0c.comp ((continuous_second_cayley_block_map.comp (continuous_mR.comp continuous_subtype_val)).subtype_mk _)
+    hκ0c.comp ((continuous_second_cayley_block_map.comp (continuous_mR.comp continuous_subtypeVal)).subtype_mk _)
   have hint : ∀ g : KR n → ℂ, Continuous g →
       ∫ k, κ k * g k ∂(μ.map eK) = ∫ v, κ0 v * g (eK v) ∂μ := by
     intro g hg
@@ -478,7 +478,7 @@ theorem projOp_of (hK : KIso) (hR : RepKer) (hI : Iwa) (hM : Mult) : ProjOp := b
   · intro Q hQ y
     obtain ⟨p', c, hp', rfl⟩ := hdec y
     rw [hint (fun k : KR n => sL Q (p' * kE hK 1 c * (k : GR n)))
-      ((hL.cont Q).comp (continuous_const.mul continuous_subtype_val))]
+      ((hL.cont Q).comp (continuous_const.mul continuous_subtypeVal))]
     have h1 : ∀ v, κ0 v * sL Q (p' * kE hK 1 c * ((eK v : KR n) : GR n)) =
         F0 p q e p' * (κ0 v * L Q (c * v)) := by
       intro v
@@ -492,7 +492,7 @@ theorem projOp_of (hK : KIso) (hR : RepKer) (hI : Iwa) (hM : Mult) : ProjOp := b
     refine ⟨Q, hQ, fun y => ?_⟩
     obtain ⟨p', c, hp', rfl⟩ := hdec y
     rw [hint (fun k : KR n => f (p' * kE hK 1 c * (k : GR n)))
-      (hf.comp (continuous_const.mul continuous_subtype_val))]
+      (hf.comp (continuous_const.mul continuous_subtypeVal))]
     have h2 : ∀ v, κ0 v * f (p' * kE hK 1 c * ((eK v : KR n) : GR n)) =
         ((hLoc p' : ℂ) ^ w * F0 p q e p') * (κ0 v * f (kE hK 1 (c * v))) := by
       intro v

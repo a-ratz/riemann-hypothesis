@@ -117,7 +117,7 @@ theorem exists_mem_count_normalizedFactors_span_eq :
     refine lt_of_le_of_ne Ideal.mul_le_left fun h => hP.ne_top ?_
     have h' : I * P = I * ⊤ := by rw [h, Ideal.mul_top]
     exact mul_left_cancel₀ hI h'
-  obtain ⟨x, hxI, hxIP⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨x, hxI, hxIP⟩ := IsConcreteLE.exists_of_lt hlt
   have hx0 : x ≠ 0 := by
     rintro rfl
     exact hxIP (Submodule.zero_mem _)
@@ -205,7 +205,7 @@ private theorem eq_pow_count_normalizedFactors_of_uniformizer {R : Type} [CommRi
     apply hπ2
     rw [← Ideal.span_singleton_le_iff_mem, hA, pow_two]
     exact Ideal.mul_mono_right hle
-  obtain ⟨s, hsA, hsP⟩ := SetLike.not_le_iff_exists.1 hAP
+  obtain ⟨s, hsA, hsP⟩ := IsConcreteLE.not_le_iff_exists.1 hAP
   have hs0 : s ≠ 0 := by
     rintro rfl
     exact hsP (zero_mem _)
@@ -273,13 +273,13 @@ theorem map_eq_pow_count_of_ultrametric :
     have hy1 : ¬μ y < 1 := fun h => hc.2 ((hmem y).2 h)
     rw [not_lt] at hx1 hy1
     nlinarith [h0 x, h0 y]
-  haveI := hPprime
+  have := hPprime
   have haP : a ∈ P := (hmem a).2 hlt
   have hbot : P ≠ ⊥ := by
     intro h
     rw [h, Submodule.mem_bot] at haP
     exact ha haP
-  obtain ⟨π, hπ, hπ2⟩ : ∃ π ∈ P ^ 1, π ∉ P ^ 2 := SetLike.exists_of_lt
+  obtain ⟨π, hπ, hπ2⟩ : ∃ π ∈ P ^ 1, π ∉ P ^ 2 := IsConcreteLE.exists_of_lt
     (Ideal.pow_right_strictAnti P hbot hPtop (by norm_num : 1 < 2))
   rw [pow_one] at hπ
   have hone : ∀ x, x ∉ P → μ x = 1 := fun x hx =>
@@ -395,7 +395,7 @@ theorem absT_add_le (p : ℕ) [hp : Fact p.Prime] (la : HeightOneSpectrum (𝓞 
       FinRd.absT p la T e (x + y) ≤ FinRd.absT p la T e u := by
     intro u hu h
     unfold FinRd.absT
-    rw [if_neg hxy, if_neg hu]
+    rw [ite_eq_right hxy, ite_eq_right hu]
     refine Real.rpow_le_rpow_of_exponent_le hp1 (neg_le_neg ?_)
     exact div_le_div_of_nonneg_right (by exact_mod_cast h) hd.le
   rcases min_le_iff.1 (min_le_vV_add (V := T.V) hx hy hxy) with h | h
@@ -420,7 +420,7 @@ theorem absT_natCast (p : ℕ) [hp : Fact p.Prime] (la : HeightOneSpectrum (𝓞
   have he' : (e : ℝ) ≠ 0 := by exact_mod_cast ho.1.ne'
   have hr' : (ramOverZ la : ℝ) ≠ 0 := by exact_mod_cast hr.ne'
   unfold FinRd.absT
-  rw [if_neg hne, ho.2, hv, Real.rpow_neg hpos.le]
+  rw [ite_eq_right hne, ho.2, hv, Real.rpow_neg hpos.le]
   have : (((e : ℤ) * (ramOverZ la : ℤ) : ℤ) : ℝ) / ((e : ℝ) * (ramOverZ la : ℝ)) = 1 := by
     push_cast
     field_simp

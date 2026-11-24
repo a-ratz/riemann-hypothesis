@@ -169,7 +169,7 @@ theorem pure_apply {κ : Type} [Fintype κ] (f : GlobalTheory.IndefiniteRowSideF
   rw [finprod_eq_prod_of_mulSupport_subset _ (s := T)]
   · refine Finset.prod_congr rfl fun v hv => ?_
     rw [h2 v]
-    simp only [if_pos hv]
+    simp only [ite_eq_left hv]
   · intro v hv
     by_contra hvT
     have hvT' : v ∉ T := by simpa using hvT
@@ -315,7 +315,7 @@ theorem exists_pureLift : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     refine ((Filter.eventually_cofinite.1 hs).union l.2).subset fun v hv => ?_
     by_cases e : pv v (M.vac v) = s v
     · right
-      simp only [Set.mem_setOf_eq, LinearMap.comp_apply, e] at hv ⊢
+      simp only [Set.mem_ofPred_eq, LinearMap.comp_apply, e] at hv ⊢
       exact hv
     · left
       exact e
@@ -336,7 +336,7 @@ theorem exists_pureLift : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     refine ((Filter.eventually_cofinite.1 hφ).union (Filter.eventually_cofinite.1 hs)).subset fun v hv => ?_
     by_cases e : φ v = M.vac v
     · right
-      simp only [Set.mem_setOf_eq, e] at hv ⊢
+      simp only [Set.mem_ofPred_eq, e] at hv ⊢
       exact hv
     · left
       exact e

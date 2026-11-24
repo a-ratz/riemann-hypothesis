@@ -350,7 +350,7 @@ theorem UpperTheory.functional_vanishes_invariant :
       have : oneL E r i k = (1 : Matrix (Fin r) (Fin r) (Cinf E)) i k := rfl
       rw [this, Matrix.one_apply]
       split_ifs <;> simp
-    simp only [hc, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hc, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [j0, LinearMap.smul_apply, ← h4, h0, smul_zero]
 end -- clump:auto
 end -- clump:auto
@@ -423,15 +423,15 @@ theorem UpperTheory.integral_quotient_derivative_oneParameter_eq_zero :
     rfl
   rw [e hh] at ih
   rw [e hD] at iD ⊢
-  haveI : IsFiniteMeasure (muQ E r) := Reduction.isFiniteMeasure_quotientMeasure (K := E) (n := r) (mu1 E r)
-  haveI : SigmaFinite (muQ E r) := IsFiniteMeasure.toSigmaFinite _
-  haveI : SFinite (muQ E r) := instSFiniteOfSigmaFinite
+  have : IsFiniteMeasure (muQ E r) := Reduction.isFiniteMeasure_quotientMeasure (K := E) (n := r) (mu1 E r)
+  have : SigmaFinite (muQ E r) := IsFiniteMeasure.toSigmaFinite _
+  have : SFinite (muQ E r) := instSFiniteOfSigmaFinite
   set_option synthInstance.maxHeartbeats 200000 in
     refine flow_abs (muQ E r) (fun u => rightMul (rationalGLOne (K := E) (n := r)) ⟨c u, c1 u⟩) ?_
       (fun u => measurePreserving_rightMul (Γ := rationalGLOne (K := E) (n := r)) (mu1 E r) _)
       (fun u => (rightMulHomeomorph (rationalGLOne (K := E) (n := r)) _).measurableEmbedding) _ _ ?_ ih iD fun y u => ?_
     · exact flow_cont (rationalGLOne (K := E) (n := r)) (fun u => ⟨c u, c1 u⟩) (cc.subtype_mk c1)
-    · exact (isOpenQuotientMap_mk (rationalGLOne (K := E) (n := r))).isQuotientMap.continuous_iff.2 (cD.comp continuous_subtype_val)
+    · exact (isOpenQuotientMap_mk (rationalGLOne (K := E) (n := r))).isQuotientMap.continuous_iff.2 (cD.comp continuous_subtypeVal)
     · obtain ⟨g, rfl⟩ := mk_surjective (rationalGLOne (K := E) (n := r)) y
       have h1 := (hd (g * c u)).scomp_of_eq u ((hasDerivAt_id u).sub_const u) (by simp)
       rw [one_smul] at h1
@@ -693,11 +693,11 @@ private theorem coord_zL (τ : E →+* ℂ) (i k : Fin r) :
 
 private theorem uC_zL : uC E r (ιC E r (zL E r)) = j0 E r := by
   rw [uC_ιC, lie_eq_sum, j0]
-  simp only [coord_zL, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.smul_sum]
+  simp only [coord_zL, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.smul_sum]
 
 private theorem tr_zL (hr : 0 < r) : ∑ τ : E →+* ℂ, ∑ i, coord τ (zL E r i i) = 1 := by
   have hd : 0 < Module.finrank ℚ E := Module.finrank_pos
-  simp only [coord_zL, if_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, NumberField.Embeddings.card, nsmul_eq_mul]
+  simp only [coord_zL, ite_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, NumberField.Embeddings.card, nsmul_eq_mul]
   have h1 : (r : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hr.ne'
   have h2 : (Module.finrank ℚ E : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hd.ne'
   push_cast
@@ -1105,8 +1105,8 @@ private theorem idx_nat (b : Blo S r) (d : Dat S s) (i : Fin s) :
 private theorem sum_zero {M : Type} [AddCommMonoid M] (b : Blo S r) (d : Dat S s) (f : Fin (r + s) → M) :
     ∑ i ∈ Finset.univ.filter fun i => (Dat.cons b d).idx i = (z0 b d), f i = ∑ i, f (Fin.castAdd s i) := by
   rw [Finset.sum_filter, Fin.sum_univ_add, Finset.sum_eq_zero (s := (Finset.univ : Finset (Fin s))), add_zero]
-  · exact Finset.sum_congr rfl fun i _ => if_pos (idx_cast b d i)
-  · exact fun i _ => if_neg (by rw [idx_nat]; exact Fin.succ_ne_zero _)
+  · exact Finset.sum_congr rfl fun i _ => ite_eq_left (idx_cast b d i)
+  · exact fun i _ => ite_eq_right (by rw [idx_nat]; exact Fin.succ_ne_zero _)
 
 private theorem sum_succ {M : Type} [AddCommMonoid M] (b : Blo S r) (d : Dat S s) (j : Fin d.len) (f : Fin (r + s) → M) :
     ∑ i ∈ Finset.univ.filter fun i => (Dat.cons b d).idx i = (sc b d j), f i =
@@ -1114,7 +1114,7 @@ private theorem sum_succ {M : Type} [AddCommMonoid M] (b : Blo S r) (d : Dat S s
   rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_add, Finset.sum_eq_zero (s := (Finset.univ : Finset (Fin r))),
     zero_add]
   · exact Finset.sum_congr rfl fun i _ => if_congr (by rw [idx_nat]; exact Fin.succ_inj) rfl rfl
-  · exact fun i _ => if_neg (by rw [idx_cast]; exact (Fin.succ_ne_zero _).symm)
+  · exact fun i _ => ite_eq_right (by rw [idx_cast]; exact (Fin.succ_ne_zero _).symm)
 
 private theorem size_zero (b : Blo S r) (d : Dat S s) : (Dat.cons b d).size (z0 b d) = r := by
   rw [Dat.size, Finset.card_eq_sum_ones, sum_zero]; simp

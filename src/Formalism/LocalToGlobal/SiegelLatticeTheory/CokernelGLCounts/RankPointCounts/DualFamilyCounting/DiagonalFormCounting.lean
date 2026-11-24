@@ -295,7 +295,7 @@ theorem card_kerX_eq [Finite A] (hd : ∀ i, star (d i) = d i) {θ e : A}
     Nat.card {X : Matrix m m A // Xᴴ * diagonal d * X = diagonal d ∧ ∃ Y, X = 1 + Y * diagonal d} =
       N := by
   classical
-  haveI : Fintype A := Fintype.ofFinite A
+  have : Fintype A := Fintype.ofFinite A
   unfold phiH at hN
   have hHs : (diagonal d)ᴴ = diagonal d := by
     rw [Matrix.diagonal_conjTranspose]
@@ -317,7 +317,7 @@ theorem card_kerX_eq [Finite A] (hd : ∀ i, star (d i) = d i) {θ e : A}
         (Y + Yᴴ + Yᴴ * diagonal d * Y) ∈ tSet d := by
     intro Y
     rw [key]
-    simp only [tSet, Set.mem_setOf_eq]
+    simp only [tSet, Set.mem_ofPred_eq]
     constructor
     · intro h
       refine ⟨herm Y, ?_⟩
@@ -643,10 +643,10 @@ theorem card_phi_succ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭
     Nat.card {Y // phiQ K 𝔭 (k + 1) a Y = T} =
       Ideal.absNorm 𝔭 ^ (m * m) * Nat.card {Y // phiQ K 𝔭 k a Y = T.map (piQ K 𝔭 k)} := by
   classical
-  haveI := finite_quot (K := K) h𝔭 (k + 1)
-  haveI := finite_quot (K := K) h𝔭 k
-  haveI : Finite (Matrix (Fin m) (Fin m) (𝓞 K ⧸ extP K 𝔭 ^ (k + 1))) := inferInstanceAs (Finite (Fin m → Fin m → (𝓞 K ⧸ extP K 𝔭 ^ (k + 1))))
-  haveI : Finite (Matrix (Fin m) (Fin m) (𝓞 K ⧸ extP K 𝔭 ^ k)) :=
+  have := finite_quot (K := K) h𝔭 (k + 1)
+  have := finite_quot (K := K) h𝔭 k
+  have : Finite (Matrix (Fin m) (Fin m) (𝓞 K ⧸ extP K 𝔭 ^ (k + 1))) := inferInstanceAs (Finite (Fin m → Fin m → (𝓞 K ⧸ extP K 𝔭 ^ (k + 1))))
+  have : Finite (Matrix (Fin m) (Fin m) (𝓞 K ⧸ extP K 𝔭 ^ k)) :=
     inferInstanceAs (Finite (Fin m → Fin m → (𝓞 K ⧸ extP K 𝔭 ^ k)))
 
   have hJJ : ∀ x ∈ (RingHom.ker (piQ K 𝔭 k)), ∀ y ∈ (RingHom.ker (piQ K 𝔭 k)), x * y = 0 := by
@@ -808,7 +808,7 @@ theorem card_phi_succ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭
             rw [Matrix.map_add _ (map_add _), hY0, hker0 E.1.1 E.1.2, add_zero])⟩
         left_inv := fun x => Subtype.ext (Subtype.ext (add_sub_cancel _ _))
         right_inv := fun E => Subtype.ext (Subtype.ext (add_sub_cancel_left _ _)) }
-  haveI : Fintype {Y // phiQ K 𝔭 k a Y = T.map (piQ K 𝔭 k)} := Fintype.ofFinite _
+  have : Fintype {Y // phiQ K 𝔭 k a Y = T.map (piQ K 𝔭 k)} := Fintype.ofFinite _
   rw [← Nat.card_congr (Equiv.sigmaFiberEquiv f), Nat.card_sigma,
     Finset.sum_congr rfl (fun y _ => hfiber y), Finset.sum_const, Finset.card_univ,
     ← Nat.card_eq_fintype_card, smul_eq_mul, mul_comm]
@@ -1077,8 +1077,8 @@ private theorem exists_UJ_umat_eq_of_inUJ {A : Type*} [CommRing A] [StarRing A] 
 theorem phi_mod_p_holds : PhiModP := by
   intro K F _ _ _ _ _ _ _ hK 𝔭 h𝔭 m a ha
   classical
-  haveI := finite_quot (K := K) h𝔭 1
-  haveI : Subsingleton (𝓞 K ⧸ extP K 𝔭 ^ 0) :=
+  have := finite_quot (K := K) h𝔭 1
+  have : Subsingleton (𝓞 K ⧸ extP K 𝔭 ^ 0) :=
     Ideal.Quotient.subsingleton_iff.mpr (by rw [pow_zero, Ideal.one_eq_top])
   obtain ⟨θ, e, he⟩ := exists_unit_quot hK h𝔭 1
 

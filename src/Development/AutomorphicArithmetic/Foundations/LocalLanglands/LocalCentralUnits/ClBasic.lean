@@ -154,7 +154,7 @@ private theorem deg_one (c : IrrCl (GL (Fin 1) k)) :
       simp [GeneralLinearGroup.scalar]
     conv_lhs => rw [← hg]
     exact hc _ v
-  haveI := c.rep.irr
+  have := c.rep.irr
   have := Model.nontrivial_of_isIrreducible c.rep.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : c.rep.V)
   let S : Subrepresentation c.rep.ρ := ⟨Submodule.span ℂ {v}, fun g w hw => by

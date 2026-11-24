@@ -246,7 +246,7 @@ theorem lambert_lower {q : ℕ} {χ : DirichletCharacter ℂ q} (hχ : χ ^ 2 = 
       = (t : ℂ) ^ (d + 1) / (1 - (t : ℂ) ^ (d + 1)) := by
     intro d
     have : t ^ (d + 1) = (Real.exp (((d + 1 : ℕ) : ℝ) * α))⁻¹ := by
-      rw [ht, ← Real.exp_nat_mul, ← Real.exp_neg, mul_neg]
+      rw [ht, ← Real.exp_natCast_mul, ← Real.exp_neg, mul_neg]
     have h2 : (Real.exp (((d + 1 : ℕ) : ℝ) * α) - 1)⁻¹ = t ^ (d + 1) / (1 - t ^ (d + 1)) := by
       rw [this]
       have h3 : 0 < ((d + 1 : ℕ) : ℝ) * α := by positivity
@@ -284,7 +284,7 @@ theorem lambert_lower {q : ℕ} {χ : DirichletCharacter ℂ q} (hχ : χ ^ 2 = 
         pow_le_pow_of_le_one ht0.le ht1.le
           (Nat.pow_le_pow_left (Finset.mem_range.1 hm) 2)
       have h6 : t ^ (M ^ 2) = Real.exp (-1) := by
-        rw [ht, ← Real.exp_nat_mul, hα]
+        rw [ht, ← Real.exp_natCast_mul, hα]
         congr 1
         push_cast
         field_simp

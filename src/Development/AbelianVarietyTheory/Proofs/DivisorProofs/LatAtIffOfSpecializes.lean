@@ -153,13 +153,13 @@ theorem exists_trait_torusPart : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyN
   let ψ' : GK.left ⟶ G₁.left := h₁.1.lift _ (GK.hom ≫ spMap alg) (by rw [hK.1.w, Category.assoc])
   have hψ' : IsGrpPullback GK G₁ (spMap alg) ψ' :=
     h₁.cancel (hK.congr rfl (h₁.1.lift_fst _ _ _).symm) (h₁.1.lift_snd _ _ _)
-  letI := E.addCommGroup
-  haveI := E.free
-  haveI := E.finite
-  haveI := E.i_hom
+  let := E.addCommGroup
+  have := E.free
+  have := E.finite
+  have := E.i_hom
   obtain ⟨j, hj, ej⟩ := GlobalTheory.TorusPart.extend_torus_hom_dvr V G₁ hG₁ GK ψ' hψ' ⟨E⟩ (FractionRing V) (RingHom.id _) GK ψ'
     hψ' E.X E.i E.i_hom
-  haveI : IsLocalHom ψ := hψ
+  have : IsLocalHom ψ := hψ
   have hαl : IsLocalHom α := ⟨fun x hx => isUnit_iff_ne_zero.2 fun h0 => by simp [h0] at hx⟩
   have hβl : IsLocalHom β := ⟨fun x hx => by
     by_contra hn
@@ -232,11 +232,11 @@ theorem exists_prime_hom_of_not_surjective {X : Type} [AddCommGroup X] {r : ℕ}
   obtain ⟨y, hy⟩ := not_forall.1 hM
   have hQ : Nontrivial ((Fin r → ℤ) ⧸ M.range) :=
     ⟨⟨(y : (Fin r → ℤ) ⧸ M.range), 0, fun h => hy ((QuotientAddGroup.eq_zero_iff y).1 h)⟩⟩
-  haveI : AddGroup.FG ((Fin r → ℤ) ⧸ M.range) := inferInstance
+  have : AddGroup.FG ((Fin r → ℤ) ⧸ M.range) := inferInstance
   obtain ⟨n, κ, _, p, hp, e, ⟨f⟩⟩ := AddCommGroup.equiv_free_prod_directSum_zmod ((Fin r → ℤ) ⧸ M.range)
   suffices h : ∃ q, q.Prime ∧ ∃ ψ : ((Fin r → ℤ) ⧸ M.range) →+ ZMod q, Function.Surjective ψ by
     obtain ⟨q, hq, ψ, hψ⟩ := h
-    haveI := Fact.mk hq
+    have := Fact.mk hq
     refine ⟨q, hq, ψ.comp (QuotientAddGroup.mk' M.range), fun h => ?_, ?_⟩
     · obtain ⟨x, hx⟩ := hψ 1
       obtain ⟨z, rfl⟩ := QuotientAddGroup.mk'_surjective M.range x
@@ -262,11 +262,11 @@ theorem exists_prime_hom_of_not_surjective {X : Type} [AddCommGroup X] {r : ℕ}
       refine ⟨fun a b => f.injective ?_⟩
       have key : ∀ x : (Fin 0 →₀ ℤ) × DirectSum κ (fun j ↦ ZMod (p j ^ e j)), x = 0 := fun x => by
         refine Prod.ext (Finsupp.ext fun j => j.elim0) (DFinsupp.ext fun j => ?_)
-        haveI : Subsingleton (ZMod (p j ^ e j)) := by rw [h j, pow_zero]; infer_instance
+        have : Subsingleton (ZMod (p j ^ e j)) := by rw [h j, pow_zero]; infer_instance
         exact Subsingleton.elim _ _
       rw [key (f a), key (f b)]
     classical
-    haveI := Fact.mk (hp i)
+    have := Fact.mk (hp i)
     refine ⟨p i, hp i, ((ZMod.castHom (dvd_pow_self (p i) hi) (ZMod (p i))).toAddMonoidHom.comp
       ((DirectSum.component ℤ κ (fun j => ZMod (p j ^ e j)) i).toAddMonoidHom.comp
         (AddMonoidHom.snd _ _))).comp f.toAddMonoidHom, ?_⟩
@@ -275,7 +275,7 @@ theorem exists_prime_hom_of_not_surjective {X : Type} [AddCommGroup X] {r : ℕ}
     refine ⟨f.symm (0, DirectSum.lof ℤ κ (fun j => ZMod (p j ^ e j)) i (k : ZMod (p i ^ e i))), ?_⟩
     simp only [AddMonoidHom.coe_comp, Function.comp_apply, AddEquiv.coe_toAddMonoidHom,
       AddEquiv.apply_symm_apply, AddMonoidHom.coe_snd, LinearMap.toAddMonoidHom_coe,
-      DirectSum.component.lof_self, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe, ZMod.castHom_apply]
+      DirectSum.component.lof_self, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass, ZMod.castHom_apply]
     exact ZMod.cast_intCast (dvd_pow_self (p i) hi) k
 
 theorem isClosedImmersion_of_torusExtension (Ω : Type) [Field Ω] (H : Over (Spec (CommRingCat.of Ω)))
@@ -284,16 +284,16 @@ theorem isClosedImmersion_of_torusExtension (Ω : Type) [Field Ω] (H : Over (Sp
     (hker : ∀ (p : ℕ), p.Prime → ∀ φ : (Fin r → ℤ) →+ ZMod p, φ ≠ 0 →
       GlobalTheory.SplitTorus.torusMap (Spec (CommRingCat.of Ω)) φ ≫ v ≠ 1) :
     IsClosedImmersion v.left := by
-  letI := E.addCommGroup; letI := E.grpB
-  haveI := E.free; haveI := E.finite
-  haveI := E.i_hom; haveI := E.q_hom; haveI := E.isAbelian.proper
-  haveI : ConnectedSpace (Spec (CommRingCat.of Ω)) := GlobalTheory.SplitTorus.connectedSpace_of_isLocalRing Ω
+  let := E.addCommGroup; let := E.grpB
+  have := E.free; have := E.finite
+  have := E.i_hom; have := E.q_hom; have := E.isAbelian.proper
+  have : ConnectedSpace (Spec (CommRingCat.of Ω)) := GlobalTheory.SplitTorus.connectedSpace_of_isLocalRing Ω
   have h1 : v ≫ E.q = toUnit _ ≫ η[E.B] :=
     GlobalTheory.splitTorus_hom_proper_trivial_local Ω (Fin r → ℤ) E.B (v ≫ E.q) inferInstance
   let w := E.isKernel.lift v (toUnit _) h1
   have hw : w ≫ E.i = v := E.isKernel.lift_fst _ _ _
   have hmono : Mono E.i := ⟨fun a b e => E.isKernel.hom_ext e (toUnit_unique _ _)⟩
-  haveI : IsMonHom w := GlobalTheory.Serre.isMonHom_of_mul_comp w fun T x y => by
+  have : IsMonHom w := GlobalTheory.Serre.isMonHom_of_mul_comp w fun T x y => by
     rw [← cancel_mono E.i, MonObj.mul_comp (x ≫ w), Category.assoc, Category.assoc, Category.assoc, hw,
       MonObj.mul_comp]
   obtain ⟨M, hM⟩ := GlobalTheory.SplitTorus.exists_eq_torusMap w
@@ -387,7 +387,7 @@ theorem isClosedImmersion_special_of_local : ∀ (R : Type) [CommRing R] [IsLoca
   have : (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraMaps.baseChange R Ω).map u = (bcIso p (Fin r → ℤ)).inv ≫ v := by
     simp [v]
   rw [this, Over.comp_left]
-  haveI : IsIso (bcIso p (Fin r → ℤ)).inv.left :=
+  have : IsIso (bcIso p (Fin r → ℤ)).inv.left :=
     inferInstanceAs (IsIso ((Over.forget _).map (bcIso p (Fin r → ℤ)).inv))
   exact IsClosedImmersion.comp _ _
 
@@ -442,9 +442,9 @@ theorem closedImm_pullback {S S' : Scheme.{0}} (a : S' ⟶ S) {X Y : Over S} (v 
 theorem closedImm_of_pullback {k Ω : CommRingCat.{0}} (hk : IsField k) (hΩ : IsField Ω) (φ : k ⟶ Ω)
     {X Y : Over (Spec k)} (v : X ⟶ Y)
     (h : IsClosedImmersion ((Over.pullback (Spec.map φ)).map v).left) : IsClosedImmersion v.left := by
-  letI := hk.toField
-  letI := hΩ.toField
-  letI := φ.hom.toAlgebra
+  let := hk.toField
+  let := hΩ.toField
+  let := φ.hom.toAlgebra
   have hd := GlobalTheory.ClosedImmFieldDescent.isClosedImmersion_descendsAlong_fpqc
   have hq : (@Surjective ⊓ @Flat ⊓ @QuasiCompact : MorphismProperty Scheme.{0}) (Spec.map φ) :=
     GlobalTheory.ClosedImmFieldDescent.fpqc_specMap_field k Ω
@@ -518,7 +518,7 @@ theorem closedImm_of_pullTorus (h : IsGrpPullback G' G f φ) (i : splitTorus S X
   have k := pullTorus_left_comp_iso h i
   have e : ((Over.pullback f).map i).left = (bcIso f X).inv.left ≫ (pullTorus h i).left ≫ h.1.isoPullback.hom := by
     rw [k, ← Category.assoc, ← Over.comp_left, Iso.inv_hom_id, Over.id_left, Category.id_comp]
-  haveI : IsIso (bcIso f X).inv.left := inferInstanceAs (IsIso ((Over.forget _).map (bcIso f X).inv))
+  have : IsIso (bcIso f X).inv.left := inferInstanceAs (IsIso ((Over.forget _).map (bcIso f X).inv))
   rw [e]
   infer_instance
 
@@ -575,7 +575,7 @@ open GlobalTheory.SplitTorus (torusMap bcMap bcIso)
 
 theorem isTorPart_pullTorus_closed : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (G₁ : Over (Sp V)) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ (X₁ : Type) [AddCommGroup X₁] [Module.Free ℤ X₁] [Module.Finite ℤ X₁] (j : splitTorus (Sp V) X₁ ⟶ G₁), IsMonHom j → ∀ (GK : Over (Sp (FractionRing V))) [GrpObj GK] (ψ : GK.left ⟶ G₁.left) (hψ : IsGrpPullback GK G₁ (spMap (algebraMap V (FractionRing V))) ψ), IsTorPart (pullTorus hψ j) → ∀ (κ : Type) [Field κ] (b : V →+* κ), IsLocalHom b → ∀ (G₀ : Over (Sp κ)) [GrpObj G₀] (ψ₀ : G₀.left ⟶ G₁.left) (hψ₀ : IsGrpPullback G₀ G₁ (spMap b) ψ₀) (X₀ : Type) [AddCommGroup X₀] [Module.Free ℤ X₀] [Module.Finite ℤ X₀] (t₀ : splitTorus (Sp κ) X₀ ⟶ G₀), IsTorPart t₀ → Module.finrank ℤ X₀ = Module.finrank ℤ X₁ → IsTorPart (pullTorus hψ₀ j) := by
   intro V _ _ _ G₁ _ _ hG X₁ _ _ _ j hj GK _ ψ hψ hgen κ _ b hb G₀ _ ψ₀ hψ₀ X₀ _ _ _ t₀ ht₀ hr
-  haveI := hj
+  have := hj
   let e : X₁ ≃+ (Fin (Module.finrank ℤ X₁) → ℤ) := (Module.finBasis ℤ X₁).equivFun.toAddEquiv
   let u : splitTorus (Sp V) (Fin (Module.finrank ℤ X₁) → ℤ) ⟶ G₁ := torusMap (Sp V) e.toAddMonoidHom ≫ j
   have hu : IsMonHom u := inferInstance
@@ -586,14 +586,14 @@ theorem isTorPart_pullTorus_closed : ∀ (V : Type) [CommRing V] [IsDomain V] [I
       ← GlobalTheory.TorusFibreImm.closedImm_iff_residue u (FractionRing V) _]
     refine closedImm_of_pullTorus hψ u ?_
     rw [pullTorus_torusMap_comp, Over.comp_left]
-    haveI := isClosedImmersion_of_isTorPart hgen
-    haveI := isIso_torusMap (Sp (FractionRing V)) e
-    haveI : IsIso (torusMap (Sp (FractionRing V)) e.toAddMonoidHom).left :=
+    have := isClosedImmersion_of_isTorPart hgen
+    have := isIso_torusMap (Sp (FractionRing V)) e
+    have : IsIso (torusMap (Sp (FractionRing V)) e.toAddMonoidHom).left :=
       inferInstanceAs (IsIso ((Over.forget _).map (torusMap (Sp (FractionRing V)) e.toAddMonoidHom)))
     infer_instance
   have hsp := GlobalTheory.TorusFibre.isClosedImmersion_special_of_local V (FractionRing V) G₁ hG _ u hu
     (by
-      haveI := hgenU (FractionRing V) _ (spMap_fractionRing_closedPoint V)
+      have := hgenU (FractionRing V) _ (spMap_fractionRing_closedPoint V)
       exact (Over.forget _).mono_of_mono_map
         (inferInstanceAs (Mono ((Over.pullback (spMap (algebraMap V (FractionRing V)))).map u).left)))
   have hfib : IsClosedImmersion ((Over.pullback (spMap b)).map u).left := by
@@ -609,11 +609,11 @@ theorem isTorPart_pullTorus_closed : ∀ (V : Type) [CommRing V] [IsDomain V] [I
       rw [pullTorus_torusMap_comp, ← Category.assoc, ← GlobalTheory.SplitTorus.torusMap_comp,
         show e.symm.toAddMonoidHom.comp e.toAddMonoidHom = AddMonoidHom.id X₁ from by ext x; simp,
         GlobalTheory.SplitTorus.torusMap_id, Category.id_comp]
-    haveI := isIso_torusMap (Sp κ) e.symm
+    have := isIso_torusMap (Sp κ) e.symm
     rw [k]
     infer_instance
   obtain ⟨ρ, hρ⟩ := ht₀.factor (pullTorus hψ₀ j) inferInstance
-  haveI : Mono (torusMap (Sp κ) ρ) := by
+  have : Mono (torusMap (Sp κ) ρ) := by
     rw [hρ] at hmono'
     exact mono_of_mono _ t₀
   have hbij := bijective_of_mono_torusMap (κ := κ) hr ρ
@@ -681,13 +681,13 @@ theorem endo_of_closed {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsSeparated G.h
   have hw : u₁.left ≫ φ₁ = φ₁ ≫ u.left := by
     have := congrArg CommaMorphism.left (pa (𝟙 G₁))
     simpa [pushPt] using this
-  haveI := hu₁
+  have := hu₁
   obtain ⟨s, hs⟩ := hK.factor (pullTorus hψ (j ≫ u₁)) inferInstance
   rw [← pullTorus_torusMap_comp] at hs
   obtain ⟨_, _⟩ : QuasiCompact (spMap (algebraMap V (FractionRing V))) ∧
       IsSchemeTheoreticallyDominant (spMap (algebraMap V (FractionRing V))) :=
     GlobalTheory.ExtUnique.spec_fractionRing V (FractionRing V)
-  haveI : IsSeparated G₁.hom := MorphismProperty.of_isPullback h.1 ‹_›
+  have : IsSeparated G₁.hom := MorphismProperty.of_isPullback h.1 ‹_›
   have key : j ≫ u₁ = torusMap _ s ≫ j :=
     GlobalTheory.ExtUnique.over_hom_ext_of_isPullback
       (GlobalTheory.SplitTorus.isPullback_bcMap (spMap (algebraMap V (FractionRing V))) X)
@@ -712,11 +712,11 @@ theorem endo_of_closed {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsSeparated G.h
 theorem compat_of_closed : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (G : Over M.Z) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (I T : Type) (f : I → (G ⟶ G)) (gγ : T → (Over.mk M.pt ⟶ G)) (ζ : oˣ) (L : ℕ), 0 < L → ζ ^ L = 1 → IsUnit (L : o) → (∀ e, IsMonHom (f e)) → (∀ t, gγ t ^ L = 1) → ∀ (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (m : I → X →+ X) (c : T → X →+ ZMod L) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ξ : Sp V ⟶ M.Z) (a : o →+* V) (G₁ : Over (Sp V)) [GrpObj G₁] (φ₁ : G₁.left ⟶ G.left), IsGrpPullback G₁ G ξ φ₁ → ∀ (j : splitTorus (Sp V) X ⟶ G₁), IsMonHom j → (∀ t, ExtNear (gγ t) (ξ (closedPoint V))) → ∀ (GK : Over (Sp (FractionRing V))) [GrpObj GK] (ψ : GK.left ⟶ G₁.left) (hψ : IsGrpPullback GK G₁ (spMap (algebraMap V (FractionRing V))) ψ), IsTorPart (pullTorus hψ j) → ∀ (κ : Type) [Field κ] (b : V →+* κ), IsLocalHom b → ∀ (G₀ : Over (Sp κ)) [GrpObj G₀] (ψ₀ : G₀.left ⟶ G₁.left) (hψ₀ : IsGrpPullback G₀ G₁ (spMap b) ψ₀), IsTorPart (pullTorus hψ₀ j) → Compat f gγ ζ L m c (spMap b ≫ ξ) (b.comp a) (ψ₀ ≫ φ₁) (pullTorus hψ₀ j) → Compat f gγ ζ L m c ξ a φ₁ j := by
   intro o Ω _ _ _ M G _ _ hG I T f gγ ζ L hL hζ hLu hf hgγ X _ _ _ m c V _ _ _ ξ a G₁ _ φ₁ h j hj hext GK _ ψ hψ hK
     κ _ b hb G₀ _ ψ₀ hψ₀ h0 hC
-  haveI := hG.separated
-  haveI := hj
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have := hG.separated
+  have := hj
+  have : NeZero L := ⟨hL.ne'⟩
   refine ⟨fun e => ?_, fun t => ?_⟩
-  · haveI := hf e
+  · have := hf e
     exact endo_of_closed h j hψ hK hψ₀ h0 (f e) (m e) (hC.1 e)
   obtain ⟨z₀, hz₀, hv₀⟩ := hC.2 t
   have hζV : (Units.map a.toMonoidHom ζ) ^ L = 1 := by rw [← map_pow, hζ, map_one]
@@ -753,22 +753,22 @@ theorem compat_of_closed : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o 
   obtain ⟨W, hW, s', ⟨hW1, hW2⟩, hs', hsv⟩ := hv
   let H : Over.mk W.ι ⟶ G := Over.homMk hW hW1
   have hne : (W : Set M.Z).Nonempty := ⟨ξ (closedPoint V), by rw [← hs']; exact (s' (closedPoint V)).2⟩
-  haveI : Nonempty W.toScheme := ⟨⟨_, hne.some_mem⟩⟩
-  haveI : IsIntegral W.toScheme := isIntegral_of_isOpenImmersion W.ι
+  have : Nonempty W.toScheme := ⟨⟨_, hne.some_mem⟩⟩
+  have : IsIntegral W.toScheme := isIntegral_of_isOpenImmersion W.ι
   have hr : Set.range M.pt ⊆ Set.range W.ι := by
     rintro _ ⟨w, rfl⟩
     rw [Scheme.Opens.range_ι]
     exact M.top_le_preimage_pt hne (x := w) trivial
   let x₀ := IsOpenImmersion.lift W.ι M.pt hr
   have hx₀ : x₀ ≫ W.ι = M.pt := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsDominant (x₀ ≫ W.ι) := hx₀ ▸ M.isDominant_pt
-  haveI : IsDominant x₀ := IsDominant.of_comp_of_isOpenImmersion x₀ W.ι
+  have : IsDominant (x₀ ≫ W.ι) := hx₀ ▸ M.isDominant_pt
+  have : IsDominant x₀ := IsDominant.of_comp_of_isOpenImmersion x₀ W.ι
   have hHL : H ^ L = 1 := by
     let u : Over.mk M.pt ⟶ Over.mk W.ι := Over.homMk x₀ hx₀
     have hu : u ≫ H = gγ t := Over.OverMorphism.ext (hW2 x₀ hx₀)
     have e : u ≫ H ^ L = u ≫ 1 := by rw [comp_pow, hu, hgγ t, comp_one]
     apply Over.OverMorphism.ext
-    haveI : IsReduced (Over.mk W.ι).left := inferInstanceAs (IsReduced W.toScheme)
+    have : IsReduced (Over.mk W.ι).left := inferInstanceAs (IsReduced W.toScheme)
     refine ext_of_isDominant_of_isSeparated (s := G.hom) ?_ x₀ ?_
     · rw [Over.w, Over.w]
     · exact congrArg CommaMorphism.left e
@@ -864,13 +864,13 @@ open GlobalTheory.SplitTorus (torusMap bcMap)
 
 theorem compat_of_compat_field : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (G : Over M.Z) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (I T : Type) (f : I → (G ⟶ G)) (gγ : T → (Over.mk M.pt ⟶ G)) (ζ : oˣ) (L : ℕ), 0 < L → ζ ^ L = 1 → ∀ (X : Type) [AddCommGroup X] (m : I → X →+ X) (c : T → X →+ ZMod L) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ξ : Sp V ⟶ M.Z) (a : o →+* V) (G₁ : Over (Sp V)) [GrpObj G₁] (φ₁ : G₁.left ⟶ G.left), IsGrpPullback G₁ G ξ φ₁ → ∀ (j : splitTorus (Sp V) X ⟶ G₁), (∀ t, ExtNear (gγ t) (ξ (closedPoint V))) → ∀ (K : Type) [Field K] (b : V →+* K), Function.Injective b → ∀ (GK : Over (Sp K)) [GrpObj GK] (ψ : GK.left ⟶ G₁.left) (hψ : IsGrpPullback GK G₁ (spMap b) ψ), Compat f gγ ζ L m c (spMap b ≫ ξ) (b.comp a) (ψ ≫ φ₁) (pullTorus hψ j) → Compat f gγ ζ L m c ξ a φ₁ j := by
   intro o Ω _ _ _ M G _ _ hG I T f gγ ζ L hL hζ X _ m c V _ _ _ ξ a G₁ _ φ₁ h₁ j hext K _ b hb GK _ ψ hψ hK
-  haveI hsep : IsSeparated G.hom := hG.separated
-  haveI : Flat (splitTorusAff ZU X).hom := (GlobalTheory.ExtUnique.splitTorusAff_flat_and_isSeparated _ _).1
-  haveI : Flat (splitTorus (Sp V) X).hom := inferInstanceAs (Flat (pullback.snd _ _))
-  haveI : IsSchemeTheoreticallyDominant (spMap b) :=
+  have hsep : IsSeparated G.hom := hG.separated
+  have : Flat (splitTorusAff ZU X).hom := (GlobalTheory.ExtUnique.splitTorusAff_flat_and_isSeparated _ _).1
+  have : Flat (splitTorus (Sp V) X).hom := inferInstanceAs (Flat (pullback.snd _ _))
+  have : IsSchemeTheoreticallyDominant (spMap b) :=
     GlobalTheory.ExtUnique.isSchemeTheoreticallyDominant_spec_of_injective _ hb
-  haveI : QuasiCompact (spMap b) := inferInstance
-  haveI : IsSchemeTheoreticallyDominant (bcMap (spMap b) X) :=
+  have : QuasiCompact (spMap b) := inferInstance
+  have : IsSchemeTheoreticallyDominant (bcMap (spMap b) X) :=
     IsSchemeTheoreticallyDominant.of_isPullback (GlobalTheory.SplitTorus.isPullback_bcMap (spMap b) X).flip
   have hw : φ₁ ≫ G.hom = G₁.hom ≫ ξ := h₁.1.w
   refine ⟨fun e => ?_, fun t => ?_⟩
@@ -886,7 +886,7 @@ theorem compat_of_compat_field : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Alge
         _ = (pullTorus hψ (torusMap (Sp V) (m e) ≫ j)).left ≫ ψ ≫ φ₁ := h1
         _ = bcMap (spMap b) X ≫ (torusMap (Sp V) (m e) ≫ j).left ≫ φ₁ := by rw [reassoc_of% e2]
   · obtain ⟨zK, hzK, hvK⟩ := hK.2 t
-    haveI : NeZero L := ⟨hL.ne'⟩
+    have : NeZero L := ⟨hL.ne'⟩
     have huL : Units.map a.toMonoidHom ζ ^ L = 1 := by rw [← map_pow, hζ, map_one]
     let φh : Multiplicative X →* (Γ(Sp V, ⊤))ˣ :=
       { toFun := fun χ => unitOn (Units.map a.toMonoidHom ζ ^ (c t (Multiplicative.toAdd χ)).val)
@@ -1088,8 +1088,8 @@ theorem Compat.unique [IsSeparated G.hom] (hL : 0 < L) {X : Type} [AddCommGroup 
     subst hzz
     ext χ
     have h3 := congrArg Units.val (GlobalTheory.ZH.TorusPerp.unitOn_injective ((hz χ).symm.trans (hz' χ)))
-    simp only [Units.val_pow_eq_pow_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at h3
-    haveI : NeZero L := ⟨hL.ne'⟩
+    simp only [Units.val_pow_eq_pow_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at h3
+    have : NeZero L := ⟨hL.ne'⟩
     exact ZMod.val_injective _ (hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) h3)
 
 theorem LatAt.unique [IsSeparated G.hom] (hL : 0 < L) (hζ : ∀ (κ : Type) [Field κ] (a : o →+* κ), IsPrimitiveRoot (a ζ) L)
@@ -1118,7 +1118,7 @@ private theorem ratModel_isLocallyNoetherian {o Ω : Type} [CommRing o] [Field �
   intro U
   have h1 := HasRingHomProperty.appLE @LocallyOfFiniteType M.s this ⟨⊤, isAffineOpen_top _⟩ U (by simp)
   have : IsNoetherianRing Γ(Sp o, ⊤) := IsLocallyNoetherian.component_noetherian ⟨⊤, isAffineOpen_top _⟩
-  letI := (M.s.appLE ⊤ U.1 (by simp)).hom.toAlgebra
+  let := (M.s.appLE ⊤ U.1 (by simp)).hom.toAlgebra
   have : Algebra.FiniteType Γ(Sp o, ⊤) Γ(M.Z, U.1) := h1
   exact Algebra.FiniteType.isNoetherianRing Γ(Sp o, ⊤) Γ(M.Z, U.1)
 

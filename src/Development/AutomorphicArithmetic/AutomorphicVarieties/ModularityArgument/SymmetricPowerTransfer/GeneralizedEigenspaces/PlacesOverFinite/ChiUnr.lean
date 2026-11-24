@@ -89,7 +89,7 @@ private theorem cyc_one (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
   show cyclotomicCharacter Ω l σ.toRingEquiv = 1
   refine Units.ext (PadicInt.ext_of_toZModPow.mp fun n => ?_)
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have e1 := cyclotomicCharacter.spec (L := Ω) l σ.toRingEquiv ζ hζ.pow_eq_one
   have hv : ¬ A.valuation ((l ^ n : ℕ) : Ω) < 1 := by

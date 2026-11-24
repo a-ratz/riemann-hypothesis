@@ -281,7 +281,7 @@ theorem norm_R_sub_le [SFinite μ] {a : ℝ → G} {u : G} (ha : Continuous a) (
       have := enorm_sub_sq_le (c := fun s => φ (g * a s)) (f := fun t => ψ (g * a t)) (by fun_prop) (hd g)
       simpa [h0] using this
     have hmeas : Measurable fun p : G × ℝ => ‖ψ (p.1 * a p.2)‖ₑ ^ (2 : ℝ) :=
-      (Continuous.measurable (by fun_prop : Continuous fun p : G × ℝ => ψ (p.1 * a p.2))).enorm.pow_const _
+      (Continuous.measurable (by fun_prop : Continuous fun p : G × ℝ => ψ (p.1 * a p.2))).eNorm.pow_const _
     calc _ ≤ ∫⁻ g in stdDom Γ, (∫⁻ t in Set.Ioc (0 : ℝ) 1, ‖ψ (g * a t)‖ₑ ^ (2 : ℝ)) ∂μ := lintegral_mono hpt
       _ = ∫⁻ t in Set.Ioc (0 : ℝ) 1, (∫⁻ g in stdDom Γ, ‖ψ (g * a t)‖ₑ ^ (2 : ℝ) ∂μ) :=
         lintegral_lintegral_swap hmeas.aemeasurable
@@ -611,7 +611,7 @@ theorem exists_bump (μ : Measure (GA D V)) [μ.IsHaarMeasure] {N : Set (GA D V)
   have hφc : Continuous φ := Complex.continuous_re.comp hc.1
   have hφs : HasCompactSupport φ := hc.2.comp_left (g := Complex.re) rfl
   exact ⟨φ, hφ, h0, hs, hφc.integrable_of_hasCompactSupport hφs,
-    hφc.integral_pos_of_hasCompactSupport_nonneg_nonzero hφs h0 (x := 1) (by rw [h1]; exact one_ne_zero)⟩
+    hφc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hφs h0 (x := 1) (by rw [h1]; exact one_ne_zero)⟩
 
 theorem finiteDimensional_of_coercive (hP : GlobalTheory.Published.CuspDecayBound) (μ : Measure (GA D V)) [μ.IsHaarMeasure]
     [μ.IsMulRightInvariant] (Sb : Submodule ℂ (L2cusp V μ)) {N : Set (GA D V)} (hN : N ∈ 𝓝 (1 : GA D V))
@@ -925,7 +925,7 @@ theorem bd_inf (μ : Measure (GA D V)) [μ.IsHaarMeasure] (hθ : IsInfFam θ) (E
     (h : ∀ (τ : D.what₂.Tau) (Z : Matrix (Fin V.rank) (Fin V.rank) ℂ) (hZ : Z ∈ lieAt V τ),
       Bd μ hθ E (der hθ τ hZ)) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ X : LieN V, ∀ φ ∈ E, ‖io μ hθ (derInf hθ X φ)‖ ≤ C * ‖X‖ * ‖io μ hθ φ‖ := by
-  haveI : FiniteDimensional ℝ (LieN V) :=
+  have : FiniteDimensional ℝ (LieN V) :=
     inferInstanceAs (FiniteDimensional ℝ (∀ τ : D.what₂.Tau, (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.lieU (gramAt D V τ)).toSubmodule))
   let b := Module.finBasis ℝ (LieN V)
   have hb : ∀ i, Bd μ hθ E (derInf hθ (b i)) := fun i => Bd.sum _ fun τ _ => h τ _ _
@@ -1015,8 +1015,8 @@ theorem finite_of_bound (μ : Measure (GA D V)) [μ.IsHaarMeasure] [μ.IsMulRigh
 theorem cuspFinite : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), IsInfFam θ → ∀ (V : HSp D) (U : Subgroup (GA D V)), IsOpen (U : Set (GA D V)) → ∀ (ε : D.what₂.Tau → Fin V.rank → Bool) (fr : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ), GlobalTheory.Published.AutFin.IsFrameFam V ε fr → ∀ (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] [∀ τ, FiniteDimensional ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (ε τ)) (W τ)), (∀ τ, GlobalTheory.Published.AutFin.IsContRep (ρ τ)) → ∀ c : D.what₂.Tau → ℕ → ℂ, FiniteDimensional ℂ (Submodule.span ℂ {φ | φ ∈ GlobalTheory.Published.AutFin.forms θ V U ε fr ρ c ∧ IsCuspFun V φ}) := by
   intro D θ hθ V U hU ε fr hfr W _ _ _ ρ hρ c
   obtain ⟨μ, -, hμ, -⟩ := PositivityTheory.MatrixIdentityOffBase.exists_meas V
-  haveI := hμ
-  haveI := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
+  have := hμ
+  have := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
   let E : Submodule ℂ (Mc θ V) :=
     { carrier := {φ | φ.1 ∈ forms θ V U ε fr ρ c}
       add_mem' := by

@@ -84,7 +84,7 @@ variable (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem exists_inf : ∃ Θ : Ainf F ⊗[F] E →+* InfiniteAdeleRing E,
     ∀ a x, Θ (a ⊗ₜ[F] x) = GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.infiniteAdeleMap F E a * algebraMap E _ x := by
-  letI : Algebra F (InfiniteAdeleRing E) :=
+  let : Algebra F (InfiniteAdeleRing E) :=
     ((algebraMap E (InfiniteAdeleRing E)).comp (algebraMap F E)).toAlgebra
   let f : E →ₐ[F] InfiniteAdeleRing E := ⟨algebraMap E _, fun _ => rfl⟩
   let g : Ainf F →ₐ[F] InfiniteAdeleRing E :=
@@ -94,7 +94,7 @@ theorem exists_inf : ∃ Θ : Ainf F ⊗[F] E →+* InfiniteAdeleRing E,
 
 theorem exists_fin : ∃ Θ : Af F ⊗[F] E →+* FiniteAdeleRing (𝓞 E) E,
     ∀ a x, Θ (a ⊗ₜ[F] x) = GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.finiteAdeleMap F E a * algebraMap E _ x := by
-  letI : Algebra F (FiniteAdeleRing (𝓞 E) E) :=
+  let : Algebra F (FiniteAdeleRing (𝓞 E) E) :=
     ((algebraMap E (FiniteAdeleRing (𝓞 E) E)).comp (algebraMap F E)).toAlgebra
   let f : E →ₐ[F] FiniteAdeleRing (𝓞 E) E := ⟨algebraMap E _, fun _ => rfl⟩
   let g : Af F →ₐ[F] FiniteAdeleRing (𝓞 E) E :=

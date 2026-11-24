@@ -285,7 +285,7 @@ theorem vAdd_of_inCodiff {x : K} (hx : x ≠ 0) (h : InCodiff x) (la : HeightOne
       Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.mpr hI) la.associates_irreducible]
     unfold vDiff
     omega
-  rw [Ideal.dvd_iff_le, SetLike.not_le_iff_exists] at hnd
+  rw [Ideal.dvd_iff_le, IsConcreteLE.not_le_iff_exists] at hnd
   obtain ⟨y, hyI, hyn⟩ := hnd
   have hy0 : y ≠ 0 := by
     rintro rfl
@@ -1405,7 +1405,7 @@ theorem Bd_mul (h0 : ∀ w, n w 0 = 0) (hnn : ∀ w x, 0 ≤ n w x) (hadd : ∀ 
     conv_lhs => rw [polynomial_eq_sum_monomials c c1, polynomial_eq_sum_monomials c' c1']
     rw [Finset.sum_mul_sum]
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
-    rw [MvPolynomial.monomial_mul]
+    rw [MvPolynomial.monomial_mul_monomial]
   rw [hpq]
   have key : Bd inc n (add w w') (∑ a ∈ c.support, ∑ b ∈ c'.support,
       MvPolynomial.monomial (a + b) (inc w (c a) * inc w' (c' b)))
@@ -1593,7 +1593,7 @@ theorem Cf_mul (p0 : ∀ w, Pr w 0) (padd : ∀ w x y, Pr w x → Pr w y → Pr 
     conv_lhs => rw [polynomial_eq_sum_monomials c c1, polynomial_eq_sum_monomials c' c1']
     rw [Finset.sum_mul_sum]
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
-    rw [MvPolynomial.monomial_mul]
+    rw [MvPolynomial.monomial_mul_monomial]
   rw [hpq]
   refine gp_Cf_sum p0 padd _ _ fun a _ => gp_Cf_sum p0 padd _ _ fun b _ => ?_
   obtain ⟨H, H1, H2⟩ := pmul w w' (c a) (c' b) (c2 a) (c2' b)

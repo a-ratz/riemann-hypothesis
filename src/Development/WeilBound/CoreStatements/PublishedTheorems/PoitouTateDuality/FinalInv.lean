@@ -130,8 +130,8 @@ theorem exists_chi' (Kf : FiniteSubfield) [NumberField Kf.1] [IsAlgClosure Kf.1 
   have hm0 : (Nat.card 𝓀[v.adicCompletion Kf.1] ^ (N : ℕ) - 1) ≠ 0 := by
     have := GroundTheory.LocalField.one_lt_card_residueField_pow (K := v.adicCompletion Kf.1) N.ne_zero
     omega
-  haveI : NeZero (Nat.card 𝓀[v.adicCompletion Kf.1] ^ (N : ℕ) - 1) := ⟨hm0⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (AlgebraicClosure ℚ) (Nat.card 𝓀[v.adicCompletion Kf.1] ^ (N : ℕ) - 1)
+  have : NeZero (Nat.card 𝓀[v.adicCompletion Kf.1] ^ (N : ℕ) - 1) := ⟨hm0⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (AlgebraicClosure ℚ) (Nat.card 𝓀[v.adicCompletion Kf.1] ^ (N : ℕ) - 1)
   have hιξ : IsPrimitiveRoot (ι ξ) (Nat.card 𝓀[v.adicCompletion Kf.1] ^ (N : ℕ) - 1) := hξ.map_of_injective ι.toRingHom.injective
   have hmA : ¬ A.valuation (((Nat.card 𝓀[v.adicCompletion Kf.1] ^ (N : ℕ) - 1) : ℕ) : AlgebraicClosure ℚ) < 1 := by
     intro h
@@ -171,7 +171,7 @@ theorem exists_chi' (Kf : FiniteSubfield) [NumberField Kf.1] [IsAlgClosure Kf.1 
     rw [isOpen_iff_forall_mem_open]
     intro g hg
     refine ⟨Subtype.val ⁻¹' {τ : G Kf.1 (AlgebraicClosure ℚ) | τ ξ = (g : G Kf.1 (AlgebraicClosure ℚ)) ξ},
-      fun g' hg' => ?_, continuous_subtype_val.isOpen_preimage _
+      fun g' hg' => ?_, continuous_subtypeVal.isOpen_preimage _
         (isOpen_setOf_apply (F := Kf.1) ξ (fun y => y = (g : G Kf.1 (AlgebraicClosure ℚ)) ξ)), rfl⟩
     have h1 := (key g (χ g).val).1 (ZMod.natCast_zmod_val _)
     have h2 : (((χ g).val : ℕ) : ZMod (N : ℕ)) = χ g' := (key g' (χ g).val).2 (by
@@ -334,7 +334,7 @@ theorem exists_root_of_unity_preimage
       rw [map_mul]; exact kummer_coc hζ hy0 κ hκ _ _
     simp only [hrho, hκev, hχadd]
     ring
-  haveI : IsDiscreteRep (Rep.res (gsFinFamily S ιs v).toMonoidHom (gsRoots S (l ^ r))) := isDiscreteRep_res_gsRoots S ιs (l ^ r) v
+  have : IsDiscreteRep (Rep.res (gsFinFamily S ιs v).toMonoidHom (gsRoots S (l ^ r))) := isDiscreteRep_res_gsRoots S ιs (l ^ r) v
   exact exists_cocycle_of_dn (Rep.res (gsFinFamily S ιs v).toMonoidHom (gsRoots S (l ^ r))) rhoV e heq _ hlc hdn
 
 end Local
@@ -475,10 +475,10 @@ theorem brauerInv_galCupClass_urPsi (N : ℕ+) (ϖ : Kˣ) (hϖ : ord (ϖ : K) = 
     brauerInvZOfIsSepClosure K Ω (galCupClass K Ω (urPsi (K := K) (Ω := Ω) N) ϖ) =
       zmodToQZ (N : ℕ) 1 := by
   obtain ⟨σ, hσ⟩ := unramifiedDegree_surjective (K := K) (Ω := Ω) (Multiplicative.ofAdd 1)
-  letI := algebraicValuativeRel K Ω
-  letI := algebraicTopology K Ω
-  haveI := algebraicTopology_isValuativeTopology K Ω
-  haveI := algebraicValuativeRel_valuativeExtension K Ω
+  let := algebraicValuativeRel K Ω
+  let := algebraicTopology K Ω
+  have := algebraicTopology_isValuativeTopology K Ω
+  have := algebraicValuativeRel_valuativeExtension K Ω
   have hψ : ∀ g ∈ (unramifiedDegree K Ω).ker,
       (urPsi (K := K) (Ω := Ω) N) (Additive.ofMul g) = 0 := by
     intro g hg
@@ -687,7 +687,7 @@ theorem found_side_inv' (Kf : FiniteSubfield) [NumberField Kf.1] [IsAlgClosure K
           maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) S) : AlgebraicClosure ℚ) =
           ζ ^ (κ (ev (s 0)) * χ (ev (s 1))).val) :
     gsLocalInvRootsQZ S ιs (l ^ r) v (cohomologyπ _ 2 x0) = - zmodToQZ (l ^ r) 1 := by
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
   refine (DFunLike.congr_fun (gsLocalInvRootsQZ_eq S ιs (l ^ r) v) (cohomologyπ _ 2 x0)).trans ?_
   refine (inv_push _ _ (rootsLocalMorZ S ιs (l ^ r) v) _ x0).trans ?_
   have hϖ0 := ord_ne_zero_loc (Kf := Kf) (v := v) hϖ
@@ -958,10 +958,10 @@ theorem exists_kummer' (F : Type) [Field F] [NumberField F] {l r : ℕ} [Fact l.
     intro b
     have hset : κ ⁻¹' {b} = Subtype.val ⁻¹' {τ : G F (AlgebraicClosure ℚ) | τ y = ζ ^ b.val * y} := by
       ext g
-      simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq]
       exact hκ_iff g b
     rw [hset]
-    exact (isOpen_setOf_apply (F := F) y (fun z => z = ζ ^ b.val * y)).preimage continuous_subtype_val
+    exact (isOpen_setOf_apply (F := F) y (fun z => z = ζ ^ b.val * y)).preimage continuous_subtypeVal
   · intro g h
     set c := ((cycMod F (AlgebraicClosure ℚ) l r (g : G F (AlgebraicClosure ℚ)) : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)) with hc
     have hgζ : (g : G F (AlgebraicClosure ℚ)) ζ = ζ ^ c.val := by
@@ -1003,7 +1003,7 @@ theorem exists_uniformizer_ord' (F : Type) [Field F] [NumberField F] (v : Height
       ord ((ϖ : F) : v.adicCompletion F) = 1 := by
   have hlt : v.asIdeal ^ (1 + 1) < v.asIdeal ^ 1 := Ideal.pow_succ_lt_pow v.ne_bot 1
   rw [pow_one] at hlt
-  obtain ⟨ϖ, hϖ, hϖ2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨ϖ, hϖ, hϖ2⟩ := IsConcreteLE.exists_of_lt hlt
   refine ⟨ϖ, hϖ, hϖ2, ?_⟩
   apply GroundTheory.Global.ord_eq_one_of_valued_eq_exp
   have h0 : ϖ ≠ 0 := by
@@ -1229,9 +1229,9 @@ theorem invMatch_nsmul_B (Kf : FiniteSubfield) [NumberField Kf.1] [IsAlgClosure 
     (h : (Submodule.Quotient.mk z : H2 (muLoc Kf.1 l r A)) = n • Submodule.Quotient.mk z') :
     cohomologyπ _ 2 x = n • cohomologyπ _ 2 x' := by
   classical
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
   have hmem : ζ ∈ maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) S := by
-    haveI : IsGalois Kf.1 (AlgebraicClosure ℚ) := IsAlgClosure.isGalois _ _
+    have : IsGalois Kf.1 (AlgebraicClosure ℚ) := IsAlgClosure.isGalois _ _
     refine mem_maxUnramifiedOutside_of_pow_eq_one S (pow_ne_zero r (Fact.out : l.Prime).ne_zero) ?_
       hζ.pow_eq_one
     intro w hw hm

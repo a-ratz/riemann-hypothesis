@@ -62,7 +62,7 @@ theorem jm_const (n : ℕ) (s : Bool) :
 
 theorem kset_const (n : ℕ) (s : Bool) : Formalism.REAL.Kset (fun _ : Fin n => s) = UJset (fun _ : Fin n => s) := by
   ext g
-  simp only [Formalism.REAL.Kset, UJset, Formalism.REAL.inUJ, jm_const, Set.mem_setOf_eq, Matrix.mem_unitaryGroup_iff',
+  simp only [Formalism.REAL.Kset, UJset, Formalism.REAL.inUJ, jm_const, Set.mem_ofPred_eq, Matrix.mem_unitaryGroup_iff',
     Matrix.star_eq_conjTranspose]
   cases s <;> simp
 
@@ -81,7 +81,7 @@ theorem isDS_const_top {n : ℕ} {s : Bool} {H : Type} [NormedAddCommGroup H] [I
     IsKTypeOf (fun _ => s) σ (Formalism.QuantumDeterminants.lowK (fun _ => s) lam) ⊤ := by
   obtain ⟨_, _, _, hirr, _, ⟨S, hS⟩, _⟩ := h
   have hfd := hS.1
-  rcases hirr S S.closed_of_finiteDimensional (fun g hg v hv => hS.2.1 g (by rwa [kset_const]) v hv) with h0 | h1
+  rcases hirr S S.isClosed_of_finiteDimensional (fun g hg v hv => hS.2.1 g (by rwa [kset_const]) v hv) with h0 | h1
   · obtain ⟨v, hv, hv0, _⟩ := hS.2.2.2.1
     exact absurd (by simpa [h0] using hv) hv0
   · rwa [h1] at hS

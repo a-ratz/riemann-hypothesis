@@ -742,7 +742,7 @@ theorem integrable_K {T : HSp D} {n : ℕ} {K : Subgroup (GA D T)} (hK : IsCompa
   have hKB : BorelSpace K := Subtype.borelSpace _
   have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have hc : Continuous fun k : K => Φ (mm (mt T ((k : GA D T)⁻¹)) x) :=
-    hΦ.comp (((continuous_mt T).comp continuous_subtype_val.inv).matrix_mul continuous_const)
+    hΦ.comp (((continuous_mt T).comp continuous_subtypeVal.inv).matrix_mul continuous_const)
   exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
 end GlobalTheory.CompanionTheory.ColumnSplitting.IkLintProof
@@ -753,9 +753,9 @@ namespace GlobalTheory.CompanionTheory.ColumnSplitting
 open IkLintProof in
 theorem ikLint : IkLint := by
   intro D n t B W d I θ hθ M hM hn a
-  haveI := I.probK
+  have := I.probK
   obtain ⟨𝓕, hμ⟩ := I.cov₁
-  haveI := hμ.1
+  have := hμ.1
   have hK := (GlobalTheory.RegSch.FirstTermCompare.hasIw_of_good d I.good).2
   have hP : projS I.νK M ∈ schwartzA θ B.rank n := GlobalTheory.T.compactAverageSchwartzProjection_mem_adelicSchwartz D θ hθ B n I.l.K hK I.νK I.probK _ hM
   have hc : Continuous M := (GlobalTheory.CompanionTheory.WeilTheta.schwartzA_continuous_and_dominated D θ hθ _ _ M hM).1
@@ -1210,7 +1210,7 @@ theorem orbFin_of_latBound : LatBound → OrbFin := by
     (GlobalTheory.SchwartzMaj.continuous_and_le_maj D θ hθ W.rank W.rank N
       (GlobalTheory.SchwartzPure.isSchwartzBruhat_of_mem_schwartzA D θ hθ W.rank W.rank N hN)).1
   have hfm : Measurable fun h : GA D W => ‖N (ww W x₀ h)‖ₑ :=
-    (hNc.comp (continuous_ww x₀)).enorm.measurable
+    (hNc.comp (continuous_ww x₀)).eNorm.measurable
 
   classical
   have hu : ∀ γ : GQ W, ∃ u : GL (Fin W.rank) D.host.E, mt W γ.1 = rat u.1 := fun γ => by
@@ -1343,14 +1343,14 @@ theorem nuT_supp : ZpEq → AcEq → ∀ (D : D7) (n t : ℕ) (B W : HSp D) (d :
       ip B z.1 z.1 = (1 : AE D) • rat b₀.1 ∧ qv B b₀ z = 0)} =
       {z | ip B z.1 z.1 = rat b₀.1 ∧ qv B b₀ z = 0}ᶜ := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_compl_iff, one_smul, true_and]
+    simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, one_smul, true_and]
   rw [hS]
   unfold nuT
   rw [Measure.map_apply (measurable_pi hn I x₀) hcl.measurableSet.compl]
   have hE : (fun p : I.l.K × Par D n t W => ac B ((p.1 : GA D B)⁻¹) (zp d hn x₀ p.2)) ⁻¹'
       {z | ip B z.1 z.1 = rat b₀.1 ∧ qv B b₀ z = 0}ᶜ = ∅ := by
     ext p
-    simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+    simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
     obtain ⟨a1, -, a3⟩ := hA D W.rank t B b₀ ((p.1 : GA D B)⁻¹) (zp d hn x₀ p.2)
     obtain ⟨z1, -, z3⟩ := hZ D n t B W d hn b₀ hb x₀ hx p.2
     exact ⟨a1.trans z1, a3.trans z3⟩
@@ -1576,7 +1576,7 @@ theorem sA_stab (hL : Law) {d : HypDec B W t} (hn : W.rank + t = n) (I : IkD d n
     unfold sA
     congr 1
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, ← ac_mul, mul_inv_rev, Subgroup.coe_inv]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, ← ac_mul, mul_inv_rev, Subgroup.coe_inv]
   rw [e, h1, map_inv, inv_inv]
   rfl
 
@@ -1604,7 +1604,7 @@ theorem nuT_map_ac (hQ : QK) (hL : Law) (D : D7) (n t : ℕ) (B W : HSp D) (d : 
   unfold sA
   congr 1
   ext z
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, ← ac_mul, mul_inv_rev, inv_inv]
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, ← ac_mul, mul_inv_rev, inv_inv]
 
 end GlobalTheory.CompanionTheory.ColumnSplitting.InvU
 

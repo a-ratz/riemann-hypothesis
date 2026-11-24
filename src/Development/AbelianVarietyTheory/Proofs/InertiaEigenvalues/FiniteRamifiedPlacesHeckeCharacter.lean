@@ -201,7 +201,7 @@ theorem finite_ramified_places_hecke_character {D : D7} (χ : Formalism.L2.Host.
   have hI : Ideal.span {((D.host.g 0 * D.host.g 1 : ℕ) : 𝓞 D.host.E)} ≠ 0 := by
     rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   refine (Ideal.finite_factors hI).subset fun w hw => ?_
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   rw [Ideal.dvd_span_singleton]
   by_contra hc
   refine hw (h w fun k hk => hc ?_)

@@ -58,7 +58,7 @@ private theorem norm_psi (a : A F) : ‖ψ a‖ = 1 := by
   exact Circle.norm_coe _
 
 private theorem cont_psi : Continuous (ψ : A F → ℂ) :=
-  continuous_subtype_val.comp continuous_adelicChar
+  continuous_subtypeVal.comp continuous_adelicChar
 
 private theorem B_add (δ : F) (y v v' : V4 F) : B4 δ y (v + v') = B4 δ y v + B4 δ y v' := by
   simp only [B4, Pi.add_apply]

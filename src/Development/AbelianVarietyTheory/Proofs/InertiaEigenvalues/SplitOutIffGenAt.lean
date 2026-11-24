@@ -73,7 +73,7 @@ theorem sys_of_genAt {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : SideA D cf
     (h : GenAt D (D.what₂.places.resChar w) (C.Q w) v k) :
     sys L i x v k = iotaO L.X.nd L.Y.naut i ((L.X.nd.hT i v k : L.X.nd.X i → L.X.nd.O i) x) := by
   unfold sys
-  rw [if_pos ((splitOut_iff_genAt hB hi v k).2 h)]
+  rw [ite_eq_left ((splitOut_iff_genAt hB hi v k).2 h)]
 
 theorem sys_of_not_genAt {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : SideA D cf jE} {M : MtFam D} {C : NChoice D}
     {tup : D.what₂.Tup → Fin D.R.m → HChar D.host.E} {big : D.what₂.places.Pl → Finset ℂ} {L : LocAll (lay0 D)}
@@ -81,7 +81,7 @@ theorem sys_of_not_genAt {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : SideA 
     (hi : i ∈ L.X.nd.locs j w) (x : L.X.nd.X i) {v : PlE D.host} {k : ℕ}
     (h : ¬ GenAt D (D.what₂.places.resChar w) (C.Q w) v k) : sys L i x v k = 0 := by
   unfold sys
-  rw [if_neg (fun h' => h ((splitOut_iff_genAt hB hi v k).1 h'))]
+  rw [ite_eq_right (fun h' => h ((splitOut_iff_genAt hB hi v k).1 h'))]
 
 theorem sys_mem {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : SideA D cf jE} {M : MtFam D} {C : NChoice D}
     {tup : D.what₂.Tup → Fin D.R.m → HChar D.host.E} {big : D.what₂.places.Pl → Finset ℂ} {L : LocAll (lay0 D)}
@@ -128,7 +128,7 @@ theorem sys_inj (L : LocAll (lay0 D)) (i : L.X.nd.Loc) {x x' : L.X.nd.X i} (h : 
     have hv : SplitOut L.X.nd i v ∧ 1 ≤ k ∧ k ≤ D.R.nV := ⟨⟨hs, hl, hS, hQ⟩, k1, k2⟩
     have := congrFun (congrFun h v) k
     unfold sys at this
-    rw [if_pos hv, if_pos hv] at this
+    rw [ite_eq_left hv, ite_eq_left hv] at this
     exact iotaO_injective L i this
   exact hle hf
 

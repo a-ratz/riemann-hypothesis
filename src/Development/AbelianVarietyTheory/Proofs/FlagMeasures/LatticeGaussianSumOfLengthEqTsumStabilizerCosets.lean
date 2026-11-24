@@ -246,7 +246,7 @@ theorem gaussSum_cosets : ∀ (I : AutInst) (s : Bool) (x : Fin I.n → I.E), st
       have hmemF : γ * (r y)⁻¹ ∈ I.GFset :=
         (ratSub I).mul_mem (show γ ∈ ratSub I from hγ) ((ratSub I).inv_mem (show r y ∈ ratSub I from hrF y))
       unfold stabF
-      rw [Set.mem_setOf_eq, fmat_mulVec hi, ← Matrix.mulVec_mulVec, hδx y]
+      rw [Set.mem_ofPred_eq, fmat_mulVec hi, ← Matrix.mulVec_mulVec, hδx y]
       constructor
       · rintro ⟨-, hx'⟩
         exact afVec_injective I hx'

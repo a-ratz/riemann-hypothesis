@@ -90,7 +90,7 @@ private theorem spec_chi {G : Type} [Group G] {I : Iwa G} {O Ω : Type} [CommRin
   have h : ∀ t : I.T, ∃ a : O, algebraMap O Ω a = R.χ ⟨t, I.T_le t.2⟩ := fun t => by
     have h1 := R.integral_torusCharacter t t.2 0 0
     have h2 := R.torusAction ⟨t, I.T_le t.2⟩ 0
-    rw [if_pos rfl] at h2
+    rw [ite_eq_left rfl] at h2
     rw [← h2]
     exact h1
   choose a ha using h
@@ -142,20 +142,20 @@ theorem UpperTheory.V.Hi.spec :
     ∀ (A : Type) [CommRing A] [Algebra c.O A] [Alg.IsCO c.O A] (θ : H.X.I.T →* Aˣ), H.IsWt θ →
     ∀ (ι : Qbar l ≃+* ℂ), ∀ (x : A →ₐ[c.O] Qbar l) (lam : Wt L l n), H.Arith θ x.toRingHom lam → ∃ (d : ℕ) (ξ : GV n H.Sl →* GL (Fin d) ℂ) (c0 : ℕ) (sp : H.X.Fn A H.m → Fin H.m → H.X.Fn ℂ d), H.IsSpec θ ι x.toRingHom lam ξ c0 sp := by
   intro L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ ι x lam ⟨e0, he0⟩
-  haveI : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨⟨c1, -, hx1⟩, a, ha1, -, ha⟩ := (GradeZeroInterpolatingElement.coPt c A).1 x
   obtain ⟨c', hc', hR⟩ := wtRep L l n H.V H.Sl ι lam c1
-  letI : Algebra c'.O ℂ := (ι.toRingHom.comp (algebraMap c'.O (Qbar l))).toAlgebra
+  let : Algebra c'.O ℂ := (ι.toRingHom.comp (algebraMap c'.O (Qbar l))).toAlgebra
   have hal : ∀ a : c'.O, algebraMap c'.O ℂ a = ι a := fun _ => rfl
   obtain ⟨R, hR, hχ⟩ : ∃ R : WtRep H.X.I c'.O ℂ, IsAlgWt (S := H.Sl) ι lam R.ξ ∧ _ := hR
-  haveI : IsCNL c'.O := { complete := (abelian₂.dvr_finite l c'.O).1, finite := (abelian₂.dvr_finite l c'.O).2.1 }
+  have : IsCNL c'.O := { complete := (abelian₂.dvr_finite l c'.O).1, finite := (abelian₂.dvr_finite l c'.O).2.1 }
   let y : A →+* c'.O := x.toRingHom.codRestrict c'.O fun b => hc' (hx1 b)
-  letI : Algebra A c'.O := y.toAlgebra
-  letI : Algebra A ℂ := (ι.toRingHom.comp x.toRingHom).toAlgebra
-  haveI : IsScalarTower A c'.O ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra A c'.O := y.toAlgebra
+  let : Algebra A ℂ := (ι.toRingHom.comp x.toRingHom).toAlgebra
+  have : IsScalarTower A c'.O ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hinj : Function.Injective (algebraMap c'.O ℂ) := ι.injective.comp Subtype.val_injective
-  haveI : IsLocalHom (algebraMap A c'.O) := ⟨fun b hu => by
+  have : IsLocalHom (algebraMap A c'.O) := ⟨fun b hu => by
     by_contra hb
     obtain ⟨w, hw⟩ := hu.exists_right_inv
     have h1 : x b * (w : PadicAlgCl l) = 1 := congrArg Subtype.val hw

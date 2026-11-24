@@ -719,7 +719,7 @@ theorem kinj_prod₂MapR (π₁ : Representation ℂ (GL (Fin r) k) U) {π₂ : 
   intro F hF h0
   have hind := F.1.2
   simp only [indSpace, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-    Set.mem_setOf_eq] at hind
+    Set.mem_ofPred_eq] at hind
   have hF' : ∀ w : ↥(KO k (Fin (r + t))),
       prod₂ π₁ π₂ w F = ((1 : ↥(KO k (Fin (r + t))) →* ℂˣ) w : ℂ) • F := hF
   have hFix : ∀ w ∈ KO k (Fin (r + t)), ∀ x, F.1.1 (x * w) = F.1.1 x := by
@@ -798,7 +798,7 @@ theorem kinj_prod₂MapL {π₁ : Representation ℂ (GL (Fin r) k) X} {π₁' :
   intro F hF h0
   have hind := F.1.2
   simp only [indSpace, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-    Set.mem_setOf_eq] at hind
+    Set.mem_ofPred_eq] at hind
   have hF' : ∀ w : ↥(KO k (Fin (r + t))),
       prod₂ π₁ π₂ w F = ((1 : ↥(KO k (Fin (r + t))) →* ℂˣ) w : ℂ) • F := hF
   have hFix : ∀ w ∈ KO k (Fin (r + t)), ∀ x, F.1.1 (x * w) = F.1.1 x := by

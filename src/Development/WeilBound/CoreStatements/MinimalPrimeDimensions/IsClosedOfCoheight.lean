@@ -202,15 +202,15 @@ theorem vertTerm_eq (hP : P.IsPrime) (h0 : P.comap CC = ⊥) (hi : Function.Inje
   · refine Finset.sum_congr rfl fun z hz => ?_
     have hp : (Pt z).IsPrime := ((hS _).2 ⟨z, hz, rfl⟩).1.1.1
     split_ifs with h
-    · refine (finsum_eq_single _ ⟨(Pt z).comap CC, Ideal.comap_isPrime _ _, h⟩ fun v hv => if_neg fun e => hv ?_).trans
-        (if_pos rfl)
+    · refine (finsum_eq_single _ ⟨(Pt z).comap CC, Ideal.comap_isPrime _ _, h⟩ fun v hv => ite_eq_right fun e => hv ?_).trans
+        (ite_eq_left rfl)
       exact HeightOneSpectrum.ext e.symm
-    · exact finsum_eq_zero_of_forall_eq_zero fun v => if_neg fun (e : (Pt z).comap CC = v.asIdeal) =>
+    · exact finsum_eq_zero_of_forall_eq_zero fun v => ite_eq_right fun (e : (Pt z).comap CC = v.asIdeal) =>
         h fun e' => v.ne_bot (e.symm.trans e')
   · intro z _
     refine Set.Subsingleton.finite fun v hv w hw => HeightOneSpectrum.ext ?_
-    have h1 : (Pt z).comap CC = v.asIdeal := by by_contra h; exact hv (if_neg h)
-    have h2 : (Pt z).comap CC = w.asIdeal := by by_contra h; exact hw (if_neg h)
+    have h1 : (Pt z).comap CC = v.asIdeal := by by_contra h; exact hv (ite_eq_right h)
+    have h2 : (Pt z).comap CC = w.asIdeal := by by_contra h; exact hw (ite_eq_right h)
     exact h1.symm.trans h2
 
 open Classical in
@@ -227,7 +227,7 @@ theorem divCycle_eq (hi : Function.Injective Pt)
   have hval (z) (hz : z ∈ S) (h : (Pt z).comap CC = ⊥) :
       ((divCycle (P.map φ) fun j => (u j : K)) ((Pt z).map φ) : ℤ) = μ z := by
     have := isPrime_map (hp z hz) h
-    rw [divCycle, hJ, fundCycle_apply, if_pos (mem_relComps_map.2 (by
+    rw [divCycle, hJ, fundCycle_apply, ite_eq_left (mem_relComps_map.2 (by
       rw [comap_map (hp z hz) h]; exact (hS _).2 ⟨z, hz, rfl⟩)), localMult_map', comap_map (hp z hz) h, hμ z hz]
   have hmem (z) (hz : z ∈ S) (h : (Pt z).comap CC = ⊥) :
       (Pt z).map φ ∈ (divCycle (P.map φ) fun j => (u j : K)).support :=
@@ -241,7 +241,7 @@ theorem divCycle_eq (hi : Function.Injective Pt)
   · have h1 : W ∈ relComps ((P ⊔ Ideal.span {linForm u}).map φ) := by
       by_contra hn
       refine Finsupp.mem_support_iff.1 hW ?_
-      rw [divCycle, hJ, fundCycle_apply, if_neg hn]
+      rw [divCycle, hJ, fundCycle_apply, ite_eq_right hn]
     obtain ⟨z, hz, e⟩ := (hS _).1 (mem_relComps_map.1 h1)
     exact ⟨z, Finset.mem_filter.2 ⟨hz, e ▸ comap_bot h1.1.1.1.ne_top⟩, by rw [e, map_comap]⟩
   · rw [Finset.mem_filter] at hz
@@ -462,7 +462,7 @@ theorem bijective_comp (F : Type) [Field F] [NumberField F] :
       set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
       intro x hx
       by_contra hne
-      have h := Ideal.comap_ne_bot_of_integral_mem hne (show x ∈ RingHom.ker τ from hx)
+      have h := Ideal.under_ne_bot_of_integral_mem hne (show x ∈ RingHom.ker τ from hx)
         (NumberField.RingOfIntegers.isIntegral x)
       apply h
       rw [eq_bot_iff]
@@ -596,14 +596,14 @@ theorem charZero_iff {Z : Scheme.{0}} [IsIntegral Z] {q : Z ⟶ Sp (𝓞 K)} {B 
       RingHom.comp_apply, Polynomial.C_eq_zero]
   constructor
   · intro hc
-    haveI := hc
+    have := hc
     rw [eq_bot_iff]
     intro r hr
     rw [Ideal.mem_comap, hmem] at hr
     have hr0 := hr i0 hi0
     by_contra hne
     have hker : r ∈ RingHom.ker ((Z.evaluation (B.U i0) _ hi0).hom.comp (algX q (B.U i0))) := hr0
-    have h := Ideal.comap_ne_bot_of_integral_mem hne hker (NumberField.RingOfIntegers.isIntegral r)
+    have h := Ideal.under_ne_bot_of_integral_mem hne hker (NumberField.RingOfIntegers.isIntegral r)
     apply h
     rw [eq_bot_iff]
     intro n hn
@@ -744,7 +744,7 @@ theorem arch_pull (hA : StArch) (hX : IsArithVar p D) (hE : Emb p s)
     · exact log_pull hE (hF σ) i hu y hy
     · have hy1 := hy
       rw [hset] at hy1
-      simp only [Set.mem_setOf_eq, not_not] at hy1
+      simp only [Set.mem_ofPred_eq, not_not] at hy1
       have hy2 : PtsOver.map i rfl (spMap (σ.comp (algebraMap (𝓞 K) K))) y ∉
           ptsIn p (σ.comp (algebraMap (𝓞 K) K)) (nonzeroLocus su) := by
         rw [← mem_ptsIn_preimage hm, ← GlobalTheory.Cartier.nonzeroLocus_secPull]
@@ -826,12 +826,12 @@ theorem height_vertical (hV : StVert) (hX : IsArithVar p D) (hE : Emb p s) (hh :
     exact hv
   obtain ⟨x, hx⟩ := hV K Z (i ≫ p) (L.B.pull i) m (fun k => GlobalTheory.secPull (s k) i) v e hproj hE' hv' hd
   rw [hpt] at hx
-  letI := x
+  let := x
   have hbij := Ideal.bijective_algebraMap_quotient_residueField v.asIdeal
   have hcard : Nat.card v.asIdeal.ResidueField = Ideal.absNorm v.asIdeal := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
     exact (Nat.card_congr (Equiv.ofBijective _ hbij)).symm
-  haveI : Finite v.asIdeal.ResidueField := by
+  have : Finite v.asIdeal.ResidueField := by
     apply Nat.finite_of_card_ne_zero
     rw [hcard]
     intro h0
@@ -883,7 +883,7 @@ private theorem core_lemma (hV : StVert) (hA : StArch) (hR : GroundTheory.Height
       ptIdeal p s (i (genericPoint Z)) := hpt' _
   have hc : CharZero Γ(Z, ⊤) := (charZero_iff hE').mpr (by rw [hQpt]; exact hc0)
   have hXZ : IsArithVar (i ≫ p) e := hX.of_isClosedImmersion i hc hd
-  haveI : IsLocallyNoetherian Z := hXZ.isLocallyNoetherian
+  have : IsLocallyNoetherian Z := hXZ.isLocallyNoetherian
   have hQproj : IsProjPrime (ptIdeal p s (i (genericPoint Z))) := ChowFormHeightComparison₂.CF.P.isProjPrime hE _
   have hIproj : IsProjPrime ((ptIdeal p s (i (genericPoint Z))).map φ) := isProjPrime_map hQproj hc0
   obtain ⟨j, hj⟩ := ChowFormHeightComparison₂.CF.P.exists_mem hE (i (genericPoint Z))
@@ -965,8 +965,8 @@ private theorem core_lemma (hV : StVert) (hA : StArch) (hR : GroundTheory.Height
       h (i z) = chowDegree (reduceMod v (ptIdeal p s (i z))) (e + 1) * Real.log (Ideal.absNorm v.asIdeal) := by
     intro z hz v hv
     obtain ⟨Zz, jz, hjz, hZz, hgen, hdz⟩ := hsub z hz
-    haveI := hjz
-    haveI := hZz
+    have := hjz
+    have := hZz
     have hv' : (ptIdeal p s ((jz ≫ i) (genericPoint Zz))).comap CC = v.asIdeal := by
       show (ptIdeal p s (i (jz (genericPoint Zz)))).comap CC = v.asIdeal
       rw [hgen]
@@ -1036,8 +1036,8 @@ private theorem core_lemma (hV : StVert) (hA : StArch) (hR : GroundTheory.Height
             (g ((ptIdeal p s (i z)).map φ)) := by
         intro z hz hzc
         obtain ⟨Zz, jz, hjz, hZz, hgen, hdz⟩ := hsub z hz
-        haveI := hjz
-        haveI := hZz
+        have := hjz
+        have := hZz
         have hW := hdc.1 z hz hzc
         have key : h (i (jz (genericPoint Zz))) = (Module.finrank ℚ K : ℝ) * chowHt H (e' + 1)
             (δW ((ptIdeal p s (i z)).map φ)) (g ((ptIdeal p s (i z)).map φ)) :=

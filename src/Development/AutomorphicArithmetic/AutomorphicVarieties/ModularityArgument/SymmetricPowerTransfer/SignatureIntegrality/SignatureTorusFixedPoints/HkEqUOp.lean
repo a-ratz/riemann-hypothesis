@@ -114,13 +114,13 @@ private theorem hk_eq_uOp (D : Iwa G) {I : Subgroup G} (F : LeviFact I) (a : G) 
     constructor
     · rintro ⟨m, hm, rfl⟩
       have e : a⁻¹ * ((MulAut.conj a).toMonoidHom m) * a = m := by
-        simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply]
+        simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply]
         group
       rw [e]
       exact hm
     · intro h
       refine ⟨a⁻¹ * y * a, h, ?_⟩
-      simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply]
+      simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply]
       group
   have heq : ∀ u x : D.N, ((u : ↥D.N ⧸ (D.Nconj a).subgroupOf D.N) = (x : ↥D.N ⧸ (D.Nconj a).subgroupOf D.N)) ↔
       a⁻¹ * ((u : G)⁻¹ * x) * a ∈ I := by
@@ -150,7 +150,7 @@ private theorem hk_eq_uOp (D : Iwa G) {I : Subgroup G} (F : LeviFact I) (a : G) 
       exact h1
     rw [← QuotientGroup.out_eq' q, ← QuotientGroup.out_eq' q']
     exact (heq _ _).mpr h2
-  haveI := Fintype.ofFinite (↥D.N ⧸ (D.Nconj a).subgroupOf D.N)
+  have := Fintype.ofFinite (↥D.N ⧸ (D.Nconj a).subgroupOf D.N)
   have hinj : Function.Injective (fun q : ↥D.N ⧸ (D.Nconj a).subgroupOf D.N => ((Quotient.out q : D.N) : G)) := by
     intro q q' h
     have h' : Quotient.out q = Quotient.out q' := Subtype.ext h

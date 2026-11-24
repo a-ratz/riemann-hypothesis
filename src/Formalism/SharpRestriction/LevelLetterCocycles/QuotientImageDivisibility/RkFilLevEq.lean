@@ -128,11 +128,11 @@ theorem rk_evenQ₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisE
   have hsum := hS.2.2.2.2.2.2.2.1
   obtain ⟨τ, hτ⟩ := exists_embedding_extending_emb W hK i
   rw [rk_filLev_eq W hK hQ T₂ hT2 i τ hτ, rk_filLev_eq W hK hQ T₂ hT2 i τ hτ]
-  haveI hfd : FiniteDimensional LL ↥(DdRE PD T₂.ρ τ) := ((hQ hK T₂.V T₂.ρ hT2).2 τ).1
+  have hfd : FiniteDimensional LL ↥(DdRE PD T₂.ρ τ) := ((hQ hK T₂.V T₂.ρ hT2).2 τ).1
   have hfdF : ∀ a : ℤ, FiniteDimensional LL ↥(FildR PD T₂.ρ τ a) := fun a =>
     Submodule.finiteDimensional_of_le (show FildR PD T₂.ρ τ a ≤ DdRE PD T₂.ρ τ from inf_le_left)
-  haveI := hfdF (-(η : ℤ))
-  haveI := hfdF 0
+  have := hfdF (-(η : ℤ))
+  have := hfdF 0
   have hNA : FildR PD T₂.ρ τ 0 ≤ FildR PD T₂.ρ τ (-(η : ℤ)) :=
     rk_fildR_anti (PD := PD) (ρ := T₂.ρ) (τ := τ) (by omega)
   have hrk := LinearMap.finrank_range_add_finrank_ker
@@ -185,7 +185,7 @@ theorem rk_low₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisExa
   have hηb := eta_le_b_add_of_SetCS W hS i
   obtain ⟨τ, hτ⟩ := exists_embedding_extending_emb W hK i
   rw [rk_ιDi_eq W hK hQ T₂ hT2 i τ hτ, rk_filLev_eq W hK hQ T₂ hT2 i τ hτ a]
-  haveI : FiniteDimensional LL ↥(DdRE PD T₂.ρ τ) := ((hQ hK T₂.V T₂.ρ hT2).2 τ).1
+  have : FiniteDimensional LL ↥(DdRE PD T₂.ρ τ) := ((hQ hK T₂.V T₂.ρ hT2).2 τ).1
   have hJ := rk_jumps₂ W hE hC hQ hS i τ hτ
   obtain ⟨lo, hlo⟩ := rk_fildR_lo (PD := PD) (ρ := T₂.ρ) (τ := τ)
 
@@ -201,7 +201,7 @@ theorem rk_low₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisExa
         intro hj
         have hw := hJ _ hj
         unfold Formalism.MainNotions.RamifiedCoefficientChains.JumpWinS at hw
-        rw [if_pos hi] at hw
+        rw [ite_eq_left hi] at hw
         rcases hw with hw | hw
         · have := hw.1
           push_cast at this ha

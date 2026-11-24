@@ -295,7 +295,7 @@ theorem phMu_eq_ballPot_half : GlobalTheory.CompanionTheory.Ar.Top.Given → ∀
     obtain ⟨A, _, φ, u, χ, hpb, hAH, hact, -, -, h3⟩ := hf
     obtain ⟨v₁, e₁, d₁⟩ := h3 (e (τ, i))
     obtain ⟨h1, w, hw, hr⟩ := (hpt t' ht').2.2 τ a
-    haveI := Or.𝔐.t.act.hom a
+    have := Or.𝔐.t.act.hom a
     have hsc := PhMuFree.val_eig Or.𝔐 Or.𝔐.tie.gen h1 (Or.sm τ) a w hw (hs τ i).1 (hv' τ i)
     exact eig_of_isDiff hpb u (Or.𝔐.t.act.act a) ((F.R t').B a) (fun p => hact a p) (hv' τ i).isTanAt
       (c := F.σ τ a) (by rw [← hr]; exact hsc) e₁ d₁
@@ -308,7 +308,7 @@ theorem phMu_eq_ballPot_half : GlobalTheory.CompanionTheory.Ar.Top.Given → ∀
   have hpos : ∀ τ, 0 < ((F.R t).gram fun i => x τ i t).det.re := fun τ => by
     obtain ⟨v, hv, hf⟩ := hxe.self_of_nhds
     have hg := (hfib t ht v hv hf).2 τ
-    haveI : CharZero Ω := algebraRat.charZero Ω
+    have : CharZero Ω := algebraRat.charZero Ω
     have hpol := _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.polarisedAt_of_interior E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 (z t) hin
     have e1 := HodgeMetric.gramAt_unique_of_polarisedAt E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 (z t) _ (s τ) _ _ hpol
       hg (hΓ₀ τ)
@@ -323,7 +323,7 @@ theorem phMu_eq_ballPot_half : GlobalTheory.CompanionTheory.Ar.Top.Given → ∀
   have hgma := GlobalTheory.SCV.analyticOnNhd_of_differentiableOn hV hgm t ht
   have hex : ∃ v, IsValueAt Dc.y d.u (gm t) v := by
     by_contra hn
-    exact hv0 (dif_neg hn)
+    exact hv0 (dite_eq_right hn)
   obtain ⟨v₀, dg, pg, ph, hpg, hph, hne, heq, hhne, hv₀⟩ := hex
   have hq : ∀ p, AnalyticAt ℂ (fun t' => gm t' p) t := fun p =>
     ((ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : (Σ k, J k) => ℂ) p).analyticAt _).comp hgma

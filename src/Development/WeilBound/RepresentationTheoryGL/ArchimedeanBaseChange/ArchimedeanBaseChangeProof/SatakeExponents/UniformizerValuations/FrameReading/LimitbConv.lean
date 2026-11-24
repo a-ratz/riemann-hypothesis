@@ -74,8 +74,8 @@ theorem integrable_conv2 (μ : Measure (H E a b)) [IsFiniteMeasureOnCompacts μ]
   refine hc.integrable_of_hasCompactSupport ?_
   have hK : IsCompact ((fun q : H E a b × H E a b => (q.1, q.1 * q.2)) '' (tsupport φ₁ ×ˢ tsupport φ₂)) :=
     (h₁.2.isCompact.prod h₂.2.isCompact).image (continuous_fst.prodMk (continuous_fst.mul continuous_snd))
-  haveI ht : T2Space (H E a b) := t2_block_group
-  haveI : T2Space (H E a b × H E a b) := Prod.t2Space
+  have ht : T2Space (H E a b) := t2_block_group
+  have : T2Space (H E a b × H E a b) := Prod.t2Space
   refine HasCompactSupport.intro' hK hK.isClosed fun p hp => ?_
   by_contra hne
   apply hp
@@ -102,8 +102,8 @@ theorem conv_mulM (D : Dom E a b) {ι : Type} [Fintype ι] (Φ₁ Φ₂ : Matrix
     (h₂ : IsTestM Φ₂) (f : ι → H E a b → ℂ) (hf : ∀ i, Continuous (f i)) :
     PositivityTheory.Rg.BcB.E.conv D.μ (mulM D.μ Φ₁ Φ₂) f = PositivityTheory.Rg.BcB.E.conv D.μ Φ₁ (PositivityTheory.Rg.BcB.E.conv D.μ Φ₂ f) := by
   have := haar_of_dom D
-  haveI : SigmaCompactSpace (H E a b) := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : SigmaFinite D.μ := SigmaFinite.of_isFiniteMeasureOnCompacts D.μ
+  have : SigmaCompactSpace (H E a b) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : SigmaFinite D.μ := SigmaFinite.of_isFiniteMeasureOnCompacts D.μ
   funext i x
   have hg : ∀ j, Continuous fun y => f j (x * y) := fun j => (hf j).comp (continuous_const.mul continuous_id)
   have hI : ∀ j k, Integrable (fun p : H E a b × H E a b => Φ₁ i k p.1 * Φ₂ k j (p.1⁻¹ * p.2) * f j (x * p.2))

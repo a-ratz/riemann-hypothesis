@@ -78,7 +78,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
       (by rw [hul]; exact hs')
   have hmap : μ.map (fun y => u • y) = (distribHaarChar A.L u⁻¹ : ℝ≥0∞) • μ := by
     ext S hS
-    rw [Measure.map_apply (measurable_const_smul u) hS, Set.preimage_smul, Measure.smul_apply, smul_eq_mul,
+    rw [Measure.map_apply (measurable_const_smul u) hS, Set.preimage_smul, smul_apply, smul_eq_mul,
       distribHaarChar_mul]
   have hemb : MeasurableEmbedding (fun y : A.L => u • y) :=
     (Homeomorph.smul u).measurableEmbedding

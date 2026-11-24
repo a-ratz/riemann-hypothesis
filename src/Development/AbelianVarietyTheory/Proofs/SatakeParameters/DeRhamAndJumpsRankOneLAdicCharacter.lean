@@ -78,10 +78,10 @@ theorem exists_isInduced_of {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [Nu
       exact mul_mem (Bw.Kw.1.algebraMap_mem a) (Bw.j_E y)
     | add t₁ t₂ h₁ h₂ => rw [map_add]; exact add_mem h₁ h₂
   have hfin : FiniteDimensional ℚ_[l] (Subalgebra.toSubmodule (GlobalTheory.GalFirstClause.Emb.tensLift jE).range) := by
-    haveI : FiniteDimensional ℚ_[l] (Subalgebra.toSubmodule Bw.Kw.1.toSubalgebra) := Bw.Kw.2
+    have : FiniteDimensional ℚ_[l] (Subalgebra.toSubmodule Bw.Kw.1.toSubalgebra) := Bw.Kw.2
     exact Submodule.finiteDimensional_of_le (Subalgebra.toSubmodule.monotone hrange)
   have hclosed : IsClosed ((GlobalTheory.GalFirstClause.Emb.tensLift jE).range : Set (Om l)) :=
-    Submodule.closed_of_finiteDimensional (Subalgebra.toSubmodule (GlobalTheory.GalFirstClause.Emb.tensLift jE).range)
+    Submodule.isClosed_of_finiteDimensional (Subalgebra.toSubmodule (GlobalTheory.GalFirstClause.Emb.tensLift jE).range)
   have hle : Bw.Kw.1.toSubalgebra ≤ (GlobalTheory.GalFirstClause.Emb.tensLift jE).range := by
     intro y hy
     refine closure_minimal ?_ hclosed (Bw.j_dense hy)
@@ -146,7 +146,7 @@ theorem deRham_and_jumps_rankOne_lAdic_character : ∀ (D : D7) (T : WDTie D.nd 
     rfl
   have hρ'c : Continuous fun g => (ρ' g : Matrix (Fin 1) (Fin 1) ↥LL'.1) := by
     have hi : Continuous (IntermediateField.inclusion hK) :=
-      continuous_induced_rng.2 continuous_subtype_val
+      continuous_induced_rng.2 continuous_subtypeVal
     exact hρc.matrix_map hi
   have hmodel : IsModel Bw (resDec D.nd.plOm.1 (rk1 μ) w) LL'
       (ρ'.comp (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype) :=

@@ -61,10 +61,10 @@ theorem bijective_liftSemi_secPull : ∀ (R R' : Type) [CommRing R] [CommRing R'
       rfl
     · exact (Category.comp_id _).trans (Category.id_comp _).symm
     · exact (Category.comp_id _).trans ((Scheme.ΓSpecIso (.of R')).hom_inv_id_assoc _).symm
-  letI : Algebra (Sec s p.1.2.1) (Sec s' p.1.1.1) := (secPull s s' p).toAlgebra
-  letI : Algebra R (Sec s' p.1.1.1) := ((algebraMap R' (Sec s' p.1.1.1)).comp (algebraMap R R')).toAlgebra
-  haveI : IsScalarTower R R' (Sec s' p.1.1.1) := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R (Sec s p.1.2.1) (Sec s' p.1.1.1) :=
+  let : Algebra (Sec s p.1.2.1) (Sec s' p.1.1.1) := (secPull s s' p).toAlgebra
+  let : Algebra R (Sec s' p.1.1.1) := ((algebraMap R' (Sec s' p.1.1.1)).comp (algebraMap R R')).toAlgebra
+  have : IsScalarTower R R' (Sec s' p.1.1.1) := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R (Sec s p.1.2.1) (Sec s' p.1.1.1) :=
     .of_algebraMap_eq fun r => (congrArg (fun q => q.hom r) po'.w).symm
   have h : Algebra.IsPushout R R' (Sec s p.1.2.1) (Sec s' p.1.1.1) :=
     (CommRingCat.isPushout_iff_isPushout.mp po').symm

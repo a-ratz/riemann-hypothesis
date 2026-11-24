@@ -119,7 +119,7 @@ theorem cInfAt_canWeight : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInteg
       ((contDiff_fst.pow n).mul ((contDiff_const.mul contDiff_snd).exp))
     refine h₂.congr ?_
     filter_upwards [(isOpen_ptsIn _).mem_nhds hi, (isOpen_ptsIn _).mem_nhds hj] with z hzi hzj
-    rw [nu_eq k X p P e 0 (x l) (hx.mem l) σ z i j hzi hzj, mul_pow, pow_mul, ← Real.exp_nat_mul]
+    rw [nu_eq k X p P e 0 (x l) (hx.mem l) σ z i j hzi hzj, mul_pow, pow_mul, ← Real.exp_natCast_mul]
     congr 2
     push_cast
     ring
@@ -187,7 +187,7 @@ theorem can_bound : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] 
   have hc := fun l => (GlobalTheory.HSAmp.continuous_val_and_bounded k X p D hX P e 0).2 (x l) (hx.mem l)
   choose C hC using fun l => (hc l).2
   have hlow : ∀ σ : k →+* ℂ, ∃ κ : ℝ, 0 < κ ∧ ∀ y : CxPts p σ, κ ≤ ∑ l, P.nu e 0 σ y (x l) := fun σ => by
-    haveI := hX.compactSpace σ
+    have := hX.compactSpace σ
     have hcont : Continuous fun y : CxPts p σ => ∑ l, P.nu e 0 σ y (x l) :=
       continuous_finsetSum _ fun l _ => (hc l).1 σ
     have hpos : ∀ y : CxPts p σ, 0 < ∑ l, P.nu e 0 σ y (x l) := fun y => by
@@ -199,8 +199,8 @@ theorem can_bound : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] 
     · obtain ⟨y₀, -, hy₀⟩ := isCompact_univ.exists_isMinOn Set.univ_nonempty hcont.continuousOn
       exact ⟨_, hpos y₀, fun y => hy₀ (Set.mem_univ y)⟩
   choose κ hκ hκ' using hlow
-  haveI := hX.finite_emb
-  haveI := Fintype.ofFinite (k →+* ℂ)
+  have := hX.finite_emb
+  have := Fintype.ofFinite (k →+* ℂ)
   have hs : 0 ≤ ∑ σ, (κ σ)⁻¹ := Finset.sum_nonneg fun σ _ => (inv_pos.2 (hκ σ)).le
   have hκ₀ : ∀ σ, (1 + ∑ σ, (κ σ)⁻¹)⁻¹ ≤ κ σ := fun σ => by
     refine inv_le_of_inv_le₀ (hκ σ) ?_

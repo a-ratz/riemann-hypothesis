@@ -173,8 +173,8 @@ private theorem rconv_conv (hn : 0 < n) (μ : Measure (normOneGL (K := K) (n := 
     (ν : Measure (archGroup K n)) [ν.IsHaarMeasure] (β₁ β₂ : TI K n) (e : TF K n) (φ : LL μ) (x : normOneGL (K := K) (n := n)) :
     rconv (rationalGLOne (K := K) (n := n)) μ (tens (conv ν β₁ β₂) e) φ x =
       ∫ a, β₁ a * rconv (rationalGLOne (K := K) (n := n)) μ (tens β₂ e) φ (x * archP K n a) ∂ν := by
-  haveI hσ : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
-  haveI : SFinite μ := @instSFiniteOfSigmaFinite _ _ μ hσ
+  have hσ : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
+  have : SFinite μ := @instSFiniteOfSigmaFinite _ _ μ hσ
   obtain ⟨T, hT⟩ : ∃ T, T = tens β₂ e := ⟨_, rfl⟩
   obtain ⟨A, hA⟩ : ∃ A, A = tsupport β₁ := ⟨_, rfl⟩
   have hAc : IsCompact A := hA ▸ β₁.hasCompactSupport.isCompact

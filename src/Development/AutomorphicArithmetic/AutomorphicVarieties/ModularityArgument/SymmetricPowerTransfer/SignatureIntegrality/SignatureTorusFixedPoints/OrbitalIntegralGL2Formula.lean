@@ -96,7 +96,7 @@ private theorem key (V : Lev k) {d : Fin 2 → kˣ} (hd : SDom d) {a b z : kˣ}
     intro i i' hii
     simp only [Units.val_mul, map_mul, hv, mul_one]
     have hz0 : valuation k (z : k) ≠ 0 := by simp
-    exact mul_lt_mul_of_pos_left (hd i i' hii) (zero_lt_iff.mpr hz0)
+    exact mul_lt_mul_of_pos_left (hd i i' hii) (pos_iff_ne_zero.mpr hz0)
   obtain ⟨hab', u, hu⟩ := conjDiag k 2 ![a, b] _ (sdom2 hab) hsd (w * j) hE
   refine ⟨u, j⁻¹, inv_mem hj, ?_, ?_, ?_⟩
   · rw [← hu]
@@ -151,7 +151,7 @@ private theorem orb_zero' {T G : Type} [Group T] [Group G] (ι : T →* G) (C : 
   simp [orb, wcount]
 
 private theorem inv_gt {x : kˣ} (h : valuation k (x : k) < 1) : valuation k (x : k) < valuation k ((x⁻¹ : kˣ) : k) := by
-  have hp : 0 < valuation k (x : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
+  have hp : 0 < valuation k (x : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
   rw [Units.val_inv_eq_inv_val, map_inv₀]
   exact h.trans ((one_lt_inv₀ hp).2 h)
 
@@ -232,23 +232,23 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_degree_one : UpperTheory.V.Z.Sy
             group
         by_cases hm : y⁻¹ * (g₀ * dg ![a, a⁻¹] * g₀⁻¹) * MonoidHom.id _ y ∈ V.DC ![t, t⁻¹]
         · simp only [Lev.quaternionDoubleCosetIndicator, Lev.fZ, Glob.one]
-          rw [if_pos hm, dite_eq_left (hiff.mp hm)]
+          rw [ite_eq_left hm, dite_eq_left (hiff.mp hm)]
           simp
         · simp only [Lev.quaternionDoubleCosetIndicator, Lev.fZ, Glob.one]
-          rw [if_neg hm, dite_eq_right (mt hiff.mpr hm)]
+          rw [ite_eq_right hm, dite_eq_right (mt hiff.mpr hm)]
       rw [orb_congr' ι _ _ _ _ hX, E]
       have hsq : a / a⁻¹ / (![t, t⁻¹] 0 / ![t, t⁻¹] 1) = (a / t) * (a / t) := by
         ext
         simp [Units.val_div_eq_div_val]
         field_simp
-      rw [hsq, if_pos (mul_mem hat hat)]
+      rw [hsq, ite_eq_left (mul_mem hat hat)]
       simp [Glob.one, hat]
     · have hX : ∀ y : GL (Fin 2) k,
           V.quaternionDoubleCosetIndicator t (y⁻¹ * (g₀ * dg ![a, a⁻¹] * g₀⁻¹) * MonoidHom.id _ y) =
           (fun _ => (0 : ℂ)) (y⁻¹ * (g₀ * dg ![a, a⁻¹] * g₀⁻¹) * MonoidHom.id _ y) := by
         intro y
         simp only [Lev.quaternionDoubleCosetIndicator, Glob.one]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hm
         have hz : (GeneralLinearGroup.scalar (Fin 2) (1 : kˣ))⁻¹ *
             (y⁻¹ * (g₀ * dg ![a, a⁻¹] * g₀⁻¹) * MonoidHom.id _ y) ∈ V.DC ![t, t⁻¹] := by
@@ -260,13 +260,13 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_degree_one : UpperTheory.V.Z.Sy
       simp [Glob.one, hat]
   have h1a : 1 < valuation k ((a⁻¹ : kˣ) : k) := by
     rw [Units.val_inv_eq_inv_val, map_inv₀]
-    exact (one_lt_inv₀ (zero_lt_iff.mpr (by simp))).mpr ha
+    exact (one_lt_inv₀ (pos_iff_ne_zero.mpr (by simp))).mpr ha
   have hvb : valuation k (b : k) = valuation k ((a⁻¹ : kˣ) : k) := by
     rw [hb]
     exact Valuation.map_add_eq_of_lt_right _ (by simpa using h1a)
   have habb : valuation k ((a * b : kˣ) : k) < valuation k (b : k) := by
     rw [Units.val_mul, map_mul]
-    exact mul_lt_of_lt_one_left (zero_lt_iff.mpr (by simp)) ha
+    exact mul_lt_of_lt_one_left (pos_iff_ne_zero.mpr (by simp)) ha
   refine ⟨?_, ?_⟩
   · refine fin_of V ht1 habb hpq' hι (V.twistedCentralTestFunction χ t) (fun g hg => ?_)
     by_contra hn
@@ -280,7 +280,7 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_degree_one : UpperTheory.V.Z.Sy
     have hq : a * b / b / (![t, 1] 0 / ![t, 1] 1) = a / t := by simp
     rw [hq]
     by_cases hat : a / t ∈ V.H
-    · rw [if_pos hat]
+    · rw [ite_eq_left hat]
       have hvat : valuation k (a : k) = valuation k (t : k) := by
         have h1 : valuation k ((a / t : kˣ) : k) = 1 := V.H_le hat
         rw [Units.val_div_eq_div_val, map_div₀, div_eq_one_iff_eq (by simp)] at h1
@@ -294,7 +294,7 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_degree_one : UpperTheory.V.Z.Sy
         simp only [map_mul] at this
         show (χ t)⁻¹ * χ (1 / b) = 1
         rw [one_div, map_inv, ← mul_inv, this, inv_one]
-      simp only [Glob.one, if_pos hat]
+      simp only [Glob.one, ite_eq_left hat]
       rw [mul_left_comm, ← Units.val_mul, hc, Units.val_one]
     · simp [Glob.one, hat]
 

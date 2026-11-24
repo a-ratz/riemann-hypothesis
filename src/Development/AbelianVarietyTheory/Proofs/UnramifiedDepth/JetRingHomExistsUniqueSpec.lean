@@ -76,7 +76,7 @@ theorem prod_pow_mem_span_pow {A κ : Type} [CommRing A] [Fintype κ] (a : κ �
 theorem jet_hom_spec : ∀ (V Ω A : Type) [CommRing V] [CommRing Ω] [CommRing A] [Algebra Ω A] (β : V →+* Ω) (κ : Type) [Fintype κ] [DecidableEq κ] (m : ℕ), (∀ a : κ → A, Ideal.span (Set.range a) ^ (m + 1) = ⊥ → ∃! ψ : Jet V κ m →+* A, (∀ v : V, ψ (algebraMap V _ v) = algebraMap Ω A (β v)) ∧ ∀ i, ψ (Ideal.Quotient.mk _ (MvPolynomial.X i)) = a i) ∧ ∀ ψ : Jet V κ m →+* A, (∀ v : V, ψ (algebraMap V _ v) = algebraMap Ω A (β v)) → Ideal.span (Set.range fun i => ψ (Ideal.Quotient.mk _ (MvPolynomial.X i))) ^ (m + 1) = ⊥ ∧ (∀ i, IsNilpotent (ψ (Ideal.Quotient.mk _ (MvPolynomial.X i)))) ∧ ∀ f : MvPowerSeries κ V, ψ (psJet m f) = nEval (MvPowerSeries.map β f) (fun i => ψ (Ideal.Quotient.mk _ (MvPolynomial.X i))) := by
   intro V Ω A _ _ _ _ β κ _ _ m
   refine ⟨fun a ha => ?_, fun ψ hψ => ?_⟩
-  · letI : Algebra V A := ((algebraMap Ω A).comp β).toAlgebra
+  · let : Algebra V A := ((algebraMap Ω A).comp β).toAlgebra
     let φ : Jet V κ m →ₐ[V] A := liftJet (MvPolynomial.aeval a) (by simpa using ha)
     have hφ : ∀ i, φ (Ideal.Quotient.mk _ (MvPolynomial.X i)) = a i := fun i =>
       MvPolynomial.aeval_X a i

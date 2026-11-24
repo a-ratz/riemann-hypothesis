@@ -125,7 +125,7 @@ theorem hasDatum_of_iso : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsA
     ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ G H : PDivGroup p O,
       Nonempty (G ≅ H) → HasDatum hε G → HasDatum hε H := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε G H ⟨f⟩ hG
-  haveI : IsIntegrallyClosedIn O C :=
+  have : IsIntegrallyClosedIn O C :=
     isIntegrallyClosedIn_iff.2 ⟨hv.hom_inj, fun hx => hv.exists_of_le_one
       (hv.isIntegral_iff_v_le_one.1 hx)⟩
   have hh : G.height = H.height := by
@@ -513,7 +513,7 @@ theorem hasDatum_of_isSum : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [I
       IsSum G G₁ G₂ → HasDatum hε G₁ → HasDatum hε G₂ → HasDatum hε G := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε G G₁ G₂ ⟨i₁, i₂, q₁, q₂, h₁, h₂, h₁₂, h₂₁, h⟩
     ⟨D₁, e₁, fil₁, lie₁, hal₁, hb₁⟩ ⟨D₂, e₂, fil₂, lie₂, hal₂, hb₂⟩
-  haveI := integrallyClosed_of_integers hv
+  have := integrallyClosed_of_integers hv
   obtain ⟨D, hal, hbb⟩ := _root_.GlobalTheory.BlockSum.exists_sum_datum p C v O hv ε hε _ _ D₁ D₂
   obtain ⟨T, hT, hTs⟩ := exists_tateSplit i₁ i₂ q₁ q₂ h₁ h₂ h₁₂ h₂₁ h
   obtain ⟨L, hL⟩ := exists_lieSplit i₁ i₂ q₁ q₂ h₁ h₂ h₁₂ h₂₁ h
@@ -745,7 +745,7 @@ theorem level_indep (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C
   have hz : ((p : ZMod (p ^ n)) ^ n) = 0 := by rw [← Nat.cast_pow, ZMod.natCast_self]
   have hf0 : ∀ u : G.Tate, f ((p : ℤ_[p]) ^ n • u) = 0 := fun u => by
     simp only [f, AddMonoidHom.comp_apply, LinearMap.toAddMonoidHom_coe, map_smul,
-      RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe, smul_eq_mul, map_mul, map_pow,
+      RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass, smul_eq_mul, map_mul, map_pow,
       map_natCast]
     rw [hz, zero_mul, map_zero]
   have hf : ∀ t s : G.Tate, t.pt n = s.pt n → f t = f s := fun t s hts => by
@@ -787,14 +787,14 @@ theorem level_indep (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C
     change Dl (AugCot.d _ _) = _
     rw [AugCot.lift_d, hDpt, ha]
     simp only [f, AddMonoidHom.comp_apply, LinearMap.toAddMonoidHom_coe, Module.Basis.coord_apply,
-      Module.Basis.repr_self, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
+      Module.Basis.repr_self, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass]
     by_cases hi : i' = i
-    · subst hi; rw [Finsupp.single_eq_same, map_one, hg1, if_pos rfl]
-    · rw [Finsupp.single_eq_of_ne (Ne.symm hi), map_zero, map_zero, if_neg hi]
+    · subst hi; rw [Finsupp.single_eq_same, map_one, hg1, ite_eq_left rfl]
+    · rw [Finsupp.single_eq_of_ne (Ne.symm hi), map_zero, map_zero, ite_eq_right hi]
   have h2 := congrArg Dl hc
 
   rw [map_sum, map_zero] at h2
-  simp only [map_smul, hDl, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+  simp only [map_smul, hDl, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
   rw [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem]
   rw [Algebra.smul_def, mul_one] at h2
   exact h2
@@ -806,7 +806,7 @@ open GlobalTheory.PDivLat
 
 theorem omega_const : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O] [IsLocalRing O], v.Integers O → ∀ G : PDivGroup p O, IsConst G → Subsingleton G.omega ∧ ∀ (h : ℕ) (b : Module.Basis (Fin h) ℤ_[p] G.Tate), Function.Bijective (Fintype.linearCombination O fun i => hodgeTate G (b i)) := by
   intro p _ C _ _ _ v O _ _ _ _ _ _ hv G hG
-  haveI := isIntegrallyClosedIn_of_integers hv
+  have := isIntegrallyClosedIn_of_integers hv
   refine ⟨⟨fun x y => Subtype.ext (funext fun n => ?_)⟩, fun h b => ?_⟩
   · obtain ⟨e⟩ := hG n
     rw [cot_eq_zero_of_equiv e (x.1 n), cot_eq_zero_of_equiv e (y.1 n)]
@@ -872,7 +872,7 @@ namespace GlobalTheory.ConstDatum
 
 theorem isLocalRing_of_integers {C : Type} [Field C] {v : Valuation C NNReal} {O : Type}
     [CommRing O] [Algebra O C] (hv : v.Integers O) : IsLocalRing O := by
-  haveI : Nontrivial O := (algebraMap O C).domain_nontrivial
+  have : Nontrivial O := (algebraMap O C).domain_nontrivial
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
   by_contra h
   push_neg at h
@@ -909,11 +909,11 @@ end GlobalTheory.ConstDatum
 open GlobalTheory.ConstDatum in
 theorem GlobalTheory.PDivLat.hasDatum_of_isConst : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ G : PDivGroup p O, IsConst G → HasDatum hε G := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε G hG
-  haveI := GlobalTheory.PointGroup.isIntegrallyClosedIn_of_integers hv
-  haveI := isLocalRing_of_integers hv
+  have := GlobalTheory.PointGroup.isIntegrallyClosedIn_of_integers hv
+  have := isLocalRing_of_integers hv
   obtain ⟨hω, hbij⟩ := _root_.GlobalTheory.ConstHT.omega_const p C v O hv G hG
-  haveI := GlobalTheory.PointGroup.finite_tate hv G
-  haveI := GlobalTheory.PointGroup.free_tate hv G
+  have := GlobalTheory.PointGroup.finite_tate hv G
+  have := GlobalTheory.PointGroup.free_tate hv G
   have hrank : Module.finrank ℤ_[p] G.Tate = G.height := G.finrank_tate C
   let e : G.Tate ≃ₗ[ℤ_[p]] (Fin G.height → ℤ_[p]) :=
     LinearEquiv.ofFinrankEq _ _ (by rw [hrank, Module.finrank_fin_fun])
@@ -922,9 +922,9 @@ theorem GlobalTheory.PDivLat.hasDatum_of_isConst : ∀ (p : ℕ) [Fact p.Prime] 
   let D := etale ε G.height
   have hF : D.Fil = ⊤ := etale_Fil hε G.height
   let fil : G.dual.omega ≃ₗ[O] D.Fil := Φ.symm ≪≫ₗ (LinearEquiv.ofTop _ hF).symm
-  haveI : Subsingleton G.Lie :=
+  have : Subsingleton G.Lie :=
     ⟨fun f g => LinearMap.ext fun w => by rw [Subsingleton.elim w 0, map_zero, map_zero]⟩
-  haveI : Subsingleton ((Fin G.height → O) ⧸ D.Fil) :=
+  have : Subsingleton ((Fin G.height → O) ⧸ D.Fil) :=
     ⟨fun a b => by
       obtain ⟨a, rfl⟩ := D.Fil.mkQ_surjective a
       obtain ⟨b, rfl⟩ := D.Fil.mkQ_surjective b
@@ -1035,8 +1035,8 @@ theorem hasDatum_dual : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlg
   have : IsIntegrallyClosedIn O C :=
     (isIntegrallyClosed_iff_isIntegrallyClosedIn C).1 inferInstance
   obtain ⟨hfin, hproj⟩ := GlobalTheory.PDiv.omega_finite_projective p C v O hv G
-  haveI := hfin
-  haveI := hproj
+  have := hfin
+  have := hproj
   let θ := WittVector.fontaineTheta O p
   let D' := SelfDualFil.dualDatum hμ hξ D
 
@@ -1103,7 +1103,7 @@ theorem hasDatum_dual : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlg
 
     rw [map_sum, map_sum]
     simp only [map_smul, ← hs, hj, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
   let Φ : G.omega →ₗ[O] (Fin G.height → O) :=
     LinearMap.pi fun i => lie (D.Fil.mkQ (Pi.single i 1))
@@ -1157,7 +1157,7 @@ theorem hasDatum_dual : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlg
       rwa [hΨ, hw] at h5
     · intro hm
       exact LinearMap.ext fun w => hm _ (fil w).2
-  haveI : Module.Projective O ((Fin G.height → O) ⧸ D.Fil) := Module.Projective.of_equiv lie.symm
+  have : Module.Projective O ((Fin G.height → O) ⧸ D.Fil) := Module.Projective.of_equiv lie.symm
   obtain ⟨s, hs⟩ := Module.projective_lifting_property D.Fil.mkQ LinearMap.id D.Fil.mkQ_surjective
   let r : (Fin G.height → O) →ₗ[O] D.Fil :=
     (LinearMap.id - s ∘ₗ D.Fil.mkQ).codRestrict D.Fil fun x => by
@@ -1232,14 +1232,14 @@ theorem isConn_of_retract {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [Fact
   have hs : Function.Surjective (f.app n) := fun a => ⟨r.app n a, by
     have := congrArg (fun g => Hom.app g n) h
     exact DFunLike.congr_fun this a⟩
-  haveI : Nontrivial (H.A n) :=
+  have : Nontrivial (H.A n) :=
     (Bialgebra.counitAlgHom O (H.A n) : H.A n →+* O).domain_nontrivial
-  haveI := hG n
+  have := hG n
   exact IsLocalRing.of_surjective' (f.app n : G.A n →+* H.A n) hs
 
 theorem hasDatum_of_conn_dual_conn : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), (∀ G : PDivGroup p O, GlobalTheory.PDivLat.IsConn G → GlobalTheory.PDivLat.IsConn G.dual → HasDatum hε G) → ∀ G : PDivGroup p O, HasDatum hε G := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε hyp G
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : ValuationRing O := ValuationRing.of_integers v hv
   obtain ⟨G₁, G₂, hs, hc₁, hk₂⟩ := GlobalTheory.ConnConstSplit.exists_isSum_conn_const p C v O hv G
   obtain ⟨H₁, H₂, hs', hcH, hkH⟩ := GlobalTheory.ConnConstSplit.exists_isSum_conn_const p C v O hv G₁.dual
   obtain ⟨i₁, -, q₁, -, e₁, -⟩ := id hs'

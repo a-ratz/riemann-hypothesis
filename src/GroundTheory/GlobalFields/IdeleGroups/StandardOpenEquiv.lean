@@ -114,9 +114,9 @@ theorem continuous_localIntegerUnit (v : HeightOneSpectrum (𝓞 K)) :
   rw [Units.continuous_iff]
   constructor
   · exact ((Units.continuous_val.comp (continuous_finiteProj v)).comp
-      continuous_subtype_val).subtype_mk _
+      continuous_subtypeVal).subtype_mk _
   · exact ((Units.continuous_coe_inv.comp (continuous_finiteProj v)).comp
-      continuous_subtype_val).subtype_mk _
+      continuous_subtypeVal).subtype_mk _
 
 def ofIntegerUnits (a : (InfiniteAdeleRing K)ˣ)
     (u : Π v : HeightOneSpectrum (𝓞 K), (v.adicCompletionIntegers K)ˣ) : IdeleGroup K where

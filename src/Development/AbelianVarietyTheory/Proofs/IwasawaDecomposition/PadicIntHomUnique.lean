@@ -58,7 +58,7 @@ namespace GlobalTheory.MemLoc
 theorem theta_ker_facts : ∀ (l : ℕ) [Fact l.Prime], Function.Surjective (Per.θ l) ∧ IsDomain (Per.Ainf l) ∧ ((l : ℕ) : Per.Ainf l) ≠ 0 ∧ ∀ e : Per.Fl l, IsEps e → RingHom.ker (Per.θ l) = Ideal.span {xi e} ∧ xi e ≠ 0 := by
   intro l _
   have hv := PadicComplexInt.integers l
-  haveI : IsDomain (Per.Fl l) := PreTilt.isDomain _ _ _ hv l
+  have : IsDomain (Per.Fl l) := PreTilt.isDomain _ _ _ hv l
   have hl : ((l : ℕ) : Per.Ainf l) ≠ 0 := fun h => by
     have h1 := congrArg (Per.θ l) h
     rw [map_natCast, map_zero] at h1

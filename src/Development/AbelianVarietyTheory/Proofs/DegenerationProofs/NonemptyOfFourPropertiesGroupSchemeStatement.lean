@@ -507,8 +507,8 @@ theorem ThetaSys.proj_column_mem_of_stable {o Ω : Type} [CommRing o] [Field Ω]
     (h1 : ∀ i, Pi.single i (1 : Ω) ∈ E)
     (h2 : ∀ h ∈ T, ∀ v ∈ E, ((S.ρ h).map (algebraMap o Ω)).mulVec v ∈ E) (i : S.J) :
     (fun j => algebraMap o Ω (S.proj T c j i)) ∈ E := by
-  haveI : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega)⟩
-  haveI : Fintype T := Fintype.ofFinite _
+  have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega)⟩
+  have : Fintype T := Fintype.ofFinite _
   have e : (fun j => algebraMap o Ω (S.proj T c j i)) =
       ∑ t : T, (algebraMap o A (Ring.inverse (Nat.card T : o) * S.ζN ^ (-(c t)).val)) •
         ((S.ρ t).map (algebraMap o Ω)).mulVec (Pi.single i 1) := by
@@ -526,8 +526,8 @@ theorem ThetaSys.proj_column_mem_of_stable {o Ω : Type} [CommRing o] [Field Ω]
 theorem basis_origin_values_regular_and_unit :
     GlobalTheory.Published.SemistableReductionSt → ThmUSt → Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (M : RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J), S.Over₀ M U₀ → S.IsEE M U₀ EE → ∀ (z : M.Z) (x₀ : S.Gam) (b : Matrix S.J S.J Ω), x₀ ∈ S.supI M z → EE.E z = Submodule.span (M.O z) (Set.range b) → (∀ i, (b i ⬝ᵥ S.ev 0) / S.th x₀ ∈ M.O z) ∧ ∃ i, (b i ⬝ᵥ S.ev 0) / S.th x₀ ≠ 0 ∧ ((b i ⬝ᵥ S.ev 0) / S.th x₀)⁻¹ ∈ M.O z := by
   intro h₁ h₂ h₃ h₄ h₅ o Ω _ _ _ _ S ρ M U₀ EE hO hEE z x₀ b hx₀ hb
-  haveI : Algebra.FiniteType ℤ o := ArithBase.ft Ω
-  haveI : CharZero Ω := ArithBase.char o
+  have : Algebra.FiniteType ℤ o := ArithBase.ft Ω
+  have : CharZero Ω := ArithBase.char o
   have hL := classical_points_and_local_regularity o Ω M U₀ hO.normal
   have hT := exists_at_test_of_cen o Ω S M U₀ (GlobalTheory.T.thetaSystem_hasTests_of_real_point h₁ h₂ h₃ h₄ h₅ o Ω S ρ).1 hO
   have hS := ThetaSys.mem_supI_iff_and_HH_eq_ker o Ω S M U₀ hO
@@ -596,7 +596,7 @@ theorem exists_det_ne_zero {K A : Type} [Field K] {r : ℕ} (v : A → Fin r →
   refine ⟨a ∘ e.symm, ?_⟩
   have h2 : LinearIndependent K ((v ∘ a) ∘ e.symm) := hli.comp _ e.symm.injective
   have h3 : IsUnit (Matrix.of fun k i => v ((a ∘ e.symm) k) i) :=
-    Matrix.linearIndependent_rows_iff_isUnit.1 h2
+    Matrix.linearIndependent_row_iff_isUnit.1 h2
   exact ((Matrix.isUnit_iff_isUnit_det _).1 h3).ne_zero
 
 theorem exists_fibrePower {G Z : Scheme.{0}} (f : G ⟶ Z) [UniversallyOpen f]
@@ -733,7 +733,7 @@ theorem isOpen_setOf_linearIndependent_on_fibres :
       refine Set.mem_iInter.2 fun k => ?_
       have hk : ⊤ ≤ (a k).1.1 ⁻¹ᵁ L.U (j k) := by
         by_contra hn
-        exact ha (Matrix.det_eq_zero_of_row_eq_zero k fun i => dif_neg hn)
+        exact ha (Matrix.det_eq_zero_of_row_eq_zero k fun i => dite_eq_right hn)
       have := hk ht
       rw [← hπ k] at this
       exact this
@@ -799,7 +799,7 @@ theorem geometric_of_field (G Z : Scheme.{0}) (f : G ⟶ Z) [Flat f]
       refine Set.mem_iInter.2 fun k => ?_
       have hk : ⊤ ≤ (a k).1.1 ⁻¹ᵁ L.U (j k) := by
         by_contra hn
-        exact ha (Matrix.det_eq_zero_of_row_eq_zero k fun i => dif_neg hn)
+        exact ha (Matrix.det_eq_zero_of_row_eq_zero k fun i => dite_eq_right hn)
       have := hk ht
       rw [← hπ k] at this
       exact this
@@ -1583,13 +1583,13 @@ theorem unif_pullback_of_unif_ring : (∀ (R : Type) [CommRing R] [IsDomain R] [
       let eM := (Functor.mapMonNatIso (Over.pullbackComp q f) ≪≫ Functor.mapMonCompIso).app (Mon.mk G)
       let e : (Over.pullback (q ≫ f)).obj G ≅ (Over.pullback q).obj ((Over.pullback f).obj G) :=
         (Mon.forget _).mapIso eM
-      haveI : IsMonHom e.hom := by
+      have : IsMonHom e.hom := by
         change IsMonHom eM.hom.hom
         infer_instance
-      letI := E.grpB
-      haveI := E.q_hom
-      haveI := E.i_hom
-      haveI : IsIso e.inv.left := Functor.map_isIso (Over.forget _) e.inv
+      let := E.grpB
+      have := E.q_hom
+      have := E.i_hom
+      have : IsIso e.inv.left := Functor.map_isIso (Over.forget _) e.inv
       exact ⟨{
         X := E.X
         addCommGroup := E.addCommGroup
@@ -1730,7 +1730,7 @@ theorem exists_mem_basicOpen_of_geometric {X : Scheme.{0}} {J I : Type} {U : I �
   obtain ⟨i, j, hij⟩ := h K g hg
   have hU : ⊤ ≤ g ⁻¹ᵁ U j := by
     by_contra h0
-    exact hij (dif_neg h0)
+    exact hij (dite_eq_right h0)
   have := (le_preimage_basicOpen_iff g hU (σ i j)).2 (Ne.isUnit hij) (x := IsLocalRing.closedPoint K) trivial
   exact ⟨i, j, hg (IsLocalRing.closedPoint K) ▸ this⟩
 

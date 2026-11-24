@@ -379,7 +379,7 @@ theorem pIdx_eq_pTor_of_finite_group (p : ℕ) {G : Type} [CommGroup G] [Finite 
 
 theorem pIdx_units_of_isAdicComplete : ∀ (p : ℕ) (O : Type) [CommRing O] [IsDomain O] [CharZero O] (π : O), 0 < p → π ≠ 0 → IsAdicComplete (Ideal.span {π}) O → Nat.card (O ⧸ Ideal.span {(p : O) * π}) ≠ 0 → pTor p (⊤ : Subgroup Oˣ) ≠ 0 ∧ pIdx p (⊤ : Subgroup Oˣ) = Nat.card (O ⧸ Ideal.span {(p : O)}) * pTor p (⊤ : Subgroup Oˣ) := by
   intro p O _ _ _ π hp hπ hc hfin
-  haveI : Finite (O ⧸ Ideal.span {(p : O) * π}) := Nat.finite_of_card_ne_zero hfin
+  have : Finite (O ⧸ Ideal.span {(p : O) * π}) := Nat.finite_of_card_ne_zero hfin
   have hp0 : (p : O) ≠ 0 := Nat.cast_ne_zero.mpr hp.ne'
   obtain ⟨hd1, hd2⟩ := _root_.GlobalTheory.CNorm.deep_units_pows p O π hp hπ hc
   have hle : Ideal.span {(p : O) * π} ≤ Ideal.span {π} :=
@@ -391,7 +391,7 @@ theorem pIdx_units_of_isAdicComplete : ∀ (p : ℕ) (O : Type) [CommRing O] [Is
   have hk : pIdx p (oneUnits ((p : O) * π)) = Nat.card (O ⧸ Ideal.span {(p : O)}) := by
     unfold pIdx
     rw [hd1, ← hs, sq, mul_assoc]
-  haveI : Finite (O ⧸ Ideal.span {(p : O)}) :=
+  have : Finite (O ⧸ Ideal.span {(p : O)}) :=
     Finite.of_surjective _ (Ideal.Quotient.factor_surjective hle')
   have hk0 : Nat.card (O ⧸ Ideal.span {(p : O)}) ≠ 0 := Nat.card_pos.ne'
   let g : Oˣ →* (O ⧸ Ideal.span {(p : O) * π})ˣ :=
@@ -453,7 +453,7 @@ theorem pTor_pIdx_subgroup_int (p : ℕ) (hp : 0 < p) (H : Subgroup (Multiplicat
     refine ⟨⟨fun x y => Subtype.ext ?_⟩, ⟨⟨1, U.one_mem, one_pow _⟩⟩⟩
     rw [(pow_eq_one_iff_left hp.ne').1 x.2.2, (pow_eq_one_iff_left hp.ne').1 y.2.2]
   refine ⟨htor H, ?_⟩
-  obtain ⟨d, hd⟩ := (Subgroup.isCyclic_iff_exists_zpowers_eq_top H).1 inferInstance
+  obtain ⟨d, hd⟩ := (Subgroup.isCyclic_iff_exists_zpowers_eq H).1 inferInstance
   have hd1 : d ≠ 1 := by
     rintro rfl
     exact hH (by rw [← hd, Subgroup.zpowers_one_eq_bot])
@@ -498,23 +498,23 @@ theorem pIdx_units_finite_extension_adicCompletion (p : ℕ) (F : Type) [Field F
     pTor p (⊤ : Subgroup Lˣ) ≠ 0 ∧ pIdx p (⊤ : Subgroup Lˣ) =
       p * (Ideal.absNorm v.asIdeal ^ e) ^ Module.finrank (v.adicCompletion F) L *
         pTor p (⊤ : Subgroup Lˣ) := by
-  letI : Algebra (v.adicCompletionIntegers F) L :=
+  let : Algebra (v.adicCompletionIntegers F) L :=
     ((algebraMap (v.adicCompletion F) L).comp
       (algebraMap (v.adicCompletionIntegers F) (v.adicCompletion F))).toAlgebra
-  haveI : IsScalarTower (v.adicCompletionIntegers F) (v.adicCompletion F) L :=
+  have : IsScalarTower (v.adicCompletionIntegers F) (v.adicCompletion F) L :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
-  haveI : CharZero L :=
+  have : CharZero L :=
     charZero_of_injective_algebraMap (algebraMap (v.adicCompletion F) L).injective
   have hinjRL : Function.Injective (algebraMap (v.adicCompletionIntegers F) L) :=
     (algebraMap (v.adicCompletion F) L).injective.comp Subtype.val_injective
-  haveI : FaithfulSMul (v.adicCompletionIntegers F) L :=
+  have : FaithfulSMul (v.adicCompletionIntegers F) L :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinjRL
   let O : Type := integralClosure (v.adicCompletionIntegers F) L
-  haveI : Module.Finite (v.adicCompletionIntegers F) O :=
+  have : Module.Finite (v.adicCompletionIntegers F) O :=
     IsIntegralClosure.finite (v.adicCompletionIntegers F) (v.adicCompletion F) L O
-  haveI : Module.Free (v.adicCompletionIntegers F) O :=
+  have : Module.Free (v.adicCompletionIntegers F) O :=
     IsIntegralClosure.module_free (v.adicCompletionIntegers F) (v.adicCompletion F) L O
   have hrank : Module.finrank (v.adicCompletionIntegers F) O =
       Module.finrank (v.adicCompletion F) L :=
@@ -602,7 +602,7 @@ theorem pIdx_units_finite_extension_adicCompletion (p : ℕ) (F : Type) [Field F
     have h1 : g (Units.mk0 _ hπL) = 1 := by
       rw [← Subgroup.mem_bot, ← h]; exact ⟨_, rfl⟩
     rw [hg, Units.val_mk0, Algebra.norm_algebraMap, map_pow, hπ] at h1
-    exact (pow_lt_one₀ zero_le' hlt Module.finrank_pos.ne').ne h1
+    exact (pow_lt_one₀ zero_le hlt Module.finrank_pos.ne').ne h1
 
 end GlobalTheory.CNorm
 end -- clump:auto

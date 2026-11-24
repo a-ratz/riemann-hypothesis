@@ -137,7 +137,7 @@ theorem res_surj (hp : (Ideal.absNorm P.asIdeal).Prime) (x : 𝓞 E ⧸ P.asIdea
   have hcard : Nat.card (𝓞 E ⧸ P.asIdeal) = qOf P := by
     unfold qOf
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) :=
+  have : Finite (𝓞 E ⧸ P.asIdeal) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact hp.ne_zero)
   let f : Fin (qOf P) → 𝓞 E ⧸ P.asIdeal := fun d => Ideal.Quotient.mk P.asIdeal ((d : ℕ) : 𝓞 E)
   have hinj : Function.Injective f := by
@@ -178,7 +178,7 @@ private theorem intAt_div_qOf_of_mem (hp : (Ideal.absNorm P.asIdeal).Prime)
       rw [hJ, pow_two]
       exact Ideal.mul_mono_right h
     exact h2 (Ideal.mem_span_singleton_self _)
-  obtain ⟨t, htJ, htP⟩ := SetLike.not_le_iff_exists.mp hJP
+  obtain ⟨t, htJ, htP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
   have hmem : α * t ∈ Ideal.span {((Ideal.absNorm P.asIdeal : ℕ) : 𝓞 E)} := by
     rw [hJ]
     exact Ideal.mul_mem_mul hα htJ
@@ -193,8 +193,8 @@ private theorem intAt_div_qOf_of_mem (hp : (Ideal.absNorm P.asIdeal).Prime)
 
 theorem approx1 (hp : (Ideal.absNorm P.asIdeal).Prime) (hq : ((Ideal.absNorm P.asIdeal : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2)
     {y : E} (hy : IntAt P y) : ∃ d : ℕ, d < qOf P ∧ IntAt P ((y - d) / (qOf P : E)) := by
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have : P.asIdeal.IsMaximal := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   obtain ⟨r, s, hs, hy'⟩ := hy
   have hs0 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := fun h => hs (Ideal.Quotient.eq_zero_iff_mem.mp h)
   obtain ⟨d, hdq, hd⟩ :=
@@ -220,7 +220,7 @@ theorem approx1 (hp : (Ideal.absNorm P.asIdeal).Prime) (hq : ((Ideal.absNorm P.a
 
 theorem mem_pow_of (hp : (Ideal.absNorm P.asIdeal).Prime) {α : 𝓞 E} {K : ℕ}
     (h : IntAt P (algebraMap (𝓞 E) E α / (qOf P : E) ^ K)) : α ∈ P.asIdeal ^ K := by
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨r, s, hs, h⟩ := h
   have hq0 := q_ne P hp
   have e : algebraMap (𝓞 E) E (s * α) = algebraMap (𝓞 E) E (r * ((qOf P : ℕ) : 𝓞 E) ^ K) := by

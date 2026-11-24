@@ -55,7 +55,7 @@ theorem t2 : ExistsBoundedBasis := by
   intro K _ _ n j M B b hM hBM hli hbB hBspan
   classical
   have hBfg : B.FG := by
-    haveI := isNoetherian_of_fg_of_noetherian M hM
+    have := isNoetherian_of_fg_of_noetherian M hM
     have h1 : (B.comap M.subtype).FG := IsNoetherian.noetherian _
     have h2 := h1.map M.subtype
     rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hBM] at h2
@@ -82,8 +82,8 @@ theorem t2 : ExistsBoundedBasis := by
     refine Submodule.span_induction (fun g hg => hyg g hg) (by simp)
       (fun u w _ _ hu hw => by rw [smul_add]; exact add_mem hu hw)
       (fun o u _ hu => by rw [smul_comm]; exact Submodule.smul_mem _ o hu) hv
-  haveI : Module.Finite (𝓞 K) B := Module.Finite.iff_fg.mpr ⟨s, hs⟩
-  haveI : Module.Finite ℤ (B ⧸ (Submodule.span (𝓞 K) (Set.range b)).comap B.subtype) :=
+  have : Module.Finite (𝓞 K) B := Module.Finite.iff_fg.mpr ⟨s, hs⟩
+  have : Module.Finite ℤ (B ⧸ (Submodule.span (𝓞 K) (Set.range b)).comap B.subtype) :=
     Module.Finite.trans (𝓞 K) _
   apply Module.finite_of_fg_torsion
   intro q

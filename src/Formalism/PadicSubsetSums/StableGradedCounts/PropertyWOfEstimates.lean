@@ -90,7 +90,7 @@ private theorem sum_le_prod_of_two_le (s : Finset ℕ) (f : ℕ → ℕ) (hf : �
       simp
     · have hP2 : 2 ≤ ∏ l ∈ s, f l :=
         (hf b (Finset.mem_insert_of_mem hb)).trans
-          (Finset.single_le_prod' (fun l hl => by
+          (Finset.single_le_prod (fun l hl => by
             have := hf l (Finset.mem_insert_of_mem hl)
             omega) hb)
       nlinarith
@@ -122,13 +122,13 @@ theorem prime_power_order_share : PrimePowerOrderShare := by
     Nat.mem_primeFactors.mpr ⟨hl, hln, hn0⟩
   have hge : ∀ l, l.Prime → l ∣ n → l ≤ l ^ padicValNat l n := by
     intro l hl hln
-    haveI := Fact.mk hl
+    have := Fact.mk hl
     have hv : 1 ≤ padicValNat l n := by
       simpa only [Nat.padicValNat_def] using one_le_multiplicity_of_dvd hn0 hln
     calc l = l ^ 1 := (pow_one l).symm
       _ ≤ l ^ padicValNat l n := Nat.pow_le_pow_right hl.pos hv
   have hf2 : 16 ≤ 2 ^ padicValNat 2 n := by
-    haveI := Fact.mk Nat.prime_two
+    have := Fact.mk Nat.prime_two
     have hv : 4 ≤ padicValNat 2 n := ((by simpa only [_root_.Nat.padicValNat_def] using @_root_.multiplicity_dvd_iff_le : ∀ {p : _root_.Nat} [hp : _root_.Fact (_root_.Nat.Prime p)] {a n : _root_.Nat} (ha : a ≠ 0), p ^ n ∣ a ↔ n ≤ _root_.padicValNat p a) hn0).mp (by norm_num; exact h16)
     calc 16 = 2 ^ 4 := by norm_num
       _ ≤ 2 ^ padicValNat 2 n := Nat.pow_le_pow_right (by norm_num) hv
@@ -322,7 +322,7 @@ theorem exists_prime_pow_eq {M : Type} [Monoid M] (n : ℕ) (hn : 2 ≤ n) (u : 
     refine ⟨l, Nat.mem_primeFactors.mpr ⟨hl, hl_n, by omega⟩, ?_⟩
     rw [← orderOf_dvd_iff_pow_eq_one, hk']
     apply pow_dvd_pow
-    haveI := Fact.mk hl
+    have := Fact.mk hl
     exact ((by simpa only [_root_.Nat.padicValNat_def] using @_root_.multiplicity_dvd_iff_le : ∀ {p : _root_.Nat} [hp : _root_.Fact (_root_.Nat.Prime p)] {a n : _root_.Nat} (ha : a ≠ 0), p ^ n ∣ a ↔ n ≤ _root_.padicValNat p a) (by omega)).mp hln
 
 variable {K L : Type} [Field K] [Fintype K] [Field L] [Algebra K L]
@@ -345,10 +345,10 @@ theorem key (P : K[X]) (hP : Irreducible P) (hm : P.Monic) (x : L) (hx : aeval x
   have hqd : 3 ≤ q ^ d := le_trans hq (Nat.le_self_pow (by omega) q)
   have hn2 : 2 ≤ n := by omega
   have hxn : x ^ n = 1 := by
-    haveI : FiniteDimensional K (IntermediateField.adjoin K {x}) :=
+    have : FiniteDimensional K (IntermediateField.adjoin K {x}) :=
       IntermediateField.adjoin.finiteDimensional hint
-    haveI : Finite (IntermediateField.adjoin K {x}) := Module.finite_of_finite K
-    letI : Fintype (IntermediateField.adjoin K {x}) := Fintype.ofFinite _
+    have : Finite (IntermediateField.adjoin K {x}) := Module.finite_of_finite K
+    let : Fintype (IntermediateField.adjoin K {x}) := Fintype.ofFinite _
     have hcard : Fintype.card (IntermediateField.adjoin K {x}) = q ^ d := by
       rw [Module.card_eq_pow_finrank (K := K), IntermediateField.adjoin.finrank hint, ← hmin]
     have hxE : (⟨x, IntermediateField.mem_adjoin_simple_self K x⟩ : IntermediateField.adjoin K {x}) ≠ 0 := by
@@ -973,12 +973,12 @@ private theorem pow_card_pow_eq_self_of_aeval_monicOf_irreducible {F E : Type} [
   have hint : IsIntegral F x := ⟨monicOf c, monicOf_monic c, by rwa [← aeval_def]⟩
   have hmin : minpoly F x = monicOf c :=
     (minpoly.eq_of_irreducible_of_monic hi hx (monicOf_monic c)).symm
-  haveI : FiniteDimensional F (IntermediateField.adjoin F ({x} : Set E)) :=
+  have : FiniteDimensional F (IntermediateField.adjoin F ({x} : Set E)) :=
     IntermediateField.adjoin.finiteDimensional hint
   have hfr : Module.finrank F (IntermediateField.adjoin F ({x} : Set E)) = δ := by
     rw [IntermediateField.adjoin.finrank hint, hmin, monicOf_natDegree]
-  haveI : Finite (IntermediateField.adjoin F ({x} : Set E)) := Module.finite_of_finite F
-  letI : Fintype (IntermediateField.adjoin F ({x} : Set E)) := Fintype.ofFinite _
+  have : Finite (IntermediateField.adjoin F ({x} : Set E)) := Module.finite_of_finite F
+  let : Fintype (IntermediateField.adjoin F ({x} : Set E)) := Fintype.ofFinite _
   have hcard : Fintype.card (IntermediateField.adjoin F ({x} : Set E)) = Fintype.card F ^ δ := by
     rw [Module.card_eq_pow_finrank (K := F), hfr]
   have key := FiniteField.pow_card

@@ -290,7 +290,7 @@ instance isDomain : IsDomain (Ainf p R) := inferInstanceAs (IsDomain (WittVector
 
 instance charZero_of_charZero [CharZero R] : CharZero (Ainf p R) := (theta p R).charZero
 
-theorem p_ne_zero : (p : Ainf p R) ≠ 0 := WittVector.p_nonzero p _
+theorem p_ne_zero : (p : Ainf p R) ≠ 0 := WittVector.p_ne_zero p _
 
 theorem xi_ne_zero [CharZero R] (ϖ : PFlat p R) : xi ϖ ≠ 0 := by
   intro h
@@ -434,7 +434,7 @@ theorem associated_xi_omega (ϖ : PFlat p R) {ε : tateModule p R} (hε : IsPrim
   WittVector.map_teichmuller, h1, h2, map_one, one_pow, Finset.sum_const, Finset.card_range,
   nsmul_eq_mul, mul_one, WittVector.teichmuller_zero, sub_zero] at h4
   have h5 : WittVector.map (p := p) ρ a = 1 :=
-    mul_left_cancel₀ (WittVector.p_nonzero p _) (h4.symm.trans (mul_one _).symm)
+    mul_left_cancel₀ (WittVector.p_ne_zero p _) (h4.symm.trans (mul_one _).symm)
   have h6 : ρ (a.coeff 0) = 1 := by
     rw [← WittVector.map_coeff, h5, WittVector.one_coeff_zero]
   have hu : IsUnit a := by

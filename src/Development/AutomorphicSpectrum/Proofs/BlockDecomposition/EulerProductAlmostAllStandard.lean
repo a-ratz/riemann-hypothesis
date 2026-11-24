@@ -92,7 +92,7 @@ theorem integrable_integral_pureN : ∀ (F E : Type) [Field F] [NumberField F] [
       (ENNReal.prod_ne_top fun v _ => hfin v)) ENNReal.ofReal_ne_top
   have hmap : (I.restrict B).map HeckeCharacterZeroLocus.SiegelWeilU.projInf = K • minf := by
     ext T hT
-    rw [Measure.map_apply hp hT, Measure.restrict_apply (hp hT), Measure.smul_apply, smul_eq_mul]
+    rw [Measure.map_apply hp hT, Measure.restrict_apply (hp hT), smul_apply, smul_eq_mul]
     have hform := hS₀ S hS (T.indicator 1) (fun v => (A v).indicator 1)
       (measurable_one.indicator hT) (fun v => measurable_one.indicator (hA v))
     simp_rw [GlobalTheory.CompanionTheory.SW.EulerBox.pureL_indicator_eq b S _ A hoff] at hform

@@ -393,7 +393,7 @@ theorem exists_dir [Fintype ι] (P : Algebra.SubmersivePresentation R A ι σ)
   simp only [dirDeriv, Finset.mul_sum, Matrix.vecMul, dotProduct]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun j' _ => ?_
-  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← this j', mul_comm]
   rfl
 
@@ -466,7 +466,7 @@ theorem bijective_base [Fintype ι] (P : Algebra.SubmersivePresentation R A ι �
       rw [hF]
       exact hv₁ j
     · simp only [Sum.elim_inr, hT, hDc, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       ring
 
 theorem der_zero [Fintype ι] (P : Algebra.SubmersivePresentation R A ι σ) (χ : A →+* ℂ)
@@ -531,8 +531,8 @@ theorem exists_sections : ∀ (R A : Type) [CommRing R] [CommRing A] [Algebra R 
   intro R A _ _ _ _ n g B ψ hB hψ b₀ hb₀ χ₀ t h₀ ht hinj hsurj
   classical
   obtain ⟨I₀, K₀, _, _, ⟨P⟩⟩ := Algebra.IsStandardSmooth.out (R := R) (S := A)
-  letI := Fintype.ofFinite I₀
-  letI := Fintype.ofFinite K₀
+  let := Fintype.ofFinite I₀
+  let := Fintype.ofFinite K₀
   choose T hT using fun c => P.algebraMap_surjective (t c)
   obtain ⟨Q, hQ⟩ : ∃ Q : K₀ ⊕ Fin g → MvPolynomial I₀ R, Q = Sum.elim P.relation T := ⟨_, rfl⟩
   obtain ⟨Φ, hΦd⟩ : ∃ Φ : (Fin n → ℂ) × (I₀ → ℂ) → (K₀ ⊕ Fin g → ℂ),
@@ -603,7 +603,7 @@ theorem exists_sections : ∀ (R A : Type) [CommRing R] [CommRing A] [Algebra R 
       Ψ b z (algebraMap P.Ring A p) = MvPolynomial.eval₂ (ψ b) (X (b, emb z)) p :=
     fun b hb z hz p => by
       rw [hΨd]
-      simp only [dif_pos (show b ∈ ball b₀ ε ∧ z ∈ ball (0 : Fin g → ℂ) ε from ⟨hb, hz⟩)]
+      simp only [dite_eq_left (show b ∈ ball b₀ ε ∧ z ∈ ball (0 : Fin g → ℂ) ε from ⟨hb, hz⟩)]
       exact hΨ₀ _ _ _ p
   have hcomp : ∀ b ∈ ball b₀ ε, ∀ z ∈ ball (0 : Fin g → ℂ) ε,
       (Ψ b z).comp (algebraMap R A) = ψ b := fun b hb z hz => RingHom.ext fun r => by
@@ -810,7 +810,7 @@ theorem exists_det_ne_zero {X : Type} {g : ℕ} (w : X → Fin g → ℂ)
       simp [Matrix.row, ha]
     rw [hEq]
     exact hli.comp _ e.injective
-  have hu := Matrix.linearIndependent_rows_iff_isUnit.1 hrow
+  have hu := Matrix.linearIndependent_row_iff_isUnit.1 hrow
   exact ((Matrix.isUnit_iff_isUnit_det _).1 hu).ne_zero
 
 theorem exists_dual_elements :
@@ -1043,7 +1043,7 @@ theorem exists_coords : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G]
   let β : R →+* Localization.Away r := algebraMap R (Localization.Away r)
   obtain ⟨φ', rfl⟩ : ∃ φ' : Localization.Away r →+* ℂ, φ'.comp β = φ := exists_lift r φ hφr
   have hle' : ⊤ ≤ ptU G β ⁻¹ᵁ V₁ := hle
-  letI alg : Algebra R Γ(G.left, V₁) := (cst G.hom V₁).toAlgebra
+  let alg : Algebra R Γ(G.left, V₁) := (cst G.hom V₁).toAlgebra
   have hv : ∀ a : Fin g, ⊤ ≤ ptV M β (Pi.single a 1) ⁻¹ᵁ V₁ := fun a => le_dual (ptV_fst M β _) hle'
   let E := evalHom (ptU G β) V₁ hle'
   let v : Fin g → (Γ(G.left, V₁) →+* DualNumber (Localization.Away r)) :=
@@ -1188,8 +1188,8 @@ open GlobalTheory.CompanionTheory.Ar.Flat.ExpChart GlobalTheory.HolHom in
 theorem exp_chart : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (g n : ℕ) (M : LieModel G (𝟙 (Sp R)) (Fin g → R)) (B : Set (Fin n → ℂ)) (ψ : (Fin n → ℂ) → (R →+* ℂ)), Smooth G.hom → IsHolPts B ψ → ∀ b₀ ∈ B, ∃ (V : G.left.Opens) (t : Fin g → Γ(G.left, V)) (N : ℕ) (f : Fin N → Γ(G.left, V)) (ε : ℝ) (Ψ : ∀ b : Fin n → ℂ, (Fin g → ℂ) → (Over.mk (spMap (ψ b)) ⟶ G)), 0 < ε ∧ ball b₀ ε ⊆ B ∧ IsHolTo (ball b₀ ε ×ˢ ball (0 : Fin g → ℂ) ε) (fun bz : (Fin n → ℂ) × (Fin g → ℂ) => (Ψ bz.1 bz.2).left) ∧ (∀ b ∈ ball b₀ ε, Ψ b 0 = 1 ∧ (∀ a : Fin g, IsDerivAt0 (fun z => (Ψ b z).left) (Pi.single a 1) (spMap (dualMap (ψ b)) ≫ (M.pt (Pi.single a 1)).left)) ∧ ∀ z ∈ ball (0 : Fin g → ℂ) ε, ⊤ ≤ (Ψ b z).left ⁻¹ᵁ V ∧ ∀ a, valAt' (Ψ b z).left V (t a) = z a) ∧ ∃ δ : ℝ, 0 < δ ∧ ∀ b ∈ ball b₀ δ, ∀ x : Over.mk (spMap (ψ b)) ⟶ G, ⊤ ≤ x.left ⁻¹ᵁ V → (∀ j, ‖valAt' x.left V (f j) - valAt' (Ψ b₀ 0).left V (f j)‖ < δ) → (fun a => valAt' x.left V (t a)) ∈ ball (0 : Fin g → ℂ) ε ∧ x = Ψ b (fun a => valAt' x.left V (t a)) := open GlobalTheory.CompanionTheory.Ar.Flat.ExpChart GlobalTheory.HolHom in by
   intro R _ G _ _ g n M B ψ hsm hB b₀ hb₀
   obtain ⟨V, t, ρ, hV, hρ, hss, hθ, hrat⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ExpChart.Coords.exists_coords R G g M (ψ b₀) hsm
-  letI : Algebra R Γ(G.left, V) := (ExpChart.cst G.hom V).toAlgebra
-  haveI : Algebra.IsStandardSmooth R Γ(G.left, V) := hss
+  let : Algebra R Γ(G.left, V) := (ExpChart.cst G.hom V).toAlgebra
+  have : Algebra.IsStandardSmooth R Γ(G.left, V) := hss
   have halg : ∀ r, algebraMap R Γ(G.left, V) r = ExpChart.cst G.hom V r := fun _ => rfl
   have h₀ := (hθ (ψ b₀) hρ).1
   let χ₀ : Γ(G.left, V) →+* ℂ := evalHom (1 : Over.mk (spMap (ψ b₀)) ⟶ G).left V h₀

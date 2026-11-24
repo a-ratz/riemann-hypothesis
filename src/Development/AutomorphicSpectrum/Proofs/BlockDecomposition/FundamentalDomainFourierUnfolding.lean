@@ -105,16 +105,16 @@ theorem integrable_of_lattice_bound {A : Type} [AddCommGroup A] [MeasurableSpace
     (hb : ∀ b, Summable (fun l : Λ => ‖F0 ((l : A) + b)‖) ∧ ∑' l : Λ, ‖F0 ((l : A) + b)‖ ≤ M) :
     Integrable F0 lam := by
   refine ⟨hm, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
+  rw [hasFiniteIntegral_iff_eNorm]
   have e : ∫⁻ b, ‖F0 b‖ₑ ∂lam = ∑' l : Λ, ∫⁻ b in 𝓖, ‖F0 ((l : A) + b)‖ₑ ∂lam :=
     h𝓖.lintegral_eq_tsum'' _
   have hmeas : ∀ l : Λ, AEMeasurable (fun b => ‖F0 ((l : A) + b)‖ₑ) (lam.restrict 𝓖) := fun l =>
-    ((hm.comp_measurePreserving (measurePreserving_add_left lam (l : A))).enorm).restrict
+    ((hm.comp_measurePreserving (measurePreserving_add_left lam (l : A))).eNorm).restrict
   rw [e, ← lintegral_tsum hmeas]
   calc ∫⁻ b in 𝓖, ∑' l : Λ, ‖F0 ((l : A) + b)‖ₑ ∂lam
       ≤ ∫⁻ _ in 𝓖, ENNReal.ofReal M ∂lam := by
         refine lintegral_mono (fun b => ?_)
-        simp_rw [← ofReal_norm_eq_enorm]
+        simp_rw [← ofReal_norm]
         rw [← ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (hb b).1]
         exact ENNReal.ofReal_le_ofReal (hb b).2
     _ < ⊤ := by simp [h1]
@@ -133,7 +133,7 @@ theorem unfold_abs : ∀ {A X Y : Type} [AddCommGroup A] [MeasurableSpace A] [Me
     Integrable F0 lam ∧ ∫ b in 𝓖, (∑' q, F q b) * ch b ∂lam = ∫ b, F0 b * ch b ∂lam := by
   intro A X Y _ _ _ lam _ Λ _ 𝓖 h𝓖 h1 _ c y0 F F0 ch hF hch hnorm hmul hΛ M hb τ hτ hcτ e he hfib
     hF0 hν
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by simp [h1]⟩
+  have : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by simp [h1]⟩
 
   have hsub : ∀ {Z : Type} (j : Z → X), Function.Injective j → ∀ b,
       Summable (fun z => ‖F (j z) b‖) ∧ ∑' z, ‖F (j z) b‖ ≤ M := by

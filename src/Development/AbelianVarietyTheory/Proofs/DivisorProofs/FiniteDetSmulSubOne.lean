@@ -348,12 +348,12 @@ theorem gauss_fin {w : R} (hσ : ∀ r, σ (σ r) = r) (hw : w + σ w = 1) {lam 
     rw [Finset.sum_congr rfl fun c hc => hQC c (mem_pts.mp hc)]
     simp
   obtain ⟨x, hxB, hxC, P, hPm, hP⟩ := exists_mem_not_mem_annihilator_maximal_of_lt hCB hBC
-  haveI : Finite (R ⧸ P) := finite_quot hP
-  letI : Fintype (R ⧸ P) := Fintype.ofFinite _
+  have : Finite (R ⧸ P) := finite_quot hP
+  let : Fintype (R ⧸ P) := Fintype.ofFinite _
   set q := Fintype.card (R ⧸ P)
   have hqc : Nat.card (R ⧸ P) = q := Nat.card_eq_fintype_card
   have hq2 : 2 ≤ q := by
-    haveI : P.IsMaximal := hPm
+    have : P.IsMaximal := hPm
     exact Fintype.one_lt_card
   obtain ⟨hlq, hlqσ⟩ := hlam.2 P hPm inferInstance
   rw [hqc] at hlq hlqσ
@@ -566,8 +566,8 @@ theorem gauss_hermitian : ∀ {R X : Type} [CommRing R] [AddCommGroup X] [Module
       show t k - (y : X) ∈ C
       rw [h2]
       exact C.neg_mem hk
-  haveI : Finite (B ⧸ C') := Finite.of_surjective e he.2
-  letI : Fintype (B ⧸ C') := Fintype.ofFinite _
+  have : Finite (B ⧸ C') := Finite.of_surjective e he.2
+  let : Fintype (B ⧸ C') := Fintype.ofFinite _
   have hout : ∀ u : B ⧸ C', Submodule.Quotient.mk (Quotient.out u) = u := fun u => Quotient.out_eq u
   have hdesc : ∀ a ∈ B, ∀ a' ∈ B, a - a' ∈ C → ∀ b ∈ B, β a b = β a' b := by
     intro a _ a' _ h b hb

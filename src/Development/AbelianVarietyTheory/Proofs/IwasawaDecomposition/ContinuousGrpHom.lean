@@ -161,8 +161,8 @@ theorem isOmegaLeb_map (e : Fin P ⊕ Fin Q ≃ Fin P' ⊕ Fin Q') (h : AntiIso 
         Complex.I • (ab.2 : Matrix (Fin A ⊕ Fin B) (Fin A ⊕ Fin B) ℂ))) := by
     intro A B
     refine continuous_pi fun ij => ?_
-    exact ((continuous_subtype_val.comp continuous_fst).add
-      ((continuous_subtype_val.comp continuous_snd).const_smul Complex.I)).matrix_elem ij.1 ij.2
+    exact ((continuous_subtypeVal.comp continuous_fst).add
+      ((continuous_subtypeVal.comp continuous_snd).const_smul Complex.I)).matrix_elem ij.1 ij.2
   have hv := volume_measurePreserving_piCongrLeft
     (fun _ : (Fin P' ⊕ Fin Q') × (Fin P' ⊕ Fin Q') => ℂ) (e.prodCongr e)
   rw [Measure.map_prod_map _ _ hm hm, Measure.map_map (hc P' Q').measurable (hm.prodMap hm),
@@ -231,7 +231,7 @@ theorem cd_zero_univ : ∀ (c : CDHaar) (N : ℕ), c.cd 0 N Set.univ = 1 := by
     rw [one_mul]; exact (_root_.GlobalTheory.OmegaDensityScale.omegaDensity_unique_and_smul _ _ _ _ h3).1 _ h5
   have h7 : (a : ENNReal) = 1 := (ENNReal.mul_left_inj hd0 hdt).1 h6
   have h8 : ((c.cd 0 N).map G) Set.univ = 1 := by
-    rw [h4, Measure.smul_apply, measure_univ, ENNReal.smul_def, h7, one_smul]
+    rw [h4, smul_apply, measure_univ, ENNReal.smul_def, h7, one_smul]
   have hG : Measurable G := G.continuous.measurable
   rwa [Measure.map_apply hG MeasurableSet.univ, Set.preimage_univ] at h8
 

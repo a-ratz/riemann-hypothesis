@@ -61,9 +61,9 @@ theorem isHolTo_finChart_symm {k : Type} [CommRing k] {Y : Scheme.{0}} {p : Y �
 
 theorem exists_countable_charts : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (d : ℕ), SmoothOfRelativeDimension d s → QuasiCompact s → ∀ (Q : Set (Fin d → ℂ) → ((Fin d → ℂ) → (Sp ℂ ⟶ X)) → Prop), (∀ B y b₀, IsOpen B → b₀ ∈ B → (∀ b ∈ B, y b ≫ s = spMap (RingHom.id ℂ)) → IsHolTo B y → ∃ B', IsOpen B' ∧ b₀ ∈ B' ∧ B' ⊆ B ∧ Q B' y) → ∃ (K : Type) (_ : Countable K) (B : K → Set (Fin d → ℂ)) (y : K → (Fin d → ℂ) → (Sp ℂ ⟶ X)), (∀ i, IsOpen (B i) ∧ (∀ b ∈ B i, y i b ≫ s = spMap (RingHom.id ℂ)) ∧ IsHolTo (B i) (y i) ∧ Set.InjOn (y i) (B i) ∧ Q (B i) (y i)) ∧ ∀ x : Sp ℂ ⟶ X, x ≫ s = spMap (RingHom.id ℂ) → ∃ i, x ∈ y i '' B i := by
   intro X s d hs hq Q hQ
-  haveI := hs
-  haveI := hq
-  haveI : Smooth s := SmoothOfRelativeDimension.smooth d s
+  have := hs
+  have := hq
+  have : Smooth s := SmoothOfRelativeDimension.smooth d s
   have hc : ∀ x : GlobalTheory.CxPts s (RingHom.id ℂ), ∃ c : GlobalTheory.AlgChart s (RingHom.id ℂ) d, x ∈ c.e.source :=
     fun x => GlobalTheory.AlgChart.exists_mem_source x
   choose c hc using hc

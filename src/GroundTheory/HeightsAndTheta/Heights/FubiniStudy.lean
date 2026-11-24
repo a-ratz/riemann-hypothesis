@@ -425,9 +425,9 @@ theorem continuous_fsNormPoly {n : ℕ} {P : MvPolynomial (Fin (N + 1)) ℂ} (hP
   have hc : Continuous fun v : Fin (N + 1) → ℂ => norm2 v :=
     Real.continuous_sqrt.comp (continuous_finsetSum _ fun j _ =>
       (continuous_norm.comp (continuous_apply j)).pow 2)
-  refine Continuous.div ?_ ((hc.comp continuous_subtype_val).pow n)
+  refine Continuous.div ?_ ((hc.comp continuous_subtypeVal).pow n)
     fun v => (pow_pos (euclideanNorm_pos v.2) n).ne'
-  exact continuous_norm.comp ((MvPolynomial.continuous_eval P).comp continuous_subtype_val)
+  exact continuous_norm.comp ((MvPolynomial.continuous_eval P).comp continuous_subtypeVal)
 
 def sectionL2NormSq (n : ℕ) (P : MvPolynomial (Fin (N + 1)) ℂ) : ℝ :=
   ∫ x, fsNormPoly n P x ^ 2 ∂fsMeasure N

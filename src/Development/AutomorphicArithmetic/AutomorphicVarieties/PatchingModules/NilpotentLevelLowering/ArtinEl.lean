@@ -89,7 +89,7 @@ private theorem unif_of_ord {x : kˣ} (hx : ord k x = 1) : IsUnif x := by
   have h5 : valuation k (x : k) = valuation k (a : k) * valuation k (b : k) := by
     rw [← map_mul]; exact congrArg (fun z : 𝒪[k] => valuation k (z : k)) hab
   have h6 : valuation k (a : k) * valuation k (b : k) < 1 * uniformizer k :=
-    mul_lt_mul_of_lt_of_le_of_nonneg_of_pos ha hb zero_le (zero_lt_iff.2 uniformizer_ne_zero)
+    mul_lt_mul_of_lt_of_le_of_nonneg_of_pos ha hb zero_le (pos_iff_ne_zero.2 uniformizer_ne_zero)
   rw [← h5, hv, one_mul] at h6
   exact lt_irrefl _ h6
 

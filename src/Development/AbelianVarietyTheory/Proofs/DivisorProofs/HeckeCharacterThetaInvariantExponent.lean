@@ -60,7 +60,7 @@ theorem chiInf_expU_single {μ : HChar E} {e : InfinitePlace E → ℤ} (h : IsM
       Complex.exp ((e v : ℂ) / 2 * z + (-(e v : ℂ) / 2) * starRingEnd ℂ z) := by
   rw [h.2.2.2.2, Finset.prod_eq_single v]
   · change (Complex.exp ((Pi.single v z : Cinf E) v) / ((‖Complex.exp ((Pi.single v z : Cinf E) v)‖ : ℝ) : ℂ)) ^ e v = _
-    rw [Pi.single_eq_same, Complex.norm_exp, Complex.ofReal_exp, ← Complex.exp_sub, ← Complex.exp_int_mul]
+    rw [Pi.single_eq_same, Complex.norm_exp, Complex.ofReal_exp, ← Complex.exp_sub, ← Complex.exp_intCast_mul]
     congr 1
     have := Complex.add_conj z
     push_cast at this

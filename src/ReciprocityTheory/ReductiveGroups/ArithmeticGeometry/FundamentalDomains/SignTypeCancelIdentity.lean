@@ -185,16 +185,16 @@ lemma bound_castLE {n : ℕ} (h : n ≤ X.p0) (Z : X.Coord) (τ : X.Ψ) (y : Fin
       exact nsq_nonneg _
 
 lemma det_lowBlock (Z : X.Coord) (τ : X.Ψ) : (X.lowBlock Z τ).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · apply Finset.prod_eq_one
     intro a _
-    simp only [Data.lowBlock, Matrix.of_apply, if_true]
+    simp only [Data.lowBlock, Matrix.of_apply, ite_true]
     rw [dite_eq_right (by omega)]
     simp
   · intro a b hab
     have hab' : a < b := hab
     simp only [Data.lowBlock, Matrix.of_apply]
-    rw [if_neg (ne_of_lt hab'), dite_eq_right]
+    rw [ite_eq_right (ne_of_lt hab'), dite_eq_right]
     · simp
     · intro hh
       have : (a : ℕ) < b := hab'
@@ -204,7 +204,7 @@ lemma psgn_add (p0 k : ℕ) : psgn p0 (p0 + k) = (-1) ^ k := by
   induction k with
   | zero => simp [psgn_eq_one le_rfl]
   | succ k ih =>
-    rw [← add_assoc, psgn_succ, ih, sgn, if_neg (by omega), pow_succ]
+    rw [← add_assoc, psgn_succ, ih, sgn, ite_eq_right (by omega), pow_succ]
 
 lemma signType_cancel_identity (k : ℕ) (D : ℂ) (hD : 0 < D.re) : 0 < (-1 : ℝ) ^ k * (((-1 : ℂ) ^ k) * D).re := by
   have h1 : ((-1 : ℂ) ^ k) = (((-1 : ℝ) ^ k : ℝ) : ℂ) := by push_cast; rfl
@@ -265,8 +265,8 @@ lemma minor_gt {x : Frame X.Ψ r} (ho : X.IsOrtho x) {Z : X.Coord} (hZ : X.zN Z 
     rintro t ⟨v, -, rfl⟩
     positivity
   have hpd := posDef_of_bound A B hZ (bound_castLE X (le_refl X.p0) Z τ) hs0
-  haveI : Invertible (1 : Matrix (Fin k) (Fin k) ℂ) := invertibleOne
-  haveI : Invertible (-1 : Matrix (Fin k) (Fin k) ℂ) := invertibleNeg 1
+  have : Invertible (1 : Matrix (Fin k) (Fin k) ℂ) := invertibleOne
+  have : Invertible (-1 : Matrix (Fin k) (Fin k) ℂ) := invertibleNeg 1
   have heq : dmin X.Gm (X.xZ x Z) τ ⟨X.p0 + k, hi⟩ =
       (-1 : ℂ) ^ k * (1 - Aᵀ * A.map (starRingEnd ℂ) + Bᵀ * B.map (starRingEnd ℂ)).det := by
     unfold dmin lminor

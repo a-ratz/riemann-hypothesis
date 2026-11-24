@@ -196,8 +196,8 @@ theorem mem_span_singleton_of_isNilpotent_of_associatedPrimes {R : Type} [CommRi
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   obtain ⟨P, hPa, hle⟩ := exists_le_isAssociatedPrime_of_isNoetherianRing R
     (Ideal.Quotient.mk (Ideal.span {x}) n) h0
-  haveI : P.IsPrime := hPa.isPrime
-  haveI := hP P hPa
+  have : P.IsPrime := hPa.isPrime
+  have := hP P hPa
   have hz : algebraMap R (Localization.AtPrime P) n = 0 :=
     (hn.map (algebraMap R (Localization.AtPrime P))).eq_zero
   obtain ⟨⟨s, hs⟩, hsn⟩ := (IsLocalization.map_eq_zero_iff P.primeCompl _ n).1 hz
@@ -283,15 +283,15 @@ theorem isReduced_of_normal (n : ℕ)
     (N : Type) [CommRing N] [IsDomain N] [IsIntegrallyClosed N] [Algebra.EssFiniteType ℤ N]
     (hdimN : ringKrullDim N ≤ (n : WithBot ℕ∞)) (I : Ideal N)
     (hIjac : I ≤ Ideal.jacobson (⊥ : Ideal N)) : IsReduced (AdicCompletion I N) := by
-  haveI : IsNoetherianRing N := Algebra.EssFiniteType.isNoetherianRing ℤ N
+  have : IsNoetherianRing N := Algebra.EssFiniteType.isNoetherianRing ℤ N
   by_cases hbot : I = ⊥
   · subst hbot
     exact isReduced_of_injective (AdicCompletion.ofAlgEquiv (⊥ : Ideal N)).symm.toRingEquiv.toRingHom
       (AdicCompletion.ofAlgEquiv (⊥ : Ideal N)).symm.injective
   obtain ⟨x, hxI, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hbot
   let R := AdicCompletion I N
-  haveI : IsNoetherianRing R := _root_.GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion N I
-  haveI : Module.Flat N R := AdicCompletion.flat_of_isNoetherian I
+  have : IsNoetherianRing R := _root_.GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion N I
+  have : Module.Flat N R := AdicCompletion.flat_of_isNoetherian I
   have hxR : algebraMap N R x ∈ nonZeroDivisors R := by
     have hxA : IsSMulRegular N x := IsSMulRegular.of_ne_zero hx0
     have h : IsSMulRegular R (algebraMap N R x) := hxA.of_flat
@@ -306,11 +306,11 @@ theorem isReduced_of_normal (n : ℕ)
   have hredq : ∀ q : Ideal N, q.IsPrime → x ∈ q → IsReduced (R ⧸ q.map (algebraMap N R)) := by
     intro q hq hxq
     obtain ⟨e⟩ := _root_.GlobalTheory.adicCompletion_quotient_ringEquiv N I q
-    haveI : IsDomain (N ⧸ q) := Ideal.Quotient.isDomain q
-    haveI : Algebra.EssFiniteType N (N ⧸ q) := inferInstance
+    have : IsDomain (N ⧸ q) := Ideal.Quotient.isDomain q
+    have : Algebra.EssFiniteType N (N ⧸ q) := inferInstance
     haveI hess : @Algebra.EssFiniteType ℤ (N ⧸ q) _ _ (Ring.toIntAlgebra _) := by
-      letI := Ring.toIntAlgebra (N ⧸ q)
-      haveI : IsScalarTower ℤ N (N ⧸ q) := .of_algebraMap_eq fun z => by simp
+      let := Ring.toIntAlgebra (N ⧸ q)
+      have : IsScalarTower ℤ N (N ⧸ q) := .of_algebraMap_eq fun z => by simp
       exact Algebra.EssFiniteType.comp ℤ N (N ⧸ q)
     have hj : I.map (Ideal.Quotient.mk q) ≤ Ideal.jacobson (⊥ : Ideal (N ⧸ q)) :=
       map_le_jacobson_of_comap_isMaximal _
@@ -322,7 +322,7 @@ theorem isReduced_of_normal (n : ℕ)
           (Ideal.Quotient.factor_surjective (by rwa [Ideal.span_singleton_le_iff_mem]))
       exact ((add_le_add h2 le_rfl).trans h1).trans hdimN
     obtain ⟨m, hmn, hm⟩ := exists_lt_of_add_one_le _ n ringKrullDim_nonneg_of_nontrivial hd1
-    haveI := ih m hmn (N ⧸ q) hm _ hj
+    have := ih m hmn (N ⧸ q) hm _ hj
     exact isReduced_of_injective e.toRingHom e.injective
   refine _root_.GlobalTheory.isReduced_of_nonZeroDivisor_mem_jacobson_of_associatedPrimes R (algebraMap N R x) hxR hxjac ?_
   intro P _ hP
@@ -336,27 +336,27 @@ theorem isReduced_of_dim_le : ∀ (n : ℕ) (D : Type) [CommRing D] [IsDomain D]
   induction n using Nat.strong_induction_on with
   | _ n ih =>
   intro D _ _ _ hdim J hJ
-  haveI : IsNoetherianRing D := Algebra.EssFiniteType.isNoetherianRing ℤ D
+  have : IsNoetherianRing D := Algebra.EssFiniteType.isNoetherianRing ℤ D
 
   let N := integralClosure D (FractionRing D)
-  haveI : Module.Finite D N := _root_.GlobalTheory.finite_integralClosure_of_essFiniteType_int D
-  haveI : IsIntegrallyClosed N := integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing D)
+  have : Module.Finite D N := _root_.GlobalTheory.finite_integralClosure_of_essFiniteType_int D
+  have : IsIntegrallyClosed N := integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing D)
   have hinj : Function.Injective (algebraMap D N) := by
     intro a b hab
     have := congrArg (fun y : N => (y : FractionRing D)) hab
     exact IsFractionRing.injective D (FractionRing D) this
   have hdimN : ringKrullDim N ≤ (n : WithBot ℕ∞) := by
     rw [ReciprocityTheory.CA.ringKrullDim_eq_of_isIntegral_of_injective hinj]; exact hdim
-  haveI : Algebra.EssFiniteType D N := inferInstance
+  have : Algebra.EssFiniteType D N := inferInstance
   haveI hessN : @Algebra.EssFiniteType ℤ N _ _ (Ring.toIntAlgebra _) := by
-    letI := Ring.toIntAlgebra N
-    haveI : IsScalarTower ℤ D N := .of_algebraMap_eq fun z => by simp
+    let := Ring.toIntAlgebra N
+    have : IsScalarTower ℤ D N := .of_algebraMap_eq fun z => by simp
     exact Algebra.EssFiniteType.comp ℤ D N
   have hIjac : J.map (algebraMap D N) ≤ Ideal.jacobson (⊥ : Ideal N) :=
     map_le_jacobson_of_comap_isMaximal _
       (fun M hM => Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := D) M) J hJ
   obtain ⟨f, hf⟩ := _root_.GlobalTheory.adicCompletion_injective_ringHom_of_finite D N hinj J
-  haveI := isReduced_of_normal n ih N hdimN _ hIjac
+  have := isReduced_of_normal n ih N hdimN _ hIjac
   exact isReduced_of_injective f hf
 
 theorem isReduced_adicCompletion : ∀ (D : Type) [CommRing D] [IsDomain D] [Algebra.EssFiniteType ℤ D]
@@ -769,7 +769,7 @@ theorem exists_primitive_of_aeval_eq_zero {S : Type*} [CommRing S] [IsDomain S] 
   have hc' : ∀ v, v ∉ g.support → g₀.coeff v = 0 := by
     intro v hv
     simp only [g₀, MvPolynomial.coeff_sum, MvPolynomial.coeff_monomial]
-    exact Finset.sum_eq_zero fun w hw => if_neg (fun h : w = v => hv (h ▸ hw))
+    exact Finset.sum_eq_zero fun w hw => ite_eq_right (fun h : w = v => hv (h ▸ hw))
   have hgd : g = MvPolynomial.C d * g₀ := by
     ext v
     rw [MvPolynomial.coeff_C_mul]
@@ -794,7 +794,7 @@ theorem exists_primitive_of_aeval_eq_zero {S : Type*} [CommRing S] [IsDomain S] 
 theorem quasiFiniteAt_iff {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S) (q : Ideal S)
     [q.IsPrime] :
     f.QuasiFiniteAt q ↔ ((algebraMap S (Localization.AtPrime q)).comp f).QuasiFinite := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have : f = algebraMap R S := rfl
   rw [this, ← IsScalarTower.algebraMap_eq R S (Localization.AtPrime q),
     RingHom.quasiFinite_algebraMap]
@@ -955,9 +955,9 @@ theorem integralClosure_of_fractions (P A : Type) [CommRing P] [IsDomain P] [IsN
   have hPK : Function.Injective (algebraMap P K) := by
     rw [IsScalarTower.algebraMap_eq P A K]
     exact hιinj.comp hinj
-  haveI : FaithfulSMul P K := (faithfulSMul_iff_algebraMap_injective P K).mpr hPK
-  letI : Algebra F K := FractionRing.liftAlgebra P K
-  haveI : IsScalarTower P F K := FractionRing.isScalarTower_liftAlgebra P K
+  have : FaithfulSMul P K := (faithfulSMul_iff_algebraMap_injective P K).mpr hPK
+  let : Algebra F K := FractionRing.liftAlgebra P K
+  have : IsScalarTower P F K := FractionRing.isScalarTower_liftAlgebra P K
 
   have halgA : ∀ a : A, IsAlgebraic P (algebraMap A K a) := by
     intro a
@@ -968,18 +968,18 @@ theorem integralClosure_of_fractions (P A : Type) [CommRing P] [IsDomain P] [IsN
       rw [← hab, map_mul, mul_assoc, mul_inv_cancel₀ ht0, mul_one]
     rw [this]
     exact (hb.algebraMap (B := K)).isAlgebraic.mul (ht.algebraMap (B := K)).isAlgebraic.inv
-  haveI hPKalg : Algebra.IsAlgebraic P K := by
+  have hPKalg : Algebra.IsAlgebraic P K := by
     refine ⟨fun x => ?_⟩
     obtain ⟨a, s, _, rfl⟩ := IsFractionRing.div_surjective (A := A) x
     rw [div_eq_mul_inv]
     exact (halgA a).mul (halgA s).inv
-  haveI : Algebra.IsAlgebraic F K := (IsFractionRing.comap_isAlgebraic_iff (A := P) (K := F)).mp hPKalg
-  haveI : Algebra.EssFiniteType A K := .of_isLocalization K (nonZeroDivisors A)
-  haveI : Algebra.EssFiniteType P K := .comp P A K
-  haveI : Algebra.EssFiniteType F K := .of_comp P F K
-  haveI : FiniteDimensional F K := Algebra.finite_of_essFiniteType_of_isAlgebraic
-  haveI : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective P F)
-  haveI hic : IsIntegralClosure B P K :=
+  have : Algebra.IsAlgebraic F K := (IsFractionRing.comap_isAlgebraic_iff (A := P) (K := F)).mp hPKalg
+  have : Algebra.EssFiniteType A K := .of_isLocalization K (nonZeroDivisors A)
+  have : Algebra.EssFiniteType P K := .comp P A K
+  have : Algebra.EssFiniteType F K := .of_comp P F K
+  have : FiniteDimensional F K := Algebra.finite_of_essFiniteType_of_isAlgebraic
+  have : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective P F)
+  have hic : IsIntegralClosure B P K :=
     { algebraMap_injective := hιinj.comp Subtype.val_injective
       isIntegral_iff := by
         intro x
@@ -990,7 +990,7 @@ theorem integralClosure_of_fractions (P A : Type) [CommRing P] [IsDomain P] [IsN
           exact ⟨⟨a, ha⟩, rfl⟩
         · rintro ⟨y, rfl⟩
           exact (y.2.algebraMap (B := K)) }
-  haveI hfrac : IsFractionRing B K := IsIntegralClosure.isFractionRing_of_finite_extension P F K B
+  have hfrac : IsFractionRing B K := IsIntegralClosure.isFractionRing_of_finite_extension P F K B
   refine ⟨IsIntegralClosure.finite P F K B, ?_, ?_, ?_⟩
   · refine (isIntegrallyClosed_iff K).mpr ?_
     intro x hx
@@ -1022,7 +1022,7 @@ theorem GlobalTheory.normal_local_is_localisation_of_finite_over_polynomial :
   intro A _ _ _ _ _ hess
   obtain ⟨S₀, M, hft, hlocM⟩ := (Algebra.essFiniteType_iff_exists_subalgebra ℤ A).mp hess
   let 𝔮 : Ideal S₀ := (maximalIdeal A).comap (algebraMap S₀ A)
-  haveI h𝔮 : 𝔮.IsPrime := Ideal.comap_isPrime _ _
+  have h𝔮 : 𝔮.IsPrime := Ideal.comap_isPrime _ _
   have hunit : ∀ s : S₀, s ∉ 𝔮 → IsUnit (algebraMap S₀ A s) := by
     intro s hs
     by_contra hu
@@ -1030,18 +1030,18 @@ theorem GlobalTheory.normal_local_is_localisation_of_finite_over_polynomial :
   have hM : M ≤ 𝔮.primeCompl := by
     intro m hm hmem
     exact (mem_maximalIdeal _).mp hmem (IsLocalization.map_units A ⟨m, hm⟩)
-  haveI hat : IsLocalization 𝔮.primeCompl A :=
+  have hat : IsLocalization 𝔮.primeCompl A :=
     IsLocalization.of_le M _ hM (fun s hs => hunit s hs)
-  haveI : CharZero S₀ := (algebraMap S₀ A).charZero
+  have : CharZero S₀ := (algebraMap S₀ A).charZero
   obtain ⟨r, y, hy, hqf⟩ := _root_.GlobalTheory.exists_algebraicIndependent_int_quasiFiniteAt S₀ 𝔮
   let P := MvPolynomial (Fin r) ℤ
-  letI algPS : Algebra P S₀ := (MvPolynomial.aeval y : P →ₐ[ℤ] S₀).toRingHom.toAlgebra
-  letI algPA : Algebra P A := ((algebraMap S₀ A).comp (algebraMap P S₀)).toAlgebra
-  haveI : IsScalarTower P S₀ A := .of_algebraMap_eq' rfl
-  haveI : IsScalarTower ℤ P S₀ := .of_algebraMap_eq' (RingHom.ext_int _ _)
-  haveI : IsScalarTower ℤ P A := .of_algebraMap_eq' (RingHom.ext_int _ _)
-  haveI : Algebra.FiniteType P S₀ := .of_restrictScalars_finiteType ℤ P S₀
-  haveI : Algebra.EssFiniteType P A := .of_comp ℤ P A
+  let algPS : Algebra P S₀ := (MvPolynomial.aeval y : P →ₐ[ℤ] S₀).toRingHom.toAlgebra
+  let algPA : Algebra P A := ((algebraMap S₀ A).comp (algebraMap P S₀)).toAlgebra
+  have : IsScalarTower P S₀ A := .of_algebraMap_eq' rfl
+  have : IsScalarTower ℤ P S₀ := .of_algebraMap_eq' (RingHom.ext_int _ _)
+  have : IsScalarTower ℤ P A := .of_algebraMap_eq' (RingHom.ext_int _ _)
+  have : Algebra.FiniteType P S₀ := .of_restrictScalars_finiteType ℤ P S₀
+  have : Algebra.EssFiniteType P A := .of_comp ℤ P A
   have hinj : Function.Injective (algebraMap P A) :=
     (Subtype.val_injective : Function.Injective (algebraMap S₀ A)).comp
       ((algebraicIndependent_iff_injective_aeval).mp hy)
@@ -1227,7 +1227,7 @@ theorem isIntegrallyClosed_of_conductor_nonZeroDivisor_of_associatedPrimes
     (A := R) (M := R ⧸ Ideal.span {x}) (x := Ideal.Quotient.mk (Ideal.span {x}) s)
   apply key
   intro P hP
-  haveI hPp : P.IsPrime := hP.isPrime
+  have hPp : P.IsPrime := hP.isPrime
   obtain ⟨hdom, hic⟩ := hloc P hP
   let RP := Localization.AtPrime P
   let K := FractionRing RP
@@ -1292,12 +1292,12 @@ theorem completion_isDomain_and_isIntegrallyClosed :
   have hred := _root_.GlobalTheory.CompletionReduced.isReduced_adicCompletion
   have hcond := _root_.GlobalTheory.exists_conductor_adicCompletion_of_essFiniteType
   intro A _ _ _ _ _ _
-  haveI : IsNoetherianRing A := Algebra.EssFiniteType.isNoetherianRing ℤ A
+  have : IsNoetherianRing A := Algebra.EssFiniteType.isNoetherianRing ℤ A
   set m := maximalIdeal A with hm
   let R := AdicCompletion m A
-  haveI : IsNoetherianRing R := hnoeth A m
-  haveI : Module.Flat A R := AdicCompletion.flat_of_isNoetherian m
-  haveI : IsReduced R := hred A m (IsLocalRing.maximalIdeal_le_jacobson _)
+  have : IsNoetherianRing R := hnoeth A m
+  have : Module.Flat A R := AdicCompletion.flat_of_isNoetherian m
+  have : IsReduced R := hred A m (IsLocalRing.maximalIdeal_le_jacobson _)
   obtain ⟨x, hx0, hx⟩ := hcond A
   have hxR : algebraMap A R x ∈ nonZeroDivisors R := by
     have hxA : IsSMulRegular A x := IsSMulRegular.of_ne_zero hx0
@@ -1309,14 +1309,14 @@ theorem completion_isDomain_and_isIntegrallyClosed :
   have hredq : ∀ q : Ideal A, q.IsPrime → x ∈ q → IsReduced (R ⧸ q.map (algebraMap A R)) := by
     intro q hq _
     obtain ⟨e⟩ := hquot A m q
-    haveI : IsDomain (A ⧸ q) := Ideal.Quotient.isDomain q
-    haveI : Algebra.EssFiniteType A (A ⧸ q) := inferInstance
+    have : IsDomain (A ⧸ q) := Ideal.Quotient.isDomain q
+    have : Algebra.EssFiniteType A (A ⧸ q) := inferInstance
     haveI hess : @Algebra.EssFiniteType ℤ (A ⧸ q) _ _ (Ring.toIntAlgebra _) := by
-      letI := Ring.toIntAlgebra (A ⧸ q)
-      haveI : IsScalarTower ℤ A (A ⧸ q) := .of_algebraMap_eq fun z => by simp
+      let := Ring.toIntAlgebra (A ⧸ q)
+      have : IsScalarTower ℤ A (A ⧸ q) := .of_algebraMap_eq fun z => by simp
       exact Algebra.EssFiniteType.comp ℤ A (A ⧸ q)
     have hj : m.map (Ideal.Quotient.mk q) ≤ Ideal.jacobson (⊥ : Ideal (A ⧸ q)) := by
-      haveI : IsLocalRing (A ⧸ q) := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
+      have : IsLocalRing (A ⧸ q) := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
       rw [Ideal.map_le_iff_le_comap]
       intro a ha
       refine Ideal.mem_comap.mpr (IsLocalRing.maximalIdeal_le_jacobson _ ?_)
@@ -1332,7 +1332,7 @@ theorem completion_isDomain_and_isIntegrallyClosed :
         have := m.sub_mem (m.mul_mem_right b ha) h3
         simpa using this
       exact (Ideal.ne_top_iff_one m).mp (IsLocalRing.maximalIdeal.isMaximal A).ne_top h4
-    haveI := hred (A ⧸ q) _ hj
+    have := hred (A ⧸ q) _ hj
     exact isReduced_of_injective e.toRingHom e.injective
   have hcl : IsIntegrallyClosed R := by
     refine hclosed R (algebraMap A R x) hxR ?_ hx

@@ -401,7 +401,7 @@ theorem rkQP_apply (τ : E →+* ℂ) (v : Vsp dim) (i : Idx dim) :
     rw [Finset.sum_eq_single b]
     · simp
     · intro x _ hx
-      rw [Pi.single_apply, if_neg]
+      rw [Pi.single_apply, ite_eq_right]
       · simp
       · intro h
         apply hx
@@ -1480,9 +1480,9 @@ theorem sum_sq_norm_ge_of_span [IsCMField E] (X : PT E) (I : Submodule ℤ (Vsp 
       rw [← hy j, IsCMField.coe_ringOfIntegersComplexConj, ← htr, map_mul,
         IsCMField.complexConj_apply_apply]
   have hmem : l ∈ Dual1 E * Dual1 E := by
-    rw [hldef, ← FractionalIdeal.mem_coe]
+    rw [hldef, ← FractionalIdeal.mem_coeToSubmodule]
     exact Submodule.sum_mem _ fun j _ =>
-      (FractionalIdeal.mem_coe).2 (FractionalIdeal.mul_mem_mul (hmemD j) (hmemD' j))
+      (FractionalIdeal.mem_coeToSubmodule).2 (FractionalIdeal.mul_mem_mul (hmemD j) (hmemD' j))
   have hnorm := one_le_norm_mul l hl hmem
 
   have hprodC : ((Algebra.norm ℚ l : ℚ) : ℂ) = ((∏ σ, a σ : ℝ) : ℂ) := by
@@ -1565,7 +1565,7 @@ theorem split_bot (X : PT E) {DF : ℕ} (P : Par X DF) (h : ¬ X.la1 < P.th) : I
   have h' : ¬ X.la1 < th (E := E) P.q P.R0 := h
   have hph : P.ph = 0 := by
     unfold Par.ph PT.ph
-    rw [if_neg h']
+    rw [ite_eq_right h']
   refine
     { le := bot_le
       sat := ?_
@@ -1614,7 +1614,7 @@ theorem split_bot (X : PT E) {DF : ℕ} (P : Par X DF) (h : ¬ X.la1 < P.th) : I
     have hu1 := hu.1
     rw [hIR, Submodule.mem_bot] at hu1
     exact hu1
-  · haveI : IsEmpty (Fin (Module.finrank ℝ (IR (⊥ : Submodule ℤ (Vsp X.dim))))) := by
+  · have : IsEmpty (Fin (Module.finrank ℝ (IR (⊥ : Submodule ℤ (Vsp X.dim))))) := by
       rw [h0]; infer_instance
     exact ⟨fun _ => 0, fun _ => 0, fun j => isEmptyElim j, linearIndependent_empty_type,
       fun j => isEmptyElim j⟩
@@ -1682,7 +1682,7 @@ theorem split_pos (X : PT E) {DF : ℕ} (P : Par X DF) (h : X.la1 < P.th) : ∃ 
   have hne := L_ne_zero X hr τ
   have hla := first_minimum_pos X hne
   have h' : X.la1 < th (E := E) P.q P.R0 := h
-  have hph : P.ph = 2 * PT.f E / (PT.rd E ^ 2 * X.la1 ^ 2) := by rw [Par.ph, PT.ph, if_pos h']
+  have hph : P.ph = 2 * PT.f E / (PT.rd E ^ 2 * X.la1 ^ 2) := by rw [Par.ph, PT.ph, ite_eq_left h']
   obtain ⟨ρ, hρ, hfr⟩ := rank_iso X I hI.le hI.stable hI.iso
   have hin : ∀ x ∈ X.L, ‖x‖ < P.th → x ∈ I := by
     intro x hx hxs

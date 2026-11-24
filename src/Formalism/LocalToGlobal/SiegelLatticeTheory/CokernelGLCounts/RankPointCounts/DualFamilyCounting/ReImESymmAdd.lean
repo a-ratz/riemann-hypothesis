@@ -183,7 +183,7 @@ theorem omg_int : IsIntegral ℤ (omg D) := by
 
 private theorem embS_conj' (τ : D.what₂.Tau) (x : D.host.E) :
     embS D τ (D.host.conj x) = (starRingEnd ℂ) (embS D τ x) := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   rw [← Formalism.MainNotions.S.Inh.tie_star]
   first
     | exact (NumberField.IsCMField.isConj_complexConj D.host.E (embS D τ)).eq x
@@ -366,7 +366,7 @@ theorem mem_cLatIm (u : D.what₂.Word) (a : Fin D.R.rS) (y : InfinitePlace X.B.
     have hset : {t | t ∈ ((aaD D a * aaD D a : FIE) : Set D.host.E) ∧ D.host.conj t = -t} =
         ((Ssub a : AddSubgroup D.host.E) : Set D.host.E) := by
       ext t
-      rw [Set.mem_setOf_eq, aa_sq]
+      rw [Set.mem_ofPred_eq, aa_sq]
       exact Iff.rfl
     show AddSubgroup.closure ((fun t v => (embS D (X.pl v) t).im) ''
       {t | t ∈ ((aaD D a * aaD D a : FIE) : Set D.host.E) ∧ D.host.conj t = -t}) = _
@@ -419,7 +419,7 @@ theorem bb_le (a : Fin D.R.rS) :
   have hm : -(D.host.sqrtMinusD * (D.host.sqrtMinusD * (y : D.host.E))) ∈ IIm a :=
     (IIm a : Submodule (𝓞 D.host.E) D.host.E).neg_mem
       (IIm_mul_int a hy' ⟨D.host.sqrtMinusD, sqrtMinusD_int⟩)
-  rw [FractionalIdeal.mem_coe, FractionalIdeal.mem_singleton_mul]
+  rw [FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_singleton_mul]
   refine ⟨(D.host.d : D.host.F) * y, ?_, ?_⟩
   · rw [mem_JF]
     convert hm using 1

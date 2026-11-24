@@ -148,7 +148,7 @@ theorem f_eq_on_at {d d₁ : Deco E n ST SG} (hd : d.Ok) (hd₁ : d₁.Ok) (P : 
   have hne : Ideal.Quotient.mk P.1.asIdeal (s * s₁) ≠ 0 := by
     rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
     exact fun hm => (P.1.isPrime.mem_or_mem hm).elim hs hs₁
-  letI := Ideal.Quotient.field P.1.asIdeal
+  let := Ideal.Quotient.field P.1.asIdeal
   exact mul_left_cancel₀ hne e
 end Loc
 

@@ -225,8 +225,8 @@ theorem minpoly_separable_of_sq_zero_free
     (hc : ∀ P : Polynomial ℂ, Polynomial.aeval (ψ c) P * Polynomial.aeval (ψ c) P = 0 →
       Polynomial.aeval (ψ c) P = 0) :
     (minpoly F c).Separable := by
-  haveI : CharZero F := (RingHom.charZero_iff σ.injective).2 inferInstance
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : CharZero F := (RingHom.charZero_iff σ.injective).2 inferInstance
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   have hinj : Function.Injective ψ := ψ.injective
   have hcomp : ψ.comp (algebraMap F C) = (algebraMap ℂ (Matrix (Fin n) (Fin n) ℂ)).comp σ := by
     ext x
@@ -516,7 +516,7 @@ theorem natDegree_minpoly_eq : ∀ (F C : Type) [Field F] [Ring C] [Algebra F C]
   have hxsep : (minpoly K x).Separable := (hsep.map).of_dvd hdvd
 
   let S := Subalgebra.centralizer F ({c} : Set C)
-  letI : CommRing S :=
+  let : CommRing S :=
     { (inferInstance : Ring S) with
       mul_comm := fun a b => Subtype.ext (by
         have ha : Commute (a : C) c := ((Subalgebra.mem_centralizer_iff F).mp a.2 c rfl).symm
@@ -621,7 +621,7 @@ theorem ubc_val_eq (G : HTGroup p) (β : G.Cˣ) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t 
   rw [map_mul, map_mul, map_inv]
   simp only [Subgroup.coe_mul, Subgroup.coe_inv, Prod.fst_mul, Prod.fst_inv, Units.val_mul, _root_.mul_inv_rev, inv_inv]
   rw [hm]
-  simp only [Units.coe_map, MonoidHom.coe_coe, mul_assoc]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass, mul_assoc]
   rw [Units.coe_map_inv]
   rfl
 

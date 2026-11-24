@@ -138,7 +138,7 @@ theorem _root_.GlobalTheory.CongruenceDet.isIntegral_det_sub_one {R E : Type} [C
   classical
   let K := AlgebraicClosure E
 
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap E K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap E K).injective
   have hroots : ∀ μ ∈ (g.map (algebraMap E K)).charpoly.roots, IsIntegral R ((μ - 1) / M) :=
     fun μ hμ => _root_.GlobalTheory.CongruenceDet.isIntegral_root hM Λ g hfg hspan hg μ
       (Polynomial.isRoot_of_mem_roots hμ)

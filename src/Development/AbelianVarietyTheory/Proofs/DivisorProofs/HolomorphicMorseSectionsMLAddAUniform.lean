@@ -298,7 +298,7 @@ theorem qf_smul {n : ℕ} (c : ℂ) (A : Matrix (Fin n) (Fin n) ℂ) (w : V n) :
 
 theorem qf_one {n : ℕ} (w : V n) : qf (1 : Matrix (Fin n) (Fin n) ℂ) w = ((‖w‖ ^ 2 : ℝ) : ℂ) := by
   rw [EuclideanSpace.norm_sq_eq]
-  simp only [qf, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [qf, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   push_cast
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Complex.mul_conj, Complex.normSq_eq_norm_sq]; push_cast; ring
@@ -563,15 +563,15 @@ theorem re_holomorphicQuadraticTaylorCoeff_sum_eq (B : V n →L[ℝ] V n →L[�
   have e : ∀ x y : Fin n → V n, B (∑ j, x j) (∑ k, y k) = ∑ j, ∑ k, B (x j) (y k) := by
     intro x y
 
-    rw [map_sum B, ContinuousLinearMap.sum_apply]
+    rw [map_sum B, sum_apply]
 
     simp_rw [map_sum]
   rw [e, e, Complex.re_sum, Finset.mul_sum, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Complex.re_sum, Finset.mul_sum, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
-  simp only [map_add (f := _), map_sub, map_smul, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, qc,
+  simp only [map_add (f := _), map_sub, map_smul, add_apply,
+    sub_apply, smul_apply, smul_eq_mul, qc,
     Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.ofReal_re,
     Complex.ofReal_im, Complex.I_re, Complex.I_im, Complex.div_ofNat_re, Complex.div_ofNat_im,
     Complex.sub_re, Complex.sub_im]
@@ -653,7 +653,7 @@ theorem taylor_two_unif (U K : Set (V n)) (φ : V n → ℝ) (η : ℝ) (hU : Is
     intro t ht
     have hT := hclose t (Ico_subset_Icc_self ht)
     calc ‖f2 (z + t • w) w w - f2 z w w‖ = ‖(f2 (z + t • w) - f2 z) w w‖ := by
-          simp only [ContinuousLinearMap.sub_apply]
+          simp only [sub_apply]
       _ ≤ ‖f2 (z + t • w) - f2 z‖ * ‖w‖ * ‖w‖ := ContinuousLinearMap.le_opNorm₂ _ _ _
       _ ≤ η * ‖w‖ * ‖w‖ := by gcongr
       _ = η * ‖w‖ ^ 2 := by ring
@@ -976,7 +976,7 @@ theorem meas_integral_in_chart : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [I
     ω.meas S = ∫⁻ v in c.e '' S, ENNReal.ofReal (ω.dens c (c.e.symm v)) ∧
     ∫ y in S, F y ∂ω.meas = ∫ v in c.e '' S, F (c.e.symm v) * ω.dens c (c.e.symm v) := by
   intro k _ X _ p D hX σ ω c S F hS hc hF
-  haveI : SecondCountableTopology (CxPts p σ) :=
+  have : SecondCountableTopology (CxPts p σ) :=
     CxPts.secondCountableTopology_of_isProjOver σ hX.isProjOver
   have hmeas : ∀ A : Set (CxPts p σ), MeasurableSet A → A ⊆ c.e.source →
       ω.meas A = ∫⁻ v in c.e '' A, ENNReal.ofReal (ω.dens c (c.e.symm v)) := by
@@ -1082,9 +1082,9 @@ theorem integral_over_chart_le_l2 {D : ℕ} (hX : IsArithVar p D) (hs : GenSmoot
     (σ : k →+* ℂ) (C : AlgChart p σ D) (T : Set (ReciprocityTheory.L2DbarEstimates.V D)) (hT : IsOpen T) (hTt : T ⊆ C.e.target) :
     ∫ v in T, cmb (vals P m 1 f) c σ (C.e.symm v) * (ω σ).dens C (C.e.symm v) ≤
       l2 (fun σ => (ω σ).meas) (vals P m 1 f) c := by
-  haveI : Finite (k →+* ℂ) := hX.finite_emb
-  haveI := hX.compactSpace σ
-  haveI : T2Space (CxPts p σ) := CxPts.t2Space_cxPts_of_isProjOver σ hX.isProjOver
+  have : Finite (k →+* ℂ) := hX.finite_emb
+  have := hX.compactSpace σ
+  have : T2Space (CxPts p σ) := CxPts.t2Space_cxPts_of_isProjOver σ hX.isProjOver
   obtain ⟨hfin, -⟩ := _root_.GlobalTheory.HSAmp.volDens_meas_finite_openPos k X p D hX hs σ (ω σ)
   have hcont := continuous_cmb hX P m f hf c σ
   set S := C.e.source ∩ C.e ⁻¹' T with hSdef
@@ -1204,7 +1204,7 @@ theorem local_bound {D : ℕ} (hX : IsArithVar p D) (hs : GenSmooth p D) (P : Pa
   rw [hid _ (hrU hy.2), hI, hdet, C.e.left_inv hy.1] at h0
   have hmin' : (ω σ).dens C (C.e.symm v₀) ≤ (ω σ).dens C y := by
     have := hmin hy.2
-    simp only [Set.mem_setOf_eq, C.e.left_inv hy.1] at this
+    simp only [Set.mem_ofPred_eq, C.e.left_inv hy.1] at this
     exact this
   set I := ∫ w in Metric.ball (C.e y) δ, cmb (vals P m 1 f) c σ (C.e.symm w) * (ω σ).dens C (C.e.symm w)
   have hM : 0 ≤ (m : ℝ) ^ D * I := mul_nonneg (by positivity) hInn
@@ -1225,10 +1225,10 @@ theorem cmb_le : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p 
     (f : ι → X.functionField), (∀ i, f i ∈ P.H m 1) → ∀ (c : ι → ℂ) (σ : k →+* ℂ) (y : CxPts p σ),
     cmb (vals P m 1 f) c σ y ≤ (ρ σ y / D.factorial + ε) * (m : ℝ) ^ D * l2 (fun σ => (ω σ).meas) (vals P m 1 f) c := by
   intro k _ X _ p D hX hs P hP ω ρ hρ ε hε
-  haveI : Finite (k →+* ℂ) := hX.finite_emb
+  have : Finite (k →+* ℂ) := hX.finite_emb
   choose N hN hev using fun σ (y₀ : CxPts p σ) => local_bound hX hs P hP ω ρ hρ ε hε σ y₀
   have hcov : ∀ σ : k →+* ℂ, ∃ t : Finset (CxPts p σ), ∀ y, ∃ y₀ ∈ t, y ∈ N σ y₀ := fun σ => by
-    haveI := hX.compactSpace σ
+    have := hX.compactSpace σ
     obtain ⟨t, -, ht⟩ := (isCompact_univ (X := CxPts p σ)).elim_nhds_subcover (N σ) fun y _ => hN σ y
     exact ⟨t, fun y => by simpa using ht (Set.mem_univ y)⟩
   choose t ht using hcov

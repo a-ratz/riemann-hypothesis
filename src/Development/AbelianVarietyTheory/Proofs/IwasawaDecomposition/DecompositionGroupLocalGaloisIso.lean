@@ -72,8 +72,8 @@ theorem denseRange_of_isAlgClosed (K : Type) [NontriviallyNormedField K] [Comple
     (hE : DenseRange (algebraMap E K)) (ι : Ω →ₐ[E] AlgebraicClosure K) :
     letI : NormedField (AlgebraicClosure K) := spectralNorm.normedField K (AlgebraicClosure K)
     DenseRange ι := by
-  letI : NormedField (AlgebraicClosure K) := spectralNorm.normedField K (AlgebraicClosure K)
-  letI : NormedAlgebra K (AlgebraicClosure K) := spectralNorm.normedAlgebra K (AlgebraicClosure K)
+  let : NormedField (AlgebraicClosure K) := spectralNorm.normedField K (AlgebraicClosure K)
+  let : NormedAlgebra K (AlgebraicClosure K) := spectralNorm.normedAlgebra K (AlgebraicClosure K)
   show DenseRange ι
   rw [Metric.denseRange_iff]
   intro a δ δpos
@@ -107,8 +107,8 @@ theorem exists_algEquiv_of_norm_eq (K : Type) [NontriviallyNormedField K] [Compl
     letI : NormedField (AlgebraicClosure K) := spectralNorm.normedField K (AlgebraicClosure K)
     ∀ (j j' : Ω →ₐ[E] AlgebraicClosure K), DenseRange j → (∀ x, ‖j' x‖ = ‖j x‖) →
       ∃ τ : AlgebraicClosure K ≃ₐ[K] AlgebraicClosure K, ∀ x, τ (j x) = j' x := by
-  letI : NormedField (AlgebraicClosure K) := spectralNorm.normedField K (AlgebraicClosure K)
-  letI : NormedAlgebra K (AlgebraicClosure K) := spectralNorm.normedAlgebra K (AlgebraicClosure K)
+  let : NormedField (AlgebraicClosure K) := spectralNorm.normedField K (AlgebraicClosure K)
+  let : NormedAlgebra K (AlgebraicClosure K) := spectralNorm.normedAlgebra K (AlgebraicClosure K)
   intro j j' hd h
   let Kb := AlgebraicClosure K
   let C := UniformSpace.Completion Kb
@@ -150,8 +150,8 @@ theorem isIntegral_iff_norm_le_one (E : Type) [Field E] [NumberField E] (w : Hei
     letI : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
     letI : NormedField (Kbar w) := spectralNorm.normedField (w.adicCompletion E) (Kbar w)
     ∀ y : Kbar w, IsIntegral (w.adicCompletionIntegers E) y ↔ ‖y‖ ≤ 1 := by
-  letI : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
-  letI : NormedField (Kbar w) := spectralNorm.normedField (w.adicCompletion E) (Kbar w)
+  let : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
+  let : NormedField (Kbar w) := spectralNorm.normedField (w.adicCompletion E) (Kbar w)
   intro y
   let K := w.adicCompletion E
   let O := w.adicCompletionIntegers E
@@ -209,8 +209,8 @@ theorem exists_mulEquiv_galLoc (A : ValuationSubring Ω) (w : HeightOneSpectrum 
     (ι : Ω →ₐ[E] Kbar w) (hι : IsLocEmb A w ι) :
     ∃ θ : Dec (F := E) A ≃* GalLoc w, Continuous θ ∧ Continuous θ.symm ∧
       ∀ σ : Dec (F := E) A, Lifts ι (θ σ) (σ : G E Ω) := by
-  letI : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
-  letI : NormedField (Kbar w) := spectralNorm.normedField (w.adicCompletion E) (Kbar w)
+  let : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
+  let : NormedField (Kbar w) := spectralNorm.normedField (w.adicCompletion E) (Kbar w)
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
@@ -224,7 +224,7 @@ theorem exists_mulEquiv_galLoc (A : ValuationSubring Ω) (w : HeightOneSpectrum 
 
   have hres : ∀ g : GalLoc w, ∃ σ ∈ Dec (F := E) A, Lifts ι g σ := by
     intro g
-    letI : Algebra Ω (Kbar w) := ι.toRingHom.toAlgebra
+    let : Algebra Ω (Kbar w) := ι.toRingHom.toAlgebra
     have : IsScalarTower E Ω (Kbar w) := IsScalarTower.of_algebraMap_eq fun x => (ι.commutes x).symm
     let ta : Kbar w →ₐ[E] Kbar w := g.toAlgHom.restrictScalars E
     let σ : Ω ≃ₐ[E] Ω := ta.restrictNormal' Ω

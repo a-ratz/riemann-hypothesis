@@ -80,10 +80,10 @@ attribute [local instance] Algebra.TensorProduct.rightAlgebra
 
 theorem exists_nsmul_intAf : letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
     ∀ O ∈ nhds (0 : AfE F E), ∃ N : ℕ, 0 < N ∧ ∀ x ∈ Formalism.L2.Herm.intAf F E, N • x ∈ O := by
-  letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
   intro O hO
-  haveI := rlt_isModTop F E
-  haveI := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (AfE F E)
+  have := rlt_isModTop F E
+  have := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (AfE F E)
   obtain ⟨m, b, hb⟩ := Module.Finite.exists_fin (R := ℤ) (M := 𝓞 E)
   have hc : Continuous (rlt_comb (F := F) b) := IsModuleTopology.continuous_of_linearMap _
   have h1 : (rlt_comb (F := F) b) ⁻¹' O ∈ nhds (0 : Fin m → FiniteAdeleRing (𝓞 F) F) :=
@@ -124,9 +124,9 @@ theorem congOne_nhds : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Num
     ∀ N ∈ nhds (1 : GL (Fin n) (AfE F E)), ∃ m₀ : ℕ, 0 < m₀ ∧ ∀ m : ℕ, m₀ ∣ m → 0 < m →
       ∀ k : GL (Fin n) (AfE F E), GlobalTheory.Mem.ColAd.CongOne ((m : ℕ) : 𝓞 E) k → GlobalTheory.Mem.ColAd.CongOne ((m : ℕ) : 𝓞 E) k⁻¹ → k ∈ N := by
   intro F E _ _ _ _ _ n
-  letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-  haveI := rlt_isModTop F E
-  haveI := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (AfE F E)
+  let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  have := rlt_isModTop F E
+  have := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (AfE F E)
   intro N hN
   rw [Units.isEmbedding_embedProduct.isInducing.nhds_eq_comap] at hN
   obtain ⟨t, ht, hts⟩ := Filter.mem_comap.1 hN
@@ -233,7 +233,7 @@ theorem det_ne_zero_of_sm {P : HeightOneSpectrum (𝓞 E)} {γ : WithZero (Multi
     field_simp
   have ha0' : P.valuation E a ≠ 0 := (Valuation.ne_zero_iff _).2 ha0
   simp only [x] at h4
-  rw [e, valued_algebraMap, map_inv₀, inv_le_one₀ (zero_lt_iff.2 ha0')] at h4
+  rw [e, valued_algebraMap, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ha0')] at h4
   exact absurd ha (not_lt.2 h4)
 
 theorem exists_near_entry (x : AfE F E) (P : HeightOneSpectrum (𝓞 E)) {γ : WithZero (Multiplicative ℤ)} (hγ : γ ≠ 0) :
@@ -347,11 +347,11 @@ theorem glue_approx {Q : Finset (HeightOneSpectrum (𝓞 E))} (hQ : ∀ P ∈ Q,
     ext i j
     show σ (G j i) = G' i j
     exact (PtExist.sig_glue hc Q _ _ _).trans (by rw [← PtExist.inv_apply hz]; rfl)
-  have hgQ : g ∈ RatAt Q := fun P i j => ⟨CM P.1 i j, (hG P.1 i j).trans (if_pos P.2)⟩
+  have hgQ : g ∈ RatAt Q := fun P i j => ⟨CM P.1 i j, (hG P.1 i j).trans (ite_eq_left P.2)⟩
   have hgP : ∀ P ∈ Q, ColAd.locM P g = (CM P).map (algebraMap E _) := fun P hP =>
-    Matrix.ext fun i j => (hG P i j).trans (if_pos hP)
+    Matrix.ext fun i j => (hG P i j).trans (ite_eq_left hP)
   have hgw : ∀ w, w ∉ Q → conjPrime₂ w ∉ Q → ColAd.locM w g = ColAd.locM w z := fun w h h' =>
-    Matrix.ext fun i j => (hG w i j).trans (by rw [if_neg h, if_neg h']; rfl)
+    Matrix.ext fun i j => (hG w i j).trans (by rw [ite_eq_right h, ite_eq_right h']; rfl)
   have hu : z⁻¹ * g ∈ UAd hc n := mul_mem (inv_mem hz) hg
   have key : ∀ P ∈ Q, ColAd.Sm Valued.v (vm P) (ColAd.locM P (z⁻¹ * g) - 1) ∧
       ColAd.Sm Valued.v (vm P) (ColAd.locM P (z⁻¹ * g)⁻¹ - 1) := by
@@ -389,7 +389,7 @@ theorem glue_approx {Q : Finset (HeightOneSpectrum (𝓞 E))} (hQ : ∀ P ∈ Q,
     intro x hx i j
     refine (mem_rInt_iff F E _).2 fun w => ?_
     rw [← adAt_apply, map_mul, adAt_inclE, map_natCast, map_inv₀, map_mul, map_inv₀, ← locM_sub_one_apply]
-    exact (inv_mul_le_one₀ (zero_lt_iff.2 (hm0 w))).2 (hx w i j)
+    exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 (hm0 w))).2 (hx w i j)
   exact ⟨g, hg, hgQ, cong _ fun w => (all w).1, cong _ fun w => (all w).2⟩
 
 end Main
@@ -500,7 +500,7 @@ theorem rd_all : ∀ {F E K : Type} [Field F] [NumberField F] [Field E] [NumberF
   intro F E K _ _ _ _ _ _ _ hc n _ SG Q J hJ T f bad S Λ emb HQ lamQ hQ1 hQ2 hO hR
   subst hJ
   classical
-  letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
   have hQc := conjP_notMem hc hQ1 hQ2
   have h1U : (1 : UPts hc.sig (1 : Matrix (Fin n) (Fin n) E) (FiniteAdeleRing (𝓞 F) F)) ∈
       {x : UPts hc.sig (1 : Matrix (Fin n) (Fin n) E) (FiniteAdeleRing (𝓞 F) F) | (x : GL _ _) ∈ S.U} := S.U.one_mem

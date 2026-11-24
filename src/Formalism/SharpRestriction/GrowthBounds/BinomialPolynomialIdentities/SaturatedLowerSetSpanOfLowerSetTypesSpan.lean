@@ -206,7 +206,7 @@ theorem saturatedLowerSetSpan_of_lowerSetTypesSpan (D : Formalism.BasicNotions.D
       have h1 : {x : WI n N LL B | ∀ i' ∈ ({i} : Set (Fin (N + 1))), x.1.1.mu i' ∈ pi i'} =
           {x | x.1.1.mu i ∈ pi i} := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, forall_eq]
+        simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, forall_eq]
       rw [← h1]
       exact span_standard_words_eq LL B O (fun P => ∀ i' ∈ ({i} : Set (Fin (N + 1))), P.mu i' ∈ pi i')
     simp only [hspan]

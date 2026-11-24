@@ -83,7 +83,7 @@ theorem cochain_eq_ptHom {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGr
     (k : K.K) (T : K.Obj) (f : K.triv k ⟶ T) (hf : f.deg = l) :
     h _ _ f = h _ _ (ptHom T (Charts.Hom.le f)) := by
   subst hf
-  letI := (K.triv k).alg
+  let := (K.triv k).alg
   exact cochain_fromTriv_eq K h f.deg H T (Charts.Hom.le f) f.φ.toRingHom (Charts.Hom.close f)
     (fun x ↦ f.φ.commutes x)
 

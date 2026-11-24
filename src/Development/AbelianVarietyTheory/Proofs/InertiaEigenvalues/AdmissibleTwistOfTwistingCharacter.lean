@@ -95,7 +95,7 @@ theorem finite_kP (P : Pl D.host.E) : Finite (kP P) := Ideal.finiteQuotientOfFre
 
 theorem isOfFinOrder_levFn {m : ℕ} (β : GL (Fin m) (Lev.EAf D)) (L : Formalism.L2.DIV.LevDat D.host.E ℂ m) (x : GL (Fin m) (Lev.EAf D)) :
     IsOfFinOrder (levFn β L x) := by
-  haveI : ∀ P : Pl D.host.E, Finite (kP P) := finite_kP
+  have : ∀ P : Pl D.host.E, Finite (kP P) := finite_kP
   have hprod : ∀ {ι : Type} (s : Finset ι) (f : ι → ℂˣ), (∀ i ∈ s, IsOfFinOrder (f i)) → IsOfFinOrder (∏ i ∈ s, f i) :=
     fun s f h => Finset.prod_induction f IsOfFinOrder (fun _ _ => IsOfFinOrder.mul) IsOfFinOrder.one h
   unfold levFn
@@ -169,7 +169,7 @@ theorem read_abstract {G G' Γ' R W P I V : Type} [Group G] [Group G'] [Group Γ
     obtain ⟨g, rfl⟩ := φ.surjective h
     rw [hr_apply, real.apply_symm_apply, hu]
   · refine eq_top_iff.2 fun f _ => ?_
-    haveI := Fintype.ofFinite I
+    have := Fintype.ofFinite I
     classical
     choose c hc0 hcm using fun i => hden (y i) ((real f).1 (φ.symm (y i)))
     have hd : algebraMap R (FractionRing R) (∏ i, c i) ≠ 0 := by
@@ -257,7 +257,7 @@ theorem eq_of_infOf_eq {m : ℕ} {a b : Fin m → ℤ} (ha : Antitone a) (hb : A
     ext z
     have := congrArg (z ∈ ·) h2
     simpa using this
-  have h4 := ((sa a ha).range_inj (sa b hb)).1 hr
+  have h4 := ((sa a ha).range_inj_of_wellFoundedGT (sa b hb)).1 hr
   funext i
   have := congrFun h4 i
   omega

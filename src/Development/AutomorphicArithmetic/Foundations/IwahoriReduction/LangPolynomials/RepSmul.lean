@@ -184,7 +184,7 @@ theorem UpperTheory.Kd.C7.pRepSmul :
     UpperTheory.Kd.C7.SRepSmul := by
   intro l hl hl2 Ω _ _ _ A hA jj Φ c β ζ hζ Z D b hRep
   classical
-  haveI : IsAdicComplete (Ideal.span {(l : Φ.R)}) Φ.R := Φ.fl.complete
+  have : IsAdicComplete (Ideal.span {(l : Φ.R)}) Φ.R := Φ.fl.complete
   unfold Rep at hRep ⊢
   obtain ⟨c₁, m₁, hR⟩ := hRep
   refine ⟨c₁, max m₁ 1, fun m hm => ?_⟩

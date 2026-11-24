@@ -84,7 +84,7 @@ theorem trdeg_residue_le {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] (D : 
   set V := vRing v with hV
   set k := IsLocalRing.ResidueField (V.comap (algebraMap K Ω)) with hk
   set κ := IsLocalRing.ResidueField V with hκ
-  letI inst : Algebra k κ := resAlg (F := K) v
+  let inst : Algebra k κ := resAlg (F := K) v
   have hKV : ∀ a : K, algebraMap K Ω a ∈ V := by
     intro a
     rw [hV, mem_valuationRing]
@@ -107,7 +107,7 @@ theorem trdeg_residue_le {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] (D : 
     exact h
   obtain ⟨r, hr⟩ : ∃ r : ℕ, Algebra.trdeg k κ = r :=
     Cardinal.lt_aleph0.mp (lt_of_le_of_lt hle Cardinal.natCast_lt_aleph0)
-  haveI : FaithfulSMul k κ :=
+  have : FaithfulSMul k κ :=
     (faithfulSMul_iff_algebraMap_injective k κ).mpr (algebraMap k κ).injective
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis k κ
   have hsr : Cardinal.mk s = r := by rw [hs.cardinalMk_eq_trdeg, hr]
@@ -226,7 +226,7 @@ theorem trdeg_eq_of_card {F E C : Type} [Field F] [Field E] [Field C] [Algebra F
     (hE : Algebra.trdeg F E ≤ n) (hcard : Fintype.card τ = Fintype.card σ + n)
     (hT : ∀ x : F, algebraMap F C x = algebraMap E C (algebraMap F E x)) :
     Algebra.trdeg F E = n ∧ AlgebraicIndependent E tb := by
-  haveI : IsScalarTower F E C := IsScalarTower.of_algebraMap_eq hT
+  have : IsScalarTower F E C := IsScalarTower.of_algebraMap_eq hT
   have h1 := ReciprocityTheory.MultiplicativeHeights.gauss_card_le_trdeg_add tb ub hu hmem
   have h2 := ReciprocityTheory.MultiplicativeHeights.gauss_trdeg_adjoin_le (E := E) tb
   obtain ⟨a, ha⟩ : ∃ a : ℕ, Algebra.trdeg F E = a :=

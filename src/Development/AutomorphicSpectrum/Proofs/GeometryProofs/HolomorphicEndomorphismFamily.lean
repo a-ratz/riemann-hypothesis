@@ -62,7 +62,7 @@ theorem exists_action_family : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hlift := fun c : 𝓞 E => exists_linear_lift_of_additive_family R t.G g n M (Metric.ball 0 ρ) ψ e g
     (Metric.ball 0 ρ) (fun b z => e.ex b z ≫ t.act.act c) Metric.isOpen_ball subset_rfl
     (fun b hb z w => by
-      haveI := t.act.hom c
+      have := t.act.hom c
       simp only [e.add b hb z w]
       exact (IsMonHom.monoidHom (t.act.act c) _).map_mul _ _)
     (ReciprocityTheory.ChartRestriction.G.PullbackSections.isHolTo_comp e.hol (t.act.act c).left)

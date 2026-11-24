@@ -193,7 +193,7 @@ theorem elemLoc_of (hS : SuppE) (hO : OneField) (hR : Reps) (hN : NormOpen) (hD 
         have v1 := congrArg (fun m : Measure (GL (Fin n) E) => m {z | y⁻¹ * (h * z * h⁻¹) * y ∈ ball n r}) hm
         rw [Measure.map_apply (Continuous.measurable (by fun_prop)) hmeas,
           Measure.map_apply (f := fun t : Subgroup.centralizer {γ} => (incl (t : GL (Fin n) k) : GL (Fin n) E))
-            (hcl.continuous.comp continuous_subtype_val).measurable hmeas] at v1
+            (hcl.continuous.comp continuous_subtypeVal).measurable hmeas] at v1
         have v2 : μδ.real {x : twCent (sigmaGL σ) δ | y⁻¹ * x * y ∈ ball n r} =
             j * μγ.real {x | y'⁻¹ * (x : GL (Fin n) k) * y' ∈ ball n r'} := by
           rw [← hvol γ y' _ ((d1 d).2.1 hd) hy' μγ hμγ]
@@ -201,10 +201,10 @@ theorem elemLoc_of (hS : SuppE) (hO : OneField) (hR : Reps) (hN : NormOpen) (hD 
           congr 1
           convert v1 using 2
           · ext x
-            simp only [Set.mem_setOf_eq, Set.mem_preimage]
+            simp only [Set.mem_ofPred_eq, Set.mem_preimage]
             rw [show h * (h⁻¹ * (x : GL (Fin n) E) * h) * h⁻¹ = x by group]
           · ext x
-            simp only [Set.mem_setOf_eq, Set.mem_preimage]
+            simp only [Set.mem_ofPred_eq, Set.mem_preimage]
             rw [hal _ x.2]
         refine e1.trans ?_
         rw [show quotIntegral μk _ μγ (fun g => (elemSet r' (nrmSet k r t)).indicator 1 (g⁻¹ * γ * g)) = _ from e2]
@@ -279,8 +279,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.normOpen :
   obtain ⟨t, ht0, ht1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
   set ε := valuation k t with hεdef
   set μ := min γ δ
-  have hμ0 : 0 < μ := lt_min (zero_lt_iff.mpr hγ0) (zero_lt_iff.mpr hδ0)
-  have hε0 : 0 < ε := zero_lt_iff.mpr (by simpa [hεdef] using ht0)
+  have hμ0 : 0 < μ := lt_min (pos_iff_ne_zero.mpr hγ0) (pos_iff_ne_zero.mpr hδ0)
+  have hε0 : 0 < ε := pos_iff_ne_zero.mpr (by simpa [hεdef] using ht0)
   set r₂ := μ * ε
   have hr₂0 : 0 < r₂ := mul_pos hμ0 hε0
   have hr₂μ : r₂ < μ := by
@@ -290,9 +290,9 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.normOpen :
   have hr₂γ : r₂ < γ := hr₂μ.trans_le (min_le_left _ _)
   have hr₂δ : r₂ < δ := hr₂μ.trans_le (min_le_right _ _)
   have hr₀r₂ : r₂ * δ ≤ r₂ := by
-    calc r₂ * δ ≤ r₂ * 1 := mul_le_mul_of_nonneg_left hδ1 zero_le'
+    calc r₂ * δ ≤ r₂ * 1 := mul_le_mul_of_nonneg_left hδ1 zero_le
       _ = r₂ := mul_one r₂
-  refine ⟨r₂ * δ, mul_pos hr₂0 (zero_lt_iff.mpr hδ0), hr₀r₂.trans_lt (hr₂δ.trans_le hδ1), ?_⟩
+  refine ⟨r₂ * δ, mul_pos hr₂0 (pos_iff_ne_zero.mpr hδ0), hr₀r₂.trans_lt (hr₂δ.trans_le hδ1), ?_⟩
   intro x hx
   have hmem : ∀ y : k, valuation k (y - 1) ≤ r₂ → valuation E (algebraMap k E y - 1) ≤ r := by
     intro y hy
@@ -362,7 +362,7 @@ private theorem units_cover (r : ValueGroupWithZero E) (h0 : 0 < r) (h1 : r < 1)
     intro h
     rw [h, map_zero] at hvc
     exact zero_ne_one hvc
-  have hfc : f c = Units.mk0 c hc0 := dif_neg hc0
+  have hfc : f c = Units.mk0 c hc0 := dite_eq_right hc0
   refine ⟨f c, Finset.mem_image_of_mem f hct, (f c)⁻¹ * x, ?_, (mul_inv_cancel_left _ _).symm⟩
   rw [hfc]
   have e : (((Units.mk0 c hc0)⁻¹ * x : Eˣ) : E) - 1 = c⁻¹ * ((x : E) - c) := by
@@ -543,7 +543,7 @@ theorem reps : Reps := by
   classical
   intro E _ _ _ _ n σ q hσ r h0 h1
   have hσi := hσ.isom
-  haveI := finite_quot (n := n) hσ r h0 h1
+  have := finite_quot (n := n) hσ r h0 h1
   have hS1 : ∀ {u m : Fin n → Eˣ}, Near r (sgT σ u / u) → m ∈ fixNear σ r h1 →
       Near r (sgT σ (u * m) / (u * m)) := fun hu hm => near_tw_mul hσi h1 hu hm
   have hfin : {ρ : Fin n → Eˣ | ρ ∈ Set.range (Quotient.out : (Fin n → Eˣ) ⧸ fixNear σ r h1 → _) ∧
@@ -619,7 +619,7 @@ private theorem strict_map {k E : Type} [Field k] [ValuativeRel k] [TopologicalS
   have h := ht i j hij
   rw [← (valuation k).vlt_iff_lt] at h
   rw [← (valuation E).vlt_iff_lt]
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   intro hle
   exact h (ValuativeExtension.vle_iff_vle.mp hle)
 
@@ -725,14 +725,14 @@ private theorem mem_diag (g : GL (Fin n) k) :
     exact hd.symm
 
 private theorem isClosed_diag : IsClosed ((diagT k (Fin n)).range : Set (GL (Fin n) k)) := by
-  haveI := GroundTheory.LocalField.t2Space_of_isNonarchimedeanLocalField k
+  have := GroundTheory.LocalField.t2Space_of_isNonarchimedeanLocalField k
   have he : ((diagT k (Fin n)).range : Set (GL (Fin n) k)) =
       Units.val ⁻¹' {M : Matrix (Fin n) (Fin n) k | ∀ i j, i ≠ j → M i j = 0} := by
     ext g
     exact mem_diag g
   rw [he]
   refine IsClosed.preimage Units.continuous_val ?_
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   refine isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ => isClosed_eq ?_ continuous_const
   exact (continuous_apply j).comp (continuous_apply i)
 
@@ -759,7 +759,7 @@ end
 theorem UpperTheory.Gal.InertialTypesAlt.L.volRatio :
     UpperTheory.Gal.InertialTypesAlt.L.VolRatio := by
   intro k E _ _ _ _ _ _ _ _ _ _ _ _ _ σ hgen n _ _ r r' hr0 hr1 hr0' hr1' hrr'
-  haveI : T2Space k := GroundTheory.LocalField.t2Space_of_isNonarchimedeanLocalField k
+  have : T2Space k := GroundTheory.LocalField.t2Space_of_isNonarchimedeanLocalField k
   have hemb : Topology.IsClosedEmbedding (incl : GL (Fin n) k →* GL (Fin n) E) :=
     ((bridge k E σ).2.2 n).2.2.2.1
   obtain ⟨KE, hKE, -, -⟩ := ballSub E n r hr0 hr1
@@ -792,15 +792,15 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.volRatio :
       hemb.isCompact_preimage (by rw [hKE]; exact BallG.isCompact_ball hr1)
     exact h1.inter_left isClosed_diag
   have hidx : Hr.relIndex Cr ≠ 0 := by
-    haveI : CompactSpace Cr := isCompact_iff_compactSpace.mp hCrc
+    have : CompactSpace Cr := isCompact_iff_compactSpace.mp hCrc
     have hopen : IsOpen ((Hr.subgroupOf Cr : Subgroup Cr) : Set Cr) := by
       have he : ((Hr.subgroupOf Cr : Subgroup Cr) : Set Cr) = Subtype.val ⁻¹' (Kk : Set (GL (Fin n) k)) := by
         ext g
         simp only [Subgroup.coe_subgroupOf, Set.mem_preimage, SetLike.mem_coe]
         exact ⟨fun h => h.2, fun h => ⟨g.2.1, h⟩⟩
       rw [he]
-      exact continuous_subtype_val.isOpen_preimage _ hKko
-    haveI := Subgroup.quotient_finite_of_isOpen _ hopen
+      exact continuous_subtypeVal.isOpen_preimage _ hKko
+    have := Subgroup.quotient_finite_of_isOpen _ hopen
     exact Subgroup.index_ne_zero_of_finite
   refine ⟨(Hr.relIndex Cr : ℝ), Nat.cast_pos.2 (Nat.pos_of_ne_zero hidx), ?_⟩
   intro γ y x hx hy ν hν
@@ -840,7 +840,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.volRatio :
       ext t
       exact ⟨fun h => h.2, fun h => ⟨hcD t, h⟩⟩
     rw [he]
-    exact ((continuous_const.mul continuous_subtype_val).mul continuous_const).isOpen_preimage _ hKko
+    exact ((continuous_const.mul continuous_subtypeVal).mul continuous_const).isOpen_preimage _ hKko
   have hv := (volIdx (GL (Fin n) k) (Subgroup.centralizer {γ}) C H hTc ν hν hCT hCc
     (Subgroup.comap_mono hHC) hHo).2
   have hri : H.relIndex C = Hr.relIndex Cr := by

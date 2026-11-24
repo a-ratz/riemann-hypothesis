@@ -78,7 +78,7 @@ theorem isUnit_of_re (hϖ : Irreducible ϖ) (z : QuadraticAlgebra W ϖ 0) (h : I
 
 theorem om_not_isUnit (hϖ : Irreducible ϖ) : ¬ IsUnit (ω : QuadraticAlgebra W ϖ 0) := by
   rw [isUnit_iff_norm_isUnit, norm_def]
-  simp only [omega_re, omega_im]
+  simp only [re_omega, im_omega]
   intro h
   have e : (0 : W) * 0 + 0 * 0 * 1 - ϖ * 1 * 1 = -ϖ := by ring
   rw [e, IsUnit.neg_iff] at h
@@ -91,8 +91,8 @@ theorem fact (hϖ : Irreducible ϖ) (z : QuadraticAlgebra W ϖ 0) (hz : z ≠ 0)
     refine ⟨2 * j + 1, ⟨v, a'⟩, isUnit_of_re hϖ _ v.isUnit, ?_⟩
     rw [pow_succ, om_pow, algebraMap_eq]
     ext
-    · simp only [re_mul, im_mul, omega_re, omega_im, re_C, im_C, h2]; ring
-    · simp only [re_mul, im_mul, omega_re, omega_im, re_C, im_C, h1]; ring
+    · simp only [re_mul, im_mul, re_omega, im_omega, re_C, im_C, h2]; ring
+    · simp only [re_mul, im_mul, re_omega, im_omega, re_C, im_C, h1]; ring
   by_cases ha : z.re = 0
   · have hb : z.im ≠ 0 := fun hb => hz (by ext <;> simp [ha, hb])
     obtain ⟨j, v, hv⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hb hϖ

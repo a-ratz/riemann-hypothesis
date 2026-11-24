@@ -78,7 +78,7 @@ theorem exists_frac_field {F : Type} [Field F] {Ω : Type} [Field Ω] [Algebra F
     exact W.presheaf.germ_stalkSpecializes_apply hqU q.2 r
   refine ⟨c, hc.1, fun a => ?_⟩
   obtain ⟨s, rfl⟩ := h.gen.bij.2 a
-  letI := W.presheaf.algebra_section_stalk (⟨genPt ξ, h0⟩ : U)
+  let := W.presheaf.algebra_section_stalk (⟨genPt ξ, h0⟩ : U)
   have hl := hU.isLocalization_stalk ⟨genPt ξ, h0⟩
   obtain ⟨⟨r, t⟩, e⟩ := IsLocalization.surj (hU.primeIdealOf ⟨genPt ξ, h0⟩).asIdeal.primeCompl
     (S := W.presheaf.stalk (genPt ξ)) s

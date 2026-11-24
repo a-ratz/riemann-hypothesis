@@ -110,7 +110,7 @@ theorem continuous_units_mk0 {X : Type*} [TopologicalSpace X] {f : X → ℂ} (h
 
 theorem continuous_ideleModule_val :
     Continuous fun c : IdeleClassGroup K ↦ (IdeleClassGroup.ideleModule K c : ℝ) :=
-  continuous_subtype_val.comp (IdeleClassGroup.continuous_ideleModule K)
+  continuous_subtypeVal.comp (IdeleClassGroup.continuous_ideleModule K)
 
 def modulePow (s : ℂ) : QuasiCharacter K where
   toFun c := Units.mk0 (Complex.exp (s * Real.log (IdeleClassGroup.ideleModule K c : ℝ)))

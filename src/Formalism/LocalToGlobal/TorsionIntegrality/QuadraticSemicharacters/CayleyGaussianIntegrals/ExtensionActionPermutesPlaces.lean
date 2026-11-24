@@ -92,7 +92,7 @@ theorem kernelTermShift : TermShift := by
 
 theorem formNormEquiv : FormNorm := by
   intro V _ _ _ H hH hpos
-  haveI : ProperSpace V := FiniteDimensional.proper ℂ V
+  have : ProperSpace V := FiniteDimensional.proper ℂ V
   have hhom : ∀ (r : ℝ) (z : V), (H ((r : ℂ) • z) ((r : ℂ) • z)).re = r ^ 2 * (H z z).re := by
     intro r z
     simp only [map_smul, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, Complex.conj_ofReal]

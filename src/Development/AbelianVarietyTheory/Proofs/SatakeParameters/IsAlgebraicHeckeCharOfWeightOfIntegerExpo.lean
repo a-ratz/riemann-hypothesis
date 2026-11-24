@@ -69,7 +69,7 @@ theorem dchi_eq_sum (χ : HChar E) (x : Cinf E) : dchi χ x = ∑ φ : E →+* �
     conv_lhs => rw [← Finset.univ_sum_single x]
     refine Finset.sum_congr rfl fun w _ => ?_
     unfold atEmb
-    rw [InfinitePlace.mk_embedding, if_pos rfl]
+    rw [InfinitePlace.mk_embedding, ite_eq_left rfl]
 
   rw [hx, map_sum]
 
@@ -78,13 +78,13 @@ theorem dchi_eq_sum (χ : HChar E) (x : Cinf E) : dchi χ x = ∑ φ : E →+* �
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [dchi_atEmb]
   simp only [coord_atEmb', mul_add, Finset.sum_add_distrib, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true]
+    ite_true]
 
 theorem chiInf_eq_prod (χ : HChar E) (n : (E →+* ℂ) → ℤ) (hn : ∀ τ, expo χ τ = n τ) (u : (Cinf E)ˣ) :
     ((chiInf χ u : ℂˣ) : ℂ) = ∏ φ : E →+* ℂ, coord φ (u : Cinf E) ^ n φ := by
   rw [← expU_log u, chiInf_expU, dchi_eq_sum, Complex.exp_sum]
   refine Finset.prod_congr rfl fun φ _ => ?_
-  rw [coord_expU, hn, ← Complex.exp_int_mul]
+  rw [coord_expU, hn, ← Complex.exp_intCast_mul]
 
 theorem isAlgPos_of_expo : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (χ : HChar E)
     (n : (E →+* ℂ) → ℤ), (∀ τ, expo χ τ = n τ) → IsAlgPos χ n := by

@@ -153,7 +153,7 @@ theorem exists_bar {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (h : Crv D c
 theorem exists_extension (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) :
     ∃ (M' : IntermediateField ℚ ℂ) (ρ' : M' →ₐ[ℚ] ℂ), (∀ x : ℂ, IsAlgebraic ℚ x → x ∈ M') ∧
       ∀ x ∈ M, x ∈ M' ∧ ρ' (TaylorLogMetric.liftM M' x) = ρ (TaylorLogMetric.liftM M x) := by
-  obtain ⟨φ, hφ⟩ := IsAlgClosed.surjective_restrictDomain_of_isAlgebraic (K := ℚ) (L := M) (M := ℂ)
+  obtain ⟨φ, hφ⟩ := IsAlgClosed.surjective_domRestrict_of_isAlgebraic (K := ℚ) (L := M) (M := ℂ)
     (E := algebraicClosure M ℂ) ρ
   refine ⟨(algebraicClosure M ℂ).restrictScalars ℚ, φ, ?_, ?_⟩
   · intro x hx

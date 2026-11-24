@@ -58,7 +58,7 @@ theorem nz_everywhere {S : Scheme.{0}} (G : Over S) [GrpObj G] [Smooth G.hom] (L
     [IsLocalRing R] (χ : Sp R ⟶ S) (σ : LB.Sec (LPow G L ((1 : ℕ) : ℤ) (Over.mk χ))) (h : NZ G L χ σ) :
     ∀ y : (Over.mk χ).left, ∃ g, (fst (Over.mk χ) G).left g = y ∧ g ∈ nonzeroLocus σ := by
   obtain ⟨x, hc, hx⟩ := h
-  haveI : Smooth (fst (Over.mk χ) G).left := by
+  have : Smooth (fst (Over.mk χ) G).left := by
     change Smooth (pullback.fst χ G.hom)
     infer_instance
   have ho : IsOpen ((fst (Over.mk χ) G).left '' (nonzeroLocus σ : Set _)) :=
@@ -71,7 +71,7 @@ theorem nz_pull : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (L : LB G.left), 
     ∀ (R V : Type) [CommRing R] [IsLocalRing R] [CommRing V] [IsLocalRing V] (χ : Sp R ⟶ S) (σ : SecAt G L χ)
       (φ : R →+* V), NZ G L χ σ → NZ G L (spMap φ ≫ χ) (SecAt.pull G L σ φ) := by
   intro S G _ L hL hG R V _ _ _ _ χ σ φ h
-  haveI : Smooth G.hom := hG.smooth
+  have : Smooth G.hom := hG.smooth
   exact nz_pullS G hL σ (nz_everywhere G L χ σ h) (spMap φ ≫ χ) _
 
 end GlobalTheory.UMin

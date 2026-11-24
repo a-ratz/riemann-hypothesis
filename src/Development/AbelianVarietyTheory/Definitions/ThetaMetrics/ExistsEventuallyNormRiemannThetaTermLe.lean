@@ -542,7 +542,7 @@ theorem riemannTheta_half_neg (α β : ι → ℤ) (Ω : Matrix ι ι ℂ) (v : 
     riemannTheta_char_add_intCast_right]
   congr 1
   have : ((-1 : ℂ)) ^ (α ⬝ᵥ β) = cexp (((α ⬝ᵥ β : ℤ) : ℂ) * -(π * I)) := by
-    rw [Complex.exp_int_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
+    rw [exp_intCast_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
     simp
   rw [this]
   congr 1

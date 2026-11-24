@@ -117,7 +117,7 @@ theorem exists_unif {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) : ∃ π : 
     rintro rfl
     exact RingOfIntegers.not_isField F (Ring.isField_iff_maximal_bot.mpr h𝔭)
   have hlt : 𝔭 ^ 2 < 𝔭 := Ideal.pow_lt_self 𝔭 hbot h𝔭.ne_top 2 le_rfl
-  obtain ⟨π, hπ, hπ'⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨π, hπ, hπ'⟩ := IsConcreteLE.exists_of_lt hlt
   exact ⟨π, hπ, hπ'⟩
 
 theorem exists_mul_dvd_unif {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {π : 𝓞 F} (hπ : π ∈ 𝔭)
@@ -130,7 +130,7 @@ theorem exists_mul_dvd_unif {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {π
     have : Ideal.span {π} ≤ 𝔭 ^ 2 := by
       rw [hb, sq]; exact Ideal.mul_mono_right hle
     exact this (Ideal.mem_span_singleton_self π)
-  obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.mp hnb
+  obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.mp hnb
   refine ⟨s ^ k, fun h => hs' (h𝔭.isPrime.mem_of_pow_mem k h), fun x hx => ?_⟩
   rw [← Ideal.mem_span_singleton, ← Ideal.span_singleton_pow, hb, mul_pow, mul_comm (s ^ k)]
   exact Ideal.mul_mem_mul hx (Ideal.pow_mem_pow hs k)
@@ -142,7 +142,7 @@ theorem exists_mul_dvd {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {c : �
     rw [Ideal.isUnit_iff]; exact h𝔭.ne_top
   obtain ⟨𝔟, hb, hnd⟩ := (FiniteMultiplicity.of_not_isUnit hu hc').exists_eq_pow_mul_and_not_dvd
   rw [Ideal.dvd_iff_le] at hnd
-  obtain ⟨t, htb, htp⟩ := SetLike.not_le_iff_exists.mp hnd
+  obtain ⟨t, htb, htp⟩ := IsConcreteLE.not_le_iff_exists.mp hnd
   refine ⟨multiplicity 𝔭 (Ideal.span {c}), t, htp, fun x hx => ?_⟩
   rw [← Ideal.mem_span_singleton, hb, mul_comm t]
   exact Ideal.mul_mem_mul hx htb

@@ -485,7 +485,7 @@ theorem ModelDimension.chow_form_product_formula :
     rw [h, map_zero] at hR1
     exact hR0 hR1
   · rw [← eval_sectionPoly, hR, hR1, map_mul, eval_C, map_prod, mul_comm]
-    simp only [eval_linForm, coeff_C, if_true]
+    simp only [eval_linForm, coeff_C, ite_true]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.CommonZeroEvaluation.EvalEqZeroOfCommonZero =====
@@ -652,7 +652,7 @@ theorem transfer {Ω S X : Type*} [MeasurableSpace Ω] [MeasurableSpace S] [Meas
   have hνfin : ν Set.univ ≠ ⊤ := by
     have h2 : ν Set.univ * μ Set.univ ≠ ⊤ := by rw [← hmass]; exact measure_ne_top γ _
     exact (ENNReal.lt_top_of_mul_ne_top_left h2 hμ).ne
-  haveI : IsFiniteMeasure ν := ⟨lt_top_iff_ne_top.2 hνfin⟩
+  have : IsFiniteMeasure ν := ⟨lt_top_iff_ne_top.2 hνfin⟩
   have hF' : AEStronglyMeasurable F ((ν.prod μ).map T) := hmap ▸ hF
   have hFT : AEStronglyMeasurable (fun p => F (T p)) (ν.prod μ) := hF'.comp_measurable hT
   have hintT : Integrable (fun p => F (T p)) (ν.prod μ) := by
@@ -757,7 +757,7 @@ theorem aesm (h : HermNorm n) (G : (Fin e × Fin n → ℂ) → ℝ)
     intro u
     obtain ⟨m, hm⟩ := exists_nat_gt (∑ i, rowN h u i)
     refine ⟨m, ?_⟩
-    simp only [ballProd, Set.mem_setOf_eq]
+    simp only [ballProd, Set.mem_ofPred_eq]
     intro i
     have h1 := rowN_sc h (c := fun _ => (1 : ℝ) / (m + 1)) (fun _ => by positivity) u i
     change rowN h (sc (fun _ => (1 : ℝ) / (m + 1)) u) i < 1
@@ -902,7 +902,7 @@ theorem wt_mul (h : HermNorm n) {s : Fin e → ℝ} (hs : ∀ i, 0 < s i) {A : S
   have hvol : ∀ X, MeasurableSet X → volume (sc (n := n) c' ⁻¹' X) = d * volume X := by
     intro X hX
     have h1 := congrArg (fun μ : Measure (Fin e × Fin n → ℂ) => μ X) hd
-    simp only [Measure.smul_apply, smul_eq_mul] at h1
+    simp only [smul_apply, smul_eq_mul] at h1
     rw [Measure.map_apply (measurable_sc c') hX] at h1
     exact h1
   have hwt : wt h s = d := by
@@ -995,13 +995,13 @@ theorem map_coefRows (h : HermNorm n) : ∃ a : ℝ≥0∞,
     LinearEquiv.ofBijective ((splitL h e).restrictScalars ℝ) ⟨hinj, splitL_surjective h⟩
   let Ψ := Ψl.toContinuousLinearEquiv
   have hΨ : ∀ π, Ψ π = (π 0, coefRows h π) := fun π => rfl
-  haveI : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := inferInstance
-  haveI : (volume : Measure (Fin e × Fin n → ℂ)).IsAddHaarMeasure := inferInstance
-  haveI : (volume : Measure ((Fin n → ℂ) × (Fin e × Fin n → ℂ))).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := inferInstance
+  have : (volume : Measure (Fin e × Fin n → ℂ)).IsAddHaarMeasure := inferInstance
+  have : (volume : Measure ((Fin n → ℂ) × (Fin e × Fin n → ℂ))).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
-  haveI : (volume : Measure (Fin (e + 1) → Fin n → ℂ)).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin (e + 1) → Fin n → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure _
-  haveI : (Measure.map Ψ (volume : Measure (Fin (e + 1) → Fin n → ℂ))).IsAddHaarMeasure :=
+  have : (Measure.map Ψ (volume : Measure (Fin (e + 1) → Fin n → ℂ))).IsAddHaarMeasure :=
     Ψ.isAddHaarMeasure_map volume
   have hc := Measure.isAddLeftInvariant_eq_smul
     (Measure.map Ψ (volume : Measure (Fin (e + 1) → Fin n → ℂ)))
@@ -1013,7 +1013,7 @@ theorem map_coefRows (h : HermNorm n) : ∃ a : ℝ≥0∞,
   refine ⟨(c : ℝ≥0∞) * ∫⁻ x : Fin n → ℂ, ENNReal.ofReal (Real.exp (-∑ j, ‖x j‖ ^ 2)), ?_⟩
   ext A hA
   have hmA : MeasurableSet (coefRows h ⁻¹' A) := measurable_coefRows h hA
-  rw [Measure.map_apply (measurable_coefRows h) hA, Measure.smul_apply, withDensity_apply _ hA,
+  rw [Measure.map_apply (measurable_coefRows h) hA, smul_apply, withDensity_apply _ hA,
     smul_eq_mul, gaussM, withDensity_apply _ hmA, ← lintegral_indicator hmA]
   have key : ∀ π, (coefRows h ⁻¹' A).indicator matGauss π =
       (fun p : (Fin n → ℂ) × (Fin e × Fin n → ℂ) =>
@@ -1063,8 +1063,8 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.sphere_mean_normalized_groups 
         (gaussM (e + 1) n Set.univ).toReal * sphereMean h e G := by
   intro n e h G hint
   have hfin := (gaussM_univ_pos_lt_top (e + 1) n).2
-  haveI : IsFiniteMeasure (gaussM (e + 1) n) := ⟨hfin⟩
-  haveI : IsFiniteMeasure (volume.restrict (ballProd h e)) := ⟨by rw [Measure.restrict_apply_univ]; exact volume_ballProd_lt_top h e⟩
+  have : IsFiniteMeasure (gaussM (e + 1) n) := ⟨hfin⟩
+  have : IsFiniteMeasure (volume.restrict (ballProd h e)) := ⟨by rw [Measure.restrict_apply_univ]; exact volume_ballProd_lt_top h e⟩
   obtain ⟨a, ha⟩ := ModelDimension.GSph.map_coefRows (e := e) h
   have hmap : Measure.map (coefRows h) (gaussM (e + 1) n) = Measure.map ModelDimension.GSph.scT ((a • (ModelDimension.GSph.exP e).withDensity (ModelDimension.GSph.wt h)).prod (volume.restrict (ballProd h e))) := by
     rw [ha, ModelDimension.GSph.layer, Measure.prod_smul_left, Measure.map_smul]

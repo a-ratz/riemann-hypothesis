@@ -93,11 +93,11 @@ theorem char_eq_zpow (χ : ℂˣ →* ℂˣ) (hc : Continuous χ) (hu : ∀ z, �
   have hcu : Continuous (Circle.toUnits : Circle → ℂˣ) := by
     rw [Units.continuous_iff]
     refine ⟨?_, ?_⟩
-    · exact continuous_subtype_val
+    · exact continuous_subtypeVal
     · have : (fun x : Circle => ((Circle.toUnits x)⁻¹ : ℂˣ).val) = fun x : Circle => (x : ℂ)⁻¹ := by
         funext x; simp
       rw [this]
-      exact (continuous_subtype_val).inv₀ fun x => Circle.coe_ne_zero x
+      exact (continuous_subtypeVal).inv₀ fun x => Circle.coe_ne_zero x
   have hf : Continuous f := by
     refine Continuous.subtype_mk ?_ _
     exact Units.continuous_val.comp (hc.comp hcu)
@@ -222,7 +222,7 @@ theorem infType : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (μ : H
       simpa using hs0
     let x : ((below E v).Completion)ˣ := Units.mk0 _ hx0
     have hx : Units.map (iota v).toMonoidHom x ^ 2 = z := Units.ext (by
-      simp only [Units.val_pow_eq_pow_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, x,
+      simp only [Units.val_pow_eq_pow_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, x,
         Units.val_mk0, iota_real]
       rw [← Complex.ofReal_pow, hs, Real.sq_sqrt (norm_nonneg _), hz])
     rw [← hx, map_pow, hval]
@@ -240,7 +240,7 @@ theorem infType : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (μ : H
   · let zv : InfinitePlace E → ℂˣ := fun v => Units.map (Pi.evalMonoidHom (fun _ : InfinitePlace E => ℂ) v) z
     have hz : z = ∏ v, single v (zv v) := Units.ext (by
       rw [Units.coe_prod]
-      simp only [single, zv, Units.coe_map, MonoidHom.coe_coe, MonoidHom.mulSingle_apply, Pi.evalMonoidHom_apply]
+      simp only [single, zv, Units.coe_map, MonoidHom.coe_ofClass, MonoidHom.mulSingle_apply, Pi.evalMonoidHom_apply]
       exact (Finset.univ_prod_mulSingle z.val).symm)
     conv_lhs => rw [hz]
     rw [map_prod, Units.coe_prod]
@@ -287,7 +287,7 @@ namespace PositivityTheory.Rg.BcB.F.Fok.Mu3Aux1
 theorem valuation_eq_uniformizer {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
     {x : w.adicCompletion E} (hx : Valued.v x = WithZero.exp (-1 : ℤ)) :
     ValuativeRel.valuation (w.adicCompletion E) x = ValuativeRel.uniformizer (w.adicCompletion E) := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E)) Valued.v
   apply le_antisymm
@@ -299,14 +299,14 @@ theorem valuation_eq_uniformizer {E : Type} [Field E] [NumberField E] (w : Heigh
       rw [← he.lt_one_iff_lt_one, hy]; exact ValuativeRel.uniformizer_lt_one
     rw [he.le_iff_le, hx]
     by_cases hy0 : Valued.v y = 0
-    · rw [hy0]; exact zero_le'
+    · rw [hy0]; exact zero_le
     · rw [← WithZero.exp_log hy0] at h1 ⊢
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h1
       rw [WithZero.exp_le_exp]; omega
 
 theorem valued_eq_one {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
     {x : w.adicCompletion E} (hx : ValuativeRel.valuation (w.adicCompletion E) x = 1) : Valued.v x = 1 := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E)) Valued.v).eq_one_iff_eq_one.1 hx
 
@@ -590,8 +590,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem infSign_ideleMap_finPartI (b : Neutral.B1.Ideles (maximalRealSubfield E)) :
     infSign E (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.ideleMap (maximalRealSubfield E) E (GlobalTheory.Mem.Chr.finPartI _ b)) = 1 := by
-  letI : IsOneApply (Neutral.B1.Ideles E →* ℂˣ) := ⟨fun _ => rfl⟩
-  letI : IsMulApply (Neutral.B1.Ideles E →* ℂˣ) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply (Neutral.B1.Ideles E →* ℂˣ) := ⟨fun _ => rfl⟩
+  let : IsMulApply (Neutral.B1.Ideles E →* ℂˣ) := ⟨fun _ _ _ => rfl⟩
   rw [infSign, prod_apply]
   refine Finset.prod_eq_one fun w _ => ?_
   have : Units.map (GlobalTheory.IdeleNormChar.infEval w)

@@ -70,7 +70,7 @@ theorem poly_eq_zero (P Q : ℂ[X]) (d : ℕ) (hd : 0 < d) (ε : ℂ)
   have key : X ^ (Q.natDegree + d) * P = C ε * Q.reverse := by
     refine Polynomial.eq_of_infinite_eval_eq _ _ (((Set.finite_singleton (0 : ℂ)).infinite_compl).mono fun c hc => ?_)
     have hc : c ≠ 0 := hc
-    letI := invertibleOfNonzero (inv_ne_zero hc)
+    let := invertibleOfNonzero (inv_ne_zero hc)
     have h1 := Polynomial.eval₂_reverse_mul_pow (RingHom.id ℂ) c⁻¹ Q
     rw [invOf_eq_inv, inv_inv] at h1
     have h2 : Q.reverse.eval c * c⁻¹ ^ Q.natDegree = Q.eval c⁻¹ := h1

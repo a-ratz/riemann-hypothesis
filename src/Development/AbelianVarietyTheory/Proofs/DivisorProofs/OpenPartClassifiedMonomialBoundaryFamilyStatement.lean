@@ -149,10 +149,10 @@ theorem openCls : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
   obtain ⟨⟨hN, -, hIC, -⟩, -⟩ := id hR
   have hf0 : (∏ i, C.s i) ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => C.s_ne_zero i
   have hle : Submonoid.powers (∏ i, C.s i) ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors hf0
-  haveI : IsDomain (Localization.Away (∏ i, C.s i)) := IsLocalization.isDomain_localization hle
-  haveI : IsNoetherianRing (Localization.Away (∏ i, C.s i)) :=
+  have : IsDomain (Localization.Away (∏ i, C.s i)) := IsLocalization.isDomain_localization hle
+  have : IsNoetherianRing (Localization.Away (∏ i, C.s i)) :=
     IsLocalization.isNoetherianRing (Submonoid.powers (∏ i, C.s i)) _ hN
-  haveI : IsIntegrallyClosed (Localization.Away (∏ i, C.s i)) :=
+  have : IsIntegrallyClosed (Localization.Away (∏ i, C.s i)) :=
     isIntegrallyClosed_of_isLocalization _ (Submonoid.powers (∏ i, C.s i)) hle
 
   let aR := algebraMap R (Localization.Away (∏ i, C.s i))

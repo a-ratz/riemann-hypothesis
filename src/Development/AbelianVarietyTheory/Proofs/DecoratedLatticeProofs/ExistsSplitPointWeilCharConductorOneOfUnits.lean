@@ -112,7 +112,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.HalfPowerSpherical (frame)
 
 theorem hasConductor_mulShift {ψ : AddChar k Circle} {β : kˣ} (h : HasConductor ψ β) :
     HasConductor (ψ.mulShift (β : k)) 1 := by
-  have hβ : 0 < valuation k (β : k) := by simp [zero_lt_iff]
+  have hβ : 0 < valuation k (β : k) := by simp [pos_iff_ne_zero]
   intro x
   have h1 := h (β * x)
   rw [map_mul, mul_le_iff_le_one_right hβ] at h1

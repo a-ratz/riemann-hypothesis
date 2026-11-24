@@ -74,7 +74,7 @@ theorem sep (ψ : AddChar K ℂ) (hψ : ∀ x, (∀ y : O, ψ (x * algebraMap O 
     {V : Type} [AddCommGroup V] [Module K V] [Module O V] [IsScalarTower O K V] (L : Submodule O V) [L.IsFullLattice K] {y : V}
     (hy : y ∉ L) : ∃ l : V →ₗ[K] K, (∀ z ∈ L, ψ (l z) = 1) ∧ ψ (l y) ≠ 1 := by
   classical
-  haveI : Module.Free O L := Submodule.IsLattice.free K L
+  have : Module.Free O L := Submodule.IsLattice.free K L
   let b := Module.Free.chooseBasis O L
   let v : Module.Free.ChooseBasisIndex O L → V := fun i => (b i : V)
   have hliO : LinearIndependent O v := b.linearIndependent.map' L.subtype (Submodule.ker_subtype L)
@@ -187,8 +187,8 @@ theorem dich [IsLocalRing O] (ψ : AddChar K ℂ) (hψ : ∀ x, (∀ y : O, ψ (
     ⟨(h⁻¹).1 * Y, by
       show h.1 * ((h⁻¹).1 * Y) = Y
       rw [← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]⟩
-  haveI : (lam K a n d).IsLattice K := isLattice_lam_of_ne_zero h0
-  haveI : (lam K a n d).IsFullLattice K := by
+  have : (lam K a n d).IsLattice K := isLattice_lam_of_ne_zero h0
+  have : (lam K a n d).IsFullLattice K := by
     refine { span_eq_top := ?_ }
     apply top_unique
     intro M
@@ -207,10 +207,10 @@ theorem dich [IsLocalRing O] (ψ : AddChar K ℂ) (hψ : ∀ x, (∀ y : O, ψ (
       convert hs using 1
       ext k l
       simp [Matrix.single_apply, Algebra.smul_def, haK, div_mul_cancel₀]
-  haveI : ((lam K a n d).map (G.restrictScalars O)).IsLattice K := isLattice_map_of_surjective _ G hGs
-  haveI : ((lam K a n d) ⊔ (lam K a n d).map (G.restrictScalars O)).IsLattice K :=
+  have : ((lam K a n d).map (G.restrictScalars O)).IsLattice K := isLattice_map_of_surjective _ G hGs
+  have : ((lam K a n d) ⊔ (lam K a n d).map (G.restrictScalars O)).IsLattice K :=
     Submodule.IsLattice.sup K _ _
-  haveI : ((lam K a n d) ⊔ (lam K a n d).map (G.restrictScalars O)).IsFullLattice K :=
+  have : ((lam K a n d) ⊔ (lam K a n d).map (G.restrictScalars O)).IsFullLattice K :=
     Submodule.IsFullLattice.of_le K le_sup_left
   by_cases hmem : h.1 * y.map (algebraMap O K) - y.map (algebraMap O K) ∈
       (lam K a n d) ⊔ (lam K a n d).map (G.restrictScalars O)

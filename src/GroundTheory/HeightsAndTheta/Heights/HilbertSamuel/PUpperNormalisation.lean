@@ -206,7 +206,7 @@ theorem UpperNormalisation.proof (h7 : G7.Statement) (hPack : PackingStatement) 
       rw [map_one, map_one, norm_one, mul_one] at h2
       have hBz : 0 ≤ B.h z := (B.pos z hz.1).le
       rw [map_mul, eval_mul, norm_mul] at h1
-      rw [hB'h, mul_pow, ← Real.exp_nat_mul, pow_add]
+      rw [hB'h, mul_pow, ← Real.exp_natCast_mul, pow_add]
       have hhn : 0 ≤ ‖eval z (map (Int.castRingHom ℂ) h)‖ * B.h z ^ n := by positivity
       calc ‖eval z (map (Int.castRingHom ℂ) g)‖
           ≤ ‖eval z (map (Int.castRingHom ℂ) c)‖ * ‖eval z (map (Int.castRingHom ℂ) h)‖ * B.h z ^ n := h1

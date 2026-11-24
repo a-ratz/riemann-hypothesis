@@ -72,7 +72,7 @@ private theorem spectralValue_le_one_iff_norm_coeff_le_one (P : ℚ_[l][X]) (hP 
     by_cases hn : n < P.natDegree
     · have ht : spectralValueTerms P n ≤ 1 :=
         (le_ciSup (spectralValueTerms_bddAbove P) n).trans h
-      rw [spectralValueTerms, if_pos hn] at ht
+      rw [spectralValueTerms, ite_eq_left hn] at ht
       have hexp : (0 : ℝ) < 1 / ((P.natDegree : ℝ) - n) := by
         have : (n : ℝ) < P.natDegree := by exact_mod_cast hn
         apply div_pos one_pos; linarith
@@ -166,7 +166,7 @@ theorem card_quot_l {C : Type} [CommRing C] [Algebra ℤ_[l] C] {n : ℕ} (b : B
 
 theorem ballCard : BallCard := by
   intro l _ K
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   let S := integralClosure ℤ_[l] ↥K.1
   let e : ↥(ball K) ≃+* ↥S :=
     { toFun := fun x => ⟨x.1, (mem_integralClosure_iff_mem_ball K x.1).mpr x.2⟩
@@ -178,9 +178,9 @@ theorem ballCard : BallCard := by
   have hIJ : Ideal.span {((l : ℕ) : ↥S)} = (Ideal.span {((l : ℕ) : ↥(ball K))}).map e := by
     rw [Ideal.map_span, Set.image_singleton, map_natCast]
   rw [Nat.card_congr (Ideal.quotientEquiv _ _ e hIJ).toEquiv]
-  haveI : Module.Free ℤ_[l] S :=
+  have : Module.Free ℤ_[l] S :=
     IsIntegralClosure.module_free (A := ℤ_[l]) (K := ℚ_[l]) (L := ↥K.1) (C := S)
-  haveI : Module.Finite ℤ_[l] S :=
+  have : Module.Finite ℤ_[l] S :=
     IsIntegralClosure.finite (A := ℤ_[l]) (K := ℚ_[l]) (L := ↥K.1) (C := S)
   rw [card_quot_l (Module.finBasis ℤ_[l] S),
     IsIntegralClosure.rank (A := ℤ_[l]) (K := ℚ_[l]) (L := ↥K.1) (C := S)]

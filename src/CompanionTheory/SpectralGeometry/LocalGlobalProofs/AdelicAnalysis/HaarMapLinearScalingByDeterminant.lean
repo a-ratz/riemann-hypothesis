@@ -78,7 +78,7 @@ theorem char_smul_map (lam : Measure R) [lam.IsAddHaarMeasure] (u : Rˣ) :
   have hm : Measurable fun x : R => (u : R) * x :=
     (continuous_const.mul continuous_id).measurable
   ext S hS
-  rw [Measure.smul_apply, Measure.map_apply hm hS]
+  rw [smul_apply, Measure.map_apply hm hS]
   have h1 := distribHaarChar_mul lam u ((fun x : R => (u : R) * x) ⁻¹' S)
   have e : u • ((fun x : R => (u : R) * x) ⁻¹' S) = S := by
     ext y
@@ -108,7 +108,7 @@ theorem map_diagonal (lam : Measure R) [lam.IsAddHaarMeasure] (d : ι → Rˣ) :
         (Measure.pi fun _ : ι => lam).map (fun x => diagonal (fun i => (d i : R)) *ᵥ x) =
       Measure.pi fun _ : ι => lam := by
   refine (Measure.pi_eq fun s hs => ?_).symm
-  rw [Measure.smul_apply, Measure.map_apply (measurable_mulVec _) (MeasurableSet.univ_pi hs)]
+  rw [smul_apply, Measure.map_apply (measurable_mulVec _) (MeasurableSet.univ_pi hs)]
   have h1 : (fun x : ι → R => diagonal (fun i => (d i : R)) *ᵥ x) ⁻¹' Set.pi Set.univ s =
       Set.pi Set.univ fun i => (fun y : R => (d i : R) * y) ⁻¹' s i := by
     ext f
@@ -119,7 +119,7 @@ theorem map_diagonal (lam : Measure R) [lam.IsAddHaarMeasure] (d : ι → Rˣ) :
     ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
   have h2 := congrArg (fun m : Measure R => m (s i)) (char_smul_map lam (d i))
-  simp only [Measure.smul_apply, Measure.map_apply (hm i) (hs i)] at h2
+  simp only [smul_apply, Measure.map_apply (hm i) (hs i)] at h2
   rw [← h2]
   rfl
 
@@ -196,7 +196,7 @@ theorem map_mulVec_eq_smul : ∀ (F : Type) [Field F] (R : Type) [CommRing R] [A
   obtain ⟨K, hKc, hK0⟩ : ∃ K : Set R, IsCompact K ∧ K ∈ 𝓝 (0 : R) := exists_compact_mem_nhds 0
   have hdc : d * c = 1 := by
     have h3 := congrArg (fun m : Measure R => m K) h2'
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
     rw [← mul_assoc, ← ENNReal.coe_mul] at h3
     have h4 : ((d * c : ℝ≥0) : ℝ≥0∞) = 1 :=
       (ENNReal.mul_left_inj (Measure.measure_pos_of_mem_nhds lam hK0).ne' hKc.measure_lt_top.ne).1

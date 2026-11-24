@@ -80,7 +80,7 @@ theorem mem_range_of_preimmersion {H Y Z : Scheme.{0}} [IsIntegral H] (g : Y ⟶
     (h : gs k z O c = gs (k ≫ g) z A τ) :
     H.germToFunctionField A τ ∈ (algebraMap (H.presheaf.stalk (g y)) H.functionField).range := by
   obtain ⟨u, hu⟩ := g.stalkMap_surjective y (Y.presheaf.germ O y hy c)
-  obtain ⟨B, hB, σ, rfl⟩ := H.presheaf.germ_exist u
+  obtain ⟨B, hB, σ, rfl⟩ := H.presheaf.exists_germ_eq u
   rw [Scheme.Hom.germ_stalkMap_apply] at hu
   obtain ⟨O', hO', i₁, i₂, hO⟩ := Y.presheaf.germ_eq y _ _ _ _ hu
   have hsp : k z ⤳ y := by

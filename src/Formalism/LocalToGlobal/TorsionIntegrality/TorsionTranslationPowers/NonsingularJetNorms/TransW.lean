@@ -279,7 +279,7 @@ theorem hW_sim (t₀ t : ℂ) (M : ℕ) (hM : 0 < M) (ht : (M : ℂ) * t ∈ L.l
     exact_mod_cast halt
   have he : Complex.exp (-(Real.pi : ℂ) * Complex.I * (Formalism.L2.Th1.F.altE L t t₀ : ℂ)) ^ (2 * M ^ 2)
       = 1 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have h2 : ((2 * M ^ 2 : ℕ) : ℂ) * (-(Real.pi : ℂ) * Complex.I * (Formalism.L2.Th1.F.altE L t t₀ : ℂ))
         = ((-k : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by
       push_cast
@@ -381,7 +381,7 @@ theorem eW_sim (a b : ℂ) (M : ℕ) (hM : 0 < M) (hb : (M : ℂ) * b ∈ L.latt
     split_ifs <;> norm_num
   have he : Complex.exp (-(Real.pi : ℂ) * Complex.I * (Formalism.L2.Th1.F.altE L b (a - b) : ℂ)) ^ (2 * M)
       = 1 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have h2 : ((2 * M : ℕ) : ℂ) * (-(Real.pi : ℂ) * Complex.I * (Formalism.L2.Th1.F.altE L b (a - b) : ℂ))
         = ((-k : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by
       push_cast
@@ -606,7 +606,7 @@ theorem shiftCase (hS : AnalyticSysW) (hA : PtWAdd) (hZ : PtWZero) (hU : Unif l 
   let rep : W.toAffine.Point → ℂ := fun P =>
     if P = 0 then 0 else
       if h : ∃ t : ℂ, (N : ℂ) * t ∈ L.lattice ∧ ptW l L ι W t = P then h.choose else 0
-  have rep0 : rep 0 = 0 := if_pos rfl
+  have rep0 : rep 0 = 0 := ite_eq_left rfl
   have repS : ∀ P ∈ AddSubgroup.zmultiples (ptW l L ι W s),
       (N : ℂ) * rep P ∈ L.lattice ∧ ptW l L ι W (rep P) = P := by
     intro P hP
@@ -618,7 +618,7 @@ theorem shiftCase (hS : AnalyticSysW) (hA : PtWAdd) (hZ : PtWZero) (hU : Unif l 
       have e : rep P = h.choose := by
         change (if P = 0 then 0 else
           if h : ∃ t : ℂ, (N : ℂ) * t ∈ L.lattice ∧ ptW l L ι W t = P then h.choose else 0) = _
-        rw [if_neg h0, dite_eq_left h]
+        rw [ite_eq_right h0, dite_eq_left h]
       rw [e]
       exact h.choose_spec
   have hsys : IsShiftSys W (AddSubgroup.zmultiples (ptW l L ι W s)) (ptW l L ι W (ω₀ / 2))

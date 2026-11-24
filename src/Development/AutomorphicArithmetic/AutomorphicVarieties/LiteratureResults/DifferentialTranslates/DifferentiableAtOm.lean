@@ -110,7 +110,7 @@ namespace Geo
 variable {Γ V S : Type} [Group Γ] [NormedAddCommGroup V] [NormedSpace ℝ V] {d : ℕ} (G : Geo Γ V S d)
 
 theorem ρ_inv_apply (γ : Γ) (p : V) : G.ρ γ⁻¹ (G.ρ γ p) = p := by
-  rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
+  rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]; rfl
 
 theorem ρ_mem_iff (γ : Γ) (p : V) : G.ρ γ p ∈ G.Y ↔ p ∈ G.Y :=
   ⟨fun h => G.ρ_inv_apply γ p ▸ G.maps γ⁻¹ _ h, G.maps γ p⟩

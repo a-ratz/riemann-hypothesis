@@ -124,8 +124,8 @@ namespace GlobalTheory.CompanionTheory.Ar.BT.Transl
 
 theorem translates_cover : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (U U' : Γ.G.left.Opens), Γ.IsFinOpenSub U → Γ.IsFinOpenSub U' → U' ≤ U → ∀ g ∈ U, ∃ (σ : 𝟙_ (Over (Spec (CommRingCat.of R))) ⟶ Γ.G) (t : T), toUnit (genPt R) ≫ σ = Γ.pt t ∧ ((toUnit Γ.G ≫ σ) * 𝟙 Γ.G).left g ∈ U' := by
   intro R _ _ _ T _ _ Γ U U' hU hU' _ g hg
-  haveI := Γ.flat
-  haveI := Γ.separated
+  have := Γ.flat
+  have := Γ.separated
   let p0 : Spec (CommRingCat.of R) := ⟨⊥, Ideal.isPrime_bot⟩
   have hp0 : p0 ⤳ Γ.G.hom g := (PrimeSpectrum.le_iff_specializes _ _).1 bot_le
   obtain ⟨g', hg'g, hg'⟩ := Flat.generalizingMap Γ.G.hom hp0
@@ -134,8 +134,8 @@ theorem translates_cover : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrall
     rw [hx]; exact hg'g.mem_open U.isOpen hg
   have hsub : ∀ z z' : Spec (CommRingCat.of (FractionRing R)), z = z' := fun z z' =>
     PrimeSpectrum.ext (by
-      haveI := z.isPrime
-      haveI := z'.isPrime
+      have := z.isPrime
+      have := z'.isPrime
       rw [Ideal.eq_bot_of_prime z.asIdeal, Ideal.eq_bot_of_prime z'.asIdeal])
   have hsall : ∀ z, (Γ.pt s).left z ∈ U := fun z => hsub x z ▸ hsU
   have hinvU : ∀ z, (Γ.pt s⁻¹).left z ∈ U := by
@@ -154,8 +154,8 @@ theorem translates_cover : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrall
     have h2 := congrArg (fun h => h x) h1
     simpa using h2
   have hw : (η[Γ.G]).left ≫ Γ.G.hom = 𝟙 _ := Over.w _
-  haveI : UniversallyClosed ((η[Γ.G]).left ≫ Γ.G.hom) := by rw [hw]; infer_instance
-  haveI : UniversallyClosed (η[Γ.G]).left :=
+  have : UniversallyClosed ((η[Γ.G]).left ≫ Γ.G.hom) := by rw [hw]; infer_instance
+  have : UniversallyClosed (η[Γ.G]).left :=
     UniversallyClosed.of_comp_of_isSeparated _ Γ.G.hom
   have hcl : IsClosed (Set.range (η[Γ.G]).left) := by
     have h := (η[Γ.G]).left.isClosedMap _ isClosed_univ
@@ -533,10 +533,10 @@ theorem btOrder_eq_top (hHenselian : type_of% @_root_.GlobalTheory.CompanionTheo
   obtain ⟨g', hg1, hg2⟩ := Scheme.exists_preimage_of_isPullback hF.cart g (IsLocalRing.closedPoint R') (by
     apply PrimeSpectrum.ext
     exact hP.symm)
-  haveI := Γ'.quasiFinite
-  haveI := Γ'.finPres
-  haveI := Γ'.separated
-  haveI := Γ'.quasiCompact
+  have := Γ'.quasiFinite
+  have := Γ'.finPres
+  have := Γ'.separated
+  have := Γ'.quasiCompact
   obtain ⟨U', hU'fin, hU'cl⟩ := PositivityTheory.HtPt.Twhopf.finite_part R' Γ'.G.left Γ'.G.hom
   have hU' := PositivityTheory.HtPt.Twhopf.finite_sub R' T Γ' U' hU'fin hU'cl
   have hFU := _root_.GlobalTheory.CompanionTheory.Ar.BT.isFinOpenSub_preimage_baseChange R T Γ R' Γ' F hF U hU

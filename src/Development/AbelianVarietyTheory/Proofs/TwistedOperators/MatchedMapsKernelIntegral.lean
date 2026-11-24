@@ -82,6 +82,6 @@ theorem exists_decomp {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     rw [Finset.smul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     funext x
-    simp only [Pi.smul_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
+    simp only [Pi.smul_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, smul_apply, smul_eq_mul, mul_assoc]
 
 end GlobalTheory.PolKerLieV

@@ -371,7 +371,7 @@ theorem specPhi_co (K LL : FinExt l) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(O
       (∀ (g : ↥(GK K)) (t : ↥T.L.T), co (T.actT g t) = (M (g : GQ l)).mulVec (co t)) ∧
       ∀ j, ∃ t, co t = Pi.single j 1 := by
   obtain ⟨b, hM, hA⟩ := h
-  letI := zlMod LL T
+  let := zlMod LL T
   let φ : ℤ_[l] →+* PadicComplex l :=
     (algebraMap ℚ_[l] (PadicComplex l)).comp PadicInt.Coe.ringHom
   let co : ↥T.L.T →+ (Fin d → PadicComplex l) :=
@@ -796,7 +796,7 @@ theorem coe_emb_algebraMap (LL : FinExt l) (τ : ↥LL.1 →ₐ[ℚ_[l]] Om l) (
 theorem exists_evEmb (LL : FinExt l) (τ : ↥LL.1 →ₐ[ℚ_[l]] Om l) :
     ∃ ev : OCO LL →+* PadicComplex l, ∀ (c : OC l) (a : ↥(OL LL)),
       ev (c ⊗ₜ[ℤ_[l]] a) = (c : PadicComplex l) * algebraMap (Om l) (PadicComplex l) (τ (a : ↥LL.1)) := by
-  letI : Algebra ℤ_[l] (PadicComplex l) :=
+  let : Algebra ℤ_[l] (PadicComplex l) :=
     ((algebraMap ℚ_[l] (PadicComplex l)).comp PadicInt.Coe.ringHom).toAlgebra
   let u : OC l →ₐ[ℤ_[l]] PadicComplex l :=
     { (PadicComplexInt l).subtype with commutes' := fun x => rfl }
@@ -828,9 +828,9 @@ theorem evEmb_eq_sum {LL : FinExt l} {f : ℕ} (o : Module.Basis (Fin f) ℤ_[l]
 theorem exists_emb_det_ne_zero {LL : FinExt l} {f : ℕ} (o : Module.Basis (Fin f) ℤ_[l] ↥(OL LL)) :
     ∃ τ : Fin f → (↥LL.1 →ₐ[ℚ_[l]] Om l),
       (Matrix.of fun i j => τ j (o i : ↥LL.1) : Matrix (Fin f) (Fin f) (Om l)).det ≠ 0 := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : IsIntegralClosure ↥(OL LL) ℤ_[l] ↥LL.1 := integralClosure.isIntegralClosure ℤ_[l] ↥LL.1
-  haveI := IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] ↥LL.1 ↥(OL LL)
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : IsIntegralClosure ↥(OL LL) ℤ_[l] ↥LL.1 := integralClosure.isIntegralClosure ℤ_[l] ↥LL.1
+  have := IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] ↥LL.1 ↥(OL LL)
   let b := o.localizationLocalization ℚ_[l] (nonZeroDivisors ℤ_[l]) ↥LL.1
   have hb : ∀ i, b i = (o i : ↥LL.1) := fun i =>
     Module.Basis.localizationLocalization_apply _ _ _ _ i
@@ -1073,7 +1073,7 @@ theorem coord (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (m n f : ℕ) [NeZero n
     (hcF : (c : PadicComplex l) ∈ inC (Ks K m))
     (hE : ∀ i k, kap o (φ (letE i)) k ∈ inC (Ks K m)) :
     ∀ a k, kap o (φ a) k ∈ intC (Ks K m) := by
-  haveI := GlobalTheory.TateDecomp.finite_Ks K m
+  have := GlobalTheory.TateDecomp.finite_Ks K m
   have hcl : IsClosed (intC (Ks K m)) := (GlobalTheory.TateDecomp.isCompact_intC (Ks K m)).isClosed
   have key : ∀ (N : ℕ) (k : Fin f) (a : LetA ↥(OL LL) n), ∃ s ∈ inC (Ks K m),
       ∃ r : PadicComplex l, ‖r‖ ≤ 1 ∧ kap o (φ a) k = s + (c : PadicComplex l) ^ N * r := by
@@ -1144,19 +1144,19 @@ theorem card_eq_finrank_mul_card {Z O R T : Type} [CommRing Z] [Nontrivial Z] [C
 theorem nontrivial_tensor_of_free {Z O S : Type} [CommRing Z] [CommRing O]
     [Nontrivial O] [Algebra Z O] [Module.Free Z O] [CommRing S] [Nontrivial S] [Algebra Z S] :
     Nontrivial (O ⊗[Z] S) := by
-  haveI : Module.FaithfullyFlat Z O := inferInstance
+  have : Module.FaithfullyFlat Z O := inferInstance
   infer_instance
 
 set_option synthInstance.maxHeartbeats 400000 in
 theorem rank_count : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (d : ℕ) (M : GQ l → Matrix (Fin d) (Fin d) (PadicComplex l)) (A : ↥(OL LL) → Matrix (Fin d) (Fin d) (PadicComplex l)) (ι : Type) [Fintype ι] (v : ι → TW (RW LL) T), IsMat K LL T M A → LinearIndependent (RW LL) v → Submodule.span (RW LL) (Set.range v) = ⊤ → ∃ (f : ℕ) (_ : Module.Basis (Fin f) ℤ_[l] ↥(OL LL)), Nonempty (Fin d ≃ Fin f × ι) := by
   intro l _ K LL T d M A ι _ v hM h1 h2
-  haveI := freeOL LL
-  haveI := finiteOL LL
-  letI := zlMod LL T
+  have := freeOL LL
+  have := finiteOL LL
+  let := zlMod LL T
   obtain ⟨b, -, -⟩ := hM
-  haveI : Module.Free ↥(OL LL) ↥T.L.T := T.L.free
-  haveI : IsScalarTower ℤ_[l] ↥(OL LL) ↥T.L.T := IsScalarTower.of_algebraMap_smul (fun _ _ => rfl)
-  haveI : Nontrivial (RW LL) := nontrivial_tensor_of_free
+  have : Module.Free ↥(OL LL) ↥T.L.T := T.L.free
+  have : IsScalarTower ℤ_[l] ↥(OL LL) ↥T.L.T := IsScalarTower.of_algebraMap_smul (fun _ _ => rfl)
+  have : Nontrivial (RW LL) := nontrivial_tensor_of_free
   have h := card_eq_finrank_mul_card (R := RW LL) b v h1 h2
   refine ⟨Module.finrank ℤ_[l] ↥(OL LL), Module.finBasis _ _, ⟨Fintype.equivOfCardEq ?_⟩⟩
   simpa using h
@@ -1176,7 +1176,7 @@ namespace GlobalTheory
 
 theorem sq_dvd_choose_prime_pow (l : ℕ) (hl : l.Prime) (b k : ℕ) (hb : 1 ≤ b) (hk0 : k ≠ 0)
     (hk : k < l ^ (b - 1)) : l ^ 2 ∣ (l ^ b).choose k := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨j, rfl⟩ : ∃ j, k = j + 1 := Nat.exists_eq_succ_of_ne_zero hk0
   obtain ⟨m, hm⟩ : ∃ m, l ^ b = m + 1 := Nat.exists_eq_succ_of_ne_zero (pow_pos hl.pos b).ne'
   have hkb : j + 1 ≤ l ^ b := le_trans hk.le (Nat.pow_le_pow_right hl.pos (Nat.sub_le b 1))
@@ -1684,12 +1684,12 @@ theorem exists_decompletion : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.l
     have h2 := (hsc _ M0 _ hx1).symm.trans (h1.trans (hsc _ M0 _ (hx2 σ hσ)))
     have h3 := smul_right_injective (Fin d → PadicComplex l) (pow_ne_zero M0 hc0) h2
     exact h3.symm.trans (hΦ3 σ (z y))
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     haveI := K.2
     FiniteDimensional.of_injective
       (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   have hidem : ∀ i k, kap o (φ (letE i)) k ∈ inC (Ks K m) := by
     intro i k
     have h1 : IsIdempotentElem (letE i : LetA S.O S.n) := by

@@ -391,7 +391,7 @@ theorem dbar_sectionFrameQuotient (hD : A.D0 L w w0 s) (hσ : A.IsFrameOn (A.kap
     intro j F G c hF hG
     unfold wdb
     rw [fderiv_fun_mul hF (hG.restrictScalars ℝ), hG.fderiv_restrictScalars ℝ]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+    simp only [add_apply, smul_apply, smul_eq_mul,
       ContinuousLinearMap.coe_restrictScalars', map_smul]
     linear_combination (F c * fderiv ℂ G c (bas n j) / 2) * Complex.I_mul_I
   unfold WeightedAtlas.dbarAt

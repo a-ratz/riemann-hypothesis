@@ -103,7 +103,7 @@ private theorem span_of_gram {n : ℕ} {K : Type} [Field K] (s : Set (Matrix (Fi
   by_cases hn : n = 0
   · subst hn
     exact Subsingleton.elim _ _
-  · haveI : Nonempty (Fin (n * n)) := ⟨⟨0, Nat.mul_pos (Nat.pos_of_ne_zero hn) (Nat.pos_of_ne_zero hn)⟩⟩
+  · have : Nonempty (Fin (n * n)) := ⟨⟨0, Nat.mul_pos (Nat.pos_of_ne_zero hn) (Nat.pos_of_ne_zero hn)⟩⟩
     have htop := hli.span_eq_top_of_card_eq_finrank (by simp [Module.finrank_matrix])
     rw [eq_top_iff, ← htop]
     apply Submodule.span_mono
@@ -116,7 +116,7 @@ private theorem discSt_iff {n : ℕ} {A G K : Type} [CommRing A] [Group G] [Fiel
     DiscSt D Q ↔ Submodule.span K (Set.range ρ) = ⊤ := by
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
-    haveI : IsEmpty (Fin (0 * 0)) := ⟨fun i => Fin.elim0 i⟩
+    have : IsEmpty (Fin (0 * 0)) := ⟨fun i => Fin.elim0 i⟩
     constructor
     · intro _
       exact Subsingleton.elim _ _

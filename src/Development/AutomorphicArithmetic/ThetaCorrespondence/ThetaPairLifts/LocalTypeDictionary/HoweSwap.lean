@@ -239,7 +239,7 @@ theorem howe_real_ker' : GlobalTheory.Published.HoweDualityReal →
       rw [← hKe] at hf
       exact LinearMap.mem_ker.1 (Submodule.mem_inf.1 hf).1
     rw [hR.quot'.onto] at hbot
-    haveI := hR.nontriv
+    have := hR.nontriv
     exact top_ne_bot hbot
   have hNK : N ⊔ K ≠ G.M'.Pol Bs.ψ Bs.emb := hsum N K hN hK hNe hKne
   rcases hR.irred (N.map R.p') (by
@@ -410,7 +410,7 @@ theorem main : GlobalTheory.Published.HoweDualityReal → ∀ (F E : Type) [Fiel
       rw [e, map_zero]
   have hKP : K ≠ P := by
     intro hKP
-    haveI := hr.nontriv
+    have := hr.nontriv
     have hle : P ≤ LinearMap.ker R.p := hKP ▸ inf_le_left
     have hbot : P.map R.p = ⊥ := by
       rw [eq_bot_iff, Submodule.map_le_iff_le_comap]
@@ -802,13 +802,13 @@ theorem stageV_alt : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : T
     obtain ⟨m, f, φ, rfl⟩ := GlobalTheory.HoweGlobal.decomp t
     refine ⟨T, hT, m, 0, fun j => ((f j : ↥(G.M.Pol Bs.ψ Bs.emb)) : SInf F (Fin a × Fin (a + a'))),
       fun j v => if h : v ∈ T then ((φ j ⟨v, h⟩ : ↥(SB _)) : (Fin a × Fin (a + a') → Fv F v) → ℂ) else G.M.vac v,
-      Fin.elim0, Fin.elim0, fun j => ⟨(f j).2, fun v => ?_, fun v hv => by simp only [dif_neg hv]⟩, fun j => Fin.elim0 j, ?_, ?_, ?_⟩
+      Fin.elim0, Fin.elim0, fun j => ⟨(f j).2, fun v => ?_, fun v hv => by simp only [dite_eq_right hv]⟩, fun j => Fin.elim0 j, ?_, ?_, ?_⟩
     · by_cases h : v ∈ T
-      · simp only [dif_pos h]; exact (φ j ⟨v, h⟩).2
-      · simp only [dif_neg h]; exact (hM.triple.geo.hM.vac v).1
+      · simp only [dite_eq_left h]; exact (φ j ⟨v, h⟩).2
+      · simp only [dite_eq_right h]; exact (hM.triple.geo.hM.vac v).1
 
     · rw [map_sum]
-      exact Finset.sum_congr rfl fun j _ => hL _ _ _ (fun v h => by simp only [dif_pos h]) (fun v h => by simp only [dif_neg h])
+      exact Finset.sum_congr rfl fun j _ => hL _ _ _ (fun v h => by simp only [dite_eq_left h]) (fun v h => by simp only [dite_eq_right h])
     · simp
 
     · rw [LinearMap.mem_ker, map_sum] at ht0

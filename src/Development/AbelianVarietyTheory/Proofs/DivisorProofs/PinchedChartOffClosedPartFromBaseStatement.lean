@@ -102,12 +102,12 @@ theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Alg
       range_comap_of_surjective _ _ Ideal.Quotient.mk_surjective
     rw [hr, Ideal.mk_ker]
     exact hno
-  haveI : IsLocalization.Away f (Localization.Away (algebraMap R R' f)) :=
+  have : IsLocalization.Away f (Localization.Away (algebraMap R R' f)) :=
     isLocalization_away_of_absorb hinj c hc hfc
   let l' : Sp (Localization.Away (algebraMap R R' f)) ⟶ Sp R' := spMap (algebraMap R' _)
   let h : Sp (Localization.Away (algebraMap R R' f)) ⟶ Sp R := spMap (algebraMap R _)
-  haveI : IsOpenImmersion l' := IsOpenImmersion.of_isLocalization (algebraMap R R' f)
-  haveI : IsOpenImmersion h := IsOpenImmersion.of_isLocalization f
+  have : IsOpenImmersion l' := IsOpenImmersion.of_isLocalization (algebraMap R R' f)
+  have : IsOpenImmersion h := IsOpenImmersion.of_isLocalization f
   have hcomp : l' ≫ spMap (algebraMap R R') = h := by
     simp only [l', h, spMap, ← Spec.map_comp]
     congr 1
@@ -122,10 +122,10 @@ theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Alg
     simp only [j, u, ← hcomp]
     rw [← Category.assoc, pullback.condition, Category.assoc]
   have hsmu : SmoothOfRelativeDimension g u := by
-    haveI : SmoothOfRelativeDimension g (pullback.snd b' l') :=
+    have : SmoothOfRelativeDimension g (pullback.snd b' l') :=
       (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback
         (IsPullback.of_hasPullback b' l') hsm
-    haveI : SmoothOfRelativeDimension 0 h := inferInstance
+    have : SmoothOfRelativeDimension 0 h := inferInstance
     have := smoothOfRelativeDimension_comp g 0 (pullback.snd b' l') h
     simpa using this
   have hD : ∀ t : ↥(pullback b' l'), f ∉ (u t).asIdeal := fun t => by
@@ -151,9 +151,9 @@ theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Alg
       (fun s m h1 _ => by simpa using h1)⟩⟩, inferInstance, ?_,
     ⟨⟨w2⟩, ⟨PullbackCone.IsLimit.mk w2
       (fun s => haveI := hEmpty _ _ _ s.condition; isInitialOfIsEmpty.to _)
-      (fun s => by haveI := hEmpty _ _ _ s.condition; exact isInitialOfIsEmpty.hom_ext _ _)
-      (fun s => by haveI := hEmpty _ _ _ s.condition; exact isInitialOfIsEmpty.hom_ext _ _)
-      (fun s m _ _ => by haveI := hEmpty _ _ _ s.condition; exact isInitialOfIsEmpty.hom_ext _ _)⟩⟩, ?_⟩
+      (fun s => by have := hEmpty _ _ _ s.condition; exact isInitialOfIsEmpty.hom_ext _ _)
+      (fun s => by have := hEmpty _ _ _ s.condition; exact isInitialOfIsEmpty.hom_ext _ _)
+      (fun s m _ _ => by have := hEmpty _ _ _ s.condition; exact isInitialOfIsEmpty.hom_ext _ _)⟩⟩, ?_⟩
   · have hr : Set.range s.snd ⊆ Set.range l' := by
       rintro _ ⟨t, rfl⟩
       rw [hrange']
@@ -176,7 +176,7 @@ theorem pinched_off : ∀ (R : Type) [CommRing R] (R' : Type) [CommRing R'] [Alg
     rw [hrange']
     exact hfx
   · intro T a a' _
-    haveI : IsEmpty T := ⟨fun t => isEmptyElim (a' t)⟩
+    have : IsEmpty T := ⟨fun t => isEmptyElim (a' t)⟩
     exact ⟨isInitialOfIsEmpty.to Y, isInitialOfIsEmpty.hom_ext _ _, isInitialOfIsEmpty.hom_ext _ _⟩
 
 end GlobalTheory.Pinch

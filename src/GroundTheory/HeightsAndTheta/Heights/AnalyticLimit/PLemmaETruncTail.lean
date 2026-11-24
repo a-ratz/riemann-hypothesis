@@ -124,8 +124,8 @@ theorem LemmaETruncTail.proof (h₁ : LemmaEScale.Statement) (h₂ : LemmaEEnerg
 
   have hΦv : ∀ i, IsPotential A (potForm Om.pot (v i)) := fun i =>
     isPotentialAdd A _ _ Om.isPot (isPotential_ofFun A _ (hvs i))
-  letI : MeasurableSpace X := borel X
-  haveI : BorelSpace X := ⟨rfl⟩
+  let : MeasurableSpace X := borel X
+  have : BorelSpace X := ⟨rfl⟩
   have hrm : Measurable (rSec L s) := measurable_const.sub (measurable_const.mul
     (Real.measurable_log.comp (continuous_normSec hL hs).measurable))
   have hSm : MeasurableSet S :=

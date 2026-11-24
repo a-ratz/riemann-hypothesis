@@ -578,8 +578,8 @@ theorem isPullback_baseChange :
   have h2 : IsPullback (spMap (MvPolynomial.map φ : MvPolynomial {j // j ≠ i} R →+* _))
       (chartι R' N i ≫ PSpace.str R' N) (chartι R N i ≫ PSpace.str R N) (spMap φ) := by
     rw [chartι_str, chartι_str]
-    letI := φ.toAlgebra
-    letI := MvPolynomial.algebraMvPolynomial (σ := {j // j ≠ i}) (R := R) (S := R')
+    let := φ.toAlgebra
+    let := MvPolynomial.algebraMvPolynomial (σ := {j // j ≠ i}) (R := R) (S := R')
     exact isPullback_SpecMap_of_isPushout _ _ _ _
       (CommRingCat.isPushout_of_isPushout R (MvPolynomial {j // j ≠ i} R) R' (MvPolynomial {j // j ≠ i} R'))
   exact h2.of_iso h1.isoPullback (Iso.refl _) (Iso.refl _) (Iso.refl _)

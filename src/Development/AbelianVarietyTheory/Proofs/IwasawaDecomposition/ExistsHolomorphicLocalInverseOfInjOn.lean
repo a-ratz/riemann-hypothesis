@@ -93,7 +93,7 @@ theorem exists_local_inverse_of_injOn :
     have := hG.continuousAt.tendsto
     rwa [hGv] at this
   have hr : ∀ᶠ u in 𝓝 (g a), g (hc.localInverse hf' hn u) = u :=
-    (hc.hasStrictFDerivAt' hf' hn).eventually_right_inverse
+    (hc.hasStrictFDerivAt hf' hn).eventually_right_inverse
   filter_upwards [hT.eventually (hW.mem_nhds ha), hr, hG.eventually (by simp)] with u h1 h2 h3
   exact ⟨h1, h2, h3.differentiableAt hn⟩
 

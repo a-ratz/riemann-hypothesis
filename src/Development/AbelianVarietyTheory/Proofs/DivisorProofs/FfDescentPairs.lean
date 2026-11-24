@@ -108,9 +108,9 @@ theorem ff_descent_pairs : ∀ (R : Type) [CommRing R] (D D' : Type) [CommRing D
     (∀ (E : Type) [CommRing E] [Algebra R E] (α β : D' →ₐ[R] E), α.comp ψ = β.comp ψ → α a = β a) →
       ∃! e : D, ψ e = a := by
   intro R _ D D' _ _ _ _ ψ hψ a h
-  letI : Algebra D D' := (ψ : D →+* D').toAlgebra
-  haveI : Module.FaithfullyFlat D D' := hψ
-  haveI : IsScalarTower R D D' := IsScalarTower.of_algebraMap_eq (fun r => (ψ.commutes r).symm)
+  let : Algebra D D' := (ψ : D →+* D').toAlgebra
+  have : Module.FaithfullyFlat D D' := hψ
+  have : IsScalarTower R D D' := IsScalarTower.of_algebraMap_eq (fun r => (ψ.commutes r).symm)
   have hinj : Function.Injective (algebraMap D D') := FaithfulSMul.algebraMap_injective D D'
   let α : D' →ₐ[R] D' ⊗[D] D' := Algebra.TensorProduct.includeLeft
   let β : D' →ₐ[R] D' ⊗[D] D' := (Algebra.TensorProduct.includeRight).restrictScalars R

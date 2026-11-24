@@ -119,7 +119,7 @@ omit [Fintype K] [∀ k, Fintype (ι k)] [∀ k, Fintype (ι' k)] in
 theorem divSupp_map (V : Ideal (MRing ι)) (s : MRing ι) :
     divSupp (V.map (ren e)) (ren e s) = Ideal.map (ren e) '' divSupp V s := by
   ext W'
-  simp only [divSupp, Set.mem_setOf_eq, Set.mem_image, sup_map, minimalPrimes_map_ringEquiv]
+  simp only [divSupp, Set.mem_ofPred_eq, Set.mem_image, sup_map, minimalPrimes_map_ringEquiv]
   constructor
   · rintro ⟨⟨W, hW, rfl⟩, hrel⟩
     exact ⟨W, ⟨hW, (relevant_iff e W).1 hrel⟩, rfl⟩
@@ -273,7 +273,7 @@ theorem ptsIntegral_map [Nonempty K] (V : Ideal (MRing ι)) (hV : IsMultiHomogId
         exact hle (hVS ▸ hf)
     rw [← hz'', ← hgg _ z'.2, ← hg c _ hc z'.2, hgg _ hmem]
     rfl
-  haveI := hfin
+  have := hfin
   rw [PtsIntegralPoints.homogProof K ι V g hV hfin hg0,
     PtsIntegralPoints.homogProof K ι' _ g' (homogIdeal_map e hV) (Finite.of_equiv _ (projEquiv e V).symm) hg,
     ← finsum_comp_equiv (projEquiv e V)]
@@ -308,7 +308,7 @@ theorem recR_map [Nonempty K] (I : Ideal (MRing ι) → (n : ℕ) → (Fin n →
       rw [comap_C]
       exact h
     have h3 : charOf (V.map (ren e)) = charOf V := by simp only [charOf, comap_C]
-    rw [if_neg h1, if_neg h2, sup_map, multAt_map, h3, geoNum_map e V hV.2 _ _ (hc _ ⟨V, hV, rfl⟩)]
+    rw [ite_eq_right h1, ite_eq_right h2, sup_map, multAt_map, h3, geoNum_map e V hV.2 _ _ (hc _ ⟨V, hV, rfl⟩)]
   · have e0 : (fun j z => Real.log (((Fin.elim0 : Fin 0 → HermLine ι) j).h z)) =
         (Fin.elim0 : Fin 0 → ((Σ k, ι k) → ℂ) → ℝ) := funext fun j => j.elim0
     have e1 : (fun j z => Real.log (((Fin.elim0 : Fin 0 → HermLine ι') j).h z)) =

@@ -59,7 +59,7 @@ theorem val_res_pullO_g (φ : X ⟶ PSpace R N) (e : ℕ) (i j : (pullO φ e).ι
   have : (((pullO φ e).g i j : Γ(X, (pullO φ e).U i ⊓ (pullO φ e).U j)ˣ) :
       Γ(X, (pullO φ e).U i ⊓ (pullO φ e).U j)) = pullRatio φ _ i inf_le_left j ^ e :=
     Units.val_pow_eq_pow_val _ _
-  rw [res, Units.coe_map, MonoidHom.coe_coe, this]
+  rw [res, Units.coe_map, MonoidHom.coe_ofClass, this]
   exact (map_pow _ _ e).trans (congrArg (· ^ e) (resG_pullRatio h))
 
 theorem isLB_pullO (φ : X ⟶ PSpace R N) (e : ℕ) : (pullO φ e).IsLB := {

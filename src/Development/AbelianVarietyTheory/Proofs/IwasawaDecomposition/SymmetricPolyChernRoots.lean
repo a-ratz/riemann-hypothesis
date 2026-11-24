@@ -150,7 +150,7 @@ theorem mem_range_chernRootsOver (n : ℕ) : ∀ (ι : Type) [Fintype ι] [Decid
   induction n with
   | zero =>
     intro ι _ _ hc R _ m S _
-    haveI : IsEmpty ι := Fintype.card_eq_zero_iff.mp hc
+    have : IsEmpty ι := Fintype.card_eq_zero_iff.mp hc
     rw [eq_C_of_isEmpty S]
     exact Subalgebra.algebraMap_mem _ _
   | succ n ih =>

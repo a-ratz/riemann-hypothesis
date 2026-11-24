@@ -80,9 +80,9 @@ theorem exists_valuation_coeff_mul_coeff_le {Γ : Type*} [LinearOrderedCommGroup
     ⟨a, Finset.mem_filter.mpr ⟨ha, rfl⟩⟩ ⟨b, Finset.mem_filter.mpr ⟨hb, rfl⟩⟩
   rw [Finset.mem_filter] at ha₀ hb₀
   have hapos : 0 < v (f.coeff a) :=
-    zero_lt_iff.mpr ((map_ne_zero v).mpr (Finsupp.mem_support_iff.mp ha))
+    pos_iff_ne_zero.mpr ((map_ne_zero v).mpr (Finsupp.mem_support_iff.mp ha))
   have hbpos : 0 < v (g.coeff b) :=
-    zero_lt_iff.mpr ((map_ne_zero v).mpr (Finsupp.mem_support_iff.mp hb))
+    pos_iff_ne_zero.mpr ((map_ne_zero v).mpr (Finsupp.mem_support_iff.mp hb))
   refine ⟨a₀ + b₀, ?_⟩
   have key : v ((f * g).coeff (a₀ + b₀)) = v (f.coeff a) * v (g.coeff b) := by
     simp_rw [coeff_mul, Finsupp.sum, ← Finset.sum_product']
@@ -91,7 +91,7 @@ theorem exists_valuation_coeff_mul_coeff_le {Γ : Type*} [LinearOrderedCommGroup
     · rintro ⟨x, y⟩ hxy
       rw [Finset.mem_sdiff, Finset.mem_product, Finset.mem_singleton] at hxy
       obtain ⟨⟨hx, hy⟩, hne⟩ := hxy
-      simp only [if_true, map_mul, ha₀.2, hb₀.2]
+      simp only [ite_true, map_mul, ha₀.2, hb₀.2]
       split_ifs with h
       · rw [map_mul]
         rcases (hamax x hx).lt_or_eq with h1 | h1

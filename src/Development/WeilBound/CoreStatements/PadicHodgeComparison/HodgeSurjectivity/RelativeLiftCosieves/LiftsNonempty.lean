@@ -105,7 +105,7 @@ def ext {V V' : Z.Opens} (h : V' ≤ V) (Λ' : Lifts q V') : Lifts q V where
 theorem ext_v {V V' : Z.Opens} (h : V' ≤ V) (k : inU q V' ≤ inU q V) (Λ' : Lifts q V')
     (T : (inU q V').FullSubcategory) (g : Sec q V) :
     (ext q h Λ').v ((ObjectProperty.ιOfLE k).obj T) g = Λ'.v T (rs h g) :=
-  dif_pos T.property
+  dite_eq_left T.property
 
 theorem ext_form {V V' : Z.Opens} (h : V' ≤ V) (k : inU q V' ≤ inU q V) (Λ' : Lifts q V') {a : ℕ}
     (g₀ : Sec q V) (g : Fin a → Sec q V) (s : ComposableArrows (inU q V').FullSubcategory a) :

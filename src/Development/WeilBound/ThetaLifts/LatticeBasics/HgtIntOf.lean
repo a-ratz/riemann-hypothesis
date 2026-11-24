@@ -85,7 +85,7 @@ theorem hgtInt_of (hC : Stab2Cpt) : HgtInt := by
   let T : G2 σ Y → Matrix (Fin n) (Fin n) (AE F E) := fun k => (mat2 k⁻¹ * diagCols (E := AE F E) (Fin n)).toRows₁
   let T' : G2 σ Y → Matrix (Fin n) (Fin n) (AE F E) := fun k => (mat2 k⁻¹ * diagCols (E := AE F E) (Fin n)).toRows₂
   have cm : Continuous fun k : G2 σ Y => (mat2 k⁻¹ * diagCols (E := AE F E) (Fin n)) :=
-    ((Units.continuous_val.comp continuous_subtype_val).comp continuous_inv).matrix_mul continuous_const
+    ((Units.continuous_val.comp continuous_subtypeVal).comp continuous_inv).matrix_mul continuous_const
   have cT : Continuous T := cm.matrix_submatrix _ _
   have cT' : Continuous T' := cm.matrix_submatrix _ _
   have : IsModuleTopology (AF F) (Matrix (Fin n) (Fin n) (AE F E)) :=

@@ -256,7 +256,7 @@ theorem inFrame_iota {ε : ℤˣ} {ζ : ℂ} (hε : d.b.1ᵀ * dbl d.Y.J * d.b.1
 theorem continuous_iota {ε : ℤˣ} {ζ : ℂ}
     (hε : d.b.1ᵀ * dbl d.Y.J * d.b.1.map σ = Matrix.fromBlocks 0 1 (((ε : ℤ) : E) • 1) 0)
     (hζ : ε = -1 ∧ ζ = 1 ∨ ε = 1 ∧ ζ = Complex.I) (w : InfinitePlace F) : Continuous (iota d hε hζ w) := by
-  have hm : Continuous fun y : GR d.n => mR y := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous fun y : GR d.n => mR y := Units.continuous_val.comp continuous_subtypeVal
   have hz : Continuous fun y : GR d.n => Zm d ζ y := (continuous_const.matrix_mul hm).matrix_mul continuous_const
   have hM : Continuous fun y : GR d.n => MxI d w ζ y :=
     (continuous_const.matrix_mul ((continuous_atM d w).comp hz)).matrix_mul continuous_const
@@ -268,10 +268,10 @@ theorem iotaEx : IotaEx := by
   intro F E _ _ _ _ _ σ d ε ζ hε hζ
   refine ⟨iota d hε hζ, continuous_iota d hε hζ, fun w y => ?_, fun w w' y hw => ?_, fun w y => ?_⟩
   · rw [inFrame_iota, cw_atM]
-    simp only [fam, if_true, Zm]
+    simp only [fam, ite_true, Zm]
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, dZ_mul_inv (zeta_ne hζ), Matrix.one_mul]
   · rw [inFrame_iota, cw_atM]
-    simp only [fam, if_neg hw]
+    simp only [fam, ite_eq_right hw]
   · rw [inFrame_iota, fin_atM]
 
 end Iota

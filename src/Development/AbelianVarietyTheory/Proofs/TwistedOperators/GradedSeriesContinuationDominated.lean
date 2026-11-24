@@ -99,7 +99,7 @@ theorem gradedSeries_continue {ι : Type} (deg : ι → ℕ) (c : ι → ℂ) (�
     change edist _ (0 : ℂ) < _
     rw [edist_zero_right]
     refine lt_of_lt_of_le ?_ hrad
-    exact ENNReal.coe_lt_coe.2 (by rw [← NNReal.coe_lt_coe, coe_nnnorm]; exact hz)
+    exact ENNReal.coe_lt_coe.2 (by rw [← NNReal.coe_lt_coe, coe_nnNorm]; exact hz)
   have hFan : AnalyticOnNhd ℂ p.sum (ball 0 (min (δ / 2) ρ)) := fun z hz =>
     hF.analyticAt_of_mem (hmem z (lt_of_lt_of_le (by simpa using hz) (min_le_left _ _)))
   have ht : Tendsto (fun x : ℝ => (x : ℂ)) (𝓝[>] 0) (𝓝[≠] 0) :=
@@ -130,7 +130,7 @@ theorem gradedSeries_continue {ι : Type} (deg : ι → ℕ) (c : ι → ℂ) (�
   have hXm : X ∈ Metric.eball (0 : ℂ) R := by
     change edist _ (0 : ℂ) < _
     rw [edist_zero_right]
-    exact ENNReal.coe_lt_coe.2 (by rw [← NNReal.coe_lt_coe, coe_nnnorm]; change ‖X‖ < (‖X‖ + ρ) / 2; linarith)
+    exact ENNReal.coe_lt_coe.2 (by rw [← NNReal.coe_lt_coe, coe_nnNorm]; change ‖X‖ < (‖X‖ + ρ) / 2; linarith)
   have := hC.hasSum hXm
   simp only [p, FormalMultilinearSeries.ofScalars_apply_eq, smul_eq_mul, zero_add] at this
   exact this

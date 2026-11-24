@@ -1012,7 +1012,7 @@ theorem GlobalTheory.PeriodFrame.not_perTau_mulVec_eq_continuous : ∀ (n a g r�
   have hslim : Filter.Tendsto (fun R => logExp a (s R)) Filter.atTop (𝓝 0) := by
     refine tendsto_pi_nhds.2 fun k => ?_
     by_cases hk : (k : ℕ) < a
-    · simp only [logExp, hs, hk, if_true, Pi.zero_apply]
+    · simp only [logExp, hs, hk, ite_true, Pi.zero_apply]
       have h3 : Filter.Tendsto (fun R : ℝ => ((Real.exp (-R) : ℝ) : ℂ)) Filter.atTop (𝓝 ((0 : ℝ) : ℂ)) :=
         (Complex.continuous_ofReal.tendsto 0).comp Real.tendsto_exp_neg_atTop_nhds_zero
       simpa [Complex.ofReal_exp] using h3
@@ -1187,7 +1187,7 @@ theorem posDef_im_on_ball_of_logExp : ∀ (n a : ℕ) (J : Type) [Fintype J] [De
   have hFd : DifferentiableOn ℂ F U := (hqd.const_mul Complex.I).cexp
   have hmax : IsMaxOn (norm ∘ F) U z := by
     intro w hw
-    simp only [Set.mem_setOf_eq, Function.comp, hFn, ← h0, neg_zero]
+    simp only [Set.mem_ofPred_eq, Function.comp, hFn, ← h0, neg_zero]
     exact Real.exp_le_exp.2 (by linarith [hnn w hw])
   have heq := Complex.eqOn_of_isPreconnected_of_isMaxOn_norm (convex_ball (0 : Fin n → ℂ) 1).isPreconnected
     Metric.isOpen_ball hFd hz hmax
@@ -1835,7 +1835,7 @@ theorem GlobalTheory.ShFam.Hor.LogCh.exists_periodChart_of_latFam : ∀ (n a g r
   intro s hs hz Hm hHm
   have hnz : ∀ i : Fin a, logExp a s (Fin.castLE ha i) ≠ 0 := by
     intro i
-    simp only [logExp, Fin.coe_castLE, i.isLt, if_true]
+    simp only [logExp, Fin.val_castLE, i.isLt, ite_true]
     exact Complex.exp_ne_zero _
   rw [hPH s hs hz Hm hHm, hY _ hnz]
   congr 2
@@ -1844,7 +1844,7 @@ theorem GlobalTheory.ShFam.Hor.LogCh.exists_periodChart_of_latFam : ∀ (n a g r
   rw [← GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.im_period ha τ₀ B (logExp a s) (fun k => s (Fin.castLE ha k)) ?_]
   · rw [hτ₀e s hs hz]; rfl
   · intro i
-    simp only [logExp, Fin.coe_castLE, i.isLt, if_true]
+    simp only [logExp, Fin.val_castLE, i.isLt, ite_true]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPeriodChartHolomorphicLatticeFamily =====

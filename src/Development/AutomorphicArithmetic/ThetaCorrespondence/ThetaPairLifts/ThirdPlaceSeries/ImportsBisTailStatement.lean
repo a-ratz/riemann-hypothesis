@@ -198,14 +198,14 @@ theorem lamI_inv_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
     simpa [valAct1_apply] using this
   have hV := hcore.models.νV j (X.tupT (D.nd.mu i))
   have hWm := hcore.models.νW j
-  haveI : (X.R.νV j (X.tupT (D.nd.mu i))).IsHaarMeasure := hV.1.1
-  haveI : (X.R.νV j (X.tupT (D.nd.mu i))).IsMulRightInvariant :=
+  have : (X.R.νV j (X.tupT (D.nd.mu i))).IsHaarMeasure := hV.1.1
+  have : (X.R.νV j (X.tupT (D.nd.mu i))).IsMulRightInvariant :=
     GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ _ hV.1.1
-  haveI : (X.R.νW j).IsHaarMeasure := hWm.1.1
-  haveI : (X.R.νW j).IsMulRightInvariant :=
+  have : (X.R.νW j).IsHaarMeasure := hWm.1.1
+  have : (X.R.νW j).IsMulRightInvariant :=
     GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ _ hWm.1.1
-  haveI : Countable (GQ (Vc D j)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Vc D j).gram
-  haveI : Countable (GQ (Wc D j)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Wc D j).gram
+  have : Countable (GQ (Vc D j)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Vc D j).gram
+  have : Countable (GQ (Wc D j)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Wc D j).gram
   have inner : ∀ g₀, thIn (X.R.ωP j (X.tupT (D.nd.mu i))) (_root_.GlobalTheory.ThetaTri.formToVectorMap A i j hj hμ) (X.R.νV j (X.tupT (D.nd.mu i)))
       (X.R.fdV j (X.tupT (D.nd.mu i))) (valAct1 (_root_.GlobalTheory.ThetaTri.standardWeilRepresentation A j (X.tupT (D.nd.mu i))) (h, g) φ) F' g₀ =
       thIn (X.R.ωP j (X.tupT (D.nd.mu i))) (_root_.GlobalTheory.ThetaTri.formToVectorMap A i j hj hμ) (X.R.νV j (X.tupT (D.nd.mu i)))
@@ -441,18 +441,18 @@ variable {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D : D7} {P : _root_.Glob
 theorem continuous_formToVectorMap (A : GlobalTheory.NJoin.Agree X P.M P.rep) (i : D.nd.Loc) (j : Fin D.R.m) (hj : j.1 + 1 = D.nd.j i)
     (hμ : Formalism.IndefR.RecTie.Used0 D (D.nd.mu i)) (F : ↥(NG.AFall D.host.E D.R.nV (P.M.loc i).wt.ρ)) :
     Continuous (_root_.GlobalTheory.ThetaTri.formToVectorMap A i j hj hμ F) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  haveI : IsTopologicalGroup (GA D (Vc D j)) :=
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsTopologicalGroup (GA D (Vc D j)) :=
     inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig (Vc D j).gram))
   obtain ⟨N, hN, hlev⟩ := F.2.2
   let J : Subgroup (Bridge.Gf (Vc D j)) :=
     { carrier := {q | ∀ k, _root_.GlobalTheory.ThetaFormV.agreementLocalMap A i j hj hμ F (k * q) = _root_.GlobalTheory.ThetaFormV.agreementLocalMap A i j hj hμ F k}
-      mul_mem' := fun {a b} ha hb k => by simp only [Set.mem_setOf_eq] at ha hb ⊢; rw [← mul_assoc, hb, ha]
+      mul_mem' := fun {a b} ha hb k => by simp only [Set.mem_ofPred_eq] at ha hb ⊢; rw [← mul_assoc, hb, ha]
       one_mem' := fun k => by rw [mul_one]
       inv_mem' := fun {a} ha k => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [← ha (k * a⁻¹), inv_mul_cancel_right] }
   have hfJ : _root_.GlobalTheory.ThetaFormV.agreementLocalMap A i j hj hμ F ∈ Bridge.AdForms ((finHom (Vc D j)).rangeRestrict.comp (GQ (Vc D j)).subtype)
       ((X.R.cV j).ρ.comp (GQ (Vc D j)).subtype) J 1 := by
@@ -801,7 +801,7 @@ theorem exists_finset_of_bdd (d : ℕ) (hd : 0 < d) (S : Set (GAf L n))
   classical
   obtain ⟨Q, hQ, c, hc⟩ := GlobalTheory.IsotOrth.exists_finite_class (F := NumberField.maximalRealSubfield L) (E := L)
     (d * d) (Nat.mul_pos hd hd)
-  haveI := hQ
+  have := hQ
   let cls : GAf L n → Fin n → Fin n → Q := fun κ i j =>
     if h : (d : AL L) * (κ.1 : Matrix (Fin n) (Fin n) (AL L)) i j ∈ ALint L then c ⟨_, h⟩ else c 0
   have key : ∀ a ∈ S, ∀ b ∈ S, cls a = cls b → a⁻¹ * b ∈ Umax L n := by
@@ -810,7 +810,7 @@ theorem exists_finset_of_bdd (d : ℕ) (hd : 0 < d) (S : Set (GAf L n))
         (a.1 : Matrix (Fin n) (Fin n) (AL L)) k l = (d : AL L) * y := by
       intro k l
       have e := congrFun (congrFun hab k) l
-      simp only [cls, dif_pos (hS a ha k l).1, dif_pos (hS b hb k l).1] at e
+      simp only [cls, dite_eq_left (hS a ha k l).1, dite_eq_left (hS b hb k l).1] at e
       obtain ⟨z, hz⟩ := hc _ _ e.symm
       refine ⟨z.1, z.2, ?_⟩
       have hz' := congrArg Subtype.val hz
@@ -840,7 +840,7 @@ theorem exists_finset_of_bdd (d : ℕ) (hd : 0 < d) (S : Set (GAf L n))
   let rep : (Fin n → Fin n → Q) → GAf L n := fun t => if h : t ∈ T then h.choose else 1
   refine ⟨hT.toFinset.image rep, fun κ hκ => ?_⟩
   have ht : cls κ ∈ T := ⟨κ, hκ, rfl⟩
-  have hr : rep (cls κ) = ht.choose := dif_pos ht
+  have hr : rep (cls κ) = ht.choose := dite_eq_left ht
   refine ⟨rep (cls κ), Finset.mem_image.2 ⟨cls κ, hT.mem_toFinset.2 ht, rfl⟩, ?_⟩
   rw [hr]
   exact key _ ht.choose_spec.1 _ hκ ht.choose_spec.2

@@ -135,8 +135,8 @@ theorem relInj_loc (hSL : SiteLaws) (hIso : IsoBij) (hCL : ChartLaws) (hCB : Cha
       cases o with
       | none => exact absurd ho hn
       | some α => exact ⟨α, rfl⟩
-    haveI := B.closed
-    haveI : Z.IsSeparated := ⟨by rw [← terminal.comp_from q]; infer_instance⟩
+    have := B.closed
+    have : Z.IsSeparated := ⟨by rw [← terminal.comp_from q]; infer_instance⟩
     have haff : IsAffineOpen (S.inf (optU B)) := by
       rw [Finset.inf_eq_iInf]
       have := IsAffineOpen.biInf (X := Z) (S : Set (Option B.ι)) S.finite_toSet ⟨_, ho⟩ (U := optU B)
@@ -294,7 +294,7 @@ theorem relInjOf_pf (hTop : TopRes) : RelInjOf := by
   intro hSL hMV hCD hZR hCL hCB hIso K _ _ W Z Y q _ _ i π _ D d hd hB a n z hz hrel hnull
   obtain ⟨B⟩ := hB
   classical
-  haveI := B.closed
+  have := B.closed
   have hQ : Cosieve (On q i) := (hSL K W Z Z q i (𝟙 Z)).2.1
   have hQ' : Cosieve (On (π ≫ q) (pullback.snd i π)) :=
     (hSL K (pullback i π) Y Y (π ≫ q) (pullback.snd i π) (𝟙 Y)).2.1

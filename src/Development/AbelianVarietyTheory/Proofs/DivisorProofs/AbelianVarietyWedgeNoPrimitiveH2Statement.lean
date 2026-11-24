@@ -461,8 +461,8 @@ namespace GlobalTheory.CatCoh.KunnethOne
 theorem sum_tmul_eq_zero_of_cup : ∀ (K : Type) [Field K] (P Q : Type) [Category.{0} P] [Category.{0} Q] [Finite Q] [Quiver.IsThin Q] (F : P ⥤ CommAlgCat.{0} K) (G : Q ⥤ CommAlgCat.{0} K) (E : P × Q ⥤ CommAlgCat.{0} K) (i₁ : ∀ T : P × Q, F.obj T.1 →ₐ[K] E.obj T) (i₂ : ∀ T : P × Q, G.obj T.2 →ₐ[K] E.obj T), (∀ (T T' : P × Q) (a : T ⟶ T') (b : F.obj T.1), i₁ T' (mp F a.1 b) = mp E a (i₁ T b)) → (∀ (T T' : P × Q) (a : T ⟶ T') (b : G.obj T.2), i₂ T' (mp G a.2 b) = mp E a (i₂ T b)) → (∀ T, Function.Bijective (Algebra.TensorProduct.productMap (i₁ T) (i₂ T))) → ∀ (n : ℕ) (x : Fin n → Z1 F) (y : Fin n → Z1 G) (f : C1 E), (∀ (T T' T'' : P × Q) (a : T ⟶ T') (b : T' ⟶ T''), d1 E f T T' T'' a b = ∑ i, mp E b (i₁ T' ((x i).1 _ _ a.1)) * i₂ T'' ((y i).1 _ _ b.2)) → ∑ i, GlobalTheory.CatCoh.H1.mk F (x i) ⊗ₜ[K] GlobalTheory.CatCoh.H1.mk G (y i) = 0 := by
   intro K _ P Q _ _ _ _ F G E i₁ i₂ h₁ h₂ hb n x y f hf
   classical
-  haveI := Fintype.ofFinite Q
-  haveI : ∀ T T' : Q, Fintype (T ⟶ T') := fun _ _ => Fintype.ofFinite _
+  have := Fintype.ofFinite Q
+  have : ∀ T T' : Q, Fintype (T ⟶ T') := fun _ _ => Fintype.ofFinite _
   apply tensor_eq_zero_of_forall
   intro l
 
@@ -623,7 +623,7 @@ theorem cup_tmul_injective : ∀ (K : Type) [Field K] (X Y : Over (Sp K)), IsSep
     show (Wf p).1 ≤ (Wf q).1
     rw [hWe p, hWe q]
     exact inf_le_inf (Scheme.Hom.preimage_mono _ (hU hpq.1)) (Scheme.Hom.preimage_mono _ (hV hpq.2))
-  haveI : Finite J'ᵒᵖ := Finite.of_equiv J' Opposite.equivToOpposite
+  have : Finite J'ᵒᵖ := Finite.of_equiv J' Opposite.equivToOpposite
   let Ψ := prodFun Wf hWm
   let F := hU.functor.op ⋙ OAff X.hom
   let G := hV.functor.op ⋙ OAff Y.hom
@@ -813,17 +813,17 @@ theorem GlobalTheory.AbCoh.wedgeO_noPrimO2 : ∀ (K : Type) [Field K] [IsAlgClos
     IsAbelianScheme A → SmoothOfRelativeDimension g A.hom →
     GlobalTheory.AbCoh.WedgeO (OAff A.hom) ∧ GlobalTheory.AbCoh.NoPrimitiveStructureSheafH2 A := by
   intro K _ _ A _ g hab hsm
-  haveI : IsProper A.hom := hab.proper
-  haveI hsep : IsSeparated A.hom := inferInstance
-  haveI hqc : QuasiCompact A.hom := inferInstance
+  have : IsProper A.hom := hab.proper
+  have hsep : IsSeparated A.hom := inferInstance
+  have hqc : QuasiCompact A.hom := inferInstance
   obtain ⟨-, hprim, -⟩ := GlobalTheory.T.abelian_variety_h1_axes_primitive_rank K A g hab hsm
   obtain ⟨n, D, hD, hcov⟩ := GlobalTheory.AbCoh.WedgeSq.exists_fin_affine_cover A.hom
   obtain ⟨⟨e1⟩, ⟨e2⟩⟩ := GlobalTheory.T.cech_cohomology_structure_sheaf_iso K A.left A.hom (Fin n) D hsep hD hcov
   obtain ⟨hfin, h1, h2⟩ := GlobalTheory.T.cech_cohomology_trivial_bundle_abelian K A g hab hsm (Fin n) D hD hcov
-  haveI := hfin 1
-  haveI := hfin 2
-  haveI : Module.Finite K (HO1 A.hom) := Module.Finite.equiv e1.symm
-  haveI : Module.Finite K (HO2 A.hom) := Module.Finite.equiv e2.symm
+  have := hfin 1
+  have := hfin 2
+  have : Module.Finite K (HO1 A.hom) := Module.Finite.equiv e1.symm
+  have : Module.Finite K (HO2 A.hom) := Module.Finite.equiv e2.symm
   have hdim : Module.finrank K (HO2 A.hom) ≤ (Module.finrank K (HO1 A.hom)).choose 2 := by
     rw [e2.finrank_eq, e1.finrank_eq, h1]; exact h2
   have hrel : ∀ t : HO1 A.hom ⊗[K] HO1 A.hom, TensorProduct.lift (cup (OAff A.hom)) t = 0 →

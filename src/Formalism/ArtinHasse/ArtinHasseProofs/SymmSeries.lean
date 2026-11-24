@@ -65,7 +65,7 @@ lemma prod_map_X_eq_monomial (s : Multiset σ) :
   | empty => simp
   | cons a s ih =>
     rw [Multiset.map_cons, Multiset.prod_cons, ih, ← Multiset.singleton_add, Multiset.toFinsupp_add,
-      Multiset.toFinsupp_singleton, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul]
+      Multiset.toFinsupp_singleton, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul]
 
 lemma toFinsupp_sum (s : Multiset σ) : ∑ i, Multiset.toFinsupp s i = Multiset.card s := by
   induction s using Multiset.induction_on with
@@ -154,7 +154,7 @@ theorem esymm_hsymm_rel (k : ℕ) (hk : 1 ≤ k) :
     exact Finset.prod_eq_one fun j _ => geom_mul _
   have h := congrArg (PowerSeries.coeff k) hAB
   rw [PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk, PowerSeries.coeff_one,
-    if_neg (by omega)] at h
+    ite_eq_right (by omega)] at h
   simp only [coeff_prod_one_sub, coeff_prod_geom] at h
   exact h
 

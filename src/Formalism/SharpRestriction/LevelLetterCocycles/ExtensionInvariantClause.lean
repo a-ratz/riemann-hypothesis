@@ -111,7 +111,7 @@ theorem coreExt_of (W : LocWach PD LL O v n) (E : EtTie W RA RW inclR φR gR πA
       rintro ⟨w, hw⟩
       obtain ⟨x0, hx0, hxw⟩ := honto w hw
       exact ⟨⟨x0, hx0⟩, Subtype.ext hxw⟩
-    haveI : Module.Free O ↥W.one.L.T := W.one.L.free
+    have : Module.Free O ↥W.one.L.T := W.one.L.free
     obtain ⟨s, hs⟩ := Module.projective_lifting_property π' LinearMap.id hπs
     let p0 : ↥Tp.L.T →ₗ[O] ↥Tp.L.T := LinearMap.id - s ∘ₗ π'
     have hrange : ∀ b : ↥Tp.L.T, p0 b ∈ LinearMap.range ι' := by
@@ -170,10 +170,10 @@ theorem coreExt_of (W : LocWach PD LL O v n) (E : EtTie W RA RW inclR φR gR πA
   refine ⟨y, z, hcoc, ?_, ?_, ?_⟩
   · have hy2 : W.Q ^ Formalism.MainNotions.DeltaInvariantLattices.mx Mi • y ∈ W.N T := hy
     have hn : n ≠ 0 := by
-      haveI := PD.finK₀
+      have := PD.finK₀
       rw [W.n_eq]
       exact Module.finrank_pos.ne'
-    haveI : NeZero n := ⟨hn⟩
+    have : NeZero n := ⟨hn⟩
     have hle : Formalism.MainNotions.DeltaInvariantLattices.mx Mi ≤ Mmax n Mi := by
       unfold Formalism.MainNotions.DeltaInvariantLattices.mx Mmax
       apply ciSup_le

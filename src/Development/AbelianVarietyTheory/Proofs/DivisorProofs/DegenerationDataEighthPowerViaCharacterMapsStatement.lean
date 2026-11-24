@@ -167,7 +167,7 @@ theorem adjCls_abelianPart : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
     rw [cls_cube_two U.LG.isLB _ _ ha, cls_cube_two U.LG.isLB _ _ hb]
     exact hadj _ _ _
 
-  haveI : IsMonHom U.gen.hom := U.gen_hom
+  have : IsMonHom U.gen.hom := U.gen_hom
   have hext : ∀ a : G ⟶ G, (Over.pullback (jK R)).map a ≫ U.gen.hom =
       U.gen.hom ≫ (U.gen.inv ≫ (Over.pullback (jK R)).map a ≫ U.gen.hom) := fun a => by simp
   obtain ⟨E, hE, -⟩ := exists_degenerationEndomorphism_of_admissibleBase R _ hAdm D A G hG U (q ≫ inc) _ inferInstance inferInstance (hext _)
@@ -179,8 +179,8 @@ theorem adjCls_abelianPart : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   have hE'B : E'.aB = rB ≫ jB :=
     (over₀_onTorus_unique R _ hAdm D D A A G G U.toUnifPre U.toUnifPre E'.aG).1 _ _ (lin_of_endU E').1.2.2.1
       (by rw [hE']; exact FactorPol.over_comp hOr hOj)
-  haveI := E.homB
-  haveI := E'.homB
+  have := E.homB
+  have := E'.homB
   obtain ⟨u, hu, -⟩ := exists_ros GlobalTheory.firstFiveLaws.1.globalFns D.toPre.P.isAb D.toPre.P.isLB E.aB E'.aB hros
   intro T x z
   rw [h1B T (x ≫ qB) z, Category.assoc, ← hEB, lam_of_rosatiGen D.toPre.P.isLB u hu, hE'B, Category.assoc,
@@ -257,8 +257,8 @@ end GlobalTheory.Mum.PowData.CmpTwoProof
 open GlobalTheory.Mum.PowData.CmpTwoProof in
 theorem GlobalTheory.Mum.PowData.cmpTwo_of_adjCls : ∀ (R : Type) [CommRing R] [IsDomain R] (D D₀ : DegPre R) (q : D.P.A ⟶ D₀.P.A) (j : D₀.P.A ⟶ D.P.A), IsMonHom q → IsMonHom j → AdjCls (cls D.P.L D.P.isLB) (cls D₀.P.L D₀.P.isLB) q j → CmpTwo D D₀ q j := by
   intro R _ _ D D₀ q j hq hj hadj
-  haveI := hq
-  haveI := hj
+  have := hq
+  have := hj
   have hN : (JN D D₀).IsLB := jn_isLB D D₀
   have hG := GlobalTheory.globalFns_holds
   have pl := pull_cls_of_isPart (isPart_inl D.P.L D₀.P.L) hN D.P.isLB
@@ -754,9 +754,9 @@ theorem periodRel_of_adj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   have := hR.2
   have := U.gen_hom
   have := U₀.gen_hom
-  haveI := hinc
-  haveI := hj
-  haveI : IsMonHom q := L.1
+  have := hinc
+  have := hj
+  have : IsMonHom q := L.1
   obtain ⟨k', tk'⟩ := GlobalTheory.Mum.Two.unifPre_hom_character_const R _ hA D₀ D A₀ A G₀ G U₀.toUnifPre U.toUnifPre inc hinc
   have un₀ := GlobalTheory.Mum.Two.over₀_onTorus_unique R _ hA D₀ D₀ A₀ A₀ G₀ G₀ U₀.toUnifPre U₀.toUnifPre
   have un := GlobalTheory.Mum.Two.over₀_onTorus_unique R _ hA D D A A G G U.toUnifPre U.toUnifPre
@@ -767,8 +767,8 @@ theorem periodRel_of_adj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     ⟨U.gen.inv ≫ (Over.pullback (jK R)).map q ≫ U₀.gen.hom, inferInstance, by simp [Gen₀]⟩
   obtain ⟨c', hc', gc'⟩ : ∃ c' : A₀.A ⟶ A.A, IsMonHom c' ∧ Gen₀ U₀.toUnifPre U.toUnifPre j c' :=
     ⟨U₀.gen.inv ≫ (Over.pullback (jK R)).map j ≫ U.gen.hom, inferInstance, by simp [Gen₀]⟩
-  haveI := hc
-  haveI := hc'
+  have := hc
+  have := hc'
   obtain ⟨E, eG, eA⟩ := (GlobalTheory.UT.functorial_of_unif R _ hA D A G hG U).1 (q ≫ j) (c ≫ c') inferInstance inferInstance
     (by
       unfold Gen₀ at gc gc'
@@ -1233,7 +1233,7 @@ theorem torMatch_of_onTorus : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   rw [s4 F c τ hτk q a rfl hqy hq ha, ← Category.assoc, s4' F c τ' hτ'k q' a' rfl hq'y hq' ha']
   obtain ⟨O, hO, hloc⟩ := IsLocalRing.exists_factor_valuationRing c
   let φ : R →+* O := c.codRestrict O.toSubring hO
-  haveI : IsLocalHom φ := hloc
+  have : IsLocalHom φ := hloc
   have hc : c = O.subtype.comp φ := rfl
   obtain ⟨τO, hτO⟩ := GlobalTheory.ToricTorsionCompare.units_of_pow_eq_one F O _ k hk1 τ' hτ'k
   have hτOk : τO ^ k = 1 := by
@@ -1666,7 +1666,7 @@ theorem exists_tens (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (hR : B
   choose inc hinc iq using fun a => exists_vec q hq huniv fun b => if a = b then 1 else 0
   let rr' : Fin r → (G ⟶ G₀) := fun a => ∏ b, q b ^ Sm a b
   have hrr : ∀ a, IsMonHom (rr' a) := fun a => isMonHom_prod_zpow q hq _
-  have iq₁ : ∀ a, inc a ≫ q a = 𝟙 _ := fun a => by rw [iq, if_pos rfl, zpow_one]
+  have iq₁ : ∀ a, inc a ≫ q a = 𝟙 _ := fun a => by rw [iq, ite_eq_left rfl, zpow_one]
   have jr : ∀ a, j a ≫ rr' a = 𝟙 _ := fun a => by
     simp only [rr', comp_prod_zpow, jq, ← zpow_mul, prod_zpow_same, mul_comm (N _ _), SN]
     simp

@@ -120,21 +120,21 @@ private theorem low_coord {K : Type} [Field K] [NumberField K] :
   obtain ⟨hlv, -, -, hc, hdet, -⟩ := blkLaws (K := K)
   let F : G1 K (2 + 2) → Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) 𝔸[K] := fun g =>
     (g : AdelicGLn.AdelicGL K (2 + 2)).val.submatrix finSumFinEquiv finSumFinEquiv
-  have hF : Continuous F := (Units.continuous_val.comp continuous_subtype_val).matrix_submatrix _ _
+  have hF : Continuous F := (Units.continuous_val.comp continuous_subtypeVal).matrix_submatrix _ _
   have hF' : Continuous fun g => F g⁻¹ := hF.comp continuous_inv
   let C : Set (G1 K (2 + 2)) := {g | (F g).toBlocks₂₁ = 0 ∧ (F g⁻¹).toBlocks₂₁ = 0}
   have hC : IsClosed C := (isClosed_eq (hF.matrix_submatrix Sum.inr Sum.inl) continuous_const).inter
     (isClosed_eq (hF'.matrix_submatrix Sum.inr Sum.inl) continuous_const)
   choose a d ha hd X hX using fun s : C => dec (s.1 : AdelicGLn.AdelicGL K (2 + 2)) s.2.1 s.2.2
   have hac : Continuous a := Units.continuous_iff.2
-    ⟨((hF.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtype_val).congr fun s => (ha s).1.symm,
-      ((hF'.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtype_val).congr fun s => (ha s).2.symm⟩
+    ⟨((hF.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtypeVal).congr fun s => (ha s).1.symm,
+      ((hF'.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtypeVal).congr fun s => (ha s).2.symm⟩
   have hdc : Continuous d := Units.continuous_iff.2
-    ⟨((hF.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtype_val).congr fun s => (hd s).1.symm,
-      ((hF'.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtype_val).congr fun s => (hd s).2.symm⟩
+    ⟨((hF.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtypeVal).congr fun s => (hd s).1.symm,
+      ((hF'.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtypeVal).congr fun s => (hd s).2.symm⟩
   let t : C → ℝ := fun s => Real.log (detModule K 2 (a s)).1
   have htc : Continuous t :=
-    (continuous_subtype_val.comp (continuous_detModule.comp hac)).log fun s => (detModule K 2 (a s)).2.ne'
+    (continuous_subtypeVal.comp (continuous_detModule.comp hac)).log fun s => (detModule K 2 (a s)).2.ne'
   have key : ∀ s : C, (s : G1 K (2 + 2)) = nn (X s) * lv (retractOne (a s)) (retractOne (d s)) (t s) := by
     intro s
     have h1 : detModule K 2 (a s) * detModule K 2 (d s) = 1 := by
@@ -161,9 +161,9 @@ private theorem low_coord {K : Type} [Field K] [NumberField K] :
     simpa only [Function.comp_def] using hc.comp hP
   have hN : Continuous fun s : C => unipMatrix (X s) := by
     have : Continuous fun s : C => (nn (X s) : G1 K (2 + 2)) :=
-      (continuous_subtype_val.mul hL.inv).congr fun s => mul_inv_eq_of_eq_mul (key s)
+      (continuous_subtypeVal.mul hL.inv).congr fun s => mul_inv_eq_of_eq_mul (key s)
     have h2 : Continuous fun g : G1 K (2 + 2) => (g : AdelicGLn.AdelicGL K (2 + 2)).val :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     exact h2.comp this
   have hXc : Continuous X := continuous_pi fun p => by
     refine ((hN.matrix_elem p.1.1 p.1.2).sub (continuous_const (y := (1 : Matrix (Fin (2 + 2)) (Fin (2 + 2)) 𝔸[K]) p.1.1 p.1.2))).congr fun s => ?_
@@ -223,7 +223,7 @@ private theorem par_homeo {K : Type} [Field K] [NumberField K] :
       left_inv := fun p => ?_
       right_inv := fun s => Subtype.ext (hkey ⟨s.1, hSC _ s.2⟩).symm
       continuous_toFun := (hN.mul hL).subtype_mk _
-      continuous_invFun := hψ.comp (continuous_subtype_val.subtype_mk _) }, hS ▸ hC, fun _ => Iff.rfl, fun _ _ _ _ => rfl⟩
+      continuous_invFun := hψ.comp (continuous_subtypeVal.subtype_mk _) }, hS ▸ hC, fun _ => Iff.rfl, fun _ _ _ _ => rfl⟩
   obtain ⟨h1, h2, h3, h4⟩ := hinj _ _ _ _ _ _ _ _ (hkey ⟨_, hSC _ ⟨p.2.2.2, p.1, p.2.1, p.2.2.1, rfl⟩⟩)
   exact Prod.ext h2.symm (Prod.ext h3.symm (Prod.ext h4.symm h1.symm))
 
@@ -237,19 +237,19 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.parHaar :
   have hw : Continuous fun t : ℝ => Real.exp (-4 * t) := by fun_prop
   have hwm : Measurable fun t : ℝ => ENNReal.ofReal (Real.exp (-4 * t)) := hw.measurable.ennreal_ofReal
   let w : Measure ℝ := volume.withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))
-  haveI : IsLocallyFiniteMeasure w := IsLocallyFiniteMeasure.withDensity_ofReal hw
-  haveI : w.IsOpenPosMeasure := Measure.AbsolutelyContinuous.isOpenPosMeasure
+  have : IsLocallyFiniteMeasure w := IsLocallyFiniteMeasure.withDensity_ofReal hw
+  have : w.IsOpenPosMeasure := Measure.AbsolutelyContinuous.isOpenPosMeasure
     (withDensity_absolutelyContinuous' hwm.aemeasurable (Eventually.of_forall fun t => by
       simp [Real.exp_pos]))
-  haveI : (unipMeasure K (2 + 2) 2).IsAddHaarMeasure := inferInstance
+  have : (unipMeasure K (2 + 2) 2).IsAddHaarMeasure := inferInstance
   let ρ := μ₂.prod (μ₂.prod (w.prod (unipMeasure K (2 + 2) 2)))
-  haveI : SFinite (w.prod (unipMeasure K (2 + 2) 2)) := inferInstance
-  haveI : SFinite (μ₂.prod (w.prod (unipMeasure K (2 + 2) 2))) := by
+  have : SFinite (w.prod (unipMeasure K (2 + 2) 2)) := inferInstance
+  have : SFinite (μ₂.prod (w.prod (unipMeasure K (2 + 2) 2))) := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact inferInstance
-  haveI : (w.prod (unipMeasure K (2 + 2) 2)).IsOpenPosMeasure := inferInstance
-  haveI : (μ₂.prod (w.prod (unipMeasure K (2 + 2) 2))).IsOpenPosMeasure := inferInstance
-  haveI : ρ.IsOpenPosMeasure := inferInstance
+  have : (w.prod (unipMeasure K (2 + 2) 2)).IsOpenPosMeasure := inferInstance
+  have : (μ₂.prod (w.prod (unipMeasure K (2 + 2) 2))).IsOpenPosMeasure := inferInstance
+  have : ρ.IsOpenPosMeasure := inferInstance
   have form : ∀ f : S → ℝ≥0∞, Measurable f → ∫⁻ s, f s ∂ρ.map φ = ∫⁻ m₁, ∫⁻ m₂, ∫⁻ t : ℝ, ∫⁻ X,
       f (φ (m₁, m₂, t, X)) * ENNReal.ofReal (Real.exp (-4 * t)) ∂unipMeasure K (2 + 2) 2 ∂volume ∂μ₂ ∂μ₂ := by
     intro f hf
@@ -263,9 +263,9 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.parHaar :
     rw [lintegral_prod _ hm2.aemeasurable, lintegral_withDensity_eq_lintegral_mul _ hwm hm2.lintegral_prod_right']
     refine lintegral_congr fun t => ?_
     rw [lintegral_mul_const' _ _ ENNReal.ofReal_ne_top, Pi.mul_apply, mul_comm]
-  haveI : IsFiniteMeasureOnCompacts (ρ.map φ) := Measure.IsFiniteMeasureOnCompacts.map ρ φ
-  haveI : (ρ.map φ).IsOpenPosMeasure := φ.continuous.isOpenPosMeasure_map φ.surjective
-  haveI : (ρ.map φ).IsMulLeftInvariant := ⟨fun g => by
+  have : IsFiniteMeasureOnCompacts (ρ.map φ) := Measure.IsFiniteMeasureOnCompacts.map ρ φ
+  have : (ρ.map φ).IsOpenPosMeasure := φ.continuous.isOpenPosMeasure_map φ.surjective
+  have : (ρ.map φ).IsMulLeftInvariant := ⟨fun g => by
     obtain ⟨⟨a, b, u, Y⟩, rfl⟩ := φ.surjective g
     obtain ⟨e, he, hme⟩ := adMeas a b u
     refine Measure.ext_of_lintegral _ fun f hf => ?_
@@ -296,5 +296,5 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.parHaar :
     refine Eq.trans (lintegral_congr fun t => ?_) (lintegral_add_left_eq_self (μ := volume) _ u)
     exact h2 (fun X => f (φ (a * m₁, b * m₂, u + t, X))) t⟩
   refine ⟨S, ρ.map φ, hS, {}, hmem, fun Φ hΦ => ?_⟩
-  rw [form (fun s => Φ s) (hΦ.comp measurable_subtype_coe)]
+  rw [form (fun s => Φ s) (hΦ.comp measurable_subtypeVal)]
   simp only [hφ]

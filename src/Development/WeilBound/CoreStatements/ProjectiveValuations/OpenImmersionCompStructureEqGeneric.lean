@@ -99,7 +99,7 @@ theorem differentiableAt_reads {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : Is
   have hb₀' : b₀ ∈ B' := ⟨hb₀, hbW⟩
   let A : Type := Γ(T.X.YY, W)
   let α : c.F →+* A := (GlobalTheory.FlagMod.ev (GlobalTheory.FlagMod.tau hW ≫ flagStr T.X) ⊤ le_top).comp (toΓ c.F)
-  letI : Algebra c.F A := α.toAlgebra
+  let : Algebra c.F A := α.toAlgebra
   have hα : GlobalTheory.FlagMod.tau hW ≫ flagStr T.X = spMap (algebraMap c.F A) := (GlobalTheory.FlagMod.spMap_ev_top _).symm
   have hτi : ⊤ ≤ GlobalTheory.FlagMod.tau hW ⁻¹ᵁ T.X.F.U i := GlobalTheory.FlagMod.tau_le hW (hWle.trans inf_le_right)
   obtain ⟨yA, hyA⟩ := exists_chartFr_alg T (S := A) (GlobalTheory.FlagMod.tau hW)
@@ -118,7 +118,7 @@ theorem differentiableAt_reads {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : Is
     exact ⟨⟨ψ, fun x => RingHom.congr_fun e₃ x⟩, fun u => (ev_eq hy u).symm, e₁⟩
   choose φ' hφ₁ hφ₂ using hφ
   let φ : (Fin m → ℂ) → (A →ₐ[c.F] CAt σ) := fun b => if hb : b ∈ B' then φ' (s b) hb.2 else φ' (s b₀) hbW
-  have hφb : ∀ b (hb : b ∈ B'), φ b = φ' (s b) hb.2 := fun b hb => dif_pos hb
+  have hφb : ∀ b (hb : b ∈ B'), φ b = φ' (s b) hb.2 := fun b hb => dite_eq_left hb
   choose y hy using fun b => GlobalTheory.FlagMod.exists_frMap (φ b) yA
   have hsub : ∀ b ∈ B', s b ∈ ptsIn _ σ (flagOpen T.X) ∧ s b ∈ ptsIn _ σ (T.X.F.U i) := fun b hb =>
     mem_ptsIn_inf.1 (ptsIn_mono hWle hb.2)

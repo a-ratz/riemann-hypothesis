@@ -74,7 +74,7 @@ theorem UpperTheory.whittakerFunction_continuous_bounded_equivariant :
       rw [Measure.restrict_restrict hC.measurableSet, Set.inter_eq_right.2 hs]
       rfl
     rw [e]
-    haveI : IsFiniteMeasure ((adeleMeasurePi (ι := Fin 2) ℚ).restrict (FS2 ℚ)) :=
+    have : IsFiniteMeasure ((adeleMeasurePi (ι := Fin 2) ℚ).restrict (FS2 ℚ)) :=
       ⟨by simpa using (measure_mono hs).trans_lt hC.measure_lt_top⟩
     set_option synthInstance.maxHeartbeats 200000 in
     exact continuous_parametric_integral_of_continuous

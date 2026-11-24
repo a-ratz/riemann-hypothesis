@@ -113,17 +113,17 @@ open GlobalTheory.SplitWeil GlobalTheory.IwahoriTraceProof in
 private theorem measure_dcos [MeasurableSpace (GL (Fin n) k)] [BorelSpace (GL (Fin n) k)] (μ : Measure (GL (Fin n) k))
     [μ.IsHaarMeasure] {K : Subgroup (GL (Fin n) k)} (hK : IwLev K) {t : Fin n → kˣ} (ht : Dom t) :
     μ.real (dcos K t) = μ.real (K : Set (GL (Fin n) k)) * (deltaB t)⁻¹ := by
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
-  letI : MeasurableSpace (unipRad k (points (Fin n))) := _root_.borel _
-  haveI : BorelSpace (unipRad k (points (Fin n))) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (unipRad k (points (Fin n))) :=
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
+  let : MeasurableSpace (unipRad k (points (Fin n))) := _root_.borel _
+  have : BorelSpace (unipRad k (points (Fin n))) := ⟨rfl⟩
+  have : LocallyCompactSpace (unipRad k (points (Fin n))) :=
     (UnipHaar.unipHomeo (points (Fin n))).isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (unipRad k (points (Fin n))) :=
+  have : SecondCountableTopology (unipRad k (points (Fin n))) :=
     (UnipHaar.unipHomeo (points (Fin n))).secondCountableTopology
   let ν : Measure (unipRad k (points (Fin n))) := Measure.haar
   have ho : IsOpen {s : unipRad k (points (Fin n)) | (s : GL (Fin n) k) ∈ K} :=
-    hK.co.2.preimage continuous_subtype_val
+    hK.co.2.preimage continuous_subtypeVal
   have hcl : IsClosed (unipRad k (points (Fin n)) : Set (GL (Fin n) k)) := isClosed_unipB
   have hc : IsCompact {s : unipRad k (points (Fin n)) | (s : GL (Fin n) k) ∈ K} :=
     hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK.co.1
@@ -146,8 +146,8 @@ end UpperTheory.Gal.Join
 theorem UpperTheory.Gal.Join.dcosVol :
     UpperTheory.Gal.Join.DcosVol := by
   intro k _ _ _ _ n _ _ μ _ K hK t ht
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hc := isCompact_dcos hK.co t
   refine ⟨⟨(LocallyConstant.indicator (1 : LocallyConstant (GL (Fin n) k) ℂ) ⟨hc.isClosed, isOpen_dcos hK.co t⟩).2,
     HasCompactSupport.intro hc fun x hx => Set.indicator_of_notMem hx _⟩, measure_dcos μ hK ht⟩

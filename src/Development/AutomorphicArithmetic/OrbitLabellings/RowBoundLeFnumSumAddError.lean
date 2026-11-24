@@ -84,7 +84,7 @@ private theorem ev_iff {d : ℕ} [NeZero d] (hd : Odd d) (ev : ZMod d → ZMod (
   · rintro rfl
     exact ⟨(hev a).1, (hev a).2.symm⟩
   · rintro ⟨he, ha⟩
-    haveI : NeZero (2 * d) := ⟨Nat.mul_ne_zero two_ne_zero (NeZero.ne d)⟩
+    have : NeZero (2 * d) := ⟨Nat.mul_ne_zero two_ne_zero (NeZero.ne d)⟩
     have key : ((s.val : ℕ) : ZMod (2 * d)) = (((ev a).val : ℕ) : ZMod (2 * d)) := by
       rw [cast_eq hd]
       exact ⟨by rw [Nat.even_iff.1 he, Nat.even_iff.1 (hev a).1], by rw [(hev a).2, ha]⟩
@@ -92,12 +92,12 @@ private theorem ev_iff {d : ℕ} [NeZero d] (hd : Odd d) (ev : ZMod d → ZMod (
 
 private theorem cast_val_eq_castHom_of_double {d : ℕ} [NeZero d] (x : ZMod (2 * d)) :
     ((x.val : ℕ) : ZMod d) = ZMod.castHom (dvd_mul_left d 2) (ZMod d) x := by
-  haveI : NeZero (2 * d) := ⟨Nat.mul_ne_zero two_ne_zero (NeZero.ne d)⟩
+  have : NeZero (2 * d) := ⟨Nat.mul_ne_zero two_ne_zero (NeZero.ne d)⟩
   rw [ZMod.castHom_apply, ZMod.cast_eq_val]
 
 private theorem cast_val_two_eq_castHom_of_double {d : ℕ} [NeZero d] (x : ZMod (2 * d)) :
     ((x.val : ℕ) : ZMod 2) = ZMod.castHom (dvd_mul_right 2 d) (ZMod 2) x := by
-  haveI : NeZero (2 * d) := ⟨Nat.mul_ne_zero two_ne_zero (NeZero.ne d)⟩
+  have : NeZero (2 * d) := ⟨Nat.mul_ne_zero two_ne_zero (NeZero.ne d)⟩
   rw [ZMod.castHom_apply, ZMod.cast_eq_val]
 
 private theorem ev_iff' {d : ℕ} [NeZero d] (hd : Odd d) (ev : ZMod d → ZMod (2 * d))
@@ -228,7 +228,7 @@ private theorem deg_le (X : RowData C V (2 * d) I J) (n K : ℕ) (ga : ZMod (2 *
     _ = ∑ k ∈ Finset.Icc 1 K, (if Even s.val ∧ k = n then (0 : ℝ) else (k : ℝ) * ga s k) := by
         apply Finset.sum_congr rfl
         intro k _
-        simp only [rst, if_true]
+        simp only [rst, ite_true]
         split_ifs <;> simp
     _ ≤ _ := le_refl _
 
@@ -291,7 +291,7 @@ private theorem blocks_wt (hd : Odd d) (X : RowData C V (2 * d) I J) (ev : ZMod 
     exact (Finset.mem_filter.1 hi).2
   by_cases hkn : k = X.n
   swap
-  · simp only [hkn, and_false, if_false, Finset.sum_const_zero, add_zero]
+  · simp only [hkn, and_false, ite_false, Finset.sum_const_zero, add_zero]
     exact hfirst
   subst hkn
   simp only [and_true]
@@ -330,7 +330,7 @@ private theorem blocks_wt (hd : Odd d) (X : RowData C V (2 * d) I J) (ev : ZMod 
   · have hch0 : ∀ a, ¬ s = ev a := fun a h => he (by rw [h]; exact (hev a).1)
     have t3 : (∑ a, ∑ i ∈ oddLevels d, if s + (d : ZMod (2 * d)) = ev a + (i : ZMod (2 * d)) then y a i else 0) = 0 :=
       Finset.sum_eq_zero (fun a _ => Finset.sum_eq_zero (fun i hi =>
-        if_neg (fun h => he ((ev_iff' hd ev hev s a i (hodd i hi)).1 h).1)))
+        ite_eq_right (fun h => he ((ev_iff' hd ev hev s a i (hodd i hi)).1 h).1)))
     have e2 := sum_supp y (fun a i v => if s + (d : ZMod (2 * d)) = ev a + (i : ZMod (2 * d)) then v else 0)
       (fun a i => by simp)
     rw [Finset.sum_add_distrib, e2, t3]
@@ -611,20 +611,20 @@ private theorem blockBd_le {l n m i y I S : ℕ} {x : ℝ} (hl : 5 ≤ l) (hn : 
   unfold blockBd bdP
   by_cases hy : y = 0
   · subst hy
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     push_cast at h1 h2 ⊢
     split_ifs with hx
     · nlinarith
     · push_neg at hx
       subst hx
       simp
-  · rw [if_neg hy]
+  · rw [ite_eq_right hy]
     have hy1 : (1:ℝ) ≤ y := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr hy
     have hx : x ≠ 0 := by
       intro h
       rw [h] at h1
       nlinarith
-    rw [if_pos hx]
+    rw [ite_eq_left hx]
     have hiI : (i:ℝ) + 1 ≤ I := by exact_mod_cast Nat.succ_le_of_lt (hi hx)
     have hpow : (1:ℝ) ≤ (l:ℝ) ^ i := one_le_pow₀ hl1.le
     have hm0 : (0:ℝ) ≤ m := Nat.cast_nonneg m
@@ -1051,7 +1051,7 @@ theorem UpperTheory.rowBound_le_Fnum_sum_add_error :
   intro hBi hCH hMON C1 hC1
   refine ⟨3567 + 6 * C1, by linarith, ?_⟩
   intro P l hcard hm hmk hr hSE hlp hl Pk
-  haveI := P.nz
+  have := P.nz
   obtain ⟨ev, hev⟩ := exists_ev P.d Pk.odd
   have hdeg := Pk.deg
   have hk1 : 1 ≤ P.k - 1 := by omega
@@ -1084,21 +1084,21 @@ theorem UpperTheory.rowBound_le_Fnum_sum_add_error :
   have hν := UpperTheory.attains_blockListOfWeights_along_orbits hCH hMON P l C1 hcard hm hmk hr hl Pk y u ev hev
     (by
       intro z hz a
-      simp only [y, u, dif_pos hz]
+      simp only [y, u, dite_eq_left hz]
       exact (pl ⟨z, hz⟩).bal a)
     (by
       intro z hz a i hi
-      simp only [y, dif_pos hz]
+      simp only [y, dite_eq_left hz]
       exact (hpl ⟨z, hz⟩).1 a i hi)
     (by
       intro o a i _ hne
-      simp only [y, dif_pos o.2, Subtype.coe_eta] at hne ⊢
+      simp only [y, dite_eq_left o.2, Subtype.coe_eta] at hne ⊢
       exact (hpl o).2.1 a i hne)
   have hsum : ∑ z ∈ Pk.Z, ((∑ a, ∑ i ∈ oddLevels P.d, RF.blockBd l (P.k - 1) P.m i (y z a i)) +
       ∑ a, RF.chBd l (P.k - 1) P.m (u z a)) = ∑ o : ↥Pk.Z, (pl o).bound (P.k - 1) P.m := by
     rw [← Finset.sum_coe_sort Pk.Z]
     refine Finset.sum_congr rfl fun o _ => ?_
-    simp only [y, u, dif_pos o.2, Subtype.coe_eta, Plan.bound]
+    simp only [y, u, dite_eq_left o.2, Subtype.coe_eta, Plan.bound]
   have hT0 : 0 < Pk.T := by linarith [hdeg.T_one]
   have hbound : Pk.T * Pk.ν ≤ ∑ o : ↥Pk.Z, Pk.T * (pl o).bound (P.k - 1) P.m +
       Pk.T * Pk.rest / ((l : ℝ) - 1) := by

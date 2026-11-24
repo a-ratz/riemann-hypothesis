@@ -100,11 +100,11 @@ private theorem nakGen {A B : Type} [CommRing A] [CommRing B] [Algebra A B] [Mod
 private theorem nakHom {A B : Type} [CommRing A] [CommRing B] [Algebra ℂ A] [Algebra ℂ B] [Algebra.FiniteType ℂ B]
     (φ : A →ₐ[ℂ] B) (hint : ∀ b : B, φ.toRingHom.IsIntegralElem b) (I : Ideal A) (𝔟 : Ideal B)
     (hb : 𝔟 ⊔ I.map φ.toRingHom = ⊤) : ∃ r : A, r - 1 ∈ I ∧ φ r ∈ 𝔟 := by
-  letI alg : Algebra A B := φ.toRingHom.toAlgebra
-  haveI tow : IsScalarTower ℂ A B := IsScalarTower.of_algebraMap_eq fun c => (φ.commutes c).symm
-  haveI int : Algebra.IsIntegral A B := ⟨hint⟩
-  haveI : Algebra.FiniteType A B := Algebra.FiniteType.of_restrictScalars_finiteType ℂ _ _
-  haveI fin : Module.Finite A B := Algebra.IsIntegral.finite
+  let alg : Algebra A B := φ.toRingHom.toAlgebra
+  have tow : IsScalarTower ℂ A B := IsScalarTower.of_algebraMap_eq fun c => (φ.commutes c).symm
+  have int : Algebra.IsIntegral A B := ⟨hint⟩
+  have : Algebra.FiniteType A B := Algebra.FiniteType.of_restrictScalars_finiteType ℂ _ _
+  have fin : Module.Finite A B := Algebra.IsIntegral.finite
   exact nakGen I 𝔟 hb
 
 variable {F L : Type} [Field F] [Field L] [Algebra ℂ F] [Algebra ℂ L] [Algebra F L] [IsScalarTower ℂ F L]
@@ -128,7 +128,7 @@ private theorem val_one (φ : rA ℂ x {0} →ₐ[ℂ] ℂ) (hφ : ∀ j, φ (tA
 private theorem nak (h : IsFinCover ℂ L x) (𝔟 : Ideal (rB ℂ L x {0}))
     (hb : 𝔟 ⊔ FibFin.coordIdeal ℂ L x = ⊤) :
     ∃ r : rA ℂ x {0}, r - 1 ∈ IA x ∧ FibFin.incl ℂ L x r ∈ 𝔟 := by
-  haveI := h.smooth 0
+  have := h.smooth 0
   have hcomp : (rB ℂ L x {0}).val.toRingHom.comp (FibFin.incl ℂ L x).toRingHom =
       algebraMap (rA ℂ x {0}) L := RingHom.ext fun a => rfl
   have hint : ∀ b : rB ℂ L x {0}, (FibFin.incl ℂ L x).toRingHom.IsIntegralElem b := fun b => by
@@ -169,7 +169,7 @@ private theorem comax (h : IsFinCover ℂ L x)
     (𝔞 : Ideal (rB ℂ L x {0})) (h𝔞 : ∀ e : fib ℂ L x, ∃ b ∈ 𝔞, e.1 b ≠ 0) :
     𝔞 ⊔ FibFin.coordIdeal ℂ L x = ⊤ := by
   obtain ⟨hfin, hsep⟩ := FibFin.fib_finite_and_sep ℂ L x h hred
-  haveI := Fintype.ofFinite (fib ℂ L x)
+  have := Fintype.ofFinite (fib ℂ L x)
   classical
   choose b hb hb0 using h𝔞
   choose c hc using fun e0 : fib ℂ L x => hCRT (fun e => if e = e0 then (e0.1 (b e0))⁻¹ else 0)
@@ -177,8 +177,8 @@ private theorem comax (h : IsFinCover ℂ L x)
   have hval : ∀ e : fib ℂ L x, e.1 (∑ e0, c e0 * b e0) = 1 := by
     intro e
 
-    rw [map_sum, Finset.sum_eq_single e (fun e0 _ hne => by rw [map_mul, hc, if_neg (Ne.symm hne), zero_mul])
-    (fun hn => (hn (Finset.mem_univ e)).elim), map_mul, hc, if_pos rfl]
+    rw [map_sum, Finset.sum_eq_single e (fun e0 _ hne => by rw [map_mul, hc, ite_eq_right (Ne.symm hne), zero_mul])
+    (fun hn => (hn (Finset.mem_univ e)).elim), map_mul, hc, ite_eq_left rfl]
     exact inv_mul_cancel₀ (hb0 e)
   have h1 := hsep (1 - ∑ e0, c e0 * b e0) (fun e => by rw [map_sub, map_one, hval, sub_self])
   rw [Ideal.eq_top_iff_one]

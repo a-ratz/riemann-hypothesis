@@ -196,7 +196,7 @@ theorem exists_level (K : FinExt l) {x : Om l} (hx : x ∈ Kinf K) : ∃ i, 1 �
     refine sup_le_sup_left (IntermediateField.adjoin.mono _ _ _ ?_) _
     intro x hx
     obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le h
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     rw [pow_add, pow_mul, hx, one_pow]
   have h : Kinf K ≤ ⨆ i, Ks K i := by
     refine sup_le (le_trans (le_sup_left : _ ≤ Ks K 0) (le_iSup (Ks K) 0)) ?_
@@ -275,8 +275,8 @@ theorem exists_root (K : FinExt l) {c : Om l} (hc : c ∈ K0 K) (h1 : ‖c‖ = 
     rw [this]
     exact mul_lt_one_of_nonneg_of_lt_one_left (by positivity)
       (inv_lt_one_of_one_lt₀ hl1) (norm_le_one hm hz)
-  haveI : NeZero M := ⟨hM0.ne'⟩
-  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) M
+  have : NeZero M := ⟨hM0.ne'⟩
+  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) M
   have hprod := congrArg (eval c) (X_pow_sub_one_eq_prod hM0 hμ)
   simp only [eval_sub, eval_pow, eval_X, eval_one, eval_prod, eval_C] at hprod
   obtain ⟨ω, hω, hcω⟩ : ∃ ω ∈ nthRootsFinset M (1 : Om l), ‖c - ω‖ < 1 := by

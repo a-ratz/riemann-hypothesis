@@ -144,7 +144,7 @@ theorem exists_common_eigenvector {k ι V : Type} [Field k] [IsAlgClosed k] [Add
   · push_neg at hs
     obtain ⟨i, hi⟩ := hs
     let g : Module.End k W := (f i).restrict (fun w hw => hinv i w hw)
-    haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
+    have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
     obtain ⟨c, hc'⟩ := Module.End.exists_eigenvalue g
     obtain ⟨v, hv⟩ := hc'.exists_hasEigenvector
     have hgv : g v = c • v := hv.apply_eq_smul
@@ -546,8 +546,8 @@ theorem trace_sqRep_of_upper {n : ℕ} (lam : DomWeight n) (T D : GL (Fin n) ℂ
     refine congrArg (fun f => MvPolynomial.eval f Q) (funext fun x => ?_)
     rw [hD, diagonal_apply]
     by_cases h : x.2 = x.1
-    · rw [if_pos h, h, Nat.sub_self, pow_zero, mul_one]
-    · rw [if_neg h]
+    · rw [ite_eq_left h, h, Nat.sub_self, pow_zero, mul_one]
+    · rw [ite_eq_right h]
       rcases lt_or_gt_of_ne h with h' | h'
       · rw [zero_pow (by rw [Fin.lt_def] at h'; omega), mul_zero]
       · rw [hT h', zero_mul]
@@ -651,7 +651,7 @@ theorem trace_sqRep_inv_eq_conj_chAt : ∀ (E : Type) [Field E] [NumberField E] 
     congr 1
     ext i j
     simp only [cT, Matrix.transpose_apply, Matrix.map_apply, RingEquiv.toRingHom_eq_coe,
-      RingHom.coe_coe, AlgEquiv.coe_ringEquiv]
+      RingHom.coe_coe, AlgEquiv.coe_toRingEquiv]
     exact (IsCMField.complexEmbedding_complexConj E τ _).symm
   have hginv : ((g⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) =
       ((g : Matrix (Fin n) (Fin n) ℂ).map (starRingEnd ℂ))ᵀ := by

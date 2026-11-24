@@ -101,10 +101,10 @@ theorem approx (A : Submodule ℂ (X → ℂ)) (hc : ∀ f ∈ A, Continuous f)
   have hS : S.SeparatesPoints := by
     intro x y hxy
     obtain ⟨f, hf, hfxy⟩ := hsep x y (fun h => hxy (Subtype.ext h))
-    let F : C(K, ℂ) := ⟨fun z => f z, (hc f hf).comp continuous_subtype_val⟩
+    let F : C(K, ℂ) := ⟨fun z => f z, (hc f hf).comp continuous_subtypeVal⟩
     exact ⟨F, ⟨F, ⟨0, f, hf, fun z => by simp [F]⟩, rfl⟩, hfxy⟩
   have htop := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints S hS
-  let gK : C(K, ℂ) := ⟨fun z => g z, hg.comp continuous_subtype_val⟩
+  let gK : C(K, ℂ) := ⟨fun z => g z, hg.comp continuous_subtypeVal⟩
   have hgK : gK ∈ S.topologicalClosure := by rw [htop]; trivial
   rw [← SetLike.mem_coe, StarSubalgebra.topologicalClosure_coe, Metric.mem_closure_iff] at hgK
   obtain ⟨p, hpS, hp⟩ := hgK ε hε

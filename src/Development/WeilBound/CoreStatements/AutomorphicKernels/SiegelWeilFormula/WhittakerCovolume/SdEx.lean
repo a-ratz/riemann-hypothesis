@@ -412,8 +412,8 @@ theorem exists_sdHerm : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   intro F E _ _ _ _ _ σ hCM ψ hψ n
   obtain ⟨b, D, hD0, hb0, hσ, hD⟩ := exists_basis σ hCM
   obtain ⟨h1, -, -, -, -, -, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := h1
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+  have := h1
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
   have h2 : (2 : F) ≠ 0 := two_ne_zero
   have hw : ∀ p : Fin n × Fin n, wt D p ≠ 0 := by
     intro p
@@ -461,14 +461,14 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂.SdExistN
 
 theorem exists_sdW_tuples : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ ψ : AddChar (AF F) ℂ, IsCharAF F ψ → ∀ n : ℕ, ∃ μ : Measure (Fin n → Fin M → AF F ⊗[F] E), SdW F E σ M J (AF F) ψ n μ := by
   intro F E _ _ _ _ _ σ hCM M J hJ ψ hψ n
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let b := Module.finBasis F E
   obtain ⟨B, hsym, hdet, -, hR'⟩ :=
     GlobalTheory.CompanionTheory.SW.TraceCoord.exists_trace_coord F E σ hCM M J hJ _ b
   obtain ⟨h1, h2, h3, h4, -, -, hcc, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := h1
-  haveI : BorelSpace (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI := hBor n M
+  have := h1
+  have : BorelSpace (AF F ⊗[F] E) := ⟨rfl⟩
+  have := hBor n M
   have hc : IsHomeomorph (GlobalTheory.CompanionTheory.SW.SdTuples.cf (F := F) (E := E) (AF F) b) := hcc _ b
   have hsym' : (Matrix.blockDiagonal fun _ : Fin n => B).IsSymm := by
     unfold Matrix.IsSymm

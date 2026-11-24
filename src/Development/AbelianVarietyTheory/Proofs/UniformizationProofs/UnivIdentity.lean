@@ -323,7 +323,7 @@ theorem tau_self (hE : D.PsiEven) (hB : D.TauBimult) (y : D.X) {z : (TF (R := R)
 
 theorem main : LL → AllD fun {R} _ _ {I} D F _ _ => ∀ (N : ℕ), Odd N → ∀ p : QkPt D.toPre F N, (∃ w, TXFrame N p w) ∧ ∀ w w', TXFrame N p w → TXFrame N p w' → ∀ z J, Good D.toPre.P.L z J → val w (𝟙 _) z J = val w' (𝟙 _) z J := by
   rintro ⟨hL, -⟩ R _ _ _ I hI D F _ _ _ N ⟨k, hk⟩ p
-  haveI : IsNoetherianRing R := hI.1
+  have : IsNoetherianRing R := hI.1
   obtain ⟨ν, hν⟩ := exists_nu (D := D.toPre) hL.mulPull N
   obtain ⟨κ, hκ⟩ := exists_kap (D := D.toPre) hL.mulPull N
   have alg : ∀ {U : Type} [CommGroup U] (x y : U), x ^ 2 = y ^ 2 → x ^ N = y ^ N → x = y := fun x y h₂ hN => by

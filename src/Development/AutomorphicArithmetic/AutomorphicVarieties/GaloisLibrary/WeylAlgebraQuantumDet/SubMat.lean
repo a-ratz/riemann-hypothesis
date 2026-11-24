@@ -71,14 +71,14 @@ theorem UpperTheory.V.Weyl.subMat :
   let I : (Fin (Module.finrank ℂ S) → ℂ) →ₗ[ℂ] (Fin d → ℂ) := S.subtype ∘ₗ b.equivFun.symm.toLinearMap
   have hIP : ∀ v, v ∈ S → I (P v) = v := by
     intro v hv
-    have e : S.linearProjOfIsCompl T hT v = ⟨v, hv⟩ := Submodule.linearProjOfIsCompl_apply_left hT ⟨v, hv⟩
+    have e : S.linearProjOfIsCompl T hT v = ⟨v, hv⟩ := Submodule.projectionOnto_apply_left hT ⟨v, hv⟩
     show ((b.equivFun.symm (b.equivFun (S.linearProjOfIsCompl T hT v)) : S) : Fin d → ℂ) = v
     rw [e, LinearEquiv.symm_apply_apply]
   have hPI : P ∘ₗ I = LinearMap.id := by
     apply LinearMap.ext
     intro w
     have e : S.linearProjOfIsCompl T hT ((b.equivFun.symm w : S) : Fin d → ℂ) = b.equivFun.symm w :=
-      Submodule.linearProjOfIsCompl_apply_left hT _
+      Submodule.projectionOnto_apply_left hT _
     show b.equivFun (S.linearProjOfIsCompl T hT ((b.equivFun.symm w : S) : Fin d → ℂ)) = w
     rw [e, LinearEquiv.apply_symm_apply]
   let A := LinearMap.toMatrix' I

@@ -103,7 +103,7 @@ theorem dr_le {Ω L : Type} [Field Ω] [Field L] [Algebra Ω L] (A B : Subalgebr
 theorem LeafGlueSep_of (hP : LeafGluePullback) (hC : LeafSpecGenClosed) :
     LateralTheory.E.LeafGlueIsProperPf.LeafGlueSep := by
   intro Ω L _ _ _ A B u h G
-  haveI := G.hiA; haveI := G.hiB
+  have := G.hiA; have := G.hiB
   have hD := dr_le A B u h.2.2.1
   apply sep_of_cover G.c0 (LateralTheory.E.LeafGlueIsProperPf.cov G)
   intro i j

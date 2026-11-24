@@ -118,10 +118,10 @@ theorem dualMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f :
 theorem finrank_comp' {A B C : Type} [Field A] [Field B] [Field C] (f : A →+* B) (g : B →+* C) :
     (letI := (g.comp f).toAlgebra; Module.finrank A C) =
       (letI := f.toAlgebra; Module.finrank A B) * (letI := g.toAlgebra; Module.finrank B C) := by
-  letI := f.toAlgebra
-  letI := g.toAlgebra
-  letI := (g.comp f).toAlgebra
-  haveI : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := f.toAlgebra
+  let := g.toAlgebra
+  let := (g.comp f).toAlgebra
+  have : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact (Module.finrank_mul_finrank A B C).symm
 
 theorem coordsAt_orbit {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} {K : Type} [Fintype K]

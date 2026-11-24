@@ -196,12 +196,12 @@ theorem stalk_normal {κ : Type} {x : κ → Ω} (N : PModel ℤ x) (hN : Flat.N
     IsDomain (N.X.presheaf.stalk q) ∧ IsIntegrallyClosed (N.X.presheaf.stalk q) := by
   let p : Cpt N.ξ := ⟨q, N.all q⟩
   have hinj : Function.Injective (genMap N.ξ p) := N.tie.gen.inj p
-  haveI hd : IsDomain (N.X.presheaf.stalk q) := hinj.isDomain (genMap N.ξ p)
+  have hd : IsDomain (N.X.presheaf.stalk q) := hinj.isDomain (genMap N.ξ p)
   refine ⟨hd, ?_⟩
-  letI : Algebra (N.X.presheaf.stalk q) Ω := (genMap N.ξ p).toAlgebra
-  haveI : FaithfulSMul (N.X.presheaf.stalk q) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  let : Algebra (N.X.presheaf.stalk q) Ω := (genMap N.ξ p).toAlgebra
+  have : FaithfulSMul (N.X.presheaf.stalk q) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
   obtain ⟨c, hc⟩ := N.tie.cover p
-  haveI : IsFractionRing (N.X.presheaf.stalk q) Ω := by
+  have : IsFractionRing (N.X.presheaf.stalk q) Ω := by
     refine IsFractionRing.of_field _ _ fun a => ?_
     obtain ⟨t, ht, h0, hta⟩ := exists_mul_mem N.tie hc.1 a
     obtain ⟨t', e⟩ := (N.tie.ring c hc.1 t).1 ht p hc
@@ -283,7 +283,7 @@ theorem exists_normal_model {κ₁ κ₂ : Type} [Finite κ₁] [Finite κ₂] (
       (∀ p : Cpt M'.ξ, ∃ d, InChart M'.ξ (fun j => i₁ (x₁ j)) d p) ∧
       (∀ p : Cpt M'.ξ, ∃ d, InChart M'.ξ (fun j => i₂ (x₂ j)) d p) := by
   classical
-  letI := i₁.toAlgebra
+  let := i₁.toAlgebra
   obtain ⟨S, hS⟩ := hfin.fg_top
   obtain ⟨d₁, hd₁⟩ := t₁.cover ⟨genPt ξ₁, specializes_rfl⟩
   obtain ⟨d₂, hd₂⟩ := t₂.cover ⟨genPt ξ₂, specializes_rfl⟩

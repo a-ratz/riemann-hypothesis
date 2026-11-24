@@ -134,14 +134,14 @@ namespace GlobalTheory.LatHecke
 theorem gl_transitive_lattices : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Finite (IsLocalRing.ResidueField O)] [Field K] [Algebra O K] [IsFractionRing O K] (r : ℕ), (∀ L : Lat O K r, ∃ g : GL (Fin r) K, glMap g (std O K r).1 = L.1) ∧ ∀ (g : GL (Fin r) K) (L : Lat O K r), (glMap g L.1).IsLattice K := by
   intro O K _ _ _ _ _ _ _ r
   refine ⟨fun L => ?_, fun g L => (glMap_isLattice g L).toIsLattice⟩
-  haveI := L.2
-  haveI : Module.Free O L.1 := Submodule.IsLattice.free K L.1
-  haveI : Module.Finite O L.1 := Module.Finite.iff_fg.2 L.2.fg
+  have := L.2
+  have : Module.Free O L.1 := Submodule.IsLattice.free K L.1
+  have : Module.Finite O L.1 := Module.Finite.iff_fg.2 L.2.fg
   have hr : Module.finrank O L.1 = r := by
     simpa using ((Submodule.IsFullLattice.finrank_eq K L.1).trans (Module.finrank_fintype_fun_eq_card K))
   let b : Module.Basis (Fin r) O L.1 := Module.finBasisOfFinrankEq O L.1 hr
   let c : Module.Basis (Fin r) K (Fin r → K) := b.extendOfIsLattice K
-  have hc : ∀ i, c i = (b i : Fin r → K) := fun i => Module.Basis.extendOfIsLattice_apply K b i
+  have hc : ∀ i, c i = (b i : Fin r → K) := fun i => Module.Basis.extendOfIsFullLattice_apply K b i
   let e : (Fin r → K) ≃ₗ[K] (Fin r → K) := (Pi.basisFun K (Fin r)).equiv c (Equiv.refl _)
   have he : ∀ i, e (Pi.basisFun K (Fin r) i) = c i := fun i => by
     simpa using (Pi.basisFun K (Fin r)).equiv_apply i c (Equiv.refl _)
@@ -299,8 +299,8 @@ theorem finite_red [Finite (ResidueField O)] (L : Lat O K r) : Finite (Red L.1) 
 
 theorem finrank_red [Finite (ResidueField O)] (L : Lat O K r) :
     Module.finrank (ResidueField O) (Red L.1) = r := by
-  haveI := finite_red L
-  haveI : Module.Finite (ResidueField O) (Red L.1) := Module.Finite.of_finite
+  have := finite_red L
+  have : Module.Finite (ResidueField O) (Red L.1) := Module.Finite.of_finite
   have h := card_red L
   rw [Module.natCard_eq_pow_finrank (K := ResidueField O)] at h
   exact Nat.pow_right_injective (two_le_qRes (O := O)) h
@@ -308,13 +308,13 @@ theorem finrank_red [Finite (ResidueField O)] (L : Lat O K r) :
 theorem ncard_subElem [Finite (ResidueField O)] (L : Lat O K r) (j : ℕ) :
     (subElem j L).ncard = Nat.card
       {W : Submodule (ResidueField O) (Red L.1) // Module.finrank (ResidueField O) (Red L.1 ⧸ W) = j} := by
-  haveI := finite_red L
+  have := finite_red L
   have hidx : ∀ W : Submodule (ResidueField O) (Red L.1),
       (toLat L W).1.toAddSubgroup.relIndex L.1.toAddSubgroup
         = qRes O ^ Module.finrank (ResidueField O) (Red L.1 ⧸ W) := by
     intro W
-    haveI : Finite (Red L.1 ⧸ W) := Finite.of_surjective _ (Submodule.mkQ_surjective W)
-    haveI : Module.Finite (ResidueField O) (Red L.1 ⧸ W) := Module.Finite.of_finite
+    have : Finite (Red L.1 ⧸ W) := Finite.of_surjective _ (Submodule.mkQ_surjective W)
+    have : Module.Finite (ResidueField O) (Red L.1 ⧸ W) := Module.Finite.of_finite
     rw [card_quot_toLat, Module.natCard_eq_pow_finrank (K := ResidueField O)]
     rfl
   have hle : ∀ W : Submodule (ResidueField O) (Red L.1), (toLat L W).1 ≤ L.1 := fun W =>
@@ -354,8 +354,8 @@ theorem subElem_degrees : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscrete
         ((subElem k L).ncard : ℂ) * X ^ k = ∏ i ∈ Finset.range r, (1 - (qRes O : ℂ) ^ i * X) := by
   intro O K _ _ _ _ _ _ _ r L
   refine ⟨subIdx_zero L, subElem_zero L, fun k hk => subElem_eq_empty hk L, fun X => ?_⟩
-  haveI := finite_red L
-  haveI : Module.Finite (ResidueField O) (Red L.1) := Module.Finite.of_finite
+  have := finite_red L
+  have : Module.Finite (ResidueField O) (Red L.1) := Module.Finite.of_finite
   have h := _root_.GlobalTheory.qBinomial_subspaces (ResidueField O) (Red L.1) X
   rw [finrank_red L] at h
   simp only [ncard_subElem L]
@@ -421,7 +421,7 @@ theorem one_sub_mul_geom (c : ℂ) :
   | zero => simp
   | succ n =>
     rw [sub_mul, one_mul, map_sub, mul_assoc, PowerSeries.coeff_C_mul, PowerSeries.coeff_succ_X_mul,
-      PowerSeries.coeff_mk, PowerSeries.coeff_mk, PowerSeries.coeff_one, if_neg (Nat.succ_ne_zero n),
+      PowerSeries.coeff_mk, PowerSeries.coeff_mk, PowerSeries.coeff_one, ite_eq_right (Nat.succ_ne_zero n),
       pow_succ]
     ring
 
@@ -703,8 +703,8 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
   have hd : ∀ k L, heckeElem k φ L = d k • φ L := by
     intro k L
     by_cases hk : k ≤ r
-    · rw [hT k hk L, hd_def]; simp only [hk, if_true]
-    · rw [heckeElem_eq_zero (by omega), hd_def]; simp only [hk, if_false, zero_smul]
+    · rw [hT k hk L, hd_def]; simp only [hk, ite_true]
+    · rw [heckeElem_eq_zero (by omega), hd_def]; simp only [hk, ite_false, zero_smul]
   have hlin : ∀ (c : ℂ) k L, heckeElem k (fun M => c • φ M) L = (c * d k) • φ L := by
     intro c k L
     rw [heckeElem_eq_sum, ← Finset.smul_sum, ← heckeElem_eq_sum, hd, smul_smul]
@@ -742,7 +742,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
     intro k
     rw [hβ_def, esymm_map_mul, hs_def, hd_def]
     by_cases hk : k ≤ r
-    · simp only [hk, if_true]
+    · simp only [hk, ite_true]
       have hreal : c ^ k = (qRes O : ℝ) ^ (k * (k - 1) / 2) *
           (qRes O : ℝ) ^ ((k : ℝ) * ((r : ℝ) - k) / 2) := by
         rw [hc_def, ← Real.rpow_natCast, ← Real.rpow_mul hq0.le, ← Real.rpow_natCast (qRes O : ℝ),
@@ -755,7 +755,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
           Complex.ofReal_natCast]
       rw [hcomp]
       ring
-    · simp only [hk, if_false, mul_zero]
+    · simp only [hk, ite_false, mul_zero]
       rw [Multiset.esymm, Multiset.powersetCard_eq_empty _ (by rw [hcard]; omega)]
       simp
   have hrel : ∀ n, 1 ≤ n → ∑ k ∈ Finset.range (n + 1), (-1 : ℂ) ^ k * β.esymm k * a (n - k) = 0 := by

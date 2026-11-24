@@ -183,7 +183,7 @@ end Fam
 theorem wall_core : EpMain → DGood → Master → SideOf → Term → ZetaK → SideUnfold → SideConv → ZetaOne → Core := by
   intro hEp hDG hMa hSO hTe hZK hSU hSC hZ1 G _ _ _ _ _ W _ _ _ K ρ hK hρ _ _ μ hμ hP k _ _ ι _ _ π Γ i₀ i₁ ω d c η η' l hM
     Ψ Ψ₁ φ L J hΨ hΨ₁ hzt hne hL hJ
-  haveI : Nonempty ι := ⟨i₀⟩
+  have : Nonempty ι := ⟨i₀⟩
   obtain ⟨V, hV, hEk⟩ := hEp k
   obtain ⟨F, F', hF, hF', hFE, hval⟩ := hEk ι Ψ ω hΨ hM.sq
   obtain ⟨hS, hS', htr, hdet⟩ := hSO G K hK k ι π Γ i₀ i₁ ω d c η η' l hM
@@ -246,8 +246,8 @@ theorem wall_core : EpMain → DGood → Master → SideOf → Term → ZetaK �
       funext fun κ => hFeq z hz _
     have hU := hSU G W K ρ hK hρ μ hμ hP k ι π Γ ((stab 𝔸[k] {i₀}).comap π) i₀ ω d c η hS Ψ hΨ z (hNr ▸ hz) g (J w)
     have e2 : (fun κ : K => zt π d i₀ Ψ ω z κ) = fun κ => tate Ψ₁ ω z * φ κ := funext (hzt z)
-    rw [e2, avg_const_mul, ContinuousLinearMap.smul_apply, hJ, eis_const_smul, ← hu] at hU
-    rw [e1, avg_const_mul, ContinuousLinearMap.smul_apply, hU]
+    rw [e2, avg_const_mul, smul_apply, hJ, eis_const_smul, ← hu] at hU
+    rw [e1, avg_const_mul, smul_apply, hU]
     simp only [smul_smul]
     congr 1
     show _ = (z - Nr) * (u * modPow (d i₀) z * a₁ z)
@@ -268,8 +268,8 @@ theorem wall_core : EpMain → DGood → Master → SideOf → Term → ZetaK �
       funext x; push_cast; ring
     have e3 : ζ z = fun κ : K => (-A * ((Nr : ℂ) - z) * B * modPow (d' i₁) ((Nr : ℂ) - z)) *
         zt (tInv.comp π) d' i₁ Ψh ω ((Nr : ℂ) - z) κ := rfl
-    rw [e1, avg_const_mul, ContinuousLinearMap.smul_apply, hU, e2, eis_add_ht hM.htl, e3, avg_const_mul,
-      ContinuousLinearMap.smul_apply, eis_const_smul, ← hB]
+    rw [e1, avg_const_mul, smul_apply, hU, e2, eis_add_ht hM.htl, e3, avg_const_mul,
+      smul_apply, eis_const_smul, ← hB]
     simp only [smul_smul]
     congr 1
     ring
@@ -300,14 +300,14 @@ theorem wall_core : EpMain → DGood → Master → SideOf → Term → ZetaK �
       exact neg_ne_zero.2 this
     · rw [hH]
       have e1 : (fun κ : K => Φ 0 (g * κ)) = fun _ => (Nr : ℂ) * V * Ψ 0 := funext fun κ => (hv _).1
-      rw [e1, hav, ContinuousLinearMap.smul_apply, smul_smul]
+      rw [e1, hav, smul_apply, smul_smul]
       congr 1
       simp
     · rw [hH]
       have e1 : (fun κ : K => Φ Nr (g * κ)) = fun _ => (Nr : ℂ) * V * (Complex.exp (l g) * A) * Ψh 0 := funext fun κ => by
         show F Nr (π (g * κ : G) * dgl d) = _
         rw [(hv _).2, hdet, hlK, ← hA]
-      rw [e1, hav, ContinuousLinearMap.smul_apply, smul_smul]
+      rw [e1, hav, smul_apply, smul_smul]
       congr 1
       ring
 

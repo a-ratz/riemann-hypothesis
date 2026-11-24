@@ -168,7 +168,7 @@ theorem norm_cL (Bj : B.RealPlaceData k ρ Wp Wq) (σ : Equiv.Perm (Fin p)) (x :
 theorem norm_ellL (Bj : B.RealPlaceData k ρ Wp Wq) (σ : Equiv.Perm (Fin p)) (x : XL k p ρ σ) (hx : GoodL Bj σ x)
     (A : Wq →L[ℂ] Wp) : ‖ellL Bj σ x A‖ = ‖A‖ := by
   unfold ellL
-  rw [ContinuousLinearMap.smul_apply, norm_smul, norm_cL, one_mul, ContinuousLinearMap.compL_apply,
+  rw [smul_apply, norm_smul, norm_cL, one_mul, ContinuousLinearMap.compL_apply,
     norm_pi_comp Bj hx.1]
 
 variable [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]

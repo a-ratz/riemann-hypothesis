@@ -107,8 +107,8 @@ theorem UpperTheory.etaleCohomology_corrOp_comm_pullback :
   have hT : (et l (sp Ω')).Good := pEtGood (pEtnGood FB pEtTr) l _ (l_unit_of_charZero l Ω')
   have OE : OpEx.{1} := pOpEx pOpTr
   have FI : FEtInj.{1} := pFEtInj (pGalClosD (pSplitsPts pIsoPts) (pOrdEx pOrdStep))
-  haveI : IsFinite s₁ := MorphismProperty.of_isPullback (P := @IsFinite) hv ‹_›
-  haveI : Etale s₁ := MorphismProperty.of_isPullback (P := @Etale) hv ‹_›
+  have : IsFinite s₁ := MorphismProperty.of_isPullback (P := @IsFinite) hv ‹_›
+  have : Etale s₁ := MorphismProperty.of_isPullback (P := @Etale) hv ‹_›
   obtain ⟨hσ, -⟩ := id hS
   have e : ∀ j, (pullback.fst c u ≫ σ j) ≫ s = pullback.snd c u ≫ u := by
     intro j
@@ -156,7 +156,7 @@ open CategoryTheory Limits AlgebraicGeometry GlobalTheory.EtC GlobalTheory.GalV 
 theorem UpperTheory.exists_algEquiv_restrict_hom_of_algebraMap_compat :
     ∀ (k K Ω Ω' : Type) [Field k] [Field K] [Field Ω] [Field Ω'] [Algebra k Ω] [IsAlgClosure k Ω] [Algebra K Ω'] (τ : k →+* K) (j : Ω →+* Ω'), (∀ x, j (algebraMap k Ω x) = algebraMap K Ω' (τ x)) → ∃ r : (Ω' ≃ₐ[K] Ω') →* (Ω ≃ₐ[k] Ω), ∀ σ' x, σ' (j x) = j (r σ' x) := by
   intro k K Ω Ω' _ _ _ _ _ _ _ τ j hj
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
   have key : ∀ (s : Ω' ≃ₐ[K] Ω') (x : Ω), ∃ y, s (j x) = j y := by
     intro s x
     have hint : IsIntegral k x := Algebra.IsIntegral.isIntegral x
@@ -397,28 +397,28 @@ private theorem bij_bc :
 theorem UpperTheory.Gal.G3.locTower_of :
     UpperTheory.Gal.G3.VBcS → UpperTheory.Gal.Seam.HopEx → NiceBc → LocTower := by
   intro hV hHop hNice l _ k K Ω Ω' _ _ _ _ _ _ _ _ _ τ j hj H hH L _ _ θ d ρ₀ hM
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
-  haveI : CharZero Ω' := charZero_of_injective_ringHom j.injective
-  haveI : CharZero K := charZero_of_injective_ringHom τ.injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
+  have : CharZero Ω' := charZero_of_injective_ringHom j.injective
+  have : CharZero K := charZero_of_injective_ringHom τ.injective
   obtain ⟨r, hr⟩ := UpperTheory.exists_algEquiv_restrict_hom_of_algebraMap_compat k K Ω Ω' τ j hj
   obtain ⟨u, v, hu, hv, hg⟩ := UpperTheory.exists_isPullback_geomFiber_baseChange_tower k K Ω Ω' τ j hj H
   have hH₀ := hH
   obtain ⟨hsm, hpj, hfe⟩ := hH
-  haveI : IsProper H.q := GlobalTheory.SchemeWords.isProper_of_isProjOver hpj
-  haveI : Smooth H.q := hsm
+  have : IsProper H.q := GlobalTheory.SchemeWords.isProper_of_isProjOver hpj
+  have : Smooth H.q := hsm
   have hΦ := bij_bc hV l Ω Ω' j (pullback.snd H.q _) (pullback.snd _ _) u hu
   have hH' := hNice k K τ H hH₀
   have hInt : ∀ g : H.Γ, pullTot l (sch.map u) ∘ₗ hop l H Ω g = hop l (bcAlong H τ) Ω' g ∘ₗ pullTot l (sch.map u) := by
     intro g
     obtain ⟨dg, hd⟩ := hfe g
-    haveI : IsFinite (H.s g) := hd.1
-    haveI : Etale (H.s g) := hd.2.1
+    have : IsFinite (H.s g) := hd.1
+    have : Etale (H.s g) := hd.2.1
     have hB : UpperTheory.Gal.G3.BcSplits := UpperTheory.Gal.G3.pBcSplits (UpperTheory.Gal.G3.pSplitsBasic (UpperTheory.Gal.G3.pSplitsPts UpperTheory.Gal.G3.pIsoPts) UpperTheory.Gal.G3.pPtsOfSplits)
     obtain ⟨hf, he, -⟩ := hB (Spec.map (CommRingCat.ofHom (algebraMap k Ω))) H.q (H.s g ≫ H.q) H.q (H.s g) rfl (𝟙 _) (Category.id_comp _)
       PEmpty (fun x => x.elim) (fun x => x.elim)
-    haveI : IsFinite (H.sΩ Ω g) := hf
-    haveI : Etale (H.sΩ Ω g) := he
+    have : IsFinite (H.sΩ Ω g) := hf
+    have : Etale (H.sΩ Ω g) := he
     exact UpperTheory.etaleCohomology_corrOp_comm_pullback l Ω' (H.sΩ Ω g) (H.tΩ Ω g) ((bcAlong H τ).sΩ Ω' g) ((bcAlong H τ).tΩ Ω' g) (pullback.snd _ _) u (v g) (hv g).1 (hv g).2
       ((UpperTheory.Gal.G3.bcMap_snd _ ((bcAlong H τ).t g) ((bcAlong H τ).comm g)).trans
         (UpperTheory.Gal.G3.bcMap_snd _ ((bcAlong H τ).s g) rfl).symm) _ _ (hHop l k Ω H hH₀ g) (hHop l K Ω' _ hH' g)

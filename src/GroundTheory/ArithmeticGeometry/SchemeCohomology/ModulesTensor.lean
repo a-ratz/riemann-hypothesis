@@ -148,7 +148,7 @@ lemma zeroSieve_mem_of_rTensor_rangeRestrict (φ : M ⟶ N)
     (V : Cᵒᵖ) (z : (M ⊗ P).obj V)
     (hz : ((φ.app V).hom.rangeRestrict.rTensor (P.obj V)) z = 0) :
     zeroSieve z ∈ J V.unop := by
-  letI : CommRing ((R ⋙ forget₂ CommRingCat RingCat).obj V) := inferInstanceAs (CommRing (R.obj V))
+  let : CommRing ((R ⋙ forget₂ CommRingCat RingCat).obj V) := inferInstanceAs (CommRing (R.obj V))
   have hex : Function.Exact (LinearMap.ker (φ.app V).hom.rangeRestrict).subtype
       (φ.app V).hom.rangeRestrict := by
     rw [LinearMap.exact_iff, Submodule.range_subtype]
@@ -182,7 +182,7 @@ lemma whiskerRight_zeroSieve_mem (φ : M ⟶ N)
     (hinj : ∀ (U : Cᵒᵖ) (x : M.obj U), φ.app U x = 0 → zeroSieve x ∈ J U.unop)
     (hsurj : ∀ (U : Cᵒᵖ) (y : N.obj U), imSieve φ y ∈ J U.unop)
     (U : Cᵒᵖ) (x : (M ⊗ P).obj U) (hx : (φ ▷ P).app U x = 0) : zeroSieve x ∈ J U.unop := by
-  letI : CommRing ((R ⋙ forget₂ CommRingCat RingCat).obj U) := inferInstanceAs (CommRing (R.obj U))
+  let : CommRing ((R ⋙ forget₂ CommRingCat RingCat).obj U) := inferInstanceAs (CommRing (R.obj U))
   have hx' : (φ.app U).hom.rTensor (P.obj U) x = 0 := hx
   obtain ⟨A, hA, y, rfl⟩ := Submodule.exists_fg_le_eq_rTensor_subtype (x : (M.obj U) ⊗[_] (P.obj U))
   set f := (φ.app U).hom with hf
@@ -213,7 +213,7 @@ lemma whiskerRight_zeroSieve_mem (φ : M ⟶ N)
       map_zero' := Subtype.ext (map_zero _)
       map_add' := fun a b => Subtype.ext (map_add _ _ _) }
   let RW := (R ⋙ forget₂ CommRingCat RingCat).obj (op W)
-  letI : CommRing RW := inferInstanceAs (CommRing (R.obj (op W)))
+  let : CommRing RW := inferInstanceAs (CommRing (R.obj (op W)))
   let pW : P.obj U →+ P.obj (op W) :=
     { toFun := fun p => (P.map g.op p : P.obj (op W))
       map_zero' := map_zero (P.map g.op).hom

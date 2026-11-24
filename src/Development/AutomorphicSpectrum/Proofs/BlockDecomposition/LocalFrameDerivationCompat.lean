@@ -87,7 +87,7 @@ theorem exists_derivation_ext {K A B : Type} [CommRing K] [CommRing A] [CommRing
     (f : A →+* B) (hf : f.comp (algebraMap K A) = algebraMap K B) (M : Submonoid A)
     (hloc : letI := f.toAlgebra; IsLocalization M B) (D : Derivation K A A) :
     ∃ p : Derivation K B B, ∀ x, p (f x) = f (D x) := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   let φ : A →+* TrivSqZeroExt B B :=
     { toFun := fun x => (f x, f (D x))
       map_one' := by
@@ -140,11 +140,11 @@ theorem main : ∀ {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRi
     ∀ {d : ℕ} (D : Fin d → Derivation K Γ(X, V) Γ(X, V)), ∃ p : Fin d → Derivation K Γ(X, X.basicOpen a) Γ(X, X.basicOpen a),
       ∀ k x, p k (rs (X.basicOpen_le a) x) = rs (X.basicOpen_le a) (D k x) := by
   intro K _ X q V hV a
-  letI := (strV q V).toAlgebra
-  letI := (strV q (X.basicOpen a)).toAlgebra
+  let := (strV q V).toAlgebra
+  let := (strV q (X.basicOpen a)).toAlgebra
   intro d D
   have hloc : letI := (rs (X.basicOpen_le a)).toAlgebra; IsLocalization (Submonoid.powers a) Γ(X, X.basicOpen a) := by
-    letI := (rs (X.basicOpen_le a)).toAlgebra
+    let := (rs (X.basicOpen_le a)).toAlgebra
     exact hV.isLocalization_basicOpen a
   have hf : (rs (X.basicOpen_le a)).comp (algebraMap K Γ(X, V)) = algebraMap K Γ(X, X.basicOpen a) :=
     GlobalTheory.CompanionTheory.CoordRes.rs_comp_strV q _
@@ -440,10 +440,10 @@ theorem sum_sgn {B : Type} [CommRing B] {m d : ℕ} (I : Idx m d) (a : Fin d →
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [Finset.sum_eq_single (I.1 ∘ π)]
-  · simp only [if_true, Matrix.of_apply, Function.comp_apply]
+  · simp only [ite_true, Matrix.of_apply, Function.comp_apply]
     rw [Units.smul_def]
   · intro J _ hJ
-    rw [if_neg hJ, zero_smul]
+    rw [ite_eq_right hJ, zero_smul]
   · intro h
     exact absurd (Finset.mem_univ _) h
 
@@ -657,12 +657,12 @@ theorem det_delta {R : Type} [CommRing R] {m d : ℕ} (I L : Idx m d) :
     (Matrix.of fun k l => if I.1 k = L.1 l then (1 : R) else 0).det = if I = L then 1 else 0 := by
   by_cases h : I = L
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have e : (Matrix.of fun k l => if I.1 k = I.1 l then (1 : R) else 0) = 1 := by
       ext k l
       simp [Matrix.one_apply, I.2.injective.eq_iff]
     rw [e, Matrix.det_one]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     have hk : ∃ k, ∀ l, I.1 k ≠ L.1 l := by
       by_contra hc
       push_neg at hc
@@ -678,7 +678,7 @@ theorem det_delta {R : Type} [CommRing R] {m d : ℕ} (I L : Idx m d) :
       have hr : Set.range I.1 = Set.range L.1 := by
         have := congrArg (fun S : Finset (Fin d) => (S : Set (Fin d))) heq
         simpa using this
-      exact Subtype.ext ((StrictMono.range_inj I.2 L.2).1 hr)
+      exact Subtype.ext ((StrictMono.range_inj_of_wellFoundedLT I.2 L.2).1 hr)
     obtain ⟨k, hk⟩ := hk
     exact Matrix.det_eq_zero_of_row_eq_zero k fun l => by simp [hk l]
 
@@ -703,14 +703,14 @@ theorem main : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶
       CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {V}) r) (sFil (KS q s {V}) (r + 1)) (fun u => ∑ I : Idx m d, E.form σ I.1 (ε (y I)) u) (resKS q s hVV _ _ _ ξ) →
       ∀ I, ∃ M : ℕ, rs hVV (f ^ M) * y I ∈ jacSpan hVV (RingHom.id _) (fun k => D k) I.1 := by
   intro K _ _ X q _ s V V' hVV hV' d c
-  letI := (strV q V).toAlgebra
+  let := (strV q V).toAlgebra
   intro D hD E ε hloc σ m r hr hs f e cu ξ y hy I
   have hWV : X.basicOpen (rs hVV f) ≤ V := X.basicOpen_le _
   have hUf : X.basicOpen f ≤ V' := X.basicOpen_le f
   have hWU : X.basicOpen (rs hVV f) ≤ X.basicOpen f := basicOpen_rs_le hVV f
   have hW : IsAffineOpen (X.basicOpen (rs hVV f)) := c.affine.basicOpen _
   obtain ⟨cW, hcW⟩ := GlobalTheory.CompanionTheory.CoordRes.main c hWV hW
-  letI := (strV q (X.basicOpen (rs hVV f))).toAlgebra
+  let := (strV q (X.basicOpen (rs hVV f))).toAlgebra
   obtain ⟨p, hp⟩ := GlobalTheory.CompanionTheory.ConeLocal.DerivExt.main q c.affine (rs hVV f) D
   have hs1 : 1 ≤ s := by omega
   obtain ⟨EW, εW, lW⟩ := GlobalTheory.CompanionTheory.ConeLocal.exists_loc q cW s hs1

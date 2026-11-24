@@ -123,14 +123,14 @@ theorem sum_char {ψ : AddChar k Circle} {c : kˣ} (h : HasConductor ψ c) {n : 
 
 theorem exists_cutoff_of_char_invariant : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ψ : AddChar k Circle), Continuous ψ → ψ ≠ 1 → ∀ (I₀ I₁ I₂ : Type) [Fintype I₀] [Fintype I₁] [Fintype I₂] (M : Type) [AddCommGroup M] [Module ℂ M] (l : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)) →ₗ[ℂ] M), (∀ (b : I₁ → k) (Φ Φ' : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))), (∀ x, Φ'.1 x = (ψ (b ⬝ᵥ x.2.1) : ℂ) * Φ.1 x) → l Φ' = l Φ) → ∀ (Φ : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))) (s : kˣ), ∃ Φ' : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)), (∀ x, Φ'.1 x = (box I₁ s).indicator (fun _ => (1 : ℂ)) x.2.1 * Φ.1 x) ∧ l Φ = l Φ' := by
   intro k _ _ _ _ ψ hψ h1 I₀ I₁ I₂ _ _ _ M _ _ l hl Φ s
-  haveI := t2Space k
+  have := t2Space k
   obtain ⟨c, hc⟩ := exists_hasConductor_of_continuous ψ hψ h1
   have hK : IsCompact ((fun x : (I₀ → k) × (I₁ → k) × (I₂ → k) => x.2.1) '' tsupport Φ.1) :=
     Φ.2.2.image (by fun_prop)
   obtain ⟨R, hsR, hKR⟩ := _root_.GlobalTheory.exists_box_superset_of_isCompact k I₁ _ hK s
   have hvr : valuation k ((c * R⁻¹ : kˣ) : k) ≤ valuation k ((c * s⁻¹ : kˣ) : k) := by
     simp only [Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀]
-    exact mul_le_mul' le_rfl (inv_anti₀ (by simp [zero_lt_iff]) hsR)
+    exact mul_le_mul' le_rfl (inv_anti₀ (by simp [pos_iff_ne_zero]) hsR)
   obtain ⟨S, hS, hU⟩ := _root_.GlobalTheory.BoxReps.exists_finset_box_reps k I₁ (c * R⁻¹) (c * s⁻¹) hvr
   have hmem : ∀ b : I₁ → k,
       (fun x : (I₀ → k) × (I₁ → k) × (I₂ → k) => (ψ (b ⬝ᵥ x.2.1) : ℂ) * Φ.1 x) ∈
@@ -179,7 +179,7 @@ theorem integral_slice_mem_SB (k : Type) [Field k] [ValuativeRel k] [Topological
     (I₀ I₁ I₂ : Type) [Fintype I₀] [Fintype I₁] [Fintype I₂]
     (Φ : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))) :
     (fun x => ∫ a, Φ.1 (x, 0, a) ∂(Measure.pi fun _ => ν)) ∈ SB (I₀ → k) := by
-  haveI := t2Space k
+  have := t2Space k
   refine ⟨(IsLocallyConstant.iff_eventually_eq _).mpr fun x => ?_,
     HasCompactSupport.intro (IsCompact.image Φ.2.2 continuous_fst) fun x hx => ?_⟩
   · have ht : Filter.Tendsto (fun x' : I₀ → k => ((x - x', (0 : I₁ → k), (0 : I₂ → k)) :
@@ -284,8 +284,8 @@ namespace GlobalTheory.SplitWeil.FourierPi
 
 theorem map_eq_zero_of_translation_invariant_of_fibre_integral_eq_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k), ν.IsAddHaarMeasure → ∀ (I₀ I₁ I₂ : Type) [Fintype I₀] [Fintype I₁] [Fintype I₂] (M : Type) [AddCommGroup M] [Module ℂ M] (l : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)) →ₗ[ℂ] M), (∀ (a : I₂ → k) (Φ Φ' : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))), (∀ x, Φ'.1 x = Φ.1 (x + (0, 0, a))) → l Φ' = l Φ) → ∀ Φ : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)), (∀ x₀ x₁, ∫ a, Φ.1 (x₀, x₁, a) ∂(Measure.pi fun _ => ν) = 0) → l Φ = 0 := by
   intro k _ _ _ _ _ _ ν hν I₀ I₁ I₂ _ _ _ M _ _ l hl Φ hΦ
-  haveI := secondCountable k
-  haveI := hν
+  have := secondCountable k
+  have := hν
 
   have hU : {t : I₂ → k | ∀ g : (I₀ → k) × (I₁ → k) × (I₂ → k), Φ.1 (g + (0, 0, t)) = Φ.1 g} ∈
       𝓝 (0 : I₂ → k) := by
@@ -402,10 +402,10 @@ theorem kernel : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
 
 theorem coinvariants : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circle) (ν : Measure k), Continuous ψ → ψ ≠ 1 → ν.IsAddHaarMeasure → ∀ (I₀ I₁ I₂ : Type) [Fintype I₀] [Fintype I₁] [Fintype I₂] (M : Type) [AddCommGroup M] [Module ℂ M] (l : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)) →ₗ[ℂ] M), (∀ (b : I₁ → k) (Φ Φ' : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))), (∀ x, Φ'.1 x = (ψ (b ⬝ᵥ x.2.1) : ℂ) * Φ.1 x) → l Φ' = l Φ) → (∀ (a : I₂ → k) (Φ Φ' : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))), (∀ x, Φ'.1 x = Φ.1 (x + (0, 0, a))) → l Φ' = l Φ) → ∃! l₀ : SB (I₀ → k) →ₗ[ℂ] M, ∀ Φ : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)), ∃ Ψ : SB (I₀ → k), (∀ x, Ψ.1 x = ∫ a, Φ.1 (x, 0, a) ∂(Measure.pi fun _ => ν)) ∧ l Φ = l₀ Ψ := by
   intro k _ _ _ _ _ _ ψ ν hψc hψ1 hν I₀ I₁ I₂ _ _ _ M _ _ l h1 h2
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   set μ : Measure (I₂ → k) := Measure.pi fun _ => ν with hμ
-  haveI : μ.IsAddHaarMeasure := by rw [hμ]; infer_instance
+  have : μ.IsAddHaarMeasure := by rw [hμ]; infer_instance
   set vol : ℝ := μ.real (box I₂ 1) with hvol
   have hvol0 : vol ≠ 0 := by
     refine (ENNReal.toReal_pos ?_ ?_).ne'

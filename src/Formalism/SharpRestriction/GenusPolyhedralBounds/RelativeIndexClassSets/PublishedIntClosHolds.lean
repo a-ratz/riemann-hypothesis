@@ -64,11 +64,11 @@ def PublishedIntClos : Prop :=
 
 private theorem inj_lemma (K A : Type) [Field K] [CommRing A] [Algebra K A] [FiniteDimensional K A]
     [IsReduced A] (x : A) (hx : ∀ M : MaximalSpectrum A, x ∈ M.asIdeal) : x = 0 := by
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
   have h : IsNilpotent x := by
     rw [nilpotent_iff_mem_prime]
     intro J hJ
-    haveI := hJ
+    have := hJ
     exact hx ⟨J, IsArtinianRing.isMaximal_of_isPrime J⟩
   exact h.eq_zero
 
@@ -76,8 +76,8 @@ private theorem idem_lemma_2 (K A : Type) [Field K] [CommRing A] [Algebra K A] [
     (I : MaximalSpectrum A) : ∃ e : A, Ideal.Quotient.mk I.asIdeal e = 1 ∧
       ∀ J : MaximalSpectrum A, J ≠ I → Ideal.Quotient.mk J.asIdeal e = 0 := by
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
-  haveI : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
   have hb : ∀ J : MaximalSpectrum A, J ≠ I →
       ∃ b : A, b ∈ J.asIdeal ∧ Ideal.Quotient.mk I.asIdeal b = 1 := by
     intro J hJ
@@ -108,10 +108,10 @@ private theorem fld_lemma_3 (O K A : Type) [CommRing O] [IsDomain O] [IsDiscrete
     [IsScalarTower O K A] [FiniteDimensional K A] (M : Ideal A) [M.IsMaximal] :
     Module.Finite O ↥(integralClosure O (A ⧸ M)) ∧ IsDedekindDomain ↥(integralClosure O (A ⧸ M)) ∧
       ¬IsField ↥(integralClosure O (A ⧸ M)) := by
-  letI : Field (A ⧸ M) := Ideal.Quotient.field M
-  haveI : FiniteDimensional K (A ⧸ M) :=
+  let : Field (A ⧸ M) := Ideal.Quotient.field M
+  have : FiniteDimensional K (A ⧸ M) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ K M).toLinearMap (Ideal.Quotient.mkₐ_surjective K M)
-  haveI : Algebra.IsSeparable K (A ⧸ M) := inferInstance
+  have : Algebra.IsSeparable K (A ⧸ M) := inferInstance
   refine ⟨IsIntegralClosure.finite O K (A ⧸ M) (integralClosure O (A ⧸ M)),
     IsIntegralClosure.isDedekindDomain O K (A ⧸ M) (integralClosure O (A ⧸ M)), ?_⟩
   intro h
@@ -135,7 +135,7 @@ private theorem dvr_lemma_4 (Cr Dr : Type) [CommRing Cr] [CommRing Dr] [IsDomain
     intro c hc
     have h0 : e * c ∈ Pm := by rw [he0 c (RingHom.mem_ker.mp hc)]; exact Pm.zero_mem
     exact (hP.mem_or_mem h0).resolve_left heP
-  haveI hQ : (Pm.map φ).IsPrime := Ideal.map_isPrime_of_surjective hφ hker
+  have hQ : (Pm.map φ).IsPrime := Ideal.map_isPrime_of_surjective hφ hker
   have hcomap : (Pm.map φ).comap φ = Pm := by
     rw [Ideal.comap_map_of_surjective φ hφ, ← RingHom.ker_eq_comap_bot]
     exact sup_eq_left.mpr hker
@@ -166,8 +166,8 @@ private theorem dvr_lemma_4 (Cr Dr : Type) [CommRing Cr] [CommRing Dr] [IsDomain
     rw [mul_comm]
     exact h2
   let LQ := Localization.AtPrime (Pm.map φ)
-  letI algC : Algebra Cr LQ := ((algebraMap Dr LQ).comp φ).toAlgebra
-  haveI hloc : IsLocalization Pm.primeCompl LQ := by
+  let algC : Algebra Cr LQ := ((algebraMap Dr LQ).comp φ).toAlgebra
+  have hloc : IsLocalization Pm.primeCompl LQ := by
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨s, hs⟩
       exact IsLocalization.map_units LQ (⟨φ s, hnotin s hs⟩ : (Pm.map φ).primeCompl)
@@ -192,17 +192,17 @@ private theorem dvr_lemma_4 (Cr Dr : Type) [CommRing Cr] [CommRing Dr] [IsDomain
       have h2 := he0 _ h1
       show e * s * x = e * s * y
       linear_combination h2
-  haveI hLQd : IsDomain LQ :=
+  have hLQd : IsDomain LQ :=
     IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors (Pm.map φ))
   let f : Localization.AtPrime Pm ≃ₐ[Cr] LQ :=
     IsLocalization.algEquiv Pm.primeCompl (Localization.AtPrime Pm) LQ
-  haveI hdom : IsDomain (Localization.AtPrime Pm) :=
+  have hdom : IsDomain (Localization.AtPrime Pm) :=
     Function.Injective.isDomain f.toRingEquiv.toRingHom f.toRingEquiv.injective
-  letI algD : Algebra Dr (Localization.AtPrime Pm) :=
+  let algD : Algebra Dr (Localization.AtPrime Pm) :=
     (f.symm.toRingEquiv.toRingHom.comp (algebraMap Dr LQ)).toAlgebra
   let g : LQ ≃ₐ[Dr] Localization.AtPrime Pm :=
     { f.symm.toRingEquiv with commutes' := fun _ => rfl }
-  haveI : IsLocalization (Pm.map φ).primeCompl (Localization.AtPrime Pm) :=
+  have : IsLocalization (Pm.map φ).primeCompl (Localization.AtPrime Pm) :=
     IsLocalization.isLocalization_of_algEquiv (M := (Pm.map φ).primeCompl) (S := LQ) g
   exact ⟨hdom, IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain Dr hQ0
     (Localization.AtPrime Pm)⟩
@@ -211,9 +211,9 @@ private theorem fin_lemma_5 (O K A : Type) [CommRing O] [IsDomain O] [IsDiscrete
     [Algebra O K] [IsFractionRing O K] [CharZero K] [CommRing A] [Algebra K A] [Algebra O A]
     [IsScalarTower O K A] [FiniteDimensional K A] [IsReduced A] : Module.Finite O ↥(As O A) := by
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
-  haveI : ∀ I : MaximalSpectrum A, Module.Finite O ↥(integralClosure O (A ⧸ I.asIdeal)) :=
-    fun I => by haveI := I.isMaximal; exact (fld_lemma_3 O K A I.asIdeal).1
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have : ∀ I : MaximalSpectrum A, Module.Finite O ↥(integralClosure O (A ⧸ I.asIdeal)) :=
+    fun I => by have := I.isMaximal; exact (fld_lemma_3 O K A I.asIdeal).1
   let ψ : ↥(As O A) →ₗ[O] ((I : MaximalSpectrum A) → ↥(integralClosure O (A ⧸ I.asIdeal))) :=
     LinearMap.pi fun I => (((Ideal.Quotient.mkₐ O I.asIdeal).comp (As O A).val).codRestrict
       (integralClosure O (A ⧸ I.asIdeal)) fun x => id
@@ -234,8 +234,8 @@ private theorem pt_lemma_6 (O K A : Type) [CommRing O] [IsDomain O] [IsDiscreteV
     [Algebra O K] [IsFractionRing O K] [CharZero K] [CommRing A] [Algebra K A] [Algebra O A]
     [IsScalarTower O K A] [FiniteDimensional K A] [IsReduced A] (ζ : Pts O A) : IsDVRAt ζ := by
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
-  haveI : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
   choose E hE1 hE0 using idem_lemma_2 K A
   have hmk : ∀ (M I : MaximalSpectrum A) (a : A),
       Ideal.Quotient.mk M.asIdeal (E I * a) = if M = I then Ideal.Quotient.mk M.asIdeal a else 0 := by
@@ -286,10 +286,10 @@ private theorem pt_lemma_6 (O K A : Type) [CommRing O] [IsDomain O] [IsDiscreteV
       simp [hsum]
     rw [h2] at h1
     exact h1
-  haveI := I.isMaximal
-  haveI := ζ.isMaximal
+  have := I.isMaximal
+  have := ζ.isMaximal
   obtain ⟨_, hDed, hNF⟩ := fld_lemma_3 O K A I.asIdeal
-  haveI := hDed
+  have := hDed
   let φ : ↥(As O A) →+* ↥(integralClosure O (A ⧸ I.asIdeal)) :=
     (((Ideal.Quotient.mkₐ O I.asIdeal).comp (As O A).val).codRestrict
       (integralClosure O (A ⧸ I.asIdeal)) fun x => id
@@ -300,7 +300,7 @@ private theorem pt_lemma_6 (O K A : Type) [CommRing O] [IsDomain O] [IsDiscreteV
     refine ⟨⟨E I * a, hint I y (y.2 : IsIntegral O (y : A ⧸ I.asIdeal)) a ha⟩, ?_⟩
     apply Subtype.ext
     show Ideal.Quotient.mk I.asIdeal (E I * a) = y
-    rw [hmk, if_pos rfl, ha]
+    rw [hmk, ite_eq_left rfl, ha]
   have hone : φ ⟨E I, hEi I⟩ = 1 := Subtype.ext (hE1 I)
   have hzero : ∀ c, φ c = 0 → (⟨E I, hEi I⟩ : ↥(As O A)) * c = 0 := by
     intro c hc

@@ -134,7 +134,7 @@ theorem eq_prod_of_components {E : Type} [Field E] [NumberField E] {R A B : Type
     by_cases hP : P ∈ S
     · have h2 := (hS P hP).2
       rw [← hyev P, huS P hP, ← sub_one_mul, map_mul, val_algebraMap] at h2
-      exact le_of_mul_le_mul_right h2 (zero_lt_iff.2 (hk0 P))
+      exact le_of_mul_le_mul_right h2 (pos_iff_ne_zero.2 (hk0 P))
     · have h2 : P.valuation E (N : E) = 1 := by
         have := (HeightOneSpectrum.valuation_eq_one_iff_notMem (K := E) P
           (r := (N : 𝓞 E))).2 (hS' P hP).2
@@ -146,7 +146,7 @@ theorem eq_prod_of_components {E : Type} [Field E] [NumberField E] {R A B : Type
       ⟨q (inc (N : E)⁻¹) * (q y - 1), (hint _).2 fun P => ?_, ?_⟩
     · rw [map_mul, map_mul, hinc, val_algebraMap, map_sub, map_one, map_inv₀]
       have hv : 0 < P.valuation E (N : E) :=
-        zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hN0)
+        pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hN0)
       exact (inv_mul_le_one₀ hv).2 (hcong P)
     · rw [nsmul_eq_mul, ← mul_assoc, ← map_natCast (q.comp inc) N,
         RingHom.comp_apply, ← map_mul, ← map_mul, mul_inv_cancel₀ hN0, map_one, map_one, one_mul]

@@ -55,7 +55,7 @@ theorem UpperTheory.Lit.Cas.cells :
   intro hGL hBZ k _ _ _ _ h N δ hd x hx hne
   classical
   obtain ⟨hJ, hC⟩ := hGL k
-  haveI hfin : Fintype (SizeMatrix (fun i : Fin h => Fin (δ i).1) (fun j : Fin 2 => Fin (x j).1)) := by
+  have hfin : Fintype (SizeMatrix (fun i : Fin h => Fin (δ i).1) (fun j : Fin 2 => Fin (x j).1)) := by
     haveI : Finite (SizeMatrix (fun i : Fin h => Fin (δ i).1) (fun j : Fin 2 => Fin (x j).1)) := by
       refine Finite.of_injective (β := (i : Fin h) → Fin 2 → Fin ((δ i).1 + 1))
         (fun b i j => ⟨b.1 i j, Nat.lt_succ_of_le ?_⟩) ?_

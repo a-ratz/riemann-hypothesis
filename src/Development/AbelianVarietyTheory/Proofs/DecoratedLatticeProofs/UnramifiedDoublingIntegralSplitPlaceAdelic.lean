@@ -134,7 +134,7 @@ theorem LvTw_div_dv_split : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   have hd : dv E r b v s = (∏ i ∈ Finset.range r, (1 - (qV E w : ℂ) ^ (-(2 * s + r - i))))⁻¹ := by
     rw [← Finset.prod_inv_distrib, dv]
     refine Finset.prod_congr rfl fun i _ => ?_
-    have hu : etaU E v = 1 := by unfold etaU; rw [if_pos hsplit]
+    have hu : etaU E v = 1 := by unfold etaU; rw [ite_eq_left hsplit]
     rw [locL, etaFam_of_unram hunr, hu, one_pow, eulerFac_singleton, Units.val_one, one_mul, GlobalTheory.LFun.npow, qV, hqw]
   rw [hd, div_inv_eq_mul, hL, hr1, hr2]
 
@@ -650,7 +650,7 @@ open GlobalTheory.LFun (locChar IsSplitChart IsInertChart KGL UnrAt)
 
 theorem sphSec_split : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (χ : (AE D)ˣ →* Circle) (b : ℕ), ResEta D χ b → ∀ v : FinPl D, Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) v → (∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = v → UnrAt χ w) → ∀ (s : ℂ) (φ : Gv (dblSp A) v → ℂ), IsSphSecAt A L v χ⁻¹ s φ → ∀ (w : HeightOneSpectrum (𝓞 D.host.E)) (h : w.under (𝓞 D.host.F) = v) (e : Gv A v ≃* GL (Fin A.rank) (w.adicCompletion D.host.E)), IsSplitChart D.sp.cm.sig A.gram L h e → ∀ ϖ, IsUnifV D.host.E w ϖ → ∀ (d : Fin A.rank → ℤ) (t : GL (Fin A.rank) (w.adicCompletion D.host.E)), t.1 = Matrix.diagonal (fun i => ϖ ^ d i) → ∀ k₁ ∈ KGL w (n := A.rank), ∀ k₂ ∈ KGL w (n := A.rank), φ (ioAt A v (e.symm (k₁ * t * k₂))) = (((GlobalTheory.LFun.val χ w)⁻¹ : ℂˣ) : ℂ) ^ (∑ i, d i) * (qV D.host.E w : ℂ) ^ (-((A.rank : ℂ) / 2 + s) * ((∑ i, |d i| : ℤ) : ℂ)) := by
   intro D A L hL χ b hχ v hv hU s φ hφ w h e he ϖ hϖ d t ht k₁ hk₁ k₂ hk₂
-  haveI := hL.1
+  have := hL.1
   have hc := isCMExt_host D
   obtain ⟨w', hne, hall, -⟩ := GlobalTheory.LFun.SplitChart.exists_conj_place hc h hv
   have h' : w'.under (𝓞 D.host.F) = v := (hall w').2 (Or.inr rfl)
@@ -732,7 +732,7 @@ theorem zeta_sum_GL_complex : GlobalTheory.Published.UnramifiedDoublingGL → �
     {a | a.out ∈ DoubleCoset.doubleCoset (T d) (KGL w (n := r) : Set (GL (Fin r) (w.adicCompletion E))) (KGL w (n := r))}
   have hSfin : ∀ d, (S d).Finite := fun d =>
     (Formalism.UG.P.finite_support_cosets hK (hmem (T d)).2).subset fun a ha => by
-      simp only [Set.mem_setOf_eq, Formalism.UG.dosetInd]; rw [Set.indicator_of_mem (s := DoubleCoset.doubleCoset _ _ _) ha]; exact one_ne_zero
+      simp only [Set.mem_ofPred_eq, Formalism.UG.dosetInd]; rw [Set.indicator_of_mem (s := DoubleCoset.doubleCoset _ _ _) ha]; exact one_ne_zero
   have hsumS : ∀ d, ∑ᶠ a ∈ S d, ρ a.out x = c d • x := fun d => by
     rw [← (hc d).1, GlobalTheory.LFun.heckeVec, finsum_mem_def]
     refine finsum_congr fun a => ?_
@@ -751,7 +751,7 @@ theorem zeta_sum_GL_complex : GlobalTheory.Published.UnramifiedDoublingGL → �
         have h1 : D a = d := hDu d a ha
         subst h1
         rfl }
-  haveI : ∀ d, Fintype (S d) := fun d => (hSfin d).fintype
+  have : ∀ d, Fintype (S d) := fun d => (hSfin d).fintype
   have hsumF : ∀ d, ∑ a : S d, ρ (a : GL (Fin r) (w.adicCompletion E) ⧸ KGL w (n := r)).out x = c d • x := fun d => by
     rw [← hsumS d, ← finsum_set_coe_eq_finsum_mem, finsum_eq_sum_of_fintype]
   set q : ℝ := (qV E w : ℝ) with hqdef
@@ -788,7 +788,7 @@ theorem zeta_sum_GL_complex : GlobalTheory.Published.UnramifiedDoublingGL → �
     have hfin : (Set.pi Set.univ fun _ : Fin r => Set.Icc (-(k : ℤ)) k).Finite :=
       Set.Finite.pi fun _ => Set.finite_Icc _ _
     refine (hfin.preimage Subtype.val_injective.injOn).subset fun d hd => ?_
-    simp only [Set.mem_setOf_eq, deg] at hd
+    simp only [Set.mem_ofPred_eq, deg] at hd
     simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, Set.mem_Icc, forall_const]
     intro i
     have h1 : |d.1 i| ≤ ∑ j, |d.1 j| := Finset.single_le_sum (fun j _ => abs_nonneg (d.1 j)) (Finset.mem_univ i)
@@ -954,7 +954,7 @@ theorem localZetaOn_split : GlobalTheory.Published.UnramifiedDoublingGL →
   have hcm := isCMExt_host D
   have h2 : Module.finrank D.host.F D.host.E = 2 := hcm.2.2.1
   have hJ : IsHermND D.sp.cm.sig A.gram := GlobalTheory.Doubling.isHermND_gram A
-  haveI : Submodule.IsFullLattice D.host.E L :=
+  have : Submodule.IsFullLattice D.host.E L :=
     Formalism.IndefR.Fin.PDA.selfDual_isFullLattice A L hL
   have hd : IsSelfDualAt D.sp.cm.sig A.gram L v :=
     (SelfDual.forall_isSelfDualAt_iff (σ := D.sp.cm.sig) (GlobalTheory.Doubling.isHermND_gram A).2

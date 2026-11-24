@@ -197,7 +197,7 @@ theorem exists_schwartz_cexp_neg_form : ∀ (V : Type) [NormedAddCommGroup V] [N
     have h2 : HasFDerivAt (fun y : V => Complex.exp (B y y)) _ x := h1.cexp
     show fderiv ℝ (fun y : V => Complex.exp (B y y)) x p = -(Q x p + Q p x) * Complex.exp (B x x)
     rw [h2.fderiv]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
+    simp only [smul_apply, add_apply, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.flip_apply, ContinuousLinearMap.id_apply, id, smul_eq_mul, hBapp]
     ring
 

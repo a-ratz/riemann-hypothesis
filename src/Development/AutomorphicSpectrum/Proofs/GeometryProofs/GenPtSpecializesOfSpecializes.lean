@@ -86,8 +86,8 @@ variable {X : Scheme.{0}} {Ω : Type} [Field Ω]
 
 theorem genPt_specializes_of_specializes (ξ : Spec (CommRingCat.of Ω) ⟶ X) (h : IsCptGen ξ) {p y : X}
     (hp : genPt ξ ⤳ p) (hy : y ⤳ p) : genPt ξ ⤳ y := by
-  haveI := CptInh.dom ξ h ⟨p, hp⟩
-  haveI : IsDomain (X.presheaf.stalk p) := this
+  have := CptInh.dom ξ h ⟨p, hp⟩
+  have : IsDomain (X.presheaf.stalk p) := this
   obtain ⟨a, ha⟩ : genPt ξ ∈ Set.range (X.fromSpecStalk p) := by
     rwa [Scheme.range_fromSpecStalk]
   obtain ⟨b, hb⟩ : y ∈ Set.range (X.fromSpecStalk p) := by
@@ -109,17 +109,17 @@ theorem isOpen_closure_genPt (ξ : Spec (CommRingCat.of Ω) ⟶ X) [IsLocallyNoe
   obtain ⟨W, hpW⟩ : ∃ W : X.affineOpens, p ∈ W.1 := by
     obtain ⟨W, hW, hpW, -⟩ := exists_isAffineOpen_mem_and_subset (x := p) (U := ⊤) trivial
     exact ⟨⟨W, hW⟩, hpW⟩
-  haveI : IsNoetherianRing Γ(X, W.1) := IsLocallyNoetherian.component_noetherian W
-  haveI : NoetherianSpace (W.1 : X.Opens) := noetherianSpace_of_isAffineOpen W.1 W.2
-  haveI : QuasiSober (W.1 : X.Opens) := inferInstanceAs (QuasiSober (W.1 : X.Opens).toScheme)
+  have : IsNoetherianRing Γ(X, W.1) := IsLocallyNoetherian.component_noetherian W
+  have : NoetherianSpace (W.1 : X.Opens) := noetherianSpace_of_isAffineOpen W.1 W.2
+  have : QuasiSober (W.1 : X.Opens) := inferInstanceAs (QuasiSober (W.1 : X.Opens).toScheme)
   have ho : IsOpen (Subtype.val ⁻¹' (closure {genPt ξ}) : Set (W.1 : X.Opens)) :=
-    isOpen_of_isClosed_of_generizing _ (isClosed_closure.preimage continuous_subtype_val)
+    isOpen_of_isClosed_of_generizing _ (isClosed_closure.preimage continuous_subtypeVal)
       fun x y hxy hy => by
         have hy' : genPt ξ ⤳ y.1 := specializes_iff_mem_closure.2 hy
         exact specializes_iff_mem_closure.1
-          (genPt_specializes_of_specializes ξ h hy' (hxy.map continuous_subtype_val))
+          (genPt_specializes_of_specializes ξ h hy' (hxy.map continuous_subtypeVal))
   refine ⟨Subtype.val '' (Subtype.val ⁻¹' (closure {genPt ξ}) : Set (W.1 : X.Opens)), ?_,
-    W.1.isOpen.isOpenMap_subtype_val _ ho, ⟨⟨p, hpW⟩, hp, rfl⟩⟩
+    W.1.isOpen.isOpenMap_subtypeVal _ ho, ⟨⟨p, hpW⟩, hp, rfl⟩⟩
   rintro _ ⟨x, hx, rfl⟩
   exact hx
 
@@ -130,13 +130,13 @@ theorem cpt_open_integral : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp
   let U : X.Opens := ⟨closure {genPt ξ}, isOpen_closure_genPt ξ h⟩
   have hU : ∀ q : X, q ∈ U ↔ genPt ξ ⤳ q := fun q => specializes_iff_mem_closure.symm
   refine ⟨U, hU, isClosed_closure, ?_⟩
-  haveI : IrreducibleSpace U.toScheme :=
+  have : IrreducibleSpace U.toScheme :=
     Subtype.irreducibleSpace (isIrreducible_singleton (x := genPt ξ)).closure
-  haveI : ∀ x : U.toScheme, _root_.IsReduced (U.toScheme.presheaf.stalk x) := fun x => by
-    haveI := CptInh.dom ξ h ⟨U.ι x, (hU _).1 x.2⟩
+  have : ∀ x : U.toScheme, _root_.IsReduced (U.toScheme.presheaf.stalk x) := fun x => by
+    have := CptInh.dom ξ h ⟨U.ι x, (hU _).1 x.2⟩
     have e := (asIso (U.ι.stalkMap x)).commRingCatIsoToRingEquiv
     exact isReduced_of_injective e.symm.toRingHom e.symm.injective
-  haveI : IsReduced U.toScheme := isReduced_of_isReduced_stalk _
+  have : IsReduced U.toScheme := isReduced_of_isReduced_stalk _
   exact isIntegral_of_irreducibleSpace_of_isReduced _
 
 end GlobalTheory.CompanionTheory.Ar.Flat

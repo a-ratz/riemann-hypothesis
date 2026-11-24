@@ -160,7 +160,7 @@ theorem decomp {σ : Type*} [Fintype σ] [LinearOrder σ] (m : ℕ) (x : MvPower
         intro hle
         have := hle i
         simp at this
-      rw [if_neg hnle]
+      rw [ite_eq_right hnle]
     · have hne : d.support.Nonempty := Finsupp.support_nonempty_iff.mpr hdz
       obtain ⟨i0, hmin⟩ := Finset.min_of_nonempty hne
       have hi0m : i0 ∈ d.support := Finset.mem_of_min hmin
@@ -170,14 +170,14 @@ theorem decomp {σ : Type*} [Fintype σ] [LinearOrder σ] (m : ℕ) (x : MvPower
           | exact Finsupp.single_le_iff.mpr hd1
           | (intro j; by_cases hj : i0 = j; (subst hj; simpa using hd1); simp [Finsupp.single_apply, hj])
       rw [Finset.sum_eq_single i0]
-      · rw [if_pos hle, hy, tsub_add_cancel_of_le hle, if_pos hmin]
+      · rw [ite_eq_left hle, hy, tsub_add_cancel_of_le hle, ite_eq_left hmin]
       · intro i _ hi
         split_ifs with hle'
         · have hc : ¬ d.support.min = (i : WithTop σ) := by
             rw [hmin]
             intro h
             exact hi (WithTop.coe_injective h).symm
-          rw [hy, tsub_add_cancel_of_le hle', if_neg hc]
+          rw [hy, tsub_add_cancel_of_le hle', ite_eq_right hc]
         · rfl
       · intro h
         exact absurd (Finset.mem_univ i0) h
@@ -188,7 +188,7 @@ private theorem subst_diff_lemma {σ τ : Type*} [Fintype σ] [Finite τ] (N : �
       (∀ i, MvPowerSeries.constantCoeff (b i) = 0) → (∀ i, Agree N (a i) (b i)) →
       Low N (MvPowerSeries.subst a z - MvPowerSeries.subst b z) := by
   classical
-  letI : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
+  let : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
   induction N with
   | zero => intro z a b _ _ _ d hd; exact absurd hd (Nat.not_lt_zero _)
   | succ N ih =>
@@ -248,7 +248,7 @@ private theorem low_one_subst_lemma_2 {σ τ : Type*} [Fintype σ] [Finite τ] (
     (ha : ∀ i, MvPowerSeries.constantCoeff (a i) = 0) :
     Low 1 (MvPowerSeries.subst a w) := by
   classical
-  letI : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
+  let : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
   have hsa : MvPowerSeries.HasSubst a := MvPowerSeries.hasSubst_of_constantCoeff_zero ha
   have hφa : ∀ w : MvPowerSeries σ K, MvPowerSeries.subst a w = MvPowerSeries.substAlgHom (R := K) hsa w := by
       intro w
@@ -273,7 +273,7 @@ theorem low_subst_diff {σ τ : Type*} [Fintype σ] [Finite τ] (g : MvPowerSeri
     (hb : ∀ i, MvPowerSeries.constantCoeff (b i) = 0) (hab : ∀ i, Agree N (a i) (b i)) :
     Low (N + 1) (MvPowerSeries.subst a g - MvPowerSeries.subst b g) := by
   classical
-  letI : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
+  let : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
   have hsa : MvPowerSeries.HasSubst a := MvPowerSeries.hasSubst_of_constantCoeff_zero ha
   have hsb : MvPowerSeries.HasSubst b := MvPowerSeries.hasSubst_of_constantCoeff_zero hb
   have hφa : ∀ w : MvPowerSeries σ K, MvPowerSeries.subst a w = MvPowerSeries.substAlgHom (R := K) hsa w := by
@@ -319,7 +319,7 @@ theorem tail_low {ι : Type*} [Fintype ι] [DecidableEq ι] (f : ι → MvPowerS
     · have hne : Finsupp.single i 1 ≠ Finsupp.single j 1 := by
         intro heq
         exact hij (Finsupp.single_left_injective one_ne_zero heq)
-      rw [if_neg hij, if_neg hne, sub_zero]
+      rw [ite_eq_right hij, ite_eq_right hne, sub_zero]
 
 theorem main (ι : Type v) [Fintype ι] [DecidableEq ι]
     (τ : Type w) [Finite τ] (C : (ι → MvPowerSeries τ K) → Prop) (f : ι → MvPowerSeries ι K)
@@ -384,7 +384,7 @@ theorem main (ι : Type v) [Fintype ι] [DecidableEq ι]
       have h0N : (0 : τ →₀ ℕ).degree < N := by rw [hd0]; exact hN
       have hP0 : ∀ j, MvPowerSeries.constantCoeff (P j) = 0 := by
         intro j
-        rw [hcc, hPc, if_pos h0N, ← hcc, hh0 j]
+        rw [hcc, hPc, ite_eq_left h0N, ← hcc, hh0 j]
       have hPint : ∀ j, IntegralMv (P j) := by
         intro j e
         rw [hPc]
@@ -394,7 +394,7 @@ theorem main (ι : Type v) [Fintype ι] [DecidableEq ι]
           exact zero_le_one
       have hagree : ∀ j, Agree N (h j) (P j) := by
         intro j e he
-        rw [hPc, if_pos he]
+        rw [hPc, ite_eq_left he]
       have hCP := hP P hP0 hPint
       have hCD := hsub _ _ hCh hCP
       have hDc : ∀ j (e : τ →₀ ℕ), e.degree ≤ N →
@@ -418,11 +418,11 @@ theorem main (ι : Type v) [Fintype ι] [DecidableEq ι]
           MvPowerSeries.coeff e (((fun j : ι => MvPowerSeries.subst h (f j)) -
             (fun j : ι => MvPowerSeries.subst P (f j))) j) = 0 := by
         intro j e he
-        rw [hDc j e he.le, if_pos he]
+        rw [hDc j e he.le, ite_eq_left he]
       have hN1 : 1 ≤ N := by omega
       have hb := hlowC _ hCD N hN1 hvan i d hdN
       have hnlt : ¬ d.degree < N := by omega
-      rw [hDc i d hdN.le, if_neg hnlt] at hb
+      rw [hDc i d hdN.le, ite_eq_right hnlt] at hb
       exact hb
   intro i d
   exact key (d.degree + 1) i d (Nat.lt_succ_self _)

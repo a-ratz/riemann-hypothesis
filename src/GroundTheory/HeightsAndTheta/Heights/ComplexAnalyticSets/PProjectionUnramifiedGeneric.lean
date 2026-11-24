@@ -96,7 +96,7 @@ theorem exists_minor_ne_zero {r c : Type*} [Fintype r] [Fintype c] (P : Matrix r
   have hNt : k ≤ Nᵀ.rank := by rw [rank_transpose, hN]
   obtain ⟨J, hJ⟩ := exists_rows_linearIndependent Nᵀ hNt
   refine ⟨I, J, ?_⟩
-  have hQ : IsUnit (Nᵀ.submatrix J id) := linearIndependent_rows_iff_isUnit.1 hJ
+  have hQ : IsUnit (Nᵀ.submatrix J id) := linearIndependent_row_iff_isUnit.1 hJ
   have e : P.submatrix I J = (Nᵀ.submatrix J id)ᵀ := by ext p q; rfl
   rw [e, det_transpose]
   exact ((isUnit_iff_isUnit_det _).1 hQ).ne_zero

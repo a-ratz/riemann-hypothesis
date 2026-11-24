@@ -85,9 +85,9 @@ theorem term_mem_maximalIdeal : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (
   intro I X₁ z₁ act x₀ hdiv V _ _ _ ev X _ t δ 𝔪 C₀ lab₀ _ T hT c₁ mu₁ hmu₁
   obtain ⟨x, fr, th, w₀, s, g₀, ω₀, hx, hfr, hth, hw₀, hs, hg₀, hT⟩ := hT
   have hV := 𝔪.cn
-  haveI : IsNoetherianRing V := hV.1
-  haveI : IsIntegrallyClosed V := hV.2.1
-  haveI : CharZero V := hV.2.2.2
+  have : IsNoetherianRing V := hV.1
+  have : IsIntegrallyClosed V := hV.2.1
+  have : CharZero V := hV.2.2.2
   have hA := admissibleBase_of_completeNormalLocalCharZero hV
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   have hN₂ : 2 ≤ X₁.S.r * X₁.S.N := le_trans X₁.S.N_ge (Nat.le_mul_of_pos_left _ X₁.S.r_pos)

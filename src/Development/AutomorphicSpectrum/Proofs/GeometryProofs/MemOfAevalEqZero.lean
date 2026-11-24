@@ -105,14 +105,14 @@ theorem homog_X [DecidableEq K] (p : Σ k, ι k) : IsMultiHomog (X p : MRing ι)
     rw [Finset.sum_eq_single i0]
     · simp
     · intro i _ hi
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro h
       exact hi (sigma_mk_injective h).symm
     · simp
   · rw [Pi.single_eq_of_ne hk]
     apply Finset.sum_eq_zero
     intro i _
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     exact hk (congrArg Sigma.fst h).symm
 
@@ -208,13 +208,13 @@ theorem mem_of_local (R : Subalgebra ℤ Ω) (w : Ω)
   let J : Ideal R :=
     { carrier := {a | (a : Ω) * w ∈ R}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         push_cast
         rw [add_mul]
         exact add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun c a ha => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at ha ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at ha ⊢
         push_cast
         rw [mul_assoc]
         exact mul_mem c.2 ha }

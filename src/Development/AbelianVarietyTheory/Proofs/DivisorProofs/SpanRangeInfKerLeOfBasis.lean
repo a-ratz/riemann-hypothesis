@@ -111,7 +111,7 @@ theorem span_range_inf_ker_eq_span_rational_ker {K : Type} [Field K] (σ : K →
       rw [smul_smul, mul_comm]
       simp
     have h2 : ∀ l, ∑ k, σ (M l k) * c k = 0 := Fintype.linearIndependent_iff.1 hli _ h1
-    letI : Algebra K ℂ := σ.toAlgebra
+    let : Algebra K ℂ := σ.toAlgebra
     let b := Basis.ofVectorSpace K ℂ
     let s := Finset.univ.biUnion fun k => (b.repr (c k)).support
     have hc : ∀ k, c k = ∑ i ∈ s, σ (b.repr (c k) i) * b i := by
@@ -202,7 +202,7 @@ theorem span_range_inf_ker_le_of_basis {K : Type} [Field K] (σ : K →+* ℂ) {
   · rw [key]
     congr 2
     ext x
-    simp only [Set.mem_setOf_eq, hM, EmbeddingLike.map_eq_zero_iff]
+    simp only [Set.mem_ofPred_eq, hM, EmbeddingLike.map_eq_zero_iff]
   · have h1 : (fun l => (j'.comp b'.equivFun.symm.toLinearMap) (Pi.single l 1))
         = (fun i => j' (b i)) ∘ e.symm := by
       funext l

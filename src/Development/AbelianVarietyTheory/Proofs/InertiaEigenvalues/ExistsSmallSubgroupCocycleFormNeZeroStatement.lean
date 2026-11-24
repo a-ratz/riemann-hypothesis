@@ -548,8 +548,8 @@ theorem exists_bform_ne_zero : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.
     (fun h hh => by rw [hx]; exact hcon h hh)
   let I : Ideal A := Ideal.span {t | ∃ h ∈ L, ∃ b, t = x.1 h b}
   have hjI : x₀ j ∈ I := by
-    letI : TopologicalSpace (A ⧸ I) := ⊥
-    haveI : DiscreteTopology (A ⧸ I) := ⟨rfl⟩
+    let : TopologicalSpace (A ⧸ I) := ⊥
+    have : DiscreteTopology (A ⧸ I) := ⟨rfl⟩
     have hker : matAct Φ (fun k => I.mkQ (x₀ k)) = 0 := by
       funext k
       have := congrArg I.mkQ (congrFun hx₀ k)

@@ -175,9 +175,9 @@ theorem mass_of_charpoly (m : ℕ) (δ₁ δ₂ : GL (Fin m) E)
       right_inv := fun s => Subtype.ext (by simp [mul_assoc])
       map_mul' := fun a b => Subtype.ext (by simp [mul_assoc])
       continuous_toFun := Continuous.subtype_mk
-        ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+        ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
       continuous_invFun := Continuous.subtype_mk
-        ((continuous_const.mul continuous_subtype_val).mul continuous_const) _ }
+        ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _ }
   have hyΓ : y ∈ (ratF E m).range := ⟨x, rfl⟩
   refine GlobalTheory.MassTor.mass_eq_of_equiv _ _ (thF E m) (thF E m) _ _ (ratF E m δ₂) (ratF E m δ₁) (isClosed_twCent_thF E m _)
     (isClosed_twCent_thF E m _) e fun t => ?_
@@ -291,13 +291,13 @@ theorem pairSum (hA : AbsSum) (hF : FinCl2) (hI : Invar2) (hN : Unit2) (hC : Cou
     (fun y hy hy' => hC E hU a b S hS P₁ h₁ P₂ h₂ y hy (by
       filter_upwards [hy', local_pair_mem_maximal_eventually δ₁ δ₂] with w h1 h2
       exact ⟨_, h2, h1⟩))
-  simp only [hinv, Set.mem_setOf_eq, Nat.cast_pow, Nat.cast_ofNat] at key
+  simp only [hinv, Set.mem_ofPred_eq, Nat.cast_pow, Nat.cast_ofNat] at key
   refine ⟨key.1, key.2.trans ?_⟩
   congr 1
   refine finprod_mem_congr rfl fun w _ => ?_
   unfold stTw2 clSum
   refine finsum_congr fun d => ?_
-  simp only [Set.mem_setOf_eq, Pi.one_apply, one_mul]
+  simp only [Set.mem_ofPred_eq, Pi.one_apply, one_mul]
 
 theorem orbit_pair_nonzero_local (hN : Unit2) (hZ : Supp) (hU : Unr E) (S : Set (Pl E)) (φ : ∀ w : Pl E, GLw a w × GLw b w → ℂ)
     (hφ : IsTestP φ) (c : TwCl (thE E a) × TwCl (thE E b)) (h₁ : pol c.1 ∈ Ell E a) (h₂ : pol c.2 ∈ Ell E b)
@@ -310,7 +310,7 @@ theorem orbit_pair_nonzero_local (hN : Unit2) (hZ : Supp) (hU : Unr E) (S : Set 
     fun w => ⟨ThBasic.charpoly_nrmL hU a w _, ThBasic.charpoly_nrmL hU b w _⟩
   have hfin : ∀ᶠ w in cofinite, twOrb (th2 a b w) (K2 a b w) (loc2 w c.1.rep c.2.rep) (φ w) = 1 := by
     filter_upwards [hN E hU a b _ h₁ _ h₂, hφ.2, local_pair_mem_maximal_eventually c.1.rep c.2.rep] with w h1 h2 h3
-    rw [h2, (h1 _ _ (hl w).1 (hl w).2 (hl w).1 (hl w).2 h3).1, if_pos ⟨1, by rw [map_one, inv_one, one_mul, mul_one]⟩]
+    rw [h2, (h1 _ _ (hl w).1 (hl w).2 (hl w).1 (hl w).2 h3).1, ite_eq_left ⟨1, by rw [map_one, inv_one, one_mul, mul_one]⟩]
   have hne : twOrb (th2 a b w) (K2 a b w) (loc2 w c.1.rep c.2.rep) (φ w) ≠ 0 := by
     intro h0
     apply h
@@ -352,7 +352,7 @@ theorem twisted_trace_formula_elliptic_expansion (hA : AbsSum) (hF : FinCl2) (hI
     rw [finsum_eq_sum_of_support_subset (s := hB.toFinset)]
     · refine Finset.sum_congr rfl fun c hc => ?_
       rw [Set.Finite.mem_toFinset] at hc
-      rw [if_pos hc.1, MassP.mass_kap E hU a c.1.rep hc.1.1, MassP.mass_kap E hU b c.2.rep hc.1.2, pow_add]
+      rw [ite_eq_left hc.1, MassP.mass_kap E hU a c.1.rep hc.1.1, MassP.mass_kap E hU b c.2.rep hc.1.2, pow_add]
       unfold orb2 pol
       ring
     · intro c hc

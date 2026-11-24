@@ -387,7 +387,7 @@ theorem exists_index {V' K'' : Type} [CommRing V'] [IsDomain V'] [IsDiscreteValu
       vV_mul (inj _ u.ne_zero) (pow_ne_zero _ (inj p hp.ne_zero)), vV_mul h2 (pow_ne_zero _ h1),
       vV_pow (inj p hp.ne_zero), vV_pow h1, vV_unit, vV_irr hp, hr]
     have := vV_unit (K' := K'') (Units.map j.toMonoidHom u)
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at this
     rw [this]; ring
   refine ⟨r, by omega, fun x => ?_⟩
   by_cases hx : x = 0
@@ -448,7 +448,7 @@ theorem recordAt_of_isArcFr : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E
   obtain ⟨r, hr, hri⟩ := RecFr.exists_index j i hi
   let io' : c.F →+* T'.Fr := i.comp (Dv.io.comp (algebraMap c.F K₁))
   have hO' : OverLa la T'.V io' (r * eL) := hO.bc i hr hri
-  letI := io'.toAlgebra
+  let := io'.toAlgebra
   have he₁C : ∀ v, e₁ (arcιR Dw Dv.Tv.V Dv.ϖ (PowerSeries.C (R := Dv.Tv.V) v)) = algebraMap T'.V T'.Fr (j v) :=
     fun v => (RingHom.congr_fun he₁ _).trans (congrArg (algebraMap T'.V T'.Fr) (RingHom.congr_fun he₀ v))
   have hcomm : ∀ x : c.F, e₁ (algebraMap c.F _ x) = io' x := by
@@ -517,7 +517,7 @@ theorem recordAt_of_isArcFr : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E
   let yI : IntFr Xo c T' io' := ⟨z₁, hev.test _ z₁, hI₁⟩
   have h0 : 0 ≤ nval T'.V (r * eL) (evI yI F) :=
     hF.2 _ ⟨PtV.mk (cls := Formalism.L2.PjFree.algCls Xo c) (lies := fun _ _ _ _ => True) la hO' yI hfin () trivial, rfl⟩
-  haveI := (GlobalTheory.LetterDenom.main E H Dw Dv.Tv Dv.ϖ hϖ).1
+  have := (GlobalTheory.LetterDenom.main E H Dw Dv.Tv Dv.ϖ hϖ).1
   have hnat := (GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hev a n F hF.1 (ArcSR Dw Dv.Tv.V Dv.ϖ)).1 T'.Fr φ Dv.yR z₁ hz₁
   rw [← hev']
   have := (hnorm _).2 (RecFr.mem_of_nval_nonneg hO'.1 h0)

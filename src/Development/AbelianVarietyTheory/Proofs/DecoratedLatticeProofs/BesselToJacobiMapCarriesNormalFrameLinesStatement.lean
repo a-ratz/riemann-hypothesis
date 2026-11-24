@@ -443,7 +443,7 @@ theorem xi_unit {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace
   rw [map_inv₀] at b2
   change valuation k (q.pr (incA D D.host.xi0)) = 1
   have hv0 : valuation k (q.pr (incA D D.host.xi0)) ≠ 0 := by simpa using hne
-  exact le_antisymm b1 ((inv_le_one₀ (zero_lt_iff.2 hv0)).1 b2)
+  exact le_antisymm b1 ((inv_le_one₀ (pos_iff_ne_zero.2 hv0)).1 b2)
 
 theorem line_crit {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (q : GlobalTheory.FinPl.SplitPt D k) {S : HSp D} {L : GlobalTheory.FinPl.Lat S} {Y : Type} [Fintype Y] [DecidableEq Y]

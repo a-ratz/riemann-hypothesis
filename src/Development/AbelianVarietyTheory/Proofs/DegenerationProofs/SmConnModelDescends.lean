@@ -223,7 +223,7 @@ theorem exists_iso_descent {R₀ K C : Type} [CommRing R₀] [CommRing K] [Field
   have hj₂ : j ≫ H.hom = X.hom ≫ spMap i := h₁.1.lift_snd _ _ _
   obtain ⟨ψ, hψ₁, hψ₂⟩ := hS L i a' b' i.injective ha hb hs H.left H.hom π₁ j h₁.1.w hj₁ hj₂
   have f₁ : Flat (spMap i) := by
-    letI := i.toAlgebra
+    let := i.toAlgebra
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact (inferInstance : Module.Flat L C)
   have f₂ : Surjective (spMap i) := ⟨fun _ => ⟨default, Subsingleton.elim _ _⟩⟩

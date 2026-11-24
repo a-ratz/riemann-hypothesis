@@ -67,12 +67,12 @@ theorem map_left_unitary (D : D7) (W : HSp D) (r : ℕ) (h : GA D W) (ν : Measu
   have hJ : IsHermND D.sp.cm.sig W.gram := GlobalTheory.Mem.VolExists.isHermND D.sp.cm W
   obtain ⟨g', hg'⟩ := GlobalTheory.AdelicModulus.Row.exists_transpose (AF D.host.F) hJ h
   have hK := GlobalTheory.AdelicModulus.Row.isHermND_inv_transpose hJ
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D r W.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : BorelSpace (Mx D r W.rank) := ⟨rfl⟩
   let T := transposeCAE D W.rank r
   have hT : Measurable T := T.continuous.measurable
   have hTs : Measurable T.symm := T.symm.continuous.measurable
-  haveI hμ' : (ν.map T).IsAddHaarMeasure := T.isAddHaarMeasure_map ν
+  have hμ' : (ν.map T).IsAddHaarMeasure := T.isAddHaarMeasure_map ν
   have hm := GlobalTheory.mul_unitary_map_haar D W.rank r (W.gram⁻¹)ᵀ hK.1 hK.2 g' (ν.map T) hμ'
   set A : Matrix (Fin W.rank) (Fin W.rank) (AE D) := (HA.mat (AF D.host.F) D.sp.cm.sig (W.gram⁻¹)ᵀ g').1
   have hR : Measurable (fun x : Mx D r W.rank =>
@@ -98,7 +98,7 @@ theorem integral_left_unitary : ∀ (D : D7) (W : HSp D) (r : ℕ) (h : GA D W) 
   intro D W r h ν hν Φ
   let u := HA.mat (AF D.host.F) D.sp.cm.sig W.gram h
   have hmt : mt W h = u.1 := rfl
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
   let e : Mx D W.rank r ≃ᵐ Mx D W.rank r :=
     { toFun := fun y => (HMul.hMul u.1 (y : Matrix (Fin W.rank) (Fin r) (AE D)) : Mx D W.rank r)
       invFun := fun y => (HMul.hMul (u⁻¹).1 (y : Matrix (Fin W.rank) (Fin r) (AE D)) : Mx D W.rank r)

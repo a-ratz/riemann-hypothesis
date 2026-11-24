@@ -80,11 +80,11 @@ theorem density {G H ι : Type} [Group G] [Fintype ι] [NormedAddCommGroup H] [I
     have hmul : ∀ g g' x, amp (π (g * g')) x = amp (π g) (amp (π g') x) := by
       intro g g' x
       refine (WithLp.ext_iff 2).2 (funext fun i => ?_)
-      simp only [hamp, map_mul, ContinuousLinearMap.mul_apply]
+      simp only [hamp, map_mul, mul_apply_eq_comp]
     have hone : ∀ x, amp (π 1) x = x := by
       intro x
       refine (WithLp.ext_iff 2).2 (funext fun i => ?_)
-      simp only [hamp, map_one, ContinuousLinearMap.one_apply]
+      simp only [hamp, map_one, one_apply_eq_self]
     have hS0 : ∀ g, S0 ≤ S0.comap (amp (π g)).toLinearMap := by
       intro g
       rw [Submodule.span_le]
@@ -127,7 +127,7 @@ theorem density {G H ι : Type} [Group G] [Fintype ι] [NormedAddCommGroup H] [I
       obtain ⟨c, hc⟩ := GlobalTheory.hilbert_schur H G π hn hi Q (by
         intro g
         refine ContinuousLinearMap.ext fun y => ?_
-        simp only [ContinuousLinearMap.mul_apply, hQ]
+        simp only [mul_apply_eq_comp, hQ]
         have h4 : WithLp.toLp 2 (Pi.single j (π g y)) = amp (π g) (WithLp.toLp 2 (Pi.single j y)) := by
           refine (WithLp.ext_iff 2).2 (funext fun k => ?_)
           rw [hamp]
@@ -160,7 +160,7 @@ theorem density {G H ι : Type} [Group G] [Fintype ι] [NormedAddCommGroup H] [I
     let Φ : PiLp 2 (fun _ : ι => H) →L[ℂ] ℂ := ∑ i, (L i) ∘L (PiLp.proj (p := 2) (𝕜 := ℂ) (β := fun _ : ι => H) i)
     have hΦ : ∀ z, Φ z = ∑ i, L i (z.ofLp i) := by
       intro z
-      simp only [Φ, ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_comp',
+      simp only [Φ, FunLike.coe_sum, Finset.sum_apply, ContinuousLinearMap.coe_comp,
         Function.comp_apply]
       rfl
     have hker : S ≤ LinearMap.ker (Φ : PiLp 2 (fun _ : ι => H) →ₗ[ℂ] ℂ) := by
@@ -175,7 +175,7 @@ theorem density {G H ι : Type} [Group G] [Fintype ι] [NormedAddCommGroup H] [I
     simpa only [hamp, hξ] using h5
   let Wv : Submodule ℂ H := Submodule.span ℂ (Set.range v)
   have : FiniteDimensional ℂ Wv := FiniteDimensional.span_of_finite ℂ (Set.finite_range v)
-  have : CompleteSpace Wv := FiniteDimensional.complete ℂ Wv
+  have : CompleteSpace Wv := FiniteDimensional.completeSpace ℂ Wv
   let B : H →L[ℂ] H := (LinearMap.toContinuousLinearMap (A ∘ₗ Wv.subtype)) ∘L Wv.orthogonalProjectionOnto
   have hB : ∀ i, B (v i) = A (v i) := by
     intro i
@@ -213,7 +213,7 @@ theorem density_sob {n : ℕ} {ε : Fin n → Bool} {H ι : Type} [Fintype ι] [
       map_one' := hσ.1.1
       map_mul' := fun g g' => by
         refine ContinuousLinearMap.ext fun x => ?_
-        rw [ContinuousLinearMap.mul_apply]
+        rw [mul_apply_eq_comp]
         exact (hmul g g' x).symm }
   have hπ : ∀ g x, π g x = σ (umat g) x := fun _ _ => rfl
   have hn : ∀ g x, ‖π g x‖ = ‖x‖ := fun g x => hσ.2.1 _ (hmem g) x
@@ -265,7 +265,7 @@ theorem density_sob {n : ℕ} {ε : Fin n → Bool} {H ι : Type} [Fintype ι] [
     rw [Finset.sum_congr rfl fun i _ => (((hsg i).2 _ (hA i)).2 φ hφ).symm]
     exact hgard φ hφ)
   have h2 : ∀ x : H, σ (umat (1 : Formalism.REAL.UJ ε)) x = x := fun x => by
-    rw [show umat (1 : Formalism.REAL.UJ ε) = 1 from rfl, hσ.1.1, ContinuousLinearMap.one_apply]
+    rw [show umat (1 : Formalism.REAL.UJ ε) = 1 from rfl, hσ.1.1, one_apply_eq_self]
   simpa only [h2] using h1
 
 private theorem sum_smul_T_update_eq_zero_of_sum_eq_zero {D : D7} {θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)} {V : HSp D}
@@ -396,19 +396,19 @@ private theorem equivariant_and_sobCont_slice {T : MMap M} (hT : T ∈ Mult θ M
   | mem T hT => exact ⟨hT.equiv, hT.cont⟩
   | zero =>
     refine ⟨fun τ g _ v w _ => ?_, fun τ v y => ⟨0, sobCont_zero_twisted_operators _ _, fun w => ?_⟩⟩
-    · simp only [MultilinearMap.zero_apply]
+    · simp only [zero_apply]
       rfl
     · simp
   | add T T' _ _ hT hT' =>
     refine ⟨fun τ g hg v w hw => ?_, fun τ v y => ?_⟩
-    · rw [MultilinearMap.add_apply, MultilinearMap.add_apply, hT.1 τ g hg v w hw, hT'.1 τ g hg v w hw]
+    · rw [add_apply, add_apply, hT.1 τ g hg v w hw, hT'.1 τ g hg v w hw]
       rfl
     · obtain ⟨ℓ, h1, h2⟩ := hT.2 τ v y
       obtain ⟨ℓ', h1', h2'⟩ := hT'.2 τ v y
       exact ⟨ℓ + ℓ', sobCont_add_twisted_operators h1 h1', fun w => by simp [h2, h2']⟩
   | smul c T _ hT =>
     refine ⟨fun τ g hg v w hw => ?_, fun τ v y => ?_⟩
-    · rw [MultilinearMap.smul_apply, MultilinearMap.smul_apply, hT.1 τ g hg v w hw]
+    · rw [smul_apply, smul_apply, hT.1 τ g hg v w hw]
       rfl
     · obtain ⟨ℓ, h1, h2⟩ := hT.2 τ v y
       exact ⟨c • ℓ, sobCont_smul_twisted_operators h1 c, fun w => by simp [h2]⟩

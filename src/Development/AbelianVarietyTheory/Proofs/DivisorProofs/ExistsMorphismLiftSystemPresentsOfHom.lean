@@ -66,8 +66,8 @@ theorem spMap_surjective {A B : Type} [CommRing A] [CommRing B] (q : A →+* B)
     intro x hx
     have hx2 := hn x (RingHom.mem_ker.1 hx)
     exact (p.isPrime.mem_or_mem (by rw [hx2]; exact p.asIdeal.zero_mem)).elim id id
-  haveI := p.isPrime
-  haveI : (Ideal.map q p.asIdeal).IsPrime := Ideal.map_isPrime_of_surjective hq hker
+  have := p.isPrime
+  have : (Ideal.map q p.asIdeal).IsPrime := Ideal.map_isPrime_of_surjective hq hker
   refine ⟨⟨Ideal.map q p.asIdeal, this⟩, ?_⟩
   apply PrimeSpectrum.ext
   change Ideal.comap q (Ideal.map q p.asIdeal) = p.asIdeal
@@ -141,8 +141,8 @@ theorem presents_hom : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
     have : a * a ∈ I ^ 2 := by rw [pow_two]; exact Ideal.mul_mem_mul ha' ha'
     rwa [hI, Ideal.zero_eq_bot, Ideal.mem_bot] at this
 
-  haveI : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom π) hπ
-  haveI hic : IsClosedImmersion i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hpb.flip inferInstance
+  have : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom π) hπ
+  have hic : IsClosedImmersion i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hpb.flip inferInstance
   have hinj : Function.Injective i := i.isClosedEmbedding.injective
   have hisurj : Function.Surjective i :=
     (MorphismProperty.of_isPullback (P := @AlgebraicGeometry.Surjective) hpb.flip ⟨hπs⟩).surj
@@ -176,7 +176,7 @@ theorem presents_hom : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
     obtain ⟨W, hxW, hWle⟩ := exists_affine (show x₀ ∈ U.1 ⊓ V.1 from ⟨hxU, hxV⟩)
     obtain ⟨c, hc'⟩ := hcov W x₀ hxW
     exact ⟨W, le_inf_iff.1 hWle |>.1, le_inf_iff.1 hWle |>.2, c, hc'.trans ha.symm⟩
-  letI := dir hX hc hd
+  let := dir hX hc hd
   let 𝒰 := cov hX hc
   let g : ∀ U : 𝒰.I₀, 𝒰.X U ⟶ Y := fun U ↦
     spMap (ψ (op U) : S.F.obj (op U) →+* S'.F.obj (op U)) ≫ hY.y (op U)

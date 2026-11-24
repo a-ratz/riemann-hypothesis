@@ -261,8 +261,8 @@ theorem BlockE.of_splitting (i : D.nd.Loc) (r : D.nd.X i → (Formalism.MainNoti
     obtain ⟨e, he⟩ := hc.rho
     exact ⟨e, fun g u => he g u⟩
   intro w hw L' h τ
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
-  haveI := L'.2
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have := L'.2
   let s : Br.G D.nbr i w hw → Formalism.MainNotions.N.GE D.nd := fun g => decS D.nd w (Br.iota D.nbr i w hw g)
   let f := (inc D i w hw L' h).comp (Br.toLLK (D.nbr i w hw))
   have hf : ∀ c, f (toK D.nd i c) = inc D i w hw L' h ((D.nbr i w hw).toLL c) := fun c =>

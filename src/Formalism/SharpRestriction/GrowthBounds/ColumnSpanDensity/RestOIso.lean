@@ -251,7 +251,7 @@ theorem qb_S {p n' : ℕ} (hp : p.Prime) (j : W →+* O) (w θ : O) (hpW : Irred
     have k4 : (Ideal.Quotient.mk (Ideal.span {(p : W)})) b = Ideal.Quotient.mk _ b' :=
       Ideal.Quotient.eq.2 (Ideal.mem_span_singleton.2 h4)
     rw [k3, k4]
-  haveI : Finite (O ⧸ Ideal.span {w}) :=
+  have : Finite (O ⧸ Ideal.span {w}) :=
     Nat.finite_of_card_ne_zero (by rw [cO]; exact (pow_pos hp.pos _).ne')
   have hbij := hinj.bijective_of_nat_card_le (by rw [Nat.card_prod, cW, cO, two_mul, pow_add])
   obtain ⟨⟨a, b⟩, hab⟩ := hbij.2 (Ideal.Quotient.mk _ x)
@@ -310,8 +310,8 @@ theorem qb_span {p n' : ℕ} (hp : p.Prime) (j : W →+* O) (w θ : O) (hpW : Ir
     (hw : Irreducible w) (cO : Nat.card (O ⧸ Ideal.span {w}) = p ^ (2 * n'))
     (hθ : ∀ a : W, ¬ w ∣ θ - j a) (x : O) :
     ∃ a b c d : W, x = j a + j b * θ + j c * w + j d * θ * w := by
-  letI : Algebra W O := j.toAlgebra
-  haveI : Module.Finite W O := hfin
+  let : Algebra W O := j.toAlgebra
+  have : Module.Finite W O := hfin
   have hsm : ∀ (r : W) (y : O), r • y = j r * y := fun r y => Algebra.smul_def r y
   let M : Submodule W O :=
     { carrier := {y | ∃ a b c d : W, y = j a + j b * θ + j c * w + j d * θ * w}
@@ -512,8 +512,8 @@ private theorem qr_hensel {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
     (hc : IsAdicComplete (IsLocalRing.maximalIdeal O) O) (w : O) (hw : Irreducible w) (B D a₀ : O)
     (h1 : w ∣ a₀ ^ 2 + B * a₀ + D) (h2 : ¬ w ∣ 2 * a₀ + B) :
     ∃ θ : O, θ ^ 2 + B * θ + D = 0 ∧ w ∣ θ - a₀ := by
-  haveI := hc
-  haveI := IsAdicComplete.henselianRing O (IsLocalRing.maximalIdeal O)
+  have := hc
+  have := IsAdicComplete.henselianRing O (IsLocalRing.maximalIdeal O)
   have hmax := (IsDiscreteValuationRing.irreducible_iff_uniformizer w).mp hw
   have hd : eval a₀ (derivative (X ^ 2 + C B * X + C D)) = 2 * a₀ + B := by
     simp only [derivative_add, derivative_X_pow, derivative_mul, derivative_C, derivative_X, eval_add, eval_mul,
@@ -559,21 +559,21 @@ private theorem qr_side (p n : ℕ) (hp : p.Prime) (hn : 0 < n) (W O : Type) [Co
     (hcO : Nat.card (O ⧸ Ideal.span {w}) = p ^ (2 * n)) :
     (∃ b c : W, qrGood p n W b c) ∧
       ∀ b c : W, qrGood p n W b c → ∃ θ : O, θ ^ 2 + j b * θ + j c = 0 ∧ ∀ a : W, ¬ w ∣ θ - j a := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : (Ideal.span {(p : W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hpW
-  haveI : (Ideal.span {w}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hw
-  letI : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
-  letI : Field (O ⧸ Ideal.span {w}) := Ideal.Quotient.field _
-  haveI : Finite (W ⧸ Ideal.span {(p : W)}) :=
+  have : Fact p.Prime := ⟨hp⟩
+  have : (Ideal.span {(p : W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hpW
+  have : (Ideal.span {w}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hw
+  let : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
+  let : Field (O ⧸ Ideal.span {w}) := Ideal.Quotient.field _
+  have : Finite (W ⧸ Ideal.span {(p : W)}) :=
     Nat.finite_of_card_ne_zero (by rw [hcW]; exact (pow_pos hp.pos _).ne')
-  haveI : Finite (O ⧸ Ideal.span {w}) :=
+  have : Finite (O ⧸ Ideal.span {w}) :=
     Nat.finite_of_card_ne_zero (by rw [hcO]; exact (pow_pos hp.pos _).ne')
-  letI : Fintype (W ⧸ Ideal.span {(p : W)}) := Fintype.ofFinite _
-  letI : Fintype (O ⧸ Ideal.span {w}) := Fintype.ofFinite _
+  let : Fintype (W ⧸ Ideal.span {(p : W)}) := Fintype.ofFinite _
+  let : Fintype (O ⧸ Ideal.span {w}) := Fintype.ofFinite _
   have hFc : Fintype.card (W ⧸ Ideal.span {(p : W)}) = p ^ n := by rw [← Nat.card_eq_fintype_card, hcW]
   have hkc : Fintype.card (O ⧸ Ideal.span {w}) = (p ^ n) ^ 2 := by
     rw [← Nat.card_eq_fintype_card, hcO]; ring
-  haveI : CharP (O ⧸ Ideal.span {w}) p := (CharP.charP_iff_prime_eq_zero hp).mpr (by
+  have : CharP (O ⧸ Ideal.span {w}) p := (CharP.charP_iff_prime_eq_zero hp).mpr (by
     rw [← map_natCast (Ideal.Quotient.mk (Ideal.span {w})), ← hw2, Ideal.Quotient.eq_zero_iff_mem,
       Ideal.mem_span_singleton]
     exact dvd_pow_self w two_ne_zero)

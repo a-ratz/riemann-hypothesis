@@ -196,7 +196,7 @@ theorem continuous_tm {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {R R' : Type} 
     [CommRing R'] [Algebra F R'] [TopologicalSpace R'] [IsTopologicalRing R'] [LocallyCompactSpace R']
     [SecondCountableTopology R'] [T2Space R'] (f : R →ₐ[F] R') (hf : Continuous f) :
     Continuous (tm E f) := by
-  haveI := finite_of_cm hCM
+  have := finite_of_cm hCM
   have h1 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R).2.2.2.2.2.2.1 _ (Module.finBasis F E)
   have h2 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R').2.2.2.2.2.2.1 _ (Module.finBasis F E)
   rw [h2.isEmbedding.continuous_iff]
@@ -207,8 +207,8 @@ theorem continuous_tm {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {R R' : Type} 
 theorem continuous_joinT {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E)
     {X : Type} [TopologicalSpace X] {f : X → Ainf F ⊗[F] E} {g : X → Af F ⊗[F] E}
     (hf : Continuous f) (hg : Continuous g) : Continuous fun x => joinT b (f x) (g x) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   have h0 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)).2.2.2.2.2.2.1 _ b
   have h1 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.1 _ b
   have h2 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.1 _ b
@@ -223,15 +223,15 @@ theorem herm_facts {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (n : ℕ) (R : Ty
     IsTopologicalAddGroup (HermR R σ n) ∧ LocallyCompactSpace (HermR R σ n) ∧
       SecondCountableTopology (HermR R σ n) ∧ T2Space (HermR R σ n) := by
   obtain ⟨h1, h2, h3, h4, -, -, -, -, h9, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI : IsTopologicalRing (R ⊗[F] E) := h1
-  haveI : LocallyCompactSpace (R ⊗[F] E) := h2
-  haveI : SecondCountableTopology (R ⊗[F] E) := h3
-  haveI : T2Space (R ⊗[F] E) := h4
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
+  have : IsTopologicalRing (R ⊗[F] E) := h1
+  have : LocallyCompactSpace (R ⊗[F] E) := h2
+  have : SecondCountableTopology (R ⊗[F] E) := h3
+  have : T2Space (R ⊗[F] E) := h4
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R ⊗[F] E))
-  haveI : T2Space (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
+  have : T2Space (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
     inferInstanceAs (T2Space (Fin n → Fin n → R ⊗[F] E))
   have hc : IsClosed (HermR R σ n : Set (Matrix (Fin n) (Fin n) (R ⊗[F] E))) := h9 n
   exact ⟨inferInstance, hc.isClosedEmbedding_subtypeVal.locallyCompactSpace,
@@ -239,22 +239,22 @@ theorem herm_facts {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (n : ℕ) (R : Ty
 
 theorem continuous_hermInf {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (n : ℕ) :
     Continuous (hermInf σ : HermR (AF F) σ n → HermR (Ainf F) σ n) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have c1 := continuous_tm (E := E) hCM (fstA F) continuous_fst
   refine continuous_induced_rng.2 ?_
   change Continuous fun x : HermR (AF F) σ n =>
     (x : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)).map (tm E (fstA F))
-  exact Continuous.matrix_map continuous_subtype_val c1
+  exact Continuous.matrix_map continuous_subtypeVal c1
 
 theorem continuous_hermFin {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (n : ℕ) :
     Continuous (hermFin σ : HermR (AF F) σ n → HermR (Af F) σ n) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   have c1 := continuous_tm (E := E) hCM (sndA F) continuous_snd
   refine continuous_induced_rng.2 ?_
   change Continuous fun x : HermR (AF F) σ n =>
     (x : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)).map (tm E (sndA F))
-  exact Continuous.matrix_map continuous_subtype_val c1
+  exact Continuous.matrix_map continuous_subtypeVal c1
 
 theorem continuous_hermJoin {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) :
     Continuous (hermJoin b σ : HermR (Ainf F) σ n × HermR (Af F) σ n → HermR (AF F) σ n) := by
@@ -264,10 +264,10 @@ theorem continuous_hermJoin {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {d : ℕ
     joinT b ((p.1 : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) i j) ((p.2 : Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) i j)
   have g1 : Continuous fun p : HermR (Ainf F) σ n × HermR (Af F) σ n =>
       (p.1 : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) i j :=
-    (continuous_id.matrix_elem i j).comp (continuous_subtype_val.comp continuous_fst)
+    (continuous_id.matrix_elem i j).comp (continuous_subtypeVal.comp continuous_fst)
   have g2 : Continuous fun p : HermR (Ainf F) σ n × HermR (Af F) σ n =>
       (p.2 : Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) i j :=
-    (continuous_id.matrix_elem i j).comp (continuous_subtype_val.comp continuous_snd)
+    (continuous_id.matrix_elem i j).comp (continuous_subtypeVal.comp continuous_snd)
   exact continuous_joinT hCM b g1 g2
 
 def hermHomeo {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) :
@@ -285,21 +285,21 @@ theorem map_eq_smul_prod : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     MeasurableEmbedding (fun b : HermR (AF F) σ n => (hermInf σ b, hermFin σ b)) ∧
     db.map (fun b => (hermInf σ b, hermFin σ b)) = c • ν₁.prod ν₂ := by
   intro F E _ _ _ _ _ σ hCM n db hdb
-  haveI := finite_of_cm hCM
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := finite_of_cm hCM
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   obtain ⟨a1, a2, a3, a4⟩ := herm_facts hCM n (AF F)
   obtain ⟨b1, b2, b3, b4⟩ := herm_facts hCM n (Ainf F)
   obtain ⟨c1, c2, c3, c4⟩ := herm_facts hCM n (Af F)
   let b := Module.finBasis F E
   let e := hermHomeo hCM b n
   have he : (e : HermR (AF F) σ n → _) = fun b => (hermInf σ b, hermFin σ b) := rfl
-  haveI hmap : (db.map e).IsAddHaarMeasure :=
+  have hmap : (db.map e).IsAddHaarMeasure :=
     (hermSplit b σ n).isAddHaarMeasure_map db e.continuous e.symm.continuous
   let ν₁ : Measure (HermR (Ainf F) σ n) := Measure.addHaar
   let ν₂ : Measure (HermR (Af F) σ n) := Measure.addHaar
-  haveI : SFinite ν₁ := inferInstance
-  haveI : SFinite ν₂ := inferInstance
+  have : SFinite ν₁ := inferInstance
+  have : SFinite ν₂ := inferInstance
   refine ⟨ν₁, ν₂, ((db.map e).addHaarScalarFactor (ν₁.prod ν₂) : ℝ≥0), inferInstance, inferInstance,
     inferInstance, inferInstance, ENNReal.coe_ne_top, ?_, ?_⟩
   · rw [← he]

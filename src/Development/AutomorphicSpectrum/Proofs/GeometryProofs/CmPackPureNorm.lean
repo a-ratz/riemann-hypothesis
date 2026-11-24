@@ -574,7 +574,7 @@ theorem orth_of_dual (H : Host E) {f : ℕ} (B : Module.Basis (Fin f) (Kf H) E) 
   let Ω := AlgebraicClosure K
   let em : K →+* Ω := algebraMap K Ω
   have hem : Function.Injective em := em.injective
-  letI : Algebra (Kf H) Ω := (em.comp (σ.comp (algebraMap (Kf H) E))).toAlgebra
+  let : Algebra (Kf H) Ω := (em.comp (σ.comp (algebraMap (Kf H) E))).toAlgebra
   let τ : E →ₐ[Kf H] Ω := { em.comp σ with commutes' := fun l => rfl }
   let τ' : E →ₐ[Kf H] Ω :=
     { em.comp σ' with
@@ -597,10 +597,10 @@ theorem orth_of_dual (H : Host E) {f : ℕ} (B : Module.Basis (Fin f) (Kf H) E) 
       rfl
   constructor
   · intro e
-    rw [if_pos (heq.2 e)] at hs
+    rw [ite_eq_left (heq.2 e)] at hs
     exact hem (hs.trans (map_one em).symm)
   · intro e
-    rw [if_neg (fun x => e (heq.1 x))] at hs
+    rw [ite_eq_right (fun x => e (heq.1 x))] at hs
     exact hem (hs.trans (map_zero em).symm)
 
 theorem trace_dual_mem (H : Host E) {f : ℕ} (B : Module.Basis (Fin f) (Kf H) E) (b : Fin f → 𝓞 E)
@@ -747,9 +747,9 @@ theorem eigProj_eq_sum [CharZero K] (hcard : Nat.card (E →+* K) = Module.finra
     {u : U} (hu : ρ r u = σ (r : E) • u) :
     HT.eigProj ρ σ u = ∑ k, σ (b' k) • ρ (b k) u := by
   classical
-  haveI : Finite (E →+* K) := Nat.finite_of_card_ne_zero (by
+  have : Finite (E →+* K) := Nat.finite_of_card_ne_zero (by
     rw [hcard]; exact Module.finrank_pos.ne')
-  haveI : Fintype (E →+* K) := Fintype.ofFinite _
+  have : Fintype (E →+* K) := Fintype.ofFinite _
   have hsum : ∑ τ : E →+* K, HT.eigProj ρ τ = 1 :=
     HT.sum_eigProj_eq_one K U E ρ (by rw [← Nat.card_eq_fintype_card, hcard])
   have hexp : u = ∑ τ : E →+* K, HT.eigProj ρ τ u := by
@@ -764,8 +764,8 @@ theorem eigProj_eq_sum [CharZero K] (hcard : Nat.card (E →+* K) = Module.finra
     rw [← Finset.sum_smul]
     by_cases h : τ = σ
     · subst h
-      rw [(hb τ rfl).1 rfl, one_smul, if_pos rfl]
-    · rw [if_neg h]
+      rw [(hb τ rfl).1 rfl, one_smul, ite_eq_left rfl]
+    · rw [ite_eq_right h]
       by_cases hr : σ (r : E) = τ (r : E)
       · rw [(hb τ hr).2 (Ne.symm h), zero_smul]
       · rw [eigProj_eq_zero ρ τ r (σ (r : E)) hr hu, smul_zero]
@@ -888,7 +888,7 @@ theorem eigSub_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     refine Real.eq_one_of_pos_of_log_eq_zero (mul_pos hpos hδp) ?_
     rw [Real.log_mul hpos.ne' hδp.ne', hlog, hδ]
     ring
-  haveI : Nonempty (Fin f) := by
+  have : Nonempty (Fin f) := by
     by_contra h
     rw [not_nonempty_iff] at h
     rw [Real.iSup_of_isEmpty] at hpos
@@ -1084,7 +1084,7 @@ private theorem cancel_lemma {R B : Type} [CommRing R] [CommRing B] {X : Scheme.
     (e : Spec.map (CommRingCat.ofHom j) ≫ a = Spec.map (CommRingCat.ofHom j) ≫ b) : a = b := by
   obtain ⟨U, hU, hcU, -⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.mp X.isBasis_affineOpens
     (show a c ∈ (⊤ : X.Opens) from trivial)
-  haveI : IsAffine U := hU
+  have : IsAffine U := hU
   have ha : Set.range a ⊆ Set.range (Scheme.Opens.ι U) := by
     rw [Scheme.Opens.range_ι]
     rintro _ ⟨p, rfl⟩
@@ -1100,12 +1100,12 @@ private theorem cancel_lemma {R B : Type} [CommRing R] [CommRing B] {X : Scheme.
       Spec.map (CommRingCat.ofHom j) ≫ IsOpenImmersion.lift (Scheme.Opens.ι U) b hb := by
     rw [← cancel_mono (Scheme.Opens.ι U), Category.assoc, Category.assoc, IsOpenImmersion.lift_fac,
       IsOpenImmersion.lift_fac, e]
-  haveI : Mono (CommRingCat.ofHom j) := ConcreteCategory.mono_of_injective _ hj
+  have : Mono (CommRingCat.ofHom j) := ConcreteCategory.mono_of_injective _ hj
   have hnat := Scheme.ΓSpecIso_naturality (CommRingCat.ofHom j)
   haveI : Mono ((Spec.map (CommRingCat.ofHom j)).appTop ≫ (Scheme.ΓSpecIso _).hom) := by
     rw [hnat]
     infer_instance
-  haveI : Mono (Spec.map (CommRingCat.ofHom j)).appTop := mono_of_mono _ (Scheme.ΓSpecIso _).hom
+  have : Mono (Spec.map (CommRingCat.ofHom j)).appTop := mono_of_mono _ (Scheme.ΓSpecIso _).hom
   rw [← cancel_mono (Spec.map (CommRingCat.ofHom j)).appTop]
   have := congrArg Scheme.Hom.appTop e'
   simpa using this
@@ -1134,8 +1134,8 @@ omit [GrpObj G] [GrpObj G'] in
 theorem spMap_mono_of_fraction [IsDomain V] [Algebra V K] [IsFractionRing V K] (hVK : VK = algebraMap V K)
     {A : Type} [CommRing A] (f₁ f₂ : Sp A ⟶ Sp K) (e : f₁ ≫ spMap VK = f₂ ≫ spMap VK) : f₁ = f₂ := by
   subst hVK
-  haveI : Epi (CommRingCat.ofHom (algebraMap V K)) := IsLocalization.epi (nonZeroDivisors V) K
-  haveI : Mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap V K)).op) := inferInstance
+  have : Epi (CommRingCat.ofHom (algebraMap V K)) := IsLocalization.epi (nonZeroDivisors V) K
+  have : Mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap V K)).op) := inferInstance
   exact (cancel_mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap V K)).op)).1 e
 
 theorem eq_bcTan_left [IsDomain V] [Algebra V K] [IsFractionRing V K] (hVK : VK = algebraMap V K)
@@ -1404,7 +1404,7 @@ theorem lie_model_extends_over_dvr : ∀ (E : Type) [Field E] [NumberField E] [I
           rw [h, Over.comp_left]
           rfl
       rw [e1]
-      haveI := T.act.hom a
+      have := T.act.hom a
       constructor
       · intro h
         have h2 := congrArg P h
@@ -1522,18 +1522,18 @@ theorem exists_frame {K : Type} [Field K] (V : Subring K) [IsDomain V] [IsPrinci
       Submodule.span V (Set.range u) ⊓ W.restrictScalars V = Submodule.span V (Set.range v) := by
   set N : Submodule V U := Submodule.span V (Set.range u) ⊓ W.restrictScalars V with hN
   have hfg : (Submodule.span V (Set.range u)).FG := Submodule.fg_span (Set.finite_range u)
-  haveI : Module.Finite V (Submodule.span V (Set.range u)) := Module.Finite.iff_fg.2 hfg
-  haveI : IsNoetherian V (Submodule.span V (Set.range u)) := inferInstance
+  have : Module.Finite V (Submodule.span V (Set.range u)) := Module.Finite.iff_fg.2 hfg
+  have : IsNoetherian V (Submodule.span V (Set.range u)) := inferInstance
   have hNfg : N.FG := by
     have := IsNoetherian.noetherian (R := V) (M := Submodule.span V (Set.range u))
       (N.comap (Submodule.span V (Set.range u)).subtype)
     have h2 := this.map (Submodule.span V (Set.range u)).subtype
     rwa [Submodule.map_comap_subtype, inf_eq_right.2 (inf_le_left : N ≤ _)] at h2
-  haveI : Module.Finite V N := Module.Finite.iff_fg.2 hNfg
-  haveI : Module.IsTorsionFree V U := ⟨fun r hr a b h => by
+  have : Module.Finite V N := Module.Finite.iff_fg.2 hNfg
+  have : Module.IsTorsionFree V U := ⟨fun r hr a b h => by
     have hr0 : (r : K) ≠ 0 := fun e => hr.ne_zero (Subtype.ext e)
     exact smul_right_injective U hr0 h⟩
-  haveI : Module.Free V N := Module.free_of_finite_type_torsion_free'
+  have : Module.Free V N := Module.free_of_finite_type_torsion_free'
   let bs := Module.finBasis V N
   refine ⟨_, fun i => (bs i : U), ?_, ?_⟩
   · refine (LinearIndependent.iff_fractionRing V K).1 ?_
@@ -1640,8 +1640,8 @@ theorem intFrames_fin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   intro E _ _ _ H D l Xo c g ty FU i Z P hP X x hx τ ℓ j v w hty hτ hloc hfr
   obtain ⟨Vs, hdvr, hVj, hOK, hunit⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.ValRing.exists_dvr_of_padic_embedding X.K ℓ j
   let V : Subring X.K := Vs.toSubring
-  haveI : IsDiscreteValuationRing V := hdvr
-  haveI : IsFractionRing V X.K := (inferInstance : IsFractionRing Vs X.K)
+  have : IsDiscreteValuationRing V := hdvr
+  have : IsFractionRing V X.K := (inferInstance : IsFractionRing Vs X.K)
   have hj : ∀ a : X.K, ‖j a‖ ≤ 1 ↔ a ∈ V := hVj
   have hOK' : ∀ s : 𝓞 X.K, (s : X.K) ∈ V := hOK
   obtain ⟨f, b, hf, hb⟩ := _root_.GlobalTheory.CompanionTheory.Relay.exists_local_basis_cm_order E H ℓ ℓ.prop

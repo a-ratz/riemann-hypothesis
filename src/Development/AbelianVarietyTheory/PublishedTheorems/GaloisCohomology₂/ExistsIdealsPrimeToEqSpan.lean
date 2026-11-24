@@ -107,17 +107,17 @@ abbrev ex (𝔪 : Ideal (𝓞 E)) (v : HeightOneSpectrum (𝓞 E)) : ℤ :=
 theorem ex_eq_zero_iff {𝔪 : Ideal (𝓞 E)} (hm : 𝔪 ≠ ⊥) (v : HeightOneSpectrum (𝓞 E)) :
     ex 𝔪 v = 0 ↔ ¬ v.asIdeal ∣ 𝔪 := by
   classical
-  rw [ex, FractionalIdeal.count_coe E v hm, ← Associates.count_ne_zero_iff_dvd hm v.irreducible, not_not]
+  rw [ex, FractionalIdeal.count_coeIdeal E v hm, ← Associates.count_ne_zero_iff_dvd hm v.irreducible, not_not]
   norm_cast
 
 theorem exp_ex_le_one (𝔪 : Ideal (𝓞 E)) (v : HeightOneSpectrum (𝓞 E)) : exp (-ex 𝔪 v) ≤ 1 := by
-  have := FractionalIdeal.count_coe_nonneg E v 𝔪
+  have := FractionalIdeal.count_coeIdeal_nonneg E v 𝔪
   rw [← exp_zero, exp_le_exp]
   exact neg_nonpos.2 this
 
 theorem exp_ex_lt_one {𝔪 : Ideal (𝓞 E)} (hm : 𝔪 ≠ ⊥) {v : HeightOneSpectrum (𝓞 E)} (hv : v.asIdeal ∣ 𝔪) :
     exp (-ex 𝔪 v) < 1 := by
-  have h1 : 0 ≤ ex 𝔪 v := FractionalIdeal.count_coe_nonneg E v 𝔪
+  have h1 : 0 ≤ ex 𝔪 v := FractionalIdeal.count_coeIdeal_nonneg E v 𝔪
   have h2 : ex 𝔪 v ≠ 0 := fun h => (ex_eq_zero_iff hm v).1 h hv
   rw [← exp_zero, exp_lt_exp]
   omega
@@ -273,7 +273,7 @@ theorem exists_quot {𝔪 : Ideal (𝓞 E)} (hm : 𝔪 ≠ ⊥) (k : Eˣ) (hk : 
     rw [← ex_mul hm hD]; exact hβ v
   have h1 : ∀ v : HeightOneSpectrum (𝓞 E), v.asIdeal ∣ 𝔪 → Valued.v (at' v β - 1) ≤ exp (-ex 𝔪 v) := fun v hv => by
     have := hβ' v
-    simp only [g, if_pos hv] at this
+    simp only [g, ite_eq_left hv] at this
     rw [Valuation.map_sub_swap, neg_add, exp_add] at this
     exact this.trans (mul_le_of_le_one_right' (exp_ex_le_one _ v))
   have hint : ∀ v : HeightOneSpectrum (𝓞 E), v.valuation E ((k : E) * β) ≤ 1 := fun v => by
@@ -282,7 +282,7 @@ theorem exists_quot {𝔪 : Ideal (𝓞 E)} (hm : 𝔪 ≠ ⊥) (k : Eˣ) (hk : 
     · rw [show Valued.v (algebraMap E (v.adicCompletion E) (k : E)) = 1 from (hk v hv).1, one_mul]
       exact at'_le_one v β
     · have := hβ' v
-      simp only [g, if_neg hv] at this
+      simp only [g, ite_eq_right hv] at this
       rw [zero_sub, Valuation.map_neg, (ex_eq_zero_iff hm v).2 hv, zero_add, ex,
         FractionalIdeal.coeIdeal_span_singleton, ← valuation_eq_exp_neg_count v hdE, ← valued_algebraMap] at this
       refine (mul_le_mul_right this _).trans ?_

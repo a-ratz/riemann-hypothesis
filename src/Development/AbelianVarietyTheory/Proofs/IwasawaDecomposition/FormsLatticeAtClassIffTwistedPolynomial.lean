@@ -126,7 +126,7 @@ theorem lift_ratSpan (D : D7) {n : ℕ} (lam : D.what₂.Tau → DomWeight n) (P
         exact Submodule.subset_span ⟨f τ, hf τ, rfl⟩
       exact Formalism.GradedWeylDivisibility.weylLeDual D.what₂.LL n n le_rfl _ (GlobalTheory.FormsSharpTie.natW_antitone (lam τ)) h1
     · have hc : D.what₂.embLL.comp (Int.castRingHom D.what₂.LL) = Int.castRingHom ℂ := RingHom.ext_int _ _
-      simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe, MvPolynomial.smul_eq_C_mul, map_mul,
+      simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass, MvPolynomial.smul_eq_C_mul, map_mul,
         MvPolynomial.map_C, Formalism.L2.Forms.ten, map_prod, MvPolynomial.map_rename, MvPolynomial.map_map, hc]
   obtain ⟨Q0, hQ0, e⟩ := hle hP
   exact ⟨Q0, hQ0, e⟩
@@ -861,7 +861,7 @@ theorem detPow_mul_mem_delW_iff : ∀ (p : ℕ) [Fact p.Prime] (T : Type) [Finty
     obtain ⟨G, hGm, hGe⟩ := AddSubgroup.mem_map.mp (delW_shift_le_map p T N ν k h)
     obtain ⟨hG, hR⟩ := AddSubgroup.mem_inf.mp hGm
     obtain ⟨Ψ, rfl⟩ := AddMonoidHom.mem_range.mp hR
-    haveI : Infinite ℂ_[p] := CharZero.infinite _
+    have : Infinite ℂ_[p] := CharZero.infinite _
     have hpoly : detPoly ℂ_[p] N k * Ψ = detPoly ℂ_[p] N k * Φ := by
       apply MvPolynomial.funext
       intro x
@@ -1003,8 +1003,8 @@ theorem keyCoord {L K : Type} [Field L] [Field K] [Module.Flat ℤ K] (ψ : L �
   obtain ⟨m2, r2, g2, h2, hR2⟩ := exists_fin_of_mem (fun _ h => neg_mem h) hc
   set T : Finset (MvPolynomial σ ℤ) := Finset.univ.image g1 ∪ Finset.univ.image g2 with hT
   set N : Submodule ℤ (MvPolynomial σ ℤ) := Submodule.span ℤ (T : Set (MvPolynomial σ ℤ)) with hN
-  haveI : Module.Finite ℤ N := Module.Finite.span_of_finite ℤ T.finite_toSet
-  haveI : Module.Free ℤ N := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ N := Module.Finite.span_of_finite ℤ T.finite_toSet
+  have : Module.Free ℤ N := Module.free_of_finite_type_torsion_free'
   set b := Module.Free.chooseBasis ℤ N with hb
   set e : Module.Free.ChooseBasisIndex ℤ N → MvPolynomial σ ℤ := fun k => (b k : MvPolynomial σ ℤ) with he_def
   have he : LinearIndependent ℤ e := b.linearIndependent.map' N.subtype N.ker_subtype
@@ -1015,7 +1015,7 @@ theorem keyCoord {L K : Type} [Field L] [Field K] [Module.Flat ℤ K] (ψ : L �
     have := congrArg Subtype.val (b.sum_repr ⟨g, hg⟩)
     rw [Submodule.coe_sum] at this
     simp only [SetLike.val_smul] at this
-    simp only [crd, dif_pos hg, e]
+    simp only [crd, dite_eq_left hg, e]
     exact this.symm
   have mapExp : ∀ (K' : Type) [CommRing K'], ∀ g ∈ N,
       map (Int.castRingHom K') g = ∑ k, (crd g k : K') • map (Int.castRingHom K') (e k) := by
@@ -1245,7 +1245,7 @@ theorem basis_change : ∀ (D : D7) {p : ℕ} [Fact p.Prime] (lam : TaylorLogMet
   have hm : ∀ x, TaylorLogMetric.embT D τ x ∈ TaylorLogMetric.Qbar := fun x =>
     mem_algebraicClosure_iff.2 ((Algebra.IsAlgebraic.isAlgebraic (R := ℚ) x).algHom (TaylorLogMetric.embT D τ).toRatAlgHom)
   set ρ : D.host.E →+* ℂ_[p] := lam.comp ((TaylorLogMetric.embT D τ).codRestrict TaylorLogMetric.Qbar hm) with hρ
-  have hρe : ∀ x, TaylorLogMetric.tauEmb D lam τ x = ρ x := fun x => dif_pos (hm x)
+  have hρe : ∀ x, TaylorLogMetric.tauEmb D lam τ x = ρ x := fun x => dite_eq_left (hm x)
   have hint : ∀ y : 𝓞 D.host.E, ‖ρ (y : D.host.E)‖ ≤ 1 := fun y =>
     norm_le_one_of_isIntegral_int (map_isIntegral_int ρ y.isIntegral_coe)
   have hunit : ∀ s : ℕ, ¬ p ∣ s → ‖ρ (s : D.host.E)‖ = 1 := fun s hs => by

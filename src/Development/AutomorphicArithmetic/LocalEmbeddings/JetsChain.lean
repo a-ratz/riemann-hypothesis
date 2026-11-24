@@ -91,7 +91,7 @@ theorem exists_haar (V : HSp D) (hV : IsDefiniteSpace V) : ∃ κ : Measure (Gin
   have hSC := hT.2.1
   have hB := hT.2.2.2.1
   have hG := hT.2.2.2.2.1
-  haveI : CompactSpace (GinfC V) := isCompact_iff_compactSpace.1 (Eqv.isCompact_GinfC hV.1 hV.2)
+  have : CompactSpace (GinfC V) := isCompact_iff_compactSpace.1 (Eqv.isCompact_GinfC hV.1 hV.2)
   exact ⟨Measure.haarMeasure ⊤, Measure.isHaarMeasure_haarMeasure _, ⟨by
     simpa using Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (GinfC V)))⟩⟩
 
@@ -105,7 +105,7 @@ theorem exists_fine (V : HSp D) {K : Subgroup (GL (Fin V.rank) (Lev.EAf D))} (hK
     rw [← finG_finOf, Subgroup.mem_map_iff_mem (ClassFin.finG_injective V)]
     rfl
   have hc : Continuous fun g => (finOf V g : GA D V) :=
-    continuous_subtype_val.comp (continuous_snd.comp (GlobalTheory.AdelicSplit.splitEquiv V).symm.continuous)
+    continuous_subtypeVal.comp (continuous_snd.comp (GlobalTheory.AdelicSplit.splitEquiv V).symm.continuous)
   have hl : ∀ k, k ∈ Lev.levA V (K ⊓ (U.comap (GfC V).subtype).map (finG V)) ↔ k ∈ Lev.levA V K ∧ k ∈ U := fun k => by
     rw [Lev.mem_levA, Lev.mem_levA, Subgroup.mem_inf, key, and_assoc]
     refine and_congr_right fun hk => ?_
@@ -132,9 +132,9 @@ def ext {P : ℕ → Type} [∀ j, One (P j)] (n : ℕ) (x : ∀ j : Fin n, P j)
 theorem finsum_snoc {A : ℕ → Type} {M : Type} [AddCommMonoid M] (n : ℕ) (hA : ∀ j < n + 1, Finite (A j))
     (f : (∀ j : Fin (n + 1), A j) → M) :
     ∑ᶠ c, f c = ∑ᶠ a : A n, ∑ᶠ c : (∀ j : Fin n, A j), f (Fin.snoc (α := fun j : Fin (n + 1) => A j) c a) := by
-  letI : ∀ j : Fin (n + 1), Fintype (A j) := fun j => @Fintype.ofFinite _ (hA j j.2)
-  letI : ∀ j : Fin n, Fintype (A j) := fun j => @Fintype.ofFinite _ (hA j (by omega))
-  letI : Fintype (A n) := @Fintype.ofFinite _ (hA n (by omega))
+  let : ∀ j : Fin (n + 1), Fintype (A j) := fun j => @Fintype.ofFinite _ (hA j j.2)
+  let : ∀ j : Fin n, Fintype (A j) := fun j => @Fintype.ofFinite _ (hA j (by omega))
+  let : Fintype (A n) := @Fintype.ofFinite _ (hA n (by omega))
   simp only [finsum_eq_sum_of_fintype]
   rw [← Fintype.sum_prod_type']
   exact (Fintype.sum_equiv (Fin.snocEquiv fun j : Fin (n + 1) => A j) _ _ fun _ => rfl).symm

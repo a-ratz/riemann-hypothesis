@@ -239,7 +239,7 @@ theorem mem_GQ_iff (g : GA D S) : g ∈ GQ S ↔ mt S g ∈ ratMx D S.rank S.ran
     exact ⟨⟨γ, _, mul_eq_one_comm.1 h1, h1⟩, h, Units.ext hγ⟩
 
 theorem continuous_mt : Continuous (mt S) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_of_mt {X : Type} [TopologicalSpace X] {φ : X → GA D S} (h : Continuous fun x => mt S (φ x)) :
     Continuous φ := by
@@ -286,7 +286,7 @@ theorem lattice_Mx : IsTopologicalAddGroup (Mx D m n) ∧ LocallyCompactSpace (M
 
 theorem exists_isCovolOne : ∃ μ 𝓕, IsCovolOne (ratMx D m n) μ 𝓕 := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   exact (GlobalTheory.exists_normalise_meanSquare_of_cocompact (Mx D m n) (ratMx D m n) K hK hKc (fun _ => 1) continuous_const
     (fun h => one_ne_zero (congrFun h 0)) (fun _ _ _ => rfl)).1
 
@@ -295,14 +295,14 @@ variable {D m n}
 theorem covolOne_measure_eq {μ μ' : Measure (Mx D m n)} {𝓕 𝓕' : Set (Mx D m n)}
     (h : IsCovolOne (ratMx D m n) μ 𝓕) (h' : IsCovolOne (ratMx D m n) μ' 𝓕') : μ' = μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨hμ, hF, h1⟩ := h
   obtain ⟨hμ', hF', h1'⟩ := h'
   have e := Measure.isAddLeftInvariant_eq_smul μ' μ
   have hF2 : IsAddFundamentalDomain (ratMx D m n) 𝓕 μ' := hF.mono (by rw [e]; exact Measure.smul_absolutelyContinuous)
   have h2 : μ' 𝓕 = 1 := (hF2.measure_eq hF').trans h1'
-  rw [e, Measure.smul_apply, h1, ENNReal.smul_def, smul_eq_mul, mul_one, ENNReal.coe_eq_one] at h2
+  rw [e, smul_apply, h1, ENNReal.smul_def, smul_eq_mul, mul_one, ENNReal.coe_eq_one] at h2
   rw [e, h2, one_smul]
 
 theorem covolOne_integral_eq {μ μ' : Measure (Mx D m n)} {𝓕 𝓕' : Set (Mx D m n)}
@@ -310,17 +310,17 @@ theorem covolOne_integral_eq {μ μ' : Measure (Mx D m n)} {𝓕 𝓕' : Set (Mx
     (hφ : ∀ γ ∈ ratMx D m n, ∀ a, φ (γ + a) = φ a) : ∫ a in 𝓕', φ a ∂μ' = ∫ a in 𝓕, φ a ∂μ := by
   obtain rfl := covolOne_measure_eq h h'
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := h.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := h.1
   exact h'.2.1.setIntegral_eq h.2.1 fun γ a => hφ γ γ.2 a
 
 theorem covolOne_integrableOn {μ : Measure (Mx D m n)} {𝓕 : Set (Mx D m n)}
     (h : IsCovolOne (ratMx D m n) μ 𝓕) (φ : Mx D m n → ℂ) (hc : Continuous φ)
     (hφ : ∀ γ ∈ ratMx D m n, ∀ a, φ (γ + a) = φ a) : IntegrableOn φ 𝓕 μ := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h.2.2]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h.2.2]; exact ENNReal.one_lt_top⟩
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hc.continuousOn
   refine Integrable.of_bound hc.measurable.aestronglyMeasurable C (Filter.Eventually.of_forall fun a => ?_)
   obtain ⟨γ, hγ, ha⟩ := hKc a
@@ -331,9 +331,9 @@ theorem covolOne_integral_add {μ : Measure (Mx D m n)} {𝓕 : Set (Mx D m n)}
     (h : IsCovolOne (ratMx D m n) μ 𝓕) (φ : Mx D m n → ℂ)
     (hφ : ∀ γ ∈ ratMx D m n, ∀ a, φ (γ + a) = φ a) (u : Mx D m n) : ∫ a in 𝓕, φ (a + u) ∂μ = ∫ a in 𝓕, φ a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := h.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := h.1
   have h1 : IsAddFundamentalDomain (ratMx D m n) (u +ᵥ 𝓕) μ := h.2.1.vadd_of_comm u
   rw [h.2.1.setIntegral_eq h1 (f := φ) fun γ w => hφ γ γ.2 w]
   have h2 := (measurePreserving_add_left μ u).setIntegral_image_emb (measurableEmbedding_addLeft u) φ 𝓕

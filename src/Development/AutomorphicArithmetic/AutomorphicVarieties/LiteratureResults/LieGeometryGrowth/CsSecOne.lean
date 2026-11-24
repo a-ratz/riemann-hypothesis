@@ -117,7 +117,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.secOne :
   have hk1 : sand k⁻¹ (hOne E a) = hOne E a := by
     have h0 : sand k (hOne E a) = hOne E a := hs.self_of_nhds
     conv_lhs => rw [← h0]
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]; rfl
   have h1 : ∀ i j, ContDiffAt ℝ ∞ (fun p => (σ p * k⁻¹).val i j) (hOne E a) := fun i j => by
     simp only [Units.val_mul, Matrix.mul_apply]
     exact ContDiffAt.sum fun l _ => (contDiffAt_pi.1 (contDiffAt_pi.1 hσ i) l).mul contDiffAt_const
@@ -129,4 +129,4 @@ theorem UpperTheory.V.Lit.Geo.Cs.secOne :
   · exact clm_smooth fun v => sand_smooth h1 v
   · exact clm_smooth fun v => sand_smooth (σ := fun p => (σ p * k⁻¹)⁻¹) h3 v
   · filter_upwards [hs] with p hp
-    rw [map_mul, ContinuousLinearMap.mul_apply, hk1, hp]
+    rw [map_mul, mul_apply_eq_comp, hk1, hp]

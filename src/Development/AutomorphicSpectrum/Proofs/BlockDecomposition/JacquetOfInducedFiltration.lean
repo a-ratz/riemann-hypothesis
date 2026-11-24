@@ -1193,7 +1193,7 @@ theorem leviEmb_apply_ne' (e' : (Σ j, m' j) ≃ Fin N) (g : Levi k m') {x y : F
     (h : blk e' x ≠ blk e' y) : (leviEmb k e' g : Matrix (Fin N) (Fin N) k) x y = 0 := by
   simp only [leviEmb, MonoidHom.coe_toHomUnits, MonoidHom.coe_mk, OneHom.coe_mk, Matrix.reindex_apply,
     Matrix.submatrix_apply, Matrix.blockDiagonal'_apply]
-  exact dif_neg h
+  exact dite_eq_right h
 
 def parabolicBlockPair (e' : (Σ j, m' j) ≃ Fin N) (γ : Fin N → ℕ) (s : ParabolicIndex N γ) : Lex (β' × β') :=
   toLex (blk e' s.1.1, blk e' s.1.2)
@@ -1274,7 +1274,7 @@ theorem block_det_of_le {a c : β'} (hac : a ≤ c) :
 include hγ in
 theorem block_det_of_not_le {a c : β'} (hac : ¬ a ≤ c) :
     ((LinearMap.toMatrix' (adCoord p)).toSquareBlock (parabolicBlockPair e' γ) (toLex (a, c))).det = 1 := by
-  haveI : IsEmpty {s : ParabolicIndex N γ // parabolicBlockPair e' γ s = toLex (a, c)} := ⟨fun s => by
+  have : IsEmpty {s : ParabolicIndex N γ // parabolicBlockPair e' γ s = toLex (a, c)} := ⟨fun s => by
     have hs := s.2
     simp only [parabolicBlockPair, toLex_inj, Prod.mk.injEq] at hs
     apply s.1.2
@@ -1292,7 +1292,7 @@ theorem det_adLie_levi :
   rw [det_adLie_eq, (adCoord_blockTriangular g p hp).det,
     Finset.prod_subset (Finset.subset_univ _) (fun x _ hx => ?hz)]
   case hz =>
-    haveI : IsEmpty {s : ParabolicIndex N γ // parabolicBlockPair e' γ s = x} :=
+    have : IsEmpty {s : ParabolicIndex N γ // parabolicBlockPair e' γ s = x} :=
       ⟨fun s => hx (Finset.mem_image.mpr ⟨s.1, Finset.mem_univ _, s.2⟩)⟩
     exact Matrix.det_isEmpty
   rw [← Equiv.prod_comp toLex, Fintype.prod_prod_type]
@@ -1303,10 +1303,10 @@ theorem det_adLie_levi :
   rw [Units.coe_prod]
   refine Finset.prod_congr rfl fun c _ => ?_
   by_cases hac : a ≤ c
-  · rw [if_pos hac, block_det_of_le hγ g p hp hac, ← Matrix.GeneralLinearGroup.val_det_apply,
+  · rw [ite_eq_left hac, block_det_of_le hγ g p hp hac, ← Matrix.GeneralLinearGroup.val_det_apply,
       ← Matrix.GeneralLinearGroup.val_det_apply, map_inv, Units.val_mul, Units.val_pow_eq_pow_val,
       Units.val_pow_eq_pow_val]
-  · rw [if_neg hac, block_det_of_not_le hγ p hac, Units.val_one]
+  · rw [ite_eq_right hac, block_det_of_not_le hγ p hac, Units.val_one]
 
 end DetAd
 
@@ -1551,10 +1551,10 @@ theorem leviEquiv : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
     constructor
     · refine continuous_matrix fun i j => ?_
       simp only [Function.comp_apply, ψ, Matrix.blockDiag'_apply, Matrix.submatrix_apply]
-      exact (Units.continuous_val.comp continuous_subtype_val).matrix_elem _ _
+      exact (Units.continuous_val.comp continuous_subtypeVal).matrix_elem _ _
     · refine continuous_matrix fun i j => ?_
       simp only [ψ, Units.inv_mk, Matrix.blockDiag'_apply, Matrix.submatrix_apply]
-      exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_elem _ _
+      exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_elem _ _
 
 end GlobalTheory.CompanionTheory.LeviIso
 end -- clump:auto

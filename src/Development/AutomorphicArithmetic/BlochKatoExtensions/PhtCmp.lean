@@ -82,14 +82,14 @@ private theorem cj_embedding {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [N
     by_cases hy : y = 0
     · simp [hy]
     · have h0 : 0 < ‖j₁ y‖ := norm_pos_iff.2 ((map_ne_zero j₁).2 hy)
-      have hv : 0 < A.valuation y := zero_lt_iff.2 ((map_ne_zero _).2 hy)
+      have hv : 0 < A.valuation y := pos_iff_ne_zero.2 ((map_ne_zero _).2 hy)
       rw [← not_le, ← not_le, ← inv_le_one₀ hv, ← inv_le_one₀ h0, ← map_inv₀, ← norm_inv, ← map_inv₀,
         A.valuation_le_one_iff, hj₁]
   have hn := cj_norm_eq τ (j₁.comp (algebraMap E Ω)) w hw (fun x => (hτ x).symm)
     (fun x => (hlt _).symm.trans (hA x))
-  letI : Algebra E (Om l) := τ.toAlgebra
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-  haveI : IsGalois E Ω := IsAlgClosure.isGalois E Ω
+  let : Algebra E (Om l) := τ.toAlgebra
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : IsGalois E Ω := IsAlgClosure.isGalois E Ω
   let j₀ : Ω →ₐ[E] Om l := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

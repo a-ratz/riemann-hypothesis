@@ -89,7 +89,7 @@ theorem finrank_weylZ {r : ℕ} (ν : Fin r → ℕ) (hν : Antitone ν) :
       rw [map_zsmul]
       exact zsmul_mem (Submodule.subset_span (Set.mem_range_self (f := v) i) : v i ∈ Submodule.span ℚ (Set.range v)) _
   obtain ⟨b', hb', -⟩ := Formalism.GradedWeylDivisibility.sSBasis ℚ r r ν
-  haveI : Fintype (Formalism.GradedWeylDivisibility.ssIdx r r ν) := (Formalism.GradedWeylDivisibility.sSIdxFinite r r ν).fintype
+  have : Fintype (Formalism.GradedWeylDivisibility.ssIdx r r ν) := (Formalism.GradedWeylDivisibility.sSIdxFinite r r ν).fintype
   have h1 := finrank_span_eq_card hvQ
   have h2 := finrank_span_eq_card hb'.1
   rw [hspan, Formalism.L2.G.Model.sw_weyl_eq ℚ r r le_rfl ν hν, ← hb'.2.1] at h1
@@ -113,7 +113,7 @@ theorem finrank_forms_level_zero {D : D7} {u : D.what₂.Word} (T : Forms0 D u) 
     LinearEquiv.piCongrRight fun _ => LinearEquiv.funCongrLeft ℂ ℂ T.val0.eY.symm
   have hfi := Formalism.MainNotions.Ext.Lw.fiC_eq_pi T.cls0.lev (embT D) ((D.fm u).lam 0) T.cls0.y T.cls0.y_bij
     (fun c γ hγ => by
-      haveI := hst c
+      have := hst c
       obtain ⟨s, hs⟩ := (T.cls0.stabI_range c γ).2 hγ
       rw [← hs, Subsingleton.elim s 1, map_one])
   have hmap : (D.mem u).A.Mu0.map (e : _ →ₗ[ℂ] _) = FiC T.cls0.lev (embT D) ((D.fm u).lam 0) T.cls0.y := by

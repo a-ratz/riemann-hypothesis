@@ -86,7 +86,7 @@ theorem alg_inj : Function.Injective (algebraMap O LL) := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro d hd
   obtain ⟨e, he, hL⟩ := W.one_line
-  haveI := W.one.L.free
+  have := W.one.L.free
   let β := Module.Free.chooseBasis O W.one.L.T
   have hkill : ∀ t : W.one.L.T, d • t = 0 := by
     intro t
@@ -432,10 +432,10 @@ theorem LiftsAtT.mono {f : W.EE} {e e' : ℕ} (he : e ≤ e') (h : LiftsAtT W A 
   · rw [TypesA.map_smulA, ← smul_sub]
     refine TypesA.RepVV_congr W (TypesA.RepVV_nat W N hR) rfl fun k => ?_
     rcases eq_or_ne k k₀ with rfl | hk
-    · rw [if_pos rfl, if_pos rfl]
+    · rw [ite_eq_left rfl, ite_eq_left rfl]
       unfold lE
       rw [hN, Nat.cast_pow, ← mul_assoc, ← pow_add, Nat.sub_add_cancel he]
-    · rw [if_neg hk, if_neg hk, mul_zero]
+    · rw [ite_eq_right hk, ite_eq_right hk, mul_zero]
 
 theorem LiftsAtT.add {f f' : W.EE} {e : ℕ} (h : LiftsAtT W A F c b sol k₀ f e)
     (h' : LiftsAtT W A F c b sol k₀ f' e) : LiftsAtT W A F c b sol k₀ (f + f') e := by
@@ -453,7 +453,7 @@ theorem LiftsAtT.add {f f' : W.EE} {e : ℕ} (h : LiftsAtT W A F c b sol k₀ f 
     exact TypesA.inMultiple_add W hP hP'
   · refine TypesA.RepVV_congr W (TypesA.RepVV_add W hR hR') (by rw [map_add (f := _)]; abel) fun k => ?_
     rcases eq_or_ne k k₀ with rfl | hk
-    · rw [if_pos rfl, if_pos rfl, if_pos rfl, mul_add]
-    · rw [if_neg hk, if_neg hk, if_neg hk, add_zero]
+    · rw [ite_eq_left rfl, ite_eq_left rfl, ite_eq_left rfl, mul_add]
+    · rw [ite_eq_right hk, ite_eq_right hk, ite_eq_right hk, add_zero]
 
 end Formalism.MainNotions.N.FrobeniusPowerSeries

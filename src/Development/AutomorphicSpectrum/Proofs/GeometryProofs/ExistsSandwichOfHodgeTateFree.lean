@@ -82,8 +82,8 @@ open scoped CategoryTheory.Obj TensorProduct Pointwise in
 theorem _root_.GlobalTheory.Models.InhabZOn.exists_dim_triple {E : Type} [Field E] [NumberField E]
     [IsCMField E] {H : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {S : Scheme.{0}}
     [ConnectedSpace S] (t : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.SAB H S) : ∃ d, SmoothOfRelativeDimension d t.G.hom := by
-  haveI : Smooth t.G.hom := t.semi.smooth
-  haveI : GeometricallyIntegral t.G.hom :=
+  have : Smooth t.G.hom := t.semi.smooth
+  have : GeometricallyIntegral t.G.hom :=
     _root_.GlobalTheory.geometricallyIntegral_of_isSemiAbelian (h := t.semi) _
   let e : S ⟶ t.G.left := (η[t.G]).left
   have he : e ≫ t.G.hom = 𝟙 S := Over.w (η[t.G])
@@ -95,7 +95,7 @@ theorem _root_.GlobalTheory.Models.InhabZOn.exists_dim_triple {E : Type} [Field 
   have hsec : _root_.IsPreconnected (Set.range e) :=
     isPreconnected_range (Scheme.Hom.continuous _)
   obtain ⟨s₀⟩ := (inferInstance : Nonempty S)
-  haveI : PreconnectedSpace t.G.left := by
+  have : PreconnectedSpace t.G.left := by
     refine ⟨isPreconnected_of_forall (e s₀) fun x _ => ?_⟩
     refine ⟨Set.range e ∪ t.G.hom ⁻¹' {t.G.hom x}, Set.subset_univ _, Or.inl ⟨s₀, rfl⟩,
       Or.inr rfl, ?_⟩
@@ -225,7 +225,7 @@ theorem sandwich_of_htFree : FarguesHodgeTate → ∀ (E : Type) [Field E] [Numb
     rw [← ho x]
     exact ⟨fun ⟨z, hz⟩ => hz ▸ z.2, fun h => ⟨⟨x, h⟩, rfl⟩⟩
   obtain ⟨hchar, -, -, -, -, -, hch⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hcpt_generic_point E H D l Xo c O β Y S Ω K J y 𝔐 p hpS o ho'
-  letI := hchar
+  let := hchar
   have hPT : PointHT := _root_.GlobalTheory.CompanionTheory.Ar.HT.Fargues.pointHT hF
   obtain ⟨Dc, hfam, htest⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hodgeTate_family_exists E H D l Xo c O β Y S Ω K J y 𝔐 p hpS hpq o ho'
   obtain ⟨hproj, -, κ, hκ, hκA⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.family_proj E H D l Xo c O β Y S Ω K J y 𝔐 p hpS hpq o ho' Dc hfam hfree

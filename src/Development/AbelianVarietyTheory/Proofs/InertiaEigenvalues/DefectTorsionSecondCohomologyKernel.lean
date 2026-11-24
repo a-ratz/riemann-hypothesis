@@ -156,32 +156,32 @@ theorem jD_aN_eq_range_gen {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAi
 
 theorem jD_XN_closed : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL) (T : Lt K LL), IsCrys ((D.loc l).PD K) T.ρ → ∃ τ : TopologicalSpace (TW (RW LL) T), letI := τ; T2Space (TW (RW LL) T) ∧ IsTopologicalAddGroup (TW (RW LL) T) ∧ (∀ b : TW (RW LL) T, Continuous (fun g : ↥(GK K) => TWact ((D.locA l).gRW LL (g : GQ l)) T g b)) ∧ Continuous (fun t : ↥T.L.T => (1 : RW LL) ⊗ₜ[↥(OL LL)] t) ∧ IsClosed (((F l).E K s LL h).tie.jD T '' (aN ((HW l).W K s LL h) T ((HW l).W K s LL h).X : Set (((HW l).W K s LL h).DD T))) := by
   intro D HW F l _ K s LL h T _
-  haveI := LL.2
-  haveI : Module.Free ℤ_[l] ↥(OL LL) :=
+  have := LL.2
+  have : Module.Free ℤ_[l] ↥(OL LL) :=
     (GlobalTheory.Per.integers_completeDVR l LL).elim fun _ h => h.2.2.2.1
-  haveI : Module.Finite ℤ_[l] ↥(OL LL) :=
+  have : Module.Finite ℤ_[l] ↥(OL LL) :=
     (GlobalTheory.Per.integers_completeDVR l LL).elim fun _ h => h.2.2.2.2.1
   obtain ⟨d, ⟨b⟩⟩ : ∃ d : ℕ, Nonempty (LatB T d) := GlobalTheory.Cyc.exists_basis_lat (R := ℤ_[l]) T
   let bO := Module.finBasis ℤ_[l] ↥(OL LL)
-  letI τ := twTop T b
-  letI tW : TopologicalSpace (WCb l) := wTop l
-  letI := cbTop l
-  haveI := hausdorff_tilt_witt (l := l)
-  haveI := ring_cb (l := l)
-  haveI : T2Space (WCb l) := GlobalTheory.WeakTop.t2Space_wittVector_product
-  haveI : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
-  letI := zlMod T
-  haveI := zlTower T
+  let τ := twTop T b
+  let tW : TopologicalSpace (WCb l) := wTop l
+  let := cbTop l
+  have := hausdorff_tilt_witt (l := l)
+  have := ring_cb (l := l)
+  have : T2Space (WCb l) := GlobalTheory.WeakTop.t2Space_wittVector_product
+  have : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
+  let := zlMod T
+  have := zlTower T
   have hc : Continuous (GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b) := continuous_induced_dom
-  haveI hT2 : T2Space (TW (RW LL) T) :=
+  have hT2 : T2Space (TW (RW LL) T) :=
     T2Space.of_injective_continuous (GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b).injective hc
-  haveI hAG : IsTopologicalAddGroup (TW (RW LL) T) :=
-    Topology.IsInducing.topologicalAddGroup (GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b) ⟨rfl⟩
+  have hAG : IsTopologicalAddGroup (TW (RW LL) T) :=
+    Topology.IsInducing.isTopologicalAddGroup (GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b) ⟨rfl⟩
   refine ⟨τ, hT2, hAG, _root_.GlobalTheory.WeakClosed.continuous_orbit_twTop (D.locA l) T b, _root_.GlobalTheory.WeakClosed.continuous_one_tmul T b, ?_⟩
   obtain ⟨r, y, hy⟩ := jD_aN_eq_range_gen ((F l).E K s LL h) T ((HW l).W K s LL h).X
   rw [hy]
-  letI := aTop (K := K) bO
-  haveI := _root_.GlobalTheory.WeakClosed.compactSpace_aTop (K := K) bO
+  let := aTop (K := K) bO
+  have := _root_.GlobalTheory.WeakClosed.compactSpace_aTop (K := K) bO
   refine (isCompact_range ?_).isClosed
   refine continuous_finsetSum _ fun i _ => ?_
   exact (_root_.GlobalTheory.WeakClosed.continuous_inclR_io_smul ((F l).E K s LL h) T b bO (y i)).comp (continuous_apply i)
@@ -334,7 +334,7 @@ theorem zval : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
     c.2.1.1.subtype_mk fun g => (liftC g).2
   have hZc : Continuous Z :=
     Continuous.add (M := M) (hemb.comp hLiftC)
-      (Continuous.sub (G := M) ((hact b).comp continuous_subtype_val) continuous_const)
+      (Continuous.sub (G := M) ((hact b).comp continuous_subtypeVal) continuous_const)
   let k : ↥T.L.T → M := fun t => (1 : RW LL) ⊗ₜ[↥(OL LL)] t
   have ha1t (g : ↥H) (t : ↥T.L.T) : a g (k t) = k (T.actT g.1 t) :=
     GlobalTheory.HerrClassMaps.TWact_one_tmul (r (g.1 : GQ l)) T g.1 t
@@ -397,7 +397,7 @@ theorem exists_ext [IsTopologicalRing LL] (hinj : Function.Injective (algebraMap
         change Continuous fun x : T.V => ((x, 0) : T.V × LL)
         exact continuous_id.prodMk continuous_const
       T_le := fun x hx => ⟨hx, 0, map_zero _⟩ }
-  haveI : ContinuousSMul LL Z.V := IsModuleTopology.toContinuousSMul LL Z.V
+  have : ContinuousSMul LL Z.V := IsModuleTopology.toContinuousSMul LL Z.V
   let π : LatHom Yt.L Z.L :=
     { f := (LinearMap.toSpanSingleton LL Z.V (e₀ : Z.V)).comp (LinearMap.snd LL T.V LL)
       equiv := fun g x => by
@@ -533,7 +533,7 @@ end Generic
 
 theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let W := (HW l).W K s LL h; let E := ((F l).E K s LL h).tie; let C := Cm l; ∀ T : Lt K LL, IsCrys ((D.loc l).PD K) T.ρ → W.GKs = ⊤ → ∀ (M hh : Let K → ℕ), JumpsLet W T M hh → ∀ κ ∈ H1fIntegralCyclotomicLayer W T, ∃ (c : ℕ) (y z : W.DD T) (hyz : (y, z) ∈ W.divisibleCocycles T), y ∈ invN W T (W.Q ^ mx M) ∧ z ∈ aN W T W.X ∧ W.cl T ⟨(y, z), hyz⟩ = (l ^ c : ℕ) • κ := by
   intro D HW F Cm l _ K s LL h W E C T hT hGKs M hh hJ κ hκ
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   refine generic E (fun a b hab => Subtype.ext hab) (GlobalTheory.Cyc.DictKs.algebraMap_RW_inj LL)
     (GlobalTheory.Cyc.DictKs.dense_gen (D.loc l) (D.locA l) K s LL h _ ((HW l).W_s K s LL h)) T hGKs (mx M) l
     ?_ ?_ (_root_.GlobalTheory.NL.NygaardFrobeniusPower.crystalline_extension_integral_cocycle_all_places D HW F Cm l K s LL h T M hh hT hJ) κ hκ
@@ -592,7 +592,7 @@ theorem cocycle_eq {l : ℕ} [Fact l.Prime] {G V LL : Type} [Group G] [Topologic
   have hS : IsClosed (S : Set G) := by
     have : {g | c g = c' g} = ⋂ f : Module.Dual LL V, {g | f (c g) = f (c' g)} := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
       refine ⟨fun h f => by rw [h], fun h => ?_⟩
       rw [← sub_eq_zero, ← Module.forall_dual_apply_eq_zero_iff LL]
       intro f
@@ -636,9 +636,9 @@ theorem cocycle_eq_lat {K LL : FinExt l} (T : Lt K LL) (H : Subgroup ↥(GK K)) 
     (h₀ : lam g₀ = Multiplicative.ofAdd 1)
     (hker : ∀ h, lam h = 1 → (c : ↥H → T.V) h = (c' : ↥H → T.V) h)
     (hg₀ : (c : ↥H → T.V) g₀ = (c' : ↥H → T.V) g₀) : c = c' := by
-  haveI := GlobalTheory.HerrClassMaps.compact_GK K
-  haveI : CompactSpace ↥H := isCompact_iff_compactSpace.1 hH.isCompact
-  haveI := T.mtop
+  have := GlobalTheory.HerrClassMaps.compact_GK K
+  have : CompactSpace ↥H := isCompact_iff_compactSpace.1 hH.isCompact
+  have := T.mtop
   exact Subtype.ext (cocycle_eq (LL := ↥LL.1) (V := T.V) (fun (g : ↥H) (x : T.V) => T.ρ (g : ↥(GK K)) x) c c' c.2.1.1 c'.2.1.1
     (fun x => by simp) c.2.1.2 c'.2.1.2 lam hlam g₀ h₀ hker hg₀)
 
@@ -723,7 +723,7 @@ theorem jump_restrict : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocA
   have := LL.2
   set τ := τ'.comp (IntermediateField.inclusion hle) with hτ
   have hF := isField_dR T
-  haveI := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
+  have := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
   obtain ⟨m, d, k, hA⟩ := exists_adapted (P.PD K) hF ρ (filSpans T K LL ρ (crys T K LL ρ hc).1) τ
   set e' := idem (K := ↥K'.1) P.R.BdR (LL := ↥LL.1) τ' with he'
   set e := idem (K := ↥K.1) P.R.BdR (LL := ↥LL.1) τ with he
@@ -1206,7 +1206,7 @@ theorem not_isUnit_l (P : LocPrime l) (LL : FinExt l) : ¬ IsUnit ((l : ℕ) : �
 
 theorem continuous_incl {K E : FinExt l} (hle : K.1 ≤ E.1) :
     Continuous (Subgroup.inclusion (GK_le hle)) :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 
 def resRep {K LL : FinExt l} (E : FinExt l) (hle : K.1 ≤ E.1) (T : Lt K LL) :
     GRep ↥(GK E) ℚ_[l] ↥LL.1 ↥(OL LL) where
@@ -1230,7 +1230,7 @@ theorem lift_rational (P : LocPrime l) (AI : LocAinf l P) (hP : LocTied l P AI) 
   let a : ↥(GK E) → ↥H := fun g => ⟨Subgroup.inclusion (GK_le hle) g, (hH _).2 g.2⟩
   let b : ↥H → ↥(GK E) := fun g => ⟨((g : ↥(GK K)) : GQ l), (hH _).1 g.2⟩
   have ha : Continuous a := (continuous_incl hle).subtype_mk _
-  have hb : Continuous b := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+  have hb : Continuous b := (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
   have hres := fun (T : Lt K LL) (hT : IsCrys (P.PD K) T.ρ) =>
     (GlobalTheory.Per.TiedRestrict.restrict_crys_deRham l P AI hP K E LL hle T.V T.ρ).1 hT
   have hc' : c₂ ∘ a ∈ finiteCocycles (P.PD E) (resRep E hle T₂).ρ := by

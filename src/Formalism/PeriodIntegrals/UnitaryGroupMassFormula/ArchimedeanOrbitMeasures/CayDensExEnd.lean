@@ -98,12 +98,12 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Local
 theorem lhu_right (m : Measure G) [m.IsHaarMeasure] (z : G) :
     ∃ r : ℝ≥0∞, ∀ B : Set G, MeasurableSet B → m {x | x * z ∈ B} = r * m B := by
   have hmeas : Measurable (fun x : G => x * z) := measurable_mul_const z
-  haveI : (m.map (fun x : G => x * z)).IsMulLeftInvariant := ⟨fun g => by
+  have : (m.map (fun x : G => x * z)).IsMulLeftInvariant := ⟨fun g => by
     rw [Measure.map_map (measurable_const_mul g) hmeas]
     have hc : ((fun x : G => g * x) ∘ fun x => x * z) = (fun x => x * z) ∘ fun x => g * x := by
       funext x; simp [mul_assoc]
     rw [hc, ← Measure.map_map hmeas (measurable_const_mul g), map_mul_left_eq_self]⟩
-  haveI : IsFiniteMeasureOnCompacts (m.map (fun x : G => x * z)) := ⟨fun K hK => by
+  have : IsFiniteMeasureOnCompacts (m.map (fun x : G => x * z)) := ⟨fun K hK => by
     rw [Measure.map_apply hmeas hK.measurableSet]
     exact ((Homeomorph.mulRight z).isCompact_preimage.2 hK).measure_lt_top⟩
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, m.map (fun x : G => x * z) = c • m :=
@@ -123,9 +123,9 @@ theorem lhu_key (m : Measure G) [m.IsHaarMeasure] (β : Measure G) (W V : Set G)
   have hViW : V⁻¹ ⊆ W := fun x hx => by simpa using hVW' x⁻¹ hx
   choose r hr using fun z => lhu_right m z
   refine ⟨∫⁻ x in V⁻¹, r x ∂β, fun B hB hBV => ?_⟩
-  haveI : IsFiniteMeasure (β.restrict V⁻¹) :=
+  have : IsFiniteMeasure (β.restrict V⁻¹) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.2 hβVi⟩
-  haveI : IsFiniteMeasure (β.restrict B) :=
+  have : IsFiniteMeasure (β.restrict B) :=
     ⟨by rw [Measure.restrict_apply_univ]
         exact lt_of_le_of_lt (measure_mono hBV) (lt_top_iff_ne_top.2 hβV)⟩
   have hmB : m B ≠ ⊤ := ne_top_of_le_ne_top hVc.measure_lt_top.ne (measure_mono hBV)
@@ -222,7 +222,7 @@ theorem local_haar_unique : LocalHaarUnique := by
   obtain ⟨K, hK⟩ := lhu_key m β W V hinv hVc hVW hVW' hβV hβVi
   refine ⟨β V / m V, (ENNReal.div_pos hβV0 hmVt).ne', ENNReal.div_ne_top hβV hmV0, V, hV1, hVW, ?_⟩
   ext s hs
-  rw [Measure.restrict_apply hs, Measure.smul_apply, Measure.restrict_apply hs, smul_eq_mul]
+  rw [Measure.restrict_apply hs, smul_apply, Measure.restrict_apply hs, smul_eq_mul]
   have h1 := hK (s ∩ V) (hs.inter hVm) (fun x hx => hx.2)
   have h2 := hK V hVm subset_rfl
   have e1 : β (s ∩ V) = (m V)⁻¹ * (K * m (s ∩ V)) := by
@@ -931,13 +931,13 @@ def phiU : Formalism.REAL.UJ ε ≃* HcS.BasicNotions.UpqT (pP ε) (pQ ε) where
 theorem continuous_phiF : Continuous (phiF ε) := by
   first
   | exact (HcInf.isClosedEmbedding_mat _ _).isInducing.continuous_iff.mpr
-      ((continuous_rA ε).comp (Units.continuous_val.comp continuous_subtype_val))
+      ((continuous_rA ε).comp (Units.continuous_val.comp continuous_subtypeVal))
   | exact (HcInf.isClosedEmbedding_mat _ _).toIsInducing.continuous_iff.mpr
       ((continuous_rA ε).comp (Units.continuous_val.comp continuous_subtype_val))
 
 theorem continuous_toS : Continuous fun h : HcS.BasicNotions.UpqT (pP ε) (pQ ε) =>
     ((HcInf.toS _ _ h : HcS.UG.Upq (pP ε) (pQ ε)) : GL (Fin (pP ε) ⊕ Fin (pQ ε)) ℂ) :=
-  continuous_subtype_val
+  continuous_subtypeVal
 
 theorem continuous_phiB : Continuous (phiB ε) :=
   ((Continuous.units_map (rMs ε) (continuous_rA_symm ε)).comp (continuous_toS ε)).subtype_mk _

@@ -383,7 +383,7 @@ theorem qk_field {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] (hV : IsCN
     [Algebra (FractionRing V) F'] (σ : AlgebraicClosure (FractionRing V) →ₐ[FractionRing V] F') :
     ∃ (p₁ : QkPt D.toPre F' k) (x₁ : TFK (R := V) F' ⟶ A.A), p₁.y = p.y ∧ x₁.left = spMap σ.toRingHom ≫ x.left ∧
       QkToAkU U.toUnifPre F' k p₁ x₁ := by
-  haveI : CharZero V := hV.2.2.2
+  have : CharZero V := hV.2.2.2
   have hAd : AdmBase V (maximalIdeal V) := ⟨hV.1, inferInstance, hV.2.1, hV.2.2.1⟩
   obtain ⟨p₁, hp₁⟩ := qkExtExists V D.toPre (AlgebraicClosure (FractionRing V)) F' σ.toRingHom (fun r => σ.commutes r) k p
   have hw : (spMap σ.toRingHom ≫ x.left) ≫ A.A.hom = (TFK (R := V) F').hom := by
@@ -436,7 +436,7 @@ theorem yy_pull' {V V' : Type} [CommRing V] [IsDomain V] [IsLocalRing V] [CommRi
       σ.comp (algebraMap (FractionRing V) _) = (algebraMap (FractionRing V') _).comp (fracMap hj) ∧
       p'.y = hD.xe.symm p.y ∧ QkToAkU U'.toUnifPre (AlgebraicClosure (FractionRing V')) k p' x' ∧
       x'.left ≫ gA = spMap σ ≫ x.left := by
-  letI : Algebra (FractionRing V) (AlgebraicClosure (FractionRing V')) :=
+  let : Algebra (FractionRing V) (AlgebraicClosure (FractionRing V')) :=
     ((algebraMap (FractionRing V') (AlgebraicClosure (FractionRing V'))).comp (fracMap hj)).toAlgebra
   let σ : AlgebraicClosure (FractionRing V) →ₐ[FractionRing V] AlgebraicClosure (FractionRing V') :=
     IsAlgClosed.lift
@@ -461,7 +461,7 @@ theorem uMem_baseChange : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matri
   have hwl : LBIso A'.L (X₁.ρ.P.L.pull (gA ≫ 𝔪.φ)) :=
     LBIso.trans A'.isLB (pull_isLB 𝔪.A.isLB _) (pull_isLB X₁.ρ.P.isLB _) htA (lbIso_pull_comp ⟨𝔪.wl, 𝔪.wl_gen⟩ gA)
   obtain ⟨wl, hwl⟩ := hwl
-  haveI := 𝔪.loc
+  have := 𝔪.loc
   have hk : 1 ≤ X₁.S.r * X₁.S.N := Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega))
   refine ⟨m, j ∘ t, δ, {
     cn := hV'

@@ -203,12 +203,12 @@ theorem Wz_sh_nzx : ∀ {D : D7} {n ρ p : ℕ} {hn : ρ + p = n} (M : Maps D hn
         _ = M.w * M.nzx 0 x * (M.nzx (t + c) 0 * h') := by
             rw [a1]; simp only [mul_assoc]
     rw [e2, hw, mul_assoc]
-  haveI := m.hz.1
-  haveI : ContinuousAdd (hermA D ρ) := ⟨Continuous.subtype_mk ((continuous_subtype_val.comp continuous_fst).add
-    (continuous_subtype_val.comp continuous_snd)) _⟩
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
-  haveI : MeasurableAdd (hermA D ρ) := ContinuousAdd.measurableAdd
+  have := m.hz.1
+  have : ContinuousAdd (hermA D ρ) := ⟨Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_fst).add
+    (continuous_subtypeVal.comp continuous_snd)) _⟩
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : MeasurableAdd (hermA D ρ) := ContinuousAdd.measurableAdd
   unfold Wz
   calc ∫ t, f (M.w * M.nzx t 0 * (M.nzx c x * h')) * conj (chz ψ b₀ t) ∂m.lz
       = ∫ t, (fun u => f (M.w * M.nzx u 0 * h') * (conj (chz ψ b₀ u) * chz ψ b₀ c)) (t + c) ∂m.lz := by

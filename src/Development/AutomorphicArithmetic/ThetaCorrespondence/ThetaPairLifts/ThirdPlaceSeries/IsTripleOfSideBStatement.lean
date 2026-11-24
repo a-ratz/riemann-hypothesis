@@ -103,7 +103,7 @@ open GlobalTheory.Triple GlobalTheory.EigTie
 theorem exists_small_ring_elem_of_fraction_map_integral {D : D7} (X : NTw D.R D.host D.what₂ D.LL0 D.nd) (i : X.Tw) (z : FractionRing (X.O0 i))
     (y : X.O i) (h : fracMap X i z = algebraMap (X.O i) (FractionRing (X.O i)) y) :
     ∃ a : X.O0 i, algebraMap (X.O0 i) (FractionRing (X.O0 i)) a = z := by
-  haveI := GlobalTheory.TwistChoice.isLocalHom_O (X := X) i
+  have := GlobalTheory.TwistChoice.isLocalHom_O (X := X) i
   rcases eq_or_ne z 0 with rfl | hz
   · exact ⟨0, map_zero _⟩
   rcases ValuationRing.isInteger_or_isInteger (X.O0 i) z with ⟨a, e⟩ | ⟨c, e⟩
@@ -136,9 +136,9 @@ theorem delAt_unr {D : D7} (cf : CharFrame D) (i : D.ntw.Tw) {P : PlE D.host} (h
     hS (D.ntw.primes_subset_exceptional i (by rw [← Finset.mem_coe, D.ntw.pD_eq i]; exact h))
   unfold CharFrame.delAt
   split_ifs with h
-  · rw [if_pos h] at hD
+  · rw [ite_eq_left h] at hD
     exact cf.isDel'.unr P hD
-  · rw [if_neg h] at hD
+  · rw [ite_eq_right h] at hD
     exact cf.isDel.unr P hD
 
 end GlobalTheory.TwInputs.HEig
@@ -170,15 +170,15 @@ theorem toC_delta {D : D7} (cf : CharFrame D) (i : D.ntw.Tw) {b : Bool} (ρ : Gl
       rw [IntermediateField.coe_inv, map_inv₀, hxd, inv_inv]
     have e : D.ntw.emb0 i xd = D.ntw.emb0b i xd⁻¹ := (D.ntw.restX_coefficientEmbedding_conj i xd⁻¹ xd ?_).symm
     · have h1 := ρ.read xd⁻¹
-      simp only [embSide, Bool.false_eq_true, if_false] at h1
-      simp only [Bool.false_eq_true, if_false]
+      simp only [embSide, Bool.false_eq_true, ite_false] at h1
+      simp only [Bool.false_eq_true, ite_false]
       rw [map_units_inv, hread, e, h1]
       show (D.what₂.embLL ((xd⁻¹ : D.LL0) : D.what₂.LL))⁻¹ = δ⁻¹
       rw [IntermediateField.coe_inv, map_inv₀, hxd, inv_inv]
     · rw [hstar, star_star]
   · have h1 := ρ.read xd
-    simp only [embSide, if_true] at h1
-    simp only [if_true, hread, h1]
+    simp only [embSide, ite_true] at h1
+    simp only [ite_true, hread, h1]
     exact hxd
 
 end GlobalTheory.TwInputs.HEig
@@ -329,9 +329,9 @@ theorem exists_zmod_eq {g : ℕ} [Fact g.Prime] (z : Formalism.CyclotomicNorms.F
 
 theorem exists_rep : ∀ (D : D7), GrpSide D → ∀ (k : Fin 2) (v : D.nd.PlG k), normV (D.naut.plGw k v) = D.host.g k ∧ ∃ (u ϖ : 𝓞 D.host.E) (π : D.nd.Om), u ∉ (D.naut.plGw k v).asIdeal ∧ ϖ ∈ (D.naut.plGw k v).asIdeal ∧ ϖ ∉ (D.naut.plGw k v).asIdeal ^ 2 ∧ π ^ (normV (D.naut.plGw k v) - 1) = algebraMap D.host.E D.nd.Om (ϖ : D.host.E) ∧ (D.nd.plOm.1 (D.naut.plGw k v)).valuation (D.ntypes.tg k v π / π - algebraMap D.host.E D.nd.Om (u : D.host.E)) < 1 ∧ orderOf (D.ntypes.tg k v π / π) = normV (D.naut.plGw k v) - 1 := by
   intro D hG k v
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
-  haveI : CharZero D.nd.Om := charZero_of_injective_ringHom (f := algebraMap D.host.E D.nd.Om) (algebraMap D.host.E D.nd.Om).injective
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : CharZero D.nd.Om := charZero_of_injective_ringHom (f := algebraMap D.host.E D.nd.Om) (algebraMap D.host.E D.nd.Om).injective
   have hgp : (D.host.g k).Prime := D.host.g_prime k
   have hAP : IsPlaceOver (F := D.host.E) (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v) :=
     D.nd.plOm.2 (D.naut.plGw k v)
@@ -425,8 +425,8 @@ theorem GlobalTheory.TwInputs.isChars_of_sideB : GlobalTheory.Published.Chebotar
   intro _hCh hGAR D cf Rw low Pq S hL eig θ Bs hT hG _hCS hV _hroots art ha i b ρ
   have hchi := GlobalTheory.TwChiGal.firstTwistCharacter_eq_ladic_heckeCharacter D cf Bs.chiD Bs.chi Bs.eta_eq Bs.ringSpec_normalisedCharacter_eq Bs.del_eq hV art ha i b ρ
   refine ⟨hchi, fun j k hk v => ?_⟩
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   obtain ⟨hN, u, ϖ, π, hu, hϖ1, hϖ2, hπ, hval, hord⟩ := GlobalTheory.TameGenRep.exists_rep D hG k v
   have hAw : IsPlaceOver (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v) := D.nd.plOm.2 _
   have hu0 : (u : D.host.E) ≠ 0 := fun h => hu (by
@@ -528,7 +528,7 @@ theorem goodE_of_eigOcc : ∀ (D : D7) (cf : CharFrame D) (Rw : RowSide D) (low 
   obtain ⟨Φ, hΦ0, hΦs, hΦT⟩ := GlobalTheory.T.exists_descent_map_nonzero_of_small_field_form D S _ (hKs _ h1 h2) i (D.ntw.side i s) x hx0
   set e := Bs.eF i (D.ntw.jS i s) (D.ntw.side i s) h1 h2 with he
   refine ⟨e.symm (Φ x), by simpa using hΦ0, ?_, ?_⟩
-  · letI : Fintype (G0g D.nd) := Formalism.MainNotions.PrimeDegreeVariant.finiteLevelGroupFintype D
+  · let : Fintype (G0g D.nd) := Formalism.MainNotions.PrimeDegreeVariant.finiteLevelGroupFintype D
     have hx1 := Module.End.mem_eigenspace_iff.1 (Submodule.mem_inf.1 hxg).1
     rw [one_smul, finsum_eq_sum_of_fintype, LinearMap.sum_apply] at hx1
     apply e.injective

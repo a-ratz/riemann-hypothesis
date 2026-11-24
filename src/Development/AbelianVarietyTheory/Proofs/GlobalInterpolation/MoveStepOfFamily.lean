@@ -593,7 +593,7 @@ theorem off_le (S : Finset (HeightOneSpectrum (𝓞 E))) (M : Submodule (𝓞 E)
   rw [halfAO, mem_localization_twist M hc' (fun Q => by have := expS_bound S Q; omega)] at hy
   rw [mem_localization_twist M hc (expS_bound S)]
   unfold expS at hy ⊢
-  rw [if_neg hQ] at hy ⊢
+  rw [ite_eq_right hQ] at hy ⊢
   split_ifs at hy ⊢
   · have h1 := nat_smul_mem c' hy
     rw [neg_neg, zpow_one, smul_smul, mul_inv_cancel₀ hcE, one_smul] at h1
@@ -609,7 +609,7 @@ theorem mem_mulLat_iff (S : Finset (HeightOneSpectrum (𝓞 E))) (AA : Submodule
   have key : ∀ P ∈ S, (y ∈ localization₂ P.asIdeal (twist₂ (perO AA N N') c (expS S)) ↔ (c : E)⁻¹ • y ∈ homAt {P} N N') := by
     intro P hP
     rw [mem_localization_twist _ hc (expS_bound S), (GlobalTheory.ThetaMove.PeriodComp.perO_components E a b AA).2.1 P N N' hN (hAA P hP), expS,
-      if_pos hP, zpow_one]
+      ite_eq_left hP, zpow_one]
   have hsm : ∀ w : HomE E a b, (c : 𝓞 E) • w = (c : E) • w := fun w => by
     rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
   constructor
@@ -637,7 +637,7 @@ theorem signed_liftW_eq : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S : Finset (
   have sdA := fun c' (hc' : 0 < c') => (GlobalTheory.ThetaMove.TwistSd.isSdLat_twO_expS X.E b N' c' S hS hN' hc').2
   have fullSd {n : ℕ} (L : Submodule (𝓞 X.E) (Sp X.E n)) (hL : IsSdLat L) :
       Submodule.IsFullLattice X.E L := by
-    letI : Submodule.IsLattice X.E L := hL.1
+    let : Submodule.IsLattice X.E L := hL.1
     exact ⟨sdLat_span_local L hL⟩
   have fB : Full (twist₂ (perO A.AA N N') c (expS S)) := eB ▸ per.2.2 N _ hfg (fullSd _ sdB) hA0
   have fA : ∀ c' : ℕ, 0 < c' → Full (halfAO S (perO A.AA N N') c') := fun c' hc' => by
@@ -651,7 +651,7 @@ theorem signed_liftW_eq : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S : Finset (
     refine ⟨s, ⟨c', hc', mem_of_locP fun Q => ?_⟩, (hmul _).2 fun P hP => (h1 P hP).2⟩
     by_cases hQ : Q ∈ S
     · have h3 : x ∈ localization₂ Q.asIdeal (halfAO S (perO A.AA N N') c') := by
-        rw [halfAO, mem_localization_twist _ hc' (fun Q => by have := expS_bound S Q; omega), expS, if_pos hQ, zpow_neg, inv_inv, zpow_one,
+        rw [halfAO, mem_localization_twist _ hc' (fun Q => by have := expS_bound S Q; omega), expS, ite_eq_left hQ, zpow_neg, inv_inv, zpow_one,
           Nat.cast_smul_eq_nsmul, ← Nat.cast_smul_eq_nsmul (𝓞 X.E)]
         exact mem_localization_of_mem Q hx
       simpa using add_mem (h1 Q hQ).1 h3
@@ -872,9 +872,9 @@ theorem nat_smul_mem {M : Submodule (𝓞 E) W} (c : ℕ) {x : W} (hx : x ∈ M)
 theorem dom_tw (M : Submodule (𝓞 E) W) {c : ℕ} (hc : 0 < c) : Dom S M (twist₂ M c (expS S)) := by
   have hcE : (c : E) ≠ 0 := by exact_mod_cast hc.ne'
   refine ⟨fun P hP x hx => ?_, fun Q hQ x hx => ?_⟩
-  · rw [mem_localization_twist M hc (expS_bound S), expS, if_pos hP, zpow_one] at hx
+  · rw [mem_localization_twist M hc (expS_bound S), expS, ite_eq_left hP, zpow_one] at hx
     simpa [smul_smul, hcE] using nat_smul_mem c hx
-  · rw [mem_localization_twist M hc (expS_bound S), expS, if_neg hQ]
+  · rw [mem_localization_twist M hc (expS_bound S), expS, ite_eq_right hQ]
     split_ifs
     · simpa using nat_smul_mem c hx
     · simpa using hx
@@ -886,9 +886,9 @@ theorem negS_bound (Q : HeightOneSpectrum (𝓞 E)) : -1 ≤ -expS S Q ∧ -expS
 theorem tw_dom (M : Submodule (𝓞 E) W) {c : ℕ} (hc : 0 < c) : Dom S (twist₂ M c fun Q => -expS S Q) M := by
   have hcE : (c : E) ≠ 0 := by exact_mod_cast hc.ne'
   refine ⟨fun P hP x hx => ?_, fun Q hQ x hx => ?_⟩
-  · rw [mem_localization_twist M hc negS_bound, expS, if_pos hP]
+  · rw [mem_localization_twist M hc negS_bound, expS, ite_eq_left hP]
     simpa using nat_smul_mem c hx
-  · rw [mem_localization_twist M hc negS_bound, expS, if_neg hQ] at hx
+  · rw [mem_localization_twist M hc negS_bound, expS, ite_eq_right hQ] at hx
     split_ifs at hx
     · simpa [smul_smul, hcE] using nat_smul_mem c hx
     · simpa using hx
@@ -1018,7 +1018,7 @@ theorem mem_mulLat_iff {N : Submodule (𝓞 E) (Sp E a)} {N' : Submodule (𝓞 E
       exact ⟨_, hx, by simp [e, smul_smul, hcE]⟩
   rw [h1, mem_homAt_iff hU h, ← GlobalTheory.ThetaMove.PeriodTwist.twO_perO E a b AA N N' c _ h.1.fg hc (expS_bound S)]
   refine forall₂_congr fun P hP => ?_
-  rw [mem_localization_twist _ hc (expS_bound S), expS, if_pos hP, zpow_one]
+  rw [mem_localization_twist _ hc (expS_bound S), expS, ite_eq_left hP, zpow_one]
 
 theorem mem_divLat_iff {N : Submodule (𝓞 E) (Sp E a)} {N' : Submodule (𝓞 E) (Sp E b)}
     (hU : ∀ P ∈ S, localization₂ P.asIdeal AA = localization₂ P.asIdeal (1 : Submodule (𝓞 E) E)) (h : IsSdLat N) {c : ℕ} (hc : 0 < c) (x : HomE E a b) :
@@ -1028,7 +1028,7 @@ theorem mem_divLat_iff {N : Submodule (𝓞 E) (Sp E a)} {N' : Submodule (𝓞 E
     rw [← algebraMap_smul E, map_natCast]
   rw [h1, mem_homAt_iff hU h, ← GlobalTheory.ThetaMove.PeriodTwist.twO_perO E a b AA N N' c _ h.1.fg hc negS_bound]
   refine forall₂_congr fun P hP => ?_
-  rw [mem_localization_twist _ hc negS_bound, expS, if_pos hP]
+  rw [mem_localization_twist _ hc negS_bound, expS, ite_eq_left hP]
   simp
 
 end Lattices
@@ -1125,7 +1125,7 @@ theorem thInd_eq (hA : Moves A a b) (hS : ∀ P ∈ S, conjPrime₂ P ∉ S) (hU
       have f3 : Module.Finite ℤ (perO A.AA N (twist₂ N' c (expS S))) := Module.Finite.trans (𝓞 X.E) _
       have f4 : (perO A.AA N (twist₂ N' c (expS S))).toAddSubgroup.FG :=
         (AddGroup.fg_iff_addSubgroup_fg _).1 (Module.Finite.iff_addGroup_fg.1 f3)
-      letI := f4
+      let := f4
       change IsAddFG ((perO A.AA N (twist₂ N' c (expS S))).toAddSubgroup.map (embH (X.embC A.σ₀) A.δ))
       infer_instance
     have := GlobalTheory.ThetaInter.finite_quot (A₁ := lam A N N') f1 (by
@@ -1323,7 +1323,7 @@ theorem kerOf_eq {X : Fields} (A : Amb X) {a b : ℕ} (Sa SB : Finset (HeightOne
     rw [Nat.cast_mul, mul_comm, mul_smul]
     exact Submodule.smul_mem _ _ x.2
   simp only [thDistC]
-  rw [if_pos ⟨Dvd.intro_left _ rfl, hx⟩, smul_comm]
+  rw [ite_eq_left ⟨Dvd.intro_left _ rfl, hx⟩, smul_comm]
 
 end Final
 

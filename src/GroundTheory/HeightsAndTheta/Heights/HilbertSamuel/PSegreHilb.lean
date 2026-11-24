@@ -158,7 +158,7 @@ theorem monomial_mem_map_segreMap (m : ℕ) :
       rw [blockWeight_unit] at h
       exact h
     · simp only [AlgHom.toLinearMap_apply, map_mul] at hge ⊢
-      rw [hge, segreMap_X, ← hsX, monomial_mul, one_mul, hadd]
+      rw [hge, segreMap_X, ← hsX, monomial_mul_monomial, one_mul, hadd]
 
 theorem map_segreMap_weightedHomogeneousSubmodule (m : ℕ) :
     (weightedHomogeneousSubmodule F (blockWeight (fun _ : Unit => ∀ k, ι k)) (fun _ => m)).map
@@ -208,9 +208,9 @@ theorem SegreHilb.proof : SegreHilb.Statement := by
   intro F _ K _ _ _ ι _ q n
   unfold hilbFn
   by_cases hn : 0 ≤ n
-  · rw [if_pos (fun _ => hn), if_pos (fun _ => hn)]
+  · rw [ite_eq_left (fun _ => hn), ite_eq_left (fun _ => hn)]
     exact congrArg (fun x : ℕ => (x : ℤ)) (segreGradedPieceEquiv F q n.toNat).finrank_eq
-  · rw [if_neg (fun h => hn (h ())), if_neg (fun h => hn (h (Classical.arbitrary K)))]
+  · rw [ite_eq_right (fun h => hn (h ())), ite_eq_right (fun h => hn (h (Classical.arbitrary K)))]
 
 end
 

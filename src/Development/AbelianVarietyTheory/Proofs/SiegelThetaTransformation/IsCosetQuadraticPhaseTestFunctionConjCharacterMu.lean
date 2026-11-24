@@ -156,7 +156,7 @@ theorem chr_add (y x x' : Matrix κ ι ℚ) : chr y (x + x') = chr y x * chr y x
 
 theorem mu_exp (q : ℚ) : IsMu (cexp (2 * Real.pi * I * (q : ℂ))) := by
   refine ⟨q.den, q.den_pos, ?_⟩
-  rw [← Complex.exp_nat_mul]
+  rw [← exp_natCast_mul]
   have h : ((q.den : ℚ) * q) = q.num := Rat.den_mul_eq_num q
   have h' : ((q.den : ℂ) * q) = q.num := by exact_mod_cast congrArg (fun t : ℚ => (t : ℂ)) h
   rw [show (q.den : ℂ) * (2 * Real.pi * I * (q : ℂ)) = ((q.den : ℂ) * q) * (2 * Real.pi * I) by ring, h']
@@ -245,9 +245,9 @@ theorem shape_mul {φ ψ : Matrix κ ι ℚ → ℂ} (h : Shape φ) (h' : Shape 
     simp only [hφ x, hψ x, sub_add_sub_cancel]
     by_cases p : x - b ∈ S
     · by_cases p' : x - b ∈ S'
-      · rw [if_pos (i1.2 p), if_pos (i2.2 p'), if_pos (AddSubgroup.mem_inf.2 ⟨p, p'⟩)]; ring
-      · rw [if_neg (mt i2.1 p'), mul_zero, if_neg (fun q => p' (AddSubgroup.mem_inf.1 q).2)]
-    · rw [if_neg (mt i1.1 p), zero_mul, if_neg (fun q => p (AddSubgroup.mem_inf.1 q).1)]
+      · rw [ite_eq_left (i1.2 p), ite_eq_left (i2.2 p'), ite_eq_left (AddSubgroup.mem_inf.2 ⟨p, p'⟩)]; ring
+      · rw [ite_eq_right (mt i2.1 p'), mul_zero, ite_eq_right (fun q => p' (AddSubgroup.mem_inf.1 q).2)]
+    · rw [ite_eq_right (mt i1.1 p), zero_mul, ite_eq_right (fun q => p (AddSubgroup.mem_inf.1 q).1)]
   · refine ⟨0, 0, ⊥, fun _ => 1, ph_zero, ⟨fun _ _ => isMu_one, fun _ _ _ _ _ _ => rfl⟩, fun x => ?_⟩
     have : φ x * ψ x = 0 := by
       rw [hφ x, hψ x]

@@ -171,7 +171,7 @@ private theorem unitAt_of_isUnit' {p : Cpt ξ} (z : regAt ξ p) (hu : IsUnit z) 
 
 theorem exists_unit_of_sum {p : Cpt ξ} {m : ℕ} {f cc : Fin m → Ω} (hf : ∀ l, f l ∈ regAt ξ p)
     (hc : ∀ l, cc l ∈ regAt ξ p) (h : ∑ l, cc l * f l = 1) : ∃ l, unitAt ξ p (f l) := by
-  haveI := isLocalRing_regAt' (ξ := ξ) (p := p)
+  have := isLocalRing_regAt' (ξ := ξ) (p := p)
   by_contra hne
   push_neg at hne
   have hnu : ∀ l, ¬ IsUnit (⟨f l, hf l⟩ : regAt ξ p) :=
@@ -186,7 +186,7 @@ theorem exists_unit_of_sum {p : Cpt ξ} {m : ℕ} {f cc : Fin m → Ω} (hf : �
 
 theorem not_inFibre_two {p : Cpt ξ} {a b : ℕ} (ha : a.Prime) (hb : b.Prime) (hab : a ≠ b) (h : InFibre ξ a p) :
     ¬ InFibre ξ b p := by
-  haveI := isLocalRing_regAt' (ξ := ξ) (p := p)
+  have := isLocalRing_regAt' (ξ := ξ) (p := p)
   intro hb'
   have hcop : Nat.Coprime a b := (Nat.coprime_primes ha hb).2 hab
   have hnA : ¬ IsUnit ((a : regAt ξ p)) := fun hu => h (by simpa using unitAt_of_isUnit' _ hu)
@@ -286,7 +286,7 @@ private theorem isUnit_of_unitAt' {p : Cpt ξ} (z : regAt ξ p) (hu : unitAt ξ 
 theorem unit_off_fibre {c : ∀ k, J k} {p : Cpt ξ} (h : InChart ξ (seg y) c p) {l : ℕ} {b : K → ℤ} {f g : MRing J}
     (hv : IsVerticalDivisorAt (mCoordIdeal y) l b f g) (hl : ¬ InFibre ξ l p) :
     unitAt ξ p (aeval y f / aeval y g * chartMono y c (-b)) := by
-  haveI := isLocalRing_regAt' (ξ := ξ) (p := p)
+  have := isLocalRing_regAt' (ξ := ξ) (p := p)
   have hc0 : ∀ k, y ⟨k, c k⟩ ≠ 0 := ne_of_seg h.1
   obtain ⟨bf, bg, hbf, hbg, hbeq⟩ := hv.degrees
   have hPW : mCoordIdeal y ≤ Ideal.comap (dhP h) (IsLocalRing.maximalIdeal (regAt ξ p)) := by

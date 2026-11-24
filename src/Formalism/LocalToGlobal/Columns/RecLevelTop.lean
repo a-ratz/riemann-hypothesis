@@ -387,7 +387,7 @@ theorem rlt_open_of_le (U : Subgroup (GL (Fin n) 𝒜)) (hU : K1 hc n ST SG ≤ 
     rw [← mul_assoc, hca, one_mul]
     ring
   have hnh : ((U.subgroupOf (UAd hc n) : Subgroup (UAd hc n)) : Set (UAd hc n)) ∈ 𝓝 (1 : UAd hc n) := by
-    refine Filter.mem_of_superset ((hWo.preimage continuous_subtype_val).mem_nhds hW1) ?_
+    refine Filter.mem_of_superset ((hWo.preimage continuous_subtypeVal).mem_nhds hW1) ?_
     intro x hx
     exact hsub x.1 x.2 hx
   exact Subgroup.isOpen_of_mem_nhds _ hnh

@@ -94,7 +94,7 @@ theorem isCuspidal_of_equiv {π : Representation ℂ (GL n k) V} {σ : Represent
       Representation.IntertwiningMap.isIntertwining _ _ φ.symm.toIntertwiningMap g w
     have hset : {g : GL n k | σ g w = w} = {g | π g (φ.symm w) = φ.symm w} := by
       ext g
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · intro hg
         rw [← key, hg]
@@ -170,7 +170,7 @@ theorem nonempty_equiv_multiProd_one {π : Representation ℂ (GL n k) V} (hπ :
     show IsOpen {g | ind (parab k e) σ' g (G0 v) = G0 v}
     convert hπ v using 1
     ext g
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro h
       have h1 := congrArg (fun f : indSpace (parab k e) σ' => f.1 1) h
@@ -745,7 +745,7 @@ theorem embeds_detRep_segment {χ : kˣ →* ℂˣ} (hχ : IsSmoothChar χ) {l :
       (x a).rep g w = ((χ * absPow k ((a : ℕ) : ℂ)) (GeneralLinearGroup.det g) : ℂ) • w := fun a g w =>
     rep_apply_eq_det_smul_of_eq_ofChar _ (x a) (hxa a) g w
   have hw : ∀ a, ∃ w : (x a).2.rep.V, w ≠ 0 := fun a => by
-    haveI := nontrivial_of_irreducible (x a).2.rep.irr
+    have := nontrivial_of_irreducible (x a).2.rep.irr
     exact exists_ne 0
   choose w hw using hw
   have ht0ne : PiTensorProduct.tprod ℂ w ≠ 0 := by
@@ -806,7 +806,7 @@ theorem embeds_detRep_segment {χ : kˣ →* ℂˣ} (hχ : IsSmoothChar χ) {l :
     have hset : {g | ind (parab k e) σ' g F0 = F0} =
         ((detChar (Fin N) (χ * absPow k (((l : ℂ) - 1) / 2))).ker : Set (GL (Fin N) k)) := by
       ext g
-      simp only [Set.mem_setOf_eq, SetLike.mem_coe, MonoidHom.mem_ker, hind, detChar_apply]
+      simp only [Set.mem_ofPred_eq, SetLike.mem_coe, MonoidHom.mem_ker, hind, detChar_apply]
       constructor
       · intro h
         exact Units.val_eq_one.1 (smul_left_injective ℂ hF0ne (h.trans (one_smul ℂ F0).symm))

@@ -131,7 +131,7 @@ theorem bridge_place (x : 𝓞 D.host.E) :
   have hj : 0 < ‖(D.nbr i w hw).j y‖ := norm_pos_iff.2 ((map_ne_zero _).2 hy)
   have h := D.nbr_ind i w hw y⁻¹
   rw [← ValuationSubring.valuation_le_one_iff, map_inv₀, map_inv₀, norm_inv, inv_le_one₀ hj,
-    inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 hy))] at h
+    inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 hy))] at h
   rw [← not_le, ← not_le, h]
 
 end Loc

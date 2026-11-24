@@ -124,7 +124,7 @@ theorem exists_segre_eq_embL [Nonempty K] {p : ℕ} {Q : Ideal (MRing ι)} (hQ :
   rw [Fintype.prod_option, Finset.prod_mul_distrib, Finset.prod_ite_eq' Finset.univ k0]
   have h1 : u ⟨none, J none⟩ = c * v (J none) := hv (J none)
   rw [h1]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   have h2 : ∀ k, basePart₂ u ⟨k, J (some k)⟩ = u ⟨some k, J (some k)⟩ := fun _ => rfl
   simp only [h2]
   ring
@@ -642,12 +642,12 @@ theorem baseMap_isIntegral (p : ℕ) (W : Ideal (MRing ι)) (b : MRing (Tb ι) �
 theorem ringKrullDim_twist (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (p : ℕ)
     (W : Ideal (MRing ι)) (hW : W.IsPrime) :
     ringKrullDim (MRing (Tb ι) ⧸ twist p W) = ringKrullDim (MRing ι ⧸ W) + 1 := by
-  haveI : W.IsPrime := hW
-  haveI : Nontrivial (MRing ι ⧸ W) := inferInstance
-  haveI : IsNoetherianRing (MRing ι) :=
+  have : W.IsPrime := hW
+  have : Nontrivial (MRing ι ⧸ W) := inferInstance
+  have : IsNoetherianRing (MRing ι) :=
     inferInstanceAs (IsNoetherianRing (MvPolynomial ((k : K) × ι k) ℤ))
-  letI : Algebra (Polynomial (MRing ι ⧸ W)) (MRing (Tb ι) ⧸ twist p W) := (baseP p W).toAlgebra
-  haveI : Algebra.IsIntegral (Polynomial (MRing ι ⧸ W)) (MRing (Tb ι) ⧸ twist p W) :=
+  let : Algebra (Polynomial (MRing ι ⧸ W)) (MRing (Tb ι) ⧸ twist p W) := (baseP p W).toAlgebra
+  have : Algebra.IsIntegral (Polynomial (MRing ι ⧸ W)) (MRing (Tb ι) ⧸ twist p W) :=
     ⟨fun b => baseMap_isIntegral p W b⟩
   rw [ReciprocityTheory.CA.ringKrullDim_eq_of_isIntegral_of_injective (baseMap_injective p W),
     Polynomial.ringKrullDim_of_isNoetherianRing]
@@ -777,7 +777,7 @@ theorem twLine_smooth (p : ℕ) (A : HermLine ι) (hA : IsSmoothHerm A) :
   refine ContDiffOn.congr hE fun u hu => ?_
   change twH p A u = _
   have hu' : ∀ o, ∃ i, u ⟨o, i⟩ ≠ 0 := hu
-  rw [twH, if_pos hu']
+  rw [twH, ite_eq_left hu']
 
 theorem twLine_conj (p : ℕ) (A : HermLine ι) : IsConjInvariantH (twLine p A) := by
   intro u
@@ -785,14 +785,14 @@ theorem twLine_conj (p : ℕ) (A : HermLine ι) : IsConjInvariantH (twLine p A) 
   have hsame : (∀ o, ∃ i, (fun q => starRingEnd ℂ (u q)) ⟨o, i⟩ ≠ 0) ↔ ∀ o, ∃ i, u ⟨o, i⟩ ≠ 0 :=
     forall_congr' fun o => exists_congr fun i => by simp
   by_cases hu : ∀ o, ∃ i, u ⟨o, i⟩ ≠ 0
-  · rw [twH, twH, if_pos (hsame.mpr hu), if_pos hu, chi_conj]
+  · rw [twH, twH, ite_eq_left (hsame.mpr hu), ite_eq_left hu, chi_conj]
     have e1 : basePart₂ (fun q => starRingEnd ℂ (u q)) = fun q => starRingEnd ℂ (basePart₂ u q) := rfl
     have e2 : (fun q => starRingEnd ℂ (basePart₂ (fun q => starRingEnd ℂ (u q)) q)) = basePart₂ u := by
       funext q; simp [basePart₂]
     rw [e2, e1]
     congr 1
     ring
-  · rw [twH, twH, if_neg (fun h => hu (hsame.mp h)), if_neg hu]
+  · rw [twH, twH, ite_eq_right (fun h => hu (hsame.mp h)), ite_eq_right hu]
 
 theorem glue_block {z : (Σ k, ι k) → ℂ} (hz : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) {v : Fin 2 → ℂ}
     (hv : v 1 ≠ 0) : ∀ o, ∃ i, glue z v ⟨o, i⟩ ≠ 0 := by
@@ -806,7 +806,7 @@ theorem twLine_vPlus (p : ℕ) (hp : p ≠ 0) (A : HermLine ι) (z : (Σ k, ι k
   change twH p A _ = _
   have hv : vPlus p 1 ≠ 0 := by simp [vPlus]
   have ho : basePart₂ (glue z (vPlus p)) = z := rfl
-  rw [twH, if_pos (glue_block hz hv), chi_vPlus p hp, ho]
+  rw [twH, ite_eq_left (glue_block hz hv), chi_vPlus p hp, ho]
   simp only [one_mul, sub_self, zero_mul, add_zero]
   exact Real.exp_log (A.pos z hz)
 
@@ -815,7 +815,7 @@ theorem twLine_vMinus (p : ℕ) (hp : p ≠ 0) (A : HermLine ι) (z : (Σ k, ι 
   change twH p A _ = A.h fun q => starRingEnd ℂ (z q)
   have hv : vMinus p 1 ≠ 0 := by simp [vMinus]
   have ho : basePart₂ (glue z (vMinus p)) = z := rfl
-  rw [twH, if_pos (glue_block hz hv), chi_vMinus p hp, ho]
+  rw [twH, ite_eq_left (glue_block hz hv), chi_vMinus p hp, ho]
   simp only [zero_mul, sub_zero, one_mul, zero_add]
   exact Real.exp_log (A.pos _ fun k => conj_ne (hz k))
 
@@ -1012,9 +1012,9 @@ theorem sheet_of_twist_sheet {p e : ℕ} (hp : p ≠ 0) {Q : Ideal (MRing ι)} (
     · refine differentiableAt_pi.mpr fun q => ?_
       have hc : DifferentiableAt ℂ (c q.1) y' := by
         by_cases hk : q.1 = k0
-        · simp only [c, hk, if_true]
+        · simp only [c, hk, ite_true]
           exact differentiableAt_pi.mp hd _
-        · simp only [c, hk, if_false]
+        · simp only [c, hk, ite_false]
           exact differentiableAt_const _
       exact hc.mul (differentiableAt_pi.mp hd _)
     · refine mcPts_smul hQ (fun k => c k y') (fun k => ?_) (oldPart_mem hm')
@@ -1122,7 +1122,7 @@ theorem sum_single_none {K : Type} {ι : K → Type} [∀ k, Fintype (ι k)] (j 
     simp only [Option.elim_some]
     apply Finset.sum_eq_zero
     intro i _
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     have h0 := congrArg (fun z : (o : Option K) × Tb ι o => z.1) h
     simp at h0
@@ -1209,7 +1209,7 @@ theorem exists_root_field {D : Type} [CommRing D] [IsDomain D] (p : ℕ)
     have := (Polynomial.mem_roots'.mp hr).2
     simp [g, Polynomial.IsRoot] at this
     exact hnr r this
-  haveI : Fact (Irreducible g) := ⟨hirr⟩
+  have : Fact (Irreducible g) := ⟨hirr⟩
   refine ⟨AdjoinRoot g, inferInstance, (AdjoinRoot.of g).comp (algebraMap D F), AdjoinRoot.root g, ?_, ?_⟩
   · have h0 : AdjoinRoot.mk g (Polynomial.X ^ 2 + Polynomial.C (p : F)) = 0 := AdjoinRoot.mk_self
     rw [map_add (f := _), map_pow, AdjoinRoot.mk_X, AdjoinRoot.mk_C, map_natCast] at h0
@@ -1231,7 +1231,7 @@ theorem exists_root_field {D : Type} [CommRing D] [IsDomain D] (p : ℕ)
 theorem twist_isPrime (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (p : ℕ)
     (W : Ideal (MRing ι)) (hW : W.IsPrime) (hN : NoRoot p W) : (twist p W).IsPrime := by
   classical
-  haveI : IsDomain (MRing ι ⧸ W) := Ideal.Quotient.isDomain W
+  have : IsDomain (MRing ι ⧸ W) := Ideal.Quotient.isDomain W
   have hD : ∀ a b : MRing ι ⧸ W, a ^ 2 + (p : MRing ι ⧸ W) * b ^ 2 = 0 → b = 0 := by
     intro a b h
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective a
@@ -1255,10 +1255,10 @@ theorem twist_isPrime (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (
     exact congrArg (fun g => g f) this
   have hx : φ xN = Polynomial.C s * Polynomial.X := by
     simp only [φ, xN, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, aeval_X]
-    exact if_pos rfl
+    exact ite_eq_left rfl
   have hy : φ yN = Polynomial.X := by
     simp only [φ, yN, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, aeval_X]
-    exact if_neg (show ¬ ((1 : Fin 2) = 0) by decide)
+    exact ite_eq_right (show ¬ ((1 : Fin 2) = 0) by decide)
   have hCp : φ (C (p : ℤ)) = (p : Polynomial E) := by
     simp [φ]
   have hle : twist p W ≤ RingHom.ker φ := by
@@ -1385,7 +1385,7 @@ theorem twist_isPrime (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (
       ext n
       simpa using (hcoef n).2
     rw [ha, hb]; simp
-  haveI : IsDomain (MRing (Tb ι) ⧸ twist p W) := hinj.isDomain φ'
+  have : IsDomain (MRing (Tb ι) ⧸ twist p W) := hinj.isDomain φ'
   exact (Ideal.Quotient.isDomain_iff_prime _).mp inferInstance
 
 end GlobalTheory.CompanionTheory.Ar.Tw
@@ -1422,9 +1422,9 @@ theorem exists_prime_noRoot {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fin
   have hbad : ∀ W ∈ S, {p : ℕ | p.Prime ∧ ∃ a b : MRing ι ⧸ W, b ≠ 0 ∧ a ^ 2 + (p : MRing ι ⧸ W) * b ^ 2 = 0}.Finite := by
     intro W hW
     obtain ⟨hp, hh⟩ := h W hW
-    haveI := hp
-    haveI : IsDomain (MRing ι ⧸ W) := Ideal.Quotient.isDomain W
-    haveI : CharZero (MRing ι ⧸ W) := by
+    have := hp
+    have : IsDomain (MRing ι ⧸ W) := Ideal.Quotient.isDomain W
+    have : CharZero (MRing ι ⧸ W) := by
       refine ⟨fun a b hab => ?_⟩
       have h0 : (C (((a : ℤ) - (b : ℤ))) : MRing ι) ∈ W := by
         rw [← Ideal.Quotient.eq_zero_iff_mem]
@@ -1435,7 +1435,7 @@ theorem exists_prime_noRoot {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fin
     exact _root_.GlobalTheory.CompanionTheory.QuadFin.finite_primes_neg_sq _ _ (Ideal.Quotient.mk W) Ideal.Quotient.mk_surjective
   have hfin : (⋃ W ∈ S, {p : ℕ | p.Prime ∧ ∃ a b : MRing ι ⧸ W, b ≠ 0 ∧ a ^ 2 + (p : MRing ι ⧸ W) * b ^ 2 = 0}).Finite :=
     hS.biUnion hbad
-  obtain ⟨p, hp, hpn⟩ := (Nat.infinite_setOf_prime.diff hfin).nonempty
+  obtain ⟨p, hp, hpn⟩ := (Nat.infinite_setOfPred_prime.sdiff hfin).nonempty
   refine ⟨p, hp, fun W hW a b hab => ?_⟩
   by_contra hb
   apply hpn
@@ -1450,7 +1450,7 @@ theorem isArithVar_twist {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintyp
   obtain ⟨hK, hM, hH, hd⟩ := hQ
   refine ⟨⟨none⟩, ⟨GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p Q hM.1 hR, _root_.GlobalTheory.CompanionTheory.Ar.Tw.isMultiHomogIdeal_twist K ι p Q hM.2.1,
     isRelevant_twist p hM.1.ne_top hM.2.2⟩, isHorizontal_twist p hH, ?_⟩
-  haveI := hM.1
+  have := hM.1
   rw [_root_.GlobalTheory.CompanionTheory.Ar.Tw.ringKrullDim_twist K ι p Q hM.1, hd, Fintype.card_option, ← add_assoc]
   push_cast
   rfl
@@ -1477,7 +1477,7 @@ theorem isMultiHomog_inc {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintyp
   | none =>
     show ∑ i, (Finsupp.mapDomain oldIdx m0) ⟨none, i⟩ = 0
     refine Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.mapDomain_notin_range]
+    rw [Finsupp.mapDomain_of_notMem_range]
     rintro ⟨q, hq⟩
     cases hq
   | some k =>
@@ -1633,7 +1633,7 @@ theorem isSectionOn_inv_one {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fin
   have : m = 0 := by
     by_contra h0
     classical
-    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, if_neg (Ne.symm h0)] at hm
+    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, ite_eq_right (Ne.symm h0)] at hm
     exact hm rfl
   simp [this]
 

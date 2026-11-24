@@ -166,13 +166,13 @@ theorem exists_L1_bound_of_L2_section [T2Space G] [IsFiniteMeasureOnCompacts μ]
   have hFr : AEStronglyMeasurable (fun y => F (r y)) (μ.restrict C) :=
     (GlobalTheory.RightRegFund.aestronglyMeasurable_comp_rep hD hDm hr hFm).restrict
   have h2 : ∫⁻ y in C, ‖F (r y)‖ₑ ^ (2 : ℝ) ∂μ ≤ M * ∫⁻ x in D, ‖F x‖ₑ ^ (2 : ℝ) ∂μ :=
-    setLIntegral_rep_le hD hDm hr hCm hM (hFm.measurable.enorm.pow_const _)
+    setLIntegral_rep_le hD hDm hr hCm hM (hFm.measurable.eNorm.pow_const _)
   have hF : ‖F‖ₑ = (∫⁻ x in D, ‖F x‖ₑ ^ (2 : ℝ) ∂μ) ^ (1 / 2 : ℝ) := by
-    rw [Lp.enorm_def, eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hFm.aestronglyMeasurable]
+    rw [Lp.eNorm_def, eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num) hFm.aestronglyMeasurable]
     simp only [ENNReal.toReal_ofNat]
   have h1 := eLpNorm_le_eLpNorm_mul_rpow_measure_univ (p := 1) (q := 2) (by norm_num) hFr
-  rw [eLpNorm_one_eq_lintegral_enorm hFr,
-    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hFr,
+  rw [eLpNorm_one_eq_lintegral_eNorm hFr,
+    eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num) hFr,
     Measure.restrict_apply_univ] at h1
   simp only [ENNReal.toReal_ofNat, ENNReal.toReal_one] at h1
   rw [show (1 : ℝ) / 1 - 1 / 2 = 1 / 2 by norm_num] at h1
@@ -206,7 +206,7 @@ theorem exists_double_bound [T2Space G] [IsFiniteMeasureOnCompacts μ]
     rw [← Measure.prod_restrict, Measure.restrict_univ]
   have hmeas : AEMeasurable (Function.uncurry fun x m => ‖F (r (m * x))‖ₑ) ((μ.restrict B).prod ν) := by
     rw [e]
-    exact (aesm_prod hD hDm hr ν F).enorm.restrict
+    exact (aesm_prod hD hDm hr ν F).eNorm.restrict
   rw [lintegral_lintegral_swap hmeas]
   calc ∫⁻ m, ∫⁻ x in B, ‖F (r (m * x))‖ₑ ∂μ ∂ν ≤ ∫⁻ _m, K * ‖F‖ₑ ∂ν := by
         refine lintegral_mono_ae ?_
@@ -258,8 +258,8 @@ theorem ae_integrable (hD : IsFundamentalDomain Γ D μ) (hDm : MeasurableSet D)
     rw [e]
     exact (aesm_prod hD hDm hr ν F).restrict
   have hfin : ∫⁻ x in B, ∫⁻ m, ‖F (r (m * x))‖ₑ ∂ν ∂μ ≠ ∞ :=
-    ne_top_of_le_ne_top (ENNReal.mul_ne_top hKt enorm_ne_top) (hK F)
-  filter_upwards [hprod.prodMk_left, ae_lt_top' hprod.enorm.lintegral_prod_right' hfin] with x h1 h2
+    ne_top_of_le_ne_top (ENNReal.mul_ne_top hKt eNorm_ne_top) (hK F)
+  filter_upwards [hprod.prodMk_left, ae_lt_top' hprod.eNorm.lintegral_prod_right' hfin] with x h1 h2
   exact ⟨h1, h2⟩
 
 theorem constTerm_add (hD : IsFundamentalDomain Γ D μ) (hDm : MeasurableSet D)
@@ -301,7 +301,7 @@ theorem isClosed_constTerm_zero (hD : IsFundamentalDomain Γ D μ) (hDm : Measur
       ae_restrict_of_ae (constTerm_add hD hDm hr hΓ hC hν (F - u n) (u n))] with x hx0 hxa
     rw [sub_add_cancel] at hxa
     rw [hxa, hx0, add_zero]
-    exact enorm_integral_le_lintegral_enorm _
+    exact eNorm_integral_le_lintegral_eNorm _
   have hlim' : Tendsto (fun n => K * ‖F - u n‖ₑ) atTop (𝓝 (K * 0)) := by
     refine ENNReal.Tendsto.const_mul ?_ (Or.inr hKt)
     have h1 : Tendsto (fun n => ‖u n - F‖) atTop (𝓝 0) := tendsto_iff_norm_sub_tendsto_zero.1 hlim
@@ -312,7 +312,7 @@ theorem isClosed_constTerm_zero (hD : IsFundamentalDomain Γ D μ) (hDm : Measur
   rw [mul_zero] at hlim'
   have hzero : ∫⁻ x in B, ‖∫ m, F (r (m * x)) ∂ν‖ₑ ∂μ = 0 :=
     le_antisymm (ge_of_tendsto' hlim' hle) zero_le
-  rw [lintegral_eq_zero_iff' hmeas.enorm] at hzero
+  rw [lintegral_eq_zero_iff' hmeas.eNorm] at hzero
   filter_upwards [hzero] with x hx
   simpa using hx
 

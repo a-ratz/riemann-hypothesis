@@ -328,7 +328,7 @@ theorem exists_inv_integer_subset {W : Set k} (hW : W ∈ 𝓝 (0 : k)) :
   calc valuation k x = valuation k (a * w) * valuation k ((a * w)⁻¹ * x) := h2
     _ ≤ valuation k (a * w) * 1 := mul_le_mul_right h1 _
     _ = γ * valuation k w := by rw [mul_one, map_mul, ha]
-    _ < γ * 1 := mul_lt_mul_of_pos_left hw1 (zero_lt_iff.mpr γ.ne_zero)
+    _ < γ * 1 := mul_lt_mul_of_pos_left hw1 (pos_iff_ne_zero.mpr γ.ne_zero)
     _ = γ := mul_one _
 
 theorem exists_Lc_subset (t : ℕ) {W : Set (Fin t → k)} (hW : W ∈ 𝓝 (0 : Fin t → k)) :
@@ -341,9 +341,9 @@ theorem exists_Lc_subset (t : ℕ) {W : Set (Fin t → k)} (hW : W ∈ 𝓝 (0 :
 
 theorem exists_Lc_invariant : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (t : ℕ) {Z : Type} [AddCommGroup Z] [Module ℂ Z] (φ : (Fin t → k) → Z), IsLocallyConstant φ → HasCompactSupport φ → ∃ c : k, c ≠ 0 ∧ ∀ o ∈ Lc t c, ∀ v, φ (v + o.toAdd) = φ v := by
   intro k _ _ _ _ t Z _ _ φ hl hc
-  letI uG : UniformSpace (Fin t → k) := IsTopologicalAddGroup.rightUniformSpace _
-  haveI : IsUniformAddGroup (Fin t → k) := isUniformAddGroup_of_addCommGroup
-  letI uZ : UniformSpace Z := ⊥
+  let uG : UniformSpace (Fin t → k) := IsTopologicalAddGroup.rightUniformSpace _
+  have : IsUniformAddGroup (Fin t → k) := isUniformAddGroup_of_addCommGroup
+  let uZ : UniformSpace Z := ⊥
   have huc : UniformContinuous φ := hc.uniformContinuous_of_continuous hl.continuous
   have hmem : {p : (Fin t → k) × (Fin t → k) | φ p.1 = φ p.2} ∈ 𝓤 (Fin t → k) := by
     have h0 : {q : Z × Z | q.1 = q.2} ∈ 𝓤 Z := by
@@ -992,7 +992,7 @@ theorem range_finite {X W : Type} [TopologicalSpace X] [AddCommGroup W] {φ : X 
     (hl : IsLocallyConstant φ) (hc : HasCompactSupport φ) : (Set.range φ).Finite := by
   have : CompactSpace (tsupport φ) := isCompact_iff_compactSpace.mp hc
   have h1 : (Set.range (φ ∘ ((↑) : tsupport φ → X))).Finite :=
-    (hl.comp_continuous continuous_subtype_val).range_finite
+    (hl.comp_continuous continuous_subtypeVal).range_finite
   refine (h1.insert 0).subset ?_
   rintro _ ⟨x, rfl⟩
   by_cases hx : x ∈ tsupport φ
@@ -1002,10 +1002,10 @@ theorem range_finite {X W : Type} [TopologicalSpace X] [AddCommGroup W] {φ : X 
 theorem exists_nhds_translation_invariant {A Z : Type} [AddCommGroup A] [TopologicalSpace A]
     [IsTopologicalAddGroup A] [AddCommGroup Z] {φ : A → Z} (hl : IsLocallyConstant φ)
     (hc : HasCompactSupport φ) : ∃ N ∈ 𝓝 (0 : A), ∀ w ∈ N, ∀ v, φ (v + w) = φ v := by
-  letI := IsTopologicalAddGroup.rightUniformSpace A
-  haveI := isUniformAddGroup_of_addCommGroup (G := A)
-  letI : UniformSpace Z := ⊥
-  haveI : DiscreteTopology Z := ⟨rfl⟩
+  let := IsTopologicalAddGroup.rightUniformSpace A
+  have := isUniformAddGroup_of_addCommGroup (G := A)
+  let : UniformSpace Z := ⊥
+  have : DiscreteTopology Z := ⟨rfl⟩
   have hu : UniformContinuous φ := hc.uniformContinuous_of_continuous hl.continuous
   have hid : {p : Z × Z | p.1 = p.2} ∈ _root_.uniformity Z := by
     have : _root_.uniformity Z = Filter.principal {p : Z × Z | p.1 = p.2} := rfl
@@ -1162,21 +1162,21 @@ theorem sum_reps_eq_zero_of_mem_twKer :
     ∀ {G Z : Type} [Group G] [AddCommGroup Z] [Module ℂ Z] [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Representation ℂ G Z), IsSmooth ρ → ∀ (L : Subgroup G), IsCompact (L : Set G) → ∀ v : Z, v ∈ twKer ρ L 1 → ∀ (K : Subgroup L) (T : Finset L), IsOpen (K : Set L) → (∀ x ∈ K, ρ (x : G) v = v) → (∀ x : L, ∃! t, t ∈ T ∧ t⁻¹ * x ∈ K) → ∑ t ∈ T, ρ (t : G) v = 0 := by
   intro G Z _ _ _ _ _ ρ hρ L hL v hv K T hKo hKv hT
   classical
-  haveI : CompactSpace L := isCompact_iff_compactSpace.mp hL
+  have : CompactSpace L := isCompact_iff_compactSpace.mp hL
   have hθ : IsOpen (((1 : L →* ℂˣ).ker : Subgroup L) : Set L) := by
     rw [MonoidHom.ker_one]
     exact isOpen_univ
   obtain ⟨M, hM, hsum⟩ := exists_sum_eq_zero hρ hL (1 : L →* ℂˣ) hθ hv
-  haveI : Finite (L ⧸ K) := Subgroup.quotient_finite_of_isOpen _ hKo
-  haveI hKf : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-  haveI : Fintype (L ⧸ K) := Fintype.ofFinite _
+  have : Finite (L ⧸ K) := Subgroup.quotient_finite_of_isOpen _ hKo
+  have hKf : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Fintype (L ⧸ K) := Fintype.ofFinite _
   set C : Subgroup L := (M ⊓ K).normalCore with hC
-  haveI : C.Normal := Subgroup.normalCore_normal _
-  haveI : C.FiniteIndex := inferInstance
-  haveI : Fintype (L ⧸ C) := Fintype.ofFinite _
+  have : C.Normal := Subgroup.normalCore_normal _
+  have : C.FiniteIndex := inferInstance
+  have : Fintype (L ⧸ C) := Fintype.ofFinite _
   have hCM : C ≤ M ⊓ K := Subgroup.normalCore_le _
-  haveI : Finite (K ⧸ C.subgroupOf K) := inferInstance
-  haveI : Fintype (K ⧸ C.subgroupOf K) := Fintype.ofFinite _
+  have : Finite (K ⧸ C.subgroupOf K) := inferInstance
+  have : Fintype (K ⧸ C.subgroupOf K) := Fintype.ofFinite _
   have hf : ∀ x : L, ∀ k ∈ K, twOrbit ρ L 1 v (x * k) = twOrbit ρ L 1 v x := by
     intro x k hk
     simp only [twOrbit, MonoidHom.one_apply, mul_one, inv_one, Units.val_one, one_smul,
@@ -1230,7 +1230,7 @@ theorem mem_twKer_of_sum {G X ι : Type} [Group G] [AddCommGroup X] [Module ℂ 
 theorem exists_reps {L : Type} [Group L] (K : Subgroup L) (hK : K.FiniteIndex) :
     ∃ T : Finset L, T.Nonempty ∧ ∀ x : L, ∃! t, t ∈ T ∧ t⁻¹ * x ∈ K := by
   classical
-  haveI : Fintype (L ⧸ K) := Fintype.ofFinite _
+  have : Fintype (L ⧸ K) := Fintype.ofFinite _
   refine ⟨(Finset.univ : Finset (L ⧸ K)).image Quotient.out, ⟨_, Finset.mem_image_of_mem _ (Finset.mem_univ (QuotientGroup.mk 1))⟩, ?_⟩
   intro x
   refine ⟨(QuotientGroup.mk x : L ⧸ K).out, ⟨Finset.mem_image_of_mem _ (Finset.mem_univ _), ?_⟩, ?_⟩

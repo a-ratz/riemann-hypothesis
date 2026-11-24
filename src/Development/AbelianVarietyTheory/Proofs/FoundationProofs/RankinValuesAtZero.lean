@@ -247,7 +247,7 @@ theorem lseriesSquares_term (e : ℕ) (c : ℕ → ℂ) (s : ℝ) (he : 1 ≤ e)
   · simp
   have hd' : (d : ℂ) ≠ 0 := by exact_mod_cast hd
   rw [LSeries.term_of_ne_zero (mul_ne_zero hd hd), LSeries.term_of_ne_zero hd]
-  simp only [Nat.sqrt_eq, if_true]
+  simp only [Nat.sqrt_eq, ite_true]
   rw [Nat.cast_mul, natCast_mul_natCast_cpow, ← cpow_add _ _ hd', ← cpow_natCast, mul_div_assoc,
     ← cpow_sub _ _ hd', div_eq_mul_inv, ← cpow_neg]
   congr 2
@@ -393,7 +393,7 @@ theorem rankin_convolution_coeff_of_squareSupported (e : ℕ) (χ ψ θ g b z : 
       rw [← hn', sq, Nat.mul_div_cancel_left _ (Nat.mul_pos hs hs)]
     have hpow : (s:ℂ)^(2*e) * (s:ℂ)^(e-1) = (s:ℂ)^(3*e-1) := by
       rw [← pow_add]; congr 1; omega
-    rw [hz, hsq, if_pos rfl, hdiv, hψ, hθ, ← hpow]
+    rw [hz, hsq, ite_eq_left rfl, hdiv, hψ, hθ, ← hpow]
     push_cast
     rw [mul_pow]
     ring
@@ -406,7 +406,7 @@ theorem rankin_convolution_coeff_of_squareSupported (e : ℕ) (χ ψ θ g b z : 
     have h : Nat.sqrt a * Nat.sqrt a = a := by
       by_contra h
       apply hne
-      simp only [hz, if_neg h, zero_mul]
+      simp only [hz, ite_eq_right h, zero_mul]
     have ha : a ≠ 0 := fun h0 => hn (by rw [← hac, h0, zero_mul])
     refine ⟨Nat.sqrt a, x, y, Nat.sqrt_pos.mpr (Nat.pos_of_ne_zero ha), by rw [h, hxy, hac], ?_⟩
     rw [h, hxy]
@@ -733,7 +733,7 @@ lemma g_nonneg (x : ℤ × ℤ) : 0 ≤ g x := by
 lemma g_zero : g 0 = 1 := by simp [g, Real.zero_rpow (by norm_num : -(3:ℝ) ≠ 0)]
 
 lemma g_ne {x : ℤ × ℤ} (hx : x ≠ 0) : g x = (‖x‖ ^ 3)⁻¹ := by
-  simp only [g, if_neg hx, add_zero]
+  simp only [g, ite_eq_right hx, add_zero]
   rw [Real.rpow_neg (norm_nonneg x)]; norm_cast
 
 theorem rowbd : ∀ j L : ℕ, 2 ≤ j → 0 < L → ∃ (C : ℝ) (A : ℕ), ∀ τ : ℍ, ∃ u : ℤ × ℤ → ℝ,
@@ -1186,7 +1186,7 @@ namespace GlobalTheory.EisM
 
 theorem rankin_values_at_zero : ∀ (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (ψ : DirichletCharacter ℂ l) (φ : DirichletCharacter ℂ (N * l)) (g : ℕ → ℂ) (ρ : ℍ → ℝ) (c₀ : ℂ), 1 ≤ e → 0 < N → l.Prime → ¬ l ∣ N → Prim (2 * e + 1) N χ g → Wt (N * l) ρ → (∀ d : ℤ, ch φ d = ch (θ * χ) d * ch ψ d) → φ ≠ 1 → MF e (N * l) (fun d => ch ψ d * ch θ d) (eis e c₀ (ch ψ) (ch θ)) → ∃ P : ℂ, P ≠ 0 ∧ pet (2 * e + 1) ρ (qs fun n => conj (g n)) (fun τ => qs (eis e c₀ (ch ψ) (ch θ)) τ * lat (e + 1) 0 (N * l) (0, 1) (latF (N * l) (fun _ => 1) φ) τ) = P ∧ pet (2 * e + 1) ρ (qs (Vo l fun n => conj (g n))) (fun τ => qs (eis e c₀ (ch ψ) (ch θ)) τ * lat (e + 1) 0 (N * l) (0, 1) (latF (N * l) (fun _ => 1) φ) τ) = θ l / (l : ℂ) ^ (2 * e) * P := by
   intro e N l χ θ ψ φ g ρ c₀ he hN hl hlN hg hρ hφ hφ1 hb
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hLpos : 0 < N * l := Nat.mul_pos hN hl.pos
   have hNL : N ∣ N * l := dvd_mul_right N l
   set b := eis e c₀ (ch ψ) (ch θ) with hbdef

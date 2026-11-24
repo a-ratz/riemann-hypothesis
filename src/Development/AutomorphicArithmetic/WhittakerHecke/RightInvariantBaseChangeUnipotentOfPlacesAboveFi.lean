@@ -106,7 +106,7 @@ private lemma fix_sum {K : Type} [Field K] [NumberField K] (φ : GL (Fin 2) (A K
       by_cases h : u = w
       · subst h
         rw [hc, sub_self, map_zero]
-        exact zero_le'
+        exact zero_le
       · rw [hne u h, sub_zero]
         exact h3 u
 
@@ -158,4 +158,4 @@ theorem UpperTheory.right_invariant_baseChangeUnipotent_of_places_above_fixed :
       rw [hz, map_mul, h1, map_mul]
       exact mul_le_one' (hk c hc) h3
     · rw [hoff w hw, map_zero]
-      exact zero_le'
+      exact zero_le

@@ -240,7 +240,7 @@ theorem PhiData.ContD_wdeg_phiX : 1 ≤ wdeg (P.φ X) := by
       rwa [PowerSeries.coeff_zero_eq_constantCoeff_apply]
     rw [h2, zero_add]
   show 1 ≤ ((P.φ X).map (IsLocalRing.residue O)).order.toNat
-  rw [h1, ENat.toNat_coe]
+  rw [h1, ENat.toNat_natCast]
   exact (Nat.Prime.one_lt Fact.out).le
 
 theorem PhiData.ContD_eq_of_X (h : O⟦X⟧ →ₐ[O] O⟦X⟧) (hX : h X = P.φ X) (f : O⟦X⟧) :

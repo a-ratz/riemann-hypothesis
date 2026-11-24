@@ -90,7 +90,7 @@ theorem gs_ne_zero [IsIntegral X] {L : LB X} (s : L.Sec) (hs : ∃ i, s.f i ≠ 
 
 theorem associated_of_flat [IsIntegral X] (f : Y ⟶ X) [Flat f] (y : Y) {a b : X.presheaf.stalk (f y)}
     (h : Associated ((f.stalkMap y).hom a) ((f.stalkMap y).hom b)) : Associated a b := by
-  letI := (f.stalkMap y).hom.toAlgebra
+  let := (f.stalkMap y).hom.toAlgebra
   have : Module.Flat (X.presheaf.stalk (f y)) (Y.presheaf.stalk y) := Flat.stalkMap f y
   have : IsLocalHom (algebraMap (X.presheaf.stalk (f y)) (Y.presheaf.stalk y)) :=
     inferInstanceAs (IsLocalHom (f.stalkMap y).hom)
@@ -103,7 +103,7 @@ theorem exists_local_unit [IsIntegral X] {V : X.Opens} (a b : Γ(X, V)) (x : X) 
     ∃ (W : X.Opens) (_ : W ≤ V) (_ : x ∈ W) (u : Γ(X, W)ˣ),
       ∀ y ∈ W, gs (𝟙 X) y V b = (gm (𝟙 X) y W u).val * gs (𝟙 X) y V a := by
   obtain ⟨c, hc⟩ := h
-  obtain ⟨U, hU, t, ht⟩ := X.presheaf.germ_exist (x := x) c.val
+  obtain ⟨U, hU, t, ht⟩ := X.presheaf.exists_germ_eq (x := x) c.val
   have hxt : x ∈ X.basicOpen t := (X.mem_basicOpen t x hU).2 (by rw [ht]; exact c.isUnit)
   have hW : V ⊓ X.basicOpen t ≤ U := inf_le_right.trans (X.basicOpen_le t)
   have hxW : x ∈ V ⊓ X.basicOpen t := ⟨hx, hxt⟩

@@ -235,12 +235,12 @@ end UpperTheory.ConvolutionTheory.R2.Ff.NI
 theorem UpperTheory.ConvolutionTheory.R2.Ff.normInf :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] (_D : Dat F E), NormInf F E := by
   intro F E _ _ _ _ _ _ _ D s
-  haveI : Module.Finite F E := Module.Finite.of_basis D.b
+  have : Module.Finite F E := Module.Finite.of_basis D.b
   have hsurj : Function.Surjective fun w : InfinitePlace E => w.comap (algebraMap F E) :=
     InfinitePlace.comap_surjective
   let val : TR.Rinf F := fun v => ∏ w : InfinitePlace E, if w.comap (algebraMap F E) = v then ‖s.val w‖ ^ 2 else 1
   have hval : ∀ w : InfinitePlace E, val (w.comap (algebraMap F E)) = ‖s.val w‖ ^ 2 := fun w => by
-    refine (Finset.prod_eq_single w (fun w' _ hw => if_neg fun e => hw (NI.place_unique D e)) (fun h => absurd (Finset.mem_univ w) h)).trans (if_pos rfl)
+    refine (Finset.prod_eq_single w (fun w' _ hw => ite_eq_right fun e => hw (NI.place_unique D e)) (fun h => absurd (Finset.mem_univ w) h)).trans (ite_eq_left rfl)
   have hs : ∀ w, s.val w ≠ 0 := fun w h => by
     have := congrFun s.mul_inv w
     rw [Pi.mul_apply, h, zero_mul] at this

@@ -64,19 +64,19 @@ def chartE (X : Data E r) : Frame X.Ψ r ≃L[ℂ] V (Module.finrank ℂ (Frame 
   ContinuousLinearEquiv.ofFinrankEq (finrank_euclideanSpace_fin).symm
 
 theorem haar_frame (X : Data E r) : (volume : Measure (Frame X.Ψ r)).IsAddHaarMeasure := by
-  haveI h0 : (volume : Measure ℂ).IsAddHaarMeasure := inferInstance
-  haveI h0' : SigmaFinite (volume : Measure ℂ) := inferInstance
-  haveI h1 : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := by
+  have h0 : (volume : Measure ℂ).IsAddHaarMeasure := inferInstance
+  have h0' : SigmaFinite (volume : Measure ℂ) := inferInstance
+  have h1 : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := by
     rw [volume_pi]; exact Measure.pi.isAddHaarMeasure _
-  haveI h2 : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure := by
+  have h2 : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure := by
     rw [volume_pi]; exact Measure.pi.isAddHaarMeasure _
   rw [volume_pi]; exact Measure.pi.isAddHaarMeasure _
 
 theorem vol_eq (X : Data E r) :
     ∃ c : ℝ≥0∞, c < ⊤ ∧ (volume : Measure (V (Module.finrank ℂ (Frame X.Ψ r)))) =
       c • Measure.map (chartE X).toHomeomorph.toMeasurableEquiv volume := by
-  haveI := haar_frame X
-  haveI : (Measure.map (chartE X) (volume : Measure (Frame X.Ψ r))).IsAddHaarMeasure :=
+  have := haar_frame X
+  have : (Measure.map (chartE X) (volume : Measure (Frame X.Ψ r))).IsAddHaarMeasure :=
     (chartE X).isAddHaarMeasure_map volume
   have h := Measure.isAddLeftInvariant_eq_smul (volume : Measure (V (Module.finrank ℂ (Frame X.Ψ r))))
     (Measure.map (chartE X) (volume : Measure (Frame X.Ψ r)))
@@ -234,7 +234,7 @@ theorem extF_of (hLU : LUStatement (E := E)) (hM : FrameMeasStatement (E := E)) 
   have hPcell : ∀ y ∈ cell D, P y = P0 D la F y := by
     intro y hy
     rw [hP]
-    simp only [dif_pos hy.1]
+    simp only [dite_eq_left hy.1]
     exact hUeq y hy.1 y (mem_ball_self (hρ y hy.1)) hy.2
 
   have hPd : DifferentiableOn ℂ P X.dom := by
@@ -245,7 +245,7 @@ theorem extF_of (hLU : LUStatement (E := E)) (hM : FrameMeasStatement (E := E)) 
       filter_upwards [hO] with y hy
       have hyd : y ∈ X.dom := hsub x hx y (ball_subset_closedBall hy)
       rw [hP]
-      simp only [dif_pos hyd]
+      simp only [dite_eq_left hyd]
       exact (hagree x hx y hyd (chartE X y) hy (mem_ball_self (hρ y hyd))).symm
     have hd : DifferentiableAt ℂ (fun y => U x hx (chartE X y)) x :=
       ((hU x hx).differentiableAt (isOpen_ball.mem_nhds (mem_ball_self (hρ x hx)))).comp x

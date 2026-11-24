@@ -121,17 +121,17 @@ theorem distribHaarChar_eq_nnnorm (v : HeightOneSpectrum (𝓞 F)) (a : Fv F v) 
     (mul_inv_eq_one₀ hq).1 h1
   rw [h2]
   apply NNReal.coe_injective
-  rw [coe_nnnorm, ← GroundTheory.Global.normalizedAbv_apply, GroundTheory.Global.normalizedAbv_eq_zpow v ha, ← hk]
+  rw [coe_nnNorm, ← GroundTheory.Global.normalizedAbv_apply, GroundTheory.Global.normalizedAbv_eq_zpow v ha, ← hk]
   simp
 
 theorem map_mul_left_finite (v : HeightOneSpectrum (𝓞 F)) (a : Fv F v) (ha : a ≠ 0)
     (μ : Measure (Fv F v)) (hμ : μ.IsAddHaarMeasure) :
     μ.map (fun x => a * x) = (‖a‖₊)⁻¹ • μ := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
-  haveI : μ.Regular := inferInstance
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
+  have : μ.Regular := inferInstance
   ext S hS
-  rw [Measure.map_apply (continuous_const_mul _).measurable hS, Measure.smul_apply]
+  rw [Measure.map_apply (continuous_const_mul _).measurable hS, smul_apply]
   have h := distribHaarChar_mul μ (Units.mk0 a ha)⁻¹ S
   have e : (fun x => a * x) ⁻¹' S = (Units.mk0 a ha)⁻¹ • S :=
     Set.preimage_smul (Units.mk0 a ha) S

@@ -115,7 +115,7 @@ theorem exists_regulariser_at_place : _root_.GlobalTheory.FunPr.ThetaLocalInputs
           rw [← mul_assoc]
           exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ h3 h4 k) (mul_nonneg (abs_nonneg C₀) (abs_nonneg C))
   have hWl := (hM.vtx (.grid i j) ⟨i.2.le, j.2.le⟩).haar_fund
-  haveI : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
+  have : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol _ _ _ hWl.1 hWl.2).ne
   have hcont := GlobalTheory.SmallRoute.continuous_translates_kerSmall hL W B ρ t i j Θ Θ' hΘ g₁ z
   exact ⟨Bs.v₁, hvP, z, hz, Integrable.of_bound ((hcont.comp (continuous_const.prodMk continuous_id)).aestronglyMeasurable) _
@@ -200,7 +200,7 @@ theorem small_kernel_invariant : _root_.GlobalTheory.FunPr.ThetaLocalInputs → 
   have hfull : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
       IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
     intro V Λ hΛ
-    haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+    have : Submodule.IsLattice D.host.E Λ := hΛ.1
     refine ⟨?_⟩
     obtain ⟨s, hs⟩ := hΛ.1.fg
     apply eq_top_iff.mpr
@@ -257,7 +257,7 @@ theorem small_kernel_invariant : _root_.GlobalTheory.FunPr.ThetaLocalInputs → 
     rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
     exact this
   refine ⟨G.Λ (.grid i j), hfin.toFinset ∪ (locPl G t).image (fun PP => (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)),
-    s0.1.fg, (by letI := hfull _ _ s0; exact Submodule.IsFullLattice.span_eq_top), ?_⟩
+    s0.1.fg, (by let := hfull _ _ s0; exact Submodule.IsFullLattice.span_eq_top), ?_⟩
   intro κ hκ u
   have hgd : ∀ v, v ∉ hfin.toFinset ∪ (locPl G t).image (fun PP => (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) → good v := by
     intro v hv
@@ -419,7 +419,7 @@ theorem regularizedIntegral_const_of_small : _root_.GlobalTheory.FunPr.ThetaLoca
   intro G W hW B ρ hρ t i j M hM Θ Θ' hΘ g g₁
   set f := kerSmall W Θ' g g₁ with hf
   have hfd := (hM.vtx (.grid i j) ⟨i.2.le, j.2.le⟩).haar_fund
-  haveI := hfd.1
+  have := hfd.1
   have hinv : ∀ γ ∈ GQ (G.V (.grid i j)), ∀ u, f (γ * u) = f u := kerSmall_rat_mid W B ρ t i j Θ Θ' hΘ g g₁
   have key := zdeg_mul_integral_comm (G.V (.grid i j)) (M.ν _) (M.fd _) hfd.2 f hinv
   obtain ⟨v₀, -, w₀, hw₀, hi₀, hs₀⟩ := k2 G W hW B ρ hρ t i j M hM Θ Θ' hΘ g g₁ ∅
@@ -501,21 +501,21 @@ theorem twisted_constant_existence : GlobalTheory.Published.HoweDualityReal → 
   let rel' : ∀ i j : ℕ, Submodule ℂ (PolRoute G (.grid i (j + 1)) (.grid (i + 1) (j + 1)) (.grid (i + 1) j) ×
       PolRoute G (.grid i (j + 1)) (.grid i j) (.grid (i + 1) j)) := fun i j =>
     if h : i < D.R.m ∧ j < D.R.m then r ⟨i, h.1⟩ ⟨j, h.2⟩ else rm.rel i j
-  have e : ∀ i j : Fin D.R.m, rel' i j = r i j := fun i j => dif_pos ⟨i.2, j.2⟩
+  have e : ∀ i j : Fin D.R.m, rel' i j = r i j := fun i j => dite_eq_left ⟨i.2, j.2⟩
   let ρ : RealMatch W := { rm with
     rel := rel'
     onto_big := fun i j a => by
       by_cases h : i < D.R.m ∧ j < D.R.m
-      · simp only [rel', dif_pos h]; exact hr1 ⟨i, h.1⟩ ⟨j, h.2⟩ a
-      · simp only [rel', dif_neg h]; exact rm.onto_big i j a
+      · simp only [rel', dite_eq_left h]; exact hr1 ⟨i, h.1⟩ ⟨j, h.2⟩ a
+      · simp only [rel', dite_eq_right h]; exact rm.onto_big i j a
     onto_small := fun i j b => by
       by_cases h : i < D.R.m ∧ j < D.R.m
-      · simp only [rel', dif_pos h]; exact hr2 ⟨i, h.1⟩ ⟨j, h.2⟩ b
-      · simp only [rel', dif_neg h]; exact rm.onto_small i j b
+      · simp only [rel', dite_eq_left h]; exact hr2 ⟨i, h.1⟩ ⟨j, h.2⟩ b
+      · simp only [rel', dite_eq_right h]; exact rm.onto_small i j b
     proper := fun i j => by
       by_cases h : i < D.R.m ∧ j < D.R.m
-      · simp only [rel', dif_pos h]; exact hr3 ⟨i, h.1⟩ ⟨j, h.2⟩
-      · simp only [rel', dif_neg h]; exact rm.proper i j }
+      · simp only [rel', dite_eq_left h]; exact hr3 ⟨i, h.1⟩ ⟨j, h.2⟩
+      · simp only [rel', dite_eq_right h]; exact rm.proper i j }
   have hρ : ρ.Over R := hrm
   have hc : ∀ i j t, ∃ c, IsSquareConst W B ρ t i j c := by
     intro i j t

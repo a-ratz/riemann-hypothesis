@@ -117,7 +117,7 @@ theorem thetaMeas_gram_indep : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hint : ∫⁻ g in 𝓕, f g ∂μ = ∫⁻ g in 𝓕', f g ∂μ := h𝓕₁.setLIntegral_eq h𝓕₄ f hinv
   have hcE0 : (c : ℝ≥0∞) ≠ 0 := by exact_mod_cast hc0
   have hcT : (c : ℝ≥0∞) ≠ ⊤ := ENNReal.coe_ne_top
-  rw [hint, hsm, Measure.restrict_smul, lintegral_smul_measure, Measure.smul_apply, ← hmass]
+  rw [hint, hsm, Measure.restrict_smul, lintegral_smul_measure, smul_apply, ← hmass]
   simp only [ENNReal.smul_def, smul_eq_mul]
   rw [ENNReal.mul_inv (Or.inl hcE0) (Or.inl hcT)]
   calc _ = ((c : ℝ≥0∞)⁻¹ * c) * ((μ 𝓕)⁻¹ * ∫⁻ g in 𝓕', f g ∂μ) := by rw [ENNReal.inv_mul_cancel hcE0 hcT, one_mul]

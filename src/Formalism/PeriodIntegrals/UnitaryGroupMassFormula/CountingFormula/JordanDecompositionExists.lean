@@ -454,7 +454,7 @@ theorem nMPseudo_of (hE : JordanExists) (hD : DetLocal) (hC : CountExt) (hA : No
         hC K F _ 𝔭 P a' h𝔭 hP h'.2.2.2.2]
       rfl
     have he : P.asIdeal.ramificationIdx (𝓞 F) ≠ 0 := by
-      haveI := P.isPrime
+      have := P.isPrime
       exact (Ideal.ramificationIdx_pos (R := 𝓞 F) P.asIdeal).ne'
     have hv : vJ h X (pbLat x 𝔞) 𝔭 = vJof 𝔭 a := by
       unfold vJ
@@ -601,7 +601,7 @@ theorem loc_g (D : Formalism.BasicNotions.D7) {T T' : D.host.E} (F0 : FlagG (VS 
     haveI := P.isPrime
     Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (MMg D F0 F') =
       Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (pbLat (flagDifferenceVectors D F0 F') (Sum.elim (differentIdealPowers D) (differentIdealPowers D))) := by
-  haveI := P.isPrime
+  have := P.isPrime
   apply locS_eq_of
   · refine (Submodule.span_le.mpr ?_).trans (le_locS _ _)
     rintro v (⟨a, rfl⟩ | ⟨b, rfl⟩)
@@ -697,7 +697,7 @@ theorem loc_ng (D : Formalism.BasicNotions.D7) {T T' : D.host.E} (F0 : FlagG (VS
     haveI := P.isPrime
     Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (UUS D F0 F') =
       Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (pbLat (flagDifferenceVectors D F0 F') (Sum.elim (differentIdealPowers D) (differentIdealPowers D))) := by
-  haveI := P.isPrime
+  have := P.isPrime
   have hg := gS_ne_zero' D
   apply locS_eq_of
   · exact (UUS_le_pb D F0 F').trans (le_locS _ _)
@@ -736,7 +736,7 @@ theorem mmPseudo_of (hg : GDiffPrime) : MMPseudo := by
 
 theorem congruence_prime_different : GDiffPrime := by
   intro D P hP
-  haveI := P.isPrime
+  have := P.isPrime
   have hg : ((D.host.g 0 : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal ∨ ((D.host.g 1 : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal := by
     apply P.isPrime.mem_or_mem
     unfold gS at hP
@@ -846,7 +846,7 @@ theorem det_sub_single (r : ℕ) (W : Matrix (Fin (r + 1)) (Fin (r + 1)) K) (c :
 
 theorem det_blocks_of_ne (r : ℕ) (Z W : Matrix (Fin (r + 1)) (Fin (r + 1)) K) (a b : K) (hZ : Z.det ≠ 0) :
     (fromBlocks Z (single (Fin.last r) (Fin.last r) a) (single (Fin.last r) (Fin.last r) b) W).det = Z.det * W.det - a * b * Z.adjugate (Fin.last r) (Fin.last r) * W.adjugate (Fin.last r) (Fin.last r) := by
-  haveI := Z.invertibleOfIsUnitDet (isUnit_iff_ne_zero.mpr hZ)
+  have := Z.invertibleOfIsUnitDet (isUnit_iff_ne_zero.mpr hZ)
   rw [Matrix.det_fromBlocks₁₁, Matrix.invOf_eq_nonsing_inv, Matrix.single_mul_mul_single,
     det_sub_single, Matrix.inv_def, Matrix.smul_apply, Ring.inverse_eq_inv', smul_eq_mul]
   field_simp
@@ -1156,7 +1156,7 @@ theorem countExt_single (K F : Type) [Field K] [NumberField K] [Field F] [Number
     FractionalIdeal.count K P (FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 K)) (algebraMap F K (α : F))) =
       ((P.asIdeal.ramificationIdx (𝓞 F) * vF 𝔭 α : ℕ) : ℤ) := by
   have h0 : 𝔭 ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField h𝔭 (NumberField.RingOfIntegers.not_isField F)
-  haveI : P.asIdeal.LiesOver 𝔭 := ⟨by rw [Ideal.under_def, hP]⟩
+  have : P.asIdeal.LiesOver 𝔭 := ⟨by rw [Ideal.under_def, hP]⟩
   set β : 𝓞 K := algebraMap (𝓞 F) (𝓞 K) α
   have hβ : β ≠ 0 := by
     intro h
@@ -1165,7 +1165,7 @@ theorem countExt_single (K F : Type) [Field K] [NumberField K] [Field F] [Number
   have hsβ : Ideal.span {β} ≠ ⊥ := by simpa using hβ
   have hsα : Ideal.span {α} ≠ ⊥ := by simpa using hα
   have hK : algebraMap F K (α : F) = algebraMap (𝓞 K) K β := rfl
-  rw [hK, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K P hsβ,
+  rw [hK, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K P hsβ,
     Ideal.count_associates_factors_eq hsβ P.isPrime P.ne_bot,
     HeightOneSpectrum.count_normalizedFactors_eq_multiplicity hsβ P]
   congr 1
@@ -1273,7 +1273,7 @@ theorem isLatIn_pb (x : ι → V) (𝔞 : ι → FractionalIdeal (nonZeroDivisor
         rw [ho, mul_comm (d i : K), mul_assoc, mul_inv_cancel₀ hdi, mul_one]
       rw [this]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-    haveI : IsNoetherian (𝓞 K) N := isNoetherian_of_fg_of_noetherian N hNfg
+    have : IsNoetherian (𝓞 K) N := isNoetherian_of_fg_of_noetherian N hNfg
     have hfg := IsNoetherian.noetherian ((pbLat x 𝔞).comap N.subtype)
     have hmap := hfg.map N.subtype
     rwa [Submodule.map_comap_eq_of_le (by rw [Submodule.range_subtype]; exact hle)] at hmap

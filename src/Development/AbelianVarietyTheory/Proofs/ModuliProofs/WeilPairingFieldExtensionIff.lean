@@ -187,8 +187,8 @@ theorem weilIs_fieldExt_iff : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (K Ω
   rw [unitOn_map]
   let h : Over.mk (spMap i ≫ x) ⟶ Over.mk x := Over.homMk (spMap i) rfl
   refine ⟨fun H => ?_, fun H => weilIs_pull globalFns_holds hG hL h H⟩
-  letI : Unique (Over.mk x).left := inferInstanceAs (Unique (PrimeSpectrum K))
-  letI : Unique (Over.mk (spMap i ≫ x)).left := inferInstanceAs (Unique (PrimeSpectrum Ω))
+  let : Unique (Over.mk x).left := inferInstanceAs (Unique (PrimeSpectrum K))
+  let : Unique (Over.mk (spMap i ≫ x)).left := inferInstanceAs (Unique (PrimeSpectrum Ω))
   obtain ⟨a, b, ha, hb, Hc⟩ := (weilIs_iff hG hL _ _ _).1 H
   have pb : IsPullback (h ▷ G).left (fst _ G).left (fst _ G).left (spMap i) := isPullback_whisker h
   obtain ⟨e, -, -, -, inj⟩ := (FieldBaseChange.epi_and_isMonHom_iff K Ω i).1 _ _ _ _ _ pb

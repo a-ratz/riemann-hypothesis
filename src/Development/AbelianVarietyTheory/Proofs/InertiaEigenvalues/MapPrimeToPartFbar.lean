@@ -74,7 +74,7 @@ private theorem pow_pow_factorization_mul_inv_val_eq_self {K : Type} [Field K] {
     rintro h
     rw [h, mul_zero] at hnqm
     omega
-  haveI : NeZero m := ⟨hm0⟩
+  have : NeZero m := ⟨hm0⟩
   have hcop : Nat.Coprime q m := (Nat.coprime_ordCompl hl hpos.ne').pow_left _
   have hym : y ^ m = 1 := by
     have h1 : (y ^ m) ^ q = 1 := by rw [← pow_mul, mul_comm, hnqm, hy]

@@ -83,7 +83,7 @@ theorem exists_index {V' K'' : Type} [CommRing V'] [IsDomain V'] [IsDiscreteValu
       vV_mul (inj _ u.ne_zero) (pow_ne_zero _ (inj p hp.ne_zero)), vV_mul h2 (pow_ne_zero _ h1),
       vV_pow (inj p hp.ne_zero), vV_pow h1, vV_unit, vV_irr hp, hr]
     have := vV_unit (K' := K'') (Units.map j.toMonoidHom u)
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at this
     rw [this]; ring
   refine ⟨r, by omega, fun x => ?_⟩
   by_cases hx : x = 0
@@ -283,8 +283,8 @@ theorem exists_ext_all_models_uniformised : ∀ (E : Type) [Field E] [NumberFiel
   obtain ⟨φ, hφ⟩ : ∃ φ : T.Fr →+* T'.Fr, ∀ v, φ (algebraMap T.V T.Fr v) = algebraMap T'.V T'.Fr (algebraMap T.V W v) :=
     ⟨IsFractionRing.lift hj, IsFractionRing.lift_algebraMap hj⟩
   obtain ⟨r, hr0, hv⟩ := exists_index (V' := T'.V) (algebraMap T.V W) φ hφ
-  letI := io.toAlgebra
-  letI := (φ.comp io).toAlgebra
+  let := io.toAlgebra
+  let := (φ.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { φ with commutes' := fun _ => rfl }
   obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap GlobalTheory.firstFiveLaws.1 E H Dw l Xo c _ _ ψ y.1
   obtain ⟨p, χ, y₀, hy₀⟩ := y.2.1
@@ -301,8 +301,8 @@ theorem exists_ext_intChart_unif : ∀ (E : Type) [Field E] [NumberField E] [IsC
       (letI := io.toAlgebra; letI := io'.toAlgebra; φ.toRingHom) = iT := ⟨_, rfl⟩
   have hio : io' = iT.comp io := by
     subst hiT
-    letI := io.toAlgebra
-    letI := io'.toAlgebra
+    let := io.toAlgebra
+    let := io'.toAlgebra
     exact RingHom.ext fun a => (φ.commutes a).symm
   have hv' : ∀ a : T.Fr, vV T'.V (iT a) = (e : ℤ) * vV T.V a := by
     intro a

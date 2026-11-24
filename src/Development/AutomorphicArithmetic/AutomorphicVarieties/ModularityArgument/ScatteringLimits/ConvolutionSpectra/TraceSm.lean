@@ -183,7 +183,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.planch :
   have fi : Integrable f := fc.integrable_of_hasCompactSupport fs
   have e1 : ∀ᵐ x : ℝ, ‖f (-x)‖ ^ 2 = Real.exp (-2 * x) * ‖kv κ e x‖ ^ 2 := by
     filter_upwards [((kvSpec κ hk).1 e).1] with x hx
-    rw [hx, norm_smul, mul_pow, Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le, ← Real.exp_nat_mul]
+    rw [hx, norm_smul, mul_pow, Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le, ← Real.exp_natCast_mul]
     congr 2; push_cast; ring
   have i2 : Integrable fun x => ‖f x‖ ^ 2 := (memLp_two_iff_integrable_sq_norm fc.aestronglyMeasurable).1 fm
   refine ⟨i2.comp_neg.congr e1, ?_⟩
@@ -280,7 +280,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.wBound :
       refine integral_congr_ae (Eventually.of_forall fun x => ?_)
       simp only
       rw [← mul_assoc, ← Real.exp_add]; ring_nf
-    rw [e, mul_pow, ← Real.exp_nat_mul]
+    rw [e, mul_pow, ← Real.exp_natCast_mul]
     exact mul_le_mul_of_nonneg_left hp2 (Real.exp_pos _).le
   have mp' : Measurable fun x => ‖p (c - x)‖ ^ 2 := mp.comp (measurable_const.sub measurable_id)
   have h2 : ∫⁻ x, ENNReal.ofReal (Real.exp (2 * x) * ‖g x‖ ^ 2) ≤ ENNReal.ofReal ((Real.exp c * Q) ^ 2) := by
@@ -323,7 +323,7 @@ private theorem half {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
       field_simp; ring
     rw [this]; positivity
   calc _ ≤ ∫⁻ y in Ioi a, ENNReal.ofReal (l / 2 * (Real.exp (2 * y) * ‖g y‖ ^ 2) + (2 * l)⁻¹ * Real.exp (-2 * y)) :=
-        lintegral_mono fun y => by rw [← ofReal_norm_eq_enorm]; exact ENNReal.ofReal_le_ofReal (pt y)
+        lintegral_mono fun y => by rw [← ofReal_norm]; exact ENNReal.ofReal_le_ofReal (pt y)
     _ = ENNReal.ofReal (∫ y in Ioi a, l / 2 * (Real.exp (2 * y) * ‖g y‖ ^ 2) + (2 * l)⁻¹ * Real.exp (-2 * y)) :=
         (ofReal_integral_eq_lintegral_ofReal i2 (Eventually.of_forall fun y => (norm_nonneg _).trans (pt y))).symm
     _ ≤ _ := by
@@ -333,7 +333,7 @@ private theorem half {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
         have h1 : ∫ y in Ioi a, Real.exp (2 * y) * ‖g y‖ ^ 2 ≤ q ^ 2 :=
           (setIntegral_le_integral h.1 (Eventually.of_forall fun y => by positivity)).trans h.2
         refine (add_le_add (mul_le_mul_of_nonneg_left h1 (by positivity)) le_rfl).trans_eq ?_
-        have e1 : Real.exp (-2 * a) = Real.exp (-a) ^ 2 := by rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+        have e1 : Real.exp (-2 * a) = Real.exp (-a) ^ 2 := by rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
         have e0 := Real.exp_pos (-a)
         rw [e1, hl]
         field_simp; ring
@@ -363,13 +363,13 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.tailB :
     φs x (by rw [mem_Icc, ← abs_le, not_le] at hx; exact hx)
   have φI : Integrable φ := φc.integrable_of_hasCompactSupport φcs
   have hsv := ((svSpec (V := V)).1 φ (φc.memLp_of_hasCompactSupport φcs) e).1
-  have gm : Measurable fun y => ‖g y‖ₑ := (Lp.stronglyMeasurable g).enorm
+  have gm : Measurable fun y => ‖g y‖ₑ := (Lp.stronglyMeasurable g).eNorm
   have hcor : ∀ s, ‖M.cor φ e p s‖ₑ ≤ ∫⁻ x, ‖φ x‖ₑ * ‖e‖ₑ * ‖g (x + s)‖ₑ := fun s => by
     have e1 : M.J' p = M.J g := by rw [hg, M.J.apply_symm_apply]
     rw [Sc.cor, e1, M.hJ, M.J.inner_map_map, L2.inner_def]
-    refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono_ae ?_)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono_ae ?_)
     filter_upwards [hsv, sh_ae V s g] with x h1 h2
-    rw [h1, h2, ← enorm_smul]
+    rw [h1, h2, ← eNorm_smul]
     exact enorm_inner_le _ _
   have main : ∀ q, Real.exp (2 * M.T₀) * Q < q → ‖∫ s in α..β, M.cor φ e p s‖ ≤ 6 / 5 * ‖e‖ * Real.exp (-α) * q := by
     intro q hq
@@ -381,9 +381,9 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.tailB :
     have h1 : ‖∫ s in α..β, M.cor φ e p s‖ₑ ≤ ENNReal.ofReal (‖e‖ * B) := by
       rw [intervalIntegral.integral_of_le hαβ]
       calc _ ≤ ∫⁻ s in Ioc α β, ∫⁻ x, ‖φ x‖ₑ * ‖e‖ₑ * ‖g (x + s)‖ₑ :=
-            (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono hcor)
+            (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono hcor)
         _ = ∫⁻ x, ∫⁻ s in Ioc α β, ‖φ x‖ₑ * ‖e‖ₑ * ‖g (x + s)‖ₑ :=
-            lintegral_lintegral_swap (((φc.measurable.enorm.comp measurable_snd).mul_const _).mul
+            lintegral_lintegral_swap (((φc.measurable.eNorm.comp measurable_snd).mul_const _).mul
               (gm.comp (measurable_snd.add measurable_fst))).aemeasurable
         _ ≤ ∫⁻ x, ‖φ x‖ₑ * (‖e‖ₑ * ENNReal.ofReal B) := by
             refine lintegral_mono fun x => ?_
@@ -406,17 +406,17 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.tailB :
               exact (indicator_of_mem h7 fun y => ‖g y‖ₑ).ge
             · rw [indicator_of_notMem hs]
               exact bot_le
-        _ = (∫⁻ x, ‖φ x‖ₑ) * (‖e‖ₑ * ENNReal.ofReal B) := lintegral_mul_const _ φc.measurable.enorm
+        _ = (∫⁻ x, ‖φ x‖ₑ) * (‖e‖ₑ * ENNReal.ofReal B) := lintegral_mul_const _ φc.measurable.eNorm
         _ ≤ 1 * (‖e‖ₑ * ENNReal.ofReal B) := by
             gcongr
-            rw [← ofReal_integral_norm_eq_lintegral_enorm φI]
+            rw [← ofReal_integral_norm_eq_lintegral_eNorm φI]
             exact ENNReal.ofReal_le_one.2 φi
-        _ = _ := by rw [one_mul, ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm_eq_enorm]
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_le_ofReal_iff (by positivity)] at h1
+        _ = _ := by rw [one_mul, ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm]
+    rw [← ofReal_norm, ENNReal.ofReal_le_ofReal_iff (by positivity)] at h1
     refine h1.trans ?_
     have h2 : Real.exp (1 / 2) ≤ 169 / 100 := by
       refine (pow_le_pow_iff_left₀ (Real.exp_pos _).le (by norm_num) two_ne_zero).1 ?_
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       norm_num
       linarith [Real.exp_one_lt_d9]
     have h3 : Real.exp (-(α - 1 / 2)) = Real.exp (-α) * Real.exp (1 / 2) := by rw [← Real.exp_add]; ring_nf
@@ -537,7 +537,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.traceFar :
       simpa [l] using this
     have a3 : E (E (X (Λ h))) = E (X (Λ h)) := DFunLike.congr_fun h3 _
     show (Λ ∘L M.F.U (-t)) (Ψ (X (Λ h))) = (Λ ∘L M.F.U (-t)) (Ψ (Λ (X (Λ h))) + Ψ (E (E (X (Λ h)))))
-    conv_lhs => rw [k5 M T (X (Λ h)), k4 M r0, ContinuousLinearMap.add_apply, a2, add_zero, map_add (f := _), map_add (f := _), map_add (f := _), map_add (f := _), a1, add_zero]
+    conv_lhs => rw [k5 M T (X (Λ h)), k4 M r0, add_apply, a2, add_zero, map_add (f := _), map_add (f := _), map_add (f := _), map_add (f := _), a1, add_zero]
     rw [a3, map_add (f := _)]
   constructor
   · have := key 0 le_rfl
@@ -550,7 +550,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.traceFar :
         exact (Λ.le_opNorm _).trans (by rw [M.F.norm]; gcongr)) (fun x y => by
       have sa := ((projLaws M).2.2.2.2.2.2.2 T T (by linarith)).2.2.2.1
       have := ((projLaws M).1 y (Λ x)).2.comp (tendsto_neg_atTop_atBot.comp (tendsto_id.const_mul_atTop two_pos))
-      simp only [ContinuousLinearMap.zero_apply, inner_zero_right]
+      simp only [zero_apply, inner_zero_right]
       exact this.congr fun a => sa.isSymmetric.apply_clm _ _)
     have z : trace ((0 : H →L[ℂ] H) ∘L Z) = 0 := by
       have := trace_smul 0 hZ
@@ -680,7 +680,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.traceId :
     have z1 := DFunLike.congr_fun x1 h
     have z2 := DFunLike.congr_fun x2 h
     simp only [ContinuousLinearMap.comp_apply] at z1 z2
-    simp only [Sc.abelian₂, ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply, map_sub, z1, z2]
+    simp only [Sc.abelian₂, sub_apply, one_apply_eq_self, map_sub, z1, z2]
   have inv1 : ∀ h, M.F.U (-a) (M.F.U a h) = h := fun h => by rw [← M.F.add, neg_add_cancel, M.F.zero]
   have inv2 : ∀ h, M.F.U a (M.F.U (-a) h) = h := fun h => by rw [← M.F.add, add_neg_cancel, M.F.zero]
   have u2 : ∀ h, M.F.U (-a) (M.abelian₂ (T - a) (T + a) h) = M.abelian₂ T T (M.F.U (-a) h) := fun h => by

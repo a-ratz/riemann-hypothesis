@@ -108,7 +108,7 @@ theorem isSelfRecip_of_dvd_ell : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have : eval z (Q.map τ) = 0 := hz
     rwa [eval_map] at this
   have hSz : eval₂ τ z S = 0 := by
-    letI : Invertible (z⁻¹) := invertibleOfNonzero (inv_ne_zero hz0)
+    let : Invertible (z⁻¹) := invertibleOfNonzero (inv_ne_zero hz0)
     have key := eval₂_reflect_mul_pow τ (z⁻¹) d (Q.map c) hdegc.le
     rw [invOf_eq_inv, inv_inv, eval₂_map, hτc, hzinv, ← Polynomial.hom_eval₂, hQz, map_zero] at key
     have hr : eval₂ τ z (reflect d (Q.map c)) = 0 := by

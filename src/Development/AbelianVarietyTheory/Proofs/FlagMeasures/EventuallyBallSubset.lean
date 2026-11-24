@@ -332,18 +332,18 @@ theorem lintegral_le_of_balls {N : ℕ} {Y : Type} [TopologicalSpace Y] [T2Space
   set ν : Measure (EuclideanSpace ℝ (Fin N)) := (μ.comap (U.domRestrict Θ)).map Subtype.val with hν
   have hνa : ∀ A, MeasurableSet A → ν A = μ (Θ '' (A ∩ U)) := by
     intro A hA
-    rw [hν, Measure.map_apply measurable_subtype_coe hA, he.comap_apply]
+    rw [hν, Measure.map_apply measurable_subtypeVal hA, he.comap_apply]
     congr 1
     ext y
     simp only [Set.mem_image, Set.mem_preimage, Subtype.exists, Set.mem_inter_iff, Set.domRestrict_apply]
     constructor
     · rintro ⟨a, ha, hA, rfl⟩; exact ⟨a, ⟨hA, ha⟩, rfl⟩
     · rintro ⟨a, ⟨hA, ha⟩, rfl⟩; exact ⟨a, ha, hA, rfl⟩
-  haveI : IsFiniteMeasureOnCompacts (K • ν) := ⟨fun A hA => by
-    rw [Measure.smul_apply, smul_eq_mul, hνa A hA.measurableSet]
+  have : IsFiniteMeasureOnCompacts (K • ν) := ⟨fun A hA => by
+    rw [smul_apply, smul_eq_mul, hνa A hA.measurableSet]
     refine ENNReal.mul_lt_top hK.lt_top ?_
     exact (measure_mono (image_mono Set.inter_subset_left)).trans_lt (hA.image hΘ).measure_lt_top⟩
-  haveI : IsLocallyFiniteMeasure (K • ν) := inferInstance
+  have : IsLocallyFiniteMeasure (K • ν) := inferInstance
   have hle : volume.restrict U ≤ K • ν := by
     refine Measure.le_iff.2 fun A hA => ?_
     rw [Measure.restrict_apply hA]
@@ -357,14 +357,14 @@ theorem lintegral_le_of_balls {N : ℕ} {Y : Type} [TopologicalSpace Y] [T2Space
     have h1 : ∀ᶠ r in 𝓝[>] (0 : ℝ), closedBall x r ⊆ U :=
       (eventually_closedBall_subset (hU.mem_nhds hx.2)).filter_mono nhdsWithin_le_nhds
     refine ((hb x hx.2 a ha).and h1).frequently.mono fun r hr => ?_
-    rw [Measure.smul_apply, Measure.smul_apply, smul_eq_mul, smul_eq_mul,
+    rw [smul_apply, smul_apply, smul_eq_mul, smul_eq_mul,
       hνa _ measurableSet_closedBall, Set.inter_eq_left.2 hr.2]
     exact hr.1
   calc ∫⁻ t in U, Φ (Θ t) ≤ ∫⁻ t, Φ (Θ t) ∂(K • ν) := lintegral_mono' hle le_rfl
     _ = K * ∫⁻ t, Φ (Θ t) ∂ν := by rw [lintegral_smul_measure, smul_eq_mul]
     _ = K * ∫⁻ y in Θ '' U, Φ y ∂μ := by
       congr 1
-      rw [hν, lintegral_map (f := fun t => Φ (Θ t)) (hΦ.comp hΘ.measurable) measurable_subtype_coe,
+      rw [hν, lintegral_map (f := fun t => Φ (Θ t)) (hΦ.comp hΘ.measurable) measurable_subtypeVal,
         ← Set.range_domRestrict, ← he.map_comap, he.lintegral_map]
       rfl
 
@@ -423,7 +423,7 @@ theorem exists_deriv_prod {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X] 
   | succ m ih =>
     obtain ⟨L, B, h1, h2, h3, h4, h5⟩ := ih (fun i => E i.succ) (fun i => φ i.succ)
       (fun i => hE _) (fun i => hφ _)
-    letI : NormedAlgebra ℚ A := .restrictScalars ℚ ℝ A
+    let : NormedAlgebra ℚ A := .restrictScalars ℚ ℝ A
     have hd : HasStrictFDerivAt (fun y => NormedSpace.exp (φ 0 y • E 0))
         ((φ 0).smulRight (NormedSpace.exp (φ 0 x • E 0) * E 0)) x := by
       have := (hasStrictDerivAt_exp_smul_const (𝕂 := ℝ) (E 0) (φ 0 x)).hasStrictFDerivAt.comp x
@@ -454,7 +454,7 @@ theorem exists_deriv_prod {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X] 
       rw [← Real.exp_add, show (m : ℝ) * s + m * s = 2 * m * s by ring] at h6
       have key : ∀ w : A, B * NormedSpace.exp ((-φ 0 x) • E 0) * (NormedSpace.exp (φ 0 x • E 0) * w) = B * w := by
         intro w; rw [mul_assoc, ← mul_assoc (NormedSpace.exp _), hinv, one_mul]
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+      simp only [add_apply, smul_apply,
         ContinuousLinearMap.smulRight_apply, smul_eq_mul, op_smul_eq_mul, smul_mul_assoc, mul_add,
         mul_smul_comm, Fin.sum_univ_succ]
       rw [key, mul_assoc (NormedSpace.exp _), key]
@@ -636,7 +636,7 @@ theorem eventually_ball_subset {s lam : ℝ} {E : Fin (n ^ 2) → Matrix (Fin n)
     ∀ᶠ r in 𝓝[>] (0 : ℝ), ∀ g : UJ ε, ‖uMat g - 1‖ ≤ lam * r → Θ t * g ∈ Θ '' closedBall t r := by
   have hE1 : ∀ i, ‖E i‖ ≤ 1 := fun i => by
     have := hE i i
-    rw [ip_self, if_pos rfl] at this
+    rw [ip_self, ite_eq_left rfl] at this
     exact (pow_le_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 this.le
   obtain ⟨L, B, h1, -, -, h4, h5⟩ := exists_deriv_prod hs t (n ^ 2) E
     (fun i => EuclideanSpace.proj i) hE1 ht
@@ -715,7 +715,7 @@ theorem continuous_chart {N : ℕ} {E : Fin N → Matrix (Fin n) (Fin n) ℂ}
   rw [(isClosedEmbeddingMatrix n ε).1.isInducing.continuous_iff]
   change Continuous fun y => uMat (Θ y)
   simp only [hΘ, List.ofFn_eq_map]
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := .restrictScalars ℚ ℝ _
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := .restrictScalars ℚ ℝ _
   exact continuous_list_prod _ fun i _ => NormedSpace.exp_continuous.comp (by fun_prop)
 
 end Mat
@@ -733,7 +733,7 @@ theorem exists_ratio {N : ℕ} {δ a K : ℝ} (ha : a < 1) (hK : 1 ≤ K * (1 - 
 
 theorem one_le_exp_mul_pow {N : ℕ} {δ : ℝ} (h0 : 0 ≤ δ) (h1 : δ ≤ 1 / 2) :
     1 ≤ Real.exp (N * (2 * δ)) * (1 - δ) ^ N := by
-  rw [Real.exp_nat_mul, ← mul_pow]
+  rw [Real.exp_natCast_mul, ← mul_pow]
   refine one_le_pow₀ ?_
   have := Real.add_one_le_exp (2 * δ)
   nlinarith

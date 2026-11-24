@@ -54,8 +54,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Approx
 
 theorem lb_descends_fg : ∀ (k V : Type) [CommRing k] [CommRing V] [Algebra k V] (X₀ X : Scheme.{0}) (p₀ : X₀ ⟶ Sp k) (p : X ⟶ Sp V) (φ : X ⟶ X₀), QuasiCompact p₀ → IsSeparated p₀ → IsPullback φ p p₀ (spMap (algebraMap k V)) → ∀ L : LB X, L.IsLB → ∃ R : Subalgebra k V, R.FG ∧ ∃ M : LB (pullback p₀ (spMap (algebraMap k R))), M.IsLB ∧ ∀ σ : X ⟶ pullback p₀ (spMap (algebraMap k R)), σ ≫ pullback.fst _ _ = φ → σ ≫ pullback.snd _ _ = p ≫ spMap R.val.toRingHom → LBIso L (M.pull σ) := by
   intro k V _ _ _ X₀ X p₀ p φ hqc hsep hpb L hL
-  haveI := hqc
-  haveI := hsep
+  have := hqc
+  have := hsep
   have hcompS : ∀ {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B)
       (g : B →+* C), spMap (g.comp f) = spMap g ≫ spMap f := by
     intro A B C _ _ _ f g
@@ -64,9 +64,9 @@ theorem lb_descends_fg : ∀ (k V : Type) [CommRing k] [CommRing V] [Algebra k V
       R₀.subtype.comp ι₀ = algebraMap k V ∧ ∀ x ∈ R₀, ∃ a, algebraMap k V a = x :=
     ⟨(algebraMap k V).range, (algebraMap k V).rangeRestrict, by ext a; rfl,
       fun x hx => RingHom.mem_range.mp hx⟩
-  haveI : QuasiSeparated p₀ := inferInstance
-  haveI : QuasiCompact (pullback.snd p₀ (spMap ι₀)) := inferInstance
-  haveI : QuasiSeparated (pullback.snd p₀ (spMap ι₀)) := inferInstance
+  have : QuasiSeparated p₀ := inferInstance
+  have : QuasiCompact (pullback.snd p₀ (spMap ι₀)) := inferInstance
+  have : QuasiSeparated (pullback.snd p₀ (spMap ι₀)) := inferInstance
   have hw0 : φ ≫ p₀ = (p ≫ spMap R₀.subtype) ≫ spMap ι₀ := by
     rw [Category.assoc, ← hcompS, hι₀c]; exact hpb.w
   obtain ⟨π, hπ1, hπ2⟩ : ∃ π : X ⟶ pullback p₀ (spMap ι₀),

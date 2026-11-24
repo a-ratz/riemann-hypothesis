@@ -143,9 +143,9 @@ theorem exists_localBump (μ : Measure (GL (Fin n) F)) [μ.IsHaarMeasure] {V : T
   · exact HasCompactSupport.intro hSc fun x hx ↦ indicator_of_notMem hx _
   · rw [hfun]
     exact (integrableOn_const hWc.measure_lt_top.ne).integrable_indicator hWm
-  · simp_rw [hfun', enorm_indicator_eq_indicator_enorm]
+  · simp_rw [hfun', eNorm_indicator_eq_indicator_eNorm]
     rw [lintegral_indicator_const hWm]
-    exact mul_ne_zero (enorm_ne_zero.2 (mul_ne_zero h0 (hdne _))) (hWo.measure_pos μ ⟨g₀, hg₀⟩).ne'
+    exact mul_ne_zero (eNorm_ne_zero.2 (mul_ne_zero h0 (hdne _))) (hWo.measure_pos μ ⟨g₀, hg₀⟩).ne'
   · rw [zetaIntegral]
     rw [hfun, integral_indicator_const _ hWm, Complex.real_smul]
     ring
@@ -267,7 +267,7 @@ theorem exists_archBump (μ : Measure (AdelicGLn.InfiniteAdelicGL K n)) [μ.IsHa
     fun x ↦ archEntries K n (x : Matrix (Fin n) (Fin n) (InfiniteAdeleRing K)) with hJdef
   have hJ : IsOpenEmbedding J :=
     (archEntries K n).isOpenEmbedding.comp (isOpenEmbedding_val_infiniteAdelicGL K n)
-  letI : R1Space (AdelicGLn.InfiniteAdelicGL K n) := hJ.isEmbedding.isInducing.r1Space
+  let : R1Space (AdelicGLn.InfiniteAdelicGL K n) := hJ.isEmbedding.isInducing.r1Space
   set c₀ : ℂ := f x₀ with hc₀
   set W : Set (AdelicGLn.InfiniteAdelicGL K n) := {x | 0 < (starRingEnd ℂ c₀ * f x).re} with hWdef
   have hWo : IsOpen W := isOpen_lt continuous_const (Complex.continuous_re.comp (continuous_const.mul hf))
@@ -316,8 +316,8 @@ theorem exists_archBump (μ : Measure (AdelicGLn.InfiniteAdelicGL K n)) [μ.IsHa
     rw [hint_eq, hψ₀, Complex.ofReal_one, one_mul]
     exact mul_ne_zero h0 (archDetPow_ne_zero _ _)
   refine ⟨φ, hInt, fun s hzero ↦ ?_, ?_, ?_⟩
-  · have hae := (lintegral_eq_zero_iff' (hcont s).enorm.aemeasurable).1 hzero
-    have hae' : archIntegrand φ f s =ᵐ[μ] 0 := hae.mono fun x hx ↦ enorm_eq_zero.1 hx
+  · have hae := (lintegral_eq_zero_iff' (hcont s).eNorm.aemeasurable).1 hzero
+    have hae' : archIntegrand φ f s =ᵐ[μ] 0 := hae.mono fun x hx ↦ eNorm_eq_zero.1 hx
     have := (Continuous.ae_eq_iff_eq μ (hcont s) continuous_const).1 hae'
     exact hne₀ s (congrFun this x₀)
   ·

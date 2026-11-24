@@ -377,7 +377,7 @@ theorem exists_isTransl_snd {A : Over (Sp K)} [GrpObj A] [IsCommMonObj A] {u : e
     (ψ : K →+* S) (x : Sp S ⟶ A.left) (hx : x ≫ A.hom = spMap ψ) :
     ∃ w, GlobalTheory.CechKS.IsTransl ψ x u w ∧ ∀ (O : A.left.Opens) (h : ⊤ ≤ x ⁻¹ᵁ O) (f : Γ(A.left, O)),
       (valR w O f).snd = GlobalTheory.TangentOrigin.evalPt x O h (dd O f) := by
-  letI : Algebra K (DualNumber S) := ((algebraMap S (DualNumber S)).comp ψ).toAlgebra
+  let : Algebra K (DualNumber S) := ((algebraMap S (DualNumber S)).comp ψ).toAlgebra
   let z : ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := K) (DualNumber S) ⟶ A :=
     Over.homMk (spMap (algebraMap S (DualNumber S)) ≫ x) (by
       rw [Category.assoc, hx]

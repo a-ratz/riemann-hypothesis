@@ -338,7 +338,7 @@ theorem dcPtG_of_bWit (w : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b) : D
   exact (GlobalTheory.Mem.R3.rowConditions_at_companion_from_readings _ _ _ _ _ _ _ _ _ w.x).2.2.1
 theorem realPins_of_bWit' (w : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b) : _root_.Formalism.IndefR.IndefiniteRealisationNormalisation b.B.Q := (_root_.GlobalTheory.T.characters_match_bundle_alt q b w).2.2.2.2.2.1
 theorem framesEx_of_bWit (w : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b) : _root_.Formalism.IndefR.IndefiniteRealisation.FramesEx b.B.Q := by
-  letI := b.B.alg
+  let := b.B.alg
   exact _root_.GlobalTheory.FramesAtReal.framesEx_of_realisation_alt _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ b.B.Q (_root_.GlobalTheory.Fam.PtRowsAt.realPins_of_bWit' w)
 theorem prim_links_and_typesSep3_of_bWit (w : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b) : Formalism.IndefR.Links.PrimRows3 b.B.Q.Rl b.B.Q.F ∧ b.P.A3.fam3.TypesSep3 := by
   have h : (fun r : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => Formalism.IndefR.Links.PrimRows3 r.B.Q.Rl r.B.Q.F ∧ r.P.A3.fam3.TypesSep3) (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfRealInput w.y.y) :=
@@ -604,7 +604,7 @@ namespace GlobalTheory.Core.Rk
 theorem exp_neg_five_lt : Real.exp (-5) < 1 / 128 := by
   have h1 : (2.7 : ℝ) < Real.exp 1 := lt_trans (by norm_num) Real.exp_one_gt_d9
   have h5 : Real.exp 5 = Real.exp 1 ^ 5 := by
-    rw [← Real.exp_nat_mul]; norm_num
+    rw [← Real.exp_natCast_mul]; norm_num
   have h2 : (2.7 : ℝ) ^ 5 < Real.exp 1 ^ 5 := pow_lt_pow_left₀ h1 (by norm_num) (by norm_num)
   have h3 : (128 : ℝ) < Real.exp 5 := by
     rw [h5]; exact lt_trans (by norm_num) h2
@@ -787,7 +787,7 @@ theorem levelPrime_window : ∀ (D : D7) (u : D.what₂.Word),
         ≤ Real.exp (1 / ((D.R.f : ℝ) * D.R.k)) ^ (D.R.f * D.R.k) :=
           pow_le_pow_left₀ (by positivity) (by linarith) _
       _ = Real.exp 1 := by
-          rw [← Real.exp_nat_mul]; congr 1; push_cast; field_simp
+          rw [← Real.exp_natCast_mul]; congr 1; push_cast; field_simp
   have hTpow : ((D.mem u).A.T : ℝ) ^ (D.R.f * D.R.k) ≤
       Real.exp 1 * ((D.mem u).A.Dstar / (D.mem u).A.duStar / (D.mem u).A.GamP ^ 2) := by
     calc ((D.mem u).A.T : ℝ) ^ (D.R.f * D.R.k)

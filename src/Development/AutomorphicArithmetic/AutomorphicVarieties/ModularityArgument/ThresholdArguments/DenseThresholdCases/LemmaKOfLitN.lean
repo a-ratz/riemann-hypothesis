@@ -227,7 +227,7 @@ theorem UpperTheory.V.ZK.sEta :
     UpperTheory.V.ZK.SEta := by
   intro l c ν M hl hM _ t₀
   have hp : l.Prime := hl.out
-  haveI : NeZero (l ^ ν) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ ν) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hF := alg_dvd (l ^ ν) (l ^ c) M
   simp only [Nat.cast_pow] at hF
   let φ : ZMod (l ^ ν) → AddMonoidAlgebra ℤ (ZMod (l ^ ν) × ZMod (l ^ ν)) →+* AddMonoidAlgebra ℤ (ZMod (l ^ ν)) :=
@@ -471,7 +471,7 @@ theorem torsAll : ∃ C : ℝ, ∀ (L) [Field L] [NumberField L], IsTotallyCompl
           UpperTheory.V.kBound C e (Module.finrank ℚ L) (discr L).natAbs := by
   refine ⟨24, ?_⟩
   intro L _ _ hL e N m he hN1 hN hm
-  haveI := hL
+  have := hL
   have ht := UpperTheory.V.KT.tors_le L N m
   refine ⟨ht.1, ?_⟩
   have hn : 1 ≤ Module.finrank ℚ L := Module.finrank_pos
@@ -698,7 +698,7 @@ theorem UpperTheory.V.ZK.sCoc : UpperTheory.V.ZK.SCoc := by
     have a1 : 2 * (s : ℕ) % 2 = 0 := by omega
     have a2 : ¬(2 * (s : ℕ) + 1) % 2 = 0 := by omega
     have a3 : 2 * (s : ℕ) / 2 = s := by omega
-    simp only [a1, a2, a3, if_true, if_false, Fin.eta]
+    simp only [a1, a2, a3, ite_true, ite_false, Fin.eta]
 
 end
 end -- clump:auto
@@ -990,7 +990,7 @@ theorem UpperTheory.V.K.primeLe :
   · subst h2
     have := Module.finrank_pos (R := ℚ) (M := L)
     omega
-  · rw [if_neg h2] at hζ
+  · rw [ite_eq_right h2] at hζ
     have hdeg := minpoly.natDegree_le (A := ℚ) ζ
     rw [← Polynomial.cyclotomic_eq_minpoly_rat hζ hp.pos, Polynomial.natDegree_cyclotomic,
       Nat.totient_prime hp] at hdeg
@@ -1011,7 +1011,7 @@ private theorem sf_card (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] [Mo
   induction h with
   | @of_subsingleton M' _ _ _ =>
     refine ⟨0, Module.length_eq_zero, ?_⟩
-    haveI := uniqueOfSubsingleton (0 : M')
+    have := uniqueOfSubsingleton (0 : M')
     simp
   | @of_simple_quotient M _ _ N _ _ ih =>
     obtain ⟨k, hk, hc⟩ := ih
@@ -1054,8 +1054,8 @@ private theorem sf_nu {l : ℕ} [Fact l.Prime] (U : Subgroup ℤ_[l]ˣ) (h0 : U.
     rw [Units.val_pow_eq_pow_val, IsUnit.unit_spec, pow_mul]
   rw [hw] at hdvd
   have hm := KStar.TotallyRealRoots.emultiplicity_pow_sub_one_sq (l := l) (u := 1 + (l:ℤ_[l]) ^ 2) (by simp) (U.index * e)
-  rw [add_sub_cancel_left, emultiplicity_pow_self hp.ne_zero hp.not_unit,
-    ← padicValNat_eq_emultiplicity (Nat.mul_ne_zero h0 he), ← Nat.padicValNat_def, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) h0 he] at hm
+  rw [add_sub_cancel_left, emultiplicity_pow_self hp.ne_zero hp.not_isUnit,
+    ← multiplicity_eq_emultiplicity (Nat.mul_ne_zero h0 he), ← Nat.padicValNat_def, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) h0 he] at hm
   have h5 := (pow_dvd_iff_le_emultiplicity).1 hdvd
   rw [hm] at h5
   norm_cast at h5
@@ -1081,7 +1081,7 @@ private theorem sf_loc {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberF
     have hne : (e : ℤ).natAbs ≠ 0 := by simpa using he
     refine le_trans (sf_nu _ hd0 hne) ?_
     have a1 : padicValNat l (LDataCardLeFinrank.decImage L l (D.A v)).index ≤ Nat.log l n :=
-      le_trans (by simpa only [Nat.padicValNat_def] using (padicValNat_le_nat_log (LDataCardLeFinrank.decImage L l (D.A v)).index)) (Nat.log_mono_right hdn)
+      le_trans (by simpa only [Nat.padicValNat_def] using (multiplicity_le_nat_log (LDataCardLeFinrank.decImage L l (D.A v)).index)) (Nat.log_mono_right hdn)
     have a2 : padicValNat l e ≤ e := by
       have hp := (Fact.out : l.Prime)
       have b1 : l ^ padicValNat l e ≤ e := Nat.le_of_dvd (Nat.pos_of_ne_zero he) (_root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat _ _))
@@ -1116,7 +1116,7 @@ theorem UpperTheory.V.ZK.sFinal :
     exact le_trans hV (add_le_add le_rfl hloc)
   have hfl : IsFiniteLength ℤ_[l] (H2 (zlTw D ((e : ℤ) + 1))) := by
     rw [← Module.length_ne_top_iff]
-    exact ne_top_of_le_ne_top (ENat.coe_ne_top _) hlen
+    exact ne_top_of_le_ne_top (ENat.natCast_ne_top _) hlen
   obtain ⟨k, hk, hcard⟩ := sf_card l _ hfl
   have hkK : k ≤ s + n * (2 + Nat.log l n + e) := by
     rw [hk] at hlen
@@ -1232,7 +1232,7 @@ theorem frob_fix {v : HeightOneSpectrum (𝓞 F)} {B : ValuationSubring Ω} (hB 
     simp only [Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C,
       Polynomial.eval_prod] at e
     rw [e, map_prod] at h1
-    refine absurd h1 (not_lt.2 (Finset.one_le_prod' fun i _ => ?_))
+    refine absurd h1 (not_lt.2 (Finset.one_le_prod fun i _ => ?_))
     have := h i
     rwa [map_mul, map_pow] at this
   set c := ζ ^ i * t with hcdef
@@ -1419,7 +1419,7 @@ theorem pe_dvd (l c ν M E : ℕ) (hl : l.Prime) (hc : 1 ≤ c) (hM : M < l ^ c)
 theorem exists_index (G : Type) [CommGroup G] [Finite G] [IsCyclic G] (q : ℕ) (hq : q ∣ Nat.card G) :
     ∃ v : G →* Cq q, ∀ u, v u = 1 → ∃ s, u = s ^ q := by
   let e : Multiplicative (ZMod (Nat.card G)) ≃* G := zmodCyclicMulEquiv inferInstance
-  haveI : NeZero (Nat.card G) := ⟨Nat.card_pos.ne'⟩
+  have : NeZero (Nat.card G) := ⟨Nat.card_pos.ne'⟩
   refine ⟨(AddMonoidHom.toMultiplicative (ZMod.castHom hq (ZMod q)).toAddMonoidHom).comp e.symm.toMonoidHom, ?_⟩
   intro u hu
   obtain ⟨x, rfl⟩ := e.surjective u
@@ -1434,7 +1434,7 @@ theorem exists_index (G : Type) [CommGroup G] [Finite G] [IsCyclic G] (q : ℕ) 
 theorem prim_map {R k : Type} [CommRing R] [IsDomain R] [Field k] (r : R →+* k) (l ν : ℕ) (hl : l.Prime)
     (hν : 1 ≤ ν) (hr : r l ≠ 0) (ζ : Rˣ) (hζ : IsPrimitiveRoot ζ (l ^ ν)) :
     IsPrimitiveRoot (Units.map (r : R →* k) ζ) (l ^ ν) := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le' hν
   have h1 : Units.map (r : R →* k) ζ ^ l ^ (n + 1) = 1 := by rw [← map_pow, hζ.pow_eq_one, map_one]
   have h2 : ¬ Units.map (r : R →* k) ζ ^ l ^ n = 1 := by
@@ -1502,9 +1502,9 @@ theorem sFewOf : SFewOf := by
           (nrm γ ((1 + l ^ c) ^ (e + 1)) α ^ l ^ (2 * e + 2 + (2 * e + 3) * (c + (2 * e + 3))) *
             (nrm γ ((1 + l ^ c) ^ (e + 1)) α' ^ l ^ (2 * e + 2 + (2 * e + 3) * (c + (2 * e + 3))))⁻¹) (s ^ l ^ ν) := by
     rintro ⟨P, hPb, hPs⟩
-    letI := P.isMaximal
-    letI := Ideal.Quotient.field P.asIdeal
-    haveI : Finite (𝓞 F ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+    let := P.isMaximal
+    let := Ideal.Quotient.field P.asIdeal
+    have : Finite (𝓞 F ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
     have hlP : Ideal.Quotient.mk P.asIdeal (l : 𝓞 F) ≠ 0 := fun h =>
       hPb (Ideal.mul_mem_right _ _ (Ideal.Quotient.eq_zero_iff_mem.1 h))
     have hbP : ∀ α, Ideal.Quotient.mk P.asIdeal (b α) ≠ 0 := fun α h =>
@@ -1651,7 +1651,7 @@ theorem goal_of : UpperTheory.V.ZK.SLayer := by
     by_cases h2 : l = 2
     · omega
     · obtain ⟨z, hz⟩ := hμ
-      rw [if_neg h2] at hz
+      rw [ite_eq_right h2] at hz
       have h1 := IsPrimitiveRoot.lcm_totient_le_finrank (K := ℚ) hz hz
         (Polynomial.cyclotomic.irreducible_rat (by rw [Nat.lcm_self]; exact hp.pos))
       rw [Nat.lcm_self, Nat.totient_prime hp] at h1
@@ -1664,7 +1664,7 @@ theorem goal_of : UpperTheory.V.ZK.SLayer := by
   · unfold Base.qExp at hq
     split_ifs at hq <;> omega
   · unfold Base.qExp at hq
-    rwa [if_pos h2] at hq
+    rwa [ite_eq_left h2] at hq
   · have := (q1 _).1 h
     omega
   · have h1 := IsTotallyComplex.finrank L'

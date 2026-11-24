@@ -245,7 +245,7 @@ theorem isCompact_box (r : ℝ) :
 
 theorem exists_compact_unit : ∃ K : Set (Ad E)ˣ, IsCompact K ∧ ∀ a ∈ GlobalTheory.Mem.Chr.unitIdl E,
     ∃ (k : Eˣ) (n : ℤ), diag E k * eIdele E ^ n * a ∈ K := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
   obtain ⟨R, hR⟩ := exists_bound_log E
   refine ⟨_, isCompact_units (isCompact_box E (Real.exp R)), fun a ha => ?_⟩
   obtain ⟨u, n, hu⟩ := hR fun w => Real.log ‖pInf E (a : Ad E) w‖
@@ -293,7 +293,7 @@ theorem exists_compact_idele : ∃ K : Set (Ad E)ˣ, IsCompact K ∧ ∀ x : (Ad
     ∃ (k : Eˣ) (n : ℤ), diag E k * eIdele E ^ n * x ∈ K := by
   obtain ⟨K, hK, h⟩ := exists_compact_unit E
   let S : Subgroup (Ad E)ˣ := GlobalTheory.Mem.Chr.unitIdl E ⊔ (diag E).range
-  haveI : S.FiniteIndex := GlobalTheory.Mem.UnitIndex.finiteIndex_unitIdl_sup E
+  have : S.FiniteIndex := GlobalTheory.Mem.UnitIndex.finiteIndex_unitIdl_sup E
   refine ⟨⋃ q : (Ad E)ˣ ⧸ S, (· * q.out) '' K,
     isCompact_iUnion fun q => hK.image (continuous_id.mul continuous_const), fun x => ?_⟩
   obtain ⟨s, hs⟩ := QuotientGroup.mk_out_eq_mul S x
@@ -331,7 +331,7 @@ theorem exists_nhds_idele : ∃ W ∈ 𝓝 (1 : (Ad E)ˣ), ∀ (k : Eˣ) (n : �
     (isOpen_lt (continuous_ideleNorm.log ideleNorm_ne_zero).abs continuous_const).mem_nhds (by simpa using hL)
   refine ⟨_, Filter.inter_mem h1 h2, fun k n ⟨h3, h4⟩ => ?_⟩
   have h5 : ideleNorm (E := E) (diag E k) = 1 := ideleNorm_principalIdele k
-  rw [Set.mem_setOf_eq, map_mul, h5, one_mul, map_zpow, Real.log_zpow, abs_mul, abs_of_pos hL,
+  rw [Set.mem_ofPred_eq, map_mul, h5, one_mul, map_zpow, Real.log_zpow, abs_mul, abs_of_pos hL,
     mul_lt_iff_lt_one_left hL] at h4
   have hn : n = 0 := Int.abs_lt_one_iff.1 (by exact_mod_cast h4)
   subst hn

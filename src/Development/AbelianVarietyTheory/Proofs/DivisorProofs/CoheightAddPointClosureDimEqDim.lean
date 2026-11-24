@@ -86,13 +86,13 @@ theorem exists_ringKrullDim_affine_eq (Y : Scheme.{0}) [IsIntegral Y]
       rintro rfl
       exact h0 (CharP.charP_to_charZero _)
     have : Fact p.Prime := ⟨(CharP.char_is_prime_or_zero Y.functionField p).resolve_right hp0⟩
-    letI : Algebra (ZMod p) Y.functionField := ZMod.algebra _ p
+    let : Algebra (ZMod p) Y.functionField := ZMod.algebra _ p
     refine ⟨((Algebra.trdeg (ZMod p) Y.functionField).toENat : WithBot ℕ∞), fun U hU _ => ?_⟩
     have := hft U hU
     have := functionField_isFractionRing_of_isAffineOpen Y U hU
     have hK := IsFractionRing.injective Γ(Y, U) Y.functionField
     have : CharP Γ(Y, U) p := (algebraMap Γ(Y, U) Y.functionField).charP hK p
-    letI : Algebra (ZMod p) Γ(Y, U) := ZMod.algebra _ p
+    let : Algebra (ZMod p) Γ(Y, U) := ZMod.algebra _ p
     have : IsScalarTower (ZMod p) Γ(Y, U) Y.functionField := IsScalarTower.of_algebraMap_eq
       fun x => congrArg (· x) (RingHom.ext_zmod (algebraMap (ZMod p) Y.functionField)
         ((algebraMap Γ(Y, U) Y.functionField).comp (algebraMap (ZMod p) Γ(Y, U))))
@@ -180,8 +180,8 @@ theorem coheight_add_eq : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) [IsIntegr
     exact hMd.trans (h2.trans (add_le_add le_rfl h3))
 
   have hle : topologicalKrullDim (closure ({z} : Set Y)) + Order.coheight z ≤ topologicalKrullDim Y := by
-    haveI : QuasiSober (closure ({z} : Set Y)) := isClosed_closure.isClosedEmbedding_subtypeVal.quasiSober
-    exact DimCodim.dim_add_le_of_le_coheight continuous_subtype_val Subtype.val_injective _
+    have : QuasiSober (closure ({z} : Set Y)) := isClosed_closure.isClosedEmbedding_subtypeVal.quasiSober
+    exact DimCodim.dim_add_le_of_le_coheight continuous_subtypeVal Subtype.val_injective _
       fun w => Order.coheight_anti (specializes_iff_mem_closure.2 w.2)
   rw [hz, hd] at hle
   have a1 : (e : ℕ∞) + Order.coheight z ≤ d := by exact_mod_cast hle

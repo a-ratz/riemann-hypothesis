@@ -287,7 +287,7 @@ private theorem exists_push (hr0 : 0 < r) {a : GL (Fin n) k → ℂ} (ha : IsLoc
   classical
   obtain ⟨hc, -, hb⟩ := bridge k E σ
   have hj := (hb n).2.2.2.1
-  haveI := (UpperTheory.V.Z.Tf.Orb.gLTop k n).2.2.1
+  have := (UpperTheory.V.Z.Tf.Orb.gLTop k n).2.2.1
   have hr1 : r < 1 := hr.trans_le (valuation_natCast_le_one _)
   let f : GL (Fin n) k → ℂ := fun γ =>
     if h : ∃ u : GL (Fin n) k, (incl u : GL (Fin n) E) ∈ ball n r ∧ u ^ Module.finrank k E = γ then a h.choose else 0
@@ -296,11 +296,11 @@ private theorem exists_push (hr0 : 0 < r) {a : GL (Fin n) k → ℂ} (ha : IsLoc
     have h : ∃ u' : GL (Fin n) k, (incl u' : GL (Fin n) E) ∈ ball n r ∧ u' ^ Module.finrank k E = u ^ Module.finrank k E :=
       ⟨u, hu, rfl⟩
     have := root_conj hr (y := 1) h.choose_spec.1 hu (by simpa using h.choose_spec.2)
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     rw [inv_one, one_mul, mul_one] at this
     exact congrArg a this
   have h2 : ∀ γ, (¬ ∃ u : GL (Fin n) k, (incl u : GL (Fin n) E) ∈ ball n r ∧ u ^ Module.finrank k E = γ) → f γ = 0 :=
-    fun γ h => dif_neg h
+    fun γ h => dite_eq_right h
   refine ⟨f, sb_of_push (U := incl ⁻¹' ball (E := E) n r) (hj.isCompact_preimage (isCompact_ball hr1))
     (p := fun u => u ^ Module.finrank k E) (continuous_pow _) ?_ ha h1 h2, h1, h2⟩
   have e : (fun u : GL (Fin n) k => u ^ Module.finrank k E) '' (incl ⁻¹' ball (E := E) n r) =
@@ -330,7 +330,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.nearDown :
         (μE : Measure (GL (Fin n) E)) (μk : Measure (GL (Fin n) k)), μE.IsHaarMeasure → μk.IsHaarMeasure → ∃ ρ : ValueGroupWithZero E, 0 < ρ ∧ ∀ φ ∈ SB (GL (Fin n) E), Function.support φ ⊆ ball n ρ →
         ∃ f ∈ SB (GL (Fin n) k), Match σ μE μk φ f := by
   intro k E _ _ _ _ _ _ _ _ _ _ _ _ _ σ hgen n _ _ _ _ μE μk hμE hμk
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap k E).injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap k E).injective
   obtain ⟨hc, -, hb⟩ := bridge k E σ
   have hj := (hb n).2.2.2.1
   obtain ⟨_, _, _, -⟩ := gLTop E n
@@ -467,10 +467,10 @@ theorem UpperTheory.ConvolutionTheory.Loc.placeDown :
         ∃ f ∈ SB (GL (Fin n) (v.adicCompletion F)), PositivityTheory.Rg.Tf.Geo.Match (incFin E v) (galFin σ v) (Module.finrank F E) mE mF 1 (fun g => φ (mapGL n (Pi.evalRingHom (fun w : PlacesOver E v => w.1.adicCompletion E) w) g)) f := by
   intro F E _ _ _ _ _ _ σ hσ v w hw n _ _ _ _ mE mF hE hF
   obtain ⟨iA, iV, iF, iG, s, hs, hrk, hinc, hgal, -⟩ := UpperTheory.V.Z.Tf.Orb.placeData_holds F E σ hσ v w hw
-  letI : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
+  have : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
   obtain ⟨hH, hM⟩ := UpperTheory.V.Z.Tf.Orb.placeOfLocal_holds F E σ hσ v w hw s hs hrk hinc hgal n mE mF hE hF
-  haveI : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
+  have : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   obtain ⟨ρ, hρ, h⟩ := UpperTheory.ConvolutionTheory.Loc.nearDown (v.adicCompletion F) (w.1.adicCompletion E) s hs n _ mF hH hF
   refine ⟨ρ, hρ, fun φ hφ hsup => ?_⟩
   obtain ⟨f, hf, hm⟩ := h φ hφ hsup
@@ -526,13 +526,13 @@ theorem UpperTheory.ConvolutionTheory.Loc.sbInv :
   have a := key (fun p => p.1 * p.2) (by fun_prop) (by simp)
   have b := key (fun p => p.2 * p.1) (by fun_prop) (by simp)
   obtain ⟨W, hW, hWo, hW1⟩ := mem_nhds_iff.1 (a.and b)
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
-  obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one (G := K) (U := Subtype.val ⁻¹' W) (hWo.preimage continuous_subtype_val) hW1
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one (G := K) (U := Subtype.val ⁻¹' W) (hWo.preimage continuous_subtypeVal) hW1
   have hU : ∀ u ∈ N.toSubgroup.map K.subtype, u ∈ W := by
     rintro _ ⟨x, hx, rfl⟩
     exact hN hx
   refine ⟨N.toSubgroup.map K.subtype, ?_, Subgroup.map_subtype_le _, fun u hu g => ⟨?_, ?_⟩⟩
-  · exact hKo.isOpenMap_subtype_val _ N.isOpen
+  · exact hKo.isOpenMap_subtypeVal _ N.isOpen
   · by_cases h : g ∈ tsupport φ
     · exact (hW (hU u hu)).1 g h
     · by_cases h' : u * g ∈ tsupport φ
@@ -571,8 +571,8 @@ private theorem lc_ind {G : Type} [TopologicalSpace G] {U : Set G} (hU : IsClope
 
 private theorem td_gl (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) :
     TotallyDisconnectedSpace (GL (Fin n) k) := by
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → k))
   exact ⟨isTotallyDisconnected_of_image Units.continuous_val.continuousOn Units.val_injective
     (isTotallyDisconnected_of_totallyDisconnectedSpace _)⟩
@@ -580,7 +580,7 @@ private theorem td_gl (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
 private theorem cmp_homeo {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n : ℕ) {v : HeightOneSpectrum (𝓞 F)}
     (w : PlacesOver E v) (hw : ∀ w' : PlacesOver E v, w' = w) :
     ∃ e : GL (Fin n) (CompletionsOver E v) ≃ₜ GL (Fin n) (w.1.adicCompletion E), ∀ g, e g = UpperTheory.ConvolutionTheory.GM.cmp w g := by
-  letI : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
+  let : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
   let r : CompletionsOver E v ≃+* w.1.adicCompletion E :=
     RingEquiv.piUnique (fun u : PlacesOver E v => u.1.adicCompletion E)
   have hr : Continuous r := continuous_apply _
@@ -599,13 +599,13 @@ theorem UpperTheory.ConvolutionTheory.T.inertData :
   obtain ⟨-, -, hne, huniq, -, -⟩ := UpperTheory.ConvolutionTheory.T.places F E hp
   obtain ⟨w⟩ := hne v
   have hw : ∀ w' : PlacesOver E v, w' = w := huniq v hns w
-  letI : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
+  let : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
   obtain ⟨ρ, hρ, hdown⟩ := UpperTheory.ConvolutionTheory.Loc.atDown F E σ hσ v w hw n
   have hN : ball n ρ ∈ nhds (1 : Gw n w.1) :=
     (UpperTheory.ConvolutionTheory.Loc.BallG.isOpen_ball hρ.ne').mem_nhds (fun i j => by simp)
   obtain ⟨J, χ, hCO, hchr, hJN, hrank, hne0, hst⟩ := UpperTheory.ConvolutionTheory.T.howeType F E σ hσ hp n hn μ V hV v w hw _ hN
-  haveI : T2Space (Gw n w.1) := (UpperTheory.V.Z.Tf.Orb.gLTop (w.1.adicCompletion E) n).2.2.1
-  haveI : T2Space (Gw n v) := (UpperTheory.V.Z.Tf.Orb.gLTop (v.adicCompletion F) n).2.2.1
+  have : T2Space (Gw n w.1) := (UpperTheory.V.Z.Tf.Orb.gLTop (w.1.adicCompletion E) n).2.2.1
+  have : T2Space (Gw n v) := (UpperTheory.V.Z.Tf.Orb.gLTop (v.adicCompletion F) n).2.2.1
   have hJc : IsClopen (J : Set (Gw n w.1)) := ⟨hCO.1.isClosed, hCO.2⟩
   let φ : Gw n w.1 → ℂ := (J : Set (Gw n w.1)).indicator fun x => conj (χ x)
   have hφl : IsLocallyConstant φ := lc_ind hJc (hchr.1.comp fun z => conj z)
@@ -684,8 +684,8 @@ private theorem mem_fixL' {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : M
 private theorem exists_fixed {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure]
     (V : Submodule ℂ (LL μ)) (hV : IsSummand μ V) (w : Pl K) :
     ∃ (S : Subgroup (Gw n w)) (x : LL μ), IsOpen (S : Set (Gw n w)) ∧ x ∈ V ∧ x ≠ 0 ∧ ∀ g ∈ S, rhoL μ w g x = x := by
-  letI : MeasurableSpace (Gw n w) := borel _
-  haveI : BorelSpace (Gw n w) := ⟨rfl⟩
+  let : MeasurableSpace (Gw n w) := borel _
+  have : BorelSpace (Gw n w) := ⟨rfl⟩
   obtain ⟨⟨σ, f, hf0, hfV, hfe⟩, -, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds K n μ V w (Measure.haar) hV
   obtain ⟨x, hx⟩ : ∃ x, f x ≠ 0 := by
     by_contra hc
@@ -693,11 +693,11 @@ private theorem exists_fixed {K : Type} [Field K] [NumberField K] {n : ℕ} (μ 
     exact hf0 (LinearMap.ext hc)
   refine ⟨{ carrier := {g | σ.ρ g x = x}
             mul_mem' := fun {a b} ha hb => by
-              simp only [Set.mem_setOf_eq] at ha hb ⊢
+              simp only [Set.mem_ofPred_eq] at ha hb ⊢
               rw [map_mul, Module.End.mul_apply, hb, ha]
             one_mem' := by simp
             inv_mem' := fun {a} ha => by
-              simp only [Set.mem_setOf_eq] at ha ⊢
+              simp only [Set.mem_ofPred_eq] at ha ⊢
               conv_lhs => rw [← ha]
               rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] },
     f x, σ.smooth x, hfV x, hx, fun g hg => ?_⟩
@@ -884,40 +884,40 @@ theorem tyEx_of (hLev : SplitLev) (hSt : SplitStable) (hMa : SplitMatch) (hIn : 
       { S := S, q_not := hqS, unr := hunr, φ := φ, f := f, c := c, UE := UE, UF := UF
         test := fun v hv => by
           by_cases b : GM.Split E v
-          · simp only [φ, f, if_pos hv, if_pos b]
+          · simp only [φ, f, ite_eq_left hv, ite_eq_left b]
             exact ⟨(hψ' v hv b).2.1.1, (hψ' v hv b).2.1.2, (hψ' v hv b).2.2.1.1, (hψ' v hv b).2.2.1.2⟩
-          · simp only [φ, f, if_pos hv, if_neg b]
+          · simp only [φ, f, ite_eq_left hv, ite_eq_right b]
             exact ⟨(k7 v hv b).2.2.1.1, (k7 v hv b).2.2.1.2, (k7 v hv b).2.2.2.1.1, (k7 v hv b).2.2.2.1.2⟩
         lev := k6
         inv := fun v hv => by
           by_cases b : GM.Split E v
-          · simp only [φ, f, if_pos hv, if_pos b]
+          · simp only [φ, f, ite_eq_left hv, ite_eq_left b]
             exact ⟨fun y hy => (hψ' v hv b).2.2.2.1 y (((k8 v hv b).2.1 y).1 hy), (hψ' v hv b).2.2.2.2⟩
-          · simp only [φ, f, if_pos hv, if_neg b]
+          · simp only [φ, f, ite_eq_left hv, ite_eq_right b]
             exact (k7 v hv b).2.2.2.2
         mat := fun v hv => by
           by_cases b : GM.Split E v
-          · simp only [φ, f, if_pos hv, if_pos b]
+          · simp only [φ, f, ite_eq_left hv, ite_eq_left b]
             exact (hψ' v hv b).1
-          · simp only [φ, f, if_pos hv, if_neg b]
+          · simp only [φ, f, ite_eq_left hv, ite_eq_right b]
             exact (k7 v hv b).2.1
-        at_q := ⟨by simp only [φ, if_neg hqS, dif_pos], by simp only [f, if_neg hqS, if_pos], (k5 q rfl).2⟩
-        off := fun v a b => ⟨by simp only [φ, if_neg a, dif_neg b], by simp only [f, if_neg a, if_neg b], (k4 v a b).2⟩ }
+        at_q := ⟨by simp only [φ, ite_eq_right hqS, dite_eq_left], by simp only [f, ite_eq_right hqS, ite_eq_left], (k5 q rfl).2⟩
+        off := fun v a b => ⟨by simp only [φ, ite_eq_right a, dite_eq_right b], by simp only [f, ite_eq_right a, ite_eq_right b], (k4 v a b).2⟩ }
     refine ⟨L, ⟨rfl, hψ, fun v hv => ?_, fun v a b => ?_⟩, fun _ _ => ⟨rfl, rfl⟩, fun v hv => ?_, fun v a b => ?_⟩
     · obtain ⟨a, b⟩ := (hsp v).1 hv
       change φ v = GM.prodFn (Function.update (fun u : PlacesOver E v => ((J' u.1 : Set (Gw n u.1)).indicator 1 : Gw n u.1 → ℂ))
         (mk v) (ψ v)) ∧ ∀ g, g ∈ UE v ↔ ∀ u, GM.cmp u g ∈ J' u.1
-      simp only [eJ, φ, if_pos a, if_pos b, true_and]
+      simp only [eJ, φ, ite_eq_left a, ite_eq_left b, true_and]
       exact (k8 v a b).2.1
     · change φ v = GM.prodFn fun u : PlacesOver E v => (J' u.1 : Set (Gw n u.1)).indicator fun x => conj (χ' u.1 x)
       have a' : v ∈ S := a
-      simp only [eJ, eχ, φ, if_pos a', if_neg b]
+      simp only [eJ, eχ, φ, ite_eq_left a', ite_eq_right b]
     · obtain ⟨a, b⟩ := (hsp v).1 hv
       change f v = _
-      simp only [f, if_pos a, if_pos b]
+      simp only [f, ite_eq_left a, ite_eq_left b]
       rfl
     · change f v = _
-      simp only [f, if_pos a, if_neg b]
+      simp only [f, ite_eq_left a, ite_eq_right b]
 
 end UpperTheory.ConvolutionTheory.T
 end -- clump:auto

@@ -48,8 +48,8 @@ open GlobalTheory.CuspRep GlobalTheory.GalOfCusp UpperTheory.V.Af UpperTheory.V.
 theorem UpperTheory.teichmuller_character_spec :
     UpperTheory.V.Sd.S3.Teich := by
   intro l _ c x m hcop hx hres
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨-, -, -, -, -, -, -, -, hunit⟩ := dvrFacts l c.O
   have hnd : ¬ l ∣ m := fun h =>
     (Nat.Prime.one_lt (Fact.out : l.Prime)).ne' (Nat.Coprime.eq_one_of_dvd hcop h)

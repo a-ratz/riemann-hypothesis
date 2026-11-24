@@ -60,9 +60,9 @@ theorem UpperTheory.exists_nondegenerate_right_invariant_form_of_compact_quotien
     ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G] (Γ : Subgroup G) [DiscreteTopology Γ] (C : Set G), IsCompact C → (∀ g, ∃ γ ∈ Γ, ∃ c ∈ C, g = γ * c) → ∃ B : (G → ℂ) →ₗ⋆[ℂ] (G → ℂ) →ₗ[ℂ] ℂ, (∀ φ : G → ℂ, Continuous φ → (∀ γ ∈ Γ, ∀ g, φ (γ * g) = φ g) → B φ φ = 0 → φ = 0) ∧ ∀ (x : G) (φ ψ : G → ℂ), Continuous φ → (∀ γ ∈ Γ, ∀ g, φ (γ * g) = φ g) → Continuous ψ → (∀ γ ∈ Γ, ∀ g, ψ (γ * g) = ψ g) → B (fun g => φ (g * x)) (fun g => ψ (g * x)) = B φ ψ := by
   intro G _ _ _ _ _ _ Γ _ C hC hcov
   classical
-  letI : MeasurableSpace G := borel G
-  haveI : BorelSpace G := ⟨rfl⟩
-  haveI : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  let : MeasurableSpace G := borel G
+  have : BorelSpace G := ⟨rfl⟩
+  have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure G, μ.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
   obtain ⟨𝓕, -, h𝓕'⟩ := _root_.Bl.SecondBlockLemmaC.goal1 Γ
   have h𝓕 := h𝓕' μ

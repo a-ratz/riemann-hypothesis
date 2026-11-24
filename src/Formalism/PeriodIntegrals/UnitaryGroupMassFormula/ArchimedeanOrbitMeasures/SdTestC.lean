@@ -156,7 +156,7 @@ def tupCoord {D : D7} (X : HidaSetting D) :
 
 theorem tupCoord_add {D : D7} (X : HidaSetting D) (x y : TupI X) :
     tupCoord X (x + y) = tupCoord X x + tupCoord X y := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   simp only [tupCoord, Homeomorph.trans_apply]
   rw [← flatten_four_add]
   congr 1
@@ -205,11 +205,11 @@ theorem BR_add_rightP {D : D7} (X : HidaSetting D) (x y y' : TupI X) :
 
 theorem continuous_traceP {D : D7} (X : HidaSetting D) :
     Continuous (Algebra.trace (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   exact IsModuleTopology.continuous_of_linearMap _
 
 theorem continuous_BR_leftP {D : D7} (X : HidaSetting D) (y : TupI X) : Continuous fun x : TupI X => BR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J x y := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   show Continuous fun x : TupI X => ∑ a, Algebra.trace (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)
     (∑ i, ∑ j, sigR (Ainf X.B.I.F) X.B.I.cm.sig (x a i) * JR (Ainf X.B.I.F) X.B.I.J i j * y a j)
   exact continuous_finsetSum _ fun a _ => (continuous_traceP X).comp (continuous_finsetSum _ fun i _ =>
@@ -217,7 +217,7 @@ theorem continuous_BR_leftP {D : D7} (X : HidaSetting D) (y : TupI X) : Continuo
       ((continuous_apply i).comp (continuous_apply a))).mul continuous_const).mul continuous_const)
 
 theorem continuous_BR_rightP {D : D7} (X : HidaSetting D) (x : TupI X) : Continuous fun y : TupI X => BR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J x y := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   show Continuous fun y : TupI X => ∑ a, Algebra.trace (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)
     (∑ i, ∑ j, sigR (Ainf X.B.I.F) X.B.I.cm.sig (x a i) * JR (Ainf X.B.I.F) X.B.I.J i j * y a j)
   exact continuous_finsetSum _ fun a _ => (continuous_traceP X).comp (continuous_finsetSum _ fun i _ =>
@@ -225,8 +225,8 @@ theorem continuous_BR_rightP {D : D7} (X : HidaSetting D) (x : TupI X) : Continu
 
 theorem sdTestI_holds : SdTestI := by
   intro D X u' ψ hT μinf νinf fibInf hP
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI := hP.2.2.2.2.1.1
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have := hP.2.2.2.2.1.1
   have hS := hP.2.2.1
   have hpc := continuous_psiInfP ψ hS
   exact ST.testEx_of_homeo μinf _ (tupCoord X) (tupCoord_add X)

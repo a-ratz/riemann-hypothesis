@@ -186,7 +186,7 @@ theorem exists_eq_embedding [IsTotallyReal F] (lam : InfinitePlace F → ℝ)
     push_cast at h2 h3
     simp only [embedding_re] at h2 h3
     simp only [map_mul] at h2
-    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, MonoidHom.coe_coe, sub_mul, Finset.sum_sub_distrib,
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, MonoidHom.coe_ofClass, sub_mul, Finset.sum_sub_distrib,
       Pi.zero_apply]
     rw [h2, h3, sub_self])
   refine ⟨a, fun w => ?_⟩
@@ -301,7 +301,7 @@ theorem finprod_absNorm_zpow_count {I : FractionalIdeal (𝓞 F)⁰ F} (hI : I �
 open MeasureTheory Matrix Finset Formalism.MainNotions.S GlobalTheory.Count GlobalTheory.FlagMeas GlobalTheory.GaussMean in
 theorem real_part_and_conductors : ∀ (I : AutInst) (θ : InfinitePlace I.F → (Ainf I.F ⊗[I.F] I.E →+* ℂ)), (∀ v, Formalism.MainNotions.StandardLattice.IsInfEmb (I.φ v) (θ v)) → ∀ ψ : AddChar (AF I.F) ℂ, IsCharAF I.F ψ → ∃ (lamv : InfinitePlace I.F → ℝ) (m : IsDedekindDomain.HeightOneSpectrum (𝓞 I.F) → ℤ), (∀ v, lamv v ≠ 0) ∧ (∀ x, psiInf I.F ψ x = Complex.exp (2 * Real.pi * Complex.I * ((∑ v, lamv v * (θ v (x ⊗ₜ[I.F] (1 : I.E))).re : ℝ) : ℂ))) ∧ (Function.support m).Finite ∧ (∀ u (t : Fv I.F u), (∀ s ∈ u.adicCompletionIntegers I.F, psiV I.F ψ u (t * s) = 1) ↔ Valued.v t ≤ WithZero.exp (m u)) ∧ ∏ᶠ u, (Ideal.absNorm u.asIdeal : ℝ) ^ m u = |(discr I.F : ℝ)| * ∏ v, |lamv v| := by
   intro I θ hθ ψ hψ
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   obtain ⟨a, ha, hinf⟩ := exists_scaling hψ
   have hθ' : ∀ v x, θ v (x ⊗ₜ[I.F] (1 : I.E)) = InfinitePlace.Completion.extensionEmbedding v (x v) := fun v =>
     congrFun ((InfiniteAdeleRing.denseRange_algebraMap I.F).equalizer (hθ v).2
@@ -324,7 +324,7 @@ theorem real_part_and_conductors : ∀ (I : AutInst) (θ : InfinitePlace I.F →
     congr 1
     · simp
     · refine Finset.prod_congr rfl fun w _ => ?_
-      rw [InfinitePlace.mult, if_pos (IsTotallyReal.isReal w), pow_one, ← InfinitePlace.norm_embedding_eq,
+      rw [InfinitePlace.mult, ite_eq_left (IsTotallyReal.isReal w), pow_one, ← InfinitePlace.norm_embedding_eq,
         ← embedding_re, Complex.norm_real, Real.norm_eq_abs]
 
 end GlobalTheory.AdeleCharConductor

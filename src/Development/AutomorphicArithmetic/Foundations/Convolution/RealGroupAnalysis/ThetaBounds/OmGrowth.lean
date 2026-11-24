@@ -161,4 +161,4 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.omGrowth :
   calc c s = Real.exp (Real.log (c s)) := (Real.exp_log (hpos s)).symm
     _ ≤ Real.exp (B * Real.pi + (⌈B⌉₊ : ℝ) * Real.log H) := Real.exp_le_exp.2 (h1.trans h2)
     _ = Real.exp (B * Real.pi) * H ^ ⌈B⌉₊ := by
-      rw [Real.exp_add, Real.exp_nat_mul, Real.exp_log hH0]
+      rw [Real.exp_add, Real.exp_natCast_mul, Real.exp_log hH0]

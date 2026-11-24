@@ -87,7 +87,7 @@ variable {k r : ℕ} (u : Matrix (Fin r) (Fin r) ℂ) (a b : Fin r) (m n : Fin (
 
 theorem u_ee : uEmb k r u (eI k r a) (eI k r b) = u a b := by
   have h : (eI k r a).val < r ∧ (eI k r b).val < r := ⟨a.2, b.2⟩
-  simp only [uEmb, dif_pos h]
+  simp only [uEmb, dite_eq_left h]
   rfl
 theorem u_em : uEmb k r u (eI k r a) (mI k r n) = 0 := by
   have va : (eI k r a).val = a.val := rfl
@@ -141,7 +141,7 @@ theorem u_ss : uEmb k r u (esI k r a) (esI k r b) = star (u⁻¹ b a) := by
   have h2 : r + k < (esI k r a).val ∧ r + k < (esI k r b).val := by rw [vsa, vsb]; omega
   have e1 : 2 * r + k - (esI k r b).val = b.val := by rw [vsb]; omega
   have e2 : 2 * r + k - (esI k r a).val = a.val := by rw [vsa]; omega
-  simp only [uEmb, dif_neg h1, dif_pos h2]
+  simp only [uEmb, dite_eq_right h1, dite_eq_left h2]
   congr 1
   exact congrArg₂ (fun x y => u⁻¹ x y) (Fin.ext e1) (Fin.ext e2)
 
@@ -347,7 +347,7 @@ theorem uEmb_mid (w : Fin (2 * r + k + 1) → ℂ) (hw : inWb k r w) : uEmb k r 
     simp [he, hs, u_ee, u_em, u_es, u_me, u_mm, u_ms, u_se, u_sm, u_ss]
 
 theorem det_upper (x : UT r → ℂ) : (upper x).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · simp [upper]
   · intro a b hab
     have h' : b < a := hab
@@ -358,7 +358,7 @@ theorem upper_mem (x : UT r → ℂ) : uEmb k r (upper x) ∈ Nset k r := by
   · intro a i hai
     rcases idx_cases i with ⟨c, rfl⟩ | ⟨p, rfl⟩ | ⟨c, rfl⟩
     · have hai' : a.val ≤ c.val := hai
-      have hac : ¬ c < a := fun h => by rw [Fin.lt_iff_val_lt_val] at h; omega
+      have hac : ¬ c < a := fun h => by rw [Fin.lt_def] at h; omega
       simp [u_ee, upper, hac, eI_inj]
     · simp [u_me, mI_ne_eI]
     · simp [u_se, esI_ne_eI]

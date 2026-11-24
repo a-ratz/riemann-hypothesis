@@ -271,10 +271,10 @@ theorem hermC_smul (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (c : ℂ) (
 
 theorem countable_inReal (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E)
     (Γ : Subgroup (GL (Fin r) E)) : Countable (inReal Ψ G Γ) := by
-  haveI : Countable E :=
+  have : Countable E :=
     Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
-  haveI : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
-  haveI : Countable (GL (Fin r) E) :=
+  have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
+  have : Countable (GL (Fin r) E) :=
     Function.Injective.countable (f := (Units.val : GL (Fin r) E → _)) fun _ _ h => Units.ext h
   have : ((inReal Ψ G Γ : Subgroup (realSU Ψ G)) : Set (realSU Ψ G)).Countable := by
     refine ((Set.countable_range (embGL Ψ r)).preimage Subtype.val_injective).mono fun g hg => ?_
@@ -348,10 +348,10 @@ theorem covolume_inReal_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     calc (A * z)⁻¹ * g * (A * z) = z⁻¹ * (A⁻¹ * g * A) * z := by group
       _ = z⁻¹ * (z * (A⁻¹ * g * A)) := by rw [mul_assoc, ← hzc]
       _ = A⁻¹ * g * A := by group
-  haveI := countable_inReal Ψ G Δ
-  haveI := countable_inReal Ψ G (Δ.map (MulAut.conj γ).toMonoidHom)
-  haveI : (riemHaar Ψ G x).IsMulLeftInvariant := by unfold riemHaar; infer_instance
-  haveI : SFinite (riemHaar Ψ G x) := by unfold riemHaar tangentHaar; infer_instance
+  have := countable_inReal Ψ G Δ
+  have := countable_inReal Ψ G (Δ.map (MulAut.conj γ).toMonoidHom)
+  have : (riemHaar Ψ G x).IsMulLeftInvariant := by unfold riemHaar; infer_instance
+  have : SFinite (riemHaar Ψ G x) := by unfold riemHaar tangentHaar; infer_instance
   have key : ∀ δ, embGL Ψ r ((MulAut.conj γ).toMonoidHom δ) = A * embGL Ψ r δ * A⁻¹ := by
     intro δ; simp [hAdef, MulAut.conj_apply, map_mul, map_inv]
   refine covolume_conj (riemHaar Ψ G x) _ _ s fun g => ?_
@@ -398,7 +398,7 @@ theorem suLie_finrank_ge : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
     show cc ((c : E) * x) = (c : E) * cc x
     rw [cc_mul, hc]
   have hs : ∀ (f : Fin r → E), cc (∑ i, f i) = ∑ i, cc (f i) := fun f => map_sum (IsCMField.complexConj E) f _
-  haveI : FiniteDimensional F E :=
+  have : FiniteDimensional F E :=
     Module.finite_of_finrank_eq_succ (Algebra.IsQuadraticExtension.finrank_eq_two F E)
   have hV : Module.finrank F (Matrix (Fin r) (Fin r) E) = r * r * 2 := by
     rw [Module.finrank_matrix, Algebra.IsQuadraticExtension.finrank_eq_two F E]; simp
@@ -685,7 +685,7 @@ theorem prod_le_locFactor_of_isPrime (E : Type) [Field E] [NumberField E] [IsCMF
     ∏ i ∈ Finset.Icc 2 r, (1 - ((Ideal.absNorm v.asIdeal : ℝ) ^ i)⁻¹) ≤ locFactor E r v := by
   classical
   unfold locFactor resOrder
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
   set w := v.asIdeal.map (algebraMap (𝓞 (maximalRealSubfield E)) (𝓞 E)) with hwdef
   set c := IsCMField.ringOfIntegersComplexConj E with hcdef
   have hcc : ∀ x, c (c x) = x := fun x => by
@@ -702,12 +702,12 @@ theorem prod_le_locFactor_of_isPrime (E : Type) [Field E] [NumberField E] [IsCMF
   have hw0 : w ≠ ⊥ := by
     rw [hwdef, Ne, Ideal.map_eq_bot_iff_of_injective (FaithfulSMul.algebraMap_injective _ _)]
     exact v.ne_bot
-  haveI hmax : w.IsMaximal := hw.isMaximal hw0
-  letI : Field (𝓞 E ⧸ w) := Ideal.Quotient.field w
-  haveI : Finite (𝓞 E ⧸ w) := Ideal.finiteQuotientOfFreeOfNeBot w hw0
+  have hmax : w.IsMaximal := hw.isMaximal hw0
+  let : Field (𝓞 E ⧸ w) := Ideal.Quotient.field w
+  have : Finite (𝓞 E ⧸ w) := Ideal.finiteQuotientOfFreeOfNeBot w hw0
   let σ : (𝓞 E ⧸ w) →+* (𝓞 E ⧸ w) := Ideal.quotientMap w (c : 𝓞 E →+* 𝓞 E) hle
   have hσ : ∀ x, σ (Ideal.Quotient.mk w x) = Ideal.Quotient.mk w (c x) := fun x => rfl
-  letI : StarRing (𝓞 E ⧸ w) :=
+  let : StarRing (𝓞 E ⧸ w) :=
     { star := σ
       star_involutive := fun x => by
         obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -741,7 +741,7 @@ theorem prod_le_locFactor_of_isPrime (E : Type) [Field E] [NumberField E] [IsCMF
       obtain ⟨a, ha⟩ := (IsCMField.ringOfIntegersComplexConj_eq_self_iff E (y * c y)).1
         (by change c _ = _; rw [map_mul, hcc, mul_comm])
       exact ⟨Ideal.Quotient.mk _ a, by rw [hf, ha, hstar, map_mul]⟩
-    · haveI : Finite (𝓞 (maximalRealSubfield E) ⧸ v.asIdeal) :=
+    · have : Finite (𝓞 (maximalRealSubfield E) ⧸ v.asIdeal) :=
         Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
       have h1 := Nat.card_le_card_of_surjective f hsurj
       have h2 : Nat.card (𝓞 (maximalRealSubfield E) ⧸ v.asIdeal) = q := by
@@ -830,7 +830,7 @@ theorem le_locFactor_of_not_prime : ∀ (E : Type) [Field E] [NumberField E] [Is
       rw [Ne, Ideal.absNorm_eq_zero_iff]; exact v.ne_bot
     exact_mod_cast Nat.pos_of_ne_zero this
   unfold locFactor resOrder
-  rw [if_neg hnp]
+  rw [ite_eq_right hnp]
   have h' : (Nat.card (Matrix.SpecialLinearGroup (Fin r) (𝓞 (maximalRealSubfield E) ⧸ v.asIdeal)) : ℝ) =
       (Ideal.absNorm v.asIdeal : ℝ) ^ (r ^ 2 - 1) * ∏ i ∈ Finset.Icc 2 r, (1 - ((Ideal.absNorm v.asIdeal : ℝ) ^ i)⁻¹) := by
     have := congrArg (fun x : ℚ => (x : ℝ)) h
@@ -942,9 +942,9 @@ theorem countable_numberField (E : Type) [Field E] [NumberField E] : Countable E
 
 theorem countable_inReal {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (Ψ : Finset (E →+* ℂ))
     (G : Matrix (Fin r) (Fin r) E) (Γ : Subgroup (GL (Fin r) E)) : Countable (inReal Ψ G Γ) := by
-  haveI := countable_numberField E
-  haveI : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
-  haveI : Countable (GL (Fin r) E) := Function.Injective.countable (f := fun u : GL (Fin r) E => (u : Matrix (Fin r) (Fin r) E)) (fun a b h => Units.ext h)
+  have := countable_numberField E
+  have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
+  have : Countable (GL (Fin r) E) := Function.Injective.countable (f := fun u : GL (Fin r) E => (u : Matrix (Fin r) (Fin r) E)) (fun a b h => Units.ext h)
   have hsub : ∀ y : inReal Ψ G Γ, ∃ γ : GL (Fin r) E, embGL Ψ r γ = (y : realSU Ψ G).1 := by
     rintro ⟨y, hy⟩
     obtain ⟨γ, -, hγ⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 hy)
@@ -960,7 +960,7 @@ theorem tangentHaar_smul {ι : Type} [Fintype ι] {r : ℕ} (H : Subgroup (ι �
   unfold tangentHaar
   rw [smul_smul]
   congr 1
-  simp only [Measure.smul_apply, smul_eq_mul, mul_div_assoc]
+  simp only [smul_apply, smul_eq_mul, mul_div_assoc]
   exact ENNReal.limsup_const_mul_of_ne_top hc
 
 theorem covolume_smul {G α : Type*} [Group G] [MulAction G α] [MeasurableSpace α] [Countable G]
@@ -969,7 +969,7 @@ theorem covolume_smul {G α : Type*} [Group G] [MulAction G α] [MeasurableSpace
   by_cases h : HasFundamentalDomain G α ν
   · obtain ⟨s, hs⟩ := h.ExistsIsFundamentalDomain
     have hs' : IsFundamentalDomain G s (c • ν) := hs.mono (Measure.smul_absolutelyContinuous)
-    rw [hs'.covolume_eq_volume, hs.covolume_eq_volume, Measure.smul_apply, smul_eq_mul]
+    rw [hs'.covolume_eq_volume, hs.covolume_eq_volume, smul_apply, smul_eq_mul]
   · have h' : ¬ HasFundamentalDomain G α (c • ν) := by
       rintro ⟨⟨s, hs⟩⟩
       exact h ⟨⟨s, hs.mono (Measure.absolutelyContinuous_smul hc)⟩⟩
@@ -979,7 +979,7 @@ theorem abs_discr_real_eq {E : Type} [Field E] [NumberField E] [IsCMField E] (hU
     |(discr (maximalRealSubfield E) : ℝ)| = rdE E ^ fdeg E := by
   have hdiff : differentIdeal (𝓞 (maximalRealSubfield E)) (𝓞 E) = ⊤ :=
     (GlobalTheory.formallyUnramified_ringOfIntegers_iff_differentIdeal_eq_top _ E).1 (by
-      haveI : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := hU; infer_instance)
+      have : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := hU; infer_instance)
   have h := natAbs_discr_eq_absNorm_differentIdeal_mul_natAbs_discr_pow (maximalRealSubfield E)
     (𝓞 (maximalRealSubfield E)) E (𝓞 E)
   rw [hdiff, Algebra.IsQuadraticExtension.finrank_eq_two] at h
@@ -1043,7 +1043,7 @@ theorem sum_covolume_le : GlobalTheory.Published.TamagawaSpecialUnitary → ∀ 
       (riemHaar X.Ψ X.Gm x) = c * covolume (inReal X.Ψ X.Gm (ratStab X.Gm (Λ : Set (Fin r → E)) (s j)))
       (realSU X.Ψ X.Gm) μ := by
     intro j
-    haveI := countable_inReal X.Ψ X.Gm (ratStab X.Gm (Λ : Set (Fin r → E)) (s j))
+    have := countable_inReal X.Ψ X.Gm (ratStab X.Gm (Λ : Set (Fin r → E)) (s j))
     rw [hriem, covolume_smul _ _ hcpos]
   simp_rw [hcov]
   rw [ENNReal.tsum_mul_left]
@@ -1117,7 +1117,7 @@ theorem exists_aniso {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ
     rw [← herm_single G a b, h0]
     rfl
   rw [hG0]
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   simp
 
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (G : Matrix (Fin r) (Fin r) E) (u : E), 0 < r → (∀ a b, IsCMField.complexConj E (G a b) = G b a) → G.det ≠ 0 → u * IsCMField.complexConj E u = 1 → ∃ γ : GL (Fin r) E, (∀ x y, herm G ((γ : Matrix (Fin r) (Fin r) E) *ᵥ x) ((γ : Matrix (Fin r) (Fin r) E) *ᵥ y) = herm G x y) ∧ (γ : Matrix (Fin r) (Fin r) E).det = u := by
@@ -1458,7 +1458,7 @@ theorem discrete_inReal {Ψ : Finset (E →+* ℂ)}
     intro τ x a
     have h1 : Continuous fun g : inReal Ψ G Γ => (g.1.1 τ : Matrix (Fin r) (Fin r) ℂ) :=
       Units.continuous_val.comp ((continuous_apply τ).comp
-        (continuous_subtype_val.comp continuous_subtype_val))
+        (continuous_subtypeVal.comp continuous_subtypeVal))
     exact continuous_const.mul
       (((continuous_apply a).comp (h1.matrix_mulVec continuous_const)).sub continuous_const)
   have hopen : IsOpen (⋂ τ : Ψ, ⋂ x : T, ⋂ a : Fin r, {g | ‖f g τ x a‖ < 1}) :=
@@ -1467,7 +1467,7 @@ theorem discrete_inReal {Ψ : Finset (E →+* ℂ)}
   refine discreteTopology_of_isOpen_singleton_one ?_
   convert hopen using 1
   ext g
-  simp only [Set.mem_singleton_iff, Set.mem_iInter, Set.mem_setOf_eq]
+  simp only [Set.mem_singleton_iff, Set.mem_iInter, Set.mem_ofPred_eq]
   constructor
   · rintro rfl τ x a
     simp [f]
@@ -1632,10 +1632,10 @@ theorem covolume_le_sum {Ψ : Finset (E →+* ℂ)} {G : Matrix (Fin r) (Fin r) 
       rw [← Units.ext ha]; exact e
     · exact ⟨1, fun a' h1 h2 => absurd ⟨a', h1, h2⟩ h⟩
   choose γ hγ using hγ
-  haveI : Countable (inReal Ψ G Δ) := by
-    haveI : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
-    haveI : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
-    haveI : Countable (GL (Fin r) E) :=
+  have : Countable (inReal Ψ G Δ) := by
+    have : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
+    have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
+    have : Countable (GL (Fin r) E) :=
       Function.Injective.countable (f := (Units.val : GL (Fin r) E → _)) fun _ _ h => Units.ext h
     have : ((inReal Ψ G Δ : Subgroup (realSU Ψ G)) : Set (realSU Ψ G)).Countable := by
       refine ((Set.countable_range (embGL Ψ r)).preimage Subtype.val_injective).mono fun g hg => ?_
@@ -1686,7 +1686,7 @@ theorem sum_covolume_le_pow_mul_tsum : ∀ (E : Type) [Field E] [NumberField E] 
   obtain ⟨J, t, ⟨j0⟩, ht⟩ := exists_sReps G (L : Set (Fin r → E)) 1
   obtain ⟨A, hAc, hA⟩ := GlobalTheory.UCls.IdxK.exists_reps_mod_KM E r M G L hM hL
   refine ⟨J, t, ht, ?_⟩
-  haveI : (riemHaar Ψ G x).IsMulLeftInvariant := by unfold riemHaar; infer_instance
+  have : (riemHaar Ψ G x).IsMulLeftInvariant := by unfold riemHaar; infer_instance
   set c : J → ℝ≥0∞ := fun j =>
     covolume (inReal Ψ G (ratStab G (L : Set (Fin r → E)) (t j))) (realSU Ψ G) (riemHaar Ψ G x) with hc
   have hj : ∀ i, ∃ j, i ∈ S → SEquiv G (L : Set (Fin r → E)) 1 (t j) (s i) := by
@@ -1701,13 +1701,13 @@ theorem sum_covolume_le_pow_mul_tsum : ∀ (E : Type) [Field E] [NumberField E] 
   have h1 : ∀ i ∈ S, covolume (inReal Ψ G (Δ i)) (realSU Ψ G) (riemHaar Ψ G x) ≤ ∑ p ∈ P i, c p.1 := by
     intro i hi
     obtain ⟨L', hL', -, hsd⟩ := GlobalTheory.UCls.selfDual_latOf_translate E r G L (t (j i)) hL (ht.1 _).1
-    haveI := discrete_inReal hΨ G (ratStab G (L : Set (Fin r → E)) (t (j i))) L' hsd.2.2.1 hsd.2.2.2.1
+    have := discrete_inReal hΨ G (ratStab G (L : Set (Fin r → E)) (t (j i))) L' hsd.2.2.1 hsd.2.2.2.1
       fun γ hγ y hy => by
         rw [← SetLike.mem_coe, hL'] at hy ⊢
         have := (hγ.2.2 _).2 hy
         rw [GlobalTheory.LocGlob.ratM_mulVec_fv] at this
         exact this
-    haveI := GlobalTheory.countable_of_discrete_subgroup (inReal Ψ G (ratStab G (L : Set (Fin r → E)) (t (j i))))
+    have := GlobalTheory.countable_of_discrete_subgroup (inReal Ψ G (ratStab G (L : Set (Fin r → E)) (t (j i))))
     obtain ⟨D, hD, hu, hF⟩ :=
       GlobalTheory.exists_isFundamentalDomain_subgroup (inReal Ψ G (ratStab G (L : Set (Fin r → E)) (t (j i))))
     refine (covolume_le_sum (riemHaar Ψ G x) A hA (hs i hi) (ht.1 _) (hj i hi) (Δ i)
@@ -1882,7 +1882,7 @@ theorem massBound_of_tamagawa : GlobalTheory.Published.TamagawaSpecialUnitary �
   have hcard : (Finset.univ.image f).card ≤ h := by
     have h1 : (Finset.univ.image f).card ≤ Nat.card (Quot fun a b : {t : RA (maximalRealSubfield E) E // IsTA (IsCMField.complexConj E) t} =>
         TEquiv (IsCMField.complexConj E) G (Λ : Set (Fin r → E)) M a.1 b.1) := by
-      haveI := Fintype.ofFinite (Quot fun a b : {t : RA (maximalRealSubfield E) E // IsTA (IsCMField.complexConj E) t} =>
+      have := Fintype.ofFinite (Quot fun a b : {t : RA (maximalRealSubfield E) E // IsTA (IsCMField.complexConj E) t} =>
         TEquiv (IsCMField.complexConj E) G (Λ : Set (Fin r → E)) M a.1 b.1)
       rw [Nat.card_eq_fintype_card]; exact Finset.card_le_univ _
     have h2 : ((Nat.card (Quot fun a b : {t : RA (maximalRealSubfield E) E // IsTA (IsCMField.complexConj E) t} =>

@@ -116,8 +116,8 @@ theorem finrank_le_pow_finrank_cot (p : ℕ) [hp : Fact p.Prime] (K H : Type) [F
   set εQ : (H ⧸ J) →ₐ[K] K := Ideal.Quotient.liftₐ J ε hJI with hεQ
   have hεQmk : ∀ a, εQ (mk a) = ε a := fun a => rfl
   have hmks : Function.Surjective mk := Ideal.Quotient.mkₐ_surjective K J
-  haveI hfinQ : Module.Finite K (H ⧸ J) := Module.Finite.of_surjective mk.toLinearMap hmks
-  haveI : IsNoetherianRing (H ⧸ J) := isNoetherian_of_tower K inferInstance
+  have hfinQ : Module.Finite K (H ⧸ J) := Module.Finite.of_surjective mk.toLinearMap hmks
+  have : IsNoetherianRing (H ⧸ J) := isNoetherian_of_tower K inferInstance
 
   have hkerQ : ∀ z ∈ RingHom.ker εQ, ∃ a ∈ RingHom.ker ε, mk a = z := by
     intro z hz
@@ -135,7 +135,7 @@ theorem finrank_le_pow_finrank_cot (p : ℕ) [hp : Fact p.Prime] (K H : Type) [F
     intro f hf
     exact ⟨p, hpowQ f hf⟩
 
-  haveI : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
+  have : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
   set d := Module.finrank K (AugCot ε) with hd
   let b := Module.finBasis K (AugCot ε)
   choose x hx using fun i => (RingHom.ker ε).toCotangent_surjective (b i)

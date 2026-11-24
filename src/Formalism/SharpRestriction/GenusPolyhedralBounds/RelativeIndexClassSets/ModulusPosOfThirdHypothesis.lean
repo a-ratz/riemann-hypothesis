@@ -114,10 +114,10 @@ theorem quotCoreE (large₂ : SizeData₂ D) {CRm Ch Ah Cq Aq : ℝ} (ka : Weigh
     Summable.of_nonneg_of_le (fun la => mul_nonneg (Nat.cast_nonneg _) (hlw la)) hle hsg
   refine ⟨fun la => ?_, ?_, ?_⟩
   · rw [hℓeq la]
-    exact ENat.coe_ne_top _
-  · simp only [hℓeq, ENat.toNat_coe]
+    exact ENat.natCast_ne_top _
+  · simp only [hℓeq, ENat.toNat_natCast]
     exact hsf
-  · simp only [hℓeq, ENat.toNat_coe]
+  · simp only [hℓeq, ENat.toNat_natCast]
     have hsub1 : nn.support ⊆ nn.support ∪ be.support := fun x hx => Finset.mem_union_left _ hx
     have hsub2 : be.support ⊆ nn.support ∪ be.support := fun x hx => Finset.mem_union_right _ hx
     calc ∑' la, (ℓ la : ℝ) * lw B.KO la
@@ -176,7 +176,7 @@ theorem DF_pos_of_SetC {large₂ : SizeData₂ D} {X : PJ D B P j} {CK C1 A1 : �
   have h2 := two_T_sq_le_last h τ i hi1
   have h3 := hL.2.1 τ i
   have hn : ¬ i.1 + 1 < (D.R.sigW j).1 := by omega
-  rw [if_neg hn] at h3
+  rw [ite_eq_right hn] at h3
   unfold gapZ at h3
   rw [dite_eq_right hn] at h3
   have hTp : (0 : ℤ) < (Tp D j T : ℤ) := by unfold Tp; positivity

@@ -260,9 +260,9 @@ theorem _root_.GroundTheory.Global.classGroup_mk_eq_one_iff {I : (FractionalIdea
     refine ⟨x, ?_⟩
     symm
     apply Subtype.coe_injective
-    simp only [FractionalIdeal.val_eq_coe, hx, coe_spanSingleton]
+    simp only [FractionalIdeal.val_eq_coe, hx, coeToSubmodule_spanSingleton]
   · rintro ⟨x, hx⟩
-    exact ⟨⟨x, by rw [← hx, coe_spanSingleton]⟩⟩
+    exact ⟨⟨x, by rw [← hx, coeToSubmodule_spanSingleton]⟩⟩
 
 theorem _root_.GroundTheory.Global.classGroup_mk_surjective :
     Function.Surjective (ClassGroup.mk K : (FractionalIdeal (𝓞 K)⁰ K)ˣ →* ClassGroup (𝓞 K)) :=

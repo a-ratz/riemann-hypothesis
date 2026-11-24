@@ -100,7 +100,7 @@ theorem coordEmb_basis {K : Type} [Field K] (σ : K →+* ℂ) (n : ℕ) {ι : T
     LinearIndependent ℂ (fun i => coordEmb σ n (b i)) ∧
       Submodule.span ℂ (Set.range (fun i => coordEmb σ n (b i))) = ⊤ := by
   classical
-  letI : Fintype ι := FiniteDimensional.fintypeBasisIndex b
+  let : Fintype ι := FiniteDimensional.fintypeBasisIndex b
   have hs : ⊤ ≤ Submodule.span ℂ (Set.range (fun i => coordEmb σ n (b i))) := by
     rw [← (EuclideanSpace.basisFun (Fin n) ℂ).toBasis.span_eq, Submodule.span_le]
     rintro _ ⟨i, rfl⟩
@@ -116,8 +116,8 @@ theorem coordEmb_basis {K : Type} [Field K] (σ : K →+* ℂ) (n : ℕ) {ι : T
 theorem exists_frame {V : Type} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (c : InnerProductSpace.Core ℂ V) :
     ∃ e : Euc (Module.finrank ℂ V) ≃ₗ[ℂ] V, ∀ x y, inner ℂ x y = c.inner (e x) (e y) := by
-  letI : NormedAddCommGroup V := c.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
+  let : NormedAddCommGroup V := c.toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
   refine ⟨(stdOrthonormalBasis ℂ V).repr.symm.toLinearEquiv, fun x y => ?_⟩
   exact ((stdOrthonormalBasis ℂ V).repr.symm.inner_map_map x y).symm
 

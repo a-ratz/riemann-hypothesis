@@ -287,7 +287,7 @@ theorem exists_unif_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
   have := hR.2.2.1
   have hI : IsLocalRing.maximalIdeal R ≠ ⊤ := (IsLocalRing.maximalIdeal.isMaximal R).ne_top
   have hpi : IsPrincipalIdealRing (R ⧸ IsLocalRing.maximalIdeal R) := by
-    letI := Ideal.Quotient.field (IsLocalRing.maximalIdeal R)
+    let := Ideal.Quotient.field (IsLocalRing.maximalIdeal R)
     infer_instance
   obtain ⟨D, U, rfl, rfl⟩ := GlobalTheory.T.exists_uniformization_data_complete_local_prime h₁ h₂ h₃ ega_holds GlobalTheory.uniformisation_dvr_unconditional R _ hR hpi G P hS hW hsp
     A gen hgen hA

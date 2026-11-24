@@ -120,12 +120,12 @@ private lemma exists_mul_mem_finset_and_eq_one {F : Type} [Field F] (V : Valuati
   have hb0 : b ≠ 0 := by
     intro hb0
     have := hmax a ha
-    rw [hb0, map_zero, le_zero_iff, Valuation.zero_iff] at this
+    rw [hb0, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at this
     exact ha0 this
   refine ⟨b⁻¹, inv_ne_zero hb0, fun x hx => ?_, b, hb, inv_mul_cancel₀ hb0⟩
   rw [← V.valuation_le_one_iff, map_mul, map_inv₀]
   have hvb : V.valuation b ≠ 0 := (Valuation.ne_zero_iff _).2 hb0
-  rw [inv_mul_le_iff₀ (zero_lt_iff.2 hvb), mul_one]
+  rw [inv_mul_le_iff₀ (pos_iff_ne_zero.2 hvb), mul_one]
   exact hmax x hx
 
 open scoped MatrixGroups TensorProduct in

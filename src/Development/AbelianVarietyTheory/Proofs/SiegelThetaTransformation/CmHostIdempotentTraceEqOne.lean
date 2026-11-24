@@ -234,7 +234,7 @@ theorem actM_mulVec (h : Matrix (Fin n) (Fin n) E) (z : Fin n → Fin g → ℂ)
     (actM idx h *ᵥ fun p => z p.1 p.2) = fun p => Dict.hAct X idx h z p.1 p.2 := by
   funext p
   simp only [actM, Dict.hAct, mulVec, dotProduct, blockDiagonal_apply, Fintype.sum_prod_type, ite_mul,
-    zero_mul, RingHom.mapMatrix_apply, map_apply, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    zero_mul, RingHom.mapMatrix_apply, map_apply, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem det_actM (h : Matrix (Fin n) (Fin n) E) :
     (actM idx h).det = ∏ i, rowType X (idx i) h.det := by
@@ -359,7 +359,7 @@ theorem ph_rat_mul_exp (r q : ℚ) : Ph ((r : ℂ) * cexp (-(Real.pi * I * (q : 
     have : -(Real.pi * I * (q : ℂ)) = ((-(Real.pi * q) : ℝ) : ℂ) * I := by push_cast; ring
     rw [this, Complex.norm_exp_ofReal_mul_I]
   have he : cexp (-(Real.pi * I * (q : ℂ))) ^ (2 * q.den) = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨-q.num, ?_⟩
     have h : (q : ℂ) * (q.den : ℂ) = (q.num : ℂ) := by exact_mod_cast Rat.mul_den_eq_num q
     push_cast
@@ -1604,8 +1604,8 @@ theorem change_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInd
     (hN.2.2.trans inf_le_left)
   obtain ⟨-, -, -, hz2, -⟩ := ZLat.exists_reps_sum E r X g bas idx n hs hn _ hwi hw L hL _ hΛ1' N' hN'.1
     (hN'.2.2.trans inf_le_left)
-  haveI := finite_levQ Dw l
-  haveI := Fintype.ofFinite (Fin n → LevQ Dw l)
+  have := finite_levQ Dw l
+  have := Fintype.ofFinite (Fin n → LevQ Dw l)
   generalize unitv (projA X bas (H.w0 : E) (tens Λ.La L) v₀) = u at hcol hu1 hp1
   generalize unitv (projA X bas (H.w0 : E) (tens (actLat h Λ).La L) v₀) = u' at hcol hu2 hp2
   rw [gphi, hp1, theta_finsum hr idx hs hn hx _ _ _ hu1.1] at e1

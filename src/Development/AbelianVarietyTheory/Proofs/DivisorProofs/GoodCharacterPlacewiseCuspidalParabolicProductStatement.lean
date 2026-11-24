@@ -67,7 +67,7 @@ theorem isIrrChar_of_abs {G K : Type} [Group G] [Fintype G] [Field K] [CharZero 
     (h : IsAbsIrrChar χ) : Formalism.L2.NT.IsIrrChar (fun g => σ (χ g)) := by
   classical
   obtain ⟨n, ρ, hρ, hχ⟩ := h
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   let ι : AlgebraicClosure K →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -91,7 +91,7 @@ theorem isIrrChar_of_abs {G K : Type} [Group G] [Fintype G] [Field K] [CharZero 
   refine ⟨⟨n, ρc, fun g => (htr g).symm⟩, ?_⟩
   have horth := Formalism.L2.Col.gx_orth (G := G) (k := AlgebraicClosure K) (ψ := ρ.character) (ψ' := ρ.character)
     ⟨n, ρ, hρ, rfl⟩ ⟨n, ρ, hρ, rfl⟩
-  rw [if_pos rfl] at horth
+  rw [ite_eq_left rfl] at horth
   have hcard : (Nat.card G : AlgebraicClosure K) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
   have hsum : ∑ g, ρ.character g * ρ.character g⁻¹ = (Nat.card G : AlgebraicClosure K) := by
     rw [← mul_one (Nat.card G : AlgebraicClosure K), ← horth, ← mul_assoc, mul_inv_cancel₀ hcard, one_mul]
@@ -116,7 +116,7 @@ theorem isProdCuspChar_good : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
   intro D G _ _ Pl0 T A Ks _ _ _ R hrec hE hX χ hχ
   classical
   obtain ⟨eR, plg, iso, h1, -, h2⟩ := hrec
-  letI : Fintype (G0g D.nd) := Fintype.ofEquiv G eR.toEquiv
+  let : Fintype (G0g D.nd) := Fintype.ofEquiv G eR.toEquiv
   have hirr : Formalism.L2.NT.IsIrrChar fun x : G0g D.nd => D.what₂.embLL (χ (eR.symm x)) :=
     isIrrChar_comp eR.symm (isIrrChar_of_abs D.what₂.embLL (hX χ hχ))
   have he0 : ∑ x : G0g D.nd, D.ntypes.e0.coeff x * D.what₂.embLL (χ (eR.symm x)) = D.what₂.embLL (χ (eR.symm 1)) := by
@@ -133,8 +133,8 @@ theorem isProdCuspChar_good : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
         ∀ g, θ' (R.eG g PP) = θ (plg.symm PP) (eR g (plg.symm PP)) := by
     intro PP
     obtain ⟨kv, rfl⟩ := plg.surjective PP
-    haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
-    letI := Ideal.Quotient.field (plg kv).1.asIdeal
+    have : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
+    let := Ideal.Quotient.field (plg kv).1.asIdeal
     refine ⟨_, GlobalTheory.FinGL.Transport.isCuspProdChar_transport _ _ (iso kv) _ _ (hθ kv), fun g => ?_⟩
     rw [Equiv.symm_apply_apply, h2]
     exact congrArg _ ((GlobalTheory.FinGL.Transport.glEquiv (iso kv) D.R.r).symm_apply_apply _)

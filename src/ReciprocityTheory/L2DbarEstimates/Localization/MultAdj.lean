@@ -68,7 +68,7 @@ theorem multA_integrable_of_sq {α : Type*} [MeasurableSpace α] (ν : Measure �
     (F : α → ℂ) (hF : AEStronglyMeasurable F ν) (h : ∫⁻ x, ‖F x‖ₑ ^ 2 ∂ν < ⊤) :
     Integrable F ν := by
   have h2 : MemLp F 2 ν := by
-    rw [memLp_iff, eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
+    rw [memLp_iff, eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top
       two_ne_zero ENNReal.ofNat_ne_top hF]
     simpa using h
   exact h2.integrable one_le_two
@@ -88,7 +88,7 @@ private lemma localL2Isometry_comp_of_norm_le {M E F : Type*} [TopologicalSpace 
   refine ⟨hg.comp_aestronglyMeasurable hf.1, fun C hC => lt_of_le_of_lt ?_ (hf.2 C hC)⟩
   refine lintegral_mono fun x => ?_
   gcongr
-  rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm]
+  rw [← ofReal_norm, ← ofReal_norm]
   exact ENNReal.ofReal_le_ofReal (hb _)
 
 theorem locL2_form_component {n : ℕ} {M : Type*} [TopologicalSpace M] [MeasurableSpace M]
@@ -122,7 +122,7 @@ theorem multA_intOn_w {M : Type*} [TopologicalSpace M] [T2Space M] [MeasurableSp
     have hx' : ph x ≤ C := le_trans (le_abs_self _) (by simpa [Real.norm_eq_abs] using hC x hx)
     have h1 : 1 ≤ Real.exp C * Real.exp (-ph x) := by
       rw [← Real.exp_add]; exact Real.one_le_exp (by linarith)
-    rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+    rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
       ← ENNReal.ofReal_mul (Real.exp_pos C).le]
     apply ENNReal.ofReal_le_ofReal
     calc ‖u x‖ ^ 2 = ‖u x‖ ^ 2 * 1 := by ring
@@ -187,7 +187,7 @@ theorem multAdj (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] : MultAdjStatement n M := by
   intro z hz ph₁ ph₂ η f w h1s h2s hηs hf hw hW g hg
   beta_reduce
-  haveI : IsFiniteMeasureOnCompacts (vol n z) := ReciprocityTheory.L2DbarEstimates.vol_isFiniteMeasureOnCompacts n z hz
+  have : IsFiniteMeasureOnCompacts (vol n z) := ReciprocityTheory.L2DbarEstimates.vol_isFiniteMeasureOnCompacts n z hz
   have he : ReciprocityTheory.L2DbarEstimates.Smooth n z (fun y => (η y : ℂ)) := hηs
   have hgs : ReciprocityTheory.L2DbarEstimates.Smooth n z g := hg.1
   have hψs : ReciprocityTheory.L2DbarEstimates.Smooth n z (fun y => (η y : ℂ) * g y) :=
@@ -287,7 +287,7 @@ theorem multS (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] : MultSStatement n M := by
   intro z hz η f σ hηs hf hσ hW φ hφ j k
   beta_reduce
-  haveI : IsFiniteMeasureOnCompacts (vol n z) := ReciprocityTheory.L2DbarEstimates.vol_isFiniteMeasureOnCompacts n z hz
+  have : IsFiniteMeasureOnCompacts (vol n z) := ReciprocityTheory.L2DbarEstimates.vol_isFiniteMeasureOnCompacts n z hz
   have he : ReciprocityTheory.L2DbarEstimates.Smooth n z (fun y => (η y : ℂ)) := hηs
   have hφs : ReciprocityTheory.L2DbarEstimates.Smooth n z φ := hφ.1
   have hψs : ReciprocityTheory.L2DbarEstimates.Smooth n z (fun y => (η y : ℂ) * φ y) :=
@@ -342,7 +342,7 @@ theorem multDiv (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] : MultDivStatement n M := by
   intro z hz η G D hηs hG hD hW φ hφ
   beta_reduce
-  haveI : IsFiniteMeasureOnCompacts (vol n z) := ReciprocityTheory.L2DbarEstimates.vol_isFiniteMeasureOnCompacts n z hz
+  have : IsFiniteMeasureOnCompacts (vol n z) := ReciprocityTheory.L2DbarEstimates.vol_isFiniteMeasureOnCompacts n z hz
   have he : ReciprocityTheory.L2DbarEstimates.Smooth n z (fun y => (η y : ℂ)) := hηs
   have hφs : ReciprocityTheory.L2DbarEstimates.Smooth n z φ := hφ.1
   have hψs : ReciprocityTheory.L2DbarEstimates.Smooth n z (fun y => (η y : ℂ) * φ y) :=

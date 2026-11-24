@@ -134,7 +134,7 @@ theorem hasDerivAt_of_eq_unit_mul {g : ℕ} {Z e θ : (Fin g → ℂ) → ℂ} (
   simp only [zero_smul, he0, hZ0, _root_.mul_one, zero_mul, sub_zero, one_pow, div_one] at h1
   refine h1.congr_of_eventuallyEq ?_
   filter_upwards [hc h, hc hne] with t h1 h2
-  simp only [Set.mem_preimage, Set.mem_setOf_eq] at h1 h2
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq] at h1 h2
   simp only [Pi.div_apply, h1]
   field_simp
 
@@ -276,7 +276,7 @@ theorem hasDerivAt_originFn {R : Type} [CommRing R] (W : WeierstrassCurve R) (s 
   have hV0 : ⊤ ≤ eSec A ⁻¹ᵁ V := (top_le_preimage_iff_mem _ _).2
     ⟨Set.mem_iInter.2 fun _ => (top_le_preimage_iff_mem _ _).1 hz, hi⟩
   have hn : ∀ U : A.left.Opens, V ≤ U → {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ U} ∈ 𝓝 (0 : Fin g → ℂ) := fun U hU =>
-    (u.hol U 0).1.mem_nhds (by rw [Set.mem_setOf_eq, h0]; exact top_le_preimage_mono _ hU hV0)
+    (u.hol U 0).1.mem_nhds (by rw [Set.mem_ofPred_eq, h0]; exact top_le_preimage_mono _ hU hV0)
   let U₁ : A.left.Opens := φ ⁻¹ᵁ coordOpen W 1
   have hV1 : V ≤ U₁ := hV.trans (φ.preimage_mono (originOpen_le W))
   let f : Γ(A.left, U₁) := (φ.app (coordOpen W 1)).hom (ratio W 1 0)

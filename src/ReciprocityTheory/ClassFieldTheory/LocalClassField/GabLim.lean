@@ -112,7 +112,7 @@ theorem isAbLK_of_cyclic (hL : FiniteDimensional ℚ_[p] L) (h : K ≤ L) [(subG
   exact (zpow_mul_comm g₀ i j)
 
 theorem isAbLK_Kn (hK : FiniteDimensional ℚ_[p] K) {n : ℕ} (hn : 0 < n) : IsAbLK p K (Kn p K n) := by
-  letI : (subG p K (Kn p K n)).Normal :=
+  let : (subG p K (Kn p K n)).Normal :=
     subG_normal_of_stable (Kn_stable p K n)
   exact isAbLK_of_cyclic (finiteDimensional_Kn p K hK hn) (le_Kn p K n)
     (frobLK p K (Kn p K n)) (by

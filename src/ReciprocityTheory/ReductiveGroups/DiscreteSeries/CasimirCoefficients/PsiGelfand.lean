@@ -70,7 +70,7 @@ theorem psiAll : PsiAllStatement n := by
   refine ⟨PsiM T μ, fun k₁ k₂ g hg => psiM_equiv T μ k₁ k₂ hg, psiM_one T μ, psiM_smooth T μ hμ,
     fun g hg => psiM_casimir T μ hμ hg, fun k X hX => psiM_dec T μ hμ hHC hgap hq k hX,
     fun ν hν => ?_, fun k g hg => psiM_gelfand T μ hμ k hg, fun μ' hμ' X hX => ?_⟩
-  · haveI := hν
+  · have := hν
     exact psiM_integrable T μ hμ hHC hgap hq ν
   · rw [isMu_unique hμ hμ']
     exact psiM_exp_formula T μ hX

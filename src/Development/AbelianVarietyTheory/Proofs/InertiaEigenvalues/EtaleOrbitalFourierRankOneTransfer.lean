@@ -105,8 +105,8 @@ theorem betaK_nondeg (A : Et F E) (h : (Algebra.traceForm F A.K).Nondegenerate) 
   rw [(betaK_isSymm A).eq]; exact hy x
 
 theorem secondCountable [Unram F E] (A : Et F E) : SecondCountableTopology A.K := by
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   let e : A.K ≃ₗ[F] (Fin (Module.finrank F A.K) → F) := (Module.finBasis F A.K).equivFun
   have h1 : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have h2 : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -122,9 +122,9 @@ theorem psi_continuous (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) : Continuous ψ
 
 theorem fourK_isTest : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (μK : Measure A.K), SelfDual μK (A.kerK ψ) → ∀ φ' : A.K × A.K → ℂ, IsTest φ' → IsTest (A.fourK μK ψ φ') := by
   intro F E _ _ _ _ _ A ψ hψ μK hsd φ' hφ
-  haveI := secondCountable A
-  haveI : μK.IsAddHaarMeasure := hsd.1
-  haveI : (μK.prod μK).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have := secondCountable A
+  have : μK.IsAddHaarMeasure := hsd.1
+  have : (μK.prod μK).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   have hnd := (_root_.GlobalTheory.JR.EtFacts.main F E A).2.2.1
   have key := (_root_.GlobalTheory.JR.SelfDualUniq.selfDual_exists_unique_isTest F E ψ hψ (A.K × A.K) (betaK A) (betaK_isSymm A) (betaK_nondeg A hnd)).2
     (μK.prod μK) inferInstance φ' hφ
@@ -162,8 +162,8 @@ namespace GlobalTheory.JHypEquiv
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
 
 theorem secondCountable_K [Unram F E] (A : Et F E) : SecondCountableTopology A.K := by
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   let e : A.K ≃ₗ[F] (Fin (Module.finrank F A.K) → F) := (Module.finBasis F A.K).equivFun
   have h1 : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have h2 : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -189,11 +189,11 @@ theorem absK_unit (A : Et F E) (s : A.Kˣ) : A.absK (s : A.K) = (distribHaarChar
 theorem integral_inv_mul [Unram F E] (A : Et F E) (μK : Measure A.K) [μK.IsAddHaarMeasure] (s : A.Kˣ)
     (H : A.K → ℂ) :
     ∫ t, H (((s⁻¹ : A.Kˣ) : A.K) * t) ∂μK = (distribHaarChar A.K s : ℝ) * ∫ u, H u ∂μK := by
-  haveI := secondCountable_K A
-  haveI := t2Space_K A
+  have := secondCountable_K A
+  have := t2Space_K A
   have hmap : μK.map (fun x => (s⁻¹ : A.Kˣ) • x) = (distribHaarChar A.K s : ENNReal) • μK := by
     ext S hS
-    rw [Measure.map_apply (measurable_const_smul _) hS, Set.preimage_smul, Measure.smul_apply, smul_eq_mul,
+    rw [Measure.map_apply (measurable_const_smul _) hS, Set.preimage_smul, smul_apply, smul_eq_mul,
       distribHaarChar_mul, inv_inv]
   have e := integral_map_equiv (MeasurableEquiv.smul (s⁻¹ : A.Kˣ) : A.K ≃ᵐ A.K) (μ := μK) H
   rw [show (⇑(MeasurableEquiv.smul (s⁻¹ : A.Kˣ) : A.K ≃ᵐ A.K)) = fun x => (s⁻¹ : A.Kˣ) • x from rfl, hmap,
@@ -212,7 +212,7 @@ theorem jHyp_nm : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
     (φ' : A.K × A.K → ℂ) (z : A.K) (s : A.Kˣ) (g : SpecialLinearGroup (Fin 2) A.K),
     A.jHyp μK ψ φ' (nS z * mS s * g) = A.etaK s * (A.absK s : ℂ) * A.jHyp μK ψ φ' g := by
   intro F E _ _ _ _ _ A μK hμ ψ φ' z s g
-  haveI := hμ
+  have := hμ
   unfold Et.jHyp
   simp only [row_one]
   set H : A.K → ℂ := fun u => A.tilde μK ψ φ' (u * g 1 0) (u * g 1 1) * A.etaK ((s : A.K) * u) with hH
@@ -455,7 +455,7 @@ theorem dual_cinvOK_small : ∀ (F E : Type) [NontriviallyNormedField F] [Nontri
     ∀ᶠ c in 𝓝[≠] (0 : F), {y : A.K | ∀ x : A.K, c • x ∈ A.OK → A.psiK ψ (x * y) = 1} ⊆ V := by
   intro F E _ _ _ _ _ A ψ hψ V hV
   classical
-  haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
+  have : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
   obtain ⟨-, -, hnd, -, -, -, -, -, -, hOpen, -, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   have h0 : (0 : A.K) ∈ A.OK := by rw [← hR]; exact R.zero_mem
   let b := Module.finBasis F A.K
@@ -555,7 +555,7 @@ namespace GlobalTheory
 theorem eventually_isUnit_and_tendsto_inverse_normed (F : Type) [NontriviallyNormedField F]
     [CompleteSpace F] (R : Type) [NormedCommRing R] [NormedAlgebra F R] [Module.Finite F R] :
     (∀ᶠ w in 𝓝 (1 : R), IsUnit w) ∧ Tendsto Ring.inverse (𝓝 (1 : R)) (𝓝 1) := by
-  have : CompleteSpace R := FiniteDimensional.complete F R
+  have : CompleteSpace R := FiniteDimensional.completeSpace F R
   refine ⟨Units.isOpen.mem_nhds isUnit_one, ?_⟩
   have h := (NormedRing.inverse_continuousAt (1 : Rˣ)).tendsto
   simpa using h
@@ -584,9 +584,9 @@ theorem eventually_isUnit_and_tendsto_inverse (F : Type) [NontriviallyNormedFiel
 
 theorem eventually_testFn_mul_inverse_eq : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (φ' : A.K × A.K → ℂ), IsTest φ' → ∀ a : A.K, IsUnit a → ∀ᶠ s in 𝓝 a, ∀ t : A.K, IsUnit t → φ' (s * Ring.inverse t, t) = φ' (a * Ring.inverse t, t) := by
   intro F E _ _ _ _ hU A φ' hφ a ha
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : CompleteSpace F := inferInstance
+  have : LocallyCompactSpace F := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : CompleteSpace F := inferInstance
   obtain ⟨hunit, hinv⟩ := eventually_isUnit_and_tendsto_inverse F A.K
   have hC : IsCompact (tsupport φ') := hφ.2
   have H1 : ∀ᶠ w in 𝓝 (1 : A.K), ∀ q ∈ tsupport φ', φ' (q.1 * w, q.2) = φ' q := by
@@ -652,11 +652,11 @@ theorem norm_eta (x : F) : ‖eta x‖ = 1 := by
   unfold eta; split_ifs <;> simp
 
 theorem measurable_etaK [Unram F E] (A : Et F E) : Measurable A.etaK := by
-  letI : MeasurableSpace F := borel F
-  haveI : BorelSpace F := ⟨rfl⟩
+  let : MeasurableSpace F := borel F
+  have : BorelSpace F := ⟨rfl⟩
   obtain ⟨-, -, -, hlc⟩ := _root_.GlobalTheory.EtaChar.main F E
   have hc : ContinuousOn (eta : F → ℂ) {0}ᶜ := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     exact hlc.continuous
   have hm : Measurable (eta : F → ℂ) := measurable_of_continuousOn_compl_singleton 0 hc
   exact hm.comp (continuous_normF A).measurable
@@ -664,7 +664,7 @@ theorem measurable_etaK [Unram F E] (A : Et F E) : Measurable A.etaK := by
 theorem collapse : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (μK : Measure A.K), μK.IsAddHaarMeasure → ∀ (φ' : A.K × A.K → ℂ), IsTest φ' → ∀ (a : A.K) (c : F), c ≠ 0 → ∫ z in {z : A.K | c • z ∈ A.OK}, (∫ t, (∫ b, φ' (b, t) * A.psiK ψ (t * z * b) ∂μK) * A.etaK t ∂μK) * A.psiK ψ (-(a * z)) ∂μK = (((μK {z : A.K | c • z ∈ A.OK}).toReal : ℝ) : ℂ) * ∫ t, (∫ b, φ' (b, t) * Set.indicator {y : A.K | ∀ x : A.K, c • x ∈ A.OK → A.psiK ψ (x * y) = 1} (fun _ => (1 : ℂ)) (t * b - a) ∂μK) * A.etaK t ∂μK := by
   intro F E _ _ _ _ U A ψ hψ μK hμ φ' hφ a c hc
   have := U.charZero; have := U.ultraF; have := U.lcF
-  haveI := GlobalTheory.FourKFub.secondCountableK A
+  have := GlobalTheory.FourKFub.secondCountableK A
   obtain ⟨_, _, _, _, -⟩ := GlobalTheory.JR.EtMeas.top_facts F A.K
   obtain ⟨-, -, hnd, -, -, -, -, -, -, hOKo, hOKc, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   have hψc := GlobalTheory.FourKFub.psiK_continuous A ψ hψ
@@ -711,7 +711,7 @@ theorem collapse : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNor
   set N : Set A.K := {y : A.K | ∀ x : A.K, c • x ∈ A.OK → A.psiK ψ (x * y) = 1} with hNdef
   have hN : {y | ∀ x ∈ M, ψ (Algebra.traceForm F A.K x y) = 1} = N := by
     ext y
-    simp only [Set.mem_setOf_eq, N, Algebra.traceForm_apply]
+    simp only [Set.mem_ofPred_eq, N, Algebra.traceForm_apply]
     constructor
     · intro h x hx; exact h x (by rw [← SetLike.mem_coe, hMset]; exact hx)
     · intro h x hx; exact h x (by rw [← SetLike.mem_coe, hMset] at hx; exact hx)
@@ -848,7 +848,7 @@ theorem scale_integral : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
   have hmap : Measure.map (fun b : A.K => ht.unit • b) μK =
       ((distribHaarChar A.K ht.unit : ENNReal))⁻¹ • μK := by
     ext S hS
-    rw [hme.map_apply, Measure.smul_apply, smul_eq_mul]
+    rw [hme.map_apply, smul_apply, smul_eq_mul]
     have h1 := distribHaarChar_mul μK ht.unit⁻¹ S
     rw [Set.preimage_smul, ← h1, map_inv, ENNReal.coe_inv (distribHaarChar_pos).ne']
   have hint : ∫ b, f (t * b) ∂μK = ∫ b, f b ∂(Measure.map (fun b : A.K => ht.unit • b) μK) := by
@@ -972,7 +972,7 @@ theorem etale_norm_continuous_and_zero (F E : Type) [NontriviallyNormedField F] 
     [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) : Continuous A.NL ∧ A.NL 0 = 0 := by
   classical
   have h2 : Module.finrank F E = 2 := Unram.finrank_eq
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   have hb : IsBaseChange A.K (IsScalarTower.toAlgHom F E A.L).toLinearMap := A.push.symm.out
   let b0 := Module.finBasisOfFinrankEq F E h2
   let b : Module.Basis (Fin 2) A.K A.L := hb.basis b0
@@ -1167,14 +1167,14 @@ theorem jx_mem_induced : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
     have hl := fix_l A ψ hψ x A.etaK μ γ W hW φ hφ
     obtain ⟨hunit, hinv⟩ := inv_cont A
     have hQ : ∀ᶠ u in 𝓝 (0 : A.K), ∀ᶠ v in 𝓝 u, W (lS v) φ = φ := hl.eventually_nhds
-    haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
+    have : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
     have hcm : Continuous (algebraMap F A.K) := continuous_algebraMap F A.K
     have hQ2 : ∀ᶠ c in 𝓝 (0 : F), (∀ᶠ v in 𝓝 (algebraMap F A.K c), W (lS v) φ = φ) ∧
         ∀ᶠ v in 𝓝 (-algebraMap F A.K c), W (lS v) φ = φ := by
       have e1 : Tendsto (algebraMap F A.K) (𝓝 0) (𝓝 0) := by simpa using hcm.tendsto 0
       have e2 : Tendsto (fun c => -algebraMap F A.K c) (𝓝 0) (𝓝 0) := by simpa using (hcm.tendsto 0).neg
       exact (e1.eventually hQ).and (e2.eventually hQ)
-    haveI := NormedField.nhdsNE_neBot (0 : F)
+    have := NormedField.nhdsNE_neBot (0 : F)
     obtain ⟨c, ⟨hc1, hc2⟩, hc0⟩ := ((hQ2.filter_mono nhdsWithin_le_nhds).and
       (self_mem_nhdsWithin : {y : F | y ≠ 0} ∈ 𝓝[≠] (0 : F))).exists
     set t := algebraMap F A.K c with ht_def
@@ -1462,7 +1462,7 @@ theorem rankOne : RankOne := by
       rw [hl, lam_sum A ψ hψ m.μK hμ a Sf r jx hjx c hc, e14]
       rw [Finset.sum_congr rfl (fun x' hx' => by rw [e15 x' hx'])]
       have hx₀f : x₀ ∈ Sf := (hmem x₀).2 hx₀
-      simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hx₀f, if_true]
+      simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hx₀f, ite_true]
       have hm := hmatch x₀ hx₀ y₀ hy₀
       rw [← ha₀'] at hm
       rw [hm]
@@ -1510,7 +1510,7 @@ theorem rankOne : RankOne := by
     lam_sum A ψ hψ m.μK hμ a Sf r jw hjw c hc, e14,
     Finset.sum_congr rfl (fun x' hx' => by rw [e15 x' hx'])] at hz
   have hxf : x ∈ Sf := (hmem x).2 hx
-  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hxf, if_true] at hz
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', hxf, ite_true] at hz
   have horb : A.orbL m.ν (φw x) y = γ x * A.orbL m.ν (fourB (m.μL x) (A.kerL ψ x) (φ x)) y := by
     simp only [Et.orbL, φw]
     rw [← integral_const_mul]

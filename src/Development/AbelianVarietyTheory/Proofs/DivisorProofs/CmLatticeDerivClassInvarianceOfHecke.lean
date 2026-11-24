@@ -236,7 +236,7 @@ theorem fderiv_eq_sum_wirt' (h : (Φ → ℂ) → ℂ) (y u : Φ → ℂ) :
   rw [map_sum]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [map_add (f := _), map_smul, map_smul]
-  simp only [wirt, Bool.false_eq_true, if_false, if_true, real_smul]
+  simp only [wirt, Bool.false_eq_true, ite_false, ite_true, real_smul]
   set A := fderiv ℝ h y (Pi.single τ 1)
   set B := fderiv ℝ h y (Pi.single τ I)
   have hc : (starRingEnd ℂ) (u τ) = (u τ).re - (u τ).im * I := by
@@ -334,7 +334,7 @@ theorem ExpSum.deriv {D : Set ℂ} {V : Set (Φ → ℂ)} (hU : IsOpen U) (hV : 
     have d₂ := ((h₂.smooth hV hmaps ht hl hGs hσ).differentiableOn (by simp)).differentiableAt (hU.mem_nhds hz)
     show fderiv ℝ (fun y => F₁ σ y + F₂ σ y) z v = F₁' σ z + F₂' σ z
     have hsum : HasFDerivAt (fun y => F₁ σ y + F₂ σ y) _ z := d₁.hasFDerivAt.add d₂.hasFDerivAt
-    rw [hsum.fderiv, ContinuousLinearMap.add_apply, e₁ σ hσ z hz, e₂ σ hσ z hz]
+    rw [hsum.fderiv, add_apply, e₁ σ hσ z hz, e₂ σ hσ z hz]
   | term n β w hβ =>
     have hdb := ((contDiffOn_infty_iff_fderiv_of_isOpen hU).1 hβ).2
     have hdbv : ContDiffOn ℝ ∞ (fun z => fderiv ℝ β z v) U := hdb.clm_apply contDiffOn_const
@@ -365,7 +365,7 @@ theorem ExpSum.deriv {D : Set ℂ} {V : Set (Φ → ℂ)} (hU : IsOpen U) (hV : 
       have hall := ((hb'.const_mul (σ ^ n)).mul hE).mul hWt
       have hall' : HasFDerivAt (fun y => σ ^ n * β y * Complex.exp (-σ * l y) * W (t y)) _ z := hall
       rw [hall'.fderiv]
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+      simp only [add_apply, smul_apply, smul_eq_mul,
         ContinuousLinearMap.comp_apply, Function.comp_apply, Pi.mul_apply]
       rw [fderiv_eq_sum_wirt' W (t z) (fderiv ℝ t z v)]
       simp only [wirtWord_cons]
@@ -787,7 +787,7 @@ theorem hasFDerivAt_factor_norm_cpow {I : Type} [Fintype I] (j : I) (a c K σ : 
   refine h.congr_fderiv ?_
   ext v
   clear h hinv hpow hP hC hU hslit
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,
     dz_apply, dzbar_apply, smul_eq_mul, ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply, map_mul,
     Function.comp_apply, id, Pi.inv_apply, Pi.pow_apply, Pi.mul_apply, ← hu_def]
   rw [Complex.cpow_sub _ _ hne, Complex.cpow_one]
@@ -1059,7 +1059,7 @@ theorem wirt_false_eq_lineDeriv {I : Type} [Fintype I] [DecidableEq I] (i : I) (
   rw [hd.lineDeriv_eq_fderiv]
   unfold wirt
   rw [hd.fderiv_restrictScalars ℝ]
-  simp only [ContinuousLinearMap.coe_restrictScalars', Bool.false_eq_true, if_false]
+  simp only [ContinuousLinearMap.coe_restrictScalars', Bool.false_eq_true, ite_false]
   rw [clm_single_I]
   have e : ∀ a b : ℂ, a = b → (a + -Complex.I * (Complex.I * a)) / 2 = b := by
     rintro a b rfl
@@ -1402,7 +1402,7 @@ theorem dualForm_values (E : Type) [Field E] [NumberField E] [IsCMField E] (ξ :
       simp [IsCMField.complexEmbedding_complexConj, ComplexEmbedding.conjugate_coe_eq]
     rw [h2] at h1
     simp only [c, sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rw [sub_eq_zero]
     have h3 : ∑ τ₁, ∑ τ₂, τ₁ ξ * τ₂ ξ * b (ComplexEmbedding.conjugate τ₁) (ComplexEmbedding.conjugate τ₂) *
         (τ₁ x * τ₂ y) = ∑ σ : E →+* ℂ, σ ξ * σ x * ComplexEmbedding.conjugate σ y := by
@@ -1423,7 +1423,7 @@ theorem dualForm_values (E : Type) [Field E] [NumberField E] [IsCMField E] (ξ :
   simp only [c, b, hcc] at hc
   constructor
   · rintro rfl
-    rw [hcc, if_pos rfl] at hc
+    rw [hcc, ite_eq_left rfl] at hc
     have h0 := hz (ComplexEmbedding.conjugate ρ)
     have h4 : ComplexEmbedding.conjugate ρ ξ *
         (ρ ξ * B ρ.toRatAlgHom.toLinearMap (ComplexEmbedding.conjugate ρ).toRatAlgHom.toLinearMap - 1) = 0 := by
@@ -1432,7 +1432,7 @@ theorem dualForm_values (E : Type) [Field E] [NumberField E] [IsCMField E] (ξ :
     exact eq_inv_of_mul_eq_one_right (sub_eq_zero.1 h5)
   · intro hne
     have hne' : ComplexEmbedding.conjugate ρ' ≠ ρ := fun h => hne (by rw [← h, hcc])
-    rw [if_neg hne', sub_zero] at hc
+    rw [ite_eq_right hne', sub_zero] at hc
     exact (mul_eq_zero.1 hc).resolve_left (mul_ne_zero (hz _) (hz _))
 
 end GlobalTheory.DualFormValues
@@ -1497,7 +1497,7 @@ theorem series_differentiable : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     simp only [ContinuousLinearMap.apply_apply] at hm
     rw [hm]
     refine tsum_congr fun q => ?_
-    simp [hf', ContinuousLinearMap.sum_apply, Pi.single_apply]
+    simp [hf', sum_apply, Pi.single_apply]
   rwa [hev] at hL
 
 end GlobalTheory.DeformedSum.Series
@@ -1632,11 +1632,11 @@ theorem series_weightTwo : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   refine (HasSum.tsum_eq ?_).symm
   refine (((hap _).add ((hap _).mul_left _)).div_const 2).congr_fun ?_
   intro q
-  simp only [hf', ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, dz_apply,
+  simp only [hf', sum_apply, add_apply, smul_apply, dz_apply,
     dzbar_apply, smul_eq_mul]
   rw [Finset.sum_eq_single i (fun j _ hj => by simp [Pi.single_apply, hj]) (by simp),
     Finset.sum_eq_single i (fun j _ hj => by simp [Pi.single_apply, hj]) (by simp)]
-  simp only [Pi.single_eq_same, map_one, Complex.conj_I, Bool.false_eq_true, if_false]
+  simp only [Pi.single_eq_same, map_one, Complex.conj_I, Bool.false_eq_true, ite_false]
   linear_combination (eTerm φ (m + Pi.single i 1) σ z q.1.out / 2 -
     eTerm φ m σ z q.1.out * (-σ * φ i q.1.out / starRingEnd ℂ (defCoord φ z q.1.out i)) / 2) * Complex.I_mul_I
 
@@ -1652,7 +1652,7 @@ theorem wirtWord_congr {I : Type} [Fintype I] {U : Set (I → ℂ)} (hU : IsOpen
 
 theorem wirt_const_mul {I : Type} [Fintype I] (i : I) (bar : Bool) (a : ℂ) {f : (I → ℂ) → ℂ} {z : I → ℂ}
     (hf : DifferentiableAt ℝ f z) : wirt i bar (fun w => a * f w) z = a * wirt i bar f z := by
-  simp only [wirt, fderiv_const_mul hf, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [wirt, fderiv_const_mul hf, smul_apply, smul_eq_mul]
   ring
 
 theorem eq_at_zero {f g : ℂ → ℂ} (hf : DifferentiableOn ℂ f halfPlane) (hg : DifferentiableOn ℂ g halfPlane)

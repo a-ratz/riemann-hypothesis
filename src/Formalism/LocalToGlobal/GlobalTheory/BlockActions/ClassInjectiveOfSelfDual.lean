@@ -110,7 +110,7 @@ theorem finrank_host_lt_T_sub_one (D : D7) (u : D.what₂.Word) : Module.finrank
   have hgg2 : 16 ≤ (D.host.g 0 * D.host.g 1) ^ 2 := by nlinarith
   have hQ : 0 < D.host.QS := D.host.QS_pos
   have hN : 0 < D.host.QS * D.host.q * D.host.d := by positivity
-  haveI : NeZero (D.host.QS * D.host.q * D.host.d) := ⟨hN.ne'⟩
+  have : NeZero (D.host.QS * D.host.q * D.host.d) := ⟨hN.ne'⟩
   have hcard : Nat.card D.R.GG ≤ Nat.card (ZMod (D.host.QS * D.host.q * D.host.d))ˣ :=
     Nat.card_le_card_of_surjective _ D.host.der.art_surj
   have hGG : Nat.card D.R.GG = 4 * D.R.ord := D.R.natCard_GG

@@ -101,7 +101,7 @@ theorem lev : GlobalTheory.Published.HarishChandraModules → ∀ (D : D7) (θ :
     ∀ v, ∀ k ∈ J, ∀ g, T v (g * k) = χ k * T v g := by
   intro hHC D θ _ V S M J χ μ 𝓕 T₀ hT₀ T hext hcont v k hk g
   have hsm : ∀ τ, ∀ w ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ, w ∈ M.sm τ := fun τ w hw => by
-    haveI := (M.ds τ).1
+    have := (M.ds τ).1
     exact Submodule.subset_span (GlobalTheory.Published.HarishChandraModules.smoothVec hHC (M.ds τ).2.2.1 (M.ds τ).2.2.2.1 hw
       (M.fr_unit τ) (M.fr_gram τ))
   have key : ∀ s : Finset D.what₂.Tau, ∀ v : M.Vec, (∀ τ ∉ s, (v τ : M.H τ) ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ) →
@@ -281,7 +281,7 @@ theorem extExists : GlobalTheory.Published.HarishChandraModules → GlobalTheory
   · rintro T T' ⟨hT, hTe⟩ ⟨hT', hT'e⟩
     have hd : T - T' ∈ Mult θ M J χ := Submodule.sub_mem _ (Submodule.subset_span hT) (Submodule.subset_span hT')
     refine sub_eq_zero.1 (GlobalTheory.KFiniteDetermined.restrInj D θ hθ V S M J χ (T - T') hd fun v hv => ?_)
-    rw [MultilinearMap.sub_apply, hTe v (fun τ => ⟨v τ, hv τ⟩) (fun τ => rfl),
+    rw [sub_apply, hTe v (fun τ => ⟨v τ, hv τ⟩) (fun τ => rfl),
       hT'e v (fun τ => ⟨v τ, hv τ⟩) (fun τ => rfl), sub_self]
 
 end GlobalTheory.GKExt

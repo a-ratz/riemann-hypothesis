@@ -71,10 +71,10 @@ private lemma one_le_ramificationIdx_mul_inertiaDeg_of_mem (E : Type) [Field E]
     {P : Ideal (NumberField.RingOfIntegers E)}
     (hP : P ∈ IsDedekindDomain.primesOverFinset p.asIdeal (NumberField.RingOfIntegers E)) :
     1 ≤ p.asIdeal.ramificationIdx' P * p.asIdeal.inertiaDeg' P := by
-  haveI := p.isMaximal
+  have := p.isMaximal
   rw [IsDedekindDomain.mem_primesOverFinset_iff p.ne_bot] at hP
-  haveI : P.IsPrime := hP.1
-  haveI : P.LiesOver p.asIdeal := hP.2
+  have : P.IsPrime := hP.1
+  have : P.LiesOver p.asIdeal := hP.2
   exact Nat.one_le_iff_ne_zero.mpr (mul_ne_zero
     (Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver P p.ne_bot)
     (Ideal.inertiaDeg'_pos p.asIdeal P).ne')
@@ -86,7 +86,7 @@ theorem _root_.GlobalTheory.HenQ.Regroup.mem_fin (E : Type) [Field E] [NumberFie
       IsDedekindDomain.primesOverFinset
         (IsDedekindDomain.HeightOneSpectrum.under (NumberField.RingOfIntegers ℚ) v).asIdeal
         (NumberField.RingOfIntegers E) := by
-  haveI := (HeightOneSpectrum.under (NumberField.RingOfIntegers ℚ) v).isMaximal
+  have := (HeightOneSpectrum.under (NumberField.RingOfIntegers ℚ) v).isMaximal
   rw [IsDedekindDomain.mem_primesOverFinset_iff
     (HeightOneSpectrum.under (NumberField.RingOfIntegers ℚ) v).ne_bot,
     HeightOneSpectrum.under_asIdeal]
@@ -109,7 +109,7 @@ theorem _root_.GlobalTheory.HenQ.Regroup.sum_eq (E : Type) [Field E] [NumberFiel
     ∑ P ∈ IsDedekindDomain.primesOverFinset p.asIdeal (NumberField.RingOfIntegers E),
         p.asIdeal.ramificationIdx' P * p.asIdeal.inertiaDeg' P =
       (2 : ℕ) := by
-  haveI := p.isMaximal
+  have := p.isMaximal
   rw [Ideal.sum_ramification_inertia (NumberField.RingOfIntegers E) ℚ E p.ne_bot, hE]
 
 end GlobalTheory.HenQ.Regroup
@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.HenQ.Regroup.fiber_inert (E : Type) [Field E] [Numbe
   have hvm := _root_.GlobalTheory.HenQ.Regroup.mem_fin E v
   rw [hv] at hvm
   set p := HeightOneSpectrum.under (NumberField.RingOfIntegers ℚ) w with hp
-  haveI : w.asIdeal.LiesOver p.asIdeal := by
+  have : w.asIdeal.LiesOver p.asIdeal := by
     rw [hp, HeightOneSpectrum.under_asIdeal]
     infer_instance
   have hn := Ideal.absNorm_eq_pow_inertiaDeg'_of_liesOver w.asIdeal p.asIdeal p.isPrime p.ne_bot

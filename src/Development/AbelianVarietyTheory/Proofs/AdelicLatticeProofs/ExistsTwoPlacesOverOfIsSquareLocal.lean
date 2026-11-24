@@ -72,12 +72,12 @@ theorem exists_centre_over {F E : Type} [Field F] [NumberField F] [Field E] [Num
     { carrier := {x | u (algebraMap (𝓞 E) E x) < 1}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
         exact u.map_add_lt ha hb
       zero_mem' := by simp
       smul_mem' := by
         intro c x hx
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul] at *
         exact lt_of_le_of_lt (mul_le_of_le_one_left' (val_integer_le_one u c)) hx }
   have hI : ∀ x : 𝓞 E, x ∈ I ↔ u (algebraMap (𝓞 E) E x) < 1 := fun x => Iff.rfl
   have hp : I.IsPrime := by

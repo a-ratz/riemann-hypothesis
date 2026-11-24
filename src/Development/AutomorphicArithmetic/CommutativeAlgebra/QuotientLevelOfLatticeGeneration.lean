@@ -96,7 +96,7 @@ theorem UpperTheory.quotient_level_of_lattice_generation :
     LatGen → QLev := by
   intro hLat q _ D R R' _ _ _ b gb N N₀ c a 𝔞 hN hgen X s s₀ o o₀ n
   have hw : n.φ ≫ o₀.A.hom = o.A.hom := by simpa using n.cart.1.w
-  haveI : IsIso n.φ := n.cart.1.isIso_fst_of_isIso
+  have : IsIso n.φ := n.cart.1.isIso_fst_of_isIso
   let f : o.A ⟶ o₀.A := Over.homMk n.φ hw
   let g : o₀.A ⟶ o.A := Over.homMk (inv n.φ) (by rw [IsIso.inv_comp_eq, hw])
   have hfl : f.left = n.φ := rfl

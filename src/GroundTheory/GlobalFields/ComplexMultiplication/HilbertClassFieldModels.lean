@@ -127,13 +127,13 @@ theorem exists_models_isogenous (M : IntermediateField K ℂ) [FiniteDimensional
           (⟨(E x).baseChange ℂ, h⟩ : CMCurve K).toEll = x) ∧
         ∀ x y, Nonempty (Isogeny (E x) (E y)) := by
   classical
-  haveI := finite_ell hK
+  have := finite_ell hK
   set x₀ := ellEquiv (algebraMap K ℂ) hK 1
   set J : IntermediateField K ℂ := K⟮ELL.j x₀⟯
   have hJ : ∀ y, ELL.j y ∈ J := fun y ↦ ELL.j_mem_adjoin hK x₀ y
-  haveI : FiniteDimensional K J :=
+  have : FiniteDimensional K J :=
     adjoin.finiteDimensional (ELL.isAlgebraic_j_over hK x₀).isIntegral
-  haveI : NumberField J := NumberField.of_module_finite K J
+  have : NumberField J := NumberField.of_module_finite K J
   set E₀ : ELL K → WeierstrassCurve J := fun y ↦ ofJ (⟨ELL.j y, hJ y⟩ : J)
   have hE₀j : ∀ y, algebraMap J ℂ (E₀ y).j = ELL.j y := fun y ↦ by
     simp only [E₀, ofJ_j]
@@ -153,12 +153,12 @@ theorem exists_models_isogenous (M : IntermediateField K ℂ) [FiniteDimensional
     exact ⟨F₁, hF₁, ⟨φ⟩⟩
   choose F hFnum hFiso using hF
   have hFfin : ∀ p, FiniteDimensional K ((F p).restrictScalars K) := fun p ↦ by
-    haveI := hFnum p
-    haveI : FiniteDimensional ℚ ((F p).restrictScalars K) := (inferInstance : FiniteDimensional ℚ (F p))
+    have := hFnum p
+    have : FiniteDimensional ℚ ((F p).restrictScalars K) := (inferInstance : FiniteDimensional ℚ (F p))
     exact Module.Finite.of_restrictScalars_finite ℚ K ((F p).restrictScalars K)
   set M' : IntermediateField K ℂ := M ⊔ J ⊔ ⨆ p, (F p).restrictScalars K
-  haveI : FiniteDimensional K M' := by
-    haveI := hFfin
+  have : FiniteDimensional K M' := by
+    have := hFfin
     infer_instance
   obtain ⟨L, hM'L, hLfin, hLgal⟩ := exists_isGalois_le M'
   have hJL : J ≤ L := le_trans (le_trans le_sup_right le_sup_left) hM'L

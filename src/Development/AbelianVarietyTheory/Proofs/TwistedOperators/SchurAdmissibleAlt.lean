@@ -80,12 +80,12 @@ theorem schur_admissible (G : Type) [Group G] [TopologicalSpace G] [IsTopologica
     { carrier := {g : G | π g v = v}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       one_mem' := by simp
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hSo : IsOpen (S : Set G) := hadm.1 v
@@ -94,14 +94,14 @@ theorem schur_admissible (G : Type) [Group G] [TopologicalSpace G] [IsTopologica
     rw [Subgroup.coe_inf]; exact hKo.inter hSo
   have hLc : IsCompact ((K ⊓ S : Subgroup G) : Set G) := by
     rw [Subgroup.coe_inf]; exact hKc.inter_right hSc
-  haveI hfd := hadm.2 (K ⊓ S) hLo hLc
+  have hfd := hadm.2 (K ⊓ S) hLo hLc
   have hmem : ∀ w : N, w ∈ GlobalTheory.PRep.fixed π (K ⊓ S) ↔
       ∀ h : (K ⊓ S : Subgroup G), π (h : G) w = w := by
     intro w
     change (∀ h : (K ⊓ S : Subgroup G), π (h : G) w = _) ↔ _
     simp
   have hvm : v ∈ GlobalTheory.PRep.fixed π (K ⊓ S) := (hmem v).2 fun h => h.2.2
-  haveI : Nontrivial (GlobalTheory.PRep.fixed π (K ⊓ S)) :=
+  have : Nontrivial (GlobalTheory.PRep.fixed π (K ⊓ S)) :=
     ⟨⟨⟨v, hvm⟩, 0, fun h => hv (congrArg Subtype.val h)⟩⟩
   have hres : ∀ w ∈ GlobalTheory.PRep.fixed π (K ⊓ S), φ w ∈ GlobalTheory.PRep.fixed π (K ⊓ S) := by
     intro w hw

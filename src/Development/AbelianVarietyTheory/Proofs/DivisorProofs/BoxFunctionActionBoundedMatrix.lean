@@ -123,18 +123,18 @@ theorem omA_unipRowGL_boxFn (ν β : kˣ →* ℂˣ) (ϖ : kˣ) (i₀ : A) (w : 
     rw [Matrix.sub_mul, Matrix.one_mul, Matrix.sub_apply, rowOpMat_mul_apply]
     by_cases hi : i = i₀
     · subst hi
-      simp only [C', updateRow_self, if_true, Pi.add_apply, vecMul, dotProduct, mul_sub, Finset.sum_sub_distrib]
+      simp only [C', updateRow_self, ite_true, Pi.add_apply, vecMul, dotProduct, mul_sub, Finset.sum_sub_distrib]
       ring
     · simp [C', hi]
   have hrow : ∀ a, a ≠ i₀ → ∀ j, X a j - C' a j = X a j - C a j := fun a ha j => by simp [C', ha]
   have hbox : (1 - rowOpMat i₀ w) * X ∈ box ϖ C (fun _ => m) ↔ X ∈ box ϖ C' (fun _ => m) := by
-    simp only [box, Set.mem_setOf_eq]
+    simp only [box, Set.mem_ofPred_eq]
     constructor
     · intro h i j
       have hS : valuation k (∑ a, w a * (X a j - C a j)) ≤ valuation k ((ϖ ^ m : kˣ) : k) :=
         valuation_rowSum_le i₀ w hw0 hw _ _ fun a ha => by
           have := h a j
-          rwa [hT, if_neg ha, sub_zero, hrow a ha] at this
+          rwa [hT, ite_eq_right ha, sub_zero, hrow a ha] at this
       have := h i j
       rw [hT] at this
       rw [show X i j - C' i j = ((X i j - C' i j) - (if i = i₀ then ∑ a, w a * (X a j - C a j) else 0)) +

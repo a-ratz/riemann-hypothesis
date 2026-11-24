@@ -63,8 +63,8 @@ open scoped ComplexOrder in
 theorem core_gram_det_ne_zero {V : Type} [AddCommGroup V] [Module ℂ V] (core : InnerProductSpace.Core ℂ V) {n : ℕ}
     (v : Fin n → V) (hv : LinearIndependent ℂ v) :
     (Matrix.of fun a b => core.inner (v a) (v b)).det ≠ 0 := by
-  letI : NormedAddCommGroup V := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup V := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
   have hp := (Matrix.posDef_gram_of_linearIndependent (𝕜 := ℂ) hv).det_pos
   have hG : (Matrix.gram ℂ v) = Matrix.of fun a b => core.inner (v a) (v b) := by
     ext i j

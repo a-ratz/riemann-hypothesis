@@ -80,8 +80,8 @@ variable {k r : ℕ}
 private theorem hasDerivAt_exp_smul_apply_zero'
     (Y : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (j c : Fin (2 * r + k + 1)) :
     HasDerivAt (fun s : ℝ => NormedSpace.exp ((s : ℂ) • Y) j c) (Y j c) 0 := by
-  letI instNR : NormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :=
+  let instNR : NormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :=
     Matrix.linftyOpNormedAlgebra
   haveI : @CompleteSpace (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)
       (@PseudoMetricSpace.toUniformSpace _ (@SeminormedRing.toPseudoMetricSpace _

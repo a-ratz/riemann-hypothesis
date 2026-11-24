@@ -184,7 +184,7 @@ theorem isIntegralElem_of_sq {V F K Kb : Type} [CommRing V] [Field F] [Field K] 
 
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (S : Scheme.{0}) (t : SAB H S) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → ∀ (χ : Sp V ⟶ S) (t' : SAB H (Sp V)), Nonempty (SABMap t' t χ) → Nonempty (PELUnif (IsLocalRing.maximalIdeal V) t') → ∀ (σ : SecAt t.G t.PP.L χ), NZ t.G t.PP.L χ σ → ∀ (m N : ℕ), Odd m → 3 ≤ m → IsUnit (m : V) → ∀ (K : Type) [Field K] (i : V →+* K) (pt : Fin N → (Over.mk (spMap i ≫ χ) ⟶ t.G)) (c : Fin N → K), Function.Injective i → ThList t.G t.PP.L t.PP.rig m (spMap i ≫ χ) (SecAt.pull t.G t.PP.L σ i) pt c → Prim i c := by
   intro E _ _ _ H S t V _ _ _ hV χ t' ⟨hm⟩ ⟨P⟩ σ hσ m N hodd h3 hmu K _ i pt c hi hL
-  haveI : IsDiscreteValuationRing V := hV.1
+  have : IsDiscreteValuationRing V := hV.1
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
   let F := AlgebraicClosure (FractionRing V)
   obtain ⟨v, hv⟩ := ReciprocityTheory.ChartRestriction.G.DVR.exists_valOver hϖ F
@@ -208,7 +208,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   let i' : K →+* Kb := algebraMap K Kb
   have hii : Function.Injective (i'.comp i) := i'.injective.comp hi
   let e : FractionRing V →+* Kb := IsFractionRing.lift hii
-  letI : Algebra (FractionRing V) Kb := e.toAlgebra
+  let : Algebra (FractionRing V) Kb := e.toAlgebra
   let j : F →+* Kb := (IsAlgClosed.lift : F →ₐ[FractionRing V] Kb).toRingHom
   have hsq : i'.comp i = j.comp φF := by
     ext r

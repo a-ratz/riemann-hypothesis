@@ -99,7 +99,7 @@ variable {K : Type} [Field K] [IsAlgClosed K]
 
 theorem exists_pt_mem (x : KeyIn K) : ∃ z : Pt x, ∀ p, z.left p ∈ Out.nonzeroLocus x.th := by
   obtain ⟨a, -, ha⟩ := x.th_ne (IsLocalRing.closedPoint K)
-  haveI := x.P.isAb.proper
+  have := x.P.isAb.proper
   have : JacobsonSpace x.P.A.left := LocallyOfFiniteType.jacobsonSpace x.P.A.hom
   obtain ⟨c, hc, hc'⟩ := nonempty_inter_closedPoints (Z := (Out.nonzeroLocus x.th : Set x.P.A.left)) ⟨a, ha⟩
     (Out.nonzeroLocus x.th).isOpen.isLocallyClosed
@@ -125,7 +125,7 @@ theorem exists_pt_isUnit : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K]
   intro laws K _ _ x m al ξ hm hal
   have hm0 : m ≠ 0 := by rintro rfl; exact hm Nat.cast_zero
   have hal' := mul_transpose_eq (Int.natCast_ne_zero.2 hm0) hal
-  haveI := x.P.isAb.comm
+  have := x.P.isAb.comm
   obtain ⟨z, hz⟩ := exists_pt_mem x
   choose u hu using fun r => exists_pow_eq laws.mulN x hm0 (z * (ξ r)⁻¹)
   let v : Fin 4 → Pt x := fun c => ∏ r', u r' ^ al r' c
@@ -145,7 +145,7 @@ theorem exists_pt_isUnit : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K]
         rw [Fin.sum_univ_four] at h
         rw [Fin.prod_univ_four, ← zpow_add, ← zpow_add, ← zpow_add, h]
         split_ifs <;> simp
-      simp only [e₃, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+      simp only [e₃, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
     rw [e₁, e₂, hu, inv_mul_cancel_right]
   refine ⟨y, fun p J hJ r => ?_⟩
   refine isUnit_gs_of_mem x.th _ p (hJ _) ?_

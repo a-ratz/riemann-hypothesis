@@ -79,7 +79,7 @@ theorem rAct_one {n : ℕ} (f : Fin n → S.V) : rAct (1 : Matrix (Fin n) (Fin n
 
 theorem det_uni {n : ℕ} (β : Matrix (Fin n) (Fin n) E) (h0 : ∀ a c, a < c → β a c = 0) (h1 : ∀ a, β a a = 1) :
     β.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular β (fun i j hij => h0 i j (by simpa using hij))]
+  rw [Matrix.det_of_isLowerTriangular β (fun i j hij => h0 i j (by simpa using hij))]
   simp [h1]
 
 theorem rAct_inj {n : ℕ} {β : Matrix (Fin n) (Fin n) E} (h0 : ∀ a c, a < c → β a c = 0) (h1 : ∀ a, β a a = 1)
@@ -423,12 +423,12 @@ theorem orb_le (hΛ : IsRowLat D F0 Λ) {t : TermsOf D u' F0 Λ} {Z₁ Z₂ : Pa
         CntLocal.NilradicalFlagMoved F0 Λ (G (R O hO) ⟨(hR O hO).1, (hR O hO).2.1⟩) F''} else ∅) ?_ ?_
   · intro O hO
     dsimp only
-    rw [dif_pos hO]
+    rw [dite_eq_left hO]
     have hs := hG (R O hO) ⟨(hR O hO).1, (hR O hO).2.1⟩
     exact ⟨_, hs.1, hs.2.1, rfl⟩
   · intro O₁ hO₁ O₂ hO₂ he
     dsimp only at he
-    rw [dif_pos hO₁, dif_pos hO₂] at he
+    rw [dite_eq_left hO₁, dite_eq_left hO₂] at he
     have ha := hG (R O₁ hO₁) ⟨(hR O₁ hO₁).1, (hR O₁ hO₁).2.1⟩
     have hb := hG (R O₂ hO₂) ⟨(hR O₂ hO₂).1, (hR O₂ hO₂).2.1⟩
     have hmem := (Set.ext_iff.1 he (G (R O₂ hO₂) ⟨(hR O₂ hO₂).1, (hR O₂ hO₂).2.1⟩)).2 ⟨hb.1, n0rel_refl' Λ _⟩
@@ -464,7 +464,7 @@ theorem orbZT_holds (M : ∀ p : Formalism.MainNotions.S.LocalSplitGroups.PlF D,
       PairVal.MatR D × PairVal.MatR D, PairVal.NormRep γ x.1 x.2.1 x.2.2.1 x.2.2.2 :=
     ⟨(w, F₁, L, U), r₁, h₁.2.1, hL, hU, (congrArg ZhatOM h₁.2.2.2.2).trans he⟩
   have hz : LsDatumB.zT γ = ZhatL (lf D F0) hex.choose.2.1 := by
-    simp only [LsDatumB.zT, LsDatumB.nrep, dif_pos hex]
+    simp only [LsDatumB.zT, LsDatumB.nrep, dite_eq_left hex]
   obtain ⟨r₂, hadm, -⟩ := hex.choose_spec
   obtain ⟨p₁, e₁⟩ := r₁
   obtain ⟨p₂, e₂⟩ := r₂

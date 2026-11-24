@@ -68,7 +68,7 @@ theorem sub_qR_mem_integers : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       ∀ X ∈ (latV b v : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)),
         algebraMap F (Fv F v) t - qR (Fv F v) σ J (X 0) ∈ v.adicCompletionIntegers F := by
   intro F E _ _ _ _ _ σ _ M J _ d b t
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have hb : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite,
       ∀ k, inclR (F := F) (Fv F v) (b k) ∈ OEv (E := E) v :=
     Filter.eventually_all.2 fun k => ev_oev (b k)

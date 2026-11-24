@@ -86,7 +86,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] [IsNoeth
       pullback Y.hom (thick V (IsLocalRing.maximalIdeal V) e) :=
     ((Over.pullback (thick V (IsLocalRing.maximalIdeal V) e)).map p).left
   have hq (e : ℕ) : IsIso (q e) := by
-    haveI := h e
+    have := h e
     exact inferInstanceAs (IsIso ((Over.forget _).map
       ((Over.pullback (thick V (IsLocalRing.maximalIdeal V) e)).map p)))
   have q1 (e : ℕ) : q e ≫ pullback.fst _ _ = pullback.fst _ _ ≫ p.left := pullback.lift_fst _ _ _
@@ -104,7 +104,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] [IsNoeth
           (by rw [← c, ← hw, Category.assoc]) =
         pullback.lift (f := Γ₁.hom) (u ≫ pullback.snd _ _) v
           (by rw [← c, ← hw, Category.assoc, ← reassoc_of% c']) := by
-      haveI := hq n
+      have := hq n
       rw [← cancel_mono (q n)]
       apply pullback.hom_ext
       · simp only [Category.assoc, q1, pullback.lift_fst_assoc, c']
@@ -120,7 +120,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] [IsNoeth
     (IsClosedImmersion.iff_isProper_and_mono p.left).2 ⟨‹_›, hm⟩
   have hi : IsIso p.left := by
     refine isIso_of_isClosedImmersion Y.hom _ fun n ↦ ?_
-    haveI := hq n
+    have := hq n
     exact ⟨inv (q n) ≫ pullback.fst _ _, by rw [Category.assoc, ← q1, IsIso.inv_hom_id_assoc]⟩
   have : IsIso ((Over.forget _).map p) := hi
   exact isIso_of_reflects_iso p (Over.forget _)

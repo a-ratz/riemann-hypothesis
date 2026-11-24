@@ -58,9 +58,9 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem isOpen_integral_everywhere : IsOpen {z : AE F E | ∀ v : Pl F, compFin F E v z ∈ intLoc F E v} := by
   classical
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
   let S : AddSubgroup (AE F E) :=
     { carrier := {z | ∀ v : Pl F, compFin F E v z ∈ intLoc F E v}
       zero_mem' := fun v => by rw [map_zero]; exact zero_mem _

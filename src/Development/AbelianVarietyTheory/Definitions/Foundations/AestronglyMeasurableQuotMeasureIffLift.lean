@@ -106,7 +106,7 @@ theorem IsSubrep.isSubrep_rep_iff (hW : IsSubrep π W) {T : Submodule ℂ W} :
   · rintro ⟨h1, h2⟩
     refine ⟨?_, fun g v hv => ?_⟩
     · rw [← Submodule.comap_map_eq_of_injective W.injective_subtype T]
-      exact h1.preimage continuous_subtype_val
+      exact h1.preimage continuous_subtypeVal
     · obtain ⟨w, hw, e⟩ := h2 g v ⟨v, hv, rfl⟩
       rwa [← show w = hW.rep g v from Subtype.ext e]
 
@@ -126,7 +126,7 @@ theorem IsSubrep.isIrredSubrep_iff (hW : IsSubrep π W) : IsIrredSubrep π W ↔
 
 theorem isIrredSubrep_span_singleton {v : H} (hv : v ≠ 0) (h : ∀ g, ∃ c : ℂ, π g v = c • v) :
     IsIrredSubrep π (ℂ ∙ v) := by
-  refine ⟨⟨Submodule.closed_of_finiteDimensional _, fun g w hw => ?_⟩, by simpa using hv, fun U hU _ => ?_⟩
+  refine ⟨⟨Submodule.isClosed_of_finiteDimensional _, fun g w hw => ?_⟩, by simpa using hv, fun U hU _ => ?_⟩
   · obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1 hw
     obtain ⟨c, hc⟩ := h g
     rw [map_smul, hc]
@@ -168,7 +168,7 @@ theorem IsSubrep.coe_repOp_rep (hW : IsSubrep π W) {T : H →L[ℂ] H} (hT : Is
   have h : IsRepOp hW.rep μ f ((T.comp W.subtypeL).codRestrict W fun v => hW.map_mem_of_isRepOp hT v.2) := by
     intro v
     have hi : Integrable (fun g => f g • hW.rep g v) μ :=
-      (W.subtypeₗᵢ.lipschitz.integrable_comp_iff_of_antilipschitz W.subtypeₗᵢ.antilipschitz (map_zero _)).1 (hT v).1
+      (W.subtypeₗᵢ.lipschitzWith.integrable_comp_iff_of_antilipschitz W.subtypeₗᵢ.antilipschitzWith (map_zero _)).1 (hT v).1
     exact ⟨hi, Subtype.ext ((hT v).2.trans (W.subtypeₗᵢ.integral_comp_comm fun g => f g • hW.rep g v))⟩
   rw [h.repOp_eq]
   exact ⟨h, fun _ => rfl⟩

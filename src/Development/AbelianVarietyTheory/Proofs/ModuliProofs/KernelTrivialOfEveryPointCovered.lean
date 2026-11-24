@@ -150,7 +150,7 @@ private theorem exists_open_kTriv_restrict_of_kTriv_fibre {S S' : Scheme.{0}} [I
   obtain ⟨_, ⟨V, hV, rfl⟩, hfqV, -⟩ :=
     S.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ (f q)) isOpen_univ
   replace hV : IsAffineOpen V := hV
-  haveI : IsNoetherianRing Γ(S, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
+  have : IsNoetherianRing Γ(S, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
   have hAp : IsGrpPullback ((Over.pullback hV.fromSpec).obj G) G hV.fromSpec (pullback.fst G.hom hV.fromSpec) :=
     isGrpPullback_pullback G hV.fromSpec
   have hLA : (L.pull (pullback.fst G.hom hV.fromSpec)).IsLB := pull_isLB hL _
@@ -217,7 +217,7 @@ theorem exists_open {S S' : Scheme.{0}} [IsLocallyNoetherian S] {G : Over S} {G'
 
 theorem kTriv_of_forall_point : Out.Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (S : Scheme.{0}) [IsLocallyNoetherian S] (t : SAB H S), IsProper t.G.hom → Out.RelAmple t.G t.PP.L → (∀ p : S, ∃ (S' : Scheme.{0}) (f : S' ⟶ S) (t' : SAB H S') (_ : SABMap t' t f), p ∈ Set.range f ∧ Out.KTriv t'.G t'.PP.L) → Out.KTriv t.G t.PP.L := by
   intro hLaws E _ _ _ H S _ t hP hA h
-  haveI : IsProper t.G.hom := hP
+  have : IsProper t.G.hom := hP
   have hAb : IsAbelianScheme t.G := AbelianSchemeGerms.isAbelianScheme_of_proper t.G t.semi
   have hL : t.PP.L.IsLB := t.PP.isLB
   have hU : ∀ p : S, ∃ U : S.Opens, p ∈ U ∧

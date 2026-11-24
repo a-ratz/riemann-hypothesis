@@ -61,7 +61,7 @@ theorem ext (n : ℕ) : EXTStatement n := by
   have hset : Metric.ball c r \ {y | F y = 0} = Metric.ball c r ∩ F ⁻¹' {(0 : ℂ)}ᶜ := by
     apply Set.ext
     intro y
-    simp [Set.mem_diff]
+    simp [Set.mem_sdiff]
   have hZ : IsOpen (Metric.ball c r \ {y | F y = 0}) := by
     rw [hset]
     exact hF.continuousOn.isOpen_inter_preimage Metric.isOpen_ball isOpen_compl_singleton
@@ -78,7 +78,7 @@ theorem mv (n : ℕ) : MVStatement n := by
   have h := C.mv n 0 R u ρ hu hρ
   simp only [sub_zero] at h
   have hc : ∀ x : ℂ, ENNReal.ofReal (‖x‖ ^ 2) = ‖x‖ₑ ^ 2 := fun x => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   have hz : ∀ y : V n, y ∉ Metric.ball (0 : V n) R → ρ ‖y‖ = 0 := by
     intro y hy
     apply hR

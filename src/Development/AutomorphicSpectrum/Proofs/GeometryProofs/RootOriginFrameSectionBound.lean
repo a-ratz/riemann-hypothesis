@@ -134,7 +134,7 @@ theorem absT_of_nval {p : ℕ} [hp : Fact p.Prime] {la : HeightOneSpectrum (𝓞
     exact_mod_cast hs
   have hag : absT p la T e g = (p : ℝ) ^ (-s) := by
     unfold absT
-    rw [if_neg hg0]
+    rw [ite_eq_right hg0]
     congr 1
     rw [← div_div, hv]
     field_simp
@@ -156,8 +156,8 @@ end Abs
 
 theorem readsZ_of_isIntPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or), ∀ (A : Subring RM.Ω) (p : ℕ) [Fact p.Prime] (z : (Σ k, RM.ι k) → PadicAlgCl p) (ev : A →+* PadicAlgCl p), z ∈ Small.algPts p (mCoordIdeal RM.y) → (∀ x : A, Small.HasVal RM.y 0 (x : RM.Ω) z (ev x)) → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ) (y : IntFr Xo c T io) (evT : A →+* T.Fr) (zT : letI := io.toAlgebra; FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), FinRd.IsIntPt Fr A ev la T io e y evT zT t → ∀ x : (Ref.pjSys Xo c).Pt la, (∀ f, (Ref.pjSys Xo c).val x f = nval T.V e (evI y f)) → FinRd.ReadsZ Fr z x (FinRd.tOf p la T e t) := by
   intro E _ _ _ H Dw l Xo c O _ β Y SS RM Sys Fx Or Fr A p _ z ev hz hev la T io e y evT zT t hI x hx a f hf
-  letI := io.toAlgebra
-  letI := Small.cstAlg Or
+  let := io.toAlgebra
+  let := Small.cstAlg Or
   obtain ⟨hp, hO, -, -, -, hn, ⟨q, φ, ψ, yq, hφ, hψ, hA⟩, hb⟩ := hI
   have hS : ReciprocityTheory.ChartRestriction.G.Out.SecBaseChangeSt := GlobalTheory.firstFiveLaws.1.secBaseChange
   have hWD := (_root_.GlobalTheory.Frames.algebraic_laws hS E H Dw l Xo c).2.2.1

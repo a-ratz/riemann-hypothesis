@@ -152,7 +152,7 @@ theorem nonSqCase : NonSqCase := by
     · exact Or.inl hI0
     · right
       have hI : I.IsPrime := hI
-      have hne : I.under 𝒪[F] ≠ ⊥ := fun h => hI0 (Ideal.eq_bot_of_comap_eq_bot h)
+      have hne : I.under 𝒪[F] ≠ ⊥ := fun h => hI0 (Ideal.eq_bot_of_under_eq_bot h)
       have hmax : (I.under 𝒪[F]).IsMaximal := (Ideal.IsPrime.under 𝒪[F] I).isMaximal hne
       refine ⟨hI, ⟨(IsLocalRing.eq_maximalIdeal hmax).symm⟩⟩
   have : IsPrincipalIdealRing C := IsPrincipalIdealRing.of_finite_primes hfinP

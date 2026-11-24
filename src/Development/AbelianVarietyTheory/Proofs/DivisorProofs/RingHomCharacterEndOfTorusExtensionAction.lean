@@ -66,14 +66,14 @@ namespace GlobalTheory.TorusEndChar
 
 theorem main : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G] (E : TorusExtension G) (f : G ⟶ G), IsMonHom f → letI := E.addCommGroup; ∃! ρ : E.X →+ E.X, ∃ τ : splitTorus (Sp k) E.X ⟶ splitTorus (Sp k) E.X, τ ≫ E.i = E.i ≫ f ∧ ∀ χ, chV τ χ = charUnit (Sp k) E.X (ρ χ) := by
   intro k _ G _ _ E f hf
-  letI := E.addCommGroup
-  haveI := E.free
-  haveI := E.finite
-  letI := E.grpB
-  haveI : IsMonHom E.q := E.q_hom
-  haveI : IsMonHom E.i := E.i_hom
-  haveI : IsProper E.B.hom := E.isAbelian.proper
-  haveI : ConnectedSpace (Sp k) := by
+  let := E.addCommGroup
+  have := E.free
+  have := E.finite
+  let := E.grpB
+  have : IsMonHom E.q := E.q_hom
+  have : IsMonHom E.i := E.i_hom
+  have : IsProper E.B.hom := E.isAbelian.proper
+  have : ConnectedSpace (Sp k) := by
     have : PreconnectedSpace (PrimeSpectrum k) := by
       refine ⟨isPreconnected_of_forall (IsLocalRing.closedPoint k) fun y _ =>
         ⟨closure {y}, Set.subset_univ _, ?_, subset_closure rfl, isPreconnected_singleton.closure⟩⟩
@@ -133,7 +133,7 @@ end TorusActRing
 
 theorem ringHom_charEnd_of_torusExtension : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G] (E : TorusExtension G) (O : Type) [Ring O] (act : O → (G ⟶ G)), (∀ a, IsMonHom (act a)) → act 1 = 𝟙 G → (∀ a b, act (a * b) = act a ≫ act b) → (∀ a b, act (a + b) = act a * act b) → letI := E.addCommGroup; ∃ ρ : O →+* Module.End ℤ E.X, ∀ a, ∃ τ : splitTorus (Sp k) E.X ⟶ splitTorus (Sp k) E.X, τ ≫ E.i = E.i ≫ act a ∧ ∀ χ, chV τ χ = charUnit (Sp k) E.X (ρ a χ) := by
   intro k _ G _ _ E O _ act hmon h1 hmul hadd
-  letI := E.addCommGroup
+  let := E.addCommGroup
   have hex := fun a => GlobalTheory.TorusEndChar.main k G E (act a) (hmon a)
   choose ρ₀ hρ₀ using fun a => (hex a).exists
   have uniq : ∀ a (σ : E.X →+ E.X) (τ : splitTorus (Sp k) E.X ⟶ splitTorus (Sp k) E.X),
@@ -161,7 +161,7 @@ theorem ringHom_charEnd_of_torusExtension : ∀ (k : Type) [Field k] (G : Over (
     intro a b
     obtain ⟨τa, ha1, ha2⟩ := hρ₀ a
     obtain ⟨τb, hb1, hb2⟩ := hρ₀ b
-    haveI := E.i_hom
+    have := E.i_hom
     refine (uniq (a + b) _ (τa * τb) ?_ ?_).symm
     · rw [MonObj.mul_comp, ha1, hb1, hadd, Hom.mul_def, Hom.mul_def, ← Category.assoc, comp_lift]
     · intro χ

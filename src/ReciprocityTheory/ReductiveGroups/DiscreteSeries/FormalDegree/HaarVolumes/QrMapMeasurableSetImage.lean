@@ -73,30 +73,30 @@ lemma qrA_unitary (k : UNgrp N) : (toM k)ᴴ * toM k = 1 := by
 lemma qrA_upMat_continuous : Continuous (upMat (N := N)) := by
   refine continuous_pi fun a => continuous_pi fun b => ?_
   by_cases hab : a = b
-  · simp only [upMat, if_pos hab]
+  · simp only [upMat, ite_eq_left hab]
     exact Complex.continuous_ofReal.comp ((continuous_apply a).comp continuous_fst)
   · by_cases h : a < b
-    · simp only [upMat, if_neg hab, dif_pos h]
+    · simp only [upMat, ite_eq_right hab, dite_eq_left h]
       exact (continuous_apply _).comp continuous_snd
-    · simp only [upMat, if_neg hab, dif_neg h]
+    · simp only [upMat, ite_eq_right hab, dite_eq_right h]
       exact continuous_const
 
 theorem qrMap_continuous : Continuous (qrMap (N := N)) := by
   show Continuous fun kt : UNgrp N × TriCo N => toM kt.1 * upMat kt.2
-  exact ((Units.continuous_val.comp continuous_subtype_val).comp continuous_fst).matrix_mul
+  exact ((Units.continuous_val.comp continuous_subtypeVal).comp continuous_fst).matrix_mul
     (qrA_upMat_continuous.comp continuous_snd)
 
 lemma qrA_upMat_tri (t : TriCo N) : (upMat t).IsUpperTriangular := by
   intro i j hij
   have h1 : i ≠ j := ne_of_gt hij
   have h2 : ¬ i < j := not_lt.2 (le_of_lt hij)
-  simp only [upMat, if_neg h1, dif_neg h2]
+  simp only [upMat, ite_eq_right h1, dite_eq_right h2]
 
 lemma qrA_upMat_diag (t : TriCo N) (i : Fin N) : upMat t i i = ((t.1 i : ℝ) : ℂ) := by
   simp [upMat]
 
 lemma qrA_upMat_det (t : TriCo N) : (upMat t).det = ∏ j, ((t.1 j : ℝ) : ℂ) := by
-  rw [Matrix.det_of_upperTriangular (qrA_upMat_tri t)]
+  rw [det_of_isUpperTriangular (qrA_upMat_tri t)]
   exact Finset.prod_congr rfl fun i _ => qrA_upMat_diag t i
 
 lemma qrA_upMat_det_ne (t : TriCo N) (ht : t ∈ triPos N) : (upMat t).det ≠ 0 := by
@@ -106,7 +106,7 @@ lemma qrA_upMat_det_ne (t : TriCo N) (ht : t ∈ triPos N) : (upMat t).det ≠ 0
 lemma qrA_triCoOf_upMat (t : TriCo N) : triCoOf (upMat t) = t := by
   refine Prod.ext (funext fun j => ?_) (funext fun ab => ?_)
   · simp [triCoOf, upMat]
-  · simp only [triCoOf, upMat, if_neg (ne_of_lt ab.2), dif_pos ab.2]
+  · simp only [triCoOf, upMat, ite_eq_right (ne_of_lt ab.2), dite_eq_left ab.2]
 
 lemma qrA_mul_diag {A B : Matrix (Fin N) (Fin N) ℂ} (hA : A.IsUpperTriangular)
     (hB : B.IsUpperTriangular) (i : Fin N) : (A * B) i i = A i i * B i i := by
@@ -120,7 +120,7 @@ lemma qrA_mul_diag {A B : Matrix (Fin N) (Fin N) ℂ} (hA : A.IsUpperTriangular)
 
 lemma qrA_inv_tri {R : Matrix (Fin N) (Fin N) ℂ} (hR : R.IsUpperTriangular) (hd : R.det ≠ 0) :
     (R⁻¹).IsUpperTriangular := by
-  haveI : Invertible R := R.invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 hd)
+  have : Invertible R := R.invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 hd)
   exact Matrix.blockTriangular_inv_of_blockTriangular hR
 
 lemma qrA_upMat_cancel {A B : Matrix (Fin N) (Fin N) ℂ} {R : Matrix (Fin N) (Fin N) ℂ} (hd : R.det ≠ 0)
@@ -209,8 +209,8 @@ private theorem qrMap_measurableSet_image_lemma (N : ℕ) : PolishSpace (UNgrp N
       isClosed_eq ((continuous_id : Continuous fun Z : Fin N → Fin N → ℂ => Matrix.of Z).matrix_conjTranspose.matrix_mul
         (continuous_id : Continuous fun Z : Fin N → Fin N → ℂ => Matrix.of Z)) continuous_const,
       fun Z => Iff.rfl⟩
-  haveI : PolishSpace C := hC.polishSpace
-  have hCt : Continuous (fun Z : C => (Z : Fin N → Fin N → ℂ)) := continuous_subtype_val
+  have : PolishSpace C := hC.polishSpace
+  have hCt : Continuous (fun Z : C => (Z : Fin N → Fin N → ℂ)) := continuous_subtypeVal
   let e : UNgrp N ≃ₜ C :=
     { toFun := fun k => ⟨Matrix.of.symm (toM k), (hmem _).2 (qrA_unitary k)⟩
       invFun := fun Z => ⟨⟨Matrix.of Z.1, (Matrix.of Z.1)ᴴ, mul_eq_one_comm.1 ((hmem _).1 Z.2),
@@ -221,7 +221,7 @@ private theorem qrMap_measurableSet_image_lemma (N : ℕ) : PolishSpace (UNgrp N
       left_inv := fun k => Subtype.ext (Units.ext rfl)
       right_inv := fun Z => rfl
       continuous_toFun := continuous_induced_rng.2
-        (Units.continuous_val.comp continuous_subtype_val :
+        (Units.continuous_val.comp continuous_subtypeVal :
           Continuous fun k : UNgrp N => ((k : (Matrix (Fin N) (Fin N) ℂ)ˣ) : Matrix (Fin N) (Fin N) ℂ))
       continuous_invFun := continuous_induced_rng.2 (Units.continuous_iff.2
         ⟨hCt, hCt.matrix_conjTranspose⟩) }
@@ -229,7 +229,7 @@ private theorem qrMap_measurableSet_image_lemma (N : ℕ) : PolishSpace (UNgrp N
 
 theorem qrMap_measurableSet_image (S : Set (UNgrp N × TriCo N)) (hS : MeasurableSet S)
     (hS0 : S ⊆ Set.univ ×ˢ triPos N) : MeasurableSet (qrMap '' S) := by
-  haveI : PolishSpace (UNgrp N) := qrMap_measurableSet_image_lemma N
+  have : PolishSpace (UNgrp N) := qrMap_measurableSet_image_lemma N
   exact hS.image_of_continuousOn_injOn qrMap_continuous.continuousOn (qrMap_injOn.mono hS0)
 
 lemma qrA_exists (Z : Matrix (Fin N) (Fin N) ℂ) (hZ : Z.det ≠ 0) :
@@ -289,11 +289,11 @@ lemma qrA_exists (Z : Matrix (Fin N) (Fin N) ℂ) (hZ : Z.det ≠ 0) :
     ext a c
     by_cases hac : a = c
     · subst hac
-      simp only [upMat, triCoOf, if_true]
+      simp only [upMat, triCoOf, ite_true]
       rw [hdiag a, Complex.ofReal_re]
     · by_cases h : a < c
-      · simp only [upMat, triCoOf, if_neg hac, dif_pos h]
-      · simp only [upMat, if_neg hac, dif_neg h]
+      · simp only [upMat, triCoOf, ite_eq_right hac, dite_eq_left h]
+      · simp only [upMat, ite_eq_right hac, dite_eq_right h]
         exact (hRup (lt_of_le_of_ne (not_lt.1 h) (Ne.symm hac))).symm
   have hQ : Qᴴ * Q = 1 := by
     ext i j

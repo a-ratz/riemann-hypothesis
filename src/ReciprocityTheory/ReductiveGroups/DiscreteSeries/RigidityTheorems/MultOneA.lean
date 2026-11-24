@@ -72,9 +72,9 @@ theorem matrixAction_smul {M : Type*} [AddCommGroup M] [Module ℂ M] (E : Fin n
 theorem matrixAction_single {M : Type*} [AddCommGroup M] [Module ℂ M] (E : Fin n → Fin n → Module.End ℂ M)
     (a b : Fin n) : actM E (Matrix.single a b (1 : ℂ)) = E a b := by
   simp only [actM, Matrix.single_apply, ite_smul, one_smul, zero_smul]
-  rw [Finset.sum_eq_single a (fun x _ hx => Finset.sum_eq_zero (fun y _ => if_neg (fun h => hx h.1.symm)))
+  rw [Finset.sum_eq_single a (fun x _ hx => Finset.sum_eq_zero (fun y _ => ite_eq_right (fun h => hx h.1.symm)))
     (by simp)]
-  rw [Finset.sum_eq_single b (fun y _ hy => if_neg (fun h => hy h.2.symm)) (by simp)]
+  rw [Finset.sum_eq_single b (fun y _ hy => ite_eq_right (fun h => hy h.2.symm)) (by simp)]
   simp
 
 theorem signMatrix_conjTranspose (ε : Fin n → Bool) : (Jm ε)ᴴ = Jm ε := by
@@ -151,14 +151,14 @@ theorem generatedSub_closure_le {H : Type*} [NormedAddCommGroup H] [InnerProduct
     { carrier := {v | ∀ g ∈ UJset ε, σ g (v : H) ∈ A}
       add_mem' := by
         intro u w hu hw g hg
-        simp only [Set.mem_setOf_eq] at hu hw
+        simp only [Set.mem_ofPred_eq] at hu hw
         simpa using A.add_mem (hu g hg) (hw g hg)
       zero_mem' := by
         intro g hg
         simp
       smul_mem' := by
         intro c v hv g hg
-        simp only [Set.mem_setOf_eq] at hv
+        simp only [Set.mem_ofPred_eq] at hv
         simpa using A.smul_mem c (hv g hg) }
   have hder : ∀ X, inG ε X → ∀ v ∈ T, actM E X v ∈ T := by
     intro X hX v hv

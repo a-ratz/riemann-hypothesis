@@ -68,7 +68,7 @@ theorem stepUp : ∀ D : D7, FinDim D → ParOfVal D → UpSpan D → UpAdj D �
   intro D hFin hPV hSpan hAdj hPar hNe
   intro hgap c hc k hk s s' hs hs' p hp ipD ip ipD' ip' hM hM' u B hB hL
   have hk' : k + 1 ≤ D.R.m := hk
-  haveI : FiniteDimensional ℂ (s'.CC c) := hFin c hc (k + 1) hk' s' hs'
+  have : FiniteDimensional ℂ (s'.CC c) := hFin c hc (k + 1) hk' s' hs'
   obtain ⟨x, hx, -⟩ := _root_.GlobalTheory.hermitian_adjoint_exists_unique (s.CC c) (s'.CC c) ip ip' hM'.herm hM'.pos p.io u
   obtain ⟨φ, v, hv, hF⟩ := hNe hgap c hc k hk s s' hs hs' p hp u B hB hL
   have key := _root_.GlobalTheory.ChainOnto.value_of_adjoint_of_mem_span (GA D s'.V) (SmT s'.M) (s'.CC c) (s'.CC c).subtype s'.KF ipD' ip' s'.pet

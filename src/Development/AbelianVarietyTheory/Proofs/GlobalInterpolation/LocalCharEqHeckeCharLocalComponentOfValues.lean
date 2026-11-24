@@ -68,7 +68,7 @@ private theorem eventually_abs_le_half_add_of_doubling_bounds {E : Type} [Field 
       rw [hJ, pow_two]
       exact Ideal.mul_mono_right h
     exact hsub (Ideal.mem_span_singleton_self π)
-  obtain ⟨s, hsJ, hsP⟩ := SetLike.not_le_iff_exists.1 hJP
+  obtain ⟨s, hsJ, hsP⟩ := IsConcreteLE.not_le_iff_exists.1 hJP
   refine ⟨s, hsP, fun x hx => ?_⟩
   have hmem : x * s ∈ Ideal.span {π} := hJ ▸ Ideal.mul_mem_mul hx hsJ
   obtain ⟨x₂, hx₂⟩ := Ideal.mem_span_singleton'.1 hmem

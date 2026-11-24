@@ -71,8 +71,8 @@ theorem reldim_eq_of_two_pullbacks {P A S : Scheme.{0}} {f : A ⟶ S} {b : A ⟶
     (h₁ : IsPullback a₁ p f b) (h₂ : IsPullback a₂ p f b) {n₁ n₂ : ℕ} {W₁ W₂ : A.Opens}
     (d₁ : SmoothOfRelativeDimension n₁ (W₁.ι ≫ f)) (d₂ : SmoothOfRelativeDimension n₂ (W₂.ι ≫ f))
     (z : P) (hz₁ : a₁ z ∈ W₁) (hz₂ : a₂ z ∈ W₂) : n₁ = n₂ := by
-  haveI := smoothOfRelativeDimension_isStableUnderBaseChange n₁
-  haveI := smoothOfRelativeDimension_isStableUnderBaseChange n₂
+  have := smoothOfRelativeDimension_isStableUnderBaseChange n₁
+  have := smoothOfRelativeDimension_isStableUnderBaseChange n₂
   have e₁ : SmoothOfRelativeDimension n₁ ((a₁ ⁻¹ᵁ W₁).ι ≫ p) :=
     MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension n₁)
       ((isPullback_morphismRestrict a₁ W₁).paste_vert h₁) d₁

@@ -77,14 +77,14 @@ theorem dvd_of_forall_cDvr : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoether
   intro p _ hp
   obtain ⟨-, hD, -⟩ := h1 p hp
   let D := primeLocalSubalgebra K p
-  haveI : IsDiscreteValuationRing D := hD
+  have : IsDiscreteValuationRing D := hD
   let W := AdicCompletion (IsLocalRing.maximalIdeal D) D
   let iW : D →+* W := algebraMap D W
   let φ : R →+* W := iW.comp (algebraMap R D)
   have hRD : Function.Injective (algebraMap R D) := fun x y hxy =>
     IsFractionRing.injective R K (congrArg Subtype.val hxy)
   have hφ : Function.Injective φ := (algebraMap_adicCompletion_injective_of_dvr D).comp hRD
-  haveI : CharZero W := (RingHom.charZero_iff hφ).1 inferInstance
+  have : CharZero W := (RingHom.charZero_iff hφ).1 inferInstance
   have hW : GlobalTheory.LN.CDvr W := ⟨inferInstance, inferInstance, inferInstance⟩
   obtain ⟨t, ht⟩ := h W hW φ hφ
   have hdvd : algebraMap R D b ∣ algebraMap R D a := by

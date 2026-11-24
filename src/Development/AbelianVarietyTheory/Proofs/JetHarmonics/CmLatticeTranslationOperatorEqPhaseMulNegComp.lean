@@ -239,7 +239,7 @@ theorem exp_rat_mem (r : ℚ) : Complex.exp ((Real.pi : ℂ) * Complex.I * (r : 
   rw [mem_algebraicClosure_iff]
   refine IsAlgebraic.of_pow (n := 2 * r.den) (by have := r.den_pos; omega) ?_
   have : Complex.exp ((Real.pi : ℂ) * Complex.I * (r : ℂ)) ^ (2 * r.den) = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨r.num, ?_⟩
     have : (r.num : ℂ) = r * r.den := by exact_mod_cast (Rat.mul_den_eq_num r).symm
     rw [this]; push_cast; ring
@@ -707,11 +707,11 @@ theorem iteratedFDeriv_comb_mem :
   have hF : ∀ j, ContDiff ℂ k (fun z : Fin g → ℂ => ∏ i, f j i (z i) ^ a i) := fun j =>
     contDiff_prod fun i _ => (((hf j i).contDiff).comp (contDiff_apply ℂ (fun _ => ℂ) i)).pow _
   rw [iteratedFDeriv_fun_sum_apply (f := fun j (z : Fin g → ℂ) => c j * ∏ i, f j i (z i) ^ a i)
-    (fun j _ => (contDiff_const.mul (hF j)).contDiffAt), ContinuousMultilinearMap.sum_apply]
+    (fun j _ => (contDiff_const.mul (hF j)).contDiffAt), sum_apply]
   refine sum_mem fun j _ => ?_
   have e := iteratedFDeriv_const_smul_apply' (a := c j) (x := 0) (hF j).contDiffAt
   simp only [smul_eq_mul] at e
-  rw [e, ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  rw [e, smul_apply, smul_eq_mul]
   refine mul_mem (hc j) ?_
   rw [GlobalTheory.CoordProdDeriv.iteratedFDeriv_prod_coord g k (fun i x => f j i x ^ a i) _
     (fun i => (hf j i).pow _)]
@@ -753,7 +753,7 @@ variable {q : ℕ} [Fact q.Prime]
 
 theorem hasSum_pi_prod : ∀ (g : ℕ) (u : Fin g → ℕ → ℂ_[q]) (s : Fin g → ℂ_[q]),
     (∀ i, HasSum (u i) (s i)) → HasSum (fun ν : Fin g → ℕ => ∏ i, u i (ν i)) (∏ i, s i) := by
-  haveI : NonarchimedeanRing ℂ_[q] := ⟨NonarchimedeanAddGroup.is_nonarchimedean⟩
+  have : NonarchimedeanRing ℂ_[q] := ⟨NonarchimedeanAddGroup.is_nonarchimedean⟩
   intro g
   induction g with
   | zero =>
@@ -871,8 +871,8 @@ theorem measure_of_products : ∀ (d q : ℕ) [Fact q.Prime] (ι : ℂ ≃+* ℂ
 
   rw [hit, hFP, map_sum μ]
 
-  simp only [map_smul, hP, smul_eq_mul, ContinuousMultilinearMap.sum_apply,
-  ContinuousMultilinearMap.smul_apply, Finset.mul_sum, map_sum]
+  simp only [map_smul, hP, smul_eq_mul, sum_apply,
+  smul_apply, Finset.mul_sum, map_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [GlobalTheory.CoordProdDeriv.iteratedFDeriv_prod_coord g k
@@ -1134,7 +1134,7 @@ private lemma eq_sum_beta_div_smul_of_beta_orthogonal {g d : ℕ} {Hm : Matrix (
     refine Fintype.linearIndependent_iff.2 fun c hc i => ?_
     have h := congrArg (fun w => _root_.Formalism.L2.Ker.JMB.beta d Hm w (x i)) hc
     simp only [beta_sum_left', beta_smul_left', hx, mul_ite, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
     have h0 : _root_.Formalism.L2.Ker.JMB.beta d Hm 0 (x i) = 0 := by
       simpa using beta_smul_left' (d := d) Hm 0 (x i) (x i)
     rw [h0] at h
@@ -1146,7 +1146,7 @@ private lemma eq_sum_beta_div_smul_of_beta_orthogonal {g d : ℕ} {Hm : Matrix (
     have hsub : w + ∑ i, (_root_.Formalism.L2.Ker.JMB.beta d Hm v (x i) / (a i : ℂ)) • x i = v := by rw [hw]; abel
     have := congrArg (fun u => _root_.Formalism.L2.Ker.JMB.beta d Hm u (x j)) hsub
     simp only [beta_add_left', beta_sum_left', beta_smul_left', hx,
-      mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, div_mul_cancel₀ _ (ha' j)] at this
+      mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, div_mul_cancel₀ _ (ha' j)] at this
     linear_combination this
   have hww : _root_.Formalism.L2.Ker.JMB.beta d Hm w w = 0 := by
     have hmem : w ∈ Submodule.span ℂ (Set.range x) := by rw [hspan]; exact Submodule.mem_top
@@ -1383,7 +1383,7 @@ theorem _root_.GlobalTheory.MomOne.kapFrame : ∀ (q : ℕ) [Fact q.Prime] (lam 
       exact ⟨-∑ i, k i, by push_cast; ring⟩
     rw [h1, mul_one, Complex.ofReal_sum, Finset.mul_sum, Complex.exp_sum]
     refine Finset.prod_congr rfl fun i _ => ?_
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -1497,7 +1497,7 @@ theorem rho_mem {d q : ℕ} (hOK : ∀ x y, InOK d x → InOK d y → ∃ k : �
   rw [e, Complex.im_ofReal_mul] at hk
   have hk' : ((s : ℂ) * s') * (((h1 d x y).im : ℝ) : ℂ) = k := by exact_mod_cast hk
   have hp : rho d x y ^ (2 * s * s') = 1 := by
-    rw [rho, ← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [rho, ← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨-k, ?_⟩
     push_cast
     linear_combination (-2 * (Real.pi : ℂ) * Complex.I) * hk'

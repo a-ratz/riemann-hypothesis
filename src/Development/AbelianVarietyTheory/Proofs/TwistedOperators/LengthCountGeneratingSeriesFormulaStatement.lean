@@ -98,7 +98,7 @@ theorem genFun_diff_hasSum {𝕜 : Type} [NormedField 𝕜] (C d : ℕ → ℕ) 
   let h : ℕ → 𝕜 := fun j => if j = 0 then 0 else (C (j - 1) : 𝕜) * x ^ j
   have hsh : (fun n => h (n + 1)) = fun n => x * ((C n : 𝕜) * x ^ n) := by
     funext n
-    simp only [h, Nat.add_sub_cancel, if_neg (Nat.succ_ne_zero n)]
+    simp only [h, Nat.add_sub_cancel, ite_eq_right (Nat.succ_ne_zero n)]
     ring
   have h1 : HasSum (fun n => h (n + 1)) (x * S) := by rw [hsh]; exact hA.mul_left x
   have hh : HasSum h (x * S) := by
@@ -108,7 +108,7 @@ theorem genFun_diff_hasSum {𝕜 : Type} [NormedField 𝕜] (C d : ℕ → ℕ) 
     funext j
     rcases j with _ | j
     · simp [h, h0]
-    · simp only [h, if_neg (Nat.succ_ne_zero j), Nat.add_sub_cancel, hs j]
+    · simp only [h, ite_eq_right (Nat.succ_ne_zero j), Nat.add_sub_cancel, hs j]
       push_cast; ring
   rw [hd, show (1 - x) * S = S - x * S by ring]
   exact hA.sub hh
@@ -116,8 +116,8 @@ theorem genFun_diff_hasSum {𝕜 : Type} [NormedField 𝕜] (C d : ℕ → ℕ) 
 theorem genFun_fibre_hasSum {ι 𝕜 : Type} [NormedField 𝕜] (f : ι → ℕ) (l j : ℕ) (x : 𝕜)
     (hfin : Set.Finite {i | f i - l = j}) (hl : ∀ i, l ≤ f i) :
     HasSum (fun y : {i // f i - l = j} => x ^ f y.1) ((Set.ncard {i | f i - l = j} : 𝕜) * x ^ (l + j)) := by
-  haveI : Finite {i // f i - l = j} := hfin.to_subtype
-  haveI : Fintype {i // f i - l = j} := Fintype.ofFinite _
+  have : Finite {i // f i - l = j} := hfin.to_subtype
+  have : Fintype {i // f i - l = j} := Fintype.ofFinite _
   have hc : ∀ y : {i // f i - l = j}, x ^ f y.1 = x ^ (l + j) := fun y => by
     have := hl y.1; have := y.2
     rw [show f y.1 = l + j by omega]
@@ -134,23 +134,23 @@ theorem genFun_holds : GenFun := by
   have hCpos : ∀ j, C j ≠ 0 := fun j =>
     Nat.mul_ne_zero (by omega) (pow_ne_zero _ (by omega))
   have hle : ∀ j, {i | g i ≤ j} = {i | f i ≤ l + j} := fun j => by
-    ext i; simp only [Set.mem_setOf_eq, g]; have := hl i; omega
+    ext i; simp only [Set.mem_ofPred_eq, g]; have := hl i; omega
   have hcum : ∀ j, Set.ncard {i | g i ≤ j} = C j := fun j => by
     rw [hle, ← Nat.card_coe_set_eq]; exact hcard j
   have hfin : ∀ j, Set.Finite {i | g i ≤ j} := fun j => by
     apply Set.finite_of_ncard_ne_zero; rw [hcum]; exact hCpos j
   have hfin' : ∀ j, Set.Finite {i | f i - l = j} := fun j =>
-    (hfin j).subset fun i hi => by simp only [Set.mem_setOf_eq, g] at hi ⊢; omega
+    (hfin j).subset fun i hi => by simp only [Set.mem_ofPred_eq, g] at hi ⊢; omega
   let d : ℕ → ℕ := fun j => Set.ncard {i | f i - l = j}
   have h0 : d 0 = C 0 := by
     rw [← hcum 0]
     show Set.ncard {i | f i - l = 0} = _
-    congr 1; ext i; simp only [Set.mem_setOf_eq, g]; omega
+    congr 1; ext i; simp only [Set.mem_ofPred_eq, g]; omega
   have hs : ∀ j, C (j + 1) = C j + d (j + 1) := fun j => by
     have hdis : Disjoint {i | g i ≤ j} {i | f i - l = j + 1} :=
-      Set.disjoint_left.2 fun i h1 h2 => by simp only [Set.mem_setOf_eq, g] at h1 h2; omega
+      Set.disjoint_left.2 fun i h1 h2 => by simp only [Set.mem_ofPred_eq, g] at h1 h2; omega
     have hun : {i | g i ≤ j + 1} = {i | g i ≤ j} ∪ {i | f i - l = j + 1} := by
-      ext i; simp only [Set.mem_setOf_eq, Set.mem_union, g]; omega
+      ext i; simp only [Set.mem_ofPred_eq, Set.mem_union, g]; omega
     rw [← hcum, ← hcum, hun, Set.ncard_union_eq hdis (hfin j) (hfin' (j + 1))]
   let e := Equiv.sigmaFiberEquiv g
   have hr : ‖(q : ℝ) ^ (N + 1) * ‖X‖‖ < 1 := by

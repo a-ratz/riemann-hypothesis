@@ -437,7 +437,7 @@ theorem exists_fibre {X : Scheme.{0}} {G : Over X} [GrpObj G] (hG : IsAbelianSch
     obtain ⟨h1, h2, h3, h4⟩ := hG
     refine ⟨?_, MorphismProperty.of_isPullback hφ.1 h2, MorphismProperty.of_isPullback hφ.1 h3,
       MorphismProperty.of_isPullback hφ.1 h4⟩
-    haveI := h1
+    have := h1
     refine ⟨?_⟩
     apply Over.OverMorphism.ext
     apply hφ.1.hom_ext
@@ -860,7 +860,7 @@ theorem gaussManinPeriods_of_parts : ∀ ε : ℤˣ, GlobalTheory.PeriodFamily.F
     HF B 𝒜 g h𝒜 hg I U y hU h0 hy A φ hφ L hL A₀ φ₀ hφ₀ L₀ u₀
   have hA : ∀ z, IsAbelianScheme (A z) := fun z ↦ isAb_pull (hφ z) h𝒜
   have hA₀ : IsAbelianScheme A₀ := isAb_pull hφ₀ h𝒜
-  haveI := smoothOfRelativeDimension_isStableUnderBaseChange.{0} g
+  have := smoothOfRelativeDimension_isStableUnderBaseChange.{0} g
   have gA : ∀ z, SmoothOfRelativeDimension g (A z).hom := fun z ↦
     MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension g) (hφ z).1 hg
   have gA₀ : SmoothOfRelativeDimension g A₀.hom :=
@@ -901,7 +901,7 @@ theorem gaussManinPeriods_of_parts : ∀ ε : ℤˣ, GlobalTheory.PeriodFamily.F
         exact this }
   haveI : IsSeparated (𝒜.hom ≫ 𝟙 _) := by
     rw [Category.comp_id]
-    haveI := h𝒜.proper
+    have := h𝒜.proper
     infer_instance
   choose per hper using HE I g u₀.Λ F B 𝒜.left _ _ e ⟨W, hW, hW0⟩
   have fix : ∀ x (c : primDR 𝒜), ∀ z ∈ V, P z (τ z x) ((m z).pull c) = (per c.1 x).fn z := fun x c z hz ↦
@@ -964,7 +964,7 @@ theorem glue : ∀ {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGroup Λ
   have hG : ∀ k, ∀ p ∈ K.W k, (f k).fn p = G p := by
     intro k p hp
     have h : ∃ k, p ∈ K.W k := ⟨k, hp⟩
-    simp only [G, dif_pos h]
+    simp only [G, dite_eq_left h]
     exact indep _ _ _ hp h.choose_spec
   have hGev : ∀ k, ∀ p ∈ K.W k, G =ᶠ[𝓝 p] (f k).fn := fun k p hp ↦ by
     filter_upwards [(K.W k).isOpen.mem_nhds hp] with q hq using (hG k q hq).symm
@@ -997,7 +997,7 @@ theorem glue : ∀ {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGroup Λ
           exact this.symm
         refine ContinuousLinearMap.ext fun v ↦ ?_
 
-        rw [← Finset.univ_sum_single v, map_sum, ContinuousLinearMap.zero_apply]
+        rw [← Finset.univ_sum_single v, map_sum, zero_apply]
         refine Finset.sum_eq_zero fun a _ ↦ ?_
         have e : Pi.single a (v a) = v a • (Pi.single a 1 : Fin g → ℂ) := by
           rw [← Pi.single_smul]; simp
@@ -1452,7 +1452,7 @@ namespace GlobalTheory.AnPer
 theorem periodHom_push_end : PEnd := by
   intro A _ g hA L u P hP α _ M hM x x' hx
   have hsep : A.left.IsSeparated := by
-    haveI : IsProper A.hom := hA.proper
+    have : IsProper A.hom := hA.proper
     refine ⟨?_⟩
     rw [← terminal.comp_from A.hom]
     infer_instance

@@ -170,7 +170,7 @@ theorem exists_smul_of_dvd {h k : ℕ} {a : Fin h ⊕ Fin h → ℤ} (H : ∀ b,
 theorem onto_torsion {I G : Type} [Fintype I] [Group G] {k : ℕ} (hk : k ≠ 0) (f : (I → ℤ) → G)
     (add : ∀ a b, f (a + b) = f a * f b) (tors : ∀ a, f a ^ k = 1) (ker : ∀ a, f a = 1 → ∃ b, a = k • b)
     (card : Nat.card {g : G // g ^ k = 1} = k ^ Fintype.card I) (g : G) (hg : g ^ k = 1) : ∃ a, f a = g := by
-  haveI : NeZero k := ⟨hk⟩
+  have : NeZero k := ⟨hk⟩
   let F : (I → ZMod k) → {g : G // g ^ k = 1} := fun c => ⟨f fun i => (c i).val, tors _⟩
   have hF : Function.Injective F := fun c c' e => by
     have e₁ : f (fun i => (c i).val) = f fun i => (c' i).val := congrArg Subtype.val e

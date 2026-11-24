@@ -64,7 +64,7 @@ def ChiAtU (g : ℕ) (γ : Matrix (Fin g ⊕ Fin g) (Fin g ⊕ Fin g) ℤ) : Pro
 
 theorem eC_pow (x : ℂ) (m : ℕ) : eC x ^ m = eC (m * x) := by
   unfold eC
-  rw [← Complex.exp_nat_mul]
+  rw [← exp_natCast_mul]
   congr 1
   ring
 

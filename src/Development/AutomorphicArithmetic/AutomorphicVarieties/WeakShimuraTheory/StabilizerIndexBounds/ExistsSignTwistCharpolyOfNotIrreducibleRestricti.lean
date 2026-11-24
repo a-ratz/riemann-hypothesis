@@ -168,7 +168,7 @@ private theorem selfTwist_commonEig {K M ι : Type} [Field K] [IsAlgClosed K] [A
     {U' : Submodule K M | U' ≤ U ∧ U' ≠ ⊥ ∧ ∀ i, ∀ x ∈ U', T i x ∈ U'} ⟨U, le_rfl, hU, hst⟩
   have key : ∀ i, ∃ c : K, ∀ x ∈ U', T i x = c • x := by
     intro i
-    haveI : Nontrivial U' := Submodule.nontrivial_iff_ne_bot.mpr h2
+    have : Nontrivial U' := Submodule.nontrivial_iff_ne_bot.mpr h2
     obtain ⟨c, hc'⟩ := Module.End.exists_eigenvalue (K := K) (V := U') ((T i).restrict (h3 i))
     obtain ⟨v, hv⟩ := hc'.exists_hasEigenvector
     have hv1 : T i v = c • (v : M) := congrArg Subtype.val hv.apply_eq_smul
@@ -284,9 +284,9 @@ theorem UpperTheory.V.Pr.T.selfTwist :
       ∀ v, p v ∈ W := by
     refine ⟨W.subtype ∘ₗ W.linearProjOfIsCompl W' hc, ?_, ?_, ?_⟩
     · intro w hw
-      exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨w, hw⟩)
+      exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨w, hw⟩)
     · intro w hw
-      exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨w, hw⟩)
+      exact congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨w, hw⟩)
     · intro v; exact (W.linearProjOfIsCompl W' hc v).2
   have hp : ∀ n ∈ N, (Representation.linHom ρ ρ) n p = p := by
     intro n hn
@@ -391,7 +391,7 @@ theorem UpperTheory.V.Ws.exists_sign_twist_charpoly_of_not_irreducible_restricti
   intro K G _ _ _ h2 r hirr S hcomm hidx hred
   have hab : ∀ a b : G, a * b * a⁻¹ * b⁻¹ ∈ S := fun a b =>
     hcomm (Subgroup.commutator_mem_commutator (Subgroup.mem_top a) (Subgroup.mem_top b))
-  haveI hN : S.Normal := ⟨fun n hn g => by
+  have hN : S.Normal := ⟨fun n hn g => by
     have := S.mul_mem (hab g n) hn
     simpa using this⟩
   have h4 : ((4 : ℕ) : K) ≠ 0 := by

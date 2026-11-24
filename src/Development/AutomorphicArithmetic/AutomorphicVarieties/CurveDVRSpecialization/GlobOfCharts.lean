@@ -77,7 +77,7 @@ theorem UpperTheory.V.Pr.globOfCharts :
   · rintro ⟨I, hIG, hIT, hID⟩
     obtain ⟨p, hpm, hpI⟩ :=
       Ideal.exists_minimalPrimes_le (J := I.asIdeal) (bot_le : (⊥ : Ideal R) ≤ I.asIdeal)
-    haveI hpp : p.IsPrime := hpm.1.1
+    have hpp : p.IsPrime := hpm.1.1
     let P : PrimeSpectrum R := ⟨p, hpp⟩
     have hPmin : P.asIdeal ∈ minimalPrimes R := hpm
     have hopen : IsOpen L.TI := by

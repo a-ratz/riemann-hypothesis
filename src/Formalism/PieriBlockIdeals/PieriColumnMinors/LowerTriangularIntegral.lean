@@ -79,7 +79,7 @@ theorem lre_lowerTri {r n K : ℕ} (sz : Fin K → ℕ) (hsz : ∀ k, sz k ≤ n
   refine Finset.sum_eq_zero fun k _ => ?_
   rw [Finsupp.finsetSum_apply]
   refine Finset.sum_eq_zero fun p _ => ?_
-  rw [Finsupp.single_apply, if_neg]
+  rw [Finsupp.single_apply, ite_eq_right]
   intro h
   have h1 : I k p = a := congrArg Prod.fst h
   have h2 : Fin.castLE (hsz k) p = s := congrArg Prod.snd h

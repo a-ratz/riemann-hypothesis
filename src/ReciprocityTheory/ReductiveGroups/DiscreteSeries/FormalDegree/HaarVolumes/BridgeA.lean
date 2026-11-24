@@ -98,13 +98,13 @@ theorem skMat_low_om (x : UCo N) (l : {ab : Fin N × Fin N // ab.2 < ab.1}) :
     skMat x l.1.1 l.1.2 = x.2 l := by
   obtain ⟨⟨a, b⟩, h⟩ := l
   show skMat x a b = x.2 ⟨(a, b), h⟩
-  simp only [skMat, if_neg (ne_of_gt h), dif_pos h]
+  simp only [skMat, ite_eq_right (ne_of_gt h), dite_eq_left h]
 
 theorem skMat_up_om (x : UCo N) (l : {ab : Fin N × Fin N // ab.2 < ab.1}) :
     skMat x l.1.2 l.1.1 = -star (x.2 l) := by
   obtain ⟨⟨a, b⟩, h⟩ := l
   show skMat x b a = -star (x.2 ⟨(a, b), h⟩)
-  simp only [skMat, if_neg (ne_of_lt h), dif_neg (not_lt.2 h.le), dif_pos h]
+  simp only [skMat, ite_eq_right (ne_of_lt h), dite_eq_right (not_lt.2 h.le), dite_eq_left h]
 
 theorem skMat_conjTranspose_om (x : UCo N) : (skMat x)ᴴ = -skMat x := by
   ext a b
@@ -491,7 +491,7 @@ private lemma vol_eq_lemma_2 :
     (volume : Measure ((Fin N ⊕ Fin 0) × (Fin N ⊕ Fin 0) → ℂ)) =
       ENNReal.ofReal (2 ^ (N * (N - 1) / 2) * 2 ^ (N * (N - 1) / 2)) •
         (volume : Measure (UCo N × UCo N)).map (phiOmE (N := N)) := by
-  haveI := phiOmE_haar (N := N)
+  have := phiOmE_haar (N := N)
   have h1 := Measure.isAddLeftInvariant_eq_smul (volume : Measure ((Fin N ⊕ Fin 0) × (Fin N ⊕ Fin 0) → ℂ))
     ((volume : Measure (UCo N × UCo N)).map (phiOmE (N := N)))
   rw [ENNReal.smul_def] at h1
@@ -505,7 +505,7 @@ private lemma vol_eq_lemma_2 :
 theorem isOmegaLeb_uToLie :
     Formalism.BasicNotions.IsOmegaLeb (ENNReal.ofReal (2 ^ (N * (N - 1) / 2)) • Measure.map (uToLie (N := N)) volume) := by
   refine ⟨?_, ?_⟩
-  · haveI := map_uToLie_haar (N := N)
+  · have := map_uToLie_haar (N := N)
     exact Measure.IsAddHaarMeasure.smul _ (ENNReal.ofReal_pos.2 (by positivity)).ne' ENNReal.ofReal_ne_top
   · rw [prod_map_lemma, ← ENNReal.ofReal_mul (by positivity), vol_eq_lemma_2]
 
@@ -594,7 +594,7 @@ lemma toM_iso (N : ℕ) (g : Formalism.BasicNotions.UpqT N 0) :
 lemma continuous_iso (N : ℕ) : Continuous (iso N) := by
   have hpsi : Continuous fun u : GL (Fin N ⊕ Fin 0) ℂ => psi N u :=
     Units.continuous_iff.2 ⟨Units.continuous_val.matrix_reindex _ _, Units.continuous_coe_inv.matrix_reindex _ _⟩
-  exact (hpsi.comp continuous_subtype_val).subtype_mk _
+  exact (hpsi.comp continuous_subtypeVal).subtype_mk _
 
 instance instBorelUpqT (P Q : ℕ) : BorelSpace (Formalism.BasicNotions.UpqT P Q) := ⟨rfl⟩
 
@@ -620,7 +620,7 @@ lemma continuous_psi_symm (N : ℕ) : Continuous (fun u : (Matrix (Fin N) (Fin N
   exact Units.continuous_coe_inv.matrix_reindex _ _
 
 lemma continuous_iso_symm (N : ℕ) : Continuous (iso N).symm :=
-  ((continuous_psi_symm N).comp continuous_subtype_val).subtype_mk _
+  ((continuous_psi_symm N).comp continuous_subtypeVal).subtype_mk _
 
 def homeo (N : ℕ) : Formalism.BasicNotions.UpqT N 0 ≃ₜ UNgrp N where
   toEquiv := (iso N).toEquiv
@@ -741,7 +741,7 @@ lemma continuous_uToLie (N : ℕ) : Continuous (uToLie (N := N)) := by
 
 lemma isOpen_ballU (N : ℕ) (r : ℝ) : IsOpen (Formalism.BasicNotions.ballU N 0 r) := by
   have hv : Continuous (fun X : Formalism.BasicNotions.lieU N 0 => (X : Matrix (Fin N ⊕ Fin 0) (Fin N ⊕ Fin 0) ℂ)) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   unfold Formalism.BasicNotions.ballU
   exact isOpen_lt (continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>
     ((continuous_apply j).comp ((continuous_apply i).comp hv)).norm) continuous_const

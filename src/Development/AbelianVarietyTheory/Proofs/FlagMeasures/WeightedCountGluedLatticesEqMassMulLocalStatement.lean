@@ -528,7 +528,7 @@ private theorem linearIndependent_frameD_of_T_ne_zero {F : Type} [Field F] [Valu
   have he := key (Fr.es j)
   rw [hg, H.h_zero_left, Fin.sum_univ_castSucc, hlast, zero_mul, add_zero] at he
   simp only [Fr.h_es, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at he
+    Finset.mem_univ, ite_true] at he
   exact he.symm
 
 theorem local_pair_linInd (Z : LocDat D) (p : PlF D) (P : LocNG.FPair (locH Z p) D.R.rS)
@@ -655,8 +655,8 @@ private theorem infinite_finPlaces (K : Type) [Field K] [NumberField K] :
     Infinite (IsDedekindDomain.HeightOneSpectrum (𝓞 K)) := by
   have h : ∀ p : Nat.Primes, ∃ la : IsDedekindDomain.HeightOneSpectrum (𝓞 K),
       la.asIdeal.comap (algebraMap ℤ (𝓞 K)) = Ideal.span {((p : ℕ) : ℤ)} := fun p => by
-    haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
-    haveI : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
+    have : Fact (p : ℕ).Prime := ⟨p.2⟩
+    have : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
     obtain ⟨M, hM, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 K) (Ideal.span {((p : ℕ) : ℤ)})
       (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 K)).injective_int]; exact bot_le)
     exact ⟨⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField K)⟩, hc⟩
@@ -775,7 +775,7 @@ theorem GlobalTheory.GlueDat.glued_data : ∀ (D : D7) (Z : LocDat D) (FP : ∀ 
         (d0 p) (hB.2.2.2.1 p) (y p)
       exact this.2 ⟨_, (hy.2 p).1⟩
     · obtain ⟨Λ₀, hΛ₀, hΛ₀p⟩ := hB.2.2.2.2
-      haveI : Infinite (PlF D) := infinite_finPlaces D.host.F
+      have : Infinite (PlF D) := infinite_finPlaces D.host.F
       obtain ⟨q, hq⟩ := Infinite.exists_notMem_finset P
       have hfull : Submodule.IsFullLattice D.host.E Λ :=
         isFullLattice_of_local_span Z q Λ hy.1
@@ -786,7 +786,7 @@ theorem GlobalTheory.GlueDat.glued_data : ∀ (D : D7) (Z : LocDat D) (FP : ∀ 
       refine (((LatLoc.lattices_local_global D Z).1 Λ Λ₀ hfull hfull₀).1.union P.finite_toSet).subset ?_
       intro p hp
       by_contra hc
-      simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not, Finset.mem_coe] at hc
+      simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not, Finset.mem_coe] at hc
       apply hp
       exact (_root_.GlobalTheory.LocOver.TermLat.datum_of_lattice (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p)).2
         (y p) (d0 p) _ _ (hy.2 p).1 (hΛ₀p p hc.2) (by dsimp only [tm]; rw [hc.1]) (by dsimp only [tm]; rw [hc.1])
@@ -1150,11 +1150,11 @@ theorem tsum_classes_eq_prod_locSums : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p :
     · intro p hp
       by_cases hpP : p ∈ P
       · exact Or.inr hpP
-      · left; simpa [Set.mem_setOf_eq, ext_out x p hpP] using hp
+      · left; simpa [Set.mem_ofPred_eq, ext_out x p hpP] using hp
     · intro p hp
       by_cases hpP : p ∈ P
       · exact Or.inr hpP
-      · left; simpa [Set.mem_setOf_eq, ext_out x p hpP] using hp
+      · left; simpa [Set.mem_ofPred_eq, ext_out x p hpP] using hp
   rw [tsum_eq_single x0]
   · have hiff : InGen (ext x0) o.out ↔ ((∀ p, p ∉ P → LocNG.Datum.Rel (d0 p) (o.out p)) ∧ {p | o.out p ≠ d0 p}.Finite) := by
       constructor
@@ -1168,7 +1168,7 @@ theorem tsum_classes_eq_prod_locSums : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p :
         · rw [ext_out x0 p hp]; exact hr p hp
     simp only [hiff, c]
   · intro x hx
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨hr, _⟩
     apply hx
     funext p
@@ -1333,7 +1333,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
   set Γ := Formalism.L2.SG.Pf.Cnt.isomFix (VS D).hT (Formalism.L2.SG.Pf.Cnt.UPair D G.fl G') with hΓ
   have hH0 : ∀ g : GV D, g ∈ H0 F F' ↔ g ∈ Γ := mem_isometriesFixingBothFrames_iff_unitriangular D F G F' G' hS.1 hS.2.1
 
-  letI actL : MulAction Γ (LV D) :=
+  let actL : MulAction Γ (LV D) :=
     { smul := fun g Λ => Formalism.HermitianLatticesTheory.gmap g.1 Λ
       one_smul := fun Λ => by
         show Λ.map (((1 : GV D) : (VS D).V →ₗ[D.host.E] (VS D).V).restrictScalars (𝓞 D.host.E)) = Λ
@@ -1349,7 +1349,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
   set GS := Formalism.L2.SG.Pf.Cnt.GlueSet (VS D).hT (Formalism.L2.SG.Pf.Cnt.UPair D G.fl G') (Formalism.L2.SG.Pf.Cnt.MMof D G.fl G') with hGS
   have hstab : ∀ (g : Γ) (Λ : LV D), Λ ∈ GS → g • Λ ∈ GS := fun g Λ hΛ =>
     glue_stable D _ _ g.1 g.2 Λ hΛ
-  letI actS : MulAction Γ {Λ : LV D // Λ ∈ GS} :=
+  let actS : MulAction Γ {Λ : LV D // Λ ∈ GS} :=
     { smul := fun g x => ⟨g • x.1, hstab g x.1 x.2⟩
       one_smul := fun x => Subtype.ext (one_smul Γ x.1)
       mul_smul := fun a b x => Subtype.ext (mul_smul a b x.1) }
@@ -1373,7 +1373,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
       exact GlobalTheory.InnerDatumAct.moves_unique (hexU g p) (GlobalTheory.InnerDatumAct.moves_act _ _) hMv
     · rintro rfl p
       exact ⟨_, hexE g p, GlobalTheory.InnerDatumAct.moves_act _ _⟩
-  letI actY : MulAction Γ (Dat Z FP) :=
+  let actY : MulAction Γ (Dat Z FP) :=
     { smul := sm
       one_smul := fun y => (keyY 1 y y).1 (fun p => ⟨1, fun x => rfl, GlobalTheory.InnerDatumAct.moves_one _⟩)
       mul_smul := fun a b y => (keyY (a * b) y (sm a (sm b y))).1 (fun p =>
@@ -1432,7 +1432,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
   have htr := (GlobalTheory.tsum_transversal_eq_tsum_orbitQuotient ι (fun _ => True) (fun _ _ _ => trivial)
     (fun _ => trivial) hcover hinj).2 (fun x => ((MulAction.stabilizer Γ x : Set Γ).encard : ℝ≥0∞)⁻¹)
     (fun g x _ => by rw [encard_stab_smul])
-  simp only [if_true] at htr
+  simp only [ite_true] at htr
   have hfixS : ∀ x : {Λ : LV D // Λ ∈ GS}, Formalism.L2.SG.Pf.Cnt.stabFix (VS D).hT (Formalism.L2.SG.Pf.Cnt.UPair D G.fl G') x.1 =
       Subtype.val '' (MulAction.stabilizer Γ x : Set Γ) := by
     intro x
@@ -1479,10 +1479,10 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
       (((stabY F F' y).encard : ℝ≥0∞))⁻¹ * ∏ p ∈ P, φ p (y p) else 0) = g0 y := by
     intro y
     by_cases hc : (∀ p, p ∉ P → LocNG.Datum.Rel (d0 p) (y p)) ∧ {p | y p ≠ d0 p}.Finite
-    · rw [if_pos hc, hstabYe]
+    · rw [ite_eq_left hc, hstabYe]
       show _ = _ * _
       rw [hfib, GlobalTheory.T.globalLattices_count_eq_prod_localCounts_badPlaces D Z FP u u' F G F' G' P d0 hk hB hS y hc.1 hc.2]
-    · rw [if_neg hc]
+    · rw [ite_eq_right hc]
       have hemp : π ⁻¹' {y} = ∅ := by
         ext x
         simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false]

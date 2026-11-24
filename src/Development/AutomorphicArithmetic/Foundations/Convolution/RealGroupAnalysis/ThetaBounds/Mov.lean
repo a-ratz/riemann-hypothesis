@@ -121,7 +121,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.derOm :
   intro F E _ _ _ _ _ _ _ D W M π f hf φ hφ φ' hφ' G hG hG0 hD h
   have hc : Continuous fun g : G1 F => f.1 (gl g * dM (nu F h)) :=
     (decay F π f hf).1.comp (Matrix.SpecialLinearGroup.continuous_toGL.mul continuous_const)
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
   have hm : ∀ ψ₀ : S4 F, AEStronglyMeasurable
       (fun g => f.1 (gl g * dM (nu F h)) * Th (W.Om g ψ₀).1) (M.μ.restrict M.D) := fun ψ₀ =>
     (hc.measurable.mul (thMeas F E D W ψ₀).1).aestronglyMeasurable
@@ -181,8 +181,8 @@ open scoped Classical
 theorem UpperTheory.ConvolutionTheory.R2.Ff.rtInv :
     ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F], RtInv F := by
   intro F _ _ _ M u hu k
-  haveI := M.haar
-  haveI := M.right
+  have := M.haar
+  have := M.right
   have hmp : MeasurePreserving (· * k) M.μ M.μ := measurePreserving_mul_right M.μ k
   have hemb : MeasurableEmbedding (· * k : G1 F → G1 F) := (MeasurableEquiv.mulRight k).measurableEmbedding
   have hfd : IsFundamentalDomain (Gam F) ((Equiv.mulRight k) '' M.D) M.μ := by

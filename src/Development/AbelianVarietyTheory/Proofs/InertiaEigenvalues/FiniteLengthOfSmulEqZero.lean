@@ -142,15 +142,15 @@ theorem finiteLength_of_smul_eq_zero {N : Type} [AddCommGroup N] [Module O N] [M
   refine ⟨inferInstance, ?_⟩
   have ht : Module.IsTorsionBySet O N (Ideal.span {c}) :=
     (Module.isTorsionBySet_span_singleton_iff c).mpr (fun x => h x)
-  letI := ht.module
-  haveI : IsScalarTower O (O ⧸ Ideal.span {c}) N := ht.isScalarTower
-  haveI : IsArtinianRing (O ⧸ Ideal.span {c}) := isArtinian_of_tower O hfl.2
-  haveI : Module.Finite (O ⧸ Ideal.span {c}) N := Module.Finite.of_restrictScalars_finite O _ _
+  let := ht.module
+  have : IsScalarTower O (O ⧸ Ideal.span {c}) N := ht.isScalarTower
+  have : IsArtinianRing (O ⧸ Ideal.span {c}) := isArtinian_of_tower O hfl.2
+  have : Module.Finite (O ⧸ Ideal.span {c}) N := Module.Finite.of_restrictScalars_finite O _ _
   exact isArtinian_of_surjective_algebraMap (R := O ⧸ Ideal.span {c}) Ideal.Quotient.mk_surjective
 
 theorem finiteLength_subquot {c : O} (hc : c ≠ 0) {X Y : Submodule O M} (hY : Y.FG) (h : c • Y ≤ X) :
     IsFiniteLength O (↥Y ⧸ X.comap Y.subtype) := by
-  haveI : Module.Finite O ↥Y := Module.Finite.iff_fg.mpr hY
+  have : Module.Finite O ↥Y := Module.Finite.iff_fg.mpr hY
   refine finiteLength_of_smul_eq_zero hc fun x => ?_
   obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
   rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]

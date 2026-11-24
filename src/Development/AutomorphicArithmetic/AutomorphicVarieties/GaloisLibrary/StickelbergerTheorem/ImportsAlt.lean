@@ -139,8 +139,8 @@ theorem UpperTheory.V.Stick.jacobi :
     (Nat.mul_pos hd0 (Nat.pos_of_ne_zero (hunit b hb))) (hlt b)]
   rw [hd, ← mul_add, mul_comm M d, Nat.mul_lt_mul_left hd0]
   by_cases h : M ≤ (a * t).val + (b * t).val
-  · simp only [carry, h, if_true, one_ne_zero, iff_false, not_lt]
-  · simp only [carry, h, if_false, iff_true]
+  · simp only [carry, h, ite_true, one_ne_zero, iff_false, not_lt]
+  · simp only [carry, h, ite_false, iff_true]
     omega
 end -- clump:auto
 end -- clump:auto
@@ -200,7 +200,7 @@ theorem UpperTheory.V.Stick.carryPrime :
         apply ha
         simpa using congrArg (· * ((t⁻¹ : (ZMod M)ˣ) : ZMod M)) h
       have hlt := ZMod.val_lt (a * (t : ZMod M))
-      rw [hb', neg_mul, ZMod.neg_val, if_neg hat]
+      rw [hb', neg_mul, ZMod.neg_val, ite_eq_right hat]
       omega
     rw [Finset.filter_true_of_mem h1]
     exact hall
@@ -245,7 +245,7 @@ theorem UpperTheory.V.Stick.carryAll :
     exact_mod_cast NeZero.ne M
   have hS : S.Finite := Ideal.finite_factors hM0
   obtain ⟨v, hvS, hprime, hvc⟩ := degOne K S hS c
-  haveI : Fact (Ideal.absNorm v.asIdeal).Prime := ⟨hprime⟩
+  have : Fact (Ideal.absNorm v.asIdeal).Prime := ⟨hprime⟩
   obtain ⟨π, hπ⟩ := (red K (Ideal.absNorm v.asIdeal) v.asIdeal).1 rfl
   have hpv := ((red K (Ideal.absNorm v.asIdeal) v.asIdeal).2 π hπ).2.2.2
   have hcop : (Ideal.absNorm v.asIdeal).Coprime M := by
@@ -330,7 +330,7 @@ theorem UpperTheory.V.Stick.comb :
     linear_combination β s * h'
   have hdiv : (M : ℤ) ∣ B := by
     rcases Nat.lt_or_ge 1 M with hM | hM
-    · haveI : Fact (1 < M) := ⟨hM⟩
+    · have : Fact (1 < M) := ⟨hM⟩
       have h1 := key 1
       rw [Units.val_one, ZMod.val_one, Nat.cast_one, mul_one] at h1
       exact ⟨_, h1.symm⟩

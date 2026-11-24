@@ -233,7 +233,7 @@ lemma ee_neg (a : ℂ) : ee (-a) = (ee a)⁻¹ := by
 
 lemma ee_pow (a : ℂ) (n : ℕ) : ee a ^ n = ee ((n : ℂ) * a) := by
   simp only [ee]
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   ring
 
@@ -454,7 +454,7 @@ theorem ee_ne_zero (z : ℂ) : ee z ≠ 0 := Complex.exp_ne_zero _
 
 theorem ee_nat_mul (n : ℕ) (z : ℂ) : ee ((n : ℂ) * z) = ee z ^ n := by
   unfold ee
-  rw [← Complex.exp_nat_mul]; congr 1; ring
+  rw [← Complex.exp_natCast_mul]; congr 1; ring
 
 theorem ee_neg (z : ℂ) : ee (-z) = (ee z)⁻¹ := by
   unfold ee
@@ -589,7 +589,7 @@ open GlobalTheory.Sieg
 
 lemma Sieg.cthS_ee_pow (w : ℂ) (n : ℕ) : ee w ^ n = ee ((n : ℂ) * w) := by
   unfold ee
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   ring
 

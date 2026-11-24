@@ -65,10 +65,10 @@ theorem amb_eq_map_mul_of_lintegral {G : Type} [Group G] [TopologicalSpace G] [M
   ext B hB
   have hf : Measurable (B.indicator (1 : G → ENNReal)) := measurable_one.indicator hB
   have hv : Measurable (Prod.map (Subtype.val : N → G) (Subtype.val : H → G)) :=
-    measurable_subtype_coe.prodMap measurable_subtype_coe
+    measurable_subtypeVal.prodMap measurable_subtypeVal
   have hm : Measurable (fun p : G × G => p.1 * p.2) := measurable_mul
   calc amb μK B = ∫⁻ x, B.indicator 1 x ∂(amb μK) := (lintegral_indicator_one hB).symm
-    _ = ∫⁻ k, B.indicator 1 (k : G) ∂μK := lintegral_map hf measurable_subtype_coe
+    _ = ∫⁻ k, B.indicator 1 (k : G) ∂μK := lintegral_map hf measurable_subtypeVal
     _ = ∫⁻ m, ∫⁻ x, B.indicator 1 ((m : G) * (x : G)) ∂μH ∂μN := h _ hf
     _ = ∫⁻ p, B.indicator 1 ((p.1 : G) * (p.2 : G)) ∂(μN.prod μH) :=
         (lintegral_prod _ (hf.comp (hm.comp hv)).aemeasurable).symm
@@ -76,7 +76,7 @@ theorem amb_eq_map_mul_of_lintegral {G : Type} [Group G] [TopologicalSpace G] [M
           (Prod.map (Subtype.val : N → G) (Subtype.val : H → G))) :=
         (lintegral_map (hf.comp hm) hv).symm
     _ = ∫⁻ q, B.indicator 1 (q.1 * q.2) ∂((amb μN).prod (amb μH)) := by
-        rw [Measure.map_prod_map μN μH measurable_subtype_coe measurable_subtype_coe]
+        rw [Measure.map_prod_map μN μH measurable_subtypeVal measurable_subtypeVal]
     _ = ∫⁻ x, B.indicator 1 x ∂(((amb μN).prod (amb μH)).map (fun p => p.1 * p.2)) :=
         (lintegral_map hf hm).symm
     _ = (((amb μN).prod (amb μH)).map (fun p => p.1 * p.2)) B := lintegral_indicator_one hB

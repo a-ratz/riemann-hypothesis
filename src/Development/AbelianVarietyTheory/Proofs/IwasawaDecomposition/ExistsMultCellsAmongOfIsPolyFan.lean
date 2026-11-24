@@ -137,18 +137,18 @@ theorem multCellsAmong_of_isPolyFan : ∀ (E : Type) [Field E] [NumberField E] [
       ∀ (m : ℕ) (δ : Fin m → LinearMap.BilinForm ℤ (R k)) (h : IsCell H.bar φ δ), LinearIndependent ℤ δ →
         (∀ i, IsPrim H.bar (⟨δ i, h.mem i⟩ : balForms H.bar (R k))) →
         ∃ e : (R k) ≃ₗ[𝓞 E] (R k), ∀ i, pull e.toLinearMap (δ i) ∈ T := fun k => by
-    letI := (hR k).1
-    haveI := (hR k).2.1
+    let := (hR k).1
+    have := (hR k).2.1
     exact perModule H φ (R k) (hφ (R k) (hR k).2.2)
   choose T hTfin hT using key
-  haveI : ∀ k, Finite (T k) := fun k => (hTfin k).to_subtype
+  have : ∀ k, Finite (T k) := fun k => (hTfin k).to_subtype
   let D := Σ k : Fin n, Σ m : Fin (Nat.card (T k) + 1), (Fin m → T k)
   let g : D → FormFamily (𝓞 E) := fun d => ⟨R d.1, d.2.1, fun i => (d.2.2 i : LinearMap.BilinForm ℤ (R d.1))⟩
   obtain ⟨N, ⟨eq⟩⟩ := Finite.exists_equiv_fin D
   refine ⟨N, fun k' => g (eq.symm k'), fun X _ _ _ _ hX m δ hδ => ?_⟩
   obtain ⟨hcell, hli, hprim, -⟩ := hδ
   obtain ⟨k, ⟨f⟩⟩ := hcls X hX
-  letI := (hR k).1
+  let := (hR k).1
   let δ' : Fin m → LinearMap.BilinForm ℤ (R k) := fun i => pull f.symm.toLinearMap (δ i)
   have hcell' : IsCell H.bar φ δ' := isCell_pull_equiv hcell f.symm
   have hli' : LinearIndependent ℤ δ' := linearIndependent_pull_equiv hli f.symm

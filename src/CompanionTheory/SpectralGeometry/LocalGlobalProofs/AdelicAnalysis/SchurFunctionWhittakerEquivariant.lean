@@ -446,7 +446,7 @@ lemma setL_isOpen (ι : Type) [Fintype ι] (a : ℕ) :
 
 lemma indL_SB (ι : Type) [Fintype ι] {a : ℕ} (ha : 0 < a) :
     SB (indL a : (ι → A F) → ℂ) := by
-  haveI : T2Space (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.1
+  have : T2Space (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.1
   have hK := setL_isCompact (F := F) ι ha
   have hO := setL_isOpen (F := F) ι a
   refine ⟨?_, ?_⟩
@@ -512,8 +512,8 @@ theorem integrable_of_periodic [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : 
     (hlf : lf.IsAddHaarMeasure) (h1 : lf (Oh F) = 1) (f : A F → ℂ) {N : ℕ} (hN : 0 < N)
     (hper : ∀ x ∈ Oh F, ∀ y, f (y + (N : A F) * x) = f y) {C : ℝ} {M : ℕ} (hM : 3 ≤ M)
     (hdec : ∀ b : F, ‖f (algebraMap F (A F) b)‖ ≤ C * ((den b : ℝ) ^ M)⁻¹) : Integrable f lf := by
-  haveI := hlf
-  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
+  have := hlf
+  have : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
   have hdense : DenseRange (algebraMap F (A F)) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.2.1
   have hHo : IsOpen (Hs F N) := hs_isOpen hN
   let st := congN F N
@@ -591,24 +591,24 @@ theorem integrable_of_periodic [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : 
           _ = ‖f (algebraMap F (A F) (b : F))‖ₑ * lf (T b) := by rw [setLIntegral_const]
           _ ≤ ‖f (algebraMap F (A F) (b : F))‖ₑ * 1 := by gcongr; exact hmeasT b
           _ ≤ ENNReal.ofReal (C * ((den (b : F) : ℝ) ^ M)⁻¹) := by
-              rw [mul_one, ← ofReal_norm_eq_enorm]
+              rw [mul_one, ← ofReal_norm]
               exact ENNReal.ofReal_le_ofReal (hdec b)
   exact lt_of_le_of_lt hb ENNReal.ofReal_lt_top
 
 theorem density_main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ ψ : AddChar (A F) ℂ, IsStdChar F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → 3 ≤ M → ∀ a : ℕ, 0 < a → ∃ Df : A F → ℝ, Continuous Df ∧ (∀ y, 0 ≤ Df y) ∧ (∀ U : Set (A F), MeasurableSet U → (Measure.pi fun _ : ι => lf) {x | (∀ i, (a : A F) * x i ∈ Oh F) ∧ qf (hf F) (Bf B) x ∈ U} = ∫⁻ y in U, ENNReal.ofReal (Df y) ∂lf) ∧ Integrable (fstar ψ (hf F) (Bf B) (muF B lf) (indL a)) lf ∧ ∀ z : A F, ∫ y, fstar ψ (hf F) (Bf B) (muF B lf) (indL a) y * ψ (-z * y) ∂lf = ((kap F ^ (2 * M - 2) * (Real.sqrt |((Algebra.norm ℚ B.det : ℚ) : ℝ)|)⁻¹ * Df z : ℝ) : ℂ) := by
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ M B ρ P hQ hM a ha
-  haveI := hlf
+  have := hlf
   obtain ⟨hLC, hSC, hT2, hOc, hOo, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hLC
+  have := hSC
+  have := hT2
   have hQ' : QSetup M B ρ P := hQ
   obtain ⟨hTR, hcard, hsym, hdet, -⟩ := hQ
   have hψc : Continuous ψ := hψ.1
   let L : Set (ι → A F) := {x | ∀ i, (a : A F) * x i ∈ Oh F}
   have hLm : MeasurableSet L := (setL_isOpen (F := F) ι a).measurableSet
   let μ0 : Measure (ι → A F) := Measure.pi fun _ => lf
-  haveI : IsFiniteMeasureOnCompacts μ0 := inferInstance
+  have : IsFiniteMeasureOnCompacts μ0 := inferInstance
   let q : (ι → A F) → A F := qf (hf F) (Bf B)
   have hqc : Continuous q := by
     refine continuous_const.mul ?_
@@ -621,7 +621,7 @@ theorem density_main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace
     ext x
     exact and_comm
   have hLfin : μ0 L < ⊤ := (setL_isCompact (F := F) ι ha).measure_lt_top
-  haveI hmfin : IsFiniteMeasure m := by
+  have hmfin : IsFiniteMeasure m := by
     refine ⟨?_⟩
     rw [mU _ MeasurableSet.univ]
     exact lt_of_le_of_lt (measure_mono fun x hx => hx.1) hLfin

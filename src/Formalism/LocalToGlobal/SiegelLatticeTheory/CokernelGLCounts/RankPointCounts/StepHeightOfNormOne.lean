@@ -213,7 +213,7 @@ theorem stepClass_of_equiv (h : CorankOneEquivalence) : StepClass := by
   constructor
   · rintro ⟨hrow, hst⟩
     ext t''
-    simp only [clsOf, Set.mem_setOf_eq]
+    simp only [clsOf, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨h1, h2, h3⟩
       exact ⟨h1, h2.trans hrow, htr t' ht' t ht t'' h1 hrow.symm h2.symm (hs t ht t' ht' hrow hst) h3⟩

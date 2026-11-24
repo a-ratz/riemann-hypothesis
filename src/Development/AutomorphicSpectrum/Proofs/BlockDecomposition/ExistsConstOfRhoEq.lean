@@ -69,7 +69,7 @@ theorem coeff_nat (p : Polynomial K) (k : ℕ) :
 theorem coeff_neg (p : Polynomial K) (k : ℤ) (hk : k < 0) :
     (Polynomial.toLaurent p).coeff k = 0 := by
   rw [LaurentPolynomial.coeff_toLaurent]
-  apply Finsupp.mapDomain_notin_range
+  apply Finsupp.mapDomain_of_notMem_range
   rintro ⟨m, hm⟩
   have : (m : ℤ) = k := hm
   omega

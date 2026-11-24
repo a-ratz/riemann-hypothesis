@@ -76,7 +76,7 @@ private theorem val_le_one {E : Type} [Field E] [NumberField E] [IsCMField E] {n
 
 private theorem exists_over {E : Type} [Field E] [NumberField E] (v : Plc ℚ) :
     ∃ w : Plc E, GroundTheory.Global.AdeleBaseChange.below ℚ w = v := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨P, hP, hlo⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) v.asIdeal
   exact ⟨⟨P, hP.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P⟩,
     (GroundTheory.Global.AdeleBaseChange.below_eq_iff _ _).2 hlo⟩

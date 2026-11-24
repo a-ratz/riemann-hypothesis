@@ -99,8 +99,8 @@ def Acts (g : GQ l) (n a : ℕ) : Prop :=
   ∀ ζ : Om l, ζ ^ (l ^ (l ^ n) - 1) = 1 → g ζ = ζ ^ (l ^ a)
 
 theorem exists_prim (n : ℕ) : ∃ ξ : Om l, IsPrimitiveRoot ξ (l ^ (l ^ n) - 1) := by
-  haveI : NeZero (l ^ (l ^ n) - 1) := ⟨(lev_pos n).ne'⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) _
+  have : NeZero (l ^ (l ^ n) - 1) := ⟨(lev_pos n).ne'⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) _
 
 theorem Acts.uniq {g : GQ l} {n a b : ℕ} (ha : Acts g n a) (hb : Acts g n b) :
     a ≡ b [MOD l ^ n] := by
@@ -158,7 +158,7 @@ theorem continuous_deg : Continuous (deg : GQ l → ℤ_[l]) := by
   refine continuous_iff_continuousAt.2 fun g => Metric.tendsto_nhds.2 fun ε hε => ?_
   obtain ⟨n, hn⟩ := PadicInt.exists_pow_neg_lt l hε
   obtain ⟨ξ, hξ⟩ := exists_prim (l := l) n
-  haveI : NeZero (l ^ (l ^ n) - 1) := ⟨(lev_pos n).ne'⟩
+  have : NeZero (l ^ (l ^ n) - 1) := ⟨(lev_pos n).ne'⟩
   have ho := (stabilizer_isOpen_of_isIntegral (K := ℚ_[l]) ξ).preimage (continuous_const_mul g⁻¹)
   filter_upwards [ho.mem_nhds (show g⁻¹ * g ∈ MulAction.stabilizer (GQ l) ξ by simp)] with h hh
   have h1 : (g⁻¹ * h) ξ = ξ := hh
@@ -198,7 +198,7 @@ theorem exists_unramified_character : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
       (∀ g ∈ IK K, δ g = 0) ∧ ∃ g, δ g ≠ 0 := by
   intro l _ K
   refine ⟨fun g => (deg (g : GQ l) : ℚ_[l]),
-    continuous_subtype_val.comp (continuous_deg.comp continuous_subtype_val),
+    continuous_subtypeVal.comp (continuous_deg.comp continuous_subtypeVal),
     fun g h => by simp [deg_mul], fun g hg => ?_, ?_⟩
   · have : deg (g : GQ l) = 0 := by
       unfold IK at hg
@@ -212,8 +212,8 @@ theorem exists_unramified_character : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
         exact this.symm
     simp [this]
   · obtain ⟨φ, hφ⟩ := exists_deg_eq_one (l := l)
-    haveI := K.2
-    haveI : Finite (GQ l ⧸ GK K) :=
+    have := K.2
+    have : Finite (GQ l ⧸ GK K) :=
       Subgroup.quotient_finite_of_isOpen _ (IntermediateField.fixingSubgroup_isOpen K.1)
     obtain ⟨N, hN, -, hm⟩ := (GK K).exists_pow_mem_of_index_ne_zero Subgroup.index_ne_zero_of_finite φ
     refine ⟨⟨φ ^ N, hm⟩, ?_⟩

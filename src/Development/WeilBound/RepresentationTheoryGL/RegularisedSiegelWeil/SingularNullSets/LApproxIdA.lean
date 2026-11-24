@@ -82,7 +82,7 @@ theorem haar_map_eq {G G' : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopol
     [SecondCountableTopology G'] [T2Space G'] [MeasurableSpace G'] [BorelSpace G'] (Θ : G ≃ₜ+ G')
     (μ : Measure G) [μ.IsAddHaarMeasure] (μ' : Measure G') [μ'.IsAddHaarMeasure] :
     ∃ c : ℝ≥0, 0 < c ∧ μ.map Θ = c • μ' := by
-  haveI : (μ.map Θ).IsAddHaarMeasure := Θ.isAddHaarMeasure_map μ
+  have : (μ.map Θ).IsAddHaarMeasure := Θ.isAddHaarMeasure_map μ
   exact ⟨_, Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _, Measure.isAddLeftInvariant_eq_smul _ _⟩
 
 def fixS {X : Type} [AddCommGroup X] (p : X →+ X) : AddSubgroup X where
@@ -106,15 +106,15 @@ theorem decomp {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsTopologicalAd
       ∫ x, f x ∂μ = (c : ℂ) * ∫ z : fixS p × p.ker, f (z.1.1 + z.2.1) ∂(νH.prod νY) := by
   have hH : IsClosed (fixS p : Set X) := isClosed_eq hp continuous_id
   have hY : IsClosed (p.ker : Set X) := isClosed_singleton.preimage hp
-  haveI : LocallyCompactSpace (fixS p) := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace p.ker := hY.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (fixS p) :=
+  have : LocallyCompactSpace (fixS p) := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace p.ker := hY.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (fixS p) :=
     TopologicalSpace.Subtype.secondCountableTopology (fixS p : Set X)
-  haveI : SecondCountableTopology p.ker :=
+  have : SecondCountableTopology p.ker :=
     TopologicalSpace.Subtype.secondCountableTopology (p.ker : Set X)
-  haveI : BorelSpace (fixS p) := inferInstance
-  haveI : BorelSpace p.ker := inferInstance
-  haveI : BorelSpace (fixS p × p.ker) := Prod.borelSpace
+  have : BorelSpace (fixS p) := inferInstance
+  have : BorelSpace p.ker := inferInstance
+  have : BorelSpace (fixS p × p.ker) := Prod.borelSpace
   let Θ : (fixS p × p.ker) ≃ₜ+ X :=
     { toFun := fun z => z.1.1 + z.2.1
       invFun := fun x => (⟨p x, hpp x⟩, ⟨x - p x, by rw [AddMonoidHom.mem_ker, map_sub, hpp, sub_self]⟩)

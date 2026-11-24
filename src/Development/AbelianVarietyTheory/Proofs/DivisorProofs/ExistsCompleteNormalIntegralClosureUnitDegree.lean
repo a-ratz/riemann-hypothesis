@@ -88,17 +88,17 @@ theorem comap_map_eq_of_isUnit_finrank : ∀ (V V' : Type) [CommRing V] [IsDomai
   have hinjL : Function.Injective (algebraMap V L) := by
     rw [IsScalarTower.algebraMap_eq V V' L]
     exact (IsFractionRing.injective V' L).comp hinj
-  haveI : FaithfulSMul V L := (faithfulSMul_iff_algebraMap_injective V L).mpr hinjL
-  letI : Algebra K L := FractionRing.liftAlgebra V L
-  haveI : IsScalarTower V K L := FractionRing.isScalarTower_liftAlgebra V L
+  have : FaithfulSMul V L := (faithfulSMul_iff_algebraMap_injective V L).mpr hinjL
+  let : Algebra K L := FractionRing.liftAlgebra V L
+  have : IsScalarTower V K L := FractionRing.isScalarTower_liftAlgebra V L
   have hrank : finrank K L = finrank V V' := IsFractionRing.finrank_eq V K V' L
   have hn0 : finrank K L ≠ 0 := by
     intro h
     rw [← hrank, h, Nat.cast_zero] at hunit
     exact not_isUnit_zero hunit
-  haveI : FiniteDimensional K L := Module.finite_of_finrank_pos (Nat.pos_of_ne_zero hn0)
-  haveI : Module.Free K L := Module.Free.of_divisionRing K L
-  haveI : Algebra.IsIntegral V V' := Algebra.IsIntegral.of_finite V V'
+  have : FiniteDimensional K L := Module.finite_of_finrank_pos (Nat.pos_of_ne_zero hn0)
+  have : Module.Free K L := Module.Free.of_divisionRing K L
+  have : Algebra.IsIntegral V V' := Algebra.IsIntegral.of_finite V V'
 
   have htrV : ∀ z : V', ∃ t : V, algebraMap V K t = Algebra.trace K L (algebraMap V' L z) := by
     intro z
@@ -154,20 +154,20 @@ theorem exists_isCN_integralClosure_of_isUnit_finrank : ∀ (V : Type) [CommRing
   intro V _ _ _ hV K' _ _ _ hunit
   obtain ⟨hnoeth, hnorm, hcomp, hchar⟩ := hV
   let K := FractionRing V
-  haveI : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective V K)
-  letI : Algebra V K' := ((algebraMap K K').comp (algebraMap V K)).toAlgebra
-  haveI : IsScalarTower V K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective V K)
+  let : Algebra V K' := ((algebraMap K K').comp (algebraMap V K)).toAlgebra
+  have : IsScalarTower V K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let W := integralClosure V K'
-  haveI hWf : Module.Finite V W := IsIntegralClosure.finite V K K' W
-  haveI : IsLocalRing W := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := V) W
+  have hWf : Module.Finite V W := IsIntegralClosure.finite V K K' W
+  have : IsLocalRing W := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := V) W
   have hVL : Function.Injective (algebraMap V K') :=
     (algebraMap K K').injective.comp (IsFractionRing.injective V K)
   have hinjW : Function.Injective (algebraMap V W) := fun x y h => hVL (congrArg Subtype.val h)
-  haveI : CharZero W := charZero_of_injective_algebraMap hinjW
+  have : CharZero W := charZero_of_injective_algebraMap hinjW
   have h1 : (maximalIdeal W).comap (algebraMap V W) = maximalIdeal V :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal W))
   have hlocW : IsLocalHom (algebraMap V W) := ((local_hom_tfae _).out 1 5).2 h1
-  haveI : IsFractionRing W K' := IsIntegralClosure.isFractionRing_of_finite_extension V K K' W
+  have : IsFractionRing W K' := IsIntegralClosure.isFractionRing_of_finite_extension V K K' W
   have hrank : Module.finrank V W = Module.finrank K K' := (IsFractionRing.finrank_eq V K W K').symm
   have hunit' : IsUnit ((Module.finrank V W : ℕ) : V) := by rw [hrank]; exact hunit
   refine ⟨W, inferInstance, inferInstance, inferInstance, algebraMap V W, (integralClosure V K').val.toRingHom,

@@ -179,13 +179,13 @@ theorem actVB_pow (g : G) (n : ℕ) (x : V ⊗[Qp] B) :
 theorem aeval_index_kill (g : G) : ∀ x ∈ PC.Dpcris ρ,
     Polynomial.aeval (actVB PC.PD ρ g) (X ^ PC.H.index - C (1 : LL)) x = 0 := by
   intro x hx
-  haveI := PC.normal
+  have := PC.normal
   have hg : g ^ PC.H.index ∈ PC.H := Subgroup.pow_index_mem PC.H g
   simp only [map_sub, map_pow, Polynomial.aeval_X, map_one, LinearMap.sub_apply, Module.End.one_apply]
   rw [actVB_pow, (GlobalTheory.PassPoly.mem_Dpcris_iff PC ρ x).1 hx _ hg, sub_self]
 
 theorem separable_index [CharZero LL] : (X ^ PC.H.index - C (1 : LL)).Separable := by
-  haveI := PC.finiteIndex
+  have := PC.finiteIndex
   exact Polynomial.separable_X_pow_sub_C 1 (Nat.cast_ne_zero.2 Subgroup.FiniteIndex.index_ne_zero) one_ne_zero
 
 theorem inertiaThrough_of_poly_pow [CharZero LL] (Sig : Finset (PC.Iner →* LLˣ))
@@ -237,7 +237,7 @@ end
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K K' LL : FinExt l) (h : K.1 ≤ K'.1) (hN : (GKin h).Normal) (hF : (GKin h).FiniteIndex) (hS : ∀ (g : ↥(GK K)) (c : ↥(K0 K')), ∃ c' : ↥(K0 K'), (P.PD K).actB g (algebraMap ↥(K0 K') P.R.B c) = algebraMap ↥(K0 K') P.R.B c') (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V) (Sig : Finset ((pc P h hN hF hS).Iner →* (↥LL.1)ˣ)), (∀ a ∈ Sig, ∀ g : (pc P h hN hF hS).Iner, (g : ↥(GK K)) ∈ (pc P h hN hF hS).H → a g = 1) → (∀ a ∈ Sig, Nat.Coprime (orderOf a) l) → (∀ (g : (pc P h hN hF hS).Iner), ∃ m : ℕ, ∀ d ∈ (pc P h hN hF hS).Dpcris ρ, (Polynomial.aeval (actVB (P.PD K) ρ (g : ↥(GK K))) ((∏ a ∈ Sig, (X - C ((a g : (↥LL.1)ˣ) : ↥LL.1))) ^ m)) d = 0) → (∃ γ : (pc P h hN hF hS).Iner, (∀ a ∈ Sig, ∀ b ∈ Sig, a γ = b γ → a = b) ∧ ∀ g : (pc P h hN hF hS).Iner, ∃ (n : ℕ) (u : (pc P h hN hF hS).Iner), (∀ a ∈ Sig, a u = 1) ∧ g = γ ^ n * u) → (pc P h hN hF hS).InertiaThrough ρ Sig := by
   intro l _ P K K' LL h hN hF hS V _ _ _ _ ρ Sig h1 h2 h3 h4
-  haveI : CharZero ↥LL.1 := charZero_of_injective_algebraMap (algebraMap ℚ_[l] ↥LL.1).injective
+  have : CharZero ↥LL.1 := charZero_of_injective_algebraMap (algebraMap ℚ_[l] ↥LL.1).injective
   refine inertiaThrough_of_poly_pow (pc P h hN hF hS) ρ Sig h1 ?_ h3 h4
   have hp : (pc P h hN hF hS).PD.p = l := P.PD_p K
   rw [hp]
@@ -259,7 +259,7 @@ namespace GlobalTheory
 
 theorem exists_rootsOfUnity_character_hom : ∀ {Γ F O LL : Type} [Group Γ] [Field F] [CommRing O] [Field LL] (n : ℕ), 0 < n → ∀ (f : F → Γ → ℂ), (∀ x, x ≠ 0 → f x 1 = 1) → (∀ x, x ≠ 0 → ∀ σ σ', f x (σ * σ') = f x σ * f x σ') → (∀ x y, x ≠ 0 → y ≠ 0 → ∀ σ, f (x * y) σ = f x σ * f y σ) → ∀ (ι : O →+* ℂ), Function.Injective ι → ∀ (ζ : O), IsPrimitiveRoot ζ n → ∀ (t : O →+* LL), ∃ Ψ : ↥(rootsOfUnity n F) →* (Γ →* LLˣ), ∀ (u : ↥(rootsOfUnity n F)) (σ : Γ), ∃ o : O, ι o = f (((u : Fˣ)) : F) σ ∧ ((Ψ u σ : LLˣ) : LL) = t o := by
   intro Γ F O LL _ _ _ _ n hn f hone hmul hx ι hι ζ hζ t
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   have h1 : ∀ σ, f 1 σ = 1 := by
     intro σ
     have hne : f 1 σ ≠ 0 := by
@@ -443,13 +443,13 @@ theorem coprime_orderOf : ∀ (l : ℕ) [Fact l.Prime] {F : Type} [Field F] [Cha
 
 theorem exists_gen : ∀ {G F : Type} [Group G] [Field F] (I : Subgroup G) (c : ↥I →* Fˣ) (n : ℕ), 0 < n → (∀ g, c g ^ n = 1) → ∀ (Sig : Finset (↥I →* Fˣ)), (∀ a ∈ Sig, ∃ k : ℕ, ∀ g, a g = c g ^ k) → ∃ γ : ↥I, (∀ a ∈ Sig, ∀ b ∈ Sig, a γ = b γ → a = b) ∧ ∀ g : ↥I, ∃ (m : ℕ) (u : ↥I), (∀ a ∈ Sig, a u = 1) ∧ g = γ ^ m * u := by
   intro G F _ _ I c n hn hc Sig hSig
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   have hle : c.range ≤ rootsOfUnity n F := by
     rintro _ ⟨g, rfl⟩
     rw [mem_rootsOfUnity]
     exact hc g
-  haveI : Finite c.range := Finite.of_injective (Subgroup.inclusion hle) (Subgroup.inclusion_injective hle)
-  haveI : IsCyclic c.range := isCyclic_of_injective_ringHom ((Units.coeHom F).comp c.range.subtype)
+  have : Finite c.range := Finite.of_injective (Subgroup.inclusion hle) (Subgroup.inclusion_injective hle)
+  have : IsCyclic c.range := isCyclic_of_injective_ringHom ((Units.coeHom F).comp c.range.subtype)
     (fun x y hxy => Subtype.ext (Units.ext hxy))
   obtain ⟨x, hx⟩ := IsCyclic.exists_monoid_generator (α := c.range)
   obtain ⟨γ, hγ⟩ := x.2
@@ -579,7 +579,7 @@ theorem main : ∀ (D : D7) (P : Pend D), TieInePoly D → InertEq D → ∀ (i 
       (pc (D.loc (D.nd.l i)) h hN hF hS).InertiaThrough ((D.nbr i w hw).rep (R.comp (decS D.nd w))) (S.image ch) := by
   intro D P hTie hIE i k hik w hw Y hY K' h hN hF hS hH
   have hn : 0 < D.what₂.restRowsFiniteGroupCard := D.what₂.restRowsFiniteGroupCard_pos
-  haveI : NeZero D.what₂.restRowsFiniteGroupCard := ⟨hn.ne'⟩
+  have : NeZero D.what₂.restRowsFiniteGroupCard := ⟨hn.ne'⟩
   have hιinj : Function.Injective (iotaO D.nd D.naut i) :=
     (((D.naut.iotaQC i).toRingHom.comp (D.naut.iotaQ i)).injective).comp
       (IsFractionRing.injective (D.nd.O i) (FractionRing (D.nd.O i)))
@@ -649,7 +649,7 @@ theorem main : ∀ (D : D7) (P : Pend D), TieInePoly D → InertEq D → ∀ (i 
         map_one]
       rfl
     have hchar : CharP (Fb (D.host.g k) (D.host.g_prime k)) (D.host.g k) := by
-      haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+      have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
       infer_instance
     have hcop := @coprime_orderOf (D.host.g k) ⟨D.host.g_prime k⟩ _ _ hchar
       (u : (Fb (D.host.g k) (D.host.g_prime k))ˣ) D.what₂.restRowsFiniteGroupCard hn ((mem_rootsOfUnity _ _).1 u.2)
@@ -732,7 +732,7 @@ variable {E Ω : Type} [Field E] [Field Ω] [Algebra E Ω] {Gw : Subgroup (Ω �
 theorem exists_finExt_of_open (U : Subgroup (Ω ≃ₐ[E] Ω)) (hU : IsOpen (U : Set (Ω ≃ₐ[E] Ω))) :
     ∃ L : FinExt l, ∀ g : ↥(GK Bw.Kw), (g : GQ l) ∈ GK L → ((Bw.e.symm g : Gw) : Ω ≃ₐ[E] Ω) ∈ U := by
   have hc : Continuous fun g : ↥(GK Bw.Kw) => ((Bw.e.symm g : Gw) : Ω ≃ₐ[E] Ω) :=
-    continuous_subtype_val.comp Bw.e_symm_cont
+    continuous_subtypeVal.comp Bw.e_symm_cont
   obtain ⟨t, ht, hts⟩ := isOpen_induced_iff.1 (hU.preimage hc)
   have h1 : (1 : GQ l) ∈ t := by
     have : (1 : ↥(GK Bw.Kw)) ∈ Subtype.val ⁻¹' t := by
@@ -835,14 +835,14 @@ theorem mem_of_normal {K' : FinExt l} (hn : Normal ℚ_[l] K'.1) (σ : GQ l) {x 
   IntermediateField.normal_iff_forall_map_le'.1 hn σ ((IntermediateField.mem_map _).2 ⟨x, hx, rfl⟩)
 
 theorem GKin_normal {K K' : FinExt l} (h : K.1 ≤ K'.1) (hn : Normal ℚ_[l] K'.1) : (GKin h).Normal := by
-  haveI : IsGalois ℚ_[l] K'.1 := IsGalois.mk
-  haveI : (GK K').Normal := (InfiniteGalois.normal_iff_isGalois K'.1).2 inferInstance
+  have : IsGalois ℚ_[l] K'.1 := IsGalois.mk
+  have : (GK K').Normal := (InfiniteGalois.normal_iff_isGalois K'.1).2 inferInstance
   unfold GKin
   infer_instance
 
 theorem GKin_finiteIndex {K K' : FinExt l} (h : K.1 ≤ K'.1) : (GKin h).FiniteIndex := by
-  haveI : Finite (GQ l ⧸ GK K') := Subgroup.quotient_finite_of_isOpen _ (@IntermediateField.fixingSubgroup_isOpen _ _ _ _ _ K'.1 K'.2)
-  haveI : (GK K').FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (GQ l ⧸ GK K') := Subgroup.quotient_finite_of_isOpen _ (@IntermediateField.fixingSubgroup_isOpen _ _ _ _ _ K'.1 K'.2)
+  have : (GK K').FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   unfold GKin
   infer_instance
 
@@ -887,13 +887,13 @@ theorem main : ∀ (D : D7) (P : Pend D), ElementDenominator.adm12 D → ∀ (i 
     obtain ⟨L, hL⟩ := exists_finExt_of_open (D.nbr i w hw) U hU
     exact ⟨L, fun g hg hI => hUo _ (hL g hg) hI⟩
   choose Ly hLy using hLy
-  haveI : ∀ j, FiniteDimensional ℚ_[D.nd.l i] (Kj j).1 := fun j => (Kj j).2
-  haveI : ∀ y, FiniteDimensional ℚ_[D.nd.l i] (Ly y).1 := fun y => (Ly y).2
-  haveI := (D.nbr i w hw).Kw.2
-  haveI := K₀'.2
+  have : ∀ j, FiniteDimensional ℚ_[D.nd.l i] (Kj j).1 := fun j => (Kj j).2
+  have : ∀ y, FiniteDimensional ℚ_[D.nd.l i] (Ly y).1 := fun y => (Ly y).2
+  have := (D.nbr i w hw).Kw.2
+  have := K₀'.2
   let M : IntermediateField ℚ_[D.nd.l i] (Om (D.nd.l i)) :=
     (D.nbr i w hw).Kw.1 ⊔ K₀'.1 ⊔ (⨆ j, (Kj j).1) ⊔ (⨆ y, (Ly y).1)
-  haveI : FiniteDimensional ℚ_[D.nd.l i] M := by infer_instance
+  have : FiniteDimensional ℚ_[D.nd.l i] M := by infer_instance
   let K' : FinExt (D.nd.l i) := ⟨IntermediateField.normalClosure ℚ_[D.nd.l i] M (Om (D.nd.l i)), inferInstance⟩
   have hMK : M ≤ K'.1 := IntermediateField.le_normalClosure M
   have hn : Normal ℚ_[D.nd.l i] K'.1 := normalClosure.normal _ _ _
@@ -903,9 +903,9 @@ theorem main : ∀ (D : D7) (P : Pend D), ElementDenominator.adm12 D → ∀ (i 
   · have hjK : (Kj j).1 ≤ K'.1 :=
       le_trans ((le_iSup (fun j => (Kj j).1) j).trans (le_sup_right.trans le_sup_left)) hMK
     refine (GlobalTheory.PcRes.main _ _ _ _ _ h _ _ _ _ _).2.2 ?_
-    exact isCrys_up (D.nbr i w hw) D.loc hadm _ ((hRc j).comp continuous_subtype_val) (hj j) hjK (hcj j)
+    exact isCrys_up (D.nbr i w hw) D.loc hadm _ ((hRc j).comp continuous_subtypeVal) (hj j) hjK (hcj j)
   · refine (GlobalTheory.PcRes.main _ _ _ _ _ h _ _ _ _ _).2.2 ?_
-    exact isCrys_up (D.nbr i w hw) D.loc hadm _ (hR₀c.comp continuous_subtype_val) h₀ h0K hc₀
+    exact isCrys_up (D.nbr i w hw) D.loc hadm _ (hR₀c.comp continuous_subtypeVal) h₀ h0K hc₀
   · intro y hy g hg hI
     have hyK : (Ly ⟨y, hy⟩).1 ≤ K'.1 :=
       le_trans ((le_iSup (fun y => (Ly y).1) ⟨y, hy⟩).trans le_sup_right) hMK
@@ -938,7 +938,7 @@ theorem cont_iotaOQ (hPH : tiePH (D := D)) (i : D.nd.Loc) (w : HeightOneSpectrum
       fun x => (((D.nbr i w hw).toLL x : ↥(D.nbr i w hw).LL.1) : Loc.Om (D.nd.l i)) :=
     funext (hPH i w hw).1
   rw [h]
-  exact continuous_subtype_val.comp (continuous_subtype_val.comp (D.nbr i w hw).eO_cont)
+  exact continuous_subtypeVal.comp (continuous_subtypeVal.comp (D.nbr i w hw).eO_cont)
 
 theorem cont_mapRep (hPH : tiePH (D := D)) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E))
     (hw : w ∈ placesOver D.host.E (D.nd.l i)) {a : ℕ} (ρ : GE D.nd →* GL (Fin a) (D.nd.O i))
@@ -985,7 +985,7 @@ theorem crys_one (hPH : tiePH (D := D)) (i : D.nd.Loc) (w : HeightOneSpectrum (�
   have h := ((hPH i w hw).2.1 1 (1 : GE D.nd →* GL (Fin 1) (D.nd.O i)) hc).1.2
   rw [mapRep_one] at h
   apply h
-  haveI := (D.nbr i w hw).LL.2
+  have := (D.nbr i w hw).LL.2
   show IsCrys _ _
   exact GlobalTheory.TrivCrys.isCrys_of_trivial _ _ (fun g x => by simp [LocBridge.rep])
 
@@ -1023,9 +1023,9 @@ theorem pow_card_GL_eq_one {r : ℕ} (hr : 1 ≤ r) {y : Formalism.CyclotomicNor
     y ^ Nat.card (GL (Fin r) (ZMod g)) = 1 := by
   set K := IntermediateField.adjoin (ZMod g) ({y} : Set (Formalism.CyclotomicNorms.Fbar g))
   have hint : IsIntegral (ZMod g) y := Algebra.IsIntegral.isIntegral y
-  haveI : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  letI : Fintype K := Fintype.ofFinite K
+  have : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  let : Fintype K := Fintype.ofFinite K
   set a := Module.finrank (ZMod g) K
   have ha : a = (minpoly (ZMod g) y).natDegree := IntermediateField.adjoin.finrank hint
   have hda : a ≤ r := by
@@ -1133,7 +1133,7 @@ theorem inePol_char (P : Pend D) (k : Fin 2) (w : HeightOneSpectrum (𝓞 D.host
     haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     ∀ σ ∈ Ine (F := D.host.E) (D.nd.plOm.1 w),
       D.naut.inePol L σ = X - C (P.om k w (algebraMap (ZMod (D.host.g k)) (Formalism.CyclotomicNorms.Fbar (D.host.g k)) a) σ) := by
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   intro σ hσ
   have h := P.inertiaCharpoly_eigenvalues k w hwk L (by rw [hlab, natDegree_X_sub_C, hdim]) σ hσ
   rw [h, hlab, rootsBar_X_sub_C, Multiset.map_singleton, Multiset.prod_singleton]
@@ -1154,7 +1154,7 @@ theorem inertial_chars : ∀ (D : D7) (P : Pend D), TypeLGC P → SumRepresentat
       ∀ σ ∈ Ine (F := D.host.E) (D.nd.plOm.1 w),
         D.naut.inePol (D.naut.wdOf i (mapRep (iotaOQ D.nd D.naut i) (chiGL i)) w) σ = X - C (P.om k w u σ) := by
   intro D P hLGC h0 hPH hChi i k hik r hr Xs hXs w hw
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hwk : w ∈ placesOver D.host.E (D.host.g k) := hik ▸ hw
   obtain ⟨v, hv⟩ := GlobalTheory.TypePlaceCover.place_cover D k w hwk
   obtain ⟨s, hs, hx⟩ := hXs

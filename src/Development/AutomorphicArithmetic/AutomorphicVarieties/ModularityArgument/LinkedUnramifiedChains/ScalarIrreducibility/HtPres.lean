@@ -68,14 +68,14 @@ theorem UpperTheory.V.J.htPres :
         (p : MvPowerSeries (Fin N) O →+* R) (f : Fin N' → MvPowerSeries (Fin N) O), Function.Surjective p → RingHom.ker p = Ideal.span (Set.range f) →
         ∀ Q : Ideal R, Q.IsPrime → ((Q.comap p).height : WithBot ℕ∞) + ringKrullDim (R ⧸ Q) = (N + 1 : ℕ) ∧ (Q.comap p).height ≤ Q.height + N' := by
   intro O _ _ _ _ N N' R _ p f hp hker Q hQ
-  haveI : IsPrincipalIdealRing O := IsDiscreteValuationRing.toIsPrincipalIdealRing
-  haveI : IsNoetherianRing O := PrincipalIdealRing.isNoetherianRing
-  haveI : IsCO O O := IsCO.self O
-  haveI : IsCO O (MvPowerSeries (Fin N) O) := co_mvps O O (Fin N)
-  haveI : IsNoetherianRing (MvPowerSeries (Fin N) O) := MvPowerSeries.isNoetherianRing O
-  haveI : NoZeroDivisors (MvPowerSeries (Fin N) O) := inferInstance
-  haveI : IsDomain (MvPowerSeries (Fin N) O) := NoZeroDivisors.to_isDomain _
-  haveI hP : (Q.comap p).IsPrime := Ideal.comap_isPrime p Q
+  have : IsPrincipalIdealRing O := IsDiscreteValuationRing.toIsPrincipalIdealRing
+  have : IsNoetherianRing O := PrincipalIdealRing.isNoetherianRing
+  have : IsCO O O := IsCO.self O
+  have : IsCO O (MvPowerSeries (Fin N) O) := co_mvps O O (Fin N)
+  have : IsNoetherianRing (MvPowerSeries (Fin N) O) := MvPowerSeries.isNoetherianRing O
+  have : NoZeroDivisors (MvPowerSeries (Fin N) O) := inferInstance
+  have : IsDomain (MvPowerSeries (Fin N) O) := NoZeroDivisors.to_isDomain _
+  have hP : (Q.comap p).IsPrime := Ideal.comap_isPrime p Q
   have hdim : ringKrullDim (MvPowerSeries (Fin N) O) = ((N + 1 : ℕ) : WithBot ℕ∞) := (CA.cl_cm.1 O N).2
   have hsurj : Function.Surjective ((Ideal.Quotient.mk Q).comp p) :=
     (Ideal.Quotient.mk_surjective).comp hp

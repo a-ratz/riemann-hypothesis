@@ -316,7 +316,7 @@ lemma unit_coord {c : κ} (hc : x c ≠ 0) : IsUnit (ev (coord (o := o) (x := x)
 lemma algebraMap_mem_grading (r : o) : algebraMap o (rees o x) r ∈ grading o x 0 := by
   intro i hi
   change (algebraMap o (Polynomial Ω) r).coeff i = 0
-  rw [Polynomial.algebraMap_apply, Polynomial.coeff_C, if_neg hi]
+  rw [Polynomial.algebraMap_apply, Polynomial.coeff_C, ite_eq_right hi]
 
 lemma ev_algebraMap (r : o) : ev (algebraMap o (rees o x) r) = algebraMap o Ω r := by
   rw [ev_apply]
@@ -488,9 +488,9 @@ theorem chart_stalk {B : Type} [CommRing B] (θ : B →+* Ω) (j : Spec (.of B) 
       simp
     rw [h6] at h5
     exact h5
-  haveI : p.asIdeal.IsPrime := p.isPrime
+  have : p.asIdeal.IsPrime := p.isPrime
   let p' : PrimeSpectrum.Top B := p
-  haveI hloc : IsLocalization.AtPrime ((structurePresheafInCommRingCat B).stalk p') p'.asIdeal :=
+  have hloc : IsLocalization.AtPrime ((structurePresheafInCommRingCat B).stalk p') p'.asIdeal :=
     inferInstance
   refine ⟨(StructureSheaf.toStalk B p ≫ e.inv).hom, ?_, ?_, ?_⟩
   · intro b
@@ -623,7 +623,7 @@ theorem tie_of_charts (o : Type) [CommRing o] [Algebra o Ω] {κ : Type} (x : κ
       let w : B c₀ → X.presheaf.stalk (genPt ξ) :=
         fun b => (X.presheaf.stalkSpecializes (spec c₀ p)).hom (φ b)
       let f : X.presheaf.stalk (genPt ξ) →+* Ω := (Scheme.stalkClosedPointTo ξ).hom
-      haveI : IsLocalHom f := Scheme.isLocalHom_stalkClosedPointTo' ξ
+      have : IsLocalHom f := Scheme.isLocalHom_stalkClosedPointTo' ξ
       have hw : ∀ b, f (w b) = θ c₀ b := h1
       have hu : IsUnit (w h') := by
         refine isUnit_of_map_unit f _ ?_
@@ -657,14 +657,14 @@ theorem tie_of_charts (o : Type) [CommRing o] [Algebra o Ω] {κ : Type} (x : κ
         { carrier := {b | θ ⟨c, hc⟩ b * a ∈ (θ ⟨c, hc⟩).range}
           add_mem' := by
             intro b b' hb hb'
-            rw [Set.mem_setOf_eq, map_add (f := _), add_mul]
+            rw [Set.mem_ofPred_eq, map_add (f := _), add_mul]
             exact add_mem hb hb'
           zero_mem' := by
-            rw [Set.mem_setOf_eq, map_zero, zero_mul]
+            rw [Set.mem_ofPred_eq, map_zero, zero_mul]
             exact zero_mem _
           smul_mem' := by
             intro r b hb
-            rw [Set.mem_setOf_eq, smul_eq_mul, map_mul, mul_assoc]
+            rw [Set.mem_ofPred_eq, smul_eq_mul, map_mul, mul_assoc]
             exact mul_mem ⟨r, rfl⟩ hb }
       have hJ : J = ⊤ := by
         by_contra hne
@@ -679,17 +679,17 @@ theorem tie_of_charts (o : Type) [CommRing o] [Algebra o Ω] {κ : Type} (x : κ
       have h1 : (1 : B ⟨c, hc⟩) ∈ J := hJ ▸ Submodule.mem_top
       have h2 : θ ⟨c, hc⟩ 1 * a ∈ (θ ⟨c, hc⟩).range := h1
       rwa [map_one, one_mul] at h2
-  · haveI : Nonempty X := ⟨genPt ξ⟩
-    haveI : IrreducibleSpace X := by
+  · have : Nonempty X := ⟨genPt ξ⟩
+    have : IrreducibleSpace X := by
       have h1 : closure {genPt ξ} = (Set.univ : Set X) :=
         Set.eq_univ_of_forall fun q => specializes_iff_mem_closure.1 (spec' q)
       have h2 := (isIrreducible_singleton (x := genPt ξ)).closure
       rw [h1] at h2
-      haveI : PreirreducibleSpace X := ⟨h2.2⟩
+      have : PreirreducibleSpace X := ⟨h2.2⟩
       exact ⟨inferInstance⟩
-    haveI : ∀ q : X, _root_.IsReduced (X.presheaf.stalk q) := fun q =>
+    have : ∀ q : X, _root_.IsReduced (X.presheaf.stalk q) := fun q =>
       isReduced_of_injective (genMap ξ ⟨q, spec' q⟩) (inj _)
-    haveI : IsReduced X := isReduced_of_isReduced_stalk X
+    have : IsReduced X := isReduced_of_isReduced_stalk X
     exact isIntegral_of_irreducibleSpace_of_isReduced X
 
 end GlobalTheory.CompanionTheory.Ar.ClSch
@@ -794,7 +794,7 @@ theorem exists_cl_scheme : ∀ (Ω : Type) [Field Ω] (o : Type) [CommRing o] [A
   let θ : ∀ c : {c // x c ≠ 0}, B c →+* Ω := fun c => chartVal (coord c.1) (unit_coord c.2)
   let j : ∀ c : {c // x c ≠ 0}, Spec (.of (B c)) ⟶ Proj (grading o x) :=
     fun c => Proj.awayι (grading o x) (coord c.1) (coord_mem c.1) one_pos
-  haveI : ∀ c, IsOpenImmersion (j c) := fun c => by dsimp only [j]; infer_instance
+  have : ∀ c, IsOpenImmersion (j c) := fun c => by dsimp only [j]; infer_instance
   let ξ : Spec (CommRingCat.of Ω) ⟶ Proj (grading o x) :=
     Spec.map (CommRingCat.ofHom (θ ⟨c₀, hc₀⟩)) ≫ j ⟨c₀, hc₀⟩
   have hξ : ∀ c, ξ = Spec.map (CommRingCat.ofHom (θ c)) ≫ j c := fun c => chart_compat hc₀ c.2
@@ -806,7 +806,7 @@ theorem exists_cl_scheme : ∀ (Ω : Type) [Field Ω] (o : Type) [CommRing o] [A
       exact ⟨⟨c, hc⟩, p, hp⟩)
     (fun c d p s hs hp => chart_overlap c.2 d.2 p s hs hp)
     ⟨c₀, hc₀⟩ hfrac
-  haveI : IsClosedImmersion (Spec.map (CommRingCat.ofHom (zeroMap (o := o) (x := x)))) :=
+  have : IsClosedImmersion (Spec.map (CommRingCat.ofHom (zeroMap (o := o) (x := x)))) :=
     IsClosedImmersion.spec_of_surjective _ zeroMap_surjective
   refine ⟨Proj (grading o x), ξ,
     Proj.toSpecZero (grading o x) ≫ Spec.map (CommRingCat.ofHom (zeroMap (o := o) (x := x))),

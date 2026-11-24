@@ -341,8 +341,8 @@ theorem balanced_finite_projective_rank : ∀ {E : Type} [Field E] [NumberField 
     (iF 2⁻¹) (by rw [← map_ofNat iF 2, ← map_mul, mul_inv_cancel₀ two_ne_zero, map_one])
   refine ⟨Module.Finite.of_surjective r (fun x => ⟨x, LinearMap.congr_fun hr1 x⟩),
     Module.Projective.of_split _ r hr1, fun m _ => ?_⟩
-  letI := Ideal.Quotient.field m
-  haveI : CharZero m.ResidueField :=
+  let := Ideal.Quotient.field m
+  have : CharZero m.ResidueField :=
     charZero_of_injective_ringHom (f := (algebraMap R m.ResidueField).comp iF) (RingHom.injective _)
   apply Nat.cast_injective (R := m.ResidueField)
   have h2 := congrArg (algebraMap (R ⧸ m) m.ResidueField) (finrank_retract _ r hr1 (R ⧸ m))
@@ -440,8 +440,8 @@ theorem signature_count : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hor : τ (H.rt : E) = H.rt0 ∨ τ (H.rt : E) = -H.rt0 := sq_eq_sq_iff_eq_or_eq_neg.mp hsq
     rw [NumberField.ComplexEmbedding.conjugate_coe_eq]
     rcases hor with h | h
-    · rw [if_pos h, h, hconj, if_neg (Ne.symm hnn)]
-    · rw [if_neg (by rw [h]; exact Ne.symm hnn), h, map_neg, hconj, neg_neg, if_pos rfl, mul_comm]
+    · rw [ite_eq_left h, h, hconj, ite_eq_right (Ne.symm hnn)]
+    · rw [ite_eq_right (by rw [h]; exact Ne.symm hnn), h, map_neg, hconj, neg_neg, ite_eq_left rfl, mul_comm]
   rw [Finset.sum_congr rfl (fun τ _ => key τ), Finset.sum_const, Finset.card_univ,
     NumberField.Embeddings.card E ℂ, smul_eq_mul, NumberField.IsTotallyComplex.finrank]
   rw [Nat.mul_div_cancel_left _ (by norm_num : 0 < 2)]
@@ -551,7 +551,7 @@ theorem tan_act {X : Scheme.{0}} (t : SAB H X) {S : Type} [CommRing S] {x0 : Sp 
   · rw [Category.assoc, Over.w]; exact hv.1
   · rw [← Category.assoc, hv.2, ← Over.comp_left]
     congr 1
-    haveI := t.act.hom a
+    have := t.act.hom a
     rw [Hom.one_def, Category.assoc, IsMonHom.one_hom]
 
 theorem comb_act_mat {X : Scheme.{0}} (t : SAB H X) {S : Type} [CommRing S] {x0 : Sp S ⟶ X} {m : ℕ}
@@ -778,7 +778,7 @@ theorem isOpen_eigRank_eq_of_datum {O R K : Type} [CommRing O] [CommRing R] [Fie
   have key : ∀ (𝔭 : PrimeSpectrum R) (M : ℕ),
       eigRank (algebraMap R 𝔭.asIdeal.ResidueField) A χ = M ↔ t - M ∈ 𝔭.asIdeal := by
     intro 𝔭 M
-    haveI : CharZero 𝔭.asIdeal.ResidueField :=
+    have : CharZero 𝔭.asIdeal.ResidueField :=
       (RingHom.charZero_iff ((algebraMap R 𝔭.asIdeal.ResidueField).comp j).injective).1 inferInstance
     rw [← Nat.cast_inj (R := 𝔭.asIdeal.ResidueField), eigRank_cast_eq_trace _ A hmul χ f b h1 h2,
       ← Ideal.algebraMap_residueField_eq_zero, map_sub, map_natCast, sub_eq_zero]
@@ -789,7 +789,7 @@ theorem isOpen_eigRank_eq_of_datum {O R K : Type} [CommRing O] [CommRing R] [Fie
   have hset : {𝔭 : PrimeSpectrum R | eigRank (algebraMap R 𝔭.asIdeal.ResidueField) A χ = N} =
       (⋃ M ∈ (Finset.range (n + 1)).filter (· ≠ N), PrimeSpectrum.zeroLocus {t - (M : R)})ᶜ := by
     ext 𝔭
-    simp only [Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_iUnion, Finset.mem_filter, Finset.mem_range,
+    simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, Set.mem_iUnion, Finset.mem_filter, Finset.mem_range,
       PrimeSpectrum.mem_zeroLocus, Set.singleton_subset_iff, SetLike.mem_coe, exists_prop, not_exists, not_and]
     constructor
     · intro h M hM hM'

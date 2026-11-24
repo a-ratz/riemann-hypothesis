@@ -261,7 +261,7 @@ theorem inter_inter (hH : IsHerm H) {A₁ A₂ : AddSubgroup V} [Finite (A₁ �
   rw [← Finset.mul_sum, Finset.sum_comm]
   simp only [← Finset.sum_mul,
     fun d : A₂ ⧸ A₁.addSubgroupOf A₂ => sum_chi hH hd₁ hd₂ (Quotient.out d : A₂).2, out_mem_iff]
-  rw [Finset.sum_eq_single_of_mem 0 (Finset.mem_univ _) fun b _ hb => by simp [hb], if_pos rfl,
+  rw [Finset.sum_eq_single_of_mem 0 (Finset.mem_univ _) fun b _ hb => by simp [hb], ite_eq_left rfl,
     hF _ ((out_mem_iff _).2 rfl), ← card_eq_card hH hd₁ hd₂]
   have hpos : (0 : ℝ) < Fintype.card (A₁ ⧸ A₂.addSubgroupOf A₁) := by exact_mod_cast Fintype.card_pos
   have h1 : ((Real.sqrt (Fintype.card (A₁ ⧸ A₂.addSubgroupOf A₁)) : ℝ) : ℂ) ≠ 0 := by
@@ -277,7 +277,7 @@ omit [Module ℂ V] in
 theorem finite_quot {A₁ A₂ : AddSubgroup V} (hfg : A₂.FG) (h : ∀ x ∈ A₂, ∃ m : ℕ, 0 < m ∧ m • x ∈ A₁) :
     Finite (A₂ ⧸ A₁.addSubgroupOf A₂) := by
   have : AddGroup.FG A₂ := (AddGroup.fg_iff_addSubgroup_fg A₂).2 hfg
-  refine AddCommGroup.finite_of_fg_torsion _ fun q => ?_
+  refine AddCommGroup.finite_of_fg_isAddTorsion _ fun q => ?_
   obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective q
   obtain ⟨m, hm, hx⟩ := h x x.2
   refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨m, hm, ?_⟩
@@ -307,7 +307,7 @@ theorem isSemiChar_round (hH : IsHerm H) (s : ℝ) {A : AddSubgroup V} (hint : A
     simp only [hs, ha, hb, he, round_intCast]
     have h1 : (-1 : ℂ) ≠ 0 := by norm_num
     rw [zpow_add₀ h1, zpow_add₀ h1, zpow_add₀ h1, (even_two_mul _).neg_one_zpow, mul_one,
-      mul_comm _ ((e : ℝ) : ℂ), Complex.ofReal_intCast, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+      mul_comm _ ((e : ℝ) : ℂ), Complex.ofReal_intCast, exp_intCast_mul, Complex.exp_pi_mul_I]
 
 def dens (H : Sesq V) (F G : V → ℂ) (z : V) : ℂ := F z * conj (G z) * cexp (-(Real.pi : ℂ) * H z z)
 
@@ -375,12 +375,12 @@ theorem discrete_of_selfDual (hH : IsHerm H) {A : AddSubgroup W} (hd : IsSelfDua
   obtain ⟨s, hs⟩ := hfg
   have hfg' : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg A).2 ⟨s, hs⟩
   have : Module.Finite ℤ A := Module.Finite.iff_addGroup_fg.2 hfg'
-  have hc : Countable A := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  have hc : Countable A := Countable.of_moduleFinite (R := ℤ)
   refine discreteTopology_iff_isOpen_singleton_zero.2 ⟨⋂ y ∈ s, {x | |altE H x y| < 1}, ?_, ?_⟩
   · exact isOpen_biInter_finset fun y _ =>
       isOpen_lt (altL H y).continuous_of_finiteDimensional.abs continuous_const
   · ext x
-    simp only [Set.mem_preimage, Set.mem_iInter, Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_preimage, Set.mem_iInter, Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · intro h
       have h0' : ∀ z : A, altE H x z = 0 := by

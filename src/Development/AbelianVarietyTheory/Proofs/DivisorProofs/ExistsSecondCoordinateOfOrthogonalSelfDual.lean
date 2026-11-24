@@ -89,11 +89,11 @@ theorem selfDual_exists_snd_of_orth : ∀ {F : Type} [Field F] [NumberField F] (
     refine ⟨fun i => ⟨c * l.1 i, hc l hl i⟩, ?_⟩
     funext i
     simp [φ, hc0]
-  haveI : IsNoetherian O (LinearMap.range φ) := isNoetherian_of_isNoetherianRing_of_finite _ _
-  haveI : IsNoetherian O Λ₁ := isNoetherian_of_le hle
-  haveI : Module.Finite O Λ₁ := Module.IsNoetherian.finite O Λ₁
-  haveI : Module.IsTorsionFree O Λ₁ := inferInstance
-  haveI : Module.Free O Λ₁ := Module.free_of_finite_type_torsion_free'
+  have : IsNoetherian O (LinearMap.range φ) := isNoetherian_of_isNoetherianRing_of_finite _ _
+  have : IsNoetherian O Λ₁ := isNoetherian_of_le hle
+  have : Module.Finite O Λ₁ := Module.IsNoetherian.finite O Λ₁
+  have : Module.IsTorsionFree O Λ₁ := inferInstance
+  have : Module.Free O Λ₁ := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis O Λ₁
   have hlift : ∀ i, ∃ l ∈ Λ, l.1 = (b i : κ → Fv F v) := fun i => by
     obtain ⟨l, hl, he⟩ := Submodule.mem_map.1 (b i).2

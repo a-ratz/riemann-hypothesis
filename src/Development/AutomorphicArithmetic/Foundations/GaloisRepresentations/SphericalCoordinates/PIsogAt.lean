@@ -84,7 +84,7 @@ theorem existsUnique_linear_lift_of_hom :
       IsHolTo Set.univ (fun z => (β z).left) → ∃! M : (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ), ∀ z, e' (M z) = β z := by
   intro X G _ _ g hab hsm y e' β he' hβ hholG
   obtain ⟨Λ, hdisc, -, hker⟩ := _root_.GlobalTheory.ExpKernel.kernel_isFullLattice X G g hab hsm y e' he'
-  letI : CommGroup (Over.mk y ⟶ G) := inferInstance
+  let : CommGroup (Over.mk y ⟶ G) := inferInstance
   let ex : (Fin g → ℂ) →+ Additive (Over.mk y ⟶ G) :=
     AddMonoidHom.mk' (fun z ↦ Additive.ofMul (e' z)) he'.1
   let G' : (Fin g → ℂ) →+ Additive (Over.mk y ⟶ G) :=
@@ -269,8 +269,8 @@ theorem UpperTheory.Gal.W2.isogAt_of :
   have hN : 0 < N := by omega
   have hN' : 0 < N' := by omega
   obtain ⟨hmon, hact, ⟨ψ', d, hmon', -, hψψ', hψ'ψ, hdp⟩, hTate⟩ := c.tr
-  haveI := hmon
-  haveI := hmon'
+  have := hmon
+  have := hmon'
   have hd : d ≠ 0 := by
     rintro rfl
     have := (Fact.out : p.Prime).one_lt

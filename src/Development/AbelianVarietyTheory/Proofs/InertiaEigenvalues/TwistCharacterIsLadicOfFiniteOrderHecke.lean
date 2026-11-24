@@ -100,7 +100,7 @@ theorem delta_isGal : GlobalTheory.Published.ChebotarevDegreeOne → ∀ {D : D7
   have hS := Filter.eventually_cofinite.1 (hl.and (GlobalTheory.Mem.UnrAe.unr_ae_and_level _ χ).1)
   refine mul_inv_eq_one.1 (GlobalTheory.FrobDense.eq_one_of_frob _ _ art hart _ (inQ κ (T.delta i) * r'⁻¹)
     (hc.mul hr'c.inv) hS.toFinset fun v hv A hA σ hσ => ?_)
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
   rw [MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one]
   apply Units.ext
   rw [hr'.frob_unr hart (Or.inr rfl) hv.2 hA hσ]

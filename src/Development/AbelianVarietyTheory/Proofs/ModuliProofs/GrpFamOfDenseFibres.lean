@@ -71,7 +71,7 @@ theorem basis_pow {G : Type} [CommGroup G] {r k l : ℕ} (hk : k ≠ 0) (hl : l 
     (hy : ∀ i, y i ^ (k * l) = 1)
     (h : ∀ z : G, z ^ (k * l) = 1 → ∃! c : Fin r → ZMod (k * l), ∏ i, y i ^ (c i).val = z)
     (z : G) (hz : z ^ k = 1) : ∃! c : Fin r → ZMod k, ∏ i, (y i ^ l) ^ (c i).val = z := by
-  haveI : NeZero k := ⟨hk⟩
+  have : NeZero k := ⟨hk⟩
   have red : ∀ e : Fin r → ℕ, ∏ i, y i ^ ((e i : ZMod (k * l))).val = ∏ i, y i ^ e i := fun e =>
     Finset.prod_congr rfl fun i _ => by rw [ZMod.val_natCast, ← pow_eq_pow_mod _ (hy i)]
   have tor : ∀ e : Fin r → ℕ, (∏ i, y i ^ e i) ^ (k * l) = 1 := fun e => by
@@ -175,7 +175,7 @@ open Fibre
 theorem grpFam_of_dense_fibres :
     Out.Laws → Out.Laws2 → ∀ (o : Type) [CommRing o] (g N' : ℕ) (J : Type) (b : TBase o (N' ^ 2)) (Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ) (κ : ℕ) (R : Type) [CommRing R] [IsNoetherianRing R] [IsReduced R] (β : o →+* R) (v : Ix g (N' ^ 2) → R) (m : ℕ) (Z : Over (Sp R)) (M : LB Z.left) (th : Ix g (N' ^ 2) → M.Sec) (sc : Ix g (N' ^ 2) → (Out.baseOver (Sp R) ⟶ Z)) (mu : Z ⊗ Z ⟶ Z) (F : Option J → (Z ⟶ Z)), N' ≠ 0 → DenseP (objPrimes b Mat κ β v) → Fam b Mat κ β v m M th sc → SmoothOfRelativeDimension g Z.hom → GeometricallyConnected Z.hom → AddAt b Mat κ β v m M th sc mu → (∀ i, EndAt b Mat κ β v m M th sc i (F i)) → ∃ _ : GrpObj Z, GrpFam b Mat κ β v m Z M (fun i => F (some i)) (fun i => sc (Pi.single i 1)) := by
   intro hL _ o _ g N' J b Mat κ R _ _ _ β v m Z M th sc mu F hN0 hden ⟨⟨I, p, hrep, _⟩, _, hfib⟩ hsm hgc hm hF
-  haveI : NeZero (N' ^ 2) := ⟨pow_ne_zero _ hN0⟩
+  have : NeZero (N' ^ 2) := ⟨pow_ne_zero _ hN0⟩
   have hun : IsUnit (N' : R) := by
     have := b.unit.map β
     rw [map_natCast, Nat.cast_pow, isUnit_pow_iff two_ne_zero] at this

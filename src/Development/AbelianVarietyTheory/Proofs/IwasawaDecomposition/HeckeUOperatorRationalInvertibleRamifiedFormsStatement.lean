@@ -183,10 +183,10 @@ theorem eq_zero_of_hyperplane_sums (k W M : Type) [Field k] [Fintype k] [Decidab
     (h1 : ∀ g : Module.Dual k W, g ≠ 0 → ∑ᶠ x ∈ {x | g x = 1}, ψ x = 0)
     (h2 : ∀ x, ∑ a : kˣ, ψ ((a : k) • x) = 0) (x0 : W) : ψ x0 = 0 := by
   classical
-  haveI : Fintype W := Fintype.ofFinite W
-  haveI : Finite (Module.Dual k W) :=
+  have : Fintype W := Fintype.ofFinite W
+  have : Finite (Module.Dual k W) :=
     Finite.of_injective (fun g : Module.Dual k W => (g : W → k)) DFunLike.coe_injective
-  haveI : Fintype (Module.Dual k W) := Fintype.ofFinite _
+  have : Fintype (Module.Dual k W) := Fintype.ofFinite _
   have hq : 1 < Fintype.card k := Fintype.one_lt_card
   have hcancel : ∀ (n : ℕ) (m : M), n ≠ 0 → n • m = 0 → m = 0 := by
     intro n m hn h
@@ -208,7 +208,7 @@ theorem eq_zero_of_hyperplane_sums (k W M : Type) [Field k] [Fintype k] [Decidab
         Finset.sum_comm]
       refine Finset.sum_eq_zero fun x _ => ?_
       by_cases hx : g x = 0
-      · simp only [hx, if_true]; exact h2 x
+      · simp only [hx, ite_true]; exact h2 x
       · simp [hx]
     · by_cases hg : g = 0
       · subst hg
@@ -221,7 +221,7 @@ theorem eq_zero_of_hyperplane_sums (k W M : Type) [Field k] [Fintype k] [Decidab
         have : (t⁻¹ • g) x = 1 ↔ g x = t := by
           simp only [LinearMap.smul_apply, smul_eq_mul]
           rw [inv_mul_eq_one₀ ht, eq_comm]
-        simp only [Set.indicator_apply, Set.mem_setOf_eq, this]
+        simp only [Set.indicator_apply, Set.mem_ofPred_eq, this]
   have T : ∑ x, ψ x = 0 := by simpa using A 0 0
   have B : ∑ x, (Finset.univ.filter (fun g : Module.Dual k W => g (x - x0) = 0)).card • ψ x
       = 0 := by
@@ -241,15 +241,15 @@ theorem eq_zero_of_hyperplane_sums (k W M : Type) [Field k] [Fintype k] [Decidab
     rw [← mul_smul]
     by_cases hx : x = x0
     · subst hx
-      simp only [sub_self, map_zero, Finset.filter_true, Finset.card_univ, if_true, hr]
+      simp only [sub_self, map_zero, Finset.filter_true, Finset.card_univ, ite_true, hr]
       rw [← add_smul]; congr 1; ring
     · have := card_annihilator_mul k W (x - x0) (sub_ne_zero.mpr hx)
-      rw [if_neg hx, add_zero, hN, ← this]
+      rw [ite_eq_right hx, add_zero, hN, ← this]
       congr!
   have D := congrArg (fun m => Fintype.card k • m) B
   simp only [Finset.smul_sum, C] at D
   simp only [smul_zero, Finset.sum_add_distrib, ← Finset.smul_sum, T,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, zero_add] at D
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, zero_add] at D
   exact hcancel _ _ (Nat.mul_ne_zero (show r ≠ 0 by omega) Fintype.card_ne_zero) D
 
 end GlobalTheory.FiniteRadon
@@ -389,13 +389,13 @@ theorem eq_zero_of_upSum_of_norm : ∀ (R V k W M : Type) [CommRing R] [AddCommG
   let ψ : W → M := fun w => if h : ∃ q, Rel res t Λ π q w then Φ h.choose else 0
   have ψ1 : ∀ q w, Rel res t Λ π q w → ψ w = Φ q := fun q w h => by
     have h0 : ∃ q, Rel res t Λ π q w := ⟨q, h⟩
-    simp only [ψ, dif_pos h0]
+    simp only [ψ, dite_eq_left h0]
     rw [rel_inj hs ht htf hsat hr h0.choose_spec h]
-  have ψ0 : ∀ w, (¬ ∃ q, Rel res t Λ π q w) → ψ w = 0 := fun w h => dif_neg h
+  have ψ0 : ∀ w, (¬ ∃ q, Rel res t Λ π q w) → ψ w = 0 := fun w h => dite_eq_right h
   let j : Pr R V k → W := fun q => if h : ∃ w, Rel res t Λ π q w then h.choose else 0
   have j1 : ∀ q : Pr R V k, q.Ok res → q.IsKer Λ → Rel res t Λ π q (j q) := fun q ho hk => by
     have h0 : ∃ w, Rel res t Λ π q w := rel_ex hs ho hk
-    simp only [j, dif_pos h0]
+    simp only [j, dite_eq_left h0]
     exact h0.choose_spec
   have key := _root_.GlobalTheory.FiniteRadon.eq_zero_of_hyperplane_sums k W M ψ (ψ0 _ fun ⟨q, h⟩ => rel_ne ht htf hsat hr q h) (fun g hg => ?_) (fun w => ?_)
   · intro q ho hk
@@ -646,10 +646,10 @@ theorem main : ∀ (D : D7) (u : D.what₂.Word) (A : AtTTied u) (i : ℕ) (hi :
   have hlat := bwB_clsCrd_lat D u i hi
   have hlatFull : ∀ c, Submodule.IsFullLattice D.host.E (clsCrd D u i hi c) := by
     intro c
-    letI := D.host.cmStar
+    let := D.host.cmStar
     let φ := (D.sp.X i).frame.equivFun.trans
       (LinearEquiv.funCongrLeft D.host.E D.host.E (finCongr (rankN D i hi)).symm)
-    letI : Submodule.IsLattice D.host.E (clsCrd D u i hi c) := hlat c
+    let : Submodule.IsLattice D.host.E (clsCrd D u i hi c) := hlat c
     let hbase : Submodule.IsFullLattice D.host.E (D.clsLat u i c) := D.clsLat_lat u i c
     constructor
     change Submodule.span D.host.E (((D.clsLat u i c).map
@@ -1063,7 +1063,7 @@ theorem commensurable : ∀ (D : D7) (u : D.what₂.Word), (∀ v, ∀ x ∈ (D.
   intro D u hst hinj w
   have hex : ∀ v, ∃ g, IsScaledU D u w v g := fun v => (exists_isScaledU_iff D u w v).2 (hst v)
   choose g hg using hex
-  haveI : Module.Finite D.what₂.LL (LT.Vl D u 0) := Module.Finite.of_basis ((D.fm u).lat 0).b
+  have : Module.Finite D.what₂.LL (LT.Vl D u 0) := Module.Finite.of_basis ((D.fm u).lat 0).b
   have hgi : ∀ v, IsUnit (g v) := by
     intro v
     rw [LinearMap.isUnit_iff_ker_eq_bot, LinearMap.ker_eq_bot']
@@ -1652,9 +1652,9 @@ theorem uop_inj (φ : LT.Fn D u 0) (hφ : φ ∈ (D.mem u).A.Mram) (h0 : LT.Uop 
       simp only [rs, Finset.sum_apply]) x
     rwa [Finset.sum_apply] at this
   funext c
-  haveI : Module.Finite ((D.mem u).A.Fv v) ((D.fm u).lk 0 v c) :=
+  have : Module.Finite ((D.mem u).A.Fv v) ((D.fm u).lk 0 v c) :=
     Module.finite_of_finrank_pos (by rw [(D.fm u).lk_rank]; exact D.R.N_pos 0)
-  haveI : Finite ((D.fm u).lk 0 v c) := Module.finite_of_finite ((D.mem u).A.Fv v)
+  have : Finite ((D.fm u).lk 0 v c) := Module.finite_of_finite ((D.mem u).A.Fv v)
   have hinj := _root_.GlobalTheory.LevelHecke.eq_zero_of_upSum_of_norm _ _ _ _ _ (T.atT.res v) (((D.mem u).A.T : ℕ) : 𝓞 D.host.E)
     (loc (T.atT.res v) (Lk T.atT 0 (Nat.zero_le _) v c))
     (locExt (T.atT.res v) (Lk T.atT 0 (Nat.zero_le _) v c) (T.lv0.prk v c)) (valAt (T.atT.eV v).1 p g (T.cls0.y c))

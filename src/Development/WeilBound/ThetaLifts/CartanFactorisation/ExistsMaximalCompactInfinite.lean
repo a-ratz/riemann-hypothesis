@@ -180,7 +180,7 @@ theorem lam_mul (v : Pl F) {ε : ℝ} (hε : 0 ≤ ε) (h1 : ε ≤ 1) {a b : AE
   exact (mul_le_mul (hx i) ((hy j).trans h1) (norm_nonneg _) hε).trans_eq (mul_one _)
 
 theorem lam_cpt (v : Pl F) {ε : ℝ} (hε : 0 ≤ ε) : IsCompact (lam (E := E) v ε hε : Set (AE F E)) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
   refine IsCompact.image ?_ (phi_cont v)
   have : {x : Ix E → Fv F v | ∀ i, ‖x i‖ ≤ ε} = Set.univ.pi fun _ => Metric.closedBall 0 ε := by ext; simp
   rw [this]
@@ -264,7 +264,7 @@ theorem local_compact_open_subgroups :
     have hle : e b ≤ e a := Nat.one_div_le_one_div hab
     exact ⟨Set.image_mono (fun x hx => fun k => (hx k).trans hle) (hg.2 i j).1,
       Set.image_mono (fun x hx => fun k => (hx k).trans hle) (hg.2 i j).2⟩⟩
-  haveI : T2Space (UA σ X.J) := (Units.isEmbedding_embedProduct.comp Topology.IsEmbedding.subtypeVal).t2Space
+  have : T2Space (UA σ X.J) := (Units.isEmbedding_embedProduct.comp Topology.IsEmbedding.subtypeVal).t2Space
   have hint : ∀ g ∈ ⋂ m, K m, g = 1 := fun g hg => by
     refine Subtype.ext (Units.ext ?_)
     change mat g = 1

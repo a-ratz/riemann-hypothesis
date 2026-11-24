@@ -130,7 +130,7 @@ theorem arMono_mapDomain_some {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel 
   have hdeg : (Finsupp.mapDomain some μ).degree = dimFl Ψ N + 1 := by
     rw [degree_eq_card_toMultiset, hms, Multiset.card_map, hcard]
   have hnone : (Finsupp.mapDomain some μ) none = 0 :=
-    Finsupp.mapDomain_notin_range _ _ (by simp)
+    Finsupp.mapDomain_of_notMem_range _ _ (by simp)
   have hlen : (Finsupp.toMultiset (Finsupp.mapDomain some μ)).toList.length = dimFl Ψ N + 1 := by
     rw [Multiset.length_toList, hms, Multiset.card_map, hcard]
   have hperm := ofFn_monoLines_perm (M.line t) some μ (Finsupp.mapDomain some μ) (dimFl Ψ N + 1) hms hlen
@@ -149,7 +149,7 @@ theorem arMono_mapDomain_some {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel 
   have hmain := arNum_linear_arList_symm.2 M.K M.ι M.P (dimFl Ψ N) M.arith (II M.K M.ι) (hII M.K M.ι) _ _ hsm
     (by simpa [Function.comp_def, RootModel.line] using hperm)
   unfold RootModel.arMono
-  rw [if_pos hdeg, hnone, pow_zero, mul_one]
+  rw [ite_eq_left hdeg, hnone, pow_zero, mul_one]
   congr 1
   exact hmain.symm
 
@@ -257,7 +257,7 @@ include m
 theorem eq_of_comap_eq {W₁ W₂ : Ideal (MRing ι O)}
     (h : W₁.comap (MvPolynomial.map (algebraMap A O)) = W₂.comap (MvPolynomial.map (algebraMap A O))) :
     W₁ = W₂ := by
-  haveI : IsLocalization (m.primeCompl.map (C (σ := (Σ k, ι k)) (R := A))) (ReciprocityTheory.ChartRestriction.G.Geo.MRingOver O ι) :=
+  have : IsLocalization (m.primeCompl.map (C (σ := (Σ k, ι k)) (R := A))) (ReciprocityTheory.ChartRestriction.G.Geo.MRingOver O ι) :=
     MvPolynomial.isLocalization m.primeCompl O
   have e : ∀ W : Ideal (MRing ι O), (W.comap (algebraMap (MRing ι A) (MRing ι O))).map
       (algebraMap (MRing ι A) (MRing ι O)) = W :=
@@ -269,7 +269,7 @@ theorem eq_of_comap_eq {W₁ W₂ : Ideal (MRing ι O)}
 theorem exists_prime_of_comap_C {W : Ideal (MRing ι A)} (hW : W.IsPrime)
     (hm : W.comap (C : A →+* MRing ι A) = m) :
     ∃ W' : Ideal (MRing ι O), W'.IsPrime ∧ W'.comap (MvPolynomial.map (algebraMap A O)) = W := by
-  haveI : IsLocalization (m.primeCompl.map (C (σ := (Σ k, ι k)) (R := A))) (MRing ι O) :=
+  have : IsLocalization (m.primeCompl.map (C (σ := (Σ k, ι k)) (R := A))) (MRing ι O) :=
     MvPolynomial.isLocalization m.primeCompl O
   have hdisj : Disjoint ((m.primeCompl.map (C (σ := (Σ k, ι k)) (R := A)) : Submonoid (MRing ι A)) :
       Set (MRing ι A)) (W : Set (MRing ι A)) := by
@@ -329,7 +329,7 @@ end GlobalTheory.CompanionTheory.Ar.Num.Places
 theorem GlobalTheory.CompanionTheory.Ar.Num.cycList_zp_eq_sum_places : ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) [∀ k, Fintype (ι k)] (Ω : Type) [Field Ω] (y : (Σ k, ι k) → Ω) (A : Type) [CommRing A] [Algebra A Ω] [IsDedekindDomain A] [Module.Finite ℤ A], Function.Injective (algebraMap A Ω) → HasConstants ℤ A y → ∀ D : ℕ, IsArithVar (mCoordIdeal y) (D + 1) → ∀ (p : Nat.Primes) (Λ : Type) [Fintype Λ] (m : Λ → Ideal A) [∀ l, (m l).IsPrime], Function.Injective m → (∀ n : Ideal A, n.IsPrime → (((p : ℕ) : A) ∈ n ↔ n ∈ Set.range m)) → ∀ (O : Λ → Type) [∀ l, CommRing (O l)] [∀ l, IsDomain (O l)] [∀ l, IsDiscreteValuationRing (O l)] [∀ l, Algebra A (O l)] [∀ l, IsLocalization.AtPrime (O l) (m l)] [∀ l, Algebra (O l) Ω] [∀ l, IsScalarTower A (O l) Ω], ∀ fd : Λ → ℕ, (∀ l, Nat.card (A ⧸ m l) = (p : ℕ) ^ fd l) → ∀ (a : K → ℕ) (f : MRing ι ℤ), IsMultiHomog f a → f ∉ mCoordIdeal y → ∀ L : List (K → ℤ), L.length = D → cycList (divCycle (extTo (ZP p) (mCoordIdeal y)) (MvPolynomial.map (Int.castRingHom (ZP p)) f)) L = ∑ l, (fd l : ℤ) * cycList (divCycle (pointIdeal (O l) y) (MvPolynomial.map (Int.castRingHom (O l)) f)) L := by
   intro K _ _ ι _ Ω _ y A _ _ _ _ hinj hconst D hP p Λ _ m _ hminj hm O _ _ _ _ _ _ _ fd hfd a f hf hfP L hL
   classical
-  haveI hpf : Fact (p : ℕ).Prime := ⟨p.2⟩
+  have hpf : Fact (p : ℕ).Prime := ⟨p.2⟩
   obtain ⟨hcomapA, hlift, hdiv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.pl_corr K ι Ω y A hconst
   have hmod := fun l => _root_.GlobalTheory.CompanionTheory.Ar.Num.pl_model K ι Ω y A hinj hconst D hP (m l) (O l)
 
@@ -393,7 +393,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Num.cycList_zp_eq_sum_places : ∀ (K : 
     rw [finsum_eq_sum_of_support_subset (s := T)]
     · refine Finset.sum_congr rfl fun W hW => ?_
       beta_reduce
-      rw [if_pos (Finset.mem_filter.mp hW).2]
+      rw [ite_eq_left (Finset.mem_filter.mp hW).2]
     · intro W hW
       rw [Function.mem_support] at hW
       have h1 := left_ne_zero_of_mul hW
@@ -401,7 +401,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Num.cycList_zp_eq_sum_places : ∀ (K : 
       by_cases hc : (C (((p : ℕ) : ℤ)) : MRing ι ℤ) ∈ W
       · exact Finset.mem_coe.mpr (Finset.mem_filter.mpr ⟨hfinZ.mem_toFinset.mpr h1, hc⟩)
       · beta_reduce at h2
-        rw [if_neg hc] at h2
+        rw [ite_eq_right hc] at h2
         exact absurd rfl h2
   have hRight : ∀ l, cycList (divCycle (pointIdeal (O l) y) (MvPolynomial.map (Int.castRingHom (O l)) f)) L =
       ∑ W ∈ Tl l, divCycle (pointIdeal (O l) y) (MvPolynomial.map (Int.castRingHom (O l)) f) W * vNumL W L := fun l => by
@@ -645,8 +645,8 @@ theorem finite_primes_containing {a : A} (ha : a ≠ 0) :
 theorem exists_card_residue (p : Nat.Primes) (hp : ((p : ℕ) : A) ≠ 0) (n : Ideal A) [hn : n.IsPrime]
     (hpn : ((p : ℕ) : A) ∈ n) : ∃ f : ℕ, Nat.card (A ⧸ n) = (p : ℕ) ^ f := by
   have hn0 : n ≠ ⊥ := fun h => hp (by simpa [h] using hpn)
-  haveI hmax : n.IsMaximal := Ring.DimensionLEOne.maximalOfPrime hn0 hn
-  haveI : Module.Finite ℤ (A ⧸ n) :=
+  have hmax : n.IsMaximal := Ring.DimensionLEOne.maximalOfPrime hn0 hn
+  have : Module.Finite ℤ (A ⧸ n) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ ℤ n).toLinearMap (Ideal.Quotient.mkₐ_surjective ℤ n)
   have hz : (((p : ℕ) : A ⧸ n)) = 0 := by
     have := Ideal.Quotient.eq_zero_iff_mem.2 hpn
@@ -657,10 +657,10 @@ theorem exists_card_residue (p : Nat.Primes) (hp : ((p : ℕ) : A) ≠ 0) (n : I
     change ((p : ℕ) : ℤ) • x = 0
     rw [zsmul_eq_mul]
     simp [hz]
-  haveI : Finite (A ⧸ n) := Module.finite_of_fg_torsion _ htor
-  letI : Field (A ⧸ n) := Ideal.Quotient.field n
-  haveI : CharP (A ⧸ n) (p : ℕ) := (CharP.charP_iff_prime_eq_zero p.2).2 hz
-  letI : Fintype (A ⧸ n) := Fintype.ofFinite _
+  have : Finite (A ⧸ n) := Module.finite_of_fg_torsion _ htor
+  let : Field (A ⧸ n) := Ideal.Quotient.field n
+  have : CharP (A ⧸ n) (p : ℕ) := (CharP.charP_iff_prime_eq_zero p.2).2 hz
+  let : Fintype (A ⧸ n) := Fintype.ofFinite _
   obtain ⟨m, -, hm⟩ := FiniteField.card (A ⧸ n) (p : ℕ)
   exact ⟨m, by rw [Nat.card_eq_fintype_card, hm]⟩
 
@@ -726,15 +726,15 @@ theorem flag_m3_padic : ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → T
   have hpA : ((p : ℕ) : A) ≠ 0 := fun h => hpΩ (by
     have := congrArg (algebraMap A Ω) h
     simpa using this)
-  haveI hfin := finite_primes_containing hpA
-  letI : Fintype {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n} := Fintype.ofFinite _
-  haveI hpr : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n}, (l.1).IsPrime := fun l => l.2.1
+  have hfin := finite_primes_containing hpA
+  let : Fintype {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n} := Fintype.ofFinite _
+  have hpr : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n}, (l.1).IsPrime := fun l => l.2.1
   have hne : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n}, l.1 ≠ ⊥ := fun l h =>
     hpA (by simpa [h] using l.2.2)
-  haveI hdom : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
+  have hdom : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
       IsDomain (Localization.AtPrime l.1) := fun l =>
     IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors _)
-  haveI hdvr : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
+  have hdvr : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
       IsDiscreteValuationRing (Localization.AtPrime l.1) := fun l =>
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A (hne l) _
   have hunit : ∀ (l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n}) (s : (l.1).primeCompl),
@@ -742,10 +742,10 @@ theorem flag_m3_padic : ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → T
     refine IsUnit.mk0 _ fun h => s.2 ?_
     have : (s : A) = 0 := hinj (by simpa using h)
     simp [this]
-  letI halg : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
+  let halg : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
       Algebra (Localization.AtPrime l.1) Ω := fun l =>
     (IsLocalization.lift (M := (l.1).primeCompl) (S := Localization.AtPrime l.1) (hunit l)).toAlgebra
-  haveI htow : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
+  have htow : ∀ l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n},
       IsScalarTower A (Localization.AtPrime l.1) Ω := fun l =>
     IsScalarTower.of_algebraMap_eq fun a => (IsLocalization.lift_eq (hunit l) a).symm
   choose fd hfd using fun l : {n : Ideal A // n.IsPrime ∧ ((p : ℕ) : A) ∈ n} =>
@@ -784,7 +784,7 @@ variable {K : Type} [DecidableEq K] {ι : K → Type}
 
 theorem intNumL_perm (F : Type) [Field F] (V : Ideal (MRing ι F)) {l l' : List (K → ℤ)} (h : l.Perm l') :
     intNumL F V l = intNumL F V l' := by
-  haveI : LeftCommutative (diffStep : (K → ℤ) → ((K → ℤ) → ℤ) → (K → ℤ) → ℤ) := ⟨fun a b g => by
+  have : LeftCommutative (diffStep : (K → ℤ) → ((K → ℤ) → ℤ) → (K → ℤ) → ℤ) := ⟨fun a b g => by
     funext m
     simp only [diffStep]
     rw [sub_right_comm m a b]
@@ -1046,9 +1046,9 @@ theorem mem_minimalPrimes_span_of_mem {T : Type} [CommRing T] [IsDomain T] [IsNo
     refine bot_lt_iff_ne_bot.2 (fun h => hb0 ?_)
     rw [h] at hbp'
     exact (Submodule.mem_bot T).1 hbp'
-  haveI : (Ideal.span {a}).IsPrincipal := ⟨⟨a, rfl⟩⟩
-  haveI := hqp
-  haveI := hp
+  have : (Ideal.span {a}).IsPrincipal := ⟨⟨a, rfl⟩⟩
+  have := hqp
+  have := hp
   have h1 : q.height ≤ ((1 : ℕ) : ℕ∞) := by
     have := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes (Ideal.span {a}) q hq
     exact_mod_cast this
@@ -1082,7 +1082,7 @@ theorem length_toNat_ne_zero {S : Type} [CommRing S] [IsNoetherianRing S] {J W :
     [hWp : W.IsPrime] (hW : W ∈ J.minimalPrimes) :
     (Module.length (Localization.AtPrime W) (LocalizedModule W.primeCompl (S ⧸ J))).toNat ≠ 0 := by
   classical
-  haveI : IsNoetherianRing (Localization.AtPrime W) :=
+  have : IsNoetherianRing (Localization.AtPrime W) :=
     IsLocalization.isNoetherianRing W.primeCompl _ inferInstance
   rw [Ne, ENat.toNat_eq_zero, not_or]
   refine ⟨?_, ?_⟩
@@ -1102,7 +1102,7 @@ theorem length_toNat_ne_zero {S : Type} [CommRing S] [IsNoetherianRing S] {J W :
       rw [hJA, IsLocalization.minimalPrimes_map W.primeCompl (Localization.AtPrime W) J,
         Set.mem_preimage, Localization.AtPrime.under_maximalIdeal]
       exact hW
-    haveI : Ring.KrullDimLE 0 (Localization.AtPrime W ⧸ JA) := by
+    have : Ring.KrullDimLE 0 (Localization.AtPrime W ⧸ JA) := by
       rw [Ring.krullDimLE_zero_iff]
       intro I hI
       have hQ : (I.comap (Ideal.Quotient.mk JA)).IsPrime := Ideal.comap_isPrime _ I
@@ -1121,7 +1121,7 @@ theorem length_toNat_ne_zero {S : Type} [CommRing S] [IsNoetherianRing S] {J W :
       · exact absurd (hIeq.trans h) hI.ne_top
       · rw [hIeq]
         exact h
-    haveI : IsArtinianRing (Localization.AtPrime W ⧸ JA) :=
+    have : IsArtinianRing (Localization.AtPrime W ⧸ JA) :=
       IsNoetherianRing.isArtinianRing_of_krullDimLE_zero
     have hlenQ : Module.length (Localization.AtPrime W) (Localization.AtPrime W ⧸ JA) ≠ ⊤ := by
       rw [Module.length_eq_of_surjective (S := Localization.AtPrime W)
@@ -1159,10 +1159,10 @@ theorem facts_of_divCycle_ne_zero {K : Type} {ι : K → Type} {R : Type} [CommR
 theorem fibre_comp : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (ϖ : O), Irreducible ϖ → ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) [∀ k, Fintype (ι k)] (P : Ideal (MRing ι O)) (d : ℕ), IsModelOver P d → (∀ W, IsFibreComp P W ↔ divCycle P (C ϖ) W ≠ 0) ∧ (∀ (a : K → ℕ) (f : MRing ι O), IsMultiHomog f a → f ∉ P → ∀ W, divCycle P f W ≠ 0 → (C ϖ : MRing ι O) ∈ W → IsFibreComp P W) ∧ ∀ (b : K → ℤ) (f g : MRing ι O), IsVerticalDivisor P ϖ b f g → ∀ W, ratDiv P f g W ≠ 0 → IsFibreComp P W := by
   intro O _ _ _ ϖ hϖ K _ _ ι _ P d hP
   classical
-  haveI : IsNoetherianRing (MRing ι O) :=
+  have : IsNoetherianRing (MRing ι O) :=
     (inferInstance : IsNoetherianRing (MvPolynomial ((k : K) × ι k) O))
   obtain ⟨⟨hPprime, -, -⟩, hnt, -⟩ := hP
-  haveI := hPprime
+  have := hPprime
   have hmax : Ideal.map (C : O →+* MRing ι O) (IsLocalRing.maximalIdeal O) =
       Ideal.span {(C ϖ : MRing ι O)} := by
     rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ, Ideal.map_span,
@@ -1186,7 +1186,7 @@ theorem fibre_comp : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuati
       unfold IsFibreComp at hF
       rw [hmax] at hF
       obtain ⟨hWmin, hWrel⟩ := hF
-      haveI : W.IsPrime := hWmin.1.1
+      have : W.IsPrime := hWmin.1.1
       unfold divCycle
       rw [dite_eq_left ⟨hWmin, hWrel⟩]
       exact Nat.cast_ne_zero.mpr (length_toNat_ne_zero hWmin)
@@ -1397,7 +1397,7 @@ theorem vertAt_two_of_ne (P : Ideal (MRing ι ℤ)) (p : Nat.Primes) (hp : (p : 
         rw [← C_mul, ← C_mul, ← C_add, hab, C_1]
       rw [this]
       exact W.add_mem (W.mul_mem_left _ hpW) (W.mul_mem_left _ h2)
-    exact mul_eq_zero_of_right _ (if_neg hpW)
+    exact mul_eq_zero_of_right _ (ite_eq_right hpW)
 
 theorem ptsIntegral_one_eq_vertAt (P : Ideal (MRing ι ℤ)) (D : ℕ) (hP : IsArithVar P (D + 1))
     (I : Ideal (MRing ι ℤ) → (n : ℕ) → (Fin n → HermLine ι) → ℝ) (hI : IsIntersectionFamily I)
@@ -1550,11 +1550,11 @@ theorem geoMono_mapDomain_some (M : RootModel Ψ N) [DecidableEq M.K] (II : Inte
     | zero => simp
     | add f g hf hg => simp [Finsupp.mapDomain_add]
     | single a b => simp
-  have hnone : (μ.mapDomain some) none = 0 := Finsupp.mapDomain_notin_range _ _ (by simp)
+  have hnone : (μ.mapDomain some) none = 0 := Finsupp.mapDomain_of_notMem_range _ _ (by simp)
   have hlen : (Finsupp.toMultiset (μ.mapDomain some)).toList.length = dimFl Ψ N := by
     rw [Multiset.length_toList, hmap, Multiset.card_map, hcard]
   unfold RootModel.geoMono
-  rw [if_pos hdeg, hnone, pow_zero, mul_one]
+  rw [ite_eq_left hdeg, hnone, pow_zero, mul_one]
   set L := monoLines (M.line 1) (μ.mapDomain some) (dimFl Ψ N) with hLdef
   have hL : ∀ k : Fin (dimFl Ψ N), L k = M.line 1 ((Finsupp.toMultiset (μ.mapDomain some)).toList.get
       ⟨k, by rw [hlen]; exact k.2⟩) := by
@@ -1654,7 +1654,7 @@ theorem exists_monomial_mixExpansion {σ : Type} [Fintype σ] (d : ℕ) :
         rw [monomial_add_single, pow_one, map_mul, map_mul, rename_X, rename_X]
         ring
       rw [key, hG', Finset.mul_sum]
-      simp only [mul_add, Finset.sum_add_distrib, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [mul_add, Finset.sum_add_distrib, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       congr 1
       exact Finset.sum_congr rfl fun j _ => by ring
     · have h2 : (X (Sum.inr i) * G' j : MvPolynomial (σ ⊕ σ) ℝ).IsHomogeneous d := by

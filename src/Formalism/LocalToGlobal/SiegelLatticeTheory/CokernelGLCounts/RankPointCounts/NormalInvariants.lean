@@ -115,7 +115,7 @@ theorem rd_one_le (D : D7) : 1 ≤ D.host.rdE := by
 
 theorem ngPt_eq {D : D7} (TT : ℕ) (γ : PN.Pts D.host.E D.R.rS) :
     NGPt D.host.rdE TT γ = ((D.host.rdE ^ (2 * D.R.rS * (D.R.rS + 1))) ^ D.R.f)⁻¹ * PG TT γ := by
-  haveI : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
+  have : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
   have hfin : Module.finrank ℚ D.host.E = 2 * D.R.f := by
     rw [D.host.der.finrank_E, Formalism.BasicNotions.Ranks.f_eq_ord (R := D.R)]
     first
@@ -271,7 +271,7 @@ def NormCountG : Prop :=
 
 theorem normCount_of (h : NormCountG) : NormCount := by
   intro D J m hJ hm S hS
-  haveI : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
+  have : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
   have hfin : Module.finrank ℚ D.host.E = 2 * D.R.f := by
     rw [D.host.der.finrank_E, Formalism.BasicNotions.Ranks.f_eq_ord (R := D.R)]
     first

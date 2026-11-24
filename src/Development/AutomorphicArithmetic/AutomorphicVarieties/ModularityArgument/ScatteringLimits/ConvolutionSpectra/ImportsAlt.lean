@@ -649,7 +649,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.nEx :
       have a := (cl (Ioc T (T + 1)) (Ioi (T + 1)) measurableSet_Ioc (mI _)).2.2.1 (Ioc_disjoint_Ioi le_rfl)
       rw [Ioc_union_Ioi_eq_Ioi (by linarith)] at a
       have c : cut V (Ioi (T + 1)) (M.J.symm h) = 0 := M.J.injective (by rw [map_zero]; exact s3)
-      have b : v = cut V (Ioc T (T + 1)) (M.J.symm h) := by rw [hv, a, ContinuousLinearMap.add_apply, c, add_zero]
+      have b : v = cut V (Ioc T (T + 1)) (M.J.symm h) := by rw [hv, a, add_apply, c, add_zero]
       have d := (cl (Icc (-(|T| + 1)) (|T| + 1)) (Ioc T (T + 1)) measurableSet_Icc measurableSet_Ioc).1
       have sub : Ioc T (T + 1) ⊆ Icc (-(|T| + 1)) (|T| + 1) := fun x hx =>
         ⟨by linarith [hx.1, neg_abs_le T], by linarith [hx.2, le_abs_self T]⟩
@@ -971,7 +971,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.resInv :
     have := h2 y
     rw [h3, norm_zero] at this
     exact norm_le_zero_iff.1 (nonpos_of_mul_nonpos_right this c0')
-  haveI := cl.completeSpace_coe
+  have := cl.completeSpace_coe
   exact LinearMap.range_eq_top.1 ((Submodule.orthogonal_eq_bot_iff).1 bot)
 end -- clump:auto
 end -- clump:auto
@@ -1125,7 +1125,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.traceNear :
     have a2 : Λ (Ψ n (M.P' (Ioi (T + d n)) (X (Λ h)))) = 0 := k3 M (hψ n) _ _ fun r hr _ => k2 M hT hr _
     have a3 : E (E (X (Λ h))) = E (X (Λ h)) := DFunLike.congr_fun h3 _
     show Λ (Ψ n (X (Λ h))) = Λ (Ψ n (Λ (X (Λ h)))) + Λ (Ψ n (E (E (X (Λ h)))))
-    conv_lhs => rw [k5 M T (X (Λ h)), k4 M (d0 n).le, ContinuousLinearMap.add_apply]
+    conv_lhs => rw [k5 M T (X (Λ h)), k4 M (d0 n).le, add_apply]
     simp only [map_add (f := _)]
     rw [a1, a2, a3, add_zero, add_zero]
   have g1 := h1.comp_left Λ
@@ -1173,8 +1173,8 @@ open scoped InnerProductSpace FourierTransform ComplexConjugate
 theorem UpperTheory.V.Z.IntegralApplyAeEq.main :
     PositivityTheory.Rg.Tf.IntegralApplyAeEq.Main := by
   intro H V W _ _ _ _ _ _ _ _ _ D
-  haveI := FiniteDimensional.complete ℂ V
-  haveI := FiniteDimensional.complete ℂ W
+  have := FiniteDimensional.completeSpace ℂ V
+  have := FiniteDimensional.completeSpace ℂ W
   obtain ⟨M, hT, hJ, hJ', hL⟩ := model D
   have act : ∀ Y β β', Ker β → Ker β' → Conv D.J D.J Y β → Conv D.J' D.J' Y β' → M.Acts Y β β' := fun Y β β' k k' c c' =>
     ⟨fun u => by rw [hJ, hJ]; exact c u _ (convSpec β k u).1, fun v => by rw [hJ', hJ']; exact c' v _ (convSpec β' k' v).1⟩

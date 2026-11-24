@@ -65,7 +65,7 @@ theorem lam_zb (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A ⊗ 
     (e : LBIso ((ev P (fst A A) (snd A A ≫ l)).pull (sqToBase A s)) (abelian₂ ((Over.pullback s).obj A) L)) :
     pull (sqToBase (G4 (A ⊗ B)) s) (zc hD.isLB l mu α) =
       lam (cls (zb mu α s P L) (isLB_zb mu α s hD.isLB hL)) (fst _ _) (snd _ _) := by
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   have hw : sqToBase (G4 (A ⊗ B)) s = Over.Hom.left (lift
       (toBase (G4 (A ⊗ B)) s (fst ((Over.pullback s).obj (G4 (A ⊗ B))) ((Over.pullback s).obj (G4 (A ⊗ B)))))
       (toBase (G4 (A ⊗ B)) s (snd ((Over.pullback s).obj (G4 (A ⊗ B))) ((Over.pullback s).obj (G4 (A ⊗ B)))))) := rfl

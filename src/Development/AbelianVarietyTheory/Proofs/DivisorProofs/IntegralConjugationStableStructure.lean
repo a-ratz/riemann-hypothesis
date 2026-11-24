@@ -58,7 +58,7 @@ theorem ratInt_eventually (x : ℚ) :
   have hI : Ideal.span {b} ≠ (0 : Ideal ℤ) := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact hb0
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors hI).subset fun w hw => ?_)
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   by_contra hd
   apply hw
   rw [HeightOneSpectrum.mem_adicCompletionIntegers]

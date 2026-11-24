@@ -315,7 +315,7 @@ theorem locSm_theta {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {ψ : 
     (h0 : ∀ t, (M t).map (finPart D) = 0) : LocSm fun x t => f (x + M t) := by
   intro x₀
   have : IsTopologicalAddGroup (AE D) := inferInstance
-  have : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
+  have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
   have : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
   obtain ⟨co, c1, c2, c3⟩ := exists_coMat D T.rank S.rank
   obtain ⟨U, hU, hl⟩ := hf.level

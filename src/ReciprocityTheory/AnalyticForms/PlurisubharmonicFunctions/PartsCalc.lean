@@ -169,8 +169,8 @@ theorem hessEntry_apply {D : ℕ} (a b : Fin D) (H : BilinSp D) :
           H (Complex.I • Pi.single a 1) (Complex.I • Pi.single b 1) : ℝ) +
         Complex.I * ((H (Pi.single a 1) (Complex.I • Pi.single b 1) -
           H (Complex.I • Pi.single a 1) (Pi.single b 1) : ℝ))) / 4 := by
-  simp only [hessEntry, ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply, Complex.ofRealCLM_apply, evalL_apply,
+  simp only [hessEntry, smul_apply, add_apply,
+    sub_apply, ContinuousLinearMap.comp_apply, Complex.ofRealCLM_apply, evalL_apply,
     smul_eq_mul]
   push_cast
   ring

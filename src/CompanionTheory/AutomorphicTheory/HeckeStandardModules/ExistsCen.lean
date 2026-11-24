@@ -188,7 +188,7 @@ theorem lift [IsGalois E Ω] (L : IntermediateField E Ω) [FiniteDimensional E L
     exact Subgroup.isOpen_mono (H₁ := (E⟮(b : Ω)⟯).fixingSubgroup) (fun σ hσ => RingOfIntegers.ext
       ((mem_fixingSubgroup_iff _ _).1 hσ _ (mem_adjoin_simple_self E _))) (E⟮(b : Ω)⟯).fixingSubgroup_isOpen
   have : ContinuousSMul G (𝓞 Ω) := continuousSMul_iff_stabilizer_isOpen.2 fun b =>
-    (hopen b).preimage continuous_subtype_val
+    (hopen b).preimage continuous_subtypeVal
   have : Algebra.IsInvariant (𝓞 L) (𝓞 Ω) G := ⟨fun b hb => by
     have hmem : (b : Ω) ∈ fixedField L.fixingSubgroup := by
       rw [mem_fixedField_iff]

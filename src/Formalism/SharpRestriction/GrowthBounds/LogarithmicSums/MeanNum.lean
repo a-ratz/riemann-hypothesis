@@ -130,7 +130,7 @@ end marg
 
 theorem frobenius_step_large_order (p : ℕ) (h : IsResidueClassZero D p) : stepP D p = hP D p := by
   unfold stepP
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hs
   simp only [IsSg] at hs
   simp only [IsResidueClassZero] at h
@@ -275,14 +275,14 @@ theorem slopeEstimate_of_lemmaB_slopeLine (X : Inst D L) (K : Consts) (hK : K.No
       _ ≤ _ := this
   by_cases hp : (p : ℝ) < L.sc.p0 D.R.k
   · constructor
-    · simp only [kapLoc, if_pos hp]
+    · simp only [kapLoc, ite_eq_left hp]
       exact le_trans (meanLoc_const_le K L.sc _ _ _ (kapIIf_nonneg K hK L _)) hII
     · intro _ a b
       unfold kapv kapLoc
-      rw [if_pos hp]
+      rw [ite_eq_left hp]
       exact hII
   · constructor
-    · simp only [kapLoc, if_neg hp]
+    · simp only [kapLoc, ite_eq_right hp]
       refine le_trans (kappa_nonneg_and_mean_bound X K Cm h8 N hI hρ p hc (not_lt.1 hp) t0 ht0).2 ?_
       rw [hN]
       have := mul_le_mul_of_nonneg_left N.kI (Nat.cast_nonneg (topsPos D p t0).card : (0 : ℝ) ≤ _)
@@ -913,7 +913,7 @@ theorem big_le_b' (s : Scale) (n : ℕ) (u : ℝ) (h : n * Real.log s.x + u + s.
   rw [b'_eq, pow_succ, mul_comm (s.x ^ n) s.x, mul_assoc]
   apply mul_le_mul_of_nonneg_left _ hx0.le
   have : s.x ^ n = Real.exp (n * Real.log s.x) := by
-    rw [Real.exp_nat_mul, Real.exp_log hx0]
+    rw [Real.exp_natCast_mul, Real.exp_log hx0]
   rw [this, ← Real.exp_add]
   exact Real.exp_le_exp.2 (by linarith)
 
@@ -1239,7 +1239,7 @@ theorem restHypI_ev (eps : ℝ) (K : Consts) (hK : K.Nonneg) (Cm C31 : ℝ) :
     apply height_bound_product_arith L.sc.x K.kI _ _ _ _ _ _ _ (Real.exp (L.sc.x ^ (L.sc.eps / 4) / 2))
       (Real.exp (L.sc.x ^ (11 * L.sc.eps / 24 + L.sc.eps / 48)) ^ 4) _ hx7 hkI0 hk0.le hN0 hn'0 (by positivity)
       (Nat.cast_nonneg _) hcG0 (Real.one_le_exp (by positivity)) hxkI hk6 hN3 hn'3 (by gcongr) hDIf hcG rfl
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]
     apply big_le_b' L.sc 85
     push_cast
     linarith only [f7, f8, f9, f10]

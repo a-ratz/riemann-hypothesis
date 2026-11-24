@@ -380,7 +380,7 @@ theorem exists_adapted [hA : ArithBase o Ω] (hB : BaseFacts S M U₀ EE) (Q : C
       rfl
     rw [e1, Matrix.mulVec_mulVec]
     congr 1
-    exact (map_mul (algebraMap o Ω).mapMatrix _ _).symm.trans (congrArg _ ((hmul _ _).trans (if_pos rfl)))
+    exact (map_mul (algebraMap o Ω).mapMatrix _ _).symm.trans (congrArg _ ((hmul _ _).trans (ite_eq_left rfl)))
 
 end Base
 
@@ -475,7 +475,7 @@ theorem mem_G_iff [hA : ArithBase o Ω] (hB : BaseFacts S M U₀ EE) (Q : Clos �
         rw [hj] at h0
         rw [h0]
         exact Submodule.subset_span ⟨j, hj, rfl⟩
-      · rw [← hwt j, Matrix.mulVec_mulVec, hP, ← Matrix.map_mul, hmul, if_neg (Ne.symm hj), Matrix.map_zero _ (map_zero _),
+      · rw [← hwt j, Matrix.mulVec_mulVec, hP, ← Matrix.map_mul, hmul, ite_eq_right (Ne.symm hj), Matrix.map_zero _ (map_zero _),
           Matrix.zero_mulVec]
         exact Submodule.zero_mem _
 
@@ -560,7 +560,7 @@ theorem exists_matrix [hA : ArithBase o Ω] (hB : BaseFacts S M U₀ EE) (Q : Cl
       exact congrArg (· * _) (RatModel.val_gPt rfl ((a * g) i j)).symm
     refine eq_of_ne_zero (fun c => (S.proj _ c).map (y₀.comp (algebraMap o S.R))) (fun c c' h => ?_) _ hb
       (fun j => t.l.wt (t.cls j)) t.wt ((n.map (ZH.OO p).subtype) i) (wt i) ?_ (j := j) fun h0 => hij ?_
-    · rw [← Matrix.map_mul, hmul, if_neg h, Matrix.map_zero _ (map_zero _)]
+    · rw [← Matrix.map_mul, hmul, ite_eq_right h, Matrix.map_zero _ (map_zero _)]
     · rw [e2]
       funext k
       refine Eq.trans ?_ (congrArg (M.val (ZH.gPt p ≫ y)) (congrFun (hwt i) k))
@@ -655,7 +655,7 @@ theorem exists_sections [ArithBase o Ω] (hB : BaseFacts S M U₀ EE) (Q : Clos 
     have h1 := mem_G_iff hB Q hAA hwt (x ≫ ξ) (z := t (pullback.snd Q.P.hom t q)) (by
         rw [e, RatModel.range_eq_singleton _ (IsLocalRing.closedPoint _)]
         exact congrArg (fun u => ({t (pullback.snd Q.P.hom t u)} : Set M.Z)) (Scheme.fromSpecResidueField_apply q _))
-      ((pullback.snd Q.P.hom t ≫ t).closePoints_subset_preimage_closedPoints hq) (hT _)
+      ((pullback.snd Q.P.hom t ≫ t).closedPoints_subset_preimage_closedPoints hq) (hT _)
       (hO _ (htW (Set.mem_univ _))) hw
     rw [Category.assoc, hξ, e] at h1
     refine (hx _).symm.trans (h1.trans (exists_congr fun i => and_congr_right fun _ => ?_))

@@ -330,8 +330,8 @@ theorem point_ends {K : Type} [Field K] {r : ℕ} (w : Point K (r + 1)) :
 theorem infinite_places (K : Type) [Field K] [NumberField K] : Infinite (HeightOneSpectrum (𝓞 K)) := by
   have h : ∀ p : Nat.Primes, ∃ la : HeightOneSpectrum (𝓞 K), la.asIdeal.comap (algebraMap ℤ (𝓞 K)) =
       Ideal.span {((p : ℕ) : ℤ)} := fun p => by
-    haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
-    haveI : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
+    have : Fact (p : ℕ).Prime := ⟨p.2⟩
+    have : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
     obtain ⟨M, hM, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 K) (Ideal.span {((p : ℕ) : ℤ)})
       (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 K)).injective_int]; exact bot_le)
     exact ⟨⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField K)⟩, hc⟩
@@ -400,7 +400,7 @@ theorem place_eq (D : D7) (Z : LocDat D) (p : PlF D) (P : Formalism.MainNotions.
     intro l hl
     have e1 : P.Dm l = leadingPrincipalMinor ((locH Z p).Zhat P.A.f P.B.f) l := by
       rw [← Formalism.MainNotions.BesselShellMomentBounds.leadMinorK_eq _ l hl]
-      simp only [Formalism.MainNotions.S.LocNG.FPair.Dm, Loc.HermSp.Dl, dif_pos hl]
+      simp only [Formalism.MainNotions.S.LocNG.FPair.Dm, Loc.HermSp.Dl, dite_eq_left hl]
       rfl
     rw [e1, hzl, lead_scale_pow D.R.rS x _ _ l hl, Formalism.L2.SG.NGCut.LeadingMinorIntegrality.leadingMinor_map, map_mul, sgnL, map_prod]
   refine ⟨fun l hl => by rw [hDm l hl, hx, map_pow], ?_⟩
@@ -448,7 +448,7 @@ theorem htPlace : Formalism.L2.SG.NGHTie.HTPlace := by
     (hloc p).2.2.1 (hloc p).2.2.2
   have hιu : ∀ p (z : D.host.E), z ≠ 0 → IsUnit ((D.s.atP p).ιE z) := fun p z hz => (Ne.isUnit hz).map _
   have hG : GPt ((Tu D u : ℕ) * (Tu D u' : ℕ)) (toPts w) ≠ 0 := by
-    haveI := infinite_places D.host.F
+    have := infinite_places D.host.F
     obtain ⟨p, hp⟩ : ∃ p : PlF D, p ∉ Fm.P := Infinite.exists_notMem_finset Fm.P
     obtain ⟨-, y, -, hy⟩ := (hPr p hp).2.1
     intro h0

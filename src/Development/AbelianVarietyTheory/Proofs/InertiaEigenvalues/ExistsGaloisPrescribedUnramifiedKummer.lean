@@ -111,7 +111,7 @@ theorem Kunr_le_adjoin {ω : Om l} (hω : IsPrimitiveRoot ω (l ^ a - 1)) : Kunr
   rcases eq_or_ne x 0 with rfl | h0
   · exact zero_mem _
   have h1 := one_lt_pow_l l a
-  haveI : NeZero (l ^ a - 1) := ⟨by omega⟩
+  have : NeZero (l ^ a - 1) := ⟨by omega⟩
   have h2 : x ^ (l ^ a - 1) = 1 := mul_right_cancel₀ h0 (by rw [← pow_succ, Nat.sub_add_cancel h1.le, hx, one_mul])
   obtain ⟨k, -, rfl⟩ := hω.eq_pow_of_pow_eq_one h2
   exact pow_mem (mem_adjoin_simple_self _ _) k
@@ -202,7 +202,7 @@ theorem frob_root (x : ↥(Kunr l a)) (hx : (x : Om l) ^ l ^ a = x) : frob l a x
   rcases eq_or_ne (x : Om l) 0 with h0 | h0
   · rw [show x = 0 from Subtype.ext h0, map_zero, ZeroMemClass.coe_zero, zero_pow hl.out.ne_zero]
   have h1 := one_lt_pow_l l a
-  haveI : NeZero (l ^ a - 1) := ⟨by omega⟩
+  have : NeZero (l ^ a - 1) := ⟨by omega⟩
   have h2 : (x : Om l) ^ (l ^ a - 1) = 1 :=
     mul_right_cancel₀ h0 (by rw [← pow_succ, Nat.sub_add_cancel h1.le, hx, one_mul])
   obtain ⟨k, -, hk⟩ := hω.eq_pow_of_pow_eq_one h2
@@ -236,11 +236,11 @@ theorem irreducible_X_pow_add_prime_over_witt (e : ℕ) [NeZero e] : Irreducible
     exact fun h => hP.ne_top ((Ideal.eq_top_iff_one _).2 h)
   · intro n hn
     rw [hdeg] at hn
-    rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg hn.ne, zero_add, Polynomial.coeff_C]
+    rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right hn.ne, zero_add, Polynomial.coeff_C]
     split_ifs
     · exact Ideal.mem_span_singleton_self _
     · exact zero_mem _
-  · rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg (NeZero.ne e).symm, zero_add, Polynomial.coeff_C_zero, Ideal.span_singleton_pow,
+  · rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right (NeZero.ne e).symm, zero_add, Polynomial.coeff_C_zero, Ideal.span_singleton_pow,
       Ideal.mem_span_singleton]
     rintro ⟨c, hc⟩
     have h1 : (l : Wq l a) * (1 - l * c) = 0 := by linear_combination hc

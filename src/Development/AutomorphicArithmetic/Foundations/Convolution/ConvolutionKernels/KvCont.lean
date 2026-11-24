@@ -81,7 +81,7 @@ private theorem continuous_rightConvolutionCLM (f : CompactlySupportedContinuous
     refine tendsto_lintegral_filter_of_dominated_convergence
       ((V * tsupport (f : G → ℂ)).indicator fun _ => ENNReal.ofReal (M + M) ^ 2) ?_ ?_ ?_ ?_
     · exact Eventually.of_forall fun x =>
-        ((hcont x).sub (hcont x₀)).measurable.enorm.pow_const 2
+        ((hcont x).sub (hcont x₀)).measurable.eNorm.pow_const 2
     · filter_upwards [hV] with x hx
       refine Eventually.of_forall fun y => ?_
       by_cases hy : y ∈ V * tsupport (f : G → ℂ)
@@ -96,7 +96,7 @@ private theorem continuous_rightConvolutionCLM (f : CompactlySupportedContinuous
     · refine Eventually.of_forall fun y => ?_
       have hc : Continuous fun x : G => ‖f (x⁻¹ * y) - f (x₀⁻¹ * y)‖ₑ ^ 2 :=
         (ENNReal.continuous_pow 2).comp
-          ((f.continuous.comp (continuous_inv.mul continuous_const)).sub continuous_const).enorm
+          ((f.continuous.comp (continuous_inv.mul continuous_const)).sub continuous_const).eNorm
       simpa using hc.tendsto x₀
   have hkey : ∀ x ∈ V, ∀ φ : Lp ℂ 2 (quotientMeasure Γ μ),
       ‖rconv Γ μ f φ x - rconv Γ μ f φ x₀‖ₑ ^ 2 ≤ (A x * N) * ‖φ‖ₑ ^ 2 := by
@@ -107,20 +107,20 @@ private theorem continuous_rightConvolutionCLM (f : CompactlySupportedContinuous
       rw [← integral_sub (integrable_rconv Γ μ f φ x) (integrable_rconv Γ μ f φ x₀)]
       simp only [sub_mul]
     have hm1 : AEMeasurable (fun y => ‖f (x⁻¹ * y) - f (x₀⁻¹ * y)‖ₑ) μ :=
-      ((hcont x).sub (hcont x₀)).measurable.enorm.aemeasurable
+      ((hcont x).sub (hcont x₀)).measurable.eNorm.aemeasurable
     have hm2 : AEMeasurable
         ((V * tsupport (f : G → ℂ)).indicator fun y => ‖φ (mk Γ y)‖ₑ) μ :=
-      ((stronglyMeasurable_lift Γ μ φ).measurable.enorm.indicator hS.measurableSet).aemeasurable
+      ((stronglyMeasurable_lift Γ μ φ).measurable.eNorm.indicator hS.measurableSet).aemeasurable
     calc ‖rconv Γ μ f φ x - rconv Γ μ f φ x₀‖ₑ ^ 2
         ≤ (∫⁻ y, ‖f (x⁻¹ * y) - f (x₀⁻¹ * y)‖ₑ *
             (V * tsupport (f : G → ℂ)).indicator (fun y => ‖φ (mk Γ y)‖ₑ) y ∂μ) ^ 2 := by
           rw [hsub]
           gcongr
-          refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+          refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
           congr 1
           ext y
           by_cases hy : y ∈ V * tsupport (f : G → ℂ)
-          · rw [indicator_of_mem hy, enorm_mul]
+          · rw [indicator_of_mem hy, eNorm_mul]
           · rw [indicator_of_notMem hy, hzero x hx y hy, hzero x₀ hx₀ y hy]
             simp
       _ ≤ A x * ∫⁻ y, (V * tsupport (f : G → ℂ)).indicator
@@ -150,7 +150,7 @@ private theorem continuous_rightConvolutionCLM (f : CompactlySupportedContinuous
   refine squeeze_zero' (Eventually.of_forall fun _ => norm_nonneg _) ?_ hlim
   filter_upwards [hV, hfin] with x hx hxf
   refine ContinuousLinearMap.opNorm_le_bound _ (Real.sqrt_nonneg _) fun φ => ?_
-  rw [ContinuousLinearMap.sub_apply, rconvCLM_apply, rconvCLM_apply]
+  rw [sub_apply, rconvCLM_apply, rconvCLM_apply]
   exact norm_le_of_enorm_sq_le (ne_top_of_lt hxf) (hkey x hx φ)
 
 end

@@ -284,7 +284,7 @@ private theorem lam_eq {lam : ℕ →* ℂ} (hlam : GoodNorm (sgOF σ) lam) {P :
   have h3 : ((Real.sqrt (Ideal.absNorm P.asIdeal) : ℝ) : ℂ) ^ 2 = (Ideal.absNorm P.asIdeal : ℂ) := by
     rw [← Complex.ofReal_pow, Real.sq_sqrt (Nat.cast_nonneg _), Complex.ofReal_natCast]
   unfold sgn
-  rw [if_neg hP]
+  rw [ite_eq_right hP]
   split_ifs with h
   · simpa using h
   · have h4 := sq_eq_sq_iff_eq_or_eq_neg.1 (h2.trans h3.symm)
@@ -329,7 +329,7 @@ private theorem wv_of_WE {z : (AEF F E)ˣ} (hz : z ∈ GlobalTheory.HeckeExtend.
 
 private theorem continuous_of_WE (κ : (AEF F E)ˣ →* Circle) (h : ∀ z ∈ GlobalTheory.HeckeExtend.WE F E 1, κ z = 1) :
     Continuous κ := by
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hWo : IsOpen (GlobalTheory.HeckeExtend.WE F E 1 : Set (AF F ⊗[F] E)ˣ) := by
     have ho := GlobalTheory.HeckeExtend.CE_isOpen F E 1 one_pos
     have hcv : Continuous fun z : (AF F ⊗[F] E)ˣ => (z : AF F ⊗[F] E) - 1 :=
@@ -371,18 +371,18 @@ theorem kapEx : KapEx := by
   · rw [hκ]
     refine finprod_invol (cj h) (cj_cj h) _ (hsup _) (fun P => ?_) (fun P hP hc => hP ?_)
     · by_cases hP : Fx σ P
-      · have a1 : sgn σ lam P = 1 := if_pos hP
-        have a2 : sgn σ lam (cj h P) = 1 := if_pos (cj_fx h hP)
+      · have a1 : sgn σ lam P = 1 := ite_eq_left hP
+        have a2 : sgn σ lam (cj h P) = 1 := ite_eq_left (cj_fx h hP)
         rw [a1, a2, _root_.one_zpow, _root_.one_zpow, one_mul]
       · have e : wv F E (cj h P) (idFF F E a) = wv F E P (idFF F E a) := by
           rw [wv_idFF (under_cj h P), ram_cj, wv_idFF rfl]
         rw [sgn_cj, e, ← _root_.mul_zpow, sgn_mul, _root_.one_zpow]
-    · have : sgn σ lam P = 1 := if_pos (fx_of_cj_eq h hc)
+    · have : sgn σ lam P = 1 := ite_eq_left (fx_of_cj_eq h hc)
       rw [this, _root_.one_zpow]
   · rw [hκ]
     have : ∀ Q, sgn σ lam Q ^ WithZero.log (wv F E Q z) = 1 := fun Q => by
       by_cases hQ : Fx σ Q
-      · have a1 : sgn σ lam Q = 1 := if_pos hQ
+      · have a1 : sgn σ lam Q = 1 := ite_eq_left hQ
         rw [a1, _root_.one_zpow]
       · simp [hz Q hQ]
     simp [this]
@@ -590,11 +590,11 @@ private theorem ev_algebraMap_pairA_eq_ite {σ : E →ₐ[F] E} (hcm : IsCMExt F
   rw [ev_fin]
   rcases hι (HeightOneSpectrum.under (𝓞 F) Q) with ⟨h1, h2⟩ | ⟨h1, h2⟩
   · have hf : ¬ Fx σ Q := fun hf => not_sq_of_fx hcm hd hθ hθ2 hb hf h2
-    rw [if_neg hf, h1, map_one]
+    rw [ite_eq_right hf, h1, map_one]
   · have hf : Fx σ Q := by
       by_contra hf
       exact h2 (sq_of_split hcm hd hθ hθ2 hb (isSplit_of_not_fx hcm hf))
-    rw [if_pos hf, h1, map_zero]
+    rw [ite_eq_left hf, h1, map_zero]
 
 private theorem exists_idele_eta_neg_one_at_place {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) {θ : E} {d : 𝓞 F}
     (hd : (d : F) ≠ 0) (hθ : σ θ = -θ) (hθ2 : θ * θ = algebraMap F E d)
@@ -608,8 +608,8 @@ private theorem exists_idele_eta_neg_one_at_place {σ : E →ₐ[F] E} (hcm : Is
     not_sq_of_fx hcm hd hθ hθ2 hb hP (sq_of_split hcm hd hθ hθ2 hb hs)
   have hunr : Formalism.MainNotions.SchurIrreducible.IsUnram (E := E) v := by
     intro P' _
-    haveI := hun
-    haveI := P'.isPrime
+    have := hun
+    have := P'.isPrime
     exact Ideal.ramificationIdx_eq_one_of_isUnramifiedAt
   set π := Formalism.L2.Host.atFin v (Formalism.L2.Host.unif v) with hπdef
   have hπ : Formalism.L2.Host.IsUnifAt v π := Formalism.L2.Host.unif_spec v
@@ -635,7 +635,7 @@ private theorem exists_idele_eta_neg_one_at_place {σ : E →ₐ[F] E} (hcm : Is
     erw [Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.map_tmul]
     rfl
   · obtain ⟨⟨η', hη'⟩, hall⟩ := h2
-    haveI : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
+    have : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
     rw [hall η' hη', pow_one, GlobalTheory.EtaSignReal.eq_signToCircle η' hη', MonoidHom.comp_apply,
       normSign_localIdele]
     have hnm := not_mem_normGroup_of_inert hcm.2.2.1 hns hunr hπ
@@ -758,7 +758,7 @@ private theorem eta_prod_all {σ : E →ₐ[F] E} {B : Base F E} (hcm : IsCMExt 
             simp only [map_sub, map_add (f := _), map_mul, map_one, ev_rI, evs]
             by_cases hQP : Q = P
             · subst hQP
-              rw [if_pos hP]
+              rw [ite_eq_left hP]
               ring
             · rw [hzQ Q hQP]
               split_ifs <;> ring
@@ -828,7 +828,7 @@ private theorem eta_prod_all {σ : E →ₐ[F] E} {B : Base F E} (hcm : IsCMExt 
   have hκg : κ (GlobalTheory.InertTrivial.proj (1 - rI F E - s) hg xA) = 1 := by
     apply hκ.ker
     intro Q hQ
-    rw [wv_apply, hev_proj, evg, if_neg hQ]
+    rw [wv_apply, hev_proj, evg, ite_eq_right hQ]
     simp
   have hκr : κ (GlobalTheory.InertTrivial.proj (rI F E) hrr xA) = 1 := by
     apply hκ.ker
@@ -912,7 +912,7 @@ private theorem idxHalf_half {X : Type} [AddCommGroup X] (γ : X → X → ℂ)
     rw [add_zero] at h
     exact mul_left_cancel₀ (nz 0 y) (h.symm.trans (mul_one _).symm)
   have hfinQ : Finite (↥Q ⧸ Q0.addSubgroupOf Q) := Nat.finite_of_card_ne_zero hfin
-  letI : Fintype (↥Q ⧸ Q0.addSubgroupOf Q) := Fintype.ofFinite _
+  let : Fintype (↥Q ⧸ Q0.addSubgroupOf Q) := Fintype.ofFinite _
   let f : ↥P → ↥Q →+ Additive ℂˣ := fun p =>
     { toFun := fun q => Additive.ofMul (Units.mk0 (γ p q) (nz p q))
       map_zero' := by
@@ -968,7 +968,7 @@ private theorem idxHalf_half {X : Type} [AddCommGroup X] (γ : X → X → ℂ)
     have h4 := congrArg (fun c : AddChar (↥Q ⧸ Q0.addSubgroupOf Q) ℂ => c ((⟨q, hq⟩ : ↥Q) : ↥Q ⧸ Q0.addSubgroupOf Q)) hp'
     rw [hχ, AddChar.one_apply] at h4
     exact h4
-  haveI : Finite (Additive (AddChar (↥Q ⧸ Q0.addSubgroupOf Q) ℂ)) :=
+  have : Finite (Additive (AddChar (↥Q ⧸ Q0.addSubgroupOf Q) ℂ)) :=
     inferInstanceAs (Finite (AddChar (↥Q ⧸ Q0.addSubgroupOf Q) ℂ))
   have hΦfin : Nat.card Φ.range ≤ Q0.relIndex Q := by
     calc Nat.card Φ.range ≤ Nat.card (Additive (AddChar (↥Q ⧸ Q0.addSubgroupOf Q) ℂ)) :=
@@ -977,7 +977,7 @@ private theorem idxHalf_half {X : Type} [AddCommGroup X] (γ : X → X → ℂ)
       _ = Fintype.card (AddChar (↥Q ⧸ Q0.addSubgroupOf Q) ℂ) := Nat.card_eq_fintype_card
       _ ≤ Fintype.card (↥Q ⧸ Q0.addSubgroupOf Q) := AddChar.card_addChar_le _ _
       _ = Q0.relIndex Q := Nat.card_eq_fintype_card.symm
-  haveI : Finite Φ.range := Finite.of_injective _ Subtype.val_injective
+  have : Finite Φ.range := Finite.of_injective _ Subtype.val_injective
   have hkpos : Φ.ker.index ≠ 0 := by
     rw [AddSubgroup.index_ker]
     exact Nat.card_pos.ne'

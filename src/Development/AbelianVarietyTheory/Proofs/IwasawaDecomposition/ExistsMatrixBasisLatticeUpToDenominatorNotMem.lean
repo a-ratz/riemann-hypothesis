@@ -125,7 +125,7 @@ theorem exists_matrix_up_to_notMem : ∀ (K : Type) [Field K] [NumberField K] (n
   obtain ⟨⟨s, hs⟩, b, hli, hb, hw⟩ := exists_basis_up_to_fintype (A := A) 𝔭.asIdeal.primeCompl L hfg hsp
   let g : Matrix n n K := Matrix.of fun i j => b j i
   have hcol : g.col = b := by funext j i; rfl
-  have hunit : IsUnit g := Matrix.linearIndependent_cols_iff_isUnit.1 (hcol ▸ hli)
+  have hunit : IsUnit g := linearIndependent_col_iff_isUnit.1 (hcol ▸ hli)
   have hdet : IsUnit g.det := (Matrix.isUnit_iff_isUnit_det _).1 hunit
   refine ⟨g, hdet, s, hs, ?_, ?_⟩
   · intro x hx i

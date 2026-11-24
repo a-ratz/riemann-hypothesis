@@ -81,8 +81,8 @@ theorem meets_iff_card {X P : Type} (cj : X → X) (hc : ∀ v, cj (cj v) = v) (
     · have h' : cj (w a) = cj (w b) := congrArg Subtype.val h
       exact congrArg _ (hinj (by rw [← hc (w a), h', hc]))
   have hS' : Nat.card S = 2 * m := hcard
-  haveI : Finite S := Nat.finite_of_card_ne_zero (by omega)
-  haveI : Finite P := Finite.of_injective _ (hf.comp Sum.inl_injective)
+  have : Finite S := Nat.finite_of_card_ne_zero (by omega)
+  have : Finite P := Finite.of_injective _ (hf.comp Sum.inl_injective)
   have hP : Nat.card (P ⊕ P) = Nat.card P + Nat.card P := Nat.card_sum
   constructor
   · intro h

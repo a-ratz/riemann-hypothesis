@@ -66,9 +66,9 @@ theorem _root_.GlobalTheory.GeomSurj.exists_lift_of_surjective {Ω : Type} [Fiel
     (ψ : P ⟶ A) [LocallyOfFiniteType ψ] [Surjective ψ] (x : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp Ω ⟶ A) :
     ∃ p : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp Ω ⟶ P, x = p ≫ ψ := by
   have hΩ : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp Ω = Spec (CommRingCat.of Ω) := rfl
-  haveI : JacobsonSpace (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp Ω) := by rw [hΩ]; infer_instance
-  haveI : Nonempty (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp Ω) := by rw [hΩ]; infer_instance
-  haveI : JacobsonSpace (pullback ψ x :) := LocallyOfFiniteType.jacobsonSpace (pullback.snd ψ x)
+  have : JacobsonSpace (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp Ω) := by rw [hΩ]; infer_instance
+  have : Nonempty (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp Ω) := by rw [hΩ]; infer_instance
+  have : JacobsonSpace (pullback ψ x :) := LocallyOfFiniteType.jacobsonSpace (pullback.snd ψ x)
   obtain ⟨q₀, -⟩ := (pullback.snd ψ x).surjective (Classical.arbitrary _)
   obtain ⟨q, hq⟩ : (closedPoints (pullback ψ x :)).Nonempty := by
     by_contra h
@@ -76,7 +76,7 @@ theorem _root_.GlobalTheory.GeomSurj.exists_lift_of_surjective {Ω : Type} [Fiel
     have hc := closure_closedPoints (X := (pullback ψ x :))
     rw [h, closure_empty] at hc
     exact (hc ▸ Set.mem_univ q₀ : q₀ ∈ (∅ : Set _))
-  haveI : LocallyOfFiniteType ((pullback ψ x).fromSpecResidueField q) :=
+  have : LocallyOfFiniteType ((pullback ψ x).fromSpecResidueField q) :=
     isClosed_singleton_iff_locallyOfFiniteType.mp hq
   let g : Spec ((pullback ψ x).residueField q) ⟶ Spec (CommRingCat.of Ω) :=
     (pullback ψ x).fromSpecResidueField q ≫ pullback.snd ψ x
@@ -84,9 +84,9 @@ theorem _root_.GlobalTheory.GeomSurj.exists_lift_of_surjective {Ω : Type} [Fiel
     rw [Spec.map_preimage]; dsimp only [g]; infer_instance
   have hft := HasRingHomProperty.Spec_iff.mp hg
   set f := Spec.preimage g with hf
-  letI : Algebra Ω ((pullback ψ x).residueField q) := f.hom.toAlgebra
-  haveI : Algebra.FiniteType Ω ((pullback ψ x).residueField q) := hft
-  haveI : Module.Finite Ω ((pullback ψ x).residueField q) :=
+  let : Algebra Ω ((pullback ψ x).residueField q) := f.hom.toAlgebra
+  have : Algebra.FiniteType Ω ((pullback ψ x).residueField q) := hft
+  have : Module.Finite Ω ((pullback ψ x).residueField q) :=
     finite_of_finite_type_of_isJacobsonRing _ _
   let φ : (pullback ψ x).residueField q →ₐ[Ω] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_

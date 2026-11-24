@@ -93,7 +93,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1
       heisO ψ S T x (comb ψ S T d f) = comb ψ S T d (heisO ψ S T x f) := by
     intro x hx f
     have h := (GlobalTheory.DisjComb.main D ψ hψ S T _ P' hd').1 (Finsupp.single x 1) d (fun u hu => by
-      rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hu
+      rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hu
       subst hu
       exact hx) hdc f
     simpa only [GlobalTheory.DisjComb.comb_single] using h

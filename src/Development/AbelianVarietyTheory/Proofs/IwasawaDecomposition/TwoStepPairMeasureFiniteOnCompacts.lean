@@ -68,9 +68,9 @@ theorem tsfin_compact_lift {G X : Type} [Group G] [TopologicalSpace G] [IsTopolo
     [LocallyCompactSpace X] [MulAction G X] [ContinuousSMul G X] (x : X)
     (hc : IsClosed (MulAction.orbit G x)) {K : Set X} (hK : IsCompact K) :
     ∃ C : Set G, IsCompact C ∧ ∀ y ∈ K, (∃ g : G, g • x = y) → ∃ g ∈ C, g • x = y := by
-  haveI : LocallyCompactSpace (MulAction.orbit G x) := hc.locallyCompactSpace
-  haveI : ContinuousSMul G (MulAction.orbit G x) :=
-    ⟨Continuous.subtype_mk (continuous_fst.smul (continuous_subtype_val.comp continuous_snd)) _⟩
+  have : LocallyCompactSpace (MulAction.orbit G x) := hc.locallyCompactSpace
+  have : ContinuousSMul G (MulAction.orbit G x) :=
+    ⟨Continuous.subtype_mk (continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)) _⟩
   let x₀ : MulAction.orbit G x := ⟨x, MulAction.mem_orbit_self x⟩
   have ho : IsOpenMap fun g : G => g • x₀ := isOpenMap_smul_of_sigmaCompact x₀
   have hK' : IsCompact (Subtype.val ⁻¹' K : Set (MulAction.orbit G x)) :=
@@ -118,7 +118,7 @@ theorem tsfin_q_smul (g : HA R σ J) (y : Fin 1 → Fin M → R ⊗[F] E) :
 theorem tsfin_q_rat [CharZero F] (h2 : Module.finrank F E = 2) (x : Fin 1 → Fin M → E) (a : F)
     (hx : hE σ J (x 0) (x 0) = algebraMap F E a) :
     qR R σ J (ratTup (F := F) R x 0) = algebraMap F R a := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
   have h : hR R σ J (ratTup (F := F) R x 0) (ratTup (F := F) R x 0) =
       (1 : R) ⊗ₜ[F] algebraMap F E a := by
     rw [← hx]
@@ -176,14 +176,14 @@ theorem twoStep_finite_on_compacts : ∀ (F E : Type) [Field F] [NumberField F] 
   have hs : IsSec R σ J x s := by
     intro y hy
     by_cases h : ∃ g ∈ C, g • ratTup (F := F) R x = y
-    · simp only [s, dif_pos h]
+    · simp only [s, dite_eq_left h]
       exact h.choose_spec.2
-    · simp only [s, dif_neg h, dif_pos hy]
+    · simp only [s, dite_eq_right h, dite_eq_left hy]
       exact hy.choose_spec
   have hsC : ∀ y ∈ K₁, (∃ g : HA R σ J, g • ratTup (F := F) R x = y) → s y ∈ C := by
     intro y hy hg
     have h := hCK y hy hg
-    simp only [s, dif_pos h]
+    simp only [s, dite_eq_left h]
     exact h.choose_spec.1
   have h1 := hT (K.indicator 1) (measurable_one.indicator hK.measurableSet) s hs
   rw [lintegral_indicator_one hK.measurableSet] at h1

@@ -219,7 +219,7 @@ theorem classes_and_weight : ∀ (D : D7) (X : HidaSetting D) (u : D.what₂.Wor
         exact key.2 hst c _ (F.cls0.stabI c s).2 hr
       rw [h1' s, h1' t]
     have : Nat.card ((D.mem u).C.stab 0 c) = 1 := by
-      haveI : Unique ((D.mem u).C.stab 0 c) := uniqueOfSubsingleton 1
+      have : Unique ((D.mem u).C.stab 0 c) := uniqueOfSubsingleton 1
       exact Nat.card_unique
     simp [Formalism.BasicNotions.ColumnChain.wt, this]
 

@@ -164,7 +164,7 @@ theorem local_bound (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ) (hψ : ∀ x, ‖�
   have hK : IsCompact ((fun z => z - x₀) '' tsupport g) :=
     hg.2.isCompact.image (continuous_id.sub continuous_const)
   obtain ⟨N, hN, hKN⟩ := exists_nat_mul_integral_of_isCompact F hK
-  haveI := discreteTopology_denomLattice F κ hN
+  have := discreteTopology_denomLattice F κ hN
   set k := Module.finrank ℤ (denomLattice F κ N) + 1
   set C := 2 ^ k * (Finset.Iic (k, 0)).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f
   set R := ‖archV F p₀.1‖ + 1
@@ -197,7 +197,7 @@ theorem local_bound (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ) (hψ : ∀ x, ‖�
       have h := hp.1
       calc ‖archV F p.1‖ = ‖(archV F p.1 - archV F p₀.1) + archV F p₀.1‖ := by rw [sub_add_cancel]
         _ ≤ ‖archV F p.1 - archV F p₀.1‖ + ‖archV F p₀.1‖ := norm_add_le _ _
-        _ ≤ R := by simp only [Set.mem_setOf_eq] at h; linarith
+        _ ≤ R := by simp only [Set.mem_ofPred_eq] at h; linarith
     have hn : ‖schr ψ p (pureA F f g) (fun i => algebraMap F (AdeleRing (𝓞 F) F) (ξ i))‖ =
         ‖f ((fun i => mixedEmbedding F (ξ i)) + archV F p.1)‖ *
           ‖g ((fun i => algebraMap F (FiniteAdeleRing (𝓞 F) F) (ξ i)) + finV F p.1)‖ := by
@@ -314,7 +314,7 @@ theorem continuous_thetaTr : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsSt
           co.e (incM D.host.F x) = (fun i => algebraMap D.host.F (AF D.host.F) (y i), fun i => algebraMap D.host.F (AF D.host.F) (z i))) →
         ∀ Φ ∈ GlobalTheory.WeilM.schA D.host.F κ, Continuous (GlobalTheory.WeilSchrodinger.thetaTr D.host.F co ψ Φ) := by
   intro D ψ hψ S T JA JB ξ _ _ κ _ co _ Φ hΦ
-  haveI : IsModuleTopology (AF D.host.F) (Matrix (Fin T.rank) (Fin S.rank) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E))) :=
+  have : IsModuleTopology (AF D.host.F) (Matrix (Fin T.rank) (Fin S.rank) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E))) :=
     inferInstanceAs (IsModuleTopology (AF D.host.F) (Fin T.rank → Fin S.rank → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E)))
   have hc : Continuous co.e := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap
   exact (schA_cont D.host.F ψ hψ.1.1 hψ.1.2.1 hΦ).2.comp hc

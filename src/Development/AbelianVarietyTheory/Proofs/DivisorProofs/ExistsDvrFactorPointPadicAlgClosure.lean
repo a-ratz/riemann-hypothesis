@@ -69,8 +69,8 @@ open GlobalTheory.Poinc.FibLat GlobalTheory.Poinc.Eq8
 theorem GlobalTheory.ValPt.exists_dvr_factor : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω) (p : ℕ) [Fact p.Prime] (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V], IsAdicComplete (maximalIdeal V) V → ∀ (κ : FractionRing V →+* PadicAlgCl p), (∀ x, ‖κ x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap V (FractionRing V))) → ∀ y : Sp (OO p) ⟶ M.Z, ∃ (V' : Type) (_ : CommRing V') (_ : IsDomain V') (_ : IsDiscreteValuationRing V') (fV : V →+* V') (fK : FractionRing V →+* FractionRing V') (κ' : FractionRing V' →+* PadicAlgCl p) (iV : V' →+* OO p) (ξ : Sp V' ⟶ M.Z), IsLocalHom fV ∧ (∀ x, fK (algebraMap V _ x) = algebraMap V' _ (fV x)) ∧ κ'.comp fK = κ ∧ IsLocalHom iV ∧ (∀ x, (iV x : PadicAlgCl p) = κ' (algebraMap V' _ x)) ∧ spMap iV ≫ ξ = y := by
   intro o Ω _ _ _ _ M p _ V _ _ _ hc κ hV y
 
-  haveI : CharZero (FractionRing V) := κ.charZero
-  haveI : CharZero V := (algebraMap V (FractionRing V)).charZero
+  have : CharZero (FractionRing V) := κ.charZero
+  have : CharZero V := (algebraMap V (FractionRing V)).charZero
   set x : M.Z := y (cPt p) with hxdef
   obtain ⟨φ, hφloc, hφ, -⟩ := GlobalTheory.ValPt.exists_unique_stalk_hom M.Z x p y rfl
   obtain ⟨U, hU, hxU, hft⟩ := GlobalTheory.RatModel.exists_affineOpen_finiteType_int o Ω M x
@@ -86,8 +86,8 @@ theorem GlobalTheory.ValPt.exists_dvr_factor : ∀ (o Ω : Type) [CommRing o] [F
   have hψK : ∀ s, ψ s ∈ κ'.range := by
     intro s
     let xU : U := ⟨x, hxU⟩
-    letI := M.Z.presheaf.algebra_section_stalk xU
-    haveI := hU.isLocalization_stalk xU
+    let := M.Z.presheaf.algebra_section_stalk xU
+    have := hU.isLocalization_stalk xU
     obtain ⟨⟨a, b⟩, hab⟩ := IsLocalization.surj (hU.primeIdealOf xU).asIdeal.primeCompl (show M.Z.presheaf.stalk (xU : M.Z) from s)
     have hb : IsUnit (algebraMap Γ(M.Z, U) (M.Z.presheaf.stalk (xU : M.Z)) (b : Γ(M.Z, U))) :=
       IsLocalization.map_units _ b

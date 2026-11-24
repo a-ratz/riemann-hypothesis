@@ -60,7 +60,7 @@ theorem _root_.GlobalTheory.Lin.zeros_eq_zeros_primitiveCharacter :
       (LFunction χ s = 0 ↔ LFunction χ.primitiveCharacter s = 0) ∧
         _root_.GlobalTheory.Lin.ord χ s = _root_.GlobalTheory.Lin.ord χ.primitiveCharacter s := by
   intro q _ χ s hs hχs
-  haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   set E : ℂ → ℂ := fun z => ∏ p ∈ q.primeFactors, (1 - χ.primitiveCharacter p * (p : ℂ) ^ (-z))
     with hE
   have hform : ∀ z, (χ.primitiveCharacter ≠ 1 ∨ z ≠ 1) →

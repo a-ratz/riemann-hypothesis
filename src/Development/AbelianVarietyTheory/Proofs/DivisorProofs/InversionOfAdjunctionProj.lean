@@ -138,14 +138,14 @@ namespace GlobalTheory.Discrepancy
 
 theorem exists_logRes_subsingleton_cohOn_one : GlobalTheory.Published.Principalisation → ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp ℂ) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (η : RatForms p n) (m : ℕ) (G : CartierDiv X) (Z : Closeds X), η ≠ 0 → 0 < m → Z ≠ ⊤ → ∃ (Y : Scheme.{0}) (_ : IsIntegral Y) (_ : IsLocallyNoetherian Y) (s : Y ⟶ X) (_ : IsDominant s) (K : CartierDiv Y) (B : Closeds Y) (F : CartierDiv Y) (N : CartierDiv X), IsLogRes p n η m G s K B ∧ (∀ y, s y ∈ Z → y ∈ B) ∧ (∀ z, F.mult z = (pullCart s G - m • K).mult z / (m : ℤ)) ∧ (∀ U : X.Opens, IsAffineOpen U → Subsingleton (cohOn (twist (GlobalTheory.structureModule Y) (toLB (pullCart s N - F))) (s ⁻¹ᵁ U) 1)) := by
   intro hPr X _ _ p n hp hn η m G Z hη hm hZ
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   obtain ⟨-, H, hH⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp
   have hpS : IsProjOver (strHom ℂ (X := X)) := by rwa [strHom_eq (f := p) fun _ => rfl]
   have hbig : IsBig ℂ H := IsAmpleLB.isBig ℂ X hpS H hH
   obtain ⟨Y, _, s, _, K, B, hlog, hZB, a, Fd, A, hA, hFd⟩ :=
     _root_.GlobalTheory.LogResBig.exists_logRes_smul_eq_ample_add_eff hPr ℂ X p n hp hn η m G hη Z hZ H hH.isLB hbig
-  haveI : SmoothOfRelativeDimension n (s ≫ p) := hlog.smooth
-  haveI : AlgebraicGeometry.IsNoetherian Y := isNoetherian_of_isProjOver hlog.proj
+  have : SmoothOfRelativeDimension n (s ≫ p) := hlog.smooth
+  have : AlgebraicGeometry.IsNoetherian Y := isNoetherian_of_isProjOver hlog.proj
   obtain ⟨F, hF, -⟩ := _root_.GlobalTheory.exists_cartierDiv_mult_ediv ℂ Y (s ≫ p) n hlog.proj (pullCart s G - m • K) m
 
   obtain ⟨J, hJ⟩ := eventually_atTop.1
@@ -291,7 +291,7 @@ theorem ratOn_apply (D : CartierDiv Y) {W : Y.Opens} (h : genericPoint Y ∈ W)
     (a : sectionsOn (twist (GlobalTheory.structureModule Y) (toLB D)) W) :
     ratOn D W a = fnOf _ (memInf h (gen_mem_chart (genChart D))) (coordFn a (genChart D)) /
       (chartEqn (genChart D) : Y.functionField) :=
-  dif_pos h
+  dite_eq_left h
 
 theorem ratOn_mul (D : CartierDiv Y) {W : Y.Opens} (h : genericPoint Y ∈ W)
     (a : sectionsOn (twist (GlobalTheory.structureModule Y) (toLB D)) W) (i : (toLB D).ι) :
@@ -560,11 +560,11 @@ theorem exists_lifted_fn : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoether
   have hpr : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp).1
   have hspr : IsProper (s ≫ p) :=
     ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hres.proj).1
-  haveI : IsProper s := IsProper.of_comp s p
-  haveI : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace (s ≫ p)
-  haveI := hres.smooth
-  haveI := SmoothOfRelativeDimension.smooth n (s ≫ p)
-  haveI : GlobalTheory.IsNormalScheme Y := isNormalScheme_of_smooth (s ≫ p)
+  have : IsProper s := IsProper.of_comp s p
+  have : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace (s ≫ p)
+  have := hres.smooth
+  have := SmoothOfRelativeDimension.smooth n (s ≫ p)
+  have : GlobalTheory.IsNormalScheme Y := isNormalScheme_of_smooth (s ≫ p)
 
   set T : Set Y := {v | v ≠ σ ∧ 0 < F.mult v} with hTdef
   have hT : T.Finite := F.finite_support_mult.subset fun v hv => hv.2.ne'
@@ -649,11 +649,11 @@ namespace GlobalTheory.Discrepancy
 
 theorem regAt_of_isIntegrallyClosed_stalk : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp ℂ), IsProjOver p → ∀ y : X, IsIntegrallyClosed (X.presheaf.stalk y) → ∀ f : X.functionField, (∀ z, z ⤳ y → ∀ E : DivOver p, E.IsAt z → f ∈ E.ring) → RegAt y f := by
   intro X _ _ p hp y hy f hf
-  haveI : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp).1
+  have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp).1
   obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (x := y) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨y, hx⟩⟩
-  letI := X.presheaf.algebra_section_stalk (⟨y, hx⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨y, hx⟩
+  have : Nonempty U := ⟨⟨y, hx⟩⟩
+  let := X.presheaf.algebra_section_stalk (⟨y, hx⟩ : U)
+  have := hU.isLocalization_stalk ⟨y, hx⟩
   refine (mem_range_algebraMap_iff_forall_height_eq_one (A := X.presheaf.stalk y) f).2
     fun q hq h1 => ?_
   let P : PrimeSpectrum Γ(X, U) := ⟨q.comap (algebraMap _ (X.presheaf.stalk y)), inferInstance⟩
@@ -673,29 +673,29 @@ theorem regAt_of_isIntegrallyClosed_stalk : ∀ (X : Scheme.{0}) [IsIntegral X] 
       hU.fromSpec.continuous
     rwa [hU.fromSpec_primeIdealOf ⟨y, hx⟩] at h
   clear_value z
-  haveI := hU.isLocalization_stalk z
+  have := hU.isLocalization_stalk z
   have hc : Order.coheight (z : X) = 1 := by
     have := IsLocalization.AtPrime.ringKrullDim_eq_height (hU.primeIdealOf z).asIdeal
       (X.presheaf.stalk (z : X))
     rw [ringKrullDim_stalk_eq_coheight, hP, hP1] at this
     exact_mod_cast this
 
-  haveI hT : IsLocalization.AtPrime (Localization.AtPrime q) P.asIdeal :=
+  have hT : IsLocalization.AtPrime (Localization.AtPrime q) P.asIdeal :=
     IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
       (hU.primeIdealOf ⟨y, hx⟩).asIdeal.primeCompl (Localization.AtPrime q) q
-  haveI : IsIntegrallyClosed (Localization.AtPrime q) :=
+  have : IsIntegrallyClosed (Localization.AtPrime q) :=
     isIntegrallyClosed_of_isLocalization _ q.primeCompl q.primeCompl_le_nonZeroDivisors
   have hs : (hU.primeIdealOf z).asIdeal.primeCompl = P.asIdeal.primeCompl := by
     ext s; rw [Ideal.mem_primeCompl_iff, Ideal.mem_primeCompl_iff, hP]
-  haveI hZ : IsLocalization P.asIdeal.primeCompl (X.presheaf.stalk (z : X)) := by
+  have hZ : IsLocalization P.asIdeal.primeCompl (X.presheaf.stalk (z : X)) := by
     rw [← hs]; exact hU.isLocalization_stalk z
   let e : X.presheaf.stalk (z : X) ≃+* Localization.AtPrime q :=
     (IsLocalization.algEquiv P.asIdeal.primeCompl (X.presheaf.stalk (z : X))
       (Localization.AtPrime q)).toRingEquiv
-  haveI : IsIntegrallyClosed (X.presheaf.stalk (z : X)) :=
+  have : IsIntegrallyClosed (X.presheaf.stalk (z : X)) :=
     ((IsNormalScheme.isDomain_and_isIntegrallyClosed_iff_of_ringEquiv e).2
       ⟨inferInstance, inferInstance⟩).2
-  haveI : IsDiscreteValuationRing (X.presheaf.stalk (z : X)) := by
+  have : IsDiscreteValuationRing (X.presheaf.stalk (z : X)) := by
     have h1 : Ring.KrullDimLE 1 (X.presheaf.stalk (z : X)) := krullDimLE_of_coheight_le hc.le
     have hf : ¬ IsField (X.presheaf.stalk (z : X)) := fun h => by
       have := ringKrullDim_eq_zero_of_isField h
@@ -808,12 +808,12 @@ theorem mult_lt_of_connected : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoe
       exact hvc (CartierDiv.coheight_eq_one_of_mult_ne_zero h0)
     rw [this]; exact hm'
   push_neg at hvc
-  haveI := hres.smooth
-  haveI : Smooth (s ≫ p) := SmoothOfRelativeDimension.smooth n _
-  haveI : GlobalTheory.IsNormalScheme Y := GlobalTheory.ModifSections.isNormalScheme_of_smooth (s ≫ p)
-  haveI : IsProper (s ≫ p) := ((isProjOver_iff_isProper_and_exists_isAmpleLB (s ≫ p)).1 hres.proj).1
-  haveI : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp).1
-  haveI : IsProper s := IsProper.of_comp s p
+  have := hres.smooth
+  have : Smooth (s ≫ p) := SmoothOfRelativeDimension.smooth n _
+  have : GlobalTheory.IsNormalScheme Y := GlobalTheory.ModifSections.isNormalScheme_of_smooth (s ≫ p)
+  have : IsProper (s ≫ p) := ((isProjOver_iff_isProper_and_exists_isAmpleLB (s ≫ p)).1 hres.proj).1
+  have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp).1
+  have : IsProper s := IsProper.of_comp s p
   have hbir := hres.bir
   have hσc : Order.coheight σ = 1 :=
     CartierDiv.coheight_eq_one_of_mult_ne_zero (by rw [hσ]; exact_mod_cast hm.ne')
@@ -976,10 +976,10 @@ end GlobalTheory.Discrepancy.CoeffPlaces
 open GlobalTheory.Discrepancy.CoeffPlaces in
 theorem GlobalTheory.Discrepancy.neg_one_lt_discrep_add_ord_of_logRes : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp ℂ) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (η : RatForms p n) (m : ℕ) (g f : X.functionFieldˣ) (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (s : Y ⟶ X) [IsDominant s] (K : CartierDiv Y) (B : Closeds Y) (y : X) (σ : Y), η ≠ 0 → 0 < m → IsLogRes p n η m (CartierDiv.principal g) s K B → (∀ y', s y' ∈ (CartierDiv.principal f).supp → y' ∈ B) → RegAt y (f : X.functionField) → Scheme.ord ((fnPull s f : Y.functionFieldˣ) : Y.functionField) σ = 1 → (pullCart s (CartierDiv.principal g) - m • K).mult σ = m → (∀ v : Y, v ≠ σ → s v ⤳ y → (pullCart s (CartierDiv.principal g) - m • K).mult v < m) → ∀ E : DivOver p, E.Through y → -1 < discrep E η m g + E.ord f := by
   intro X _ _ p n hproj _ η m g f Y _ _ s _ K B y σ hη hm hres hfB hfy hσ1 hσm hlt E hE
-  haveI : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hproj
-  haveI : IsProper (s ≫ p) := GlobalTheory.CommonModel.isProper_of_isProjOver hres.proj
-  haveI : IsProper s := IsProper.of_comp s p
-  haveI := hres.smooth
+  have : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hproj
+  have : IsProper (s ≫ p) := GlobalTheory.CommonModel.isProper_of_isProjOver hres.proj
+  have : IsProper s := IsProper.of_comp s p
+  have := hres.smooth
   obtain ⟨E', hE'E⟩ := _root_.GlobalTheory.Discrepancy.DivOver.exists_over ℂ X Y p s hres.bir E
   obtain ⟨y', rfl, hE'⟩ := _root_.GlobalTheory.Discrepancy.DivOver.exists_through_of_isProper ℂ X Y p s hres.bir inferInstance E' E hE'E _ hE
   have hη' : EtaleKlt.ratPull p s n η ≠ 0 := fun h0 =>
@@ -1204,7 +1204,7 @@ theorem ord_algebraMap_of_isUnit (x : X) (g : X.presheaf.stalk x) (hg : IsUnit g
   · have hne : algebraMap (X.presheaf.stalk x) X.functionField g ≠ 0 :=
       (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 hg.ne_zero
     rw [Scheme.ord_eq_iff hx hne]
-    haveI : Ring.KrullDimLE 1 (X.presheaf.stalk x) := krullDimLE_of_coheight_le hx.le
+    have : Ring.KrullDimLE 1 (X.presheaf.stalk x) := krullDimLE_of_coheight_le hx.le
     change Ring.ordFrac _ _ = _
     rw [Ring.ordFrac_of_isUnit hg]
     rfl
@@ -1213,7 +1213,7 @@ theorem ord_algebraMap_of_isUnit (x : X) (g : X.presheaf.stalk x) (hg : IsUnit g
 theorem ord_algebraMap_ne_zero (x : X) (hx : Order.coheight x = 1) (g : X.presheaf.stalk x)
     (hg0 : g ≠ 0) (hg : g ∈ maximalIdeal (X.presheaf.stalk x)) :
     Scheme.ord (algebraMap (X.presheaf.stalk x) X.functionField g) x ≠ 0 := by
-  haveI : Ring.KrullDimLE 1 (X.presheaf.stalk x) := krullDimLE_of_coheight_le hx.le
+  have : Ring.KrullDimLE 1 (X.presheaf.stalk x) := krullDimLE_of_coheight_le hx.le
   have hne : algebraMap (X.presheaf.stalk x) X.functionField g ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 hg0
   intro h0
@@ -1240,7 +1240,7 @@ theorem exists_meet_point : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoethe
   obtain ⟨j', hj'J, rfl⟩ := (hc.mem v hvw hv).1 hvB
   obtain ⟨j, hjJ, rfl⟩ := (hc.mem σ hσw hσ).1 hσB
   have hjj : j ≠ j' := fun h => hvσ (by rw [h])
-  haveI : IsRegularLocalRing (Y.presheaf.stalk w) := (hB w).1
+  have : IsRegularLocalRing (Y.presheaf.stalk w) := (hB w).1
   have hUmem : ∀ y : Y, y ⤳ w → y ∈ U := fun y hy => hy.mem_open U.isOpen hwU
   have hgerm : ∀ (y : Y) (hy : y ⤳ w) (i : Fin n),
       (Y.presheaf.stalkSpecializes hy).hom (Y.presheaf.germ U w hwU (z i)) =
@@ -1439,9 +1439,9 @@ theorem GlobalTheory.FieldPair.mult_lt_of_adjKlt : ∀ (X : Scheme.{0}) [IsInteg
   by_cases hv0 : (pullCart s (CartierDiv.principal g) - m • K).mult v ≤ 0
   · exact lt_of_le_of_lt hv0 (by exact_mod_cast hm)
   have hv0' : (pullCart s (CartierDiv.principal g) - m • K).mult v ≠ 0 := by omega
-  haveI := hres.smooth
-  haveI := SmoothOfRelativeDimension.smooth n (s ≫ p)
-  haveI : GlobalTheory.IsNormalScheme Y := Discrepancy.CanonIso.isNormalScheme_of_smooth' (s ≫ p)
+  have := hres.smooth
+  have := SmoothOfRelativeDimension.smooth n (s ≫ p)
+  have : GlobalTheory.IsNormalScheme Y := Discrepancy.CanonIso.isNormalScheme_of_smooth' (s ≫ p)
   have hmσ0 : (pullCart s (CartierDiv.principal g) - m • K).mult σ ≠ 0 := by
     rw [hmσ]; exact_mod_cast hm.ne'
   have hvB : v ∈ B := hres.supp (CartierDiv.mem_supp_of_mult_ne_zero hv0')
@@ -1492,7 +1492,7 @@ theorem GlobalTheory.FieldPair.mult_lt_of_adjKlt : ∀ (X : Scheme.{0}) [IsInteg
   · have h1 : Ideal.span {stalkEquiv w' t, stalkEquiv w' u} = (Ideal.span {t, u}).map (stalkEquiv w') := by
       rw [Ideal.map_span]; simp [Set.image_insert_eq]
     rw [h1, hspan]
-    haveI := hQ.isLocalRing
+    have := hQ.isLocalRing
     exact map_maximalIdeal_equiv _
   · exact (ringKrullDim_eq_of_ringEquiv (stalkEquiv w')).symm.trans hdim
   · intro P hP h1 h2
@@ -1531,15 +1531,15 @@ theorem inversion_of_adjunction_proj : GlobalTheory.Published.Principalisation �
   obtain ⟨Y, hYi, hYn, s, hsd, K, B, hres, hB, hconn⟩ :=
     _root_.GlobalTheory.connectedness_at_normal_point hP X p n hproj hdim (dForm (Cartier.constFn p) x) m (CartierDiv.principal g)
       (CartierDiv.principal f).supp hη hm (CartierDiv.supp_ne_top _)
-  haveI := hYi; haveI := hYn; haveI := hsd
+  have := hYi; have := hYn; have := hsd
   obtain ⟨z, hzy, hSz⟩ := (isPrimeOf_placeEquiv S y).1 hS
   have hbir := hres.bir
-  haveI : IsProper p := CommonModel.isProper_of_isProjOver hproj
-  haveI : IsProper (s ≫ p) := CommonModel.isProper_of_isProjOver hres.proj
-  haveI : IsProper s := IsProper.of_comp s p
+  have : IsProper p := CommonModel.isProper_of_isProjOver hproj
+  have : IsProper (s ≫ p) := CommonModel.isProper_of_isProjOver hres.proj
+  have : IsProper s := IsProper.of_comp s p
   obtain ⟨S', hS'⟩ := DivOver.exists_over ℂ X Y p s hbir S
   obtain ⟨σ, hσz, hS'σ⟩ := DivOver.isAt_lift ℂ X Y p s hbir inferInstance S' S hS' z hSz
-  haveI := hres.smooth
+  have := hres.smooth
   have hη' : EtaleKlt.ratPull p s n (dForm (Cartier.constFn p) x) ≠ 0 := fun h0 =>
     hη ((EtaleKlt.ratPull_bijective_of_birational ℂ X Y p s hbir n).1
       (h0.trans (map_zero _).symm))

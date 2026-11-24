@@ -197,7 +197,7 @@ theorem nontrivial_Ep (A : Places F E sig) (p : HeightOneSpectrum (𝓞 F)) : No
 
 theorem sig_sig (A : Places F E sig) (y : E) : sig (sig y) = y := by
   obtain ⟨p⟩ := nonempty_place' (F := F)
-  haveI := nontrivial_Ep A p
+  have := nontrivial_Ep A p
   apply (A.loc p).ιE.injective
   rw [← (A.loc p).cj_ιE, ← (A.loc p).cj_ιE, ← A.L_cj, (A.L p).cj_cj]
 
@@ -245,7 +245,7 @@ theorem int_of_loc (A : Places F E sig) (t : F)
     (h : ∀ p, (A.loc p).ιE (algebraMap F E t) ∈ (A.L p).O) : t ∈ (algebraMap (𝓞 F) F).range := by
   apply HeightOneSpectrum.mem_integers_of_valuation_le_one
   intro p
-  haveI := nontrivial_Ep A p
+  have := nontrivial_Ep A p
   have h1 := h p
   rw [(A.loc p).compat, (A.L p).O_def] at h1
   have h2 : IsIntegral 𝒪[(A.loc p).Fp] ((A.loc p).ιF t) :=
@@ -586,7 +586,7 @@ theorem natCast_isUnit_ae {F E : Type} [Field F] [NumberField F] [Field E] [Numb
   have hI : Ideal.span {((N : 𝓞 F))} ≠ ⊥ := by simpa using hx
   refine (Ideal.finite_factors hI).subset ?_
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   rw [Ideal.dvd_span_singleton]
   by_contra hmem
   apply hp
@@ -602,7 +602,7 @@ theorem natCast_isUnit_ae {F E : Type} [Field F] [NumberField F] [Field E] [Numb
   have hmem1 : (N : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp] := by
     rw [Valuation.mem_integer_iff]; exact (Valuation.vle_one_iff (v := valuation _)).1 h1
   have hN0 : (N : (A.loc p).Fp) ≠ 0 := by
-    haveI := (A.loc p).char0; exact Nat.cast_ne_zero.2 hN
+    have := (A.loc p).char0; exact Nat.cast_ne_zero.2 hN
   have hmem2 : (N : (A.loc p).Fp)⁻¹ ∈ 𝒪[(A.loc p).Fp] := by
     rw [Valuation.mem_integer_iff, map_inv₀, inv_le_one₀]
     · have := (Valuation.vle_iff_le (v := valuation _)).1 h2; rwa [map_one] at this
@@ -664,10 +664,10 @@ theorem glue : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
         simpa [Places.bc] using this
     refine ⟨Γ, hL, fun p => le_antisymm ?_ ?_⟩
     · exact Submodule.span_le.2 (by rintro _ ⟨x, hx, rfl⟩; exact hx p)
-    · haveI := (A.loc p).char0
+    · have := (A.loc p).char0
       refine _root_.GlobalTheory.HL.Glue.local_le_lat_of_approx A n Λ Γ N hΓ (fun q => (hb q).1) ?_ p
       have hc : ∀ q, (N : (A.loc q).Fp) ≠ 0 := fun q => by
-        haveI := (A.loc q).char0; exact_mod_cast hN
+        have := (A.loc q).char0; exact_mod_cast hN
       have happN := (_root_.GlobalTheory.HL.StrongApprox.strong_approx_additive A (fun q => Units.mk0 _ (hc q))
         (by simpa using _root_.GlobalTheory.HL.Glue.natCast_isUnit_ae A N hN)).2.1
       intro y hy

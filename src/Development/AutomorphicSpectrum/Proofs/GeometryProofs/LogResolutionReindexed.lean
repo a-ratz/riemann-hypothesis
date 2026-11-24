@@ -220,7 +220,7 @@ theorem isMultiHomog_rename' {κ : K₀ → K} {v : (Σ k, J₀ k) → (Σ k, J 
       _ = ∑ i, m0 ⟨k, i⟩ := hb.sum_comp fun i => m0 ⟨k, i⟩
   · rw [Function.extend_apply' _ _ _ (by simpa using hk)]
     refine Finset.sum_eq_zero fun i' _ => ?_
-    refine Finsupp.mapDomain_notin_range _ _ ?_
+    refine Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨p, hp⟩
     exact hk ⟨p.1, by rw [← hv.2.2.1 p, hp]⟩
 
@@ -305,8 +305,8 @@ theorem exists_local_section {Ω₀ Ω : Type} [Field Ω₀] [Field Ω] [CharZer
             ∀ z'' ∈ V' ∩ mcPts (mCoordIdeal y), ∀ w ∈ V ∩ mcPts (mCoordIdeal y₀),
               SameOrbit (fun p => z'' (blkV bk bx p)) w → SameOrbit (f w) z'' := by
   have halg : ∀ α : Ω, (letI := i.toAlgebra; IsAlgebraic Ω₀ α) := by
-    letI := i.toAlgebra
-    haveI : Module.Finite Ω₀ Ω := Module.finite_of_finrank_pos (by rw [hfin]; exact hd)
+    let := i.toAlgebra
+    have : Module.Finite Ω₀ Ω := Module.finite_of_finrank_pos (by rw [hfin]; exact hd)
     exact fun α => Algebra.IsAlgebraic.isAlgebraic α
   have hdata := fun q r : Σ k, J k => _root_.GlobalTheory.CompanionTheory.Ar.AlgPoly.algebraic_form_poly K₀ J₀ Ω₀ Ω y₀ i (y q / y r) hB₀ (halg _)
   choose n c a G b hc hG hGn hsum hsimple using hdata
@@ -343,7 +343,7 @@ theorem exists_local_section {Ω₀ Ω : Type} [Field Ω₀] [Field Ω] [CharZer
   choose V W g hVo hV hWo hW hga huniq using hroot
   refine ⟨⋂ q, V q, {z'' | ∀ q : Σ k, J k, z'' (r q.1) ≠ 0 ∧ z'' q / z'' (r q.1) ∈ W q}, fun w q => g q w,
     isOpen_iInter_of_finite hVo, Set.mem_iInter.2 hV, ?_, fun q => ⟨hrr _, hW q⟩, ?_, ?_⟩
-  · rw [Set.setOf_forall]
+  · rw [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun q => ?_
     have hc1 : Continuous fun z'' : (Σ k, J k) → ℂ => z'' (r q.1) := continuous_apply _
     have hc2 : Continuous fun z'' : (Σ k, J k) → ℂ => z'' q := continuous_apply _

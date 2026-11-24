@@ -62,8 +62,8 @@ theorem pureA_fixed_fin :
         ∀ m ∈ M, ∀ f : (κ → mixedEmbedding.mixedSpace F) → ℂ,
           GlobalTheory.WeilM.schr ψ (GlobalTheory.WeilAdm.finE2 F m) (GlobalTheory.WeilM.pureA F f g) = GlobalTheory.WeilM.pureA F f g := by
   intro F _ _ ψ hψ κ _ g hg
-  haveI := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := F)
-  haveI : NonarchimedeanAddGroup (κ → FiniteAdeleRing (𝓞 F) F) := GlobalTheory.HeisSchA.nonarch_pi
+  have := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := F)
+  have : NonarchimedeanAddGroup (κ → FiniteAdeleRing (𝓞 F) F) := GlobalTheory.HeisSchA.nonarch_pi
   let χ := GlobalTheory.HeisSchA.finChar ψ
   have hL : IsOpen {a | χ a = 1} := (GlobalTheory.HeisSchA.finChar_isLocallyConstant ψ hψ).isOpen_fiber 1
   let c : FiniteAdeleRing (𝓞 F) F := (⅟(2 : AdeleRing (𝓞 F) F)).2

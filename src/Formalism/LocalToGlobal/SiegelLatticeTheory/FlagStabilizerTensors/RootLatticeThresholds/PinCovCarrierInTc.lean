@@ -79,7 +79,7 @@ theorem pinCov_carrierInTc (u u' : D.what₂.Word) (e : InfinitePlace D.host.E �
   intro v γ μRv ν hH
   obtain ⟨j, rfl⟩ := (tauE X e).surjective v
   have key : ∀ (j' : Fin (nfE D)) (h' : X.pl.symm (e (plE D j')) = tauE X e j),
-      (haveI := FiniteDimensional.complete ℂ (X.Vloc u (tauE X e j));
+      (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u (tauE X e j));
         Jv ν (X.Wloc u (tauE X e j)) (X.Wloc u' (tauE X e j)) γ) =
         ((castLoc X u h').toContinuousLinearEquiv.toContinuousLinearMap :
             X.Vloc u (tauE X e j') →L[ℂ] X.Vloc u (tauE X e j)).comp

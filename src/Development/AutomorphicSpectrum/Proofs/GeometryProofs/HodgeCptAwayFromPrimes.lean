@@ -402,8 +402,8 @@ theorem lattices_of_char_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   intro E _ _ _ H D l Xo c O _ β Y S Ω _ K _ J _ y 𝔐 hβ q hq
   classical
   obtain ⟨-, -, hchar, hinj, -, htop, hind, hreg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.basic E H D l Xo c O β Y S Ω K J y 𝔐 hβ
-  haveI := hchar
-  haveI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
+  have := hchar
+  have : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
   have hnat := unitAt_natCast (q := q) hq
   have hV : ∀ s, 𝔐.V s q = 𝔐.dR s q := fun s =>
     Lat.patch_of_not S _ _ fun p hp => hq p (𝔐.S_prime p hp)

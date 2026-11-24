@@ -75,7 +75,7 @@ theorem cup_identity {R : Type*} [CommRing R]
 
 theorem exists_val_add {R : Type*} [CommRing R] (p n : ℕ) (hp : p ≠ 0) (u v : ZMod (p ^ n)) :
     ∃ t : ℕ, (((u + v).val : ℕ) : R) = (u.val : R) + (v.val : R) - (p : R) ^ n * (t : R) := by
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero n hp⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero n hp⟩
   refine ⟨(u.val + v.val) / p ^ n, ?_⟩
   have h := Nat.mod_add_div (u.val + v.val) (p ^ n)
   rw [← ZMod.val_add] at h

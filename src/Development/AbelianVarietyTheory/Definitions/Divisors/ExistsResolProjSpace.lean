@@ -429,7 +429,7 @@ theorem isFull_latIf : IsFull (latIf ψ hψ q M) := by
     refine ⟨f.isFull.fg.map _, ?_⟩
     refine (Submodule.span_image e.symm.toLinearMap).trans ?_
     rw [f.isFull.span, Submodule.map_top, LinearEquiv.range]
-  · have : Subsingleton (rangeIf ψ q) := by rw [rangeIf, if_neg hq]; infer_instance
+  · have : Subsingleton (rangeIf ψ q) := by rw [rangeIf, ite_eq_right hq]; infer_instance
     exact ⟨by rw [Subsingleton.elim (latIf ψ hψ q M) ⊥]; exact Submodule.fg_bot, Subsingleton.elim _ _⟩
 
 theorem exists_famIf : ∃ g : HermFam F (rangeIf ψ q), g.IsConjInv ∧ (q → ∀ σ x, g.nrm σ x = Nm σ (invIf ψ hψ q x)) := by

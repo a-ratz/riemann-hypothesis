@@ -1158,7 +1158,7 @@ theorem lam_top (G : GridData L sc) (M : DSModel (G.V (.core D.R.m)) (Node.par D
     rw [← hd, descEnum_cast _ _ hE hn a]
     show _ = ((La D sc.cGap τ).w (Fin.cast hn a) : ℚ) + _
     have hc : ((G.V (.core D.R.m)).rank : ℚ) = (rankP D D.R.m : ℚ) := by exact_mod_cast hn
-    rw [hw, GlobalTheory.SignedHC.highestWeight, rhoVec, Fin.coe_cast, hc]
+    rw [hw, GlobalTheory.SignedHC.highestWeight, rhoVec, Fin.val_cast, hc]
     ring
   rw [hq, e1]
   push_cast
@@ -1326,7 +1326,7 @@ variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
 
 theorem coefPlus_is (G : GridData L sc) (θ : InfFam D) (hθ : IsInfFam θ) : (coefPlus G θ).Is := by
   obtain ⟨hc, hs⟩ := GlobalTheory.CoefModel.realGL_laws hθ (Xp G)
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig (Xp G).gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig (Xp G).gram
   refine GlobalTheory.CoefModel.coefOf_is _ _ _ (fun h hh => ?_) (fun h τ => ?_) (fun τ => ?_) (fun g hg => ?_)
   · have : GlobalTheory.CoefModel.realGL θ (Xp G) h = 1 := funext fun τ => by
       show Formalism.UG.bc (θ τ) (infHom (Xp G) h) = 1

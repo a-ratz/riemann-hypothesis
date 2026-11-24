@@ -471,7 +471,7 @@ theorem pairHerm_iota (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) {a : ℕ
 
     simp only [BR, hR, Formalism.UG.hform, JR, Matrix.map_apply, Matrix.one_apply, apply_ite,
     map_one, map_zero, mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, map_sum]
+    Finset.mem_univ, ite_true, map_sum]
   rw [hBR]
   simp only [pairHerm, iota, add_mul, Finset.sum_add_distrib, map_add (f := _)]
   simp only [← hTm]
@@ -499,7 +499,7 @@ theorem dualAt_H [Algebra.IsSeparable F E] (σ : E →ₐ[F] E) (hσ : ∀ x, σ
   · rw [latH_eq]
     exact hcl.isCompact_preimage hKc
   · rw [latH_eq]
-    exact hKo.preimage continuous_subtype_val
+    exact hKo.preimage continuous_subtypeVal
   · intro s hs S hS
     have hmem : s • (S : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) ∈ HermR (Fv F v) σ a := by
       intro p q

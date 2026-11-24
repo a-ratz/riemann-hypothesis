@@ -53,7 +53,7 @@ theorem b_ne_bot (D : D7) : D.host.𝔟 ≠ ⊥ := by
   exact bot_ne_top h2
 
 theorem one_mem_inverse_halfDifferent (D : D7) : (1 : D.host.E) ∈ D.host.AA0 :=
-  FractionalIdeal.one_mem_inv_coe_ideal (b_ne_bot D)
+  FractionalIdeal.one_mem_inv_coeIdeal (b_ne_bot D)
 
 theorem normK_mem_AA (D : D7) : ((Ideal.absNorm D.host.ccK : ℕ) : D.host.E) ∈ D.host.AA := by
   have hN : ((Ideal.absNorm D.host.ccK : ℕ) : D.host.E) ∈

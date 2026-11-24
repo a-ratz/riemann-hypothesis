@@ -79,8 +79,8 @@ theorem IsSmoothFun.contDiff_comp {f : G → F} (hf : h.IsSmoothFun f) (g₀ : G
     [NormedAddCommGroup V] [NormedSpace ℝ V] {φ₁ φ₂ φ₃ : V → 𝔤} (h₁ : ContDiff ℝ ∞ φ₁)
     (h₂ : ContDiff ℝ ∞ φ₂) (h₃ : ContDiff ℝ ∞ φ₃) :
     ContDiff ℝ ∞ (fun p => f (g₀ * h.expG (φ₁ p) * h.expG (φ₂ p) * h.expG (φ₃ p))) := by
-  letI := h.chartedSpace
-  haveI := h.lieGroup ∞
+  let := h.chartedSpace
+  have := h.lieGroup ∞
   have hm : ContMDiff 𝓘(ℝ, V) 𝓘(ℝ, 𝔤) ∞
       (fun p => g₀ * h.expG (φ₁ p) * h.expG (φ₂ p) * h.expG (φ₃ p)) :=
     ((contMDiff_const.mul (h.contMDiff_expG_comp h₁)).mul (h.contMDiff_expG_comp h₂)).mul
@@ -102,8 +102,8 @@ theorem hasDerivAt_rightDeriv {f : G → F} (hf : h.IsSmoothFun f) (X : 𝔤) (g
 
 theorem isSmoothFun_rightTranslate {f : G → F} (hf : h.IsSmoothFun f) (a : G) :
     h.IsSmoothFun (rightTranslate a f) := by
-  letI := h.chartedSpace
-  haveI := h.lieGroup ∞
+  let := h.chartedSpace
+  have := h.lieGroup ∞
   exact ContMDiff.comp (I' := 𝓘(ℝ, 𝔤)) hf (contMDiff_id.mul contMDiff_const)
 
 theorem isSmoothFun_rightDeriv {f : G → F} (hf : h.IsSmoothFun f) (X : 𝔤) :
@@ -221,7 +221,7 @@ theorem rightDeriv_bracket {f : G → F} (hf : h.IsSmoothFun f) (X Y : 𝔤) :
     (h.hasDerivAt_Ad_expG X Y)
   have e := hg.unique (hg'.congr_of_eventuallyEq (Eventually.of_forall fun s => ?_))
   · change D2 (er + eu) et = h.rightDeriv (h.bracket X Y) f g at e
-    rw [Pi.sub_apply, ← e, map_add (f := _), ContinuousLinearMap.add_apply, db, hsymm, dd, sub_eq_add_neg]
+    rw [Pi.sub_apply, ← e, map_add (f := _), add_apply, db, hsymm, dd, sub_eq_add_neg]
   · simp only [zero_add, Function.comp_apply]
     rw [diag]
 

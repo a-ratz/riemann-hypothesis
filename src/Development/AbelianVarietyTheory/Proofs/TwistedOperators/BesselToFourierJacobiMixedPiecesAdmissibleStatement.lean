@@ -218,7 +218,7 @@ theorem mxAt_mul_right {P : GlobalTheory.FinPl.Pl D → Prop} {k m n : ℕ} {x :
 theorem finLat_comap_mul {k n k' m' : ℕ} {A : AddSubgroup (Mx D k' m')} (hA : FinLat A) (f : Mx D k n →+ Mx D k' m')
     (M : Mx D k' k) (N : Mx D n m') (M' : Mx D k k') (N' : Mx D m' n) (hf : ∀ x : Mx D k n, f x = M ⬝ x ⬝ N)
     (hM : M' ⬝ M = 1) (hN : N ⬝ N' = 1) : FinLat (A.comap f) := by
-  haveI : T2Space (Mx D k' m') := (lattice_Mx D k' m').2.2.2.1
+  have : T2Space (Mx D k' m') := (lattice_Mx D k' m').2.2.2.1
   have hfc : Continuous f := by
     have : (f : Mx D k n → Mx D k' m') = fun x : Mx D k n => M ⬝ x ⬝ N := funext hf
     rw [this]; exact (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
@@ -559,7 +559,7 @@ theorem exists_nsmul_mem {K : Type} [Field K] [NumberField K] (I : FractionalIde
 
 private theorem selfDual_full (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hΛ : IsSelfDualC V Λ) : Submodule.IsFullLattice D.host.E Λ := by
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr
@@ -816,12 +816,12 @@ theorem isClosed_mxAt (m n : ℕ) : IsClosed {a : Mx D m n | MxAt (fun _ => True
   have e : {a : Mx D m n | MxAt (fun _ => True) a} =
       ⋂ i, ⋂ j, {a : Mx D m n | infPart D (a i j) = 0} := by
     ext a
-    simp only [Set.mem_setOf_eq, MxAt, mem_idAt_true, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, MxAt, mem_idAt_true, Set.mem_iInter]
   rw [e]
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field D.host.F
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field D.host.F
   obtain ⟨eh⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (Ainf D.host.F)
-  haveI : T2Space (Ainf D.host.F ⊗[D.host.F] D.host.E) := eh.isEmbedding.t2Space
+  have : T2Space (Ainf D.host.F ⊗[D.host.F] D.host.E) := eh.isEmbedding.t2Space
   exact isClosed_iInter fun i => isClosed_iInter fun j =>
     isClosed_eq ((GlobalTheory.Member.continuous_infPart D).comp ((continuous_apply j).comp (continuous_apply i))) continuous_const
 
@@ -921,7 +921,7 @@ theorem ann_open (hψ : Continuous ψ) (hψ1 : ∀ x, ‖ψ x‖ = 1) (C : Set (
     rintro ⟨a, b⟩ ⟨-, hb⟩
     rw [Set.mem_singleton_iff] at hb
     subst hb
-    simp only [Set.mem_setOf_eq, hΦdef, map_zero]
+    simp only [Set.mem_ofPred_eq, hΦdef, map_zero]
     rw [show symplO V W (dV.extX W a) 0 = 0 from map_zero (symplR V W (dV.extX W a)), AddChar.map_zero_eq_one, sub_self,
       norm_zero]
     exact one_pos
@@ -935,7 +935,7 @@ theorem ann_open (hψ : Continuous ψ) (hψ1 : ∀ x, ‖ψ x‖ = 1) (C : Set (
   refine eq_one_of_pow_near _ (hψ1 _) fun n => ?_
   have hn : (n • a, a') ∈ u ×ˢ v := ⟨hCu (hΓC _ (by rw [map_nsmul]; exact nsmul_mem ha n)), ha'⟩
   have := huv hn
-  simp only [Set.mem_setOf_eq, hpow] at this
+  simp only [Set.mem_ofPred_eq, hpow] at this
   exact this
 
 
@@ -1342,7 +1342,7 @@ theorem mxAt_mul_right {m n k : ℕ} {a : Mx D m n} (ha : MxAt (fun _ => True) a
 
 theorem finLat_comap_extX {V V₀ W : HSp D} {ρ : ℕ} (d : GlobalTheory.MixModel.HypDec V V₀ ρ) {Γ : AddSubgroup (WO V W)}
     (hΓ : FinLat Γ) : FinLat (Γ.comap (d.extX W)) := by
-  haveI : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
+  have : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
   have hc : Continuous (d.extX W) := by
     show Continuous fun a : Mx D W.rank ρ => a ⬝ d.pX
     exact continuous_id.matrix_mul continuous_const

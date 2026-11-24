@@ -60,11 +60,11 @@ theorem UpperTheory.V.Odd.actFacts :
     have h1 := hρ b σ hbσ x
     have h2 := hσ x
     simpa using h1.symm.trans h2
-  haveI hc : CharZero Ω := charZero_of_injective_algebraMap inj
-  haveI : IsScalarTower ℚ E Ω := IsScalarTower.of_algebraMap_eq (fun x => by simp)
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
+  have hc : CharZero Ω := charZero_of_injective_algebraMap inj
+  have : IsScalarTower ℚ E Ω := IsScalarTower.of_algebraMap_eq (fun x => by simp)
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
   have key : ∀ φ : E →ₐ[ℚ] Ω, ∃ σ : Ω ≃+* Ω, ∀ x : E, σ (algebraMap E Ω x) = φ x := by
     intro φ
     refine ⟨((Algebra.IsAlgebraic.algEquivEquivAlgHom ℚ Ω).symm (φ.liftNormal Ω)).toRingEquiv,
@@ -88,7 +88,7 @@ theorem UpperTheory.V.Odd.actFacts :
     · calc Module.finrank ℚ E = Nat.card (E →ₐ[ℚ] Ω) := by
             rw [Nat.card_eq_fintype_card, AlgHom.card]
         _ ≤ Nat.card Gal(E/ℚ) := Nat.card_le_card_of_surjective f hf
-  haveI : IsGalois ℚ E := IsGalois.of_card_aut_eq_finrank ℚ E hcard
+  have : IsGalois ℚ E := IsGalois.of_card_aut_eq_finrank ℚ E hcard
   have hq : Nat.card (Gq ρ) = Module.finrank ℚ E := by
     rw [← hcard]
     exact Nat.card_congr (QuotientGroup.quotientKerEquivOfSurjective ρ hsurj).toEquiv

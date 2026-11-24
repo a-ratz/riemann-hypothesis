@@ -335,13 +335,13 @@ theorem exists_isReb : ∀ (p : ℕ) [Fact p.Prime], ∀ (Ω : Type) [Field Ω] 
   let e : AdjoinRoot (fY p n) ≃+* O0 p := RingEquiv.ofBijective (phiInv p n) (phiInv_bij p n)
   let ι : AdjoinRoot (fY p n) →+* Ω :=
     AdjoinRoot.lift (algebraMap (O0 p) Ω) (T.qq n) (by simp [fY, GlobalTheory.K5.Basic.qq_pow])
-  haveI : IsDomain (AdjoinRoot (fY p n)) := Function.Injective.isDomain (phiInv p n) (phiInv_bij p n).1
-  haveI : Module.Finite (O0 p) (AdjoinRoot (fY p n)) := (AdjoinRoot.powerBasis' (fY_monic p n)).finite
+  have : IsDomain (AdjoinRoot (fY p n)) := Function.Injective.isDomain (phiInv p n) (phiInv_bij p n).1
+  have : Module.Finite (O0 p) (AdjoinRoot (fY p n)) := (AdjoinRoot.powerBasis' (fY_monic p n)).finite
   have hιinj : Function.Injective ι := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     by_contra hne
-    have hI := Ideal.comap_ne_bot_of_integral_mem (R := O0 p) hne (show x ∈ RingHom.ker ι from hx)
+    have hI := Ideal.under_ne_bot_of_integral_mem (R := O0 p) hne (show x ∈ RingHom.ker ι from hx)
       (Algebra.IsIntegral.isIntegral x)
     apply hI
     rw [eq_bot_iff]

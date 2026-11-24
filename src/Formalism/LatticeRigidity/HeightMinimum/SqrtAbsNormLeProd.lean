@@ -218,9 +218,9 @@ theorem card_box_le (b : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) (hb : b �
     by_contra hne
     have hsub0 : l - l' ≠ 0 := sub_ne_zero.mpr hne
     have hsubb : l - l' ∈ b := by
-      have := Submodule.sub_mem (b : Submodule (𝓞 E) E) (FractionalIdeal.mem_coe.mpr hlb)
-        (FractionalIdeal.mem_coe.mpr hlb')
-      exact FractionalIdeal.mem_coe.mp this
+      have := Submodule.sub_mem (b : Submodule (𝓞 E) E) (FractionalIdeal.mem_coeToSubmodule.mpr hlb)
+        (FractionalIdeal.mem_coeToSubmodule.mpr hlb')
+      exact FractionalIdeal.mem_coeToSubmodule.mp this
     have hlow := absNorm_le_prod_infinitePlace_sq b hb (l - l') hsubb hsub0
     have hsmall : ∀ w, w (l - l') ^ 2 < 2 * (ρ w / s) ^ 2 := by
       intro w

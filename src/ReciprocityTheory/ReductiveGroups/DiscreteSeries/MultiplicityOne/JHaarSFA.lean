@@ -68,7 +68,7 @@ theorem eq_smul_of_sigmaFinite (μ ν : Measure G) [SigmaFinite μ] [SigmaFinite
     exact Measure.measure_univ_eq_zero.mp this
   have hS := measurableSet_spanningSets (μ + ν) n
   have hfin := measure_spanningSets_lt_top (μ + ν) n
-  rw [Measure.add_apply] at hfin
+  rw [add_apply] at hfin
   have hνf : ν (spanningSets (μ + ν) n) ≠ ∞ := (lt_of_le_of_lt le_add_self hfin).ne
   have hμf : μ (spanningSets (μ + ν) n) ≠ ∞ := (lt_of_le_of_lt le_self_add hfin).ne
   have heq : μ = (μ (spanningSets (μ + ν) n) / ν (spanningSets (μ + ν) n)) • ν := by
@@ -82,7 +82,7 @@ theorem eq_smul_of_sigmaFinite (μ ν : Measure G) [SigmaFinite μ] [SigmaFinite
          ENNReal.inv_mul_cancel hn hνf, one_mul])
     | (ext t ht
        have key := measure_mul_measure_eq μ ν (spanningSets (μ + ν) n) t hn hνf
-       rw [Measure.smul_apply, smul_eq_mul, ENNReal.div_eq_inv_mul, mul_assoc, key, ← mul_assoc,
+       rw [smul_apply, smul_eq_mul, ENNReal.div_eq_inv_mul, mul_assoc, key, ← mul_assoc,
          ENNReal.inv_mul_cancel hn hνf, one_mul])
     | (ext t ht
        have key := measure_mul_measure_eq μ ν (spanningSets (μ + ν) n) t hS ht hn hνf
@@ -147,7 +147,7 @@ instance : Group (Aset U) where
     exact Matrix.nonsing_inv_mul _ (hU.out.unit _ a.2))
 
 theorem continuous_toM : Continuous (toM : Aset U → Mat k r) := by
-  exact continuous_matrix_of_Mt.comp continuous_subtype_val
+  exact continuous_matrix_of_Mt.comp continuous_subtypeVal
 
 theorem continuous_mulA : Continuous fun p : Aset U × Aset U => p.1 * p.2 := by
   refine Continuous.subtype_mk ?_ _
@@ -174,7 +174,7 @@ open Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.Fourier
 variable {k r : ℕ} {U : Set (Mat k r)} [hU : Fact (IsClosedSubgroup U)]
 
 theorem mEmb : MeasurableEmbedding (Subtype.val : Aset U → Mt k r) := by
-  exact MeasurableEmbedding.subtype_coe (measurableSet_Aset hU.out)
+  exact MeasurableEmbedding.subtypeVal (measurableSet_Aset hU.out)
 
 theorem map_comap_val (μ : Measure (Mt k r)) (hc : μ (Aset U)ᶜ = 0) :
     (μ.comap (Subtype.val : Aset U → Mt k r)).map Subtype.val = μ := by
@@ -198,7 +198,7 @@ theorem isMulLeftInvariant_comap (μ : Measure (Mt k r)) (hc : μ (Aset U)ᶜ = 
   intro g
   have hm : Measurable (fun x : Aset U => g * x) := by
     refine Measurable.subtype_mk ?_
-    exact (continuous_lmulM (toM g)).measurable.comp measurable_subtype_coe
+    exact (continuous_lmulM (toM g)).measurable.comp measurable_subtypeVal
   have hval : Subtype.val ∘ (fun x : Aset U => g * x) = lmulM (toM g) ∘ Subtype.val := rfl
   have hmap : ((μ.comap (Subtype.val : Aset U → Mt k r)).map (fun x : Aset U => g * x)).map Subtype.val
       = (μ.comap (Subtype.val : Aset U → Mt k r)).map Subtype.val := by

@@ -251,9 +251,9 @@ end Rep
 
 theorem exists_JJ_ne_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasure] (ψ : AddChar k Circle) {n : ℕ} {V V' : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup V'] [Module ℂ V'] (T : Representation ℂ (Mir k (n + 1)) V) (B : V →ₗ[ℂ] V' →ₗ[ℂ] ℂ), Continuous ψ → IsSmooth T → (∀ v, v ≠ 0 → ∃ v', B v v' ≠ 0) → ∀ v : V, v ∉ twKer T (MirUin k (n + 1)) (mirChar k ψ n) → ∃ t₀ : kˣ, ∀ t : kˣ, valuation k (t₀ : k) ≤ valuation k (t : k) → ∃ v', JJ ν ψ T B (box (n + 1) t : Set (Fin (n + 1) → k)) v v' ≠ 0 := by
   intro k _ _ _ _ _ _ ν _ ψ n V V' _ _ _ _ T B hψ hT hB v hv
-  haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
-  haveI : SigmaFinite ν := sigmaFinite_of_locallyFinite
-  haveI : (piHaar ν (n + 1)).IsAddHaarMeasure := by
+  have : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
+  have : SigmaFinite ν := sigmaFinite_of_locallyFinite
+  have : (piHaar ν (n + 1)).IsAddHaarMeasure := by
     unfold piHaar
     infer_instance
   obtain ⟨r, hr⟩ := exists_cball_addChar_eq_one ψ hψ
@@ -384,7 +384,7 @@ theorem continuous_wt_mul_coef {k : Type} [Field k] [ValuativeRel k] [Topologica
   refine Continuous.mul ?_ (continuous_coef T B hT v v')
   have h : Continuous fun x : Fin (n + 1) → k => ψ (-x (Fin.last n)) :=
     hψ.comp (continuous_apply _).neg
-  exact continuous_subtype_val.comp h
+  exact continuous_subtypeVal.comp h
 
 end GlobalTheory.CompanionTheory.MirPair.Nondeg
 
@@ -636,7 +636,7 @@ theorem exists_threshold_mem_box {m : ℕ} (y : Fin m → k) (t₀ : kˣ) :
         have hya : y a ≠ 0 := by
           intro h0'
           rw [h0', map_zero] at hlt
-          exact not_lt_zero' hlt
+          exact not_lt_zero hlt
         refine ⟨Units.mk0 (y a) hya, ?_, fun j hj => ?_⟩
         · simpa using h0.trans hlt.le
         · rcases Finset.mem_insert.1 hj with rfl | hj
@@ -651,8 +651,8 @@ theorem setIntegral_box_add (ν : Measure k) [ν.IsAddHaarMeasure] {m : ℕ} (t 
     (hy : y ∈ box m t) (f : (Fin m → k) → ℂ) :
     ∫ x in (box m t : Set (Fin m → k)), f (x + y) ∂(piHaar ν m) =
       ∫ x in (box m t : Set (Fin m → k)), f x ∂(piHaar ν m) := by
-  haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
-  haveI : (piHaar ν m).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
+  have : (piHaar ν m).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hpre : (fun x => x + y) ⁻¹' (box m t : Set (Fin m → k)) = box m t := by
     ext x
     exact (box m t).add_mem_cancel_right hy
@@ -910,7 +910,7 @@ theorem exists_highest (ψ : AddChar k Circle) (hc : Continuous ψ) (h1 : ψ ≠
     rw [hb]
     exact (Submodule.quotEquivOfEqBot ⊥ rfl).toEquiv.nontrivial
   have hex : ∃ n, n ≤ m ∧ Nontrivial (TwJacquet π (derUnip k (m + 1) n) (derChar k ψ (m + 1) n)) := by
-    obtain ⟨n, hnm, h⟩ := _root_.GlobalTheory.CompanionTheory.BZMirDer.NonZero.exists_derivative_nontrivial k ψ hc h1 m V (resM k π).ρ (isSmooth_comp hs _ continuous_subtype_val) hn
+    obtain ⟨n, hnm, h⟩ := _root_.GlobalTheory.CompanionTheory.BZMirDer.NonZero.exists_derivative_nontrivial k ψ hc h1 m V (resM k π).ρ (isSmooth_comp hs _ continuous_subtypeVal) hn
     exact ⟨n, hnm, (twJ_congr (_root_.GlobalTheory.CompanionTheory.BZMirDer.twKer_resM_derUnipM k ψ m n V π)).1 h⟩
   classical
   have hmin := fun (l : ℕ) (hl : l < Nat.find hex) => Nat.find_min hex hl
@@ -926,7 +926,7 @@ theorem isSmooth_iterPhi (ψ : AddChar k Circle) (n : ℕ) : ∀ (j : ℕ) (τ :
   | j + 1, τ, h => isSmooth_iterPhi ψ n j (MRep.phiM k ψ τ) (_root_.GlobalTheory.CompanionTheory.BZMirSmooth.smPhiMinus k ψ _ _ τ.ρ h)
 
 theorem isSmooth_resM {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] {π : Representation ℂ (GL (Fin (n + 1)) k) V}
-    (h : IsSmooth π) : IsSmooth (resM k π).ρ := isSmooth_comp h _ continuous_subtype_val
+    (h : IsSmooth π) : IsSmooth (resM k π).ρ := isSmooth_comp h _ continuous_subtypeVal
 
 theorem isSmooth_deriv (ψ : AddChar k Circle) {n : ℕ} (j : ℕ) {V : Type} [AddCommGroup V] [Module ℂ V]
     {π : Representation ℂ (GL (Fin (n + j + 1)) k) V} (h : IsSmooth π) : IsSmooth (GlobalTheory.BZMir.deriv k ψ j π) :=

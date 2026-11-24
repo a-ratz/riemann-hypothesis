@@ -53,7 +53,7 @@ theorem UpperTheory.V.Ws.isClosed_setOf_matrix_stabilizes_submodule :
   have hset : {g | ∀ v ∈ W, a g *ᵥ v ∈ W} =
       ⋂ v ∈ W, ⋂ φ ∈ W.dualAnnihilator, {g | φ (a g *ᵥ v) = 0} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     constructor
     · intro h v hv φ hφ
       exact (Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff W _).mpr (h v hv) φ hφ

@@ -78,7 +78,7 @@ lemma one_mem_UJset : (1 : Matrix (Fin n) (Fin n) ℂ) ∈ UJset ε := by
   exact (UJ ε).one_mem
 
 lemma cont_orbit {τ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hτ : IsURepOn (UJset ε) τ) (u : H) :
-    Continuous (fun h : UJ ε => τ (umat h) u) := (hτ.2.2 u).comp_continuous (Units.continuous_val.comp continuous_subtype_val) (fun h => h.2)
+    Continuous (fun h : UJ ε => τ (umat h) u) := (hτ.2.2 u).comp_continuous (Units.continuous_val.comp continuous_subtypeVal) (fun h => h.2)
 
 lemma gv_sub_norm_le [CompleteSpace H] {τ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
     (hτ : IsURepOn (UJset ε) τ)

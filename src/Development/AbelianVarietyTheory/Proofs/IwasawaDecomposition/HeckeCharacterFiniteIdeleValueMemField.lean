@@ -149,7 +149,7 @@ theorem mem_of_inf_eq_one : ∀ (E : Type) [Field E] [NumberField E] (χ : HChar
       (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).1 hv2
     rw [map_inv, Units.val_inv_eq_inv_val, map_inv₀] at e2
     have h0 : 0 < Valued.v ((GlobalTheory.HeckeSplit.finPart E v x : (v.adicCompletion E)ˣ) : v.adicCompletion E) :=
-      zero_lt_iff.2 ((Valuation.ne_zero_iff _).mpr (Units.ne_zero _))
+      pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).mpr (Units.ne_zero _))
     exact le_antisymm e1 ((inv_le_one₀ h0).1 e2)
   have hfin := Filter.eventually_cofinite.1 hev
   set S := hfin.toFinset ∪ (GlobalTheory.Mem.UnrAe.finite_ramified χ).toFinset

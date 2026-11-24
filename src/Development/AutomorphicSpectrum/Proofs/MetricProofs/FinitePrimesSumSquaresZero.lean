@@ -81,14 +81,14 @@ theorem exists_eq_add_mul_of_mem_adjoin {E : Type*} [Field E] [Algebra ℚ E] (x
 
 theorem not_sq_eq_of_prime {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hpq : p ≠ q) (b : ℚ)
     (h : (p : ℚ) = q * b ^ 2) : False := by
-  haveI := Fact.mk hq
+  have := Fact.mk hq
   have hb : b ≠ 0 := by
     rintro rfl
     have h0 : (p : ℚ) = 0 := by rw [h]; ring
     exact hp.ne_zero (by exact_mod_cast h0)
   have h1 := congrArg (padicValRat q) h
   rw [padicValRat.mul (by exact_mod_cast hq.ne_zero) (pow_ne_zero 2 hb), padicValRat.pow b,
-    padicValRat.self hq.one_lt, padicValRat.of_nat, padicValNat.eq_zero_of_not_dvd] at h1
+    padicValRat.self hq.one_lt, padicValRat.of_nat, multiplicity_eq_zero_of_not_dvd] at h1
   · push_cast at h1
     omega
   · intro hd
@@ -122,7 +122,7 @@ theorem false_of_sq_eq {E : Type*} [Field E] [CharZero E] [Algebra ℚ E] {p q :
 theorem finite_primes_of_finiteDimensional (E : Type*) [Field E] [CharZero E] [Algebra ℚ E]
     [FiniteDimensional ℚ E] : {p : ℕ | p.Prime ∧ ∃ x : E, x ^ 2 = -(p : E)}.Finite := by
   classical
-  haveI : Finite (IntermediateField ℚ E) :=
+  have : Finite (IntermediateField ℚ E) :=
     (Field.exists_primitive_element_iff_finite_intermediateField ℚ E).mp
       ⟨inferInstance, Field.exists_primitive_element ℚ E⟩
   have key : ∀ p q : ℕ, p.Prime → q.Prime → ∀ x y : E, x ^ 2 = -(p : E) → y ^ 2 = -(q : E) →
@@ -154,10 +154,10 @@ theorem finite_primes_field (F : Type*) [Field F] [CharZero F] [Algebra ℚ F]
 theorem finite_primes_of_isFractionRing (A F : Type*) [CommRing A] [IsDomain A] [CharZero A]
     [Algebra.FiniteType ℤ A] [Field F] [Algebra A F] [IsFractionRing A F] :
     {p : ℕ | p.Prime ∧ ∃ a b : A, b ≠ 0 ∧ a ^ 2 + (p : A) * b ^ 2 = 0}.Finite := by
-  haveI : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective A F)
-  haveI : Algebra.EssFiniteType A F := Algebra.EssFiniteType.of_isLocalization F (nonZeroDivisors A)
-  haveI : Algebra.EssFiniteType ℤ F := Algebra.EssFiniteType.comp ℤ A F
-  haveI : Algebra.EssFiniteType ℚ F := Algebra.EssFiniteType.of_comp ℤ ℚ F
+  have : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective A F)
+  have : Algebra.EssFiniteType A F := Algebra.EssFiniteType.of_isLocalization F (nonZeroDivisors A)
+  have : Algebra.EssFiniteType ℤ F := Algebra.EssFiniteType.comp ℤ A F
+  have : Algebra.EssFiniteType ℚ F := Algebra.EssFiniteType.of_comp ℤ ℚ F
   refine (finite_primes_field F).subset ?_
   rintro p ⟨hp, a, b, hb, hab⟩
   have hb' : algebraMap A F b ≠ 0 := fun h0 =>
@@ -170,7 +170,7 @@ theorem finite_primes_of_isFractionRing (A F : Type*) [CommRing A] [IsDomain A] 
 
 theorem finite_primes_neg_sq : ∀ (σ : Type) [Finite σ] (A : Type) [CommRing A] [IsDomain A] [CharZero A] (f : MvPolynomial σ ℤ →+* A), Function.Surjective f → {p : ℕ | p.Prime ∧ ∃ a b : A, b ≠ 0 ∧ a ^ 2 + (p : A) * b ^ 2 = 0}.Finite := by
   intro σ _ A _ _ _ f hf
-  haveI : Algebra.FiniteType ℤ A := by
+  have : Algebra.FiniteType ℤ A := by
     obtain ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin σ
     refine Algebra.FiniteType.iff_quotient_mvPolynomial''.mpr
       ⟨n, MvPolynomial.aeval (R := ℤ) (fun i : Fin n => f (MvPolynomial.X (e.symm i))), ?_⟩

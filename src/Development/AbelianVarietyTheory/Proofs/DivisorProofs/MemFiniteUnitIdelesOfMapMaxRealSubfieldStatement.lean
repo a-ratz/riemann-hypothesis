@@ -62,7 +62,7 @@ namespace GlobalTheory.UnitDown
 
 theorem exists_above {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (v : HeightOneSpectrum (𝓞 F)) : ∃ w : HeightOneSpectrum (𝓞 E), w.under (𝓞 F) = v := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨P, hPm, hP⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) v.asIdeal
   have hne : P ≠ ⊥ := by
     intro h
@@ -89,7 +89,7 @@ theorem unit_down : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (b : 
   set n := (w.under (𝓞 (maximalRealSubfield E))).asIdeal.ramificationIdx' w.asIdeal
   have h' : x ^ n = 1 := h
   rcases lt_trichotomy x 1 with hx | hx | hx
-  · exact absurd h' (pow_lt_one₀ zero_le' hx he).ne
+  · exact absurd h' (pow_lt_one₀ zero_le hx he).ne
   · exact hx
   · exact absurd h' (one_lt_pow₀ hx he).ne'
 

@@ -209,7 +209,7 @@ theorem genWeil_move {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
   have pw : ∀ x, x ^ n = 1 → P x ^ n = 1 := fun x hx => by rw [← map_pow, hx, map_one]
   have pw' : ∀ x, x ^ n = 1 → P.symm x ^ n = 1 := fun x hx => by rw [← map_pow, hx, map_one]
   refine ⟨fun a b => e (P a) (P b), ?_⟩
-  haveI := h.finite
+  have := h.finite
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact Finite.of_injective (fun x : {x : Over.mk ξ' ⟶ t'.G // x ^ n = 1} =>
       (⟨P x.1, pw _ x.2⟩ : {x : Over.mk q ⟶ t.G // x ^ n = 1}))
@@ -259,8 +259,8 @@ theorem torsion_of_tate {E : Type} [Field E] [NumberField E] [IsCMField E] (H : 
       (∀ (a : 𝓞 E) x x', e (a • x) x' = e x (RingOfIntegers.mapRingEquiv (HT.cmConj E) a • x')) ∧
       (∀ φ : (Fin (D.p + D.q) → 𝓞 E) →+ ZMod N, ∃ x, e x = φ) ∧ ∀ x, e x = 0 → ∃ x', x = N • x' := by
   classical
-  haveI : NeZero N := ⟨hN0.ne'⟩
-  haveI : Epi (spMap iK) := WeilObj.epi_spMap_field Ω k iK
+  have : NeZero N := ⟨hN0.ne'⟩
+  have : Epi (spMap iK) := WeilObj.epi_spMap_field Ω k iK
   have inj : ∀ x x' : Over.mk ξ ⟶ t.G, WeilObj.extPt ξ iK ≫ x = WeilObj.extPt ξ iK ≫ x' → x = x' :=
     fun x x' h => by
       have h' : spMap iK ≫ x.left = spMap iK ≫ x'.left := congrArg CommaMorphism.left h
@@ -379,11 +379,11 @@ theorem torsion_of_tate {E : Type} [Field E] [NumberField E] [IsCMField E] (H : 
       have h1 := hsb (φ y)
       rw [smul_neg, ← sub_eq_add_neg, eq_sub_iff_add_eq]
       exact h1.symm)
-    haveI : Module.Projective (𝓞 E) D.La := D.proj
-    haveI : Module.Finite (𝓞 E) D.La := D.fin
-    haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-    haveI : Module.Flat ℤ D.La := Module.Flat.trans ℤ (𝓞 E) D.La
-    haveI : Module.Free ℤ D.La := inferInstance
+    have : Module.Projective (𝓞 E) D.La := D.proj
+    have : Module.Finite (𝓞 E) D.La := D.fin
+    have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+    have : Module.Flat ℤ D.La := Module.Flat.trans ℤ (𝓞 E) D.La
+    have : Module.Free ℤ D.La := inferInstance
     obtain ⟨h, hh⟩ := Module.projective_lifting_property (Int.castAddHom (ZMod N)).toIntLinearMap
       ((AddMonoidHom.mulLeft v).comp ψ).toIntLinearMap (fun z => by
         obtain ⟨w, hw⟩ := ZMod.intCast_surjective z

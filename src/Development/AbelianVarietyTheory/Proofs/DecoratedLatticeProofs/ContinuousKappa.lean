@@ -121,8 +121,8 @@ theorem integrable_contr (hψ : IsStdChar D ψ (-1)) {ρ σ : ℕ} {B : BesLev D
     (h₁ : IsThetaFunO ψ B.V₀ S Ξ₁) (h₂ : IsThetaFunO ψ S B'.V₀ Ξ₂) (u : WO B.A S) (v : WO S B'.A) :
     Integrable (fun w => Ξ₂ ((B'.o.resT S).symm (v, w)) * Ξ₁ ((B.o.resS S).symm (u, l.κ S w)))
       (vL.μ.restrict vL.𝓕) := by
-  haveI : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
-  haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
+  have : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
+  have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, vL.covol.2.2]; exact ENNReal.one_lt_top⟩
   obtain ⟨C₁, hC₁⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded _ _ ψ hψ Ξ₁ h₁
   obtain ⟨C₂, hC₂⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded _ _ ψ hψ Ξ₂ h₂
@@ -175,9 +175,9 @@ theorem exists_normPair {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace 
     [MeasurableSpace k] [BorelSpace k] (ψk : AddChar k Circle) (ν : Measure k) (hψ : Continuous ψk)
     (hν : ν.IsAddHaarMeasure) (n : Type) [Fintype n] [DecidableEq n] :
     ∃ φ₀ φ₀' : SB (n → k), ∫ u, φ₀'.1 u * GlobalTheory.StepData.hat ψk ν (-1) φ₀.1 u ∂(Measure.pi fun _ => ν) = 1 := by
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
-  haveI := hν
-  haveI := GlobalTheory.SplitWeil.secondCountable k
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have := hν
+  have := GlobalTheory.SplitWeil.secondCountable k
   let L := GlobalTheory.LatPair.stdLat k n
   have hc := GlobalTheory.FinPl.Comm.fpair_ne_zero ψk hψ (-1) (Or.inr rfl) (Measure.pi fun _ => ν) L
   set c := GlobalTheory.FinPl.Comm.fpair ψk (-1) (Measure.pi fun _ => ν) (GlobalTheory.FinPl.vecInd L) (GlobalTheory.FinPl.dualInd L)

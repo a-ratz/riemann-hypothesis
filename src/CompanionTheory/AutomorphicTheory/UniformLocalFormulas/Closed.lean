@@ -247,7 +247,7 @@ theorem coef_expand (L : LocBessel k r) (P : L.Hs →L[ℂ] L.Wp) (Q : L.Wq →L
     P.comp ((L.σ x).comp Q) = ∑ i, ∑ j, Pv.AmpDD.coefF L (ContinuousLinearMap.adjoint P (stdOrthonormalBasis ℂ L.Wp i))
       (Q (stdOrthonormalBasis ℂ L.Wq j)) (stdOrthonormalBasis ℂ L.Wp i) (stdOrthonormalBasis ℂ L.Wq j) x := by
   ext η
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply, Pv.AmpDD.coefF,
+  simp only [ContinuousLinearMap.comp_apply, sum_apply, Pv.AmpDD.coefF,
     ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, ContinuousLinearMap.adjoint_inner_left, smul_smul]
   conv_lhs => rw [← (stdOrthonormalBasis ℂ L.Wp).sum_repr' (P (L.σ x (Q η)))]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -281,9 +281,9 @@ theorem int_coefF (L : LocBessel k r) {μG : Measure (Mt k r)} (hμG : IsHaarOn 
   have hI : Integrable (fun p : PairSp k r => ∫ x, PsiM L w0 v v' ξ ξ' γ (p, x) ∂μG) ν := by
     refine (hpm.const_mul K).mono' hsm.aestronglyMeasurable (hae.mono fun p hp => ?_)
     rw [he p hp]
-    have h1 := (enorm_integral_le_lintegral_enorm _).trans
+    have h1 := (eNorm_integral_le_lintegral_eNorm _).trans
       (lint_G_bound L hμG P.norm_inverse_bound hb hab hIG w0 v v' ξ ξ' hC1 hC2 hγ hp)
-    rw [← ofReal_norm_eq_enorm] at h1
+    rw [← ofReal_norm] at h1
     exact (ENNReal.ofReal_le_ofReal_iff (mul_nonneg hK0 (pairMaj_nonneg γ b p))).1 h1
   refine (hI.smul (d : ℂ)).congr (hae.mono fun p hp => ?_)
   have hd' : (d : ℂ) ≠ 0 := by exact_mod_cast hd.ne'
@@ -777,7 +777,7 @@ theorem goodS_deg {X : HidaSetting D} {θ : ℝ} {C : Choice X θ} (hLF : LocFac
       with ha
     have ha0 : 0 ≤ a := div_nonneg (mul_nonneg hc.le hd'.le) hL'.le
     have hnorm : (‖((Real.sqrt a : ℝ) : ℂ)‖₊ : ℝ≥0∞) ^ 2 = ENNReal.ofReal a := by
-      rw [← enorm_eq_nnnorm, ← ofReal_norm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg _),
+      rw [← eNorm_eq_nnNorm, ← ofReal_norm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg _),
         ← ENNReal.ofReal_pow (Real.sqrt_nonneg _), Real.sq_sqrt ha0]
     rw [hnorm, ← ENNReal.ofReal_toReal hLu'.2.ne, ← ENNReal.ofReal_mul ha0, ha, div_mul_cancel₀ _ hL'.ne']
 
@@ -855,7 +855,7 @@ theorem rowDataUnifN_of_6 (hBW : BesselOfW) (hR : ThmBChain6.AmplitudeBoundsAllC
     Formalism.L2.SG.ThmSOwn.gap_hypothesis_of_hypotheses hc.1.1 (le_trans (le_max_right _ _) h3) (le_trans (le_max_right _ _) h1)
   obtain ⟨hIre, θ, hθ, hw, hrest⟩ := h2 C' Cl (le_trans (le_max_left _ _) h1) (le_trans (le_max_left _ _) h3) D large₂ X Y u u'
     hc hb X0 ψ hBT sd C Th F0 what₂ vR Q i0 i0' νq Irat Ire hO ν hp
-  haveI : Nonempty D.what₂.Word := ⟨u⟩
+  have : Nonempty D.what₂.Word := ⟨u⟩
   obtain ⟨Cc⟩ := choiceExists X θ hθ
   have hLF := LocF.locFactor_holds hG Cc
   have hB : WuBessel Cc := wuBesselOfLoc_all Cc hG hBW hLF (fun τ => dsTr Cc τ) (fun τ => haarTr Cc τ)
@@ -1098,7 +1098,7 @@ theorem map_smap (τ : D.what₂.Tau) (g : Formalism.REAL.UJ (X.B.I.ε (vOf X τ
   have hm : Measurable fun γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) => Matrix.of.symm (trG (C.Q τ) (C.Qi τ) γ) := by
     refine Continuous.measurable ?_
     unfold trG
-    exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul continuous_const
+    exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul continuous_const
   rw [e, ← Measure.map_map hm ((measurable_mul_const _).comp (measurable_const_mul _)),
     ← Measure.map_map (measurable_mul_const _) (measurable_const_mul _), map_mul_left_eq_self, map_mul_right_eq_self]
   rfl
@@ -1203,7 +1203,7 @@ theorem use₇ (hB : WuBessel C) (u u' : D.what₂.Word)
   have hq2 := quot_push C γ τ hQ
   rw [← hμ] at hq2
   obtain ⟨hcl, hun⟩ := _root_.GlobalTheory.UnipUnimod.rset_unimodular D.R.k D.R.rS _ hg
-  have := FiniteDimensional.complete ℂ (X.Vloc u (vOf X τ))
+  have := FiniteDimensional.completeSpace ℂ (X.Vloc u (vOf X τ))
   set F : MatKR D.R.k D.R.rS → (X.Vloc u' (vOf X τ) →L[ℂ] X.Vloc u (vOf X τ)) := fun x =>
     (innerSL ℂ ((locS hB u u' τ).Φ' x)).smulRight ((locS hB u u' τ).Φ (JointAmplitudePoints.gamP C u u' w τ * x)) with hF
   have hFS : ∀ z, F (Smap C τ (γ (vOf X τ)) z) = sclOf hB u u' τ •
@@ -1211,7 +1211,7 @@ theorem use₇ (hB : WuBessel C) (u u' : D.what₂.Word)
     fun z => integrand_S C hB u u' τ (γ (vOf X τ)) z
   have hFc : ContinuousOn F (Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)) := by
     refine ContinuousOn.mono (s := Set.range (Smap C τ (γ (vOf X τ)))) ?_ fun x hx => mem_range C τ _ hx
-    refine continuousOn_iff_continuous_restrict.2 ?_
+    refine continuousOn_iff_continuous_domRestrict.2 ?_
     have hemb : Continuous fun z => F (Smap C τ (γ (vOf X τ)) z) := by
       rw [funext hFS]
       exact (rank_one_continuous (X.Wloc_cont u (vOf X τ))

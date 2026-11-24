@@ -356,7 +356,7 @@ theorem isOpen_unipotentCompact (e : ℕ) :
     IsOpen (unipotentCompact F n β e : Set (unipotentRadical F n β)) := by
   rw [coe_unipotentCompact]
   exact ((isOpen_integralGL F n).preimage (conjHomeomorph _).continuous).preimage
-    continuous_subtype_val
+    continuous_subtypeVal
 
 theorem isCompact_unipotentCompact (e : ℕ) :
     IsCompact (unipotentCompact F n β e : Set (unipotentRadical F n β)) := by
@@ -418,9 +418,9 @@ theorem rankTorus_inv_conj_apply_facts {k t m : ℕ} (hm : k + t ≤ m) {z : GL 
   rw [rankTorus_inv_conj_apply]
   rcases lt_trichotomy (β i) (β j) with h | h | h
   · rw [hlow i j h, mul_zero, one_apply_ne (fun e => h.ne (by rw [e])), sub_zero, map_zero]
-    exact ⟨zero_mem _, zero_le'⟩
+    exact ⟨zero_mem _, zero_le⟩
   · rw [h1 i j h, blockRank_eq h, sub_self, zpow_zero, one_mul, sub_self, map_zero]
-    refine ⟨?_, zero_le'⟩
+    refine ⟨?_, zero_le⟩
     by_cases hij : i = j
     · rw [hij, one_apply_eq]
       exact one_mem _
@@ -496,7 +496,7 @@ theorem isSmooth_comp_subtype {G : Type*} [Group G] [TopologicalSpace G] {V : Ty
     ext h
     rfl
   rw [this]
-  exact (hπ v).preimage continuous_subtype_val
+  exact (hπ v).preimage continuous_subtypeVal
 
 variable (F : Type*) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
   (n : ℕ) {α : Type*} [LinearOrder α] (β : Fin n → α)
@@ -619,7 +619,7 @@ theorem isSmooth_jacquetRep (hπ : IsSmooth π) : IsSmooth (jacquetRep F n β π
     rw [mem_stabilizerOf, jacquetRep_mk, mem_stabilizerOf.1 hm.1,
       invSqrtModular_leviIncl_of_mem m hm.2, one_smul]
   · rw [Subgroup.coe_subgroupOf, Subgroup.coe_inf]
-    exact ((hπ v).inter (isOpen_integralGL F n)).preimage continuous_subtype_val
+    exact ((hπ v).inter (isOpen_integralGL F n)).preimage continuous_subtypeVal
 
 theorem mk_apply_levi (m : levi F n β) (v : V) :
     Representation.Coinvariants.mk (π.comp (unipotentRadical F n β).subtype) (π m v) =

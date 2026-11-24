@@ -58,7 +58,7 @@ private theorem polyApprox_cut {η : J → k} {T : Set (J → k)} {Q : MvPolynom
   obtain ⟨s, c, hs, hc⟩ := h (ε * ‖aeval η Q‖) (mul_pos hε hq)
   refine ⟨s.filter (fun x => aeval x Q ≠ 0), fun x => c x * aeval x Q / aeval η Q, ?_, ?_⟩
   · intro x hx
-    simp only [Finset.coe_filter, Set.mem_setOf_eq] at hx
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hx
     exact ⟨hs hx.1, hx.2⟩
   · intro P
     have e1 : ∑ x ∈ s.filter (fun x => aeval x Q ≠ 0), c x * aeval x Q / aeval η Q * aeval x P
@@ -104,10 +104,10 @@ private theorem polyApprox_trans {θ : J → k} {S T : Set (J → k)} (h : PolyA
       symm
       apply Finset.sum_subset_zero_on_sdiff (Finset.subset_biUnion_of_mem t hη)
       · intro ζ hζ
-        rw [if_neg (Finset.mem_sdiff.1 hζ).2]
+        rw [ite_eq_right (Finset.mem_sdiff.1 hζ).2]
         ring
       · intro ζ hζ
-        rw [if_pos hζ]
+        rw [ite_eq_left hζ]
         ring
     rw [hsum]
     have split : aeval θ P - ∑ η ∈ s, c η * ∑ ζ ∈ t η, d η ζ * aeval ζ P

@@ -177,7 +177,7 @@ variable {o F : Type} [CommRing o] [IsDomain o] [IsDiscreteValuationRing o] [Fie
 theorem isAdic_map {ϖ : o} (hϖ : Irreducible ϖ) :
     letI := valued o F
     IsAdic ((IsLocalRing.maximalIdeal o).map (equivInt o F)) := by
-  letI := valued o F
+  let := valued o F
   set J := (IsLocalRing.maximalIdeal o).map (equivInt o F)
   set π := algebraMap o F ϖ
   have hπ0 : val o F π ≠ 0 := by
@@ -194,7 +194,7 @@ theorem isAdic_map {ϖ : o} (hϖ : Irreducible ϖ) :
       rw [Valued.mem_nhds_zero]
       have hπne : π ≠ 0 := by rintro h; simp [h] at hπ0
       refine ⟨Units.mk0 ((val o F).restrict (π ^ n)) (by simp [hπne]), fun y hy => ?_⟩
-      simp only [Units.val_mk0, Set.mem_setOf_eq] at hy ⊢
+      simp only [Units.val_mk0, Set.mem_ofPred_eq] at hy ⊢
       have hy' : (val o F).restrict y < (val o F).restrict (π ^ n) := hy
       rw [Valuation.restrict_lt_iff] at hy'
       simpa [map_pow] using hy'
@@ -204,7 +204,7 @@ theorem isAdic_map {ϖ : o} (hϖ : Irreducible ϖ) :
     have hγ0 : MonoidWithZeroHom.ValueGroup₀.embedding γ.1 ≠ 0 := by simp
     obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one _ _ hπ0 hπ1 hγ0
     refine ⟨n, fun y hy => hus (hγ ?_)⟩
-    simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+    simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
     exact ((mem_pow_iff hϖ n y).mp hy).trans_lt hn
 
 end GlobalTheory.LocFieldOfDVR
@@ -219,14 +219,14 @@ theorem compactSpace_integer [IsAdicComplete (IsLocalRing.maximalIdeal o) o]
     [Finite (IsLocalRing.ResidueField o)] :
     letI := valued o F
     CompactSpace (Valued.integer F) := by
-  letI := valued o F
+  let := valued o F
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible o
-  letI : (Valued.v : Valuation F ℤᵐ⁰).RankOne :=
+  let : (Valued.v : Valuation F ℤᵐ⁰).RankOne :=
     Valuation.IsRankOneDiscrete.rankOne (val o F) (e := 2) one_lt_two
   have hI := isAdic_map (F := F) hϖ
   have hpre : IsPrecomplete ((IsLocalRing.maximalIdeal o).map (equivInt o F)) (val o F).integer :=
     (IsPrecomplete.congr_ringEquiv _ _).mpr inferInstance
-  haveI : IsUniformAddGroup (val o F).integer :=
+  have : IsUniformAddGroup (val o F).integer :=
     inferInstanceAs (IsUniformAddGroup (val o F).integer.toAddSubgroup)
   have hcomp : CompleteSpace (val o F).integer := (IsAdic.isPrecomplete_iff hI).mp hpre
   have hdvr : IsDiscreteValuationRing (Valued.integer F) :=
@@ -240,7 +240,7 @@ theorem locallyCompactSpace [IsAdicComplete (IsLocalRing.maximalIdeal o) o]
     [Finite (IsLocalRing.ResidueField o)] :
     letI := valued o F
     LocallyCompactSpace F := by
-  letI := valued o F
+  let := valued o F
   have := compactSpace_integer (o := o) (F := F)
   exact IsCompact.locallyCompactSpace_of_mem_nhds_of_addGroup
     (isCompact_iff_compactSpace.mpr this) ((Valued.isOpen_integer F).mem_nhds (zero_mem _))
@@ -253,9 +253,9 @@ open scoped WithZero
 
 theorem exists_isNonarchimedeanLocalField : ∀ (o F : Type) [CommRing o] [IsDomain o] [IsDiscreteValuationRing o] [IsAdicComplete (IsLocalRing.maximalIdeal o) o] [Finite (IsLocalRing.ResidueField o)] [Field F] [Algebra o F] [IsFractionRing o F], ∃ (_ : ValuativeRel F) (_ : TopologicalSpace F), IsNonarchimedeanLocalField F ∧ ∀ x : F, x ∈ 𝒪[F] ↔ ∃ a : o, algebraMap o F a = x := by
   intro o F _ _ _ _ _ _ _ _
-  letI := valued o F
-  letI vr : ValuativeRel F := .ofValuation (val o F)
-  haveI : (val o F).Compatible := .ofValuation _
+  let := valued o F
+  let vr : ValuativeRel F := .ofValuation (val o F)
+  have : (val o F).Compatible := .ofValuation _
   refine ⟨vr, inferInstance, ?_, fun x => ?_⟩
   · have h1 : IsValuativeTopology F :=
       IsValuativeTopology.of_mem_nhds_iff_vle (val o F) (fun {s x} => Valued.mem_nhds)
@@ -285,10 +285,10 @@ namespace GlobalTheory.UnitLemma
 theorem UQ.finite_units_mod_sq : ∀ (K : UQ) (L : Type) [Field L] [Algebra K.E L] [FiniteDimensional K.E L],
     Finite (Lˣ ⧸ (powMonoidHom 2 : Lˣ →* Lˣ).range) := by
   intro K L _ _ _
-  letI := GlobalTheory.LocFieldOfDVR.valued K.O K.E
-  letI : ValuativeRel K.E := .ofValuation (GlobalTheory.LocFieldOfDVR.val K.O K.E)
-  haveI : (GlobalTheory.LocFieldOfDVR.val K.O K.E).Compatible := .ofValuation _
-  haveI : IsNonarchimedeanLocalField K.E := by
+  let := GlobalTheory.LocFieldOfDVR.valued K.O K.E
+  let : ValuativeRel K.E := .ofValuation (GlobalTheory.LocFieldOfDVR.val K.O K.E)
+  have : (GlobalTheory.LocFieldOfDVR.val K.O K.E).Compatible := .ofValuation _
+  have : IsNonarchimedeanLocalField K.E := by
     have : IsValuativeTopology K.E :=
       IsValuativeTopology.of_mem_nhds_iff_vle (GlobalTheory.LocFieldOfDVR.val K.O K.E)
         (fun {s x} => Valued.mem_nhds)
@@ -297,7 +297,7 @@ theorem UQ.finite_units_mod_sq : ∀ (K : UQ) (L : Type) [Field L] [Algebra K.E 
     have : LocallyCompactSpace K.E := GlobalTheory.LocFieldOfDVR.locallyCompactSpace
     exact {}
   obtain ⟨vrL, topL, hlocL, -⟩ := GroundTheory.LocalField.exists_isNonarchimedeanLocalField_valuativeExtension K.E L
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap K.E L).injective
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap K.E L).injective
   exact GroundTheory.LocalField.finite_quotient_range_pow_of_charZero (K := L) two_ne_zero
 
 end GlobalTheory.UnitLemma
@@ -356,9 +356,9 @@ theorem finite_quot (hsq : Finite (B.Aˣ ⧸ (powMonoidHom 2 : B.Aˣ →* B.Aˣ)
     (hmu : Set.Finite {x : B.A | x ^ 2 = 1}) : Finite (fixG B ⧸ (normHom B).range) := by
   set Sq := (powMonoidHom 2 : B.Aˣ →* B.Aˣ).range
   set φ : fixG B →* B.Aˣ ⧸ Sq := (QuotientGroup.mk' Sq).comp (fixG B).subtype
-  haveI : Finite (fixG B ⧸ φ.ker) := Finite.of_injective _ (QuotientGroup.kerLift_injective φ)
+  have : Finite (fixG B ⧸ φ.ker) := Finite.of_injective _ (QuotientGroup.kerLift_injective φ)
   set M := {x : fixG B | ((x : B.Aˣ) : B.A) ^ 2 = 1}
-  haveI : Finite M := by
+  have : Finite M := by
     have : Finite {x : B.A | x ^ 2 = 1} := hmu.to_subtype
     refine Finite.of_injective (fun x : M => (⟨((x.1 : B.Aˣ) : B.A), x.2⟩ : {x : B.A | x ^ 2 = 1})) ?_
     intro a b h
@@ -448,7 +448,7 @@ theorem toCl_surjective : Function.Surjective (toCl B) := by
 theorem finite_Cl (K : UQ) (B : InvAlg K) : Finite B.Cl := by
   have hsq := _root_.GlobalTheory.units_modSq_finite_of_fields K.E (_root_.GlobalTheory.UnitLemma.UQ.finite_units_mod_sq K) B.A
   have hmu := _root_.GlobalTheory.finite_sq_eq_one_of_finite_algebra K.E B.A
-  haveI := finite_quot B hsq hmu
+  have := finite_quot B hsq hmu
   exact Finite.of_surjective _ (toCl_surjective B)
 
 theorem finite_Cl_of_separable : ∀ (K : UQ) (B : InvAlg K), B.P.Separable → Finite B.Cl :=

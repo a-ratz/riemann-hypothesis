@@ -121,12 +121,12 @@ open scoped TensorProduct NNReal ENNReal in
 theorem _root_.GlobalTheory.GaugeEx.nice_tensor : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E], ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] [LocallyCompactSpace R] [SecondCountableTopology R] [MeasurableSpace R] [BorelSpace R], _root_.GlobalTheory.GaugeEx.Nice R → IsArtinianRing (R ⊗[F] E) ∧ IsReduced (R ⊗[F] E) ∧ IsOpenUnits (R ⊗[F] E) := by
   intro F E _ _ _ _ _ R _ _ _ _ _ _ _ _ _ hR
   obtain ⟨hArt, hRed, hOpen, -⟩ := hR
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   refine ⟨?_, ?_, ?_⟩
   · exact IsArtinianRing.of_finite R (R ⊗[F] E)
   · exact _root_.GlobalTheory.ReducedAlg.isReduced_tensor (k := F) R E
-  · haveI := _root_.GlobalTheory.GaugeEx.modTopTens (F := F) (E := E) R
-    haveI := _root_.GlobalTheory.GaugeEx.topRingTens (F := F) (E := E) R
+  · have := _root_.GlobalTheory.GaugeEx.modTopTens (F := F) (E := E) R
+    have := _root_.GlobalTheory.GaugeEx.topRingTens (F := F) (E := E) R
     exact _root_.GlobalTheory.GaugeEx.isOpenUnits_of_basis
       (Algebra.TensorProduct.basis R (Module.finBasis F E))
 

@@ -174,7 +174,7 @@ theorem coordTie_join_of_charts : ∀ (o : Type) [CommRing o] (Ω : Type) [Field
     (dominates_id_iff.2 (Category.comp_id _))
   have e2 : f ≫ g = 𝟙 _ := u2.unique (dominates_id_iff.2 (by rw [← Category.assoc, hf, hg]))
     (dominates_id_iff.2 (Category.comp_id _))
-  haveI : IsIso f := ⟨g, e2, e1⟩
+  have : IsIso f := ⟨g, e2, e1⟩
   have := coordTie_comp_iso M'.ξ f M'.tie
   rwa [hf] at this
 

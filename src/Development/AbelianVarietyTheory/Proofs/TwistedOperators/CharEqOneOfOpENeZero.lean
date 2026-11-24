@@ -133,7 +133,7 @@ theorem exists_bd_subset {ι κ : Type} [Fintype ι] [Fintype κ] (Λ : AddSubgr
 
 theorem isCompact_bd {ι : Type} [Fintype ι] [DecidableEq ι] (γ : ValueGroupWithZero k) :
     IsCompact {g : GL ι k | Bd γ g.val ∧ Bd γ (g⁻¹).val} := by
-  haveI := t2Space k
+  have := t2Space k
   have hB : IsCompact {x : Matrix ι ι k | Bd γ x} := by
     have := isCompact_univ_pi (fun _ : ι => isCompact_univ_pi
       (fun _ : ι => IsNonarchimedeanLocalField.isCompact_closedBall k γ))
@@ -169,8 +169,8 @@ theorem exists_bd_of_char (ψ : AddChar k Circle) (hψ : ψ ≠ 1) (u : kˣ) :
   apply hy
   have := ha (y / a) (by
     rw [map_div₀] at hlt ⊢
-    rw [div_lt_iff₀ (by simp [zero_lt_iff])] at hlt
-    rw [div_le_iff₀ (by simp [zero_lt_iff, ha0]), mul_comm]
+    rw [div_lt_iff₀ (by simp [pos_iff_ne_zero])] at hlt
+    rw [div_le_iff₀ (by simp [pos_iff_ne_zero, ha0]), mul_comm]
     exact hlt.le)
   rwa [mul_div_cancel₀ _ ha0] at this
 
@@ -214,7 +214,7 @@ theorem diagPart_mul {lv : ι → ℕ} {b b' : Matrix ι ι k} (hb : b.BlockTria
 theorem inv_blockTriangular {lv : ι → ℕ} {b : GL ι k} (hb : b.val.BlockTriangular lv) :
     (b⁻¹).val.BlockTriangular lv := by
   rw [Matrix.coe_units_inv]
-  letI := b.invertible
+  let := b.invertible
   exact Matrix.blockTriangular_inv_of_blockTriangular hb
 
 def levi (lv : ι → ℕ) (b : GL ι k) (hb : b.val.BlockTriangular lv) : GL ι k :=
@@ -268,7 +268,7 @@ theorem char_eq_one_of_opE_ne_zero {k : Type} [Field k] [ValuativeRel k] [Topolo
     (d : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) (hd : ∀ r s, ¬ Free p (r, s) → d r s = 0)
     (hFd : ∀ x, F (x + d) = F x) : ψ (ch d) = 1 := by
   classical
-  haveI := secondCountable k
+  have := secondCountable k
   unfold opE at hF
   set e₀ : {rs : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1)) // Free p rs} → k := fun rs => d rs.1.1 rs.1.2
   have hadd : ∀ e, affPt p x₀ (e₀ + e) = affPt p x₀ e + d := by

@@ -152,11 +152,11 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
       calc (l : ℝ)⁻¹ ^ 2 * ‖(y : V)‖ ≤ (l : ℝ)⁻¹ ^ 2 * l := by gcongr
         _ = (l : ℝ)⁻¹ := by field_simp
         _ < 1 := inv_lt_one_of_one_lt₀ hl1
-  letI : Module (ZMod (l ^ 2)) (T ⧸ U) := AddCommGroup.zmodModule hkill
-  letI : TopologicalSpace (T ⧸ U) := ⊥
-  haveI : DiscreteTopology (T ⧸ U) := ⟨rfl⟩
-  haveI : ProperSpace V := FiniteDimensional.proper ℚ_[l] V
-  haveI : Finite (T ⧸ U) := by
+  let : Module (ZMod (l ^ 2)) (T ⧸ U) := AddCommGroup.zmodModule hkill
+  let : TopologicalSpace (T ⧸ U) := ⊥
+  have : DiscreteTopology (T ⧸ U) := ⟨rfl⟩
+  have : ProperSpace V := FiniteDimensional.proper ℚ_[l] V
+  have : Finite (T ⧸ U) := by
     obtain ⟨t, htT, htf, hcov⟩ :=
       (isCompact_closedBall (0 : V) l).finite_cover_balls (e := 1) one_pos
     let f : V → T ⧸ U := fun x => if hx : x ∈ T then QuotientAddGroup.mk ⟨x, hx⟩ else 0
@@ -166,7 +166,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
       obtain ⟨x, hxt, hxy⟩ := Set.mem_iUnion₂.1 (hcov y.2)
       refine ⟨x, hxt, ?_⟩
       have hxT : x ∈ T := htT hxt
-      simp only [f, dif_pos hxT]
+      simp only [f, dite_eq_left hxT]
       rw [QuotientAddGroup.eq]
       show ‖(-(x : V) + y)‖ < 1
       rw [neg_add_eq_sub]
@@ -179,11 +179,11 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
       have hpre : (QuotientAddGroup.mk : T → T ⧸ U) ⁻¹' {QuotientAddGroup.mk z} =
           {w : T | ‖(w : V) - z‖ < 1} := by
         ext w
-        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq,
+        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq,
           QuotientAddGroup.eq_iff_sub_mem]
         exact Iff.rfl
       rw [hpre]
-      exact isOpen_lt (continuous_norm.comp (continuous_subtype_val.sub continuous_const))
+      exact isOpen_lt (continuous_norm.comp (continuous_subtypeVal.sub continuous_const))
         continuous_const
   let rho : Representation (ZMod (l ^ 2)) H (T ⧸ U) :=
     (_root_.GlobalTheory.LocalH1Finiteness.repQuot ρ hn (l : ℝ) hlR (l ^ 2)).comp φ
@@ -199,10 +199,10 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
   have hZ : Finite ↥(_root_.ReciprocityTheory.Gal.Z1 rho) := by
     have hH1 : Finite (_root_.ReciprocityTheory.Gal.H1 rho) := hfin 2 (T ⧸ U) rho two_pos hcont
     set N := Submodule.comap (_root_.ReciprocityTheory.Gal.Z1 rho).subtype (_root_.ReciprocityTheory.Gal.B1 rho)
-    haveI hQ : Finite (↥(_root_.ReciprocityTheory.Gal.Z1 rho) ⧸ N.toAddSubgroup) := hH1
-    haveI : Finite ↥(LinearMap.range (_root_.ReciprocityTheory.Gal.d0 rho)) :=
+    have hQ : Finite (↥(_root_.ReciprocityTheory.Gal.Z1 rho) ⧸ N.toAddSubgroup) := hH1
+    have : Finite ↥(LinearMap.range (_root_.ReciprocityTheory.Gal.d0 rho)) :=
       Finite.of_surjective _ (LinearMap.surjective_rangeRestrict (_root_.ReciprocityTheory.Gal.d0 rho))
-    haveI hN : Finite ↥N.toAddSubgroup :=
+    have hN : Finite ↥N.toAddSubgroup :=
       Finite.of_injective (fun x : N.toAddSubgroup =>
         (⟨x.1.1, x.2⟩ : LinearMap.range (_root_.ReciprocityTheory.Gal.d0 rho)))
         (fun a b hab => by
@@ -220,7 +220,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
     have hΨc : Ψ c = fun h =>
         QuotientAddGroup.mk (⟨c (φ h), mem_closedBall_zero_iff.2 (hcl (φ h))⟩ : T) := by
       funext h
-      simp only [Ψ, dif_pos (hcl (φ h))]
+      simp only [Ψ, dite_eq_left (hcl (φ h))]
     rw [hΨc]
     refine ⟨hπ.comp (Continuous.subtype_mk (hc'.1.comp hφ) _), fun h h' => ?_⟩
     have hval : (⟨c (φ (h * h')), mem_closedBall_zero_iff.2 (hcl _)⟩ : T) =
@@ -236,7 +236,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
     rintro c ⟨-, hcl⟩ c' ⟨-, hcl'⟩ hcc g
     obtain ⟨h, rfl⟩ := hφs g
     have := congrFun hcc h
-    simp only [Ψ, dif_pos (hcl (φ h)), dif_pos (hcl' (φ h)), QuotientAddGroup.eq_iff_sub_mem] at this
+    simp only [Ψ, dite_eq_left (hcl (φ h)), dite_eq_left (hcl' (φ h)), QuotientAddGroup.eq_iff_sub_mem] at this
     exact this
   have himg : (Ψ '' A).Finite :=
     (Set.toFinite (_root_.ReciprocityTheory.Gal.Z1 rho : Set (H → T ⧸ U))).subset (by
@@ -248,7 +248,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
       Ψ (Function.invFunOn Ψ A (Ψ c)) = Ψ c := fun c hc =>
     ⟨Function.invFunOn_mem ⟨c, hc, rfl⟩, Function.invFunOn_eq ⟨c, hc, rfl⟩⟩
   set S := Submodule.span ℚ_[l] B
-  haveI : FiniteDimensional ℚ_[l] S := FiniteDimensional.span_of_finite ℚ_[l] hBfin
+  have : FiniteDimensional ℚ_[l] S := FiniteDimensional.span_of_finite ℚ_[l] hBfin
   have hind : ∀ c ∈ A, ∀ n : ℕ, ∃ s ∈ S, ∃ a ∈ A, c = s + ((l : ℚ_[l]) ^ n) • a := by
     intro c hc n
     induction n with
@@ -269,7 +269,7 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
   have hAS : ∀ c ∈ A, c ∈ S := by
     intro c hc
     choose s hs a ha hca using hind c hc
-    refine (Submodule.closed_of_finiteDimensional S).mem_of_tendsto (f := s) (b := Filter.atTop) ?_
+    refine (Submodule.isClosed_of_finiteDimensional S).mem_of_tendsto (f := s) (b := Filter.atTop) ?_
       (Filter.Eventually.of_forall hs)
     refine tendsto_pi_nhds.2 fun g => ?_
     rw [tendsto_iff_norm_sub_tendsto_zero]
@@ -300,9 +300,9 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover {
         _ ≤ l := hl1.le
     have := S.smul_mem ((l : ℚ_[l]) ^ n)⁻¹ (hAS _ hmem)
     rwa [smul_smul, inv_mul_cancel₀ (pow_ne_zero _ hlQ), one_smul] at this
-  haveI : FiniteDimensional ℚ_[l] ((_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles ρ).restrictScalars ℚ_[l]) :=
+  have : FiniteDimensional ℚ_[l] ((_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles ρ).restrictScalars ℚ_[l]) :=
     Submodule.finiteDimensional_of_le hle
-  haveI : Module.Finite ℚ_[l] (_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles ρ) :=
+  have : Module.Finite ℚ_[l] (_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles ρ) :=
     (inferInstance : FiniteDimensional ℚ_[l] ((_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles ρ).restrictScalars ℚ_[l]))
   exact Module.Finite.of_restrictScalars_finite ℚ_[l] L (_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles ρ)
 
@@ -333,11 +333,11 @@ theorem _root_.GlobalTheory.LocalH1Finiteness.finite_continuous_cocycles_localGa
     (r : ↥Gw →* GL (Fin m) O)
     (hr : Continuous fun g => (r g : Matrix (Fin m) (Fin m) O)) :
     Module.Finite ↥Bw.LL.1 (_root_.Formalism.WeaklyAdmissibleFiltrations.continuousCocycles (Bw.rep r)) := by
-  haveI : FiniteDimensional ℚ_[l] ↥Bw.LL.1 := Bw.LL.2
-  haveI : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
+  have : FiniteDimensional ℚ_[l] ↥Bw.LL.1 := Bw.LL.2
+  have : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
   have htoLL : Continuous Bw.toLL := by
     show Continuous (fun x => ((Bw.eO x : _) : ↥Bw.LL.1))
-    exact continuous_subtype_val.comp Bw.eO_cont
+    exact continuous_subtypeVal.comp Bw.eO_cont
   let φ : _root_.Formalism.GaloisCohomology.GK l Bw.Kw.1 →* ↥(_root_.Formalism.BasicNotions.Loc.GK Bw.Kw) :=
     (Bw.Kw.1.fixingSubgroupEquiv.symm : _ ≃* _).toMonoidHom
   refine _root_.GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover (l := l) (Bw.rep r) ?_ ?_ φ ?_ ?_ ?_

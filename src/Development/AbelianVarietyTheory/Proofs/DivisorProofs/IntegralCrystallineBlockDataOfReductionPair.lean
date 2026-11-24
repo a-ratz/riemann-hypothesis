@@ -122,11 +122,11 @@ theorem exists_finExt_root_emb (E : Type) [Field E] [NumberField E] (l : ℕ) [F
   classical
   obtain ⟨ζ, hζ⟩ : ∃ ζ : PadicAlgCl l, IsPrimitiveRoot ζ l := HasEnoughRootsOfUnity.prim
   let b := Module.finBasis ℚ E
-  haveI : Fintype (E →+* PadicAlgCl l) := Fintype.ofFinite _
+  have : Fintype (E →+* PadicAlgCl l) := Fintype.ofFinite _
   let T : Finset (PadicAlgCl l) :=
     insert ζ (Finset.univ.image fun p : (E →+* PadicAlgCl l) × Fin (Module.finrank ℚ E) => p.1 (b p.2))
   let K : IntermediateField ℚ_[l] (PadicAlgCl l) := IntermediateField.adjoin ℚ_[l] (T : Set (PadicAlgCl l))
-  haveI : FiniteDimensional ℚ_[l] K :=
+  have : FiniteDimensional ℚ_[l] K :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   have hT : ∀ x ∈ T, x ∈ K := fun x hx => IntermediateField.subset_adjoin _ _ hx
   refine ⟨⟨K, inferInstance⟩, ⟨⟨ζ, hT _ (Finset.mem_insert_self _ _)⟩, ?_⟩, fun τ x => ?_⟩
@@ -886,13 +886,13 @@ theorem descend : ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l) (Γ : Type) [Grou
       refine Matrix.ext fun i j => ?_
       apply incl_injective LL
       have := congrArg (fun P : Matrix (Fin n) (Fin n) (PadicAlgCl l) => P i j) h
-      simpa only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply] using this
+      simpa only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply] using this
     have hr : ∀ g, ((f g : GL (Fin n) (PadicAlgCl l)) : Matrix (Fin n) (Fin n) (PadicAlgCl l)) ∈ Set.range
         ((((LL.1.val.toRingHom).comp ((OL LL).val.toRingHom)).mapMatrix : Matrix (Fin n) (Fin n) ↥(OL LL) →+* Matrix (Fin n) (Fin n) (PadicAlgCl l)).toMonoidHom) := by
       intro g
       refine ⟨Matrix.of fun i j => liftInt LL _ (hf g i j), ?_⟩
       ext i j
-      simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply]
+      simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply]
       exact liftInt_spec LL _ (hf g i j)
     exact lift_units _ hinj f hr
   · intro χ hχ
@@ -943,7 +943,7 @@ theorem integralBlock_of_blockPair : ∀ (E Ω : Type) [Field E] [NumberField E]
     refine ⟨?_, hBρ g i j⟩
     simpa [Units.val_mul] using memLL _ _ _ hB2 (hρL g) hB1 i j)
   choose ψ hψ using fun s => (GlobalTheory.IntDescend.descend l LL (G E Ω)).2 (χ s) (fun g => ⟨hχL s g, _root_.GlobalTheory.ExpFrame.CharUnit.norm_char_eq_one E Ω l (χ s) (hχ s).1 g⟩)
-  haveI : IsDiscreteValuationRing ↥(OL LL) := Examples₂.LB.OL_dvr LL
+  have : IsDiscreteValuationRing ↥(OL LL) := Examples₂.LB.OL_dvr LL
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible ↥(OL LL)
   have hmat : ∀ g, (r' g : Matrix (Fin n) (Fin n) ↥(OL LL)).map (GlobalTheory.WachBlock.ofOL l LL) =
       ((A⁻¹ * r g * A : GL (Fin n) (PadicAlgCl l)) : Matrix (Fin n) (Fin n) (PadicAlgCl l)) := by

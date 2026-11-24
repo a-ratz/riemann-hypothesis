@@ -1483,13 +1483,13 @@ theorem mkQ_mem_eigenSub_iff (a : S → w.valuationSubring) (ha : Function.Injec
     by_cases hs : s = τ
     · subst hs
       have h1 := h0 s
-      rw [hu, if_pos rfl] at h1
+      rw [hu, ite_eq_left rfl] at h1
       have h2 : (filSpace (kerFil a N g) s).mkQ (f s - z) = 0 := (hfs s _).2 (by rw [map_sub]; exact h1)
       rw [map_sub, sub_eq_zero] at h2
       rw [LinearMap.single_apply, Pi.single_eq_same]
       exact h2
     · have h1 := h0 s
-      rw [hu, if_neg hs, sub_zero] at h1
+      rw [hu, ite_eq_right hs, sub_zero] at h1
       rw [LinearMap.single_apply, Pi.single_eq_of_ne hs]
       exact (hfs s _).2 h1
 
@@ -1572,7 +1572,7 @@ theorem det_adapted_core : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (�
   rw [happ, hx, Matrix.det_mul] at hdet
   have hAU : (A * Matrix.of U).det ≠ 0 := by
     have hu : IsUnit (Matrix.of (fun i => ∑ j, A i j • U j)) :=
-      Matrix.linearIndependent_rows_iff_isUnit.1 hX.1
+      Matrix.linearIndependent_row_iff_isUnit.1 hX.1
     rw [hx] at hu
     exact ((Matrix.isUnit_iff_isUnit_det _).1 hu).ne_zero
   have hU0 : (Matrix.of U).det ≠ 0 := by

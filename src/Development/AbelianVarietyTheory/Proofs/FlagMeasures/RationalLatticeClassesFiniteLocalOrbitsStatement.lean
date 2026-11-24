@@ -558,7 +558,7 @@ variable {D : D7}
 theorem scale_part : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ Λ₀ : LV D, Submodule.IsLattice D.host.E Λ₀ → ∃ d : ℕ, 0 < d ∧ ∀ Λ : LV D, Submodule.IsLattice D.host.E Λ → (∀ p, ∃ h ∈ (FP p).UW0, LocNG.img h (lattice₂ D Z.M p Λ₀) = lattice₂ D Z.M p Λ) → ∀ x ∈ Λ, ∀ y ∈ Λ, (d : D.host.E) * (VS D).hT x y ∈ Set.range (algebraMap (𝓞 D.host.E) D.host.E) := by
   intro D X Y u u' F F' w _ _ Z FP _ _ Λ₀ h0
   obtain ⟨S, hSfin, hSspan⟩ := Submodule.fg_def.1 h0.fg
-  haveI : Fintype S := hSfin.fintype
+  have : Fintype S := hSfin.fintype
   obtain ⟨d, hd0, hd⟩ := exists_nat_mul_fin (D := D) (fun ij : S × S => (VS D).hT ij.1 ij.2)
   have hzero : (0 : D.host.E) ∈ Set.range (algebraMap (𝓞 D.host.E) D.host.E) := ⟨0, map_zero _⟩
 
@@ -653,8 +653,8 @@ theorem dual_part : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what
       have hn' : (n : D.host.E) ≠ 0 := by exact_mod_cast hn.ne'
       have := Submodule.smul_mem _ ((n : D.host.E)⁻¹) hmem
       rwa [smul_smul, inv_mul_cancel₀ hn', one_smul] at this
-  haveI : Finite b := hli.finite
-  haveI : Fintype b := Fintype.ofFinite b
+  have : Finite b := hli.finite
+  have : Fintype b := Fintype.ofFinite b
   have hvΛ : ∀ i : b, (i : (VS D).V) ∈ Λ₀ := fun i => (hbs i.2).1
   have hvW : ∀ i : b, (i : (VS D).V) ∈ orth (VS D) U := fun i => (hbs i.2).2
   let B : Matrix b b D.host.E := fun i j => (VS D).hT (j : (VS D).V) (i : (VS D).V)
@@ -1181,7 +1181,7 @@ namespace GlobalTheory.LatClassFin
 
 theorem fg_of_le_fg {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module (𝓞 K) V]
     {N L : Submodule (𝓞 K) V} (hL : L.FG) (h : N ≤ L) : N.FG := by
-  haveI := isNoetherian_of_fg_of_noetherian L hL
+  have := isNoetherian_of_fg_of_noetherian L hL
   have h1 := IsNoetherian.noetherian (N.comap L.subtype)
   have e : (N.comap L.subtype).map L.subtype = N := by
     rw [Submodule.map_comap_subtype, inf_of_le_right h]
@@ -1384,7 +1384,7 @@ private theorem isFullLattice_of_local_span {D : D7} (Z : LocDat D) (p : PlF D) 
 open GlobalTheory.ThetaMove.CommonRef in
 theorem lattice_between_parts : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ Λ₀ : LV D, Submodule.IsFullLattice D.host.E Λ₀ → ∃ N : ℕ, 0 < N ∧ ∀ Λ : LV D, Submodule.IsLattice D.host.E Λ → (∀ p, ∃ h ∈ (FP p).UW0, LocNG.img h (lattice₂ D Z.M p Λ₀) = lattice₂ D Z.M p Λ) → ∀ x ∈ Λ, (N : D.host.E) • x ∈ Λ ⊓ toO (VS D) (Xplus F ⊔ Xplus F') ⊔ Λ ⊓ toO (VS D) (orth (VS D) (Xplus F ⊔ Xplus F')) := by
   intro D X Y u u' F F' w hZ hG Z FP hB hRel Λ₀ hΛ₀
-  letI := hΛ₀
+  let := hΛ₀
   have hU : ∀ y ∈ Xplus F ⊔ Xplus F', y ∈ orth (VS D) (Xplus F ⊔ Xplus F') → y = 0 := by
     intro y hyU hyW
     by_contra hy

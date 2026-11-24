@@ -98,7 +98,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω]
 
 theorem isOpen_setOf_apply [Algebra.IsAlgebraic ℚ Ω] (x : Ω) (P : Ω → Prop) :
     IsOpen {σ : G ℚ Ω | P (σ x)} := by
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {x}) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {x}) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral x)
   have hH : ((IntermediateField.adjoin ℚ {x}).fixingSubgroup : Set (G ℚ Ω)) ∈ nhds (1 : G ℚ Ω) :=
     (IntermediateField.fixingSubgroup_isOpen _).mem_nhds (Subgroup.one_mem _)
@@ -132,7 +132,7 @@ theorem isClosed_Ine [Algebra.IsAlgebraic ℚ Ω] (A : ValuationSubring Ω) :
       (⋂ x : Ω, {σ : G ℚ Ω | (σ x ∈ A ↔ x ∈ A)}) ∩
         ⋂ x : Ω, {σ : G ℚ Ω | A.valuation x ≤ 1 → A.valuation (σ x - x) < 1} := by
     ext σ
-    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
     constructor
     · intro h
       exact ⟨fun x => apply_mem_iff_of_mem_Dec (F := ℚ) h.1 x, h.2⟩

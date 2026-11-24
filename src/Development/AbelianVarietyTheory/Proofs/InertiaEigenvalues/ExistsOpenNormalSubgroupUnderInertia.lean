@@ -59,7 +59,7 @@ theorem exists_fix_roots {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alg
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have : NeZero n := ⟨hn⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω n
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω n
   have hp : ∀ ζ : Ω, ζ ^ n = 1 → ∃ k : ℕ, ξ ^ k = ζ := fun ζ h => by
     obtain ⟨k, -, hk⟩ := hξ.eq_pow_of_pow_eq_one h
     exact ⟨k, hk⟩

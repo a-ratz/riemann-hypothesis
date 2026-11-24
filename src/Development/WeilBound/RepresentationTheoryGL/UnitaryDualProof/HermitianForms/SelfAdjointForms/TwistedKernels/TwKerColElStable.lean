@@ -162,7 +162,7 @@ theorem isLat_sup {A A' : AddSubgroup (Fin (m + 1) → k)} (hA : IsLat A) (hA' :
 theorem avg_idem (hB : Lv ψ h π s B) (ξ : Fin (m + 1) → k) {A : AddSubgroup (Fin (m + 1) → k)} (hA : IsLat A) (v : V) :
     avg ψ h π ξ A (avg ψ h π ξ A v) = avg ψ h π ξ A v := by
   have e := PositivityTheory.RgUd.Form.U.Atom.avg_avg h π ψ hB.cont hB.smooth ξ ξ hA hA le_rfl v
-  rw [if_pos (fun _ _ => rfl)] at e
+  rw [ite_eq_left (fun _ _ => rfl)] at e
   exact e
 
 theorem form_avg_self (hB : Lv ψ h π s B) (ξ : Fin (m + 1) → k) {A : AddSubgroup (Fin (m + 1) → k)} (hA : IsLat A)

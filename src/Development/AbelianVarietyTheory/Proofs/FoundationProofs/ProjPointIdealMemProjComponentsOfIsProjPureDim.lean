@@ -72,7 +72,7 @@ attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem ringKrullDim_quotient_add_one_le_of_lt {A : Type*} [CommRing A] {Q P : Ideal A}
     [Q.IsPrime] (h : Q < P) : ringKrullDim (A ⧸ P) + 1 ≤ ringKrullDim (A ⧸ Q) := by
-  obtain ⟨g, hg, hgQ⟩ := SetLike.exists_of_lt h
+  obtain ⟨g, hg, hgQ⟩ := IsConcreteLE.exists_of_lt h
   exact ringKrullDim_succ_le_of_surjective (Ideal.Quotient.factor h.le)
     (Ideal.Quotient.factor_surjective _) (r := Ideal.Quotient.mk Q g)
     (mem_nonZeroDivisors_of_ne_zero (by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem])) (by
@@ -111,7 +111,7 @@ theorem mk_mem_projPoints_iff {I : Ideal (MvPolynomial ι k)}
     (hI : I.IsHomogeneous (homogeneousSubmodule ι k)) {v : ι → k} (hv : v ≠ 0) :
     Projectivization.mk k v hv ∈ projPoints I ↔ ∀ g ∈ I, MvPolynomial.eval v g = 0 := by
   obtain ⟨a, ha⟩ := Projectivization.exists_smul_eq_mk_rep k v hv
-  rw [projPoints, Set.mem_setOf_eq, ← ha]
+  rw [projPoints, Set.mem_ofPred_eq, ← ha]
   refine ⟨fun h => ?_, fun h => eval_smul_eq_zero_of_isHomogeneous hI h a⟩
   have := eval_smul_eq_zero_of_isHomogeneous hI h (a⁻¹ : kˣ)
   rwa [Units.smul_def, smul_smul, Units.inv_mul, one_smul] at this
@@ -151,12 +151,12 @@ theorem mem_projPoints_iff_le {I : Ideal (MvPolynomial ι k)}
 
 theorem exists_X_notMem_projPointIdeal (y : Projectivization k (ι → k)) :
     ∃ i, (X i : MvPolynomial ι k) ∉ projPointIdeal y := by
-  obtain ⟨i, hi⟩ := Function.ne_iff.1 y.rep_nonzero
+  obtain ⟨i, hi⟩ := Function.ne_iff.1 y.rep_ne_zero
   exact ⟨i, fun h => hi (by simpa using eval_eq_zero_of_mem_projPointIdeal h)⟩
 
 theorem eq_of_projPointIdeal_le {y z : Projectivization k (ι → k)}
     (h : projPointIdeal y ≤ projPointIdeal z) : y = z := by
-  obtain ⟨i, hi⟩ := Function.ne_iff.1 y.rep_nonzero
+  obtain ⟨i, hi⟩ := Function.ne_iff.1 y.rep_ne_zero
   have hi' : y.rep i ≠ 0 := hi
   have key : ∀ j, y.rep i * z.rep j = y.rep j * z.rep i := by
     intro j
@@ -271,7 +271,7 @@ omit [Finite ι] in
 theorem projComponents_of_isPrime {P : Ideal (MvPolynomial ι k)} [P.IsPrime] {i : ι}
     (h : (X i : MvPolynomial ι k) ∉ P) : projComponents P = {P} := by
   ext Q
-  rw [projComponents, Set.mem_setOf_eq, Ideal.minimalPrimes_eq_subsingleton_self]
+  rw [projComponents, Set.mem_ofPred_eq, Ideal.minimalPrimes_eq_subsingleton_self]
   exact ⟨fun h => h.1, fun hQ => ⟨hQ, i, hQ ▸ h⟩⟩
 
 theorem projSetDegree_of_isPrime {P : Ideal (MvPolynomial ι k)} [P.IsPrime] {i : ι}
@@ -552,7 +552,7 @@ theorem idealHilbertPoly_bot [Fintype ι] {n : ℕ} (hn : Fintype.card ι = n + 
     rw [← natCard_degree_eq, homogeneousSubmodule_eq_finsupp_supported]
     exact finrank_eq_nat_card_basis (basisRestrictSupport k {d : ι →₀ ℕ | d.degree = m})
   rw [Submodule.restrictScalars_bot, bot_inf_eq, finrank_bot, add_zero, h2, hn] at h1
-  rw [← hm, h1, preHilbertPoly_eq_choose_sub_add ℚ n (Nat.zero_le (m + n)), Nat.sub_zero,
+  rw [← hm, h1, preHilbertPoly_eq_choose_add_sub ℚ n (Nat.zero_le (m + n)), Nat.sub_zero,
     ← Nat.choose_symm_add]
   rfl
 

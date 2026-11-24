@@ -160,7 +160,7 @@ theorem redM_mat {gp : Fin 2 → ℕ} (G : GLoc F E σ gp) (i : Fin 2) (h : (gp 
   rw [mat_one]
   ext a b
   obtain ⟨hh, e⟩ := hres _ _ (hA a b)
-  exact (dif_pos hh).trans e
+  exact (dite_eq_left hh).trans e
 
 end Generic
 
@@ -211,14 +211,14 @@ theorem exists_natCast {w : HeightOneSpectrum (𝓞 B.host.E)} (hw : w ∈ (B.pr
     exacts [⟨0, h⟩, ⟨1, h⟩]
   have hN := hPr.vG_norm i w hi
   have hp := hPr.g_prime i
-  haveI : Fact (B.host.g i).Prime := ⟨hp⟩
-  haveI := w.isMaximal
-  letI : Field (𝓞 B.host.E ⧸ w.asIdeal) := Ideal.Quotient.field _
-  haveI : Fintype (𝓞 B.host.E ⧸ w.asIdeal) := Fintype.ofFinite _
+  have : Fact (B.host.g i).Prime := ⟨hp⟩
+  have := w.isMaximal
+  let : Field (𝓞 B.host.E ⧸ w.asIdeal) := Ideal.Quotient.field _
+  have : Fintype (𝓞 B.host.E ⧸ w.asIdeal) := Fintype.ofFinite _
   have hc : Fintype.card (𝓞 B.host.E ⧸ w.asIdeal) = B.host.g i := by
     rw [← Nat.card_eq_fintype_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
     exact hN
-  haveI : CharP (𝓞 B.host.E ⧸ w.asIdeal) (B.host.g i) := charP_of_card_eq_prime hc
+  have : CharP (𝓞 B.host.E ⧸ w.asIdeal) (B.host.g i) := charP_of_card_eq_prime hc
   obtain ⟨a, rfl⟩ := (ZMod.ringEquiv (𝓞 B.host.E ⧸ w.asIdeal) hc).surjective c
   exact ⟨a.val, by rw [ZMod.natCast_val]; rfl⟩
 
@@ -326,7 +326,7 @@ theorem lev_iff (hI : I.Ok) {u : B.Word} {Lb : Unit → Submodule (𝓞 B.host.E
 theorem colLev_zero (w : (B.primes X).vGs) : colLev I.Ch 0 w =
     ⟨HX (𝓞 B.host.E ⧸ w.1.asIdeal) (B.R.N 0) B.R.k B.R.t 0,
       lamX (I.Ch.psi0 w) (extChi fun s => I.Ch.chi s w) (B.R.N 0) B.R.k B.R.m B.R.t 0⟩ :=
-  if_pos (by have := B.R.two_le_m; omega)
+  ite_eq_left (by have := B.R.two_le_m; omega)
 
 theorem mem_colLev_zero {w : (B.primes X).vGs} {g : GL (Fin (B.R.N 0)) (𝓞 B.host.E ⧸ w.1.asIdeal)} :
     g ∈ (colLev I.Ch 0 w).H ↔ g ∈ uniUT (B.R.N 0) (𝓞 B.host.E ⧸ w.1.asIdeal) B.R.k [] := by
@@ -365,7 +365,7 @@ theorem chr_colLev (Λ : LevFam B.host.E B.LL (B.R.N 0) (B.primes X).vGs) (hΛ :
 theorem levelTwistPrimes_stepZero_character_eq_one (hI : I.Ok) (u : B.Word) (b : (I.stp u I.mu0 0).β)
     (g : (levQAt I.sel (I.tup I.mu0) (I.idx I.mu0) (I.Tp I.mu0) 0 b).grp) :
     (levQAt I.sel (I.tup I.mu0) (I.idx I.mu0) (I.Tp I.mu0) 0 b).chr g = 1 := by
-  haveI : IsEmpty (QE I.sel (I.tup I.mu0 : Chr B.fields.F B.fields.E B.fields.K)) := ⟨fun P => notMem_twistPrimes_initialTuple I P.1 P.2⟩
+  have : IsEmpty (QE I.sel (I.tup I.mu0 : Chr B.fields.F B.fields.E B.fields.K)) := ⟨fun P => notMem_twistPrimes_initialTuple I P.1 P.2⟩
   rw [LevQFam.chr, piChar, Finset.univ_eq_empty, Finset.prod_empty]
   rfl
 
@@ -380,7 +380,7 @@ theorem chi_eq (hI : I.Ok) {u : B.Word} {Lb : Unit → Submodule (𝓞 B.host.E)
       ((chi () ⟨x, hx⟩ : ℂˣ) : ℂ) = B.embLL (∏ w : (B.primes X).vGs,
         I.Ch.psi0 w (supSum B.R.k (SX B.R.k B.R.m 0) ((h w : GL _ _) : Matrix (Fin (B.R.N 0)) (Fin (B.R.N 0)) _))) := by
   have hQ := notMem_twistPrimes_initialTuple I
-  haveI : NeZero (B.R.N 0) := ⟨by have := B.R.m_add_three_le_k; simp [Ranks.N]; omega⟩
+  have : NeZero (B.R.N 0) := ⟨by have := B.R.m_add_three_le_k; simp [Ranks.N]; omega⟩
   set p0 := ((I.stp u I.mu0 0).rep c).1.1 with hp0def
   have hp0 : IsPtOf B.sp.cm (y c * k ()) p0 :=
     (hR.pt c).of_extTo (fun P hP => absurd hP (hQ P)) (Finset.disjoint_right.2 fun {P} hP => absurd hP (hQ P))
@@ -428,8 +428,8 @@ theorem inJ_iff {κ L : Type} [Field κ] [Field L] (ρ : κ →+* L) (hn : B.R.N
     (A : GL (Fin (B.R.N 0)) κ) :
     InJ B.R.k B.R.t (B.R.N 0) false (A.1.map ρ) ↔ A ∈ uniUT (B.R.N 0) κ B.R.k [] := by
   have hlt : ∀ x : Fin (B.R.N 0), (x : ℕ) < B.R.k := fun x => hn ▸ x.2
-  have hb : ∀ x : Fin (B.R.N 0), Formalism.L2.Forms.blkOf B.R.k B.R.t x = x := fun x => if_pos (hlt x)
-  have hf : ∀ x : Fin (B.R.N 0), fine B.R.k [] x = x := fun x => if_pos (hlt x)
+  have hb : ∀ x : Fin (B.R.N 0), Formalism.L2.Forms.blkOf B.R.k B.R.t x = x := fun x => ite_eq_left (hlt x)
+  have hf : ∀ x : Fin (B.R.N 0), fine B.R.k [] x = x := fun x => ite_eq_left (hlt x)
   simp only [InJ, hb, Matrix.map_apply]
   constructor
   · rintro ⟨h1, h2, -, -⟩
@@ -478,9 +478,9 @@ theorem prod_places (Φ : (B.primes X).vGs → ℂ)
     · refine Finset.prod_congr rfl fun w hw => ?_
       obtain ⟨w', hw', e, e'⟩ := hf i _ (g_mem_under hw)
       obtain rfl : w' = w := vGs_inj (X := X) (mem_vGs.2 ⟨i, hw⟩) (mem_vGs.2 ⟨i, hw'⟩) e
-      rw [finprod_eq_dif, dif_pos (g_mem_under hw), e']
+      rw [finprod_eq_dif, dite_eq_left (g_mem_under hw), e']
       simp only [Ψ]
-      rw [dif_pos (mem_vGs.2 ⟨i, hw⟩)]
+      rw [dite_eq_left (mem_vGs.2 ⟨i, hw⟩)]
     · intro v hv
       rw [Function.mem_mulSupport, finprod_eq_dif] at hv
       split_ifs at hv with h
@@ -496,7 +496,7 @@ theorem prod_places (Φ : (B.primes X).vGs → ℂ)
   rw [e, ← Finset.prod_coe_sort (B.primes X).vGs Ψ]
   refine Finset.prod_congr rfl fun w _ => ?_
   simp only [Ψ]
-  rw [dif_pos w.2]
+  rw [dite_eq_left w.2]
 
 theorem norm_additiveCharacter_typePrime_eq_one (w : (B.primes X).vGs) (a : 𝓞 B.host.E ⧸ w.1.asIdeal) : ‖B.embLL (I.Ch.psi0 w a)‖ = 1 := by
   obtain ⟨i, hi⟩ := mem_vGs.1 w.2

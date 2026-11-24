@@ -239,7 +239,7 @@ theorem frRatioG (hch : IsChartG t x0 d F act tg uvec x) {ph1 ph2 sy ad} {e : �
       ∀ y, gm (ρn x0 d n m).left y ⊤ (unitΓ u') = gm (𝟙 _) y ⊤ (unitΓ u) := by
     intro n u' u f h' h y
     refine (gm_map _ u' y).trans (congrArg (fun w => gm (𝟙 _) y ⊤ (unitΓ w)) (Units.ext ?_))
-    simp only [Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass]
     rw [h', h]
     exact psJet_trunc m f
   refine ⟨U, corr_of_val hL fun y J hJ => ?_, ?_, ?_, fun a => ?_⟩

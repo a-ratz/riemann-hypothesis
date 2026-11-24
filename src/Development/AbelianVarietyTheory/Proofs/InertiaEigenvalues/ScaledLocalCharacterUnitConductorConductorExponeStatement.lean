@@ -80,7 +80,7 @@ theorem condOne_condExp : ∀ (E : Type) [Field E] [NumberField E] (ϖ : ∀ w :
     rw [map_mul, hval] at h1
     have h2 : WithZero.exp n * Valued.v x ≤ WithZero.exp n ↔ Valued.v x ≤ 1 := by
       conv_lhs => rhs; rw [← mul_one (WithZero.exp n)]
-      exact mul_le_mul_iff_right₀ (zero_lt_iff.mpr WithZero.exp_ne_zero)
+      exact mul_le_mul_iff_right₀ (pos_iff_ne_zero.mpr WithZero.exp_ne_zero)
     rw [h2] at h1
     exact h1
   unfold condExp

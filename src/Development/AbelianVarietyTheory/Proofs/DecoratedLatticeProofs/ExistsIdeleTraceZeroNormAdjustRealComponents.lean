@@ -162,7 +162,7 @@ private theorem scal_pos (D : D7) (μ : D.host.E) (hμ : μ ≠ 0) (w : Infinite
   set hw := NumberField.IsTotallyReal.isReal w
   set n : D.host.F := ⟨μ * star μ, (IsCMField.complexConj_eq_self_iff D.host.E _).1 (by
         change star (μ * star μ) = μ * star μ; rw [star_mul, star_star])⟩ with hn
-  letI : Algebra D.host.F ℂ := w.embedding.toAlgebra
+  let : Algebra D.host.F ℂ := w.embedding.toAlgebra
   let φ : D.host.E →ₐ[D.host.F] ℂ := by
     exact IsAlgClosed.lift
   have h1 : φ (algebraMap D.host.F D.host.E n) = w.embedding n := φ.commutes n

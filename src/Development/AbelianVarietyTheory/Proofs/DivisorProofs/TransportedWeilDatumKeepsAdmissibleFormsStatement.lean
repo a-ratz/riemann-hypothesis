@@ -607,11 +607,11 @@ theorem weilAdmissible_of_heisenberg_unitary (D : D7) (ψ : AddChar (AF D.host.F
     { toFun := fun f => sl f r
       map_add' := fun f f' => by
         ext z
-        rw [SchwartzMap.add_apply, hsl, hsl, hsl, show ⇑(f + f') = ⇑f + ⇑f' from funext fun _ => rfl, pureA_add, map_add (f := _)]
+        rw [add_apply, hsl, hsl, hsl, show ⇑(f + f') = ⇑f + ⇑f' from funext fun _ => rfl, pureA_add, map_add (f := _)]
         rfl
       map_smul' := fun a f => by
         ext z
-        rw [SchwartzMap.smul_apply, hsl, hsl, show ⇑(a • f) = a • ⇑f from funext fun _ => rfl, pureA_smul, map_smul]
+        rw [smul_apply, hsl, hsl, show ⇑(a • f) = a • ⇑f from funext fun _ => rfl, pureA_smul, map_smul]
         rfl }
   have hA : ∀ r f, ⇑(A r f) = slice D.host.F (O (GlobalTheory.WeilM.pureA D.host.F f g)) r := fun r f => funext (hsl f r)
   have hcont : ∀ r, Continuous (A r) := by
@@ -631,7 +631,7 @@ theorem weilAdmissible_of_heisenberg_unitary (D : D7) (ψ : AddChar (AF D.host.F
   refine ⟨∑ r ∈ R.attach, (T r.1 r.2).comp ⟨A r.1, hcont r.1⟩, fun f => ?_⟩
   have hΦ := hdec (O (GlobalTheory.WeilM.pureA D.host.F f g)) (hfix _ (hfixed f)).1 (hfix _ (hfixed f)).2
 
-  rw [LinearMap.comp_apply, hΦ, map_sum, ContinuousLinearMap.sum_apply, ← Finset.sum_attach R]
+  rw [LinearMap.comp_apply, hΦ, map_sum, sum_apply, ← Finset.sum_attach R]
   refine Finset.sum_congr rfl fun r _ => ?_
   rw [← hA, hT r.1 r.2]
   rfl

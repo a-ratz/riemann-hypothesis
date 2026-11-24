@@ -60,8 +60,8 @@ theorem _root_.GlobalTheory.EtC.flatS_tw : ∀ (q : ℕ) [NeZero q] (i : ℤ),
   refine ⟨_, toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ _root_.GlobalTheory.EtC.twF q i), h1, h2,
     fun U hU => ?_⟩
   obtain ⟨x⟩ := hU
-  haveI : Nontrivial Γ(U, ⊤) := (U.presheaf.germ ⊤ x trivial).hom.domain_nontrivial
-  haveI := (_root_.GlobalTheory.TwFree.twist_free q i Γ(U, ⊤)).1
+  have : Nontrivial Γ(U, ⊤) := (U.presheaf.germ ⊤ x trivial).hom.domain_nontrivial
+  have := (_root_.GlobalTheory.TwFree.twist_free q i Γ(U, ⊤)).1
   change Module.Flat (ULift.{1} (ZMod q))
     ((_root_.GlobalTheory.EtC.Prim q Γ(U, ⊤) →₀ ULift.{1} (ZMod q)) ⧸
       _root_.GlobalTheory.EtC.twRel q i Γ(U, ⊤))

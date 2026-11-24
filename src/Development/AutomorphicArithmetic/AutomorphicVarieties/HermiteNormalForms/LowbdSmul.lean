@@ -55,7 +55,7 @@ private theorem lowbd_cont (L : Type) [Field L] [NumberField L] (N : ℕ) :
   unfold qR mat
   simp only [dotProduct, mulVec, Matrix.of_apply, Pi.star_apply]
   have hv : Continuous fun p : HS L N × VR L N => (p.1 : InfinitePlace L → Fin N → Fin N → ℂ) :=
-    continuous_subtype_val.comp continuous_fst
+    continuous_subtypeVal.comp continuous_fst
   have hz : Continuous fun p : HS L N × VR L N => (p.2 : InfinitePlace L → Fin N → ℂ) := continuous_snd
   refine continuous_finsetSum _ fun w _ => Complex.continuous_re.comp ?_
   refine continuous_finsetSum _ fun i _ => ?_

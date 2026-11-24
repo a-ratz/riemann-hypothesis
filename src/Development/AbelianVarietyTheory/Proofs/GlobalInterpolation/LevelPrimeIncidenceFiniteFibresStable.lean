@@ -184,7 +184,7 @@ theorem incf_fin_dn [Finite F] (p : PP Lc n) : {p₀ : PP Lc n | p₀.Inc p}.Fin
   rcases Set.eq_empty_or_nonempty {p₀ : PP Lc n | p₀.Inc p} with h | ⟨r, -, -, -, hr, -⟩
   · rw [h]; exact Set.finite_empty
   obtain ⟨S, hS, hSL, hrep⟩ := incf_reps r.1.L r.2.lat
-  haveI := hS.to_subtype
+  have := hS.to_subtype
   refine Set.Finite.of_finite_image (f := fun (a : PP Lc n) (s : S) => a.1.f s) (Set.toFinite _) ?_
   rintro a ⟨-, -, -, ha, -⟩ b ⟨-, -, -, hb, -⟩ hab
   have ha' : a.1.L = r.1.L := SetLike.coe_injective (ha.symm.trans hr)
@@ -210,7 +210,7 @@ theorem incf_act_inc {g : GL (Fin n) Lc.K} {p p₁ a a₁ : PP Lc n} (ha : p.IsA
   · ext y
     obtain ⟨u, rfl⟩ := incf_surj g y
     have : u ∈ p₁.ker ↔ u ∈ p.1.L := by rw [hk]; rfl
-    simp only [PP.ker, Set.mem_setOf_eq, SetLike.mem_coe] at this ⊢
+    simp only [PP.ker, Set.mem_ofPred_eq, SetLike.mem_coe] at this ⊢
     rw [(ha₁ u).1, (ha₁ u).2, (ha u).1, this]
   · rw [← Matrix.mulVec_smul, (ha₁ _).2, hf]
 
@@ -239,9 +239,9 @@ theorem incf_frame (p : PP Lc n) {x : Fin n → Lc.K} (hx : p.1.f x = 1) :
     intro y
     funext k
     simp only [hA, Matrix.mulVec, dotProduct, Matrix.updateCol_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    rw [← Finset.add_sum_erase _ _ (Finset.mem_univ j), if_pos rfl, add_comm,
+    rw [← Finset.add_sum_erase _ _ (Finset.mem_univ j), ite_eq_left rfl, add_comm,
       Finset.sum_congr rfl (g := fun i => if k = i then y i else 0)
-        (fun i hi => by rw [if_neg (Finset.ne_of_mem_erase hi), Matrix.one_apply]; split_ifs <;> simp),
+        (fun i hi => by rw [ite_eq_right (Finset.ne_of_mem_erase hi), Matrix.one_apply]; split_ifs <;> simp),
       Finset.sum_ite_eq]
     by_cases hk : k = j
     · subst hk; simp; ring
@@ -307,19 +307,19 @@ theorem incf_up_existsUnique (p : PP Lc n) (x : Fin n → Lc.K) (hx : p.1.f x = 
     hxL, ?_, ?_⟩
   · intro y hy z hz
     simp only at hy hz ⊢
-    rw [if_pos hy, if_pos hz, if_pos (add_mem hy hz), smul_add, p.2.add _ (hqL y hy) _ (hqL z hz)]
+    rw [ite_eq_left hy, ite_eq_left hz, ite_eq_left (add_mem hy hz), smul_add, p.2.add _ (hqL y hy) _ (hqL z hz)]
   · intro a y hy
     simp only at hy ⊢
-    rw [if_pos hy, if_pos (L.smul_mem a hy), smul_comm, p.2.smul _ _ (hqL y hy)]
+    rw [ite_eq_left hy, ite_eq_left (L.smul_mem a hy), smul_comm, p.2.smul _ _ (hqL y hy)]
   · intro y hy
     simp only at hy ⊢
-    rw [if_neg hy]
-  · exact ⟨_, by simp only; rw [if_pos he, hfe]; exact one_ne_zero⟩
+    rw [ite_eq_right hy]
+  · exact ⟨_, by simp only; rw [ite_eq_left he, hfe]; exact one_ne_zero⟩
   · ext y
-    simp only [PP.ker, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [PP.ker, Set.mem_ofPred_eq, SetLike.mem_coe]
     constructor
     · rintro ⟨hy, hf⟩
-      rw [if_pos hy] at hf
+      rw [ite_eq_left hy] at hf
       obtain ⟨l, hl, a, rfl⟩ := (hmem y).1 hy
       rw [hqe, p.2.add _ (incf_q_mem _ hl) _ (p.1.L.smul_mem _ hxL), incf_f_q p hl, p.2.smul _ _ hxL, hx,
         zero_add, mul_one] at hf
@@ -332,9 +332,9 @@ theorem incf_up_existsUnique (p : PP Lc n) (x : Fin n → Lc.K) (hx : p.1.f x = 
       exact add_mem hl (p.1.L.smul_mem _ hxL)
     · intro hy
       have hy' : y ∈ L := (hmem _).2 ⟨y, hy, 0, by simp⟩
-      exact ⟨hy', by rw [if_pos hy', incf_f_q p hy]⟩
+      exact ⟨hy', by rw [ite_eq_left hy', incf_f_q p hy]⟩
   · simp only
-    rw [if_pos he, hfe]
+    rw [ite_eq_left he, hfe]
 
 end LocF
 

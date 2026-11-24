@@ -150,7 +150,7 @@ theorem logIdeal_support_finite : ∀ (E : Type) [Field E] [NumberField E] (I : 
   refine ⟨p.2, ?_, hn0⟩
   by_contra hdvd
   apply hj
-  haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
+  have : Fact (p : ℕ).Prime := ⟨p.2⟩
   have h1 : ‖j (n : 𝓞 E)‖ = 1 := by
     rw [map_natCast]
     have : ((n : ℚ_[p]) : ℂ_[p]) = (n : ℂ_[p]) := by simp

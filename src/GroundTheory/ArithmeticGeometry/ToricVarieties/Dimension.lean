@@ -61,7 +61,7 @@ variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] [Algebra.IsIntegr
 
 theorem ringKrullDim_le_of_isIntegral : ringKrullDim A ≤ ringKrullDim R :=
   Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap R A)) fun _ _ hpq =>
-    Ideal.IsIntegral.comap_lt_comap (R := R) hpq
+    Ideal.IsIntegral.under_lt_under (R := R) hpq
 
 theorem exists_ltSeries_lift (hinj : Function.Injective (algebraMap R A))
     (l : LTSeries (PrimeSpectrum R)) :

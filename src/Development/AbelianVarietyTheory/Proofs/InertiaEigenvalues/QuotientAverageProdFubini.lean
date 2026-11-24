@@ -66,8 +66,8 @@ theorem isCoLat_prod {Γ₁ : AddSubgroup G₁} {Γ₂ : AddSubgroup G₂} (h₁
   · refine DiscreteTopology.of_continuous_injective
       (f := fun z : Γ₁.prod Γ₂ => ((⟨z.1.1, (AddSubgroup.mem_prod.1 z.2).1⟩ : Γ₁),
         (⟨z.1.2, (AddSubgroup.mem_prod.1 z.2).2⟩ : Γ₂))) ?_ ?_
-    · exact ((continuous_fst.comp continuous_subtype_val).subtype_mk _).prodMk
-        ((continuous_snd.comp continuous_subtype_val).subtype_mk _)
+    · exact ((continuous_fst.comp continuous_subtypeVal).subtype_mk _).prodMk
+        ((continuous_snd.comp continuous_subtypeVal).subtype_mk _)
     · intro a b h
       simp only [Prod.mk.injEq, Subtype.mk.injEq] at h
       exact Subtype.ext (Prod.ext h.1 h.2)
@@ -122,18 +122,18 @@ theorem avg_prod (G₁ : Type) [AddCommGroup G₁] [TopologicalSpace G₁] [IsTo
     (Γ₁ : AddSubgroup G₁) (Γ₂ : AddSubgroup G₂) (h₁ : IsCoLat Γ₁) (h₂ : IsCoLat Γ₂)
     (Φ : G₁ × G₂ → ℂ) (hΦ : Per (Γ₁.prod Γ₂) Φ) :
     avg (Γ₁.prod Γ₂) Φ = avg Γ₁ (fun x => avg Γ₂ (fun y => Φ (x, y))) := by
-  letI m₁ : MeasurableSpace G₁ := borel G₁
-  haveI : BorelSpace G₁ := ⟨rfl⟩
-  letI m₂ : MeasurableSpace G₂ := borel G₂
-  haveI : BorelSpace G₂ := ⟨rfl⟩
+  let m₁ : MeasurableSpace G₁ := borel G₁
+  have : BorelSpace G₁ := ⟨rfl⟩
+  let m₂ : MeasurableSpace G₂ := borel G₂
+  have : BorelSpace G₂ := ⟨rfl⟩
   have e₁ : ∃ p : Measure G₁ × Set G₁, p.1.IsAddHaarMeasure ∧ IsAddFundamentalDomain Γ₁ p.2 p.1 ∧ p.1 p.2 = 1 := by
     obtain ⟨μ, F, a, b, c⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one G₁ Γ₁ h₁
     exact ⟨(μ, F), a, b, c⟩
   have e₂ : ∃ p : Measure G₂ × Set G₂, p.1.IsAddHaarMeasure ∧ IsAddFundamentalDomain Γ₂ p.2 p.1 ∧ p.1 p.2 = 1 := by
     obtain ⟨μ, F, a, b, c⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one G₂ Γ₂ h₂
     exact ⟨(μ, F), a, b, c⟩
-  have A₁ : ∀ Ψ : G₁ → ℂ, avg Γ₁ Ψ = ∫ x in e₁.choose.2, Ψ x ∂e₁.choose.1 := fun Ψ => dif_pos e₁
-  have A₂ : ∀ Ψ : G₂ → ℂ, avg Γ₂ Ψ = ∫ y in e₂.choose.2, Ψ y ∂e₂.choose.1 := fun Ψ => dif_pos e₂
+  have A₁ : ∀ Ψ : G₁ → ℂ, avg Γ₁ Ψ = ∫ x in e₁.choose.2, Ψ x ∂e₁.choose.1 := fun Ψ => dite_eq_left e₁
+  have A₂ : ∀ Ψ : G₂ → ℂ, avg Γ₂ Ψ = ∫ y in e₂.choose.2, Ψ y ∂e₂.choose.1 := fun Ψ => dite_eq_left e₂
   obtain ⟨H₁, F₁, M₁⟩ := e₁.choose_spec
   obtain ⟨H₂, F₂, M₂⟩ := e₂.choose_spec
   set μ₁ := e₁.choose.1

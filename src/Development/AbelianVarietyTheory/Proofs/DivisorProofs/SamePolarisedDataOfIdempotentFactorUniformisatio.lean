@@ -202,10 +202,10 @@ theorem formEq_cancel {X Y Y' : Scheme.{0}} {K : Type} [Fintype K] (ε : K → �
 
 theorem samePol_of_two_factors : ∀ (R : Type) [CommRing R] [IsDomain R] (D₁ D₂ D' : DegPre R), D₁.TauBimult → ∀ (F₁ : Factor D₁ D') (F₂ : Factor D₂ D'), F₁.o.onB.act F₁.e = F₂.o.onB.act F₂.e → F₁.o.onB.act F₁.f = F₂.o.onB.act F₂.f → (∀ z : D'.X, F₁.e • z = F₂.e • z) → (∀ z : D'.X, F₁.f • z = F₂.f • z) → SamePol D₁ D₂ := by
   intro R _ _ D₁ D₂ D' hB F₁ F₂ he hf hXe hXf
-  haveI := F₂.inc_hom
-  haveI := F₁.pr_hom
+  have := F₂.inc_hom
+  have := F₁.pr_hom
   let eI : D₂.P.A ≅ D₁.P.A := ⟨F₂.inc ≫ F₁.pr, F₁.inc ≫ F₂.pr, comp_inv F₁ F₂ he, inv_comp F₁ F₂ he⟩
-  haveI : IsMonHom eI.hom := inferInstanceAs (IsMonHom (F₂.inc ≫ F₁.pr))
+  have : IsMonHom eI.hom := inferInstanceAs (IsMonHom (F₂.inc ≫ F₁.pr))
   have hs : spMap (RingHom.id R) = 𝟙 (Sp R) := Spec.map_id _
   refine ⟨GlobalTheory.PolDeg.Wit.ofDeg D₁ hB, AddEquiv.refl _, xEquiv F₁ F₂ hXe, GlobalTheory.PolDeg.Wit.refines_ofDeg D₁ hB, ?_⟩
   let β₂ := (lift (fst D₂.P.A D₂.P.A ≫ F₂.inc ≫ F₁.pr) (snd D₂.P.A D₂.P.A ≫ F₂.inc ≫ F₁.pr) : G2 D₂.P.A ⟶ G2 D₁.P.A).left
@@ -214,7 +214,7 @@ theorem samePol_of_two_factors : ∀ (R : Type) [CommRing R] [IsDomain R] (D₁ 
     · rw [← Over.comp_left, lift_fst, Over.comp_left]
     · rw [← Over.comp_left, lift_snd, Over.comp_left]
 
-  haveI : Nonempty (D₁.P.A.left ⨿ D₂.P.A.left : Scheme.{0}) :=
+  have : Nonempty (D₁.P.A.left ⨿ D₂.P.A.left : Scheme.{0}) :=
     ⟨(coprod.inl : D₁.P.A.left ⟶ _) (Classical.arbitrary _)⟩
   have hL₁ := D₁.P.isLB
   have hL₂ := D₂.P.isLB

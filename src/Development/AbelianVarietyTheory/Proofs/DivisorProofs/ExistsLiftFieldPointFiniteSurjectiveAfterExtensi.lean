@@ -70,8 +70,8 @@ namespace GlobalTheory.FinLift
 
 theorem lift_point_finite_surjective : ∀ (K : Type) [Field K] (X Y : Scheme.{0}) (y : Sp K ⟶ X) (q : Y ⟶ X), IsFinite q → Surjective q → ∃ (L : Type) (_ : Field L) (_ : Algebra K L) (_ : FiniteDimensional K L) (y' : Sp L ⟶ Y), y' ≫ q = spMap (algebraMap K L) ≫ y := by
   intro K _ X Y y q hq hs
-  haveI := hq
-  haveI := hs
+  have := hq
+  have := hs
   have : IsAffine (pullback q y) := isAffine_of_isAffineHom (pullback.snd q y)
   let e := (pullback q y).isoSpec
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (e.inv ≫ pullback.snd q y)
@@ -83,11 +83,11 @@ theorem lift_point_finite_surjective : ∀ (K : Type) [Field K] (X Y : Scheme.{0
   let pt : PrimeSpectrum Γ(pullback q y, ⊤) := e.hom.base p
   obtain ⟨m, hm, -⟩ := Ideal.exists_le_maximal pt.asIdeal pt.isPrime.ne_top
   let L := Γ(pullback q y, ⊤) ⧸ m
-  letI : Field L := Ideal.Quotient.field m
+  let : Field L := Ideal.Quotient.field m
   let ψ : K →+* L := (Ideal.Quotient.mk m).comp φ.hom
-  letI : Algebra K L := ψ.toAlgebra
+  let : Algebra K L := ψ.toAlgebra
   have hψ : ψ.Finite := RingHom.Finite.comp (RingHom.Finite.of_surjective _ Ideal.Quotient.mk_surjective) hfin
-  haveI : FiniteDimensional K L := hψ
+  have : FiniteDimensional K L := hψ
   refine ⟨L, inferInstance, inferInstance, inferInstance,
     Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk m)) ≫ e.inv ≫ pullback.fst q y, ?_⟩
   rw [Category.assoc, Category.assoc, pullback.condition, ← Category.assoc e.inv, ← hφ,

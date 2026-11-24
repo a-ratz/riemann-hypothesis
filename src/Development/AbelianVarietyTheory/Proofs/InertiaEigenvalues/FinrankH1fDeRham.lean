@@ -81,7 +81,7 @@ theorem incl_apply (v : V) : incl (Qp := Qp) (B := B) (LL := LL) v = v ⊗ₜ[Qp
 
 include PD in
 theorem incl_injective : Function.Injective (fun v : V => v ⊗ₜ[Qp] (1 : B)) := by
-  haveI := nontrivial_B PD
+  have := nontrivial_B PD
   have h1 : Function.Injective (Algebra.linearMap Qp B) := (algebraMap Qp B).injective
   have h2 := Module.Flat.lTensor_preserves_injective_linearMap (M := V) _ h1
   intro a b hab
@@ -336,15 +336,15 @@ theorem H1f_dim_formula [FiniteDimensional LL V]
     rintro _ ⟨v, rfl⟩
     exact incl_mem_E PD ρ hρ v
   have hRfr : finrank LL R = finrank LL V := LinearMap.finrank_range_of_inj hinc
-  haveI : Module.Finite LL R := Module.Finite.range _
+  have : Module.Finite LL R := Module.Finite.range _
   have hkerΛ : LinearMap.ker (Λ PD ρ hinj) = R.comap (E PD ρ).subtype := by
     ext x
     rw [mem_ker_Λ PD ρ hinj hρ hker x]
     rfl
   have ekΛ : LinearMap.ker (Λ PD ρ hinj) ≃ₗ[LL] R :=
     (LinearEquiv.ofEq _ _ hkerΛ).trans (Submodule.comapSubtypeEquivOfLe hRE)
-  haveI : Module.Finite LL (LinearMap.ker (Λ PD ρ hinj)) := Module.Finite.equiv ekΛ.symm
-  haveI : Module.Finite LL (E PD ρ) := by
+  have : Module.Finite LL (LinearMap.ker (Λ PD ρ hinj)) := Module.Finite.equiv ekΛ.symm
+  have : Module.Finite LL (E PD ρ) := by
     rw [Module.finite_def]
     refine Submodule.fg_of_fg_map_of_fg_inf_ker (Λ PD ρ hinj) ?_ ?_
     · exact IsNoetherian.noetherian _
@@ -358,7 +358,7 @@ theorem H1f_dim_formula [FiniteDimensional LL V]
     rfl
   have frkerΘ : finrank LL (LinearMap.ker (Θ PD ρ)) = finrank LL S :=
     ((LinearEquiv.ofEq _ _ hkerΘ).trans (Submodule.comapSubtypeEquivOfLe hSE)).finrank_eq
-  haveI : Module.Finite LL (FiniteCohomology PD ρ) := Module.Finite.of_surjective _ (Θ_surjective PD ρ)
+  have : Module.Finite LL (FiniteCohomology PD ρ) := Module.Finite.of_surjective _ (Θ_surjective PD ρ)
   have ha := LinearMap.finrank_range_add_finrank_ker (Θ PD ρ)
   rw [LinearMap.range_eq_top.2 (Θ_surjective PD ρ), finrank_top, frkerΘ] at ha
   have hb := Submodule.finrank_sup_add_finrank_inf_eq (Dcris PD ρ) R

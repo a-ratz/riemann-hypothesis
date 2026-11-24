@@ -119,9 +119,9 @@ variable {D : D7}
 
 open scoped Topology in
 theorem continuous_cpt_toEAf (w : Pl D.host.E) : Continuous fun a : AE D => cpt w (toEAf D a) := by
-  letI tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  let tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E)
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  let ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
   obtain ⟨e, he, hec, -⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
       (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=
@@ -136,7 +136,7 @@ theorem continuous_cpt_toEAf (w : Pl D.host.E) : Continuous fun a : AE D => cpt 
     convert this using 1
     ext z
     simp
-  haveI : MulArchimedean (ValuativeRel.ValueGroupWithZero (Kw w)) :=
+  have : MulArchimedean (ValuativeRel.ValueGroupWithZero (Kw w)) :=
     ValuativeRel.isRankLeOne_iff_mulArchimedean.1 inferInstance
   let f : AE D →+ Kw w := ((cpt w).comp (toEAf D)).toAddMonoidHom
   refine continuous_of_continuousAt_zero f ?_
@@ -151,7 +151,7 @@ theorem continuous_cpt_toEAf (w : Pl D.host.E) : Continuous fun a : AE D => cpt 
     simpa [u, Units.val_pow_eq_pow_val, map_pow] using hn
   have hU : {z : AE D | finPart D (atPl w ((u⁻¹ : (Kw w)ˣ) : Kw w) * z) ∈ intAE D} ∈ 𝓝 (0 : AE D) := by
     refine IsOpen.mem_nhds (h1.preimage (hfc.comp (continuous_const.mul continuous_id))) ?_
-    simp only [Set.mem_setOf_eq, mul_zero, map_zero]
+    simp only [Set.mem_ofPred_eq, mul_zero, map_zero]
     exact zero_mem _
   filter_upwards [hU] with z hz
   have h3 := valuation_cpt_le_one w _ hz
@@ -166,9 +166,9 @@ variable {D : D7}
 
 theorem continuous_atPl (w : Pl D.host.E) : Continuous (atPl (D := D) w) := by
   classical
-  letI tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  let tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E)
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  let ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
   obtain ⟨e, he, -, hes⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
       (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=

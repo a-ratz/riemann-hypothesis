@@ -894,7 +894,7 @@ theorem sigR_fixed_eq_algebraMap : ∀ {F E : Type} [Field F] [NumberField F] [F
       exact hθ (mul_self_eq_zero.1 hsq)
     exact ⟨θ, a, B, hθ, ha, hσθ, hsq, hB0, hB1⟩
   obtain ⟨θ, d, B, hθ, hd, hσθ, hsq, hB0, hB1⟩ := hex
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
   let C : Module.Basis (Fin 2) K (K ⊗[F] E) := Algebra.TensorProduct.basis K B
   have hC0 : C 0 = 1 := by
     simp only [C, Algebra.TensorProduct.basis_apply, hB0]
@@ -1144,8 +1144,8 @@ theorem hasBase_place : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
             show Valued.v e⁻¹ ≤ 1
             rw [map_inv₀, h1, inv_one]
           have hle := nnnorm_le_one_iff_mem.2 hinvm
-          have h2 : ‖e * e⁻¹‖₊ = 1 := by rw [mul_inv_cancel₀ he0, nnnorm_one]
-          rw [nnnorm_mul] at h2
+          have h2 : ‖e * e⁻¹‖₊ = 1 := by rw [mul_inv_cancel₀ he0, nnNorm_one]
+          rw [nnNorm_mul] at h2
           have h3 : ‖e‖₊ * ‖e⁻¹‖₊ < 1 := lt_of_le_of_lt (mul_le_of_le_one_right zero_le hle) he
           rw [h2] at h3
           exact lt_irrefl _ h3

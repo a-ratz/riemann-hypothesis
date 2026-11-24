@@ -102,7 +102,7 @@ theorem infMat_realElt (θ : InfFam D) (hθ : IsInfFam θ) (W : HSp D) (u : D.wh
     (hu : ∀ τ, u τ ∈ Formalism.QuantumDeterminants.UH (gramAt D W τ)) (ρ : D.what₂.Tau) :
     infMat D.sp.cm.sig W.gram (θ ρ) (realElt θ W u) = u ρ := by
   rw [realElt, GlobalTheory.RealTransSm.infMat_list_prod hθ u hu ρ _ (Finset.nodup_toList _),
-    if_pos (Finset.mem_toList.2 (Finset.mem_univ ρ))]
+    ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ ρ))]
 
 theorem realElt_mem (θ : InfFam D) (W : HSp D) (u : D.what₂.Tau → Matrix (Fin W.rank) (Fin W.rank) ℂ) :
     realElt θ W u ∈ GinfC W := by
@@ -117,7 +117,7 @@ theorem finE_realElt (θ : InfFam D) (W : HSp D) (u : D.what₂.Tau → Matrix (
 theorem continuous_realElt (θ : InfFam D) (hθ : IsInfFam θ) (W : HSp D) (hW : W.SigOK) (Fr : Frames W)
     (hFr : IsFrames W Fr) :
     Continuous fun b : (∀ ρ, Upq W ρ) => realElt θ W fun ρ => realMat W Fr ρ (b ρ) := by
-  haveI : IsTopologicalGroup (GA D W) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D W) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   unfold realElt
   refine continuous_list_prod _ fun ρ _ => ?_
   have hκ : Continuous fun b : (∀ ρ, Upq W ρ) => realMat W Fr ρ (b ρ) := by
@@ -129,14 +129,14 @@ theorem continuous_realElt (θ : InfFam D) (hθ : IsInfFam θ) (W : HSp D) (hW :
 
 theorem lintegral_levelSet_eq_pi : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (W : HSp D), W.SigOK → ∀ (K : Subgroup (GL (Fin W.rank) (Lev.EAf D))) (ν : Measure (GA D W)), IsMeasLev W K ν → ∀ Fr : Frames W, IsFrames W Fr → ∀ mR : ∀ ρ, Measure (Upq W ρ), (∀ ρ, Lev.IsMinf (mR ρ)) → ∀ Z : GA D W → ENNReal, Measurable Z → (∀ g, ∀ k ∈ levA W K, Z (g * k) = Z g) → MeasurableSet {h : GA D W | finE W h ∈ K} → ∫⁻ g in {h : GA D W | finE W h ∈ K}, Z g ∂ν = ∫⁻ b, Z (realElt θ W fun ρ => realMat W Fr ρ (b ρ)) ∂(Measure.pi mR) := by
   intro D θ hθ W hW K ν hν Fr hFr mR hmR Z hZ hZK hS
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
   obtain ⟨-, hsc, hbo, -⟩ := GlobalTheory.TwistAdelicTop.locallyCompact_secondCountable_borel_countable W
-  haveI := hsc
-  haveI := hbo
-  haveI : ∀ ρ, SigmaFinite (mR ρ) := fun ρ => by haveI := (hmR ρ).1; infer_instance
+  have := hsc
+  have := hbo
+  have : ∀ ρ, SigmaFinite (mR ρ) := fun ρ => by have := (hmR ρ).1; infer_instance
   obtain ⟨φ, hφc, hφ⟩ := exists_realPart θ hθ W hW Fr hFr
   have hφm : Measurable φ := hφc.measurable
   set sec : (∀ ρ, Upq W ρ) → GA D W := fun b => realElt θ W fun ρ => realMat W Fr ρ (b ρ) with hsec
@@ -150,7 +150,7 @@ theorem lintegral_levelSet_eq_pi : ∀ (D : D7) (θ : InfFam D), IsInfFam θ →
     rw [Measure.map_apply hφm (MeasurableSet.univ_pi hB), Measure.restrict_apply hm, ← H2 mR hmR B hB]
     congr 1
     ext h
-    simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_univ_pi, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_univ_pi, Set.mem_ofPred_eq]
     rw [and_comm]
     refine and_congr_right fun _ => forall_congr' fun ρ => ⟨fun hb => ⟨φ h ρ, hb, hφ h ρ⟩, ?_⟩
     rintro ⟨b, hb, hbe⟩

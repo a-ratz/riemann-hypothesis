@@ -69,8 +69,8 @@ theorem exists_free_gens {R K : Type*} [CommRing R] [IsDomain R] [IsPrincipalIde
       (∀ i, w i ∈ Submodule.span R (Set.range b)) := by
   classical
   set M : Submodule R (Fin n → K) := Submodule.span R (Set.range w) with hM
-  haveI : Module.Finite R M := Module.Finite.span_of_finite R (Set.finite_range w)
-  haveI : Module.Free R M := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite R M := Module.Finite.span_of_finite R (Set.finite_range w)
+  have : Module.Free R M := Module.free_of_finite_type_torsion_free'
   let e := Module.finBasis R M
   refine ⟨_, fun s => (e s : Fin n → K), ?_, fun s => (e s).2, fun i => ?_⟩
   · rw [← LinearIndependent.iff_fractionRing R K]

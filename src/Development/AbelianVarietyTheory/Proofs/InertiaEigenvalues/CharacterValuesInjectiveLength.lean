@@ -269,9 +269,9 @@ theorem coeff_det_pencil_mem : ∀ {Γ X O : Type} [Group Γ] [CommRing O] {n : 
   rw [hfun]
   refine Subalgebra.sum_mem _ fun d _ => ?_
   by_cases hd : d 0 = j
-  · simp only [hd, if_true]
+  · simp only [hd, ite_true]
     exact key d
-  · simp only [hd, if_false]
+  · simp only [hd, ite_false]
     exact T.zero_mem
 
 end GlobalTheory.SpanRing
@@ -328,27 +328,27 @@ theorem exists_fin_prod_of_splits {L : Type} [Field L] (t : ℕ) (f : L[X]) (hs 
 theorem exists_finite_dvr_splitting : ∀ (l : ℕ) [Fact l.Prime] {A ι : Type} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [CharZero A] [Algebra ℤ_[l] A] [Module.Finite ℤ_[l] A] [Finite ι] (t : ℕ) (P : ι → Polynomial A), (∀ i, ((P i).map (toFr A)).Monic ∧ ((P i).map (toFr A)).natDegree = t) → ∃ (B : Type) (_ : CommRing B) (_ : IsDomain B) (_ : IsDiscreteValuationRing B) (_ : Algebra A B), Module.Finite A B ∧ Function.Injective (algebraMap A B) ∧ ∀ i, ∃ α : Fin t → FractionRing B, (P i).map ((toFr B).comp (algebraMap A B)) = ∏ c, (Polynomial.X - Polynomial.C (α c)) := by
   intro l _ A ι _ _ _ _ _ _ _ t P hP
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   let K := FractionRing A
-  haveI : CharZero K := IsFractionRing.charZero_of_isFractionRing A
+  have : CharZero K := IsFractionRing.charZero_of_isFractionRing A
   let F : K[X] := ∏ i, (P i).map (toFr A)
   have hF : F.Monic := monic_prod_of_monic _ _ fun i _ => (hP i).1
   let L := F.SplittingField
-  haveI : IsScalarTower A K L := inferInstance
+  have : IsScalarTower A K L := inferInstance
   let S := integralClosure A L
-  haveI : Module.Finite A S := IsIntegralClosure.finite A K L S
-  haveI : IsDedekindDomain S := IsIntegralClosure.isDedekindDomain A K L S
-  haveI : IsFractionRing S L := IsIntegralClosure.isFractionRing_of_finite_extension A K L S
-  haveI : IsLocalRing S := by
-    letI : Algebra ℤ_[l] S := ((algebraMap A S).comp (algebraMap ℤ_[l] A)).toAlgebra
-    haveI : IsScalarTower ℤ_[l] A S := .of_algebraMap_eq fun _ => rfl
-    haveI : Module.Finite ℤ_[l] S := Module.Finite.trans A S
+  have : Module.Finite A S := IsIntegralClosure.finite A K L S
+  have : IsDedekindDomain S := IsIntegralClosure.isDedekindDomain A K L S
+  have : IsFractionRing S L := IsIntegralClosure.isFractionRing_of_finite_extension A K L S
+  have : IsLocalRing S := by
+    let : Algebra ℤ_[l] S := ((algebraMap A S).comp (algebraMap ℤ_[l] A)).toAlgebra
+    have : IsScalarTower ℤ_[l] A S := .of_algebraMap_eq fun _ => rfl
+    have : Module.Finite ℤ_[l] S := Module.Finite.trans A S
     exact isLocalRing_of_domain_finite_padicInt l S
   have hinj : Function.Injective (algebraMap A S) :=
     algebraMap_injective_of_field_isFractionRing A S K L
   have hnf : ¬ IsField S := fun h =>
     IsDiscreteValuationRing.not_isField A (isField_of_isIntegral_of_isField hinj h)
-  haveI : IsDiscreteValuationRing S := ((IsDiscreteValuationRing.TFAE S hnf).out 3 1).1
+  have : IsDiscreteValuationRing S := ((IsDiscreteValuationRing.TFAE S hnf).out 3 1).1
     (inferInstance : IsDedekindDomain S)
   refine ⟨S, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, hinj,
     fun i => ?_⟩
@@ -677,7 +677,7 @@ theorem _root_.GlobalTheory.BlockDensity.density : ∀ {K Γ V : Type} [Field K]
     | smul c E _ h =>
       obtain ⟨a, ha, hax⟩ := h
       exact ⟨c • a, Submodule.smul_mem _ c ha, fun x => by simp [hax]⟩
-  haveI : IsSemisimpleModule (_root_.GlobalTheory.BlockDensity.spanAlg ρ) V := by
+  have : IsSemisimpleModule (_root_.GlobalTheory.BlockDensity.spanAlg ρ) V := by
     rw [← sSup_simples_eq_top_iff_isSemisimpleModule, eq_top_iff]
     intro v _
     refine Submodule.iSup_induction Vs (motive := fun v => v ∈ sSup {m : Submodule
@@ -688,7 +688,7 @@ theorem _root_.GlobalTheory.BlockDensity.density : ∀ {K Γ V : Type} [Field K]
     · exact zero_mem _
     have hvT : v ∈ _root_.GlobalTheory.BlockDensity.toSub ρ (Vs j) (hs j) := hv
     refine Submodule.mem_sSup_of_mem ?_ hvT
-    rw [Set.mem_setOf_eq, isSimpleModule_iff_isAtom]
+    rw [Set.mem_ofPred_eq, isSimpleModule_iff_isAtom]
     refine ⟨fun h => hv0 ((Submodule.mem_bot _).mp (h ▸ hvT)), fun N hN => ?_⟩
     by_contra hN0
     obtain ⟨w, hwN, hw0⟩ := (Submodule.ne_bot_iff N).mp hN0
@@ -817,7 +817,7 @@ theorem finite_bad_base {K : Type} [Field K] {t : ℕ} (B A : Matrix (Fin t) (Fi
     simp [h] at this
   refine (D.roots.toFinset.finite_toSet).subset ?_
   intro l hl
-  simp only [Set.mem_setOf_eq, hD, not_not] at hl
+  simp only [Set.mem_ofPred_eq, hD, not_not] at hl
   simp [hD0, hl]
 
 theorem separable_smul {K : Type} [Field K] {t : ℕ} (A : Matrix (Fin t) (Fin t) K) {c : K}
@@ -895,7 +895,7 @@ theorem exists_separable {O K X : Type} [CommRing O] [IsDomain O] [Infinite O] [
       obtain ⟨l, hl⟩ := h3.exists_notMem
       refine ⟨s + l • s', M.add_mem hs (M.smul_mem l hs'), ?_⟩
       intro y hy
-      simp only [Set.mem_preimage, Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_not] at hl
+      simp only [Set.mem_preimage, Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, not_not] at hl
       have := hl y hy
       rwa [algebraMap_smul, add_assoc] at this
   have := Fintype.ofFinite X
@@ -1612,7 +1612,7 @@ theorem exists_choice (l : ℕ) [Fact l.Prime] [Finite X] [IsDomain A] [IsDiscre
     (hr : 2 ≤ r) (hS : HidaSetting t T Z rep ρ χ) {π : X} (hπ : π ∈ Z) (g0 : Γ)
     (hinj : Function.Injective fun c : Fin t => ((χ ((c : ℕ) + 1) g0 : Aˣ) : A)) (L : ℕ) :
     ∃ eB e1 X0, IsChoice t T rep ρ χ π g0 L eB e1 X0 := by
-  haveI := charZero_of_finite l A
+  have := charZero_of_finite l A
   obtain ⟨hl, hsep, -, hT, hirr, -, hdec, habs⟩ := hS
   obtain ⟨e, hd⟩ := hdec π hπ
   obtain ⟨eB, e1, hid, heB, he1⟩ := _root_.GlobalTheory.SpanIdem.exists_orthogonal_idempotents l T rep (ρ π) χ π e hr (span_top (habs π hπ)) hd
@@ -1681,7 +1681,7 @@ theorem character_values_injective_length {g0 : GE N} (hg : IsInertiaCyclotomicG
     Set.InjOn (fun c => ((N.chi i c g0 : (N.O i)ˣ) : N.O i)) (Finset.Icc 1 R.t : Set ℕ) ∧
     lenUnit (O := N.O i) (N.l i) (N.O i ⧸ Ideal.span {∏ c ∈ Finset.Ioc 1 R.t,
       (((N.chi i 1 g0 : (N.O i)ˣ) : N.O i) - ((N.chi i c g0 : (N.O i)ˣ) : N.O i))}) = N.vdel i := by
-  haveI := charZero_of_finite (N.l i) (N.O i)
+  have := charZero_of_finite (N.l i) (N.O i)
   obtain ⟨-, v, hv⟩ := hg
   refine _root_.GlobalTheory.CharValueLength.injOn_and_lenUnit (N.l i) (N.s0 i) R.t (cycZ (F := H.E) (Ω := N.Om) (N.l i) g0) v
     (fun c => N.chi i c g0) ?_ ?_ hv ?_
@@ -1811,7 +1811,7 @@ theorem exists_good (rep : N.X i → (GE N →* GL (Fin R.nV) (N.O i)))
 theorem consExist : ConsExist N i := by
   intro rep ρ A _ _ _ _ _ _ _ TA repA ρA χA _ hE hS
   obtain ⟨hinj, hTO, hrep, hρ, hχ⟩ := hE
-  haveI := charZero_of_finite (N.l i) A
+  have := charZero_of_finite (N.l i) A
   refine ⟨fun π hπ g0 hg L => ?_, fun g0 L eB e1 X0 h => ?_, fun π hπ g0 L eB e1 X0 hg hc hroot => ?_⟩
   · refine exists_choice (N.l i) (two_le_r R) hS hπ g0 (fun a b hab => ?_) L
     have := (character_values_injective_length N i hg).1 (x₁ := (a : ℕ) + 1) (by simp) (x₂ := (b : ℕ) + 1) (by simp) (by

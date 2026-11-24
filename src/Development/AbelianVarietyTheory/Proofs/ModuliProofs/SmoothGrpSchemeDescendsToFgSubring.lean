@@ -251,7 +251,7 @@ theorem exists_grpObj (j : U ⟶ Z) [QuasiCompact j] [IsSchemeTheoreticallyDomin
   have : Flat ((G ⊗ G) ⊗ G).hom := flat_tensor_hom _ G
   have : Flat (𝟙_ (Over Z) ⊗ G).hom := flat_tensor_hom _ G
   have : Flat (G ⊗ 𝟙_ (Over Z)).hom := flat_tensor_hom G _
-  letI inst : GrpObj G :=
+  let inst : GrpObj G :=
     { one := e
       mul := m
       inv := i
@@ -745,7 +745,7 @@ theorem exists_pairModel {p : U ⟶ Sp V} (h : HasModel p) (a : T ⟶ U) [IsOpen
     ∃ (R : Type) (_ : CommRing R) (f : R →+* V), Algebra.FiniteType ℤ R ∧ Nonempty (PairModel (spMap f) p a) := by
   classical
   obtain ⟨k, _, f, X₀, p₀, φ, hk, _, _, _, hφ⟩ := h
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have hφ' : IsPullback φ p p₀ (spMap (algebraMap k V)) := hφ
   obtain ⟨s, O, hO, hs⟩ := exists_preimage_eq (bcDiagram p₀ V) (bcCone p₀ V) (isLimitBcCone p₀ V)
     (a ≫ hφ'.isoPullback.hom).opensRange (isCompact_range (Scheme.Hom.continuous _))
@@ -789,7 +789,7 @@ theorem hasModel_of_two {X W : Scheme.{0}} (q : X ⟶ Sp V) [IsSeparated q] (u :
   obtain ⟨R₁, _, f₁, h₁, ⟨M₁⟩⟩ := exists_pairModel hU (pullback.fst u v)
   obtain ⟨R₂, _, f₂, h₂, ⟨N₁⟩⟩ := exists_pairModel hW (pullback.snd u v)
   obtain ⟨k, _, f, g₁, g₂, hk, e₁, e₂⟩ := exists_common_level f₁ f₂ h₁ h₂
-  letI := f.toAlgebra
+  let := f.toAlgebra
   obtain ⟨M⟩ : Nonempty (PairModel (spMap (algebraMap k V)) (u ≫ q) (pullback.fst u v)) := ⟨M₁.baseChange _ _ e₁⟩
   obtain ⟨N⟩ : Nonempty (PairModel (spMap (algebraMap k V)) (v ≫ q) (pullback.snd u v)) := ⟨N₁.baseChange _ _ e₂⟩
   have hN := N.hτ.paste_vert N.hφ
@@ -846,7 +846,7 @@ namespace GlobalTheory
 theorem smooth_grpScheme_descends_to_fg_subring : ∀ (V : Type) [CommRing V] (A : Over (Sp V)) [GrpObj A] [IsCommMonObj A] (F : Finset V), Smooth A.hom → IsSeparated A.hom → QuasiCompact A.hom → ∃ (R : Subring V) (A₀ : Over (Sp R)) (_ : GrpObj A₀) (_ : IsCommMonObj A₀) (φ : A.left ⟶ A₀.left), (F : Set V) ⊆ R ∧ Algebra.FiniteType ℤ R ∧ Smooth A₀.hom ∧ IsSeparated A₀.hom ∧ QuasiCompact A₀.hom ∧ IsGrpPullback A A₀ (spMap R.subtype) φ := by
   intro V _ A _ _ F h₁ h₂ h₃
   obtain ⟨k, _, f, X₀, p₀, φ, hk, g₁, g₂, g₃, hφ⟩ := SpreadGroup.hasModel A.hom
-  letI := f.toAlgebra
+  let := f.toAlgebra
   obtain ⟨R, A₀, i₁, i₂, ψ, hF, hR, s₁, s₂, s₃, hψ⟩ := _root_.GlobalTheory.grpObj_descends_to_fg_subalgebra k V A X₀ p₀ φ F g₁ g₂ g₃ hφ
   exact ⟨R.toSubring, A₀, i₁, i₂, ψ, hF, SpreadGroup.finiteType_of_fg hk hR, s₁, s₂, s₃, hψ⟩
 

@@ -124,7 +124,7 @@ theorem anyF (hDS : Formalism.MainNotions.S.IsDS ε lam σ) (hgap : StdGap ε la
     intro v
     have e := hkey 1 h1 v v
     rw [hDS.2.2.1.1.1, hP.2.1] at e
-    simp only [ContinuousLinearMap.one_apply] at e
+    simp only [one_apply_eq_self] at e
     have e2 : ‖j v‖ ^ 2 = ‖v‖ ^ 2 := by
       rw [← @inner_self_eq_norm_sq ℂ, ← @inner_self_eq_norm_sq ℂ, e]
     exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).1 e2

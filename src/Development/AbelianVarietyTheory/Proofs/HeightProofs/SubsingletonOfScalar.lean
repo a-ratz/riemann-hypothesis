@@ -359,7 +359,7 @@ theorem diagMap_nsmul (S : Scheme.{0}) (X : Type) [AddCommGroup X] (m : ℕ) :
 theorem isProper_of_actsBy {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : TorusExtension G) (a : OAct O G)
     {w : O} {m d : ℕ} (hd : d.Prime) (hm : 4 * m = 1 + d) (hw : w * w + m = w) (c : k)
     (H : ActsBy G (a.act w) (𝟙 _) c) : IsProper G.hom := by
-  letI := T.addCommGroup; letI := T.grpB
+  let := T.addCommGroup; let := T.grpB
   have := T.free
   have := T.finite
   have := T.i_hom

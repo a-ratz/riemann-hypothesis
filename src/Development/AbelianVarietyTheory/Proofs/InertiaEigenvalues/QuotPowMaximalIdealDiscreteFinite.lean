@@ -52,7 +52,7 @@ theorem quot_pow_maximalIdeal_discrete_finite :
       [IsTopologicalRing O], PadicCoeff p O → ∀ k : ℕ,
       DiscreteTopology (O ⧸ IsLocalRing.maximalIdeal O ^ k) ∧ Finite (O ⧸ IsLocalRing.maximalIdeal O ^ k) := by
   intro p O _ _ _ _ _ hO k
-  haveI : CompactSpace O := hO.compact
+  have : CompactSpace O := hO.compact
   set I : Ideal O := IsLocalRing.maximalIdeal O ^ k with hI
   have hopen : IsOpen ((I : Ideal O) : Set O) := (isAdic_iff.mp hO.adic).1 k
   have hdisc : DiscreteTopology (O ⧸ I) := by
@@ -67,7 +67,7 @@ theorem quot_pow_maximalIdeal_discrete_finite :
     rw [← himg]
     exact QuotientRing.isOpenMap_coe I _ hopen
   refine ⟨hdisc, ?_⟩
-  haveI : CompactSpace (O ⧸ I) := Quotient.compactSpace
+  have : CompactSpace (O ⧸ I) := Quotient.compactSpace
   exact finite_of_compact_of_discrete
 
 end GlobalTheory.NatQuot

@@ -233,7 +233,7 @@ theorem finLev_of [IsDomain O] (W : LocWach PD LL O v n) (hR : Formalism.MainNot
     · rcases lt_or_gt_of_ne hk with hlt | hgt
       · exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_span_singleton.2 (hPc k hlt))
       · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by omega), map_zero]
-  haveI : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr (by
+  have : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr (by
     rw [Ne, hI, Ideal.span_singleton_eq_top]; exact hpu)
   have hord : ((P : PowerSeries O).map (Ideal.Quotient.mk I)).order.toNat = D := by
     rw [hmapP, order_X_pow]; rfl
@@ -402,19 +402,19 @@ theorem crt_fam {ι : Type} [DecidableEq ι] (x₀ : LetA O n) (x : ι → LetA 
       fun i => if i = a then Formalism.MainNotions.ArcLiftingSetup.lA W ^ κ * t else R i * r, ?_, ?_⟩
     · intro i hi
       by_cases hia : i = a
-      · simp only [hia, if_true]; exact W.AΔ.mul_mem (lA_mem W κ) ht
-      · simp only [hia, if_false]
+      · simp only [hia, ite_true]; exact W.AΔ.mul_mem (lA_mem W κ) ht
+      · simp only [hia, ite_false]
         exact W.AΔ.mul_mem (hR i ((Finset.mem_insert.1 hi).resolve_left hia)) hr
     · rw [Finset.sum_insert ha]
       dsimp only
-      rw [if_pos rfl, Finset.erase_insert ha, Finset.prod_insert ha]
+      rw [ite_eq_left rfl, Finset.erase_insert ha, Finset.prod_insert ha]
       have hs : ∑ i ∈ s, x₀ * (∏ j ∈ (insert a s).erase i, x j) *
           (if i = a then Formalism.MainNotions.ArcLiftingSetup.lA W ^ κ * t else R i * r) =
           (∑ i ∈ s, x₀ * (∏ j ∈ s.erase i, x j) * R i) * r * x a := by
         rw [Finset.sum_mul, Finset.sum_mul]
         refine Finset.sum_congr rfl fun i hi => ?_
         have hia : i ≠ a := fun h => ha (h ▸ hi)
-        rw [if_neg hia, Finset.erase_insert_of_ne (Ne.symm hia),
+        rw [ite_eq_right hia, Finset.erase_insert_of_ne (Ne.symm hia),
           Finset.prod_insert (fun h => ha (Finset.mem_of_mem_erase h))]
         ring
       rw [hs, pow_add]
@@ -545,9 +545,9 @@ theorem gen_of_killer {R V : Type*} [CommRing R] [IsDomain R] [IsPrincipalIdealR
     intro q hq
     obtain ⟨f, hf, rfl⟩ := Submodule.mem_map.mp hq
     exact mkQ_mem_span_of_mem_sup_lemma Psub F (hfg (hIM hf))
-  haveI hT : IsNoetherian R (Submodule.span R (Set.range fun i => Psub.mkQ (F i))) :=
+  have hT : IsNoetherian R (Submodule.span R (Set.range fun i => Psub.mkQ (F i))) :=
     isNoetherian_of_fg_of_noetherian _ (Submodule.fg_span (Set.finite_range _))
-  haveI hIN : IsNoetherian R (Isub.map Psub.mkQ) := isNoetherian_of_le hIle
+  have hIN : IsNoetherian R (Isub.map Psub.mkQ) := isNoetherian_of_le hIle
   have hfgI : (Isub.map Psub.mkQ).FG :=
     (Submodule.fg_top _).mp (IsNoetherian.noetherian _)
   obtain ⟨S, hS⟩ := hfgI

@@ -107,21 +107,21 @@ theorem height_eq_of_isMaximal_of_intCast_eq_zero {B : Type*} [CommRing B] [IsDo
     simp at hdvd
     exact hn0 hdvd
   have hp : p.Prime := (CharP.char_is_prime_or_zero B p).resolve_right hp0
-  haveI : Fact p.Prime := ⟨hp⟩
-  letI : Algebra (ZMod p) B := ZMod.algebra B p
-  haveI : Algebra.FiniteType (ZMod p) B := Algebra.FiniteType.of_restrictScalars_finiteType ℤ (ZMod p) B
+  have : Fact p.Prime := ⟨hp⟩
+  let : Algebra (ZMod p) B := ZMod.algebra B p
+  have : Algebra.FiniteType (ZMod p) B := Algebra.FiniteType.of_restrictScalars_finiteType ℤ (ZMod p) B
   exact height_eq_of_isMaximal_of_field (k := ZMod p) M N hM hN
 
 theorem height_eq_ringKrullDim_of_forall {B : Type*} [CommRing B]
     (hB : ∀ M N : Ideal B, M.IsMaximal → N.IsMaximal → M.height = N.height)
     (M : Ideal B) (hM : M.IsMaximal) : (M.height : WithBot ℕ∞) = ringKrullDim B := by
-  haveI := hM.isPrime
+  have := hM.isPrime
   apply le_antisymm
   · exact Ideal.height_le_ringKrullDim_of_ne_top hM.ne_top
   · rw [ringKrullDim, Order.krullDim_eq_iSup_height]
     refine iSup_le fun p => ?_
     obtain ⟨N, hN, hpN⟩ := Ideal.exists_le_maximal p.asIdeal p.isPrime.ne_top
-    haveI := hN.isPrime
+    have := hN.isPrime
     have h1 : Order.height p ≤ Order.height (⟨N, hN.isPrime⟩ : PrimeSpectrum B) :=
       Order.height_mono (show p ≤ ⟨N, hN.isPrime⟩ from hpN)
     have h2 : N.height = Order.height (⟨N, hN.isPrime⟩ : PrimeSpectrum B) :=
@@ -157,7 +157,7 @@ private theorem ideal_height_eq_order_height_primeSpectrum {R : Type*} [CommRing
   exact PrimeSpectrum.height_eq_orderHeight (⟨N, hN⟩ : PrimeSpectrum R)
 
 theorem height_int_of_isMaximal (M : Ideal ℤ) (hM : M.IsMaximal) : M.height = 1 := by
-  haveI := hM.isPrime
+  have := hM.isPrime
   rw [ideal_height_eq_order_height_primeSpectrum M]
   have hMbot : M ≠ ⊥ := by
     intro h
@@ -242,11 +242,11 @@ theorem height_eq_of_isMaximal_mvPolynomial_int {σ : Type*} [Finite σ]
   let e : MvPolynomial σ ℤ ≃+* MvPolynomial (Fin n) ℤ := (MvPolynomial.renameEquiv ℤ eσ).toRingEquiv
   have key : ∀ I : Ideal (MvPolynomial σ ℤ), I.IsMaximal → I.height = n + 1 := by
     intro I hI
-    haveI := hI
-    haveI := hI.isPrime
+    have := hI
+    have := hI.isPrime
     have hJ : (Ideal.comap (e.symm : MvPolynomial (Fin n) ℤ →+* MvPolynomial σ ℤ) I).IsMaximal :=
       Ideal.comap_isMaximal_of_surjective _ e.symm.surjective
-    haveI := hJ.isPrime
+    have := hJ.isPrime
     have h1 := height_mvPolynomial_int_fin_of_isMaximal n _ hJ
     rw [ideal_height_eq_order_height_primeSpectrum] at h1 ⊢
     rw [← h1]

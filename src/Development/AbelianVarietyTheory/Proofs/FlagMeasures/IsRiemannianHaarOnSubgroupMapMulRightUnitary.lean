@@ -60,7 +60,7 @@ theorem map_mul_right_of_conj_nhds {G : Type} [Group G] [TopologicalSpace G] [Is
     ν.map (fun g => g * l) = ν := by
   have hU : (interior B).Nonempty := ⟨1, mem_interior_iff_mem_nhds.2 hB⟩
   have hmeas : Measurable (fun g : G => g * l) := measurable_mul_const l
-  haveI : IsFiniteMeasureOnCompacts ν :=
+  have : IsFiniteMeasureOnCompacts ν :=
     ⟨fun K hK => measure_lt_top_of_isCompact_of_isMulLeftInvariant' hU ht hK⟩
 
   have hVo : IsOpen ((fun g : G => g * l⁻¹) ⁻¹' interior B) :=
@@ -70,7 +70,7 @@ theorem map_mul_right_of_conj_nhds {G : Type} [Group G] [TopologicalSpace G] [Is
     congr 1
     ext g
     simp [mul_assoc]
-  haveI : IsFiniteMeasureOnCompacts (ν.map (fun g => g * l)) :=
+  have : IsFiniteMeasureOnCompacts (ν.map (fun g => g * l)) :=
     ⟨fun K hK => measure_lt_top_of_isCompact_of_isMulLeftInvariant _ hVo
       ⟨l, by simpa using mem_interior_iff_mem_nhds.2 hB⟩
       (by rw [hV]; exact ((measure_mono interior_subset).trans_lt ht.lt_top).ne) hK⟩
@@ -88,12 +88,12 @@ theorem map_mul_right_of_conj_nhds {G : Type} [Group G] [TopologicalSpace G] [Is
   have hc₁ : (c₁ : ENNReal) ≠ 0 := by
     rintro h
     apply h0
-    rw [e₁, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, h, zero_mul]
+    rw [e₁, smul_apply, ENNReal.smul_def, smul_eq_mul, h, zero_mul]
   have hfin : (Measure.haar : Measure G) B ≠ ⊤ := by
     intro h
     apply ht
-    rw [e₁, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, h, ENNReal.mul_top hc₁]
-  rw [e₂, e₁, Measure.smul_apply, Measure.smul_apply, ENNReal.smul_def, ENNReal.smul_def,
+    rw [e₁, smul_apply, ENNReal.smul_def, smul_eq_mul, h, ENNReal.mul_top hc₁]
+  rw [e₂, e₁, smul_apply, smul_apply, ENNReal.smul_def, ENNReal.smul_def,
     smul_eq_mul, smul_eq_mul, ENNReal.mul_left_inj hpos hfin] at hBB
   rw [e₂, e₁, ENNReal.coe_injective hBB]
 
@@ -103,17 +103,17 @@ theorem map_mul_right_of_conj_nhds_subgroup {G : Type} [Group G] [TopologicalSpa
     (hinv : ∀ s ∈ M, μ.map (fun g => s * g) = μ) (B : Set G) (hBm : MeasurableSet B) (hB : B ∈ 𝓝 (1 : G))
     (h0 : μ B ≠ 0) (ht : μ B ≠ ⊤) (l : G) (hlM : l ∈ M) (hl : ∀ g, g * l ∈ B ↔ l * g ∈ B) :
     μ.map (fun g => g * l) = μ := by
-  haveI : LocallyCompactSpace M := hM.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology M := inferInstanceAs (SecondCountableTopology (M : Set G))
-  haveI : BorelSpace M := inferInstanceAs (BorelSpace (M : Set G))
+  have : LocallyCompactSpace M := hM.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology M := inferInstanceAs (SecondCountableTopology (M : Set G))
+  have : BorelSpace M := inferInstanceAs (BorelSpace (M : Set G))
   have emb : MeasurableEmbedding (Subtype.val : M → G) :=
-    MeasurableEmbedding.subtype_coe hM.measurableSet
+    MeasurableEmbedding.subtypeVal hM.measurableSet
 
   set ν : Measure M := μ.comap Subtype.val with hν
   have hμν : ν.map Subtype.val = μ := by
     rw [hν, emb.map_comap, Subtype.range_coe]
     exact Measure.restrict_eq_self_of_ae_mem (by rw [ae_iff]; exact hμ)
-  haveI : ν.IsMulLeftInvariant := ⟨fun s => by
+  have : ν.IsMulLeftInvariant := ⟨fun s => by
     ext A hA
     rw [Measure.map_apply (measurable_const_mul s) hA, hν, emb.comap_apply, emb.comap_apply]
     have himg : Subtype.val '' ((fun x => s * x) ⁻¹' A) =
@@ -135,14 +135,14 @@ theorem map_mul_right_of_conj_nhds_subgroup {G : Type} [Group G] [TopologicalSpa
       hinv s s.2]⟩
   have hνB : ν (Subtype.val ⁻¹' B) = μ B := by
     conv_rhs => rw [← hμν]
-    rw [Measure.map_apply measurable_subtype_coe hBm]
+    rw [Measure.map_apply measurable_subtypeVal hBm]
   have key := map_mul_right_of_conj_nhds ν (Subtype.val ⁻¹' B)
-    (hBm.preimage measurable_subtype_coe)
-    (continuous_subtype_val.continuousAt.preimage_mem_nhds hB)
+    (hBm.preimage measurable_subtypeVal)
+    (continuous_subtypeVal.continuousAt.preimage_mem_nhds hB)
     (by rwa [hνB]) (by rwa [hνB]) ⟨l, hlM⟩ (fun g => hl g)
-  rw [← hμν, Measure.map_map (measurable_mul_const l) measurable_subtype_coe,
+  rw [← hμν, Measure.map_map (measurable_mul_const l) measurable_subtypeVal,
     show (fun g : G => g * l) ∘ Subtype.val = Subtype.val ∘ (fun g : M => g * ⟨l, hlM⟩) from rfl,
-    ← Measure.map_map measurable_subtype_coe (measurable_mul_const _), key]
+    ← Measure.map_map measurable_subtypeVal (measurable_mul_const _), key]
 
 theorem hs_eq_re_trace {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) : Formalism.REAL.hs X = (trace (X * Xᴴ)).re := by
   simp only [Formalism.REAL.hs, Matrix.trace, Matrix.diag_apply, Matrix.mul_apply,

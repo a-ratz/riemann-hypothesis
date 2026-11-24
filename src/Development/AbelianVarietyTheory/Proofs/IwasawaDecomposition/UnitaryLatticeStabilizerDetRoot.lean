@@ -93,7 +93,7 @@ theorem UpperTheory.Reformulated.B.Ybf4.isIntegral_det :
   intro E _ _ N L hfg hspan γ hγ
   refine isIntegral_trans (A := NumberField.RingOfIntegers E) _
     (UpperTheory.Reformulated.B.Ybf4.isIntegral_det_of_isIntegral γ ?_)
-  haveI : Module.Finite (NumberField.RingOfIntegers E) L := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite (NumberField.RingOfIntegers E) L := Module.Finite.iff_fg.2 hfg
   let g : (Fin N → E) →ₗ[NumberField.RingOfIntegers E] (Fin N → E) :=
     (Matrix.mulVecLin γ).restrictScalars _
   let f : Module.End (NumberField.RingOfIntegers E) L := g.restrict (p := L) (q := L) hγ
@@ -147,7 +147,7 @@ theorem isIntegral_det {E : Type} [Field E] [NumberField E] {N : ℕ} (L : Submo
 
 theorem eq_pm_one_of_unitary {R : Ranks} (H : Formalism.BasicNotions.Host R) :
     letI := H.cmStar; ∀ z : H.E, z ∈ unitary H.E → IsIntegral ℤ z → ∃ m : ℕ, 0 < m ∧ z ^ m = 1 := by
-  letI := H.cmStar
+  let := H.cmStar
   intro z hu hz
   have := H.isCMField_hostE
   obtain ⟨n, hn, hp⟩ := NumberField.Embeddings.pow_eq_one_of_norm_eq_one H.E ℂ hz (fun φ => by

@@ -85,7 +85,7 @@ theorem gauss_unif : ∃ π ∈ la.asIdeal, π ≠ 0 ∧ ∃ s ∉ la.asIdeal,
   have hlt : la.asIdeal ^ 2 < la.asIdeal := by
     have := Ideal.pow_right_strictAnti la.asIdeal hp0 hp1 (show 1 < 2 by norm_num)
     simpa using this
-  obtain ⟨π, hπ, hπ2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨π, hπ, hπ2⟩ := IsConcreteLE.exists_of_lt hlt
   have hπ0 : π ≠ 0 := by
     rintro rfl
     exact hπ2 (Ideal.zero_mem _)
@@ -99,7 +99,7 @@ theorem gauss_unif : ∃ π ∈ la.asIdeal, π ≠ 0 ∧ ∃ s ∉ la.asIdeal,
     have h2 : la.asIdeal * J ≤ la.asIdeal ^ 2 := by
       rw [pow_two]; exact Ideal.mul_mono_right hle
     exact h2 h1
-  obtain ⟨s, hsJ, hsp⟩ := SetLike.not_le_iff_exists.mp hJp
+  obtain ⟨s, hsJ, hsp⟩ := IsConcreteLE.not_le_iff_exists.mp hJp
   refine ⟨π, hπ, hπ0, s, hsp, fun a ha => ?_⟩
   have hmem : a * s ∈ Ideal.span {π} := by
     rw [hJ]; exact Ideal.mul_mem_mul ha hsJ
@@ -189,7 +189,7 @@ theorem gauss_clear (p : KTp K D N) :
 
 theorem gauss_frac :
     @IsFractionRing (Op D N la) _ (KTf K D N) _ (OpToKT D N la).toAlgebra := by
-  letI := (ReciprocityTheory.ChartRestriction.G.T0.OpToKT D N la).toAlgebra
+  let := (ReciprocityTheory.ChartRestriction.G.T0.OpToKT D N la).toAlgebra
   have : IsDomain (ReciprocityTheory.ChartRestriction.G.T0.Op D N la) :=
     IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors _)
   have intInj : Function.Injective (ReciprocityTheory.ChartRestriction.G.T0.OTtoKT K D N) :=
@@ -271,9 +271,9 @@ variable {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι] {Ω : ι 
 theorem places_over_height_one_prime (𝒜 : (c : ι) → WT → Submodule (Ω c) (A c))
     (d : Data K ι Ω WT A) : LeafSt.places_over_la 𝒜 d := by
   intro hd h la c
-  letI : Algebra (Op d.D d.N la) (KTf K d.D d.N) := (OpToKT d.D d.N la).toAlgebra
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  letI : Algebra (Op d.D d.N la) (OmS (Ω c) d.D d.N) := (d.OpToS h la c).toAlgebra
+  let : Algebra (Op d.D d.N la) (KTf K d.D d.N) := (OpToKT d.D d.N la).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (Op d.D d.N la) (OmS (Ω c) d.D d.N) := (d.OpToS h la c).toAlgebra
   have : IsScalarTower (Op d.D d.N la) (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have : IsDiscreteValuationRing (Op d.D d.N la) := gauss_dvr d.D d.N la

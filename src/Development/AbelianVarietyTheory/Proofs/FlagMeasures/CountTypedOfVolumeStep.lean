@@ -450,7 +450,7 @@ theorem deepBound (hV : GlobalTheory.FlagMeas.AbsoluteVolume) (hK : GlobalTheory
   have hpt : ∀ x ∈ GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.deepSet B q b,
       ENNReal.ofReal (kern B.I (phe B d) x x).re ≤ ENNReal.ofReal Kc := by
     intro x hx
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.deepSet, Set.mem_setOf_eq] at hx
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.deepSet, Set.mem_ofPred_eq] at hx
     apply ENNReal.ofReal_le_ofReal
     have hτ0 : 0 < least B.I x :=
       ((_root_.GlobalTheory.CountSteps.steps B.I x 1 one_pos).2.2.2.2.2.2.2.2 (by omega)).1
@@ -499,7 +499,7 @@ theorem deepBound (hV : GlobalTheory.FlagMeas.AbsoluteVolume) (hK : GlobalTheory
     _ ≤ ENNReal.ofReal Kc * B.I.muA B.μf B.fund := by
         gcongr
         intro x hx
-        simp only [GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.deepSet, Set.mem_setOf_eq] at hx
+        simp only [GlobalTheory.IndefiniteRowSideFullHecke.DeepSet.deepSet, Set.mem_ofPred_eq] at hx
         exact hx.1
     _ ≤ ENNReal.ofReal Kc * ENNReal.ofReal (X ^ N * (B.g : ℝ) ^ (2 * N) * kR / P) := by gcongr
     _ = ENNReal.ofReal ((B.D : ℝ) * Real.exp (-((B.I.n : ℝ) ^ 2 * (B.I.f : ℝ)))) := by
@@ -640,7 +640,7 @@ theorem gap_threshold_pays_far_terms : ∀ (Cg : ℝ) (n f q : ℕ) (rd g b : �
       have a1 : t⁻¹ ≤ M ^ (11 * q) := inv_le_of_inv_le₀ (pow_pos hMpos _) ht1
       have a2 : M ^ (11 * q) ≤ Real.exp Lb ^ (11 * q) := pow_le_pow_left₀ hMpos.le hMle _
       have a3 : Real.exp Lb ^ (11 * q) = Real.exp (((11 * q : ℕ) : ℝ) * Lb) := by
-        rw [Real.exp_nat_mul]
+        rw [exp_natCast_mul]
       have a4 : ((11 * q : ℕ) : ℝ) * Lb ≤ 11 * s * Lb := by
         push_cast
         have : 11 * (q : ℝ) ≤ 11 * s := by linarith
@@ -671,7 +671,7 @@ theorem gap_threshold_pays_far_terms : ∀ (Cg : ℝ) (n f q : ℕ) (rd g b : �
       exact mul_le_mul b4 b3 (by positivity) (by positivity)
     have hpow : (3 * s / t ^ 2) ^ (2 * (n ^ 2 * f))
         ≤ Real.exp (((2 * (n ^ 2 * f) : ℕ) : ℝ) * (2 + s + 22 * s * Lb)) := by
-      rw [Real.exp_nat_mul]
+      rw [exp_natCast_mul]
       exact pow_le_pow_left₀ (by positivity) hA _
 
     have hsmall : 2 * (f : ℝ) * 3 ^ f ≤ Real.exp (4 * f) := by
@@ -679,7 +679,7 @@ theorem gap_threshold_pays_far_terms : ∀ (Cg : ℝ) (n f q : ℕ) (rd g b : �
         have := Real.add_one_le_exp (2 * (f : ℝ))
         linarith
       have c2 : (3 : ℝ) ^ f ≤ Real.exp (f * 2) := by
-        rw [Real.exp_nat_mul]
+        rw [exp_natCast_mul]
         have : (3 : ℝ) ≤ Real.exp 2 := by
           have := Real.add_one_le_exp 2
           linarith
@@ -1186,7 +1186,7 @@ theorem sum_two_pow_pred_mul_exp_neg_le :
   intro q x hx
   have hr : ∀ J : ℕ, Real.exp (-(1 / 2 * J * x)) = Real.exp (-(x / 2)) ^ J := by
     intro J
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     ring
   simp only [hr]
@@ -1479,7 +1479,7 @@ theorem lintegral_le_sum_types : ∀ (B : RowsAut) (p q : ℕ), SigIs B p q → 
       push_neg at hlt
       obtain ⟨J, hJ, c, τ, hτ⟩ := GlobalTheory.TypeDecomp.exists_type B p q hs hn x hlt
       apply hx
-      simp only [hP, Set.mem_iUnion, Set.mem_setOf_eq]
+      simp only [hP, Set.mem_iUnion, Set.mem_ofPred_eq]
       exact ⟨J, hJ, c, Finset.mem_univ c, τ, hτ⟩
     rw [lintegral_congr_ae hae, lintegral_zero]
   calc ∫⁻ x in B.fund, Φ x ∂(B.I.muA B.μf)
@@ -1576,7 +1576,7 @@ theorem moderate_log_factor_absorbed : ∀ Cg : ℝ, ∃ n₀ : ℕ, ∀ (n f q 
       have := Real.add_one_le_exp (1 : ℝ); linarith
     have hp : (2 : ℝ) ^ q ≤ Real.exp q := by
       calc (2 : ℝ) ^ q ≤ (Real.exp 1) ^ q := by gcongr
-        _ = Real.exp q := by rw [← Real.exp_nat_mul]; simp
+        _ = Real.exp q := by rw [← exp_natCast_mul]; simp
     calc 2 * (2 : ℝ) ^ q * Real.exp (-(3 / 8) * n * f * L)
         ≤ Real.exp 1 * Real.exp q * Real.exp (-(3 / 8) * n * f * L) := by gcongr
       _ = Real.exp (1 + q + -(3 / 8) * n * f * L) := by rw [Real.exp_add, Real.exp_add]
@@ -1619,7 +1619,7 @@ theorem one_type_arith (L κ Y : ℝ) (a J : ℕ) (hL : 0 ≤ L) (hJ : 1 ≤ J) 
     2 * κ * Y ^ a ≤ 2 * Real.exp (-(3 / 8) * L) := by
 
   have hYa : Y ^ a ≤ Real.exp (a * (1 / 8 * L)) := by
-    rw [Real.exp_nat_mul]
+    rw [Real.exp_natCast_mul]
     exact pow_le_pow_left₀ hY0 hY a
   have hYa0 : 0 ≤ Y ^ a := pow_nonneg hY0 a
   rcases lt_or_ge κ 0 with hκ0 | hκ0
@@ -1658,7 +1658,7 @@ theorem nearModerate : GlobalTheory.FlagMeas.FlagMeasureBound → GlobalTheory.F
   have hlogn : 15 ≤ Real.log B.I.n := by
     have h3 : Real.exp 15 ≤ (B.I.n : ℝ) := by
       have e1 : Real.exp 1 ≤ 3 := by linarith [Real.exp_one_lt_d9]
-      calc Real.exp 15 = Real.exp 1 ^ 15 := by rw [← Real.exp_nat_mul]; norm_num
+      calc Real.exp 15 = Real.exp 1 ^ 15 := by rw [← Real.exp_natCast_mul]; norm_num
         _ ≤ 3 ^ 15 := pow_le_pow_left₀ (Real.exp_pos 1).le e1 15
         _ ≤ (B.I.n : ℝ) := by exact_mod_cast hn3
     have := Real.log_le_log (Real.exp_pos 15) h3

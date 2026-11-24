@@ -157,7 +157,7 @@ theorem UpperTheory.weilDeligne_triangular_initial_segment :
       by_cases hj : j = Fin.last n
       · subst hj
         rw [h2]; simp
-      · rw [h1 (lt_of_le_of_ne (Fin.le_last j) hj), Finsupp.single_apply, if_neg hj, mul_zero]
+      · rw [h1 (lt_of_le_of_ne (Fin.le_last j) hj), Finsupp.single_apply, ite_eq_right hj, mul_zero]
     simpa using LinearMap.congr_fun h x
   have hS : ∀ a, ∀ x ∈ LinearMap.ker (b.coord (Fin.last n)), T a x ∈ LinearMap.ker (b.coord (Fin.last n)) := by
     intro a x hx
@@ -169,7 +169,7 @@ theorem UpperTheory.weilDeligne_triangular_initial_segment :
   · let v : Fin n → LinearMap.ker (b.coord (Fin.last n)) := fun i =>
       ⟨b (Fin.castSucc i), by
         rw [LinearMap.mem_ker, Basis.coord_apply, Basis.repr_self, Finsupp.single_apply,
-          if_neg (Fin.castSucc_lt_last i).ne]⟩
+          ite_eq_right (Fin.castSucc_lt_last i).ne]⟩
     have hv : LinearIndependent k v := by
       apply LinearIndependent.of_comp (LinearMap.ker (b.coord (Fin.last n))).subtype
       exact b.linearIndependent.comp Fin.castSucc (Fin.castSucc_injective n)
@@ -263,7 +263,7 @@ theorem UpperTheory.weilDeligne_triangularizable :
   induction n with
   | zero =>
     intro V _ _ _ _ _ ρ κ μ ⟨b, _⟩ _ hV
-    haveI := hV.finite
+    have := hV.finite
     have h0 : finrank ℂ (WDSpace (Loc.PP l) ι ρ) = 0 := by
       rw [LetterDim.finrank_wdSpace l _ ι _ L V ρ hV, finrank_eq_card_basis b, Fintype.card_fin]
     exact ⟨finBasisOfFinrankEq ℂ _ h0, fun a => ⟨fun i => i.elim0, fun i => i.elim0⟩⟩
@@ -277,9 +277,9 @@ theorem UpperTheory.weilDeligne_triangularizable :
       rw [LinearMap.exact_iff, hker, Submodule.range_subtype]
     obtain ⟨h', h'', hinj, hsurj, hexW⟩ := UpperTheory.weil_deligne_functor_exactness l ι Bw.Kw L ↥S V ↥L.1 ρ' ρ (Loc.chRep (κ (Fin.last n)))
       S.subtype p hf hpe S.subtype_injective hp hex hV
-    haveI := hV.finite
-    haveI := h'.finite
-    haveI := h''.finite
+    have := hV.finite
+    have := h'.finite
+    have := h''.finite
     have h1 : finrank ℂ (WDSpace (Loc.PP l) ι (Loc.chRep (κ (Fin.last n)))) = 1 := by
       rw [LetterDim.finrank_wdSpace l _ ι _ L _ _ h'', finrank_self]
     have hI := ih ↥S ρ' (fun i => κ (Fin.castSucc i)) (fun σ i => μ σ (Fin.castSucc i)) hT'

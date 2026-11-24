@@ -144,8 +144,8 @@ theorem isChar_finsum_conj_ext0_of_isChar :
     ∀ (K L : Type) [Field K] [Field L] [Algebra K L] (G : Type) [Group G] [Finite G] (H : Subgroup G) (ψ : H → L), IsChar K L ψ → IsChar K L (fun g : G => ∑ᶠ q : G ⧸ H, ext0 H ψ (q.out⁻¹ * g * q.out)) := by
   intro K L _ _ _ G _ _ H ψ hψ
   classical
-  haveI : Fintype G := Fintype.ofFinite G
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype G := Fintype.ofFinite G
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   obtain ⟨n, σ, hσ⟩ := hψ
   obtain ⟨m, ρ, hρ⟩ :=
     (isChar_and_isIrrChar_of_rep K L G (G ⧸ H → Fin n → K) (cosetIndRep H σ)).1
@@ -165,10 +165,10 @@ theorem isChar_finsum_conj_ext0_of_isChar :
   · have hm : q.out⁻¹ * g * q.out ∈ H := (inv_smul_eq_iff_conj_mem H g q).mp h
     have he : (⟨q.out⁻¹ * g * q.out, hm⟩ : H) = cosetCocycle H g q :=
       Subtype.ext (by simp [cosetCocycle, h])
-    rw [if_pos h, ext0, dite_eq_left hm, hσ, he]
+    rw [ite_eq_left h, ext0, dite_eq_left hm, hσ, he]
     rfl
   · have hm : q.out⁻¹ * g * q.out ∉ H := fun hm => h ((inv_smul_eq_iff_conj_mem H g q).mpr hm)
-    rw [if_neg h, ext0, dite_eq_right hm, map_zero]
+    rw [ite_eq_right h, ext0, dite_eq_right hm, map_zero]
 
 end GlobalTheory.BI
 end -- clump:auto

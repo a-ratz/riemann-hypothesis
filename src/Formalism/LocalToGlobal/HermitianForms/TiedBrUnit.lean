@@ -87,7 +87,7 @@ theorem isUnit_det_cols {E : Type} [Field E] {N n : ℕ} (hN : n + 1 = N) (A : M
 variable (D : D7)
 
 theorem iX'_injective : letI := D.host.cmStar; Function.Injective D.sp.iX' := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro x y h
   rw [← sub_eq_zero]
   have h0 : D.sp.iX' (x - y) = 0 := by rw [map_sub, h, sub_self]
@@ -96,7 +96,7 @@ theorem iX'_injective : letI := D.host.cmStar; Function.Injective D.sp.iX' := by
   rw [← D.sp.iX'_isom (x - y) w, h0, map_zero, LinearMap.zero_apply]
 
 theorem iXc_injective : Function.Injective (iXc D) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro x y h
   unfold iXc at h
   simp only [LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe, EmbeddingLike.apply_eq_iff_eq] at h

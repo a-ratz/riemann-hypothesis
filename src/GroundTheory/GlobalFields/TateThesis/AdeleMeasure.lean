@@ -92,7 +92,7 @@ def finiteAdeleMeasure : Measure (FiniteAdeleRing (𝓞 K) K) :=
   (NNReal.sqrt ‖discr K‖₊)⁻¹ • addHaarMeasure (integralFiniteAdelesPositiveCompacts K)
 
 theorem sqrt_discr_ne_zero : NNReal.sqrt ‖discr K‖₊ ≠ 0 := by
-  rw [Ne, NNReal.sqrt_eq_zero, nnnorm_eq_zero]
+  rw [Ne, NNReal.sqrt_eq_zero, nnNorm_eq_zero]
   exact discr_ne_zero K
 
 instance : (finiteAdeleMeasure K).IsAddHaarMeasure := by
@@ -105,7 +105,7 @@ instance : (finiteAdeleMeasure K).Regular := by
 
 theorem finiteAdeleMeasure_integralFiniteAdeles :
     finiteAdeleMeasure K (integralFiniteAdeles (𝓞 K) K) = ((NNReal.sqrt ‖discr K‖₊)⁻¹ : ℝ≥0) := by
-  rw [finiteAdeleMeasure, Measure.smul_apply, ← coe_integralFiniteAdelesPositiveCompacts,
+  rw [finiteAdeleMeasure, smul_apply, ← coe_integralFiniteAdelesPositiveCompacts,
     addHaarMeasure_self, ENNReal.smul_def, smul_eq_mul, mul_one]
 
 def measurableEquivMixedSpace : InfiniteAdeleRing K ≃ᵐ mixedSpace K :=
@@ -152,7 +152,7 @@ theorem infiniteAdeleMeasure_fundamentalSetInfinite :
   change infiniteAdeleMeasure K ((measurableEquivMixedSpace K) ⁻¹'
     ZSpan.fundamentalDomain (latticeBasis K)) = _
   rw [(measurePreserving_measurableEquivMixedSpace K).measure_preimage_equiv, selfDualMeasure,
-    Measure.smul_apply, volume_fundamentalDomain_latticeBasis, smul_eq_mul, ← mul_assoc, ← mul_pow,
+    smul_apply, volume_fundamentalDomain_latticeBasis, smul_eq_mul, ← mul_assoc, ← mul_pow,
     ENNReal.mul_inv_cancel two_ne_zero ENNReal.ofNat_ne_top, one_pow, one_mul]
 
 theorem adeleMeasure_fundamentalSet : adeleMeasure K (fundamentalSet K) = 1 := by

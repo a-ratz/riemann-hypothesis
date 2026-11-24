@@ -389,7 +389,7 @@ theorem card_mul_card_orth [Finite M] (hc : ∀ x y, β x y = β y x) (hz : ∀ 
     (h2 : ∀ x x' y, β (x + x') y = β x y * β x' y) (h4 : ∀ x, (∀ y, β x y = 1) → x = 0)
     {X Y : Submodule R M} (hY : ∀ y, y ∈ Y ↔ ∀ x ∈ X, β y x = 1) :
     Nat.card X * Nat.card Y = Nat.card M := by
-  letI := Fintype.ofFinite M
+  let := Fintype.ofFinite M
   have e1 : ∑ y : M, ∑ x : X, β y x = (Nat.card X * Nat.card Y : ℕ) := by
     simp only [sum_beta hc hz h2 hY]
     rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul, Nat.cast_mul, mul_comm,
@@ -398,7 +398,7 @@ theorem card_mul_card_orth [Finite M] (hc : ∀ x y, β x y = β y x) (hz : ∀ 
     rw [Finset.sum_eq_single (0 : X)]
     · simp [hc _ 0, hz]
     · intro x _ hx
-      rw [sum_char (fun y => β y x) (hz _) (fun a b => h2 _ _ _), if_neg]
+      rw [sum_char (fun y => β y x) (hz _) (fun a b => h2 _ _ _), ite_eq_right]
       intro h
       exact hx (Subtype.ext (h4 _ fun y => by rw [hc]; exact h y))
     · simp
@@ -509,9 +509,9 @@ theorem isotropic_step [Finite M] (h : IsHerm σ φ β) {X Y : Submodule R M}
   · obtain ⟨p, rfl⟩ := hπ p
     obtain ⟨χ, hχ, hχ'⟩ := h5 (p : M)
     exact ⟨χ, hχ, fun a => by rw [← map_smul, hφ]; exact hχ' a⟩
-  · letI := Fintype.ofFinite M
-    haveI : Finite (Y ⧸ X.submoduleOf Y) := Finite.of_surjective _ hπ
-    letI := Fintype.ofFinite (Y ⧸ X.submoduleOf Y)
+  · let := Fintype.ofFinite M
+    have : Finite (Y ⧸ X.submoduleOf Y) := Finite.of_surjective _ hπ
+    let := Fintype.ofFinite (Y ⧸ X.submoduleOf Y)
     obtain ⟨n, hn, e⟩ := sum_comp_surj π.toAddMonoidHom hπ φ'
     refine ⟨n, hn, ?_⟩
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, ← e, sum_eq_sum_orth hc hz h1 h2 hY hX]
@@ -542,7 +542,7 @@ theorem split_step [Finite M] (h : IsHerm σ φ β) {X Y : Submodule R M}
     simp only
     rw [hc, h2, hc a, hc b, (hY _).1 y.2 _ a.2, one_mul]
     exact hy b
-  · letI := Fintype.ofFinite M
+  · let := Fintype.ofFinite M
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype,
       ← hbij.sum_comp φ, Fintype.sum_prod_type, Finset.sum_mul_sum]
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
@@ -612,10 +612,10 @@ theorem gauss_sign {R : Type} [CommRing R] (σ : R →+* R) (hσ : ∀ a, σ (σ
   have hc := beta_comm h0 h1
   have hz := beta_zero h0 h1 h2
   rcases eq_bot_or_exists_atom_le (⊤ : Submodule R M) with htop | ⟨X, hX, -⟩
-  · haveI : Subsingleton M := ⟨fun a b => by
+  · have : Subsingleton M := ⟨fun a b => by
       have ha : a - b ∈ (⊤ : Submodule R M) := trivial
       rwa [htop, Submodule.mem_bot, sub_eq_zero] at ha⟩
-    haveI : Unique M := uniqueOfSubsingleton 0
+    have : Unique M := uniqueOfSubsingleton 0
     refine ⟨1, one_pos, ?_⟩
     rw [finsum_unique, Nat.card_unique, s1, Subsingleton.elim default (0 : M), phi_zero h0 h1 h2]
     simp
@@ -624,7 +624,7 @@ theorem gauss_sign {R : Type} [CommRing R] (σ : R →+* R) (hσ : ∀ a, σ (σ
     Finite.one_lt_card_iff_nontrivial.2 (Submodule.nontrivial_iff_ne_bot.2 hX.1)
   by_cases hφ : ∀ x ∈ X, φ x = 1
   · obtain ⟨c, φ', β', h', k, hk, e⟩ := isotropic_step h hY hφ
-    haveI : Finite (Y ⧸ X.submoduleOf Y) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
+    have : Finite (Y ⧸ X.submoduleOf Y) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
     have hq : 0 < Nat.card (Y ⧸ X.submoduleOf Y) := Nat.card_pos
     obtain ⟨r, hr, e'⟩ := ih _ (by rw [← hn, c]; nlinarith [Nat.mul_pos hq (zero_lt_one.trans hX1)])
       _ φ' β' rfl h'
@@ -647,9 +647,9 @@ theorem gauss_sign {R : Type} [CommRing R] (σ : R →+* R) (hσ : ∀ a, σ (σ
     have he : ∀ q : R ⧸ P, ((e q : X) : M) = Quotient.out q • x := fun q => by
       conv_lhs => rw [← Quotient.out_eq q]
       rfl
-    haveI : IsSimpleModule R X := isSimpleModule_iff_isAtom.2 hX
-    haveI : P.IsMaximal := Ideal.isMaximal_def.2 (isSimpleModule_iff_isCoatom.1 (IsSimpleModule.congr e))
-    haveI : Finite (R ⧸ P) := Finite.of_equiv _ e.toEquiv.symm
+    have : IsSimpleModule R X := isSimpleModule_iff_isAtom.2 hX
+    have : P.IsMaximal := Ideal.isMaximal_def.2 (isSimpleModule_iff_isCoatom.1 (IsSimpleModule.congr e))
+    have : Finite (R ⧸ P) := Finite.of_equiv _ e.toEquiv.symm
     obtain ⟨hst, hnd, hsum⟩ := line_step h hσ hw (x := x) (P := P) (a₀ := 1) (fun a => Iff.rfl)
       (by rwa [one_smul])
     obtain ⟨hs, hne⟩ := sP P inferInstance hst
@@ -708,9 +708,9 @@ def GaussSign (D : D7) : Prop := ∀ (M : Type) [AddCommGroup M] [Module (𝓞 D
 theorem finsum_comp_surj {G K : Type} [AddCommGroup G] [AddCommGroup K] [Finite G] (p : G →+ K)
     (hp : Function.Surjective p) (f : K → ℂ) :
     ∃ n : ℕ, 0 < n ∧ ∑ᶠ g, f (p g) = n * ∑ᶠ k, f k := by
-  haveI : Finite K := Finite.of_surjective p hp
-  letI := Fintype.ofFinite G
-  letI := Fintype.ofFinite K
+  have : Finite K := Finite.of_surjective p hp
+  let := Fintype.ofFinite G
+  let := Fintype.ofFinite K
   refine ⟨(Finset.univ.filter fun g => p g = 0).card, Finset.card_pos.2 ⟨0, by simp⟩, ?_⟩
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Finset.mul_sum,
     ← Finset.sum_fiberwise (s := Finset.univ) (g := fun g => p g)]
@@ -740,7 +740,7 @@ theorem gauss_quot (D : D7) (hG : GaussSign D) (M : Type) [AddCommGroup M] [Modu
     (Submodule.Quotient.mk_eq_zero R).2 (hNR hx)
   have hp0 : ∀ x : M, p (x : M ⧸ N) = R.mkQ x := fun x => rfl
   have hp : Function.Surjective p := fun k => ⟨(o k : M ⧸ N), (hp0 _).trans (ho k)⟩
-  haveI : Finite (M ⧸ R) := Finite.of_surjective p hp
+  have : Finite (M ⧸ R) := Finite.of_surjective p hp
   obtain ⟨r, hr, hs⟩ := hG (M ⧸ R) (fun k => φ (o k)) (fun k l => β (o k) (o l)) (fun _ => h0 _)
     (fun k l => by
       obtain ⟨x, rfl⟩ := R.mkQ_surjective k
@@ -813,9 +813,9 @@ theorem gauss_sign (D : D7) (hG : GaussSign D) {V : Type} [AddCommGroup V] [Modu
     linarith
   have hmem : ∀ w : A, w ∈ (subLa m A).addSubgroupOf A ↔ ∃ v ∈ A, m • v = (w : V) := fun w => by
     simp [AddSubgroup.mem_addSubgroupOf, subLa]
-  haveI : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg A).2 hFG
-  haveI : Finite (A ⧸ (subLa m A).addSubgroupOf A) := by
-    refine AddCommGroup.finite_of_fg_torsion _ fun q => ?_
+  have : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg A).2 hFG
+  have : Finite (A ⧸ (subLa m A).addSubgroupOf A) := by
+    refine AddCommGroup.finite_of_fg_isAddTorsion _ fun q => ?_
     induction q using QuotientAddGroup.induction_on with
     | H x =>
       refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨m, hm0, ?_⟩
@@ -833,7 +833,7 @@ theorem gauss_sign (D : D7) (hG : GaussSign D) {V : Type} [AddCommGroup V] [Modu
     simp
     ring
   simp only [hφ]
-  letI : Module (𝓞 D.host.E) A :=
+  let : Module (𝓞 D.host.E) A :=
     { smul := fun b x => ⟨T b x, hTA b x x.2⟩
       one_smul := fun x => Subtype.ext (hT1 x)
       mul_smul := fun b c x => Subtype.ext (hTm b c x)
@@ -1403,10 +1403,10 @@ theorem idx_ne_zero {L : Lat D N} (hL : SD D L) : idx D L ≠ 0 := by
   obtain ⟨n, hn, h⟩ := exists_common ((sd_iff D L).1 hL).2.1
   have hfg : (stdL D N).FG := Submodule.fg_pi fun _ => by
     rw [Submodule.one_eq_span]; exact Submodule.fg_span_singleton _
-  haveI : Module.Finite (𝓞 D.host.E) (stdL D N) := Module.Finite.iff_fg.2 hfg
-  haveI : Module.Finite ℤ (stdL D N ⧸ Submodule.comap (stdL D N).subtype L) :=
+  have : Module.Finite (𝓞 D.host.E) (stdL D N) := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite ℤ (stdL D N ⧸ Submodule.comap (stdL D N).subtype L) :=
     Module.Finite.trans (𝓞 D.host.E) _
-  haveI : Finite (stdL D N ⧸ Submodule.comap (stdL D N).subtype L) := by
+  have : Finite (stdL D N ⧸ Submodule.comap (stdL D N).subtype L) := by
     refine Module.finite_of_fg_torsion _ fun q => ⟨⟨n, mem_nonZeroDivisors_of_ne_zero hn⟩, ?_⟩
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ q
     change n • (Submodule.mkQ (Submodule.comap (stdL D N).subtype L) x) = 0
@@ -1570,7 +1570,7 @@ def sN (y : 𝓞 D.host.E) : ℂ := sgn D (Ideal.absNorm (Ideal.span {y}))
 theorem ev_norm {y : 𝓞 D.host.E} (hy : y ≠ 0) :
     Ev D (Ideal.absNorm (Ideal.span {y})) ∧ Ideal.absNorm (Ideal.span {y}) ≠ 0 := by
   have h0 : Ideal.span {y} ≠ ⊥ := by simpa using hy
-  haveI : Finite (𝓞 D.host.E ⧸ Ideal.span {y}) := Ideal.finiteQuotientOfFreeOfNeBot _ h0
+  have : Finite (𝓞 D.host.E ⧸ Ideal.span {y}) := Ideal.finiteQuotientOfFreeOfNeBot _ h0
   exact ⟨by rw [Ideal.absNorm_eq_natCard]; exact (GlobalTheory.InertParity.FiniteOrder.ev_card_and_sgn_card D (𝓞 D.host.E ⧸ Ideal.span {y})).1, Ideal.absNorm_eq_zero_iff.not.2 h0⟩
 
 theorem inertPrimeOrderParitySign_radical_integral_form {n i k : ℕ} {w : D.host.E} {w₁ c : 𝓞 D.host.E} (h1 : w₁ ≠ 0) (hc : c ≠ 0) (h : w * c = w₁)
@@ -1596,7 +1596,7 @@ theorem sgn_rad {n i k : ℕ} {w y : D.host.E} {y₁ c : 𝓞 D.host.E} (hw : w 
   · exact inertPrimeOrderParitySign_radical_integral_form h1 hc h hi hi0 (by simpa only [hk] using hn)
 
 theorem ev_idx {n : ℕ} {L : Submodule (𝓞 D.host.E) (Fin n → D.host.E)} (h : idx D L ≠ 0) : Ev D (idx D L) := by
-  haveI : Finite (stdL D n ⧸ Submodule.comap (stdL D n).subtype L) := Nat.finite_of_card_ne_zero h
+  have : Finite (stdL D n ⧸ Submodule.comap (stdL D n).subtype L) := Nat.finite_of_card_ne_zero h
   exact (GlobalTheory.InertParity.FiniteOrder.ev_card_and_sgn_card D _).1
 
 def prin {y : D.host.E} (hy : y ≠ 0) : (AE D)ˣ := Units.map (inc D).toMonoidHom (Units.mk0 y hy)

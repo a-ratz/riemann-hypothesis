@@ -391,7 +391,7 @@ theorem finrank_le_of_lieMult {R : Type} [CommRing R] [IsDomain R] [IsDiscreteVa
     (fun a => (LinearMap.toMatrix' (ρ a))ᵀ) ρ' hM star b (fun k => (φ k).1)
     (φ.linearIndependent.map' (Submodule.subtype _) (Submodule.ker_subtype _))
     (fun k a x => ((φ k).2 _ x).trans (congrArg (τ · * _) (star_star a))) fun n => ?_
-  · obtain ⟨x, hx, hc'⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := R) c).exists_nonzero_dvd
+  · obtain ⟨x, hx, hc'⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := R) c).exists_ne_zero_dvd
       (mem_nonZeroDivisors_of_ne_zero hc)
     obtain ⟨n, hn⟩ := IsDiscreteValuationRing.associated_pow_irreducible hx hπ
     exact ⟨n, hc'.trans (by rw [← map_pow]; exact map_dvd _ hn.dvd)⟩

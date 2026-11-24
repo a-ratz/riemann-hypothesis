@@ -93,7 +93,7 @@ theorem isTr_absFrob_F : ∀ (p : ℕ) [Fact p.Prime] (B : Base p (fun _ _ G => 
       ∀ y, l' (B.F G.dual (dual_conn h) y) = p * WittVector.frobenius (l y) := by
   intro p _ B k _ _ _ G h l l' hT y
   set hp := p_eq_zero p k
-  letI : Algebra k k := (frobRing hp).toAlgebra
+  let : Algebra k k := (frobRing hp).toAlgebra
   obtain ⟨hb, lb, h1, h2⟩ := hT
   have hd := dual_conn h
 
@@ -181,16 +181,16 @@ theorem GlobalTheory.Dieu.EtFromConn.isTr_comp : ∀ (p : ℕ) [Fact p.Prime] (B
     simpa using e
   subst hυ
   obtain rfl : u = t.comp s := SemiHom.ext_apply hu
-  letI iσ : Algebra k k' := σ.toAlgebra
-  letI iτ : Algebra k' k'' := τ.toAlgebra
-  letI iυ : Algebra k k'' := (τ.comp σ).toAlgebra
+  let iσ : Algebra k k' := σ.toAlgebra
+  let iτ : Algebra k' k'' := τ.toAlgebra
+  let iυ : Algebra k k'' := (τ.comp σ).toAlgebra
   dsimp only [IsTr] at hs ht ⊢
   obtain ⟨hb, lb, hlb, hl'⟩ := hs
   obtain ⟨hb', lb', hlb', hl''⟩ := ht
   have hD := dual_conn h
   have hbu : (G.dual.baseChange k'').IsConn := (baseChange_isConn_isEt p k k'' G.dual).1 hD
-  haveI := B.free G.dual hD
-  haveI := B.finite G.dual hD
+  have := B.free G.dual hD
+  have := B.finite G.dual hD
   let b := Module.Free.chooseBasis (WittVector p k) (B.M G.dual hD)
   obtain ⟨bu, hbu_eq⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p _ B k k'' G.dual hD hbu _ b
   obtain ⟨bk, hbk_eq⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p _ B k k' G.dual hD hb _ b
@@ -209,7 +209,7 @@ theorem GlobalTheory.Dieu.EtFromConn.isTr_comp : ∀ (p : ℕ) [Fact p.Prime] (B
       simp [map_smul, smul_eq_mul, map_mul]
     · intro i
       simp only [AddMonoidHom.comp_apply, LinearMap.toAddMonoidHom_coe, RingHom.toAddMonoidHom_eq_coe,
-        AddMonoidHom.coe_coe]
+        AddMonoidHom.coe_ofClass]
       rw [← hbu_eq, Module.Basis.constr_basis]
   refine ⟨hbu, lbu, hlbu, fun y => ?_⟩
 
@@ -289,8 +289,8 @@ theorem GlobalTheory.Dieu.EtFromConn.isTr_comp : ∀ (p : ℕ) [Fact p.Prime] (B
       rw [hbk_eq, hlb, ← B.smap_comp hbu hb hD (G.dual.toBase k') ρ (G.dual.toBase k'')
         (fun n a => (hρ n a).symm), hlbu, wittMap_comp]
   have hA : ∀ z, lb' z = lbu (B.map hbu hb' ψ z) := by
-    haveI := B.free G'.dual (dual_conn h')
-    haveI := B.finite G'.dual (dual_conn h')
+    have := B.free G'.dual (dual_conn h')
+    have := B.finite G'.dual (dual_conn h')
     let b' := Module.Free.chooseBasis (WittVector p k') (B.M G'.dual (dual_conn h'))
     obtain ⟨b'', hb''⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p _ B k' k'' G'.dual (dual_conn h') hb' _ b'
     have key := b''.ext (f₁ := lb') (f₂ := lbu.comp (B.map hbu hb' ψ)) fun i => by
@@ -354,10 +354,10 @@ theorem red_of_isTr (p : ℕ) [Fact p.Prime] (B : Base p (fun _ _ G => G.IsConn)
     (σ : k →+* k') (G' : PDivGroup p k') (G : PDivGroup p k) (h' : G'.IsEt) (h : G.IsEt)
     (s : SemiHom σ G' G) (l : Mod B G h) (l' : Mod B G' h') (hT : IsTr B σ h' h s l l') :
     red B G' h' l' = s.rig (red B G h l) := by
-  letI : Algebra k k' := σ.toAlgebra
+  let : Algebra k k' := σ.toAlgebra
   obtain ⟨hb, lb, h1, h2⟩ := hT
-  haveI := B.free _ hb
-  haveI := B.finite _ hb
+  have := B.free _ hb
+  have := B.finite _ hb
   obtain ⟨r', hr', -, -⟩ := wittDual_reduction p k' _ _ (B.red _ hb) (B.red_surjective _ hb)
     (B.red_eq_zero _ hb)
   have hψ : ∀ m, r' lb (B.red _ hb m) = WittVector.constantCoeff (lb m) := hr' lb
@@ -432,7 +432,7 @@ namespace GlobalTheory.Dieu.EtFromConn
 theorem isTr_ofHom : ∀ (p : ℕ) [Fact p.Prime] (B : Base p (fun _ _ G => G.IsConn)) (k : Type) [Field k] [CharP k p] [PerfectRing k p] (G H : PDivGroup p k) (hG : G.IsEt) (hH : H.IsEt) (f : G ⟶ H) (l : Mod B H hH), IsTr B (RingHom.id k) hG hH (SemiHom.ofHom f) l (l ∘ₗ B.map (dual_conn hH) (dual_conn hG) (dualHom G H f)) := by
   intro p _ B k _ _ _ G H hG hH f l
   unfold IsTr
-  letI : Algebra k k := (RingHom.id k).toAlgebra
+  let : Algebra k k := (RingHom.id k).toAlgebra
   have hd := dual_conn hH
   have hd' := dual_conn hG
   have hb : (H.dual.baseChange k).IsConn := (baseChange_isConn_isEt p k k H.dual).1 hd
@@ -476,8 +476,8 @@ namespace GlobalTheory
 
 theorem semiHom_dual_transpose : ∀ (p : ℕ) [Fact p.Prime] (B : Base p (fun _ _ G => G.IsConn)) (k k' : Type) [Field k] [CharP k p] [PerfectRing k p] [Field k'] [CharP k' p] [PerfectRing k' p] [Algebra k k'] (G : PDivGroup p k) (G' : PDivGroup p k') (hd : G.dual.IsConn) (hd' : G'.dual.IsConn) (hb : (G.dual.baseChange k').IsConn) (s : SemiHom (algebraMap k k') G' G) (l : Module.Dual (WittVector p k) (B.M G.dual hd)), ∃! l' : Module.Dual (WittVector p k') (B.M G'.dual hd'), ∃ lb : Module.Dual (WittVector p k') (B.M (G.dual.baseChange k') hb), (∀ x, lb (B.smap hb hd (G.dual.toBase k') x) = WittVector.map (algebraMap k k') (l x)) ∧ ∀ y, l' y = lb (B.map hb hd' ((PerfdLat.dualBaseChange k' G).inv ≫ dualHom G' (G.baseChange k') s.lift) y) := by
   intro p _ B k k' _ _ _ _ _ _ _ G G' hd hd' hb s l
-  haveI := B.free G.dual hd
-  haveI := B.finite G.dual hd
+  have := B.free G.dual hd
+  have := B.finite G.dual hd
   let b := Module.Free.chooseBasis (WittVector p k) (B.M G.dual hd)
   obtain ⟨b', hb'⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p (fun _ _ G => G.IsConn) B k k' G.dual hd hb _ b
   let lb : Module.Dual (WittVector p k') (B.M (G.dual.baseChange k') hb) :=
@@ -522,7 +522,7 @@ theorem exists_unique_isTr {k k' : Type} [Field k] [CharP k p] [PerfectRing k p]
     [CharP k' p] [PerfectRing k' p] {σ : k →+* k'} {G' : PDivGroup p k'} {G : PDivGroup p k}
     (hG' : G'.IsEt) (hG : G.IsEt) (s : SemiHom σ G' G) (l : Mod B G hG) :
     ∃! l', IsTr B σ hG' hG s l l' := by
-  letI : Algebra k k' := σ.toAlgebra
+  let : Algebra k k' := σ.toAlgebra
   have hb := (_root_.GlobalTheory.Dieu.baseChange_isConn_isEt p k k' G.dual).1 (dual_conn hG)
   obtain ⟨l', h1, h2⟩ := _root_.GlobalTheory.semiHom_dual_transpose p B k k' G G' (dual_conn hG) (dual_conn hG') hb s l
   exact ⟨l', ⟨hb, h1⟩, fun l'' ⟨_, h⟩ => h2 l'' h⟩
@@ -546,7 +546,7 @@ theorem tr_add {k k' : Type} [Field k] [CharP k p] [PerfectRing k p] [Field k']
   apply tr_eq
   have h1 := isTr_tr B hG' hG s l
   have h2 := isTr_tr B hG' hG s m
-  letI : Algebra k k' := σ.toAlgebra
+  let : Algebra k k' := σ.toAlgebra
   obtain ⟨hb, lb, a1, b1⟩ := h1
   obtain ⟨_, mb, a2, b2⟩ := h2
   refine ⟨hb, lb + mb, fun x => ?_, fun y => ?_⟩
@@ -559,7 +559,7 @@ theorem tr_smul {k k' : Type} [Field k] [CharP k p] [PerfectRing k p] [Field k']
     tr B hG' hG s (a • l) = WittVector.map σ a • tr B hG' hG s l := by
   apply tr_eq
   have h1 := isTr_tr B hG' hG s l
-  letI : Algebra k k' := σ.toAlgebra
+  let : Algebra k k' := σ.toAlgebra
   obtain ⟨hb, lb, a1, b1⟩ := h1
   refine ⟨hb, WittVector.map σ a • lb, fun x => ?_, fun y => ?_⟩
   · rw [LinearMap.smul_apply, a1, LinearMap.smul_apply, smul_eq_mul, smul_eq_mul, map_mul]
@@ -667,7 +667,7 @@ theorem mvPowerSeries_algHom_isNilpotent_of_constantCoeff_zero :
         ∀ a : MvPowerSeries σ k, constantCoeff a = 0 → IsNilpotent (φ a) := by
   intro k _ σ _ A _ _ φ hφ a ha
   classical
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   have hc : ∀ α : σ →₀ ℕ, ∃ o : Option σ, (α = 0 ∧ o = none) ∨ ∃ i, o = some i ∧ α i ≠ 0 := by
     intro α
     by_cases h : α = 0
@@ -693,7 +693,7 @@ theorem mvPowerSeries_algHom_isNilpotent_of_constantCoeff_zero :
   have hd : (X i : MvPowerSeries σ k) ∣ g i := by
     rw [X_dvd_iff]
     intro m hm
-    rw [hg, if_neg]
+    rw [hg, ite_eq_right]
     intro h
     rcases hc m with ⟨-, h1⟩ | ⟨j, h1, h2⟩
     · rw [h1] at h; cases h
@@ -825,7 +825,7 @@ theorem PDivGroup.semiHom_app_eq_conn_part :
   have h1 : ∀ c : C.A n,
       i₁.app n (x.app n c) = algebraMap k' (G'₁.A n) (σ (counit (R := k) c)) := by
     intro c
-    haveI := hEt n
+    have := hEt n
     have hmem : c - algebraMap k (C.A n) (counit (R := k) c) ∈ augIdeal k (C.A n) := by
       rw [mem_augIdeal_iff', map_sub, ← Bialgebra.counitAlgHom_apply (R := k),
         ← Bialgebra.counitAlgHom_apply (R := k), AlgHom.commutes, Algebra.algebraMap_self,
@@ -898,8 +898,8 @@ theorem app_app_eq_algebraMap_counit_of_isConn_of_isEt {p : ℕ} [Fact p.Prime] 
     refine h.trans ?_
     change i₀.app n ((x.app n) (algebraMap k (C.A n) (counit (R := k) a))) = _
     rw [(x.app n).map_algebraMap, AlgHomClass.commutes]
-  haveI := hC n
-  haveI : IsNoetherianRing (G'₀.A n) := isNoetherian_of_tower k' inferInstance
+  have := hC n
+  have : IsNoetherianRing (G'₀.A n) := isNoetherian_of_tower k' inferInstance
   obtain ⟨N, hN⟩ := (Ideal.FG.isNilpotent_iff_le_nilradical
     (IsNoetherian.noetherian (augIdeal k' (G'₀.A n)))).2 fun y hy => mem_nilradical.2 (hG n y hy)
   obtain ⟨b, hb, hab⟩ := exists_augIdeal_pow_eq (A := C.A n) N _ hmem
@@ -1061,12 +1061,12 @@ theorem exists_katz_etDual : ∀ (p : ℕ) [Fact p.Prime] (Bc : GlobalTheory.Die
     red := fun {k} _ _ _ G _ =>
       redSum _ (q₀ k G) (q₁ k G) (Bc.red (G₀ k G) (hc k G)) (Be.red (G₁ k G) (he k G))
     free := fun {k} _ _ _ G _ => by
-      haveI := Bc.free (G₀ k G) (hc k G)
-      haveI := Be.free (G₁ k G) (he k G)
+      have := Bc.free (G₀ k G) (hc k G)
+      have := Be.free (G₁ k G) (he k G)
       exact (inferInstance : Module.Free (WittVector p k) (Bc.M (G₀ k G) (hc k G) × Be.M (G₁ k G) (he k G)))
     finite := fun {k} _ _ _ G _ => by
-      haveI := Bc.finite (G₀ k G) (hc k G)
-      haveI := Be.finite (G₁ k G) (he k G)
+      have := Bc.finite (G₀ k G) (hc k G)
+      have := Be.finite (G₁ k G) (he k G)
       exact (inferInstance : Module.Finite (WittVector p k) (Bc.M (G₀ k G) (hc k G) × Be.M (G₁ k G) (he k G)))
     red_surjective := fun {k} _ _ _ G _ x => by
       obtain ⟨m₀, e₀⟩ := Bc.red_surjective (G₀ k G) (hc k G) (rigExtMap (i₀ k G) x)
@@ -1246,7 +1246,7 @@ noncomputable def frobInv (G : PDivGroup p k) :
 
 theorem frobInv_frobProj (G : PDivGroup p k) (n : ℕ) (a : G.A n) :
     (frobInv G).app n ((frobProj (p_eq_zero p k) G).app n a) = a := by
-  letI := (frobRing (p_eq_zero p k)).toAlgebra
+  let := (frobRing (p_eq_zero p k)).toAlgebra
   refine (SemiHom.liftOver_app _ _ _ n 1 a).trans ?_
   simp
 

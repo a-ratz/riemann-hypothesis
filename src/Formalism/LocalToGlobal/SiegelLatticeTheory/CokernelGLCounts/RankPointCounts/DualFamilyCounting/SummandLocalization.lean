@@ -70,7 +70,7 @@ theorem summand_localization : SummandLoc := by
   have hfull : Submodule.IsFullLattice K L' := by
     have hfg : L'.FG := Submodule.fg_of_fg_map_injective i Subtype.val_injective
       (hmap.symm ▸ hL.fg)
-    letI : Submodule.IsLattice K L' := Submodule.IsLattice.of_fg K hfg
+    let : Submodule.IsLattice K L' := Submodule.IsLattice.of_fg K hfg
     refine ⟨?_⟩
     apply Submodule.map_injective_of_injective (f := W.subtype) Subtype.val_injective
     have himage : W.subtype '' (L' : Set W) = (L : Set V) := by
@@ -103,7 +103,7 @@ theorem summand_localization : SummandLoc := by
     rwa [map_sub, hproj, sub_eq_zero] at he
   refine ⟨π, Submodule.projection_apply_mem hYX.symm,
     fun _ hx => Submodule.projection_apply_of_mem_left hYX.symm hx, ?_⟩
-  letI := h𝔭.isPrime
+  let := h𝔭.isPrime
   intro y hy
   obtain ⟨t, ht, hty⟩ := (LocalSpans.mem_locF 𝔭 L y).1 hy
   have ht0 : t ≠ 0 := fun ht0 => ht (ht0 ▸ 𝔭.zero_mem)

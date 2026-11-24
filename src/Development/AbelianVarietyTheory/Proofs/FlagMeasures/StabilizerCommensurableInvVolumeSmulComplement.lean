@@ -230,10 +230,10 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
   · set Λ₀ := S.stdLat S.f S.es d.1
     let P : S.V →ₗ[E] S.V := S.W0.subtype ∘ₗ Submodule.linearProjOfIsCompl S.W0 S.ME hc.symm
     have hP0 : ∀ x ∈ S.ME, P x = 0 := fun x hx => by
-      have := (Submodule.linearProjOfIsCompl_apply_eq_zero_iff hc.symm).2 hx
+      have := (Submodule.projectionOnto_apply_eq_zero_iff hc.symm).2 hx
       exact congrArg Subtype.val this
     have hP1 : ∀ x ∈ S.W0, P x = x := fun x hx => by
-      have := Submodule.linearProjOfIsCompl_apply_left hc.symm ⟨x, hx⟩
+      have := Submodule.projectionOnto_apply_left hc.symm ⟨x, hx⟩
       exact congrArg Subtype.val this
     have hME : ∀ x ∈ Set.range S.f ∪ Set.range S.f', x ∈ S.ME := by
       rintro _ (⟨i, rfl⟩ | ⟨i, rfl⟩)

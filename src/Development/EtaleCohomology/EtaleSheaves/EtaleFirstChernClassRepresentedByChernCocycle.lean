@@ -834,7 +834,7 @@ theorem LeafRootLoc_of : LateralTheory.E.ChernClassRootLocalization.LeafRootLoc 
   refine ⟨Units.map ((h ≫ pullback.snd _ _).appTop.hom.comp (Scheme.ΓSpecIso B).inv.hom).toMonoidHom hX.unit, ?_⟩
   ext
   simp only [Units.val_pow_eq_pow_val, Units.coe_map, IsUnit.unit_spec, RingHom.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe]
+    MonoidHom.coe_ofClass]
   rw [← map_pow, kpair_root]
   exact congrArg (fun f => f.hom (u : Γ(U, ⊤))) hcomp
 

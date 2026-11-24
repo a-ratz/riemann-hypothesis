@@ -56,7 +56,7 @@ variable {m n : ℕ}
 theorem gramX_apply (ε : Fin m → Bool) (x : Fin m → Fin n → ℂ) (i j : Fin n) :
     gramX ε x i j = ∑ a, sgn ε a * (star (x a i) * x a j) := by
 
-  simp only [gramX, Qp, Qb, evX, map_sub, map_sum, map_mul, eval_X, Finset.sum_filter, if_true]
+  simp only [gramX, Qp, Qb, evX, map_sub, map_sum, map_mul, eval_X, Finset.sum_filter, ite_true]
   rw [← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl (fun a _ => ?_)
   cases h : ε a <;> simp [sgn, h]

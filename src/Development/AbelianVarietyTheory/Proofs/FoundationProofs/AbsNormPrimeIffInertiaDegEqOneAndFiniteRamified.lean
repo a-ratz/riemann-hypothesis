@@ -65,7 +65,7 @@ theorem _root_.GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramif
   have key : ∀ P : HeightOneSpectrum (𝓞 E), (Ideal.absNorm (P.asIdeal.under ℤ)).Prime ∧
       Ideal.absNorm P.asIdeal = Ideal.absNorm (P.asIdeal.under ℤ) ^ P.asIdeal.inertiaDeg ℤ := by
     intro P
-    haveI : NeZero P.asIdeal := ⟨P.ne_bot⟩
+    have : NeZero P.asIdeal := ⟨P.ne_bot⟩
     exact ⟨Nat.absNorm_under_prime P.asIdeal,
       (Ideal.absNorm_pow_inertiaDeg (P.asIdeal.under ℤ) P.asIdeal).symm⟩
   refine ⟨fun P => ?_, ?_⟩
@@ -85,10 +85,10 @@ theorem _root_.GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramif
       exact hq
   · set d := (discr E).natAbs with hd_def
     have hd : 0 < d := Int.natAbs_pos.mpr (discr_ne_zero E)
-    refine ((Ideal.finite_setOfPred_absNorm_le (S := 𝓞 E) (d ^ Module.finrank ℤ (𝓞 E))).preimage
+    refine ((Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 E) (d ^ Module.finrank ℤ (𝓞 E))).preimage
       (fun P _ Q _ h => HeightOneSpectrum.ext h)).subset ?_
     intro P hP
-    simp only [Set.mem_setOf_eq, Set.mem_preimage] at hP ⊢
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage] at hP ⊢
     obtain ⟨hq, -⟩ := key P
     set q := Ideal.absNorm (P.asIdeal.under ℤ) with hq_def
     have hmem := Int.absNorm_under_mem P.asIdeal

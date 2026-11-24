@@ -70,7 +70,7 @@ theorem value_eq_val : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) (w :
   have hlt : w.asIdeal ^ 2 < w.asIdeal ^ 1 :=
     Ideal.pow_right_strictAnti w.asIdeal w.ne_bot w.isPrime.ne_top (by norm_num : 1 < 2)
   rw [pow_one] at hlt
-  obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨ϖ, h1, h2⟩ := IsConcreteLE.exists_of_lt hlt
   have hϖ0 : (ϖ : D.host.E) ≠ 0 := by
     intro h0
     exact h2 (by rw [show ϖ = 0 from RingOfIntegers.coe_eq_zero_iff.1 h0]; exact zero_mem _)

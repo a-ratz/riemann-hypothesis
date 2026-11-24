@@ -134,8 +134,8 @@ theorem norm_lt_one_of_pow_of_commute (E : Type) [NontriviallyNormedField E] [Is
     have := hM i i
     simp at this
   obtain ⟨u, v, hu, hv, huv⟩ := hb
-  haveI := unitBallMaxIdeal_isMaximal E
-  letI : Field (unitBallSubring E ⧸ unitBallMaxIdeal E) := Ideal.Quotient.field _
+  have := unitBallMaxIdeal_isMaximal E
+  let : Field (unitBallSubring E ⧸ unitBallMaxIdeal E) := Ideal.Quotient.field _
   let O := unitBallSubring E
   let π : O →+* (unitBallSubring E ⧸ unitBallMaxIdeal E) := Ideal.Quotient.mk _
   let N' : Matrix (Fin n) (Fin n) O := fun a b => ⟨N a b, hN a b⟩
@@ -277,7 +277,7 @@ variable {E : Type} [NontriviallyNormedField E] [IsUltrametricDist E] {n : ℕ}
 
 theorem exists_pow_close [LocallyCompactSpace E] (y : Matrix (Fin n) (Fin n) E)
     (hy : ∀ i j, ‖y i j‖ ≤ 1) : ∃ a b : ℕ, a < b ∧ Sm (y ^ b - y ^ a) := by
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
   let f : ℕ → Fin n → Fin n → E := fun k i j => (y ^ k) i j
   have hs : IsCompact (Metric.closedBall (0 : Fin n → Fin n → E) 1) := isCompact_closedBall _ _
   have hf : ∀ k, f k ∈ Metric.closedBall (0 : Fin n → Fin n → E) 1 := by
@@ -609,7 +609,7 @@ theorem _root_.GlobalTheory.ValDecomp.valuation_decomp : ∀ (E : Type) [Nontriv
     rw [Subalgebra.mem_centralizer_iff]; rintro g rfl; exact hx.symm
   have ofS : ∀ {x : Matrix (Fin n) (Fin n) E}, x ∈ S → x * N = N * x := fun hx =>
     ((Subalgebra.mem_centralizer_iff E).1 hx N rfl).symm
-  letI : CommRing S := { (inferInstance : Ring S) with
+  let : CommRing S := { (inferInstance : Ring S) with
     mul_comm := fun x y => Subtype.ext (hcomm x y (ofS x.2) (ofS y.2)) }
   have toM : ∀ {X Y : S}, X = Y → (X : Matrix (Fin n) (Fin n) E) = Y := fun h => congrArg _ h
   have hscal : ∀ r : E, (r • (1 : Matrix (Fin n) (Fin n) E)) * N = N * (r • 1) := fun r => by
@@ -949,7 +949,7 @@ theorem quotient_integral_unit : ∀ (E : Type) [NontriviallyNormedField E] [IsU
   set S := Subalgebra.centralizer E ({N} : Set (Matrix (Fin n) (Fin n) E)) with hS
   have memN : ∀ x : S, x.1 * N = N * x.1 := fun x =>
     ((Subalgebra.mem_centralizer_iff E).1 x.2 N rfl).symm
-  letI : CommRing S := { (inferInstance : Ring S) with
+  let : CommRing S := { (inferInstance : Ring S) with
     mul_comm := fun x y => Subtype.ext (hcomm _ _ (memN x) (memN y)) }
   have mem : ∀ x : Matrix (Fin n) (Fin n) E, x * N = N * x → x ∈ S := fun x hx =>
     (Subalgebra.mem_centralizer_iff E).2
@@ -1156,7 +1156,7 @@ theorem unit_split {E : Type} [NontriviallyNormedField E] [IsUltrametricDist E]
       e * e = e ∧ ‖(y * e + (1 - e)).det‖ = 1 ∧ y * (1 - e) = ϖ • a := by
   obtain ⟨x, z, a₁, a₂, a₃, ⟨hxN, hzN, h1N, h2N, h3N⟩, hint, hx, hyx, hyz⟩ :=
     _root_.GlobalTheory.UnitDiscAlg.Red.main E n N ϖ hN hB h0 h1 hϖ y hyN hy
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
   obtain ⟨e, a', heN, ha'N, he, heI, ha'I, hea⟩ :=
     _root_.GlobalTheory.IdemLift.idem_lift E n N x a₁ ϖ h1 hxN (fun i j => (hint i j).1) (fun i j => (hint i j).2.2.1) hx
   have hzI : ∀ i j, ‖z i j‖ ≤ 1 := fun i j => (hint i j).2.1
@@ -1274,7 +1274,7 @@ private theorem theta_integral_of_integral_of_norm_det_one (F E : Type)
     [_root_.GlobalTheory.JR.Unram F E] {n : ℕ} {g : Matrix (Fin n) (Fin n) E}
     (hg : ∀ i j, ‖g i j‖ ≤ 1) (hd : ‖g.det‖ = 1) :
     (∀ i j, ‖_root_.GlobalTheory.Tw.theta g i j‖ ≤ 1) ∧ ‖(_root_.GlobalTheory.Tw.theta g).det‖ = 1 := by
-  haveI := _root_.GlobalTheory.JR.Unram.ultraE F (E := E)
+  have := _root_.GlobalTheory.JR.Unram.ultraE F (E := E)
   have hΦ : ∀ i j, ‖_root_.GlobalTheory.Tw.Phi n E i j‖ ≤ 1 := by
     intro i j
     rw [_root_.GlobalTheory.Tw.Model.Phi_apply']
@@ -1298,9 +1298,9 @@ private theorem exists_star_fixed_uniformizer (F E : Type) [NontriviallyNormedFi
     [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
     [_root_.GlobalTheory.JR.Unram F E] :
     ∃ ϖ : E, star ϖ = ϖ ∧ 0 < ‖ϖ‖ ∧ ‖ϖ‖ < 1 ∧ ∀ y : E, ‖y‖ < 1 → ‖y‖ ≤ ‖ϖ‖ := by
-  haveI := _root_.GlobalTheory.JR.Unram.ultraE F (E := E)
-  haveI := _root_.GlobalTheory.JR.Unram.lcE F (E := E)
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have := _root_.GlobalTheory.JR.Unram.ultraE F (E := E)
+  have := _root_.GlobalTheory.JR.Unram.lcE F (E := E)
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
   obtain ⟨y, hy0, hy1⟩ := NormedField.exists_norm_lt_one E
   have hK : IsCompact (Metric.ball (0 : E) 1) :=
     (isCompact_closedBall (0 : E) 1).of_isClosed_subset (IsUltrametricDist.isClosed_ball 0 1)
@@ -1355,7 +1355,7 @@ private theorem mul_inv_quotient_mem_twistedCentralizerGL_lemma_3 {E : Type} [Fi
       _root_.GlobalTheory.Tw.cent δ := by
   set N := _root_.GlobalTheory.Tw.nrm δ
   set A := Algebra.adjoin E {N}
-  letI : CommRing A := { (inferInstance : Ring A) with mul_comm := mul_comm' }
+  let : CommRing A := { (inferInstance : Ring A) with mul_comm := mul_comm' }
   have hmem : ∀ g, g * N = N * g → g ∈ A := fun g hg =>
     _root_.GlobalTheory.Tw.CentralizerAdjoin.mem_adjoin_of_commute N g hsep hg
   have hNA : N ∈ A := Algebra.self_mem_adjoin_singleton E N
@@ -1477,7 +1477,7 @@ theorem _root_.GlobalTheory.TwIntegral.integral_twConj_mem_cent_mul : ∀ (F E :
     ∃ t ∈ _root_.GlobalTheory.Tw.cent δ, ∃ k : Matrix (Fin n) (Fin n) E, (∀ i j, ‖k i j‖ ≤ 1) ∧
       ‖k.det‖ = 1 ∧ x = t * k := by
   intro F E _ _ _ _ _ n δ x hδ hδd ⟨u, v, hu, hv, huv⟩ hx hx' hx'd
-  haveI := _root_.GlobalTheory.JR.Unram.ultraE F (E := E)
+  have := _root_.GlobalTheory.JR.Unram.ultraE F (E := E)
   have hδu := _root_.GlobalTheory.TwIntegral.isUnit_of_norm_det hδd
   have hδdu := (isUnit_iff_isUnit_det δ).mp hδu
   obtain ⟨hθδ, -⟩ := theta_integral_of_integral_of_norm_det_one F E hδ hδd
@@ -1529,7 +1529,7 @@ theorem _root_.GlobalTheory.TwIntegral.integral_twConj_mem_cent_mul : ∀ (F E :
     rw [hs]
     simp [det_mul, det_nonsing_inv, Ring.inverse_eq_inv', hδd, hθkd, hx'd, hkd]
   obtain ⟨ϖ, hϖs, hϖ0, hϖ1, hϖmax⟩ := exists_star_fixed_uniformizer F E
-  haveI := _root_.GlobalTheory.JR.Unram.lcE F (E := E)
+  have := _root_.GlobalTheory.JR.Unram.lcE F (E := E)
   obtain ⟨-, hP3, hP4, -, hQi, hQd⟩ := _root_.GlobalTheory.UnitDiscAlg.units_quotient E n _ c _ ϖ hNi
     ⟨u, v, hu, hv, huv⟩ hϖ0 hϖ1 hϖmax hc hcN hsN hsi hsd
   have hQ := _root_.GlobalTheory.TwIntegral.isUnit_of_norm_det hQd
@@ -1617,9 +1617,9 @@ theorem eq_twCent_mul_KGL : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   obtain ⟨hc, hinv, hval, hns, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
   obtain ⟨-, ⟨ϖ, q, hϖ, -⟩, -⟩ := hns hs
   obtain ⟨-, -, hϖf, hϖv, ⟨x₀, -, hx₀⟩, -⟩ := hϖ
-  letI : NontriviallyNormedField (w.adicCompletion E) :=
+  let : NontriviallyNormedField (w.adicCompletion E) :=
     Valued.toNontriviallyNormedField _ (WithZero (Multiplicative ℤ))
-  letI : StarRing (w.adicCompletion E) := starOfInv (cj w) hinv
+  let : StarRing (w.adicCompletion E) := starOfInv (cj w) hinv
   have hle1 : ∀ x : w.adicCompletion E, ‖x‖ ≤ 1 ↔ Valued.v x ≤ 1 := fun x => Valued.toNormedField.norm_le_one_iff
   have hneq : ∀ x y : w.adicCompletion E, Valued.v x = Valued.v y → ‖x‖ = ‖y‖ := fun x y h =>
     le_antisymm (Valued.toNormedField.norm_le_iff.2 h.le) (Valued.toNormedField.norm_le_iff.2 h.ge)
@@ -1629,13 +1629,13 @@ theorem eq_twCent_mul_KGL : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hϖn : 1 < ‖ϖ⁻¹‖ := by
     rw [Valued.toNormedField.one_lt_norm_iff, map_inv₀, hϖv]
     exact one_lt_inv₀ (by simp) |>.2 (by rw [← WithZero.coe_one, WithZero.coe_lt_coe]; decide)
-  letI nF : NontriviallyNormedField (fixF (cj w)) :=
+  let nF : NontriviallyNormedField (fixF (cj w)) :=
     { (inferInstance : NormedField (fixF (cj w))) with non_trivial := ⟨⟨ϖ⁻¹, hϖi⟩, hϖn⟩ }
-  letI : NormedAlgebra (fixF (cj w)) (w.adicCompletion E) :=
+  let : NormedAlgebra (fixF (cj w)) (w.adicCompletion E) :=
     { (inferInstance : Algebra (fixF (cj w)) (w.adicCompletion E)) with
       norm_smul_le := fun r x => by rw [Algebra.smul_def, norm_mul]; exact le_of_eq rfl }
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
-  haveI hUn : GlobalTheory.JR.Unram (fixF (cj w)) (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have hUn : GlobalTheory.JR.Unram (fixF (cj w)) (w.adicCompletion E) :=
     { charZero := ⟨fun a b h => Nat.cast_injective (R := w.adicCompletion E) (by simpa using congrArg (algebraMap (fixF (cj w)) (w.adicCompletion E)) h)⟩
       ultraF := inferInstance
       ultraE := inferInstance
@@ -1659,9 +1659,9 @@ theorem eq_twCent_mul_KGL : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hcs : cj w = starRingEnd (w.adicCompletion E) := RingHom.ext fun _ => rfl
   have hth : ∀ h : GLw n w, (thL n w h).val = GlobalTheory.Tw.theta h.val := by
     intro h
-    rw [thL, if_neg hs, hcs, thetaGL_val]
+    rw [thL, ite_eq_right hs, hcs, thetaGL_val]
   have hnr : (nrmL n w y).val = GlobalTheory.Tw.nrm y.val := by
-    rw [nrmL, if_neg hs, Units.val_mul, hcs, thetaGL_val]; rfl
+    rw [nrmL, ite_eq_right hs, Units.val_mul, hcs, thetaGL_val]; rfl
 
   have hmem (O : Subring (w.adicCompletion E)) (h : GLw n w) :
       h ∈ GLint (Fin n) O ↔

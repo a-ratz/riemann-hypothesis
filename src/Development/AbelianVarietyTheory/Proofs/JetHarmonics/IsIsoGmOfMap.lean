@@ -193,7 +193,7 @@ theorem division [CompleteSpace K] (h : PowerSeries K) (d : ℕ) (hd : 0 < d)
       rw [norm_inv, h1, inv_one]
     · rw [Subring.coe_mul, hg]
       exact mul_inv_cancel₀ h0
-  haveI := adicComplete p hp
+  have := adicComplete p hp
   have HD := H.isWeierstrassDivisionAt_div_mod (PowerSeries.X ^ d)
   set q := H.div (PowerSeries.X ^ d)
   set r := H.mod (PowerSeries.X ^ d)
@@ -207,7 +207,7 @@ theorem division [CompleteSpace K] (h : PowerSeries K) (d : ℕ) (hd : 0 < d)
     rw [g.eq_X_pow_mul_shift_add_trunc d, add_mul, mul_assoc, map_add (f := _), map_add (f := _),
       PowerSeries.coeff_X_pow_self, Polynomial.coeff_coe,
       Polynomial.coeff_eq_zero_of_degree_lt hdeg, add_zero, PowerSeries.coeff_X_pow_mul',
-      if_pos le_rfl, Nat.sub_self, PowerSeries.coeff_mul] at e
+      ite_eq_left le_rfl, Nat.sub_self, PowerSeries.coeff_mul] at e
     rw [Finset.Nat.antidiagonal_zero, Finset.sum_singleton] at e
     have e2 : PowerSeries.coeff d (((g.trunc d : Polynomial (ball K)) : PowerSeries (ball K)) * q) ∈ I := by
       refine PowerSeries.coeff_mul_mem_ideal_of_coeff_left_mem_ideal' (fun i => ?_) d
@@ -228,7 +228,7 @@ theorem division [CompleteSpace K] (h : PowerSeries K) (d : ℕ) (hd : 0 < d)
   · rw [Polynomial.coeff_map]
     by_cases hn : n < d
     · have := HD.coeff_f_sub_r_mem (i := n) (hord'.symm ▸ hn)
-      rw [map_sub, PowerSeries.coeff_X_pow, if_neg hn.ne, zero_sub, neg_mem_iff,
+      rw [map_sub, PowerSeries.coeff_X_pow, ite_eq_right hn.ne, zero_sub, neg_mem_iff,
         Polynomial.coeff_coe] at this
       exact ((hmem _).1 this).trans_lt hp
     · rw [Polynomial.coeff_eq_zero_of_degree_lt (hdeg.trans_le (by exact_mod_cast not_lt.1 hn))]
@@ -325,15 +325,15 @@ theorem exists_torsion_tower (K : Type) [NormedField K] [IsUltrametricDist K] [C
       intro n
       rcases n with _ | n
       · simp [h0c, hc.le]
-      · rw [map_sub, PowerSeries.coeff_C, if_neg (Nat.succ_ne_zero n), sub_zero]
+      · rw [map_sub, PowerSeries.coeff_C, ite_eq_right (Nat.succ_ne_zero n), sub_zero]
         exact hcoef _
     obtain ⟨y, hy, hy0⟩ := _root_.GlobalTheory.ConvSer.exists_root_of_weierstrassDegree K (h - PowerSeries.C c) p hpr.pos hIc (by
-        rw [map_sub, PowerSeries.coeff_C, if_neg hpr.ne_zero, sub_zero]
+        rw [map_sub, PowerSeries.coeff_C, ite_eq_right hpr.ne_zero, sub_zero]
         exact hp) (by
         intro k hk
         rcases k with _ | k
         · simpa [h0, h0c] using hc
-        · rw [map_sub, PowerSeries.coeff_C, if_neg (Nat.succ_ne_zero k), sub_zero]
+        · rw [map_sub, PowerSeries.coeff_C, ite_eq_right (Nat.succ_ne_zero k), sub_zero]
           exact hlt _ hk)
     refine ⟨⟨y, hy⟩, ?_⟩
     obtain ⟨-, hops, hCe, -⟩ := hev y hy
@@ -392,7 +392,7 @@ theorem exists_torsion_tower (K : Type) [NormedField K] [IsUltrametricDist K] [C
   · intro n
     rcases n with _ | m
     · simpa [x0] using hxroot
-    · simp only [Nat.add_sub_cancel, if_neg (Nat.succ_ne_zero _), Function.iterate_succ_apply']
+    · simp only [Nat.add_sub_cancel, ite_eq_right (Nat.succ_ne_zero _), Function.iterate_succ_apply']
       exact hf _
 
 end GlobalTheory.ConvSer
@@ -484,7 +484,7 @@ theorem exists_pow_eq_interpolation {K : Type} [NormedField K] [IsUltrametricDis
   induction k with
   | zero =>
     refine ⟨1, fun a ha => ?_, fun a => ?_, by simp⟩
-    · rw [coeff_one, if_neg (by omega)]
+    · rw [coeff_one, ite_eq_right (by omega)]
     · rw [coeff_one]; split_ifs <;> simp
   | succ k ih =>
     obtain ⟨Q, hQ0, hQ1, hQ2⟩ := ih
@@ -664,7 +664,7 @@ theorem exists_integral_poly_of_character (K : Type) [NormedField K] [IsUltramet
     intro a b
     have h2 := van _ (fun j => congrFun (h1 j) a)
     exact sub_eq_zero.1 (congrFun h2 b)
-  haveI : Nonempty (Fin (Fintype.card G)) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin (Fintype.card G)) := ⟨⟨0, hpos⟩⟩
   obtain ⟨m, -, hm⟩ := Finset.exists_max_image Finset.univ
     (fun a : Fin (Fintype.card G) => ‖g.coeff a‖) Finset.univ_nonempty
   have hM : ‖g.coeff m‖ * ‖g.coeff m‖ ≤ ‖g.coeff m‖ := by
@@ -713,7 +713,7 @@ theorem exists_intg_polynomial_level (K : Type) [NormedField K] [IsUltrametricDi
     ∃ g : Polynomial K, (∀ k, ‖g.coeff k‖ ≤ 1) ∧
       ∀ j : ℕ, g.eval (ev1 (nMul F j) (t n)) = ζ ^ j := by
   classical
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   have hord := (_root_.GlobalTheory.ConvSer.tower_exact_order K p F hF t ht h0 h1 hp).2.2 n
   obtain ⟨-, -, hnorm, hadd, -⟩ := (_root_.GlobalTheory.ConvSer.nMul_point K F hF).2 (t n) (ht n)
   set x : ZMod (p ^ n) → K := fun i => ev1 (nMul F i.val) (t n) with hx
@@ -977,11 +977,11 @@ theorem prod_range_mul (g : ℕ → ℝ) (N b : ℕ) :
 theorem prod_range_ite (f : ℕ → ℝ) (c : ℝ) {M : ℕ} (hM : 0 < M) :
     ∏ j ∈ Finset.range M, (if j = 0 then c else f j) = c * ∏ j ∈ Finset.Ico 1 M, f j := by
   rw [Finset.range_eq_Ico, Finset.prod_eq_prod_Ico_succ_bot hM]
-  simp only [if_true, zero_add]
+  simp only [ite_true, zero_add]
   congr 1
   refine Finset.prod_congr rfl fun j hj => ?_
   have := (Finset.mem_Ico.1 hj).1
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 section
 
@@ -1130,14 +1130,14 @@ theorem tower_norm : ∀ (K : Type) [NormedField K] [IsUltrametricDist K] [Compl
       refine Finset.prod_congr rfl fun a _ => ?_
       by_cases ha : a = 0
       · subst ha
-        rw [if_pos rfl, ← hB, ← one_mul (∏ b ∈ Finset.Ico 1 p, _), ← prod_range_ite _ _ hp.pos]
+        rw [ite_eq_left rfl, ← hB, ← one_mul (∏ b ∈ Finset.Ico 1 p, _), ← prod_range_ite _ _ hp.pos]
         refine Finset.prod_congr rfl fun b _ => ?_
         by_cases hb : b = 0
         · simp [hb]
-        · rw [if_neg hb, zero_add, if_neg (Nat.mul_ne_zero hN.ne' hb), hbot]
-      · rw [if_neg ha, ← hA n a]
+        · rw [ite_eq_right hb, zero_add, ite_eq_right (Nat.mul_ne_zero hN.ne' hb), hbot]
+      · rw [ite_eq_right ha, ← hA n a]
         refine Finset.prod_congr rfl fun b _ => ?_
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
 
 end GlobalTheory.ConvSer.TowerNorm
 end -- clump:auto
@@ -1159,7 +1159,7 @@ theorem exists_root_tower (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (p :
       ∀ n, ζ n ^ p ^ n = 1 := by
   have hp0 : 0 < p := hp.out.pos
   have : NeZero p := ⟨hp0.ne'⟩
-  obtain ⟨z, hz⟩ : ∃ z : K, IsPrimitiveRoot z p := HasEnoughRootsOfUnity.exists_primitiveRoot K p
+  obtain ⟨z, hz⟩ : ∃ z : K, IsPrimitiveRoot z p := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K p
   choose r hr using fun x : K => IsAlgClosed.exists_pow_nat_eq x hp0
   have h : ∀ n, (fun n : ℕ => Nat.casesOn (motive := fun _ => K) n 1 fun m => r^[m] z) (n + 1) ^ p
       = (fun n : ℕ => Nat.casesOn (motive := fun _ => K) n 1 fun m => r^[m] z) n := by

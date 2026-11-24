@@ -87,7 +87,7 @@ theorem GoodSub.of_le {W : Type} [AddCommGroup W] {W0 A A' : AddSubgroup W} {S :
     fun h0 => h2 (AddSubgroup.relIndex_eq_zero_of_le_right hle h0),
     fun x hx a ha => h3 x hx a (hle ha), ?_⟩
   rw [image_mk_eq_preimage_of_le hle h3]
-  haveI : Finite (A ⧸ A'.addSubgroupOf A) := Nat.finite_of_card_ne_zero hi
+  have : Finite (A ⧸ A'.addSubgroupOf A) := Nat.finite_of_card_ne_zero hi
   exact (h4.prod Set.finite_univ).preimage (Equiv.injective _).injOn
 
 theorem relVol_eq_mul_of_le {W : Type} [AddCommGroup W] {W0 A A' : AddSubgroup W}

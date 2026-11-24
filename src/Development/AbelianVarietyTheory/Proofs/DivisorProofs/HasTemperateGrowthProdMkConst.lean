@@ -84,14 +84,14 @@ theorem lineSnd_apply (v' : V') (f : 𝓢(V × V', ℂ)) (p : V × V') :
 theorem lineSnd_add (v₁ v₂ : V') (f : 𝓢(V × V', ℂ)) :
     lineSnd (v₁ + v₂) f = lineSnd v₁ f + lineSnd v₂ f := by
   ext p
-  simp only [lineSnd_apply, SchwartzMap.add_apply]
+  simp only [lineSnd_apply, add_apply]
   rw [← map_add (f := _)]
   simp
 
 theorem lineSnd_smul (c : ℝ) (v : V') (f : 𝓢(V × V', ℂ)) :
     lineSnd (c • v) f = (c : ℂ) • lineSnd v f := by
   ext p
-  simp only [lineSnd_apply, SchwartzMap.smul_apply]
+  simp only [lineSnd_apply, smul_apply]
   rw [show ((0 : V), c • v) = c • ((0 : V), v) by simp, map_smul]
   simp [Complex.real_smul]
 

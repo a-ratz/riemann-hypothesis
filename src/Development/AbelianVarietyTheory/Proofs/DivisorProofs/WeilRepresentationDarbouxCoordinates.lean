@@ -186,16 +186,16 @@ theorem archDir_transport : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     rw [hact, LinearEquiv.apply_symm_apply] at key
     exact key
   · intro h
-    haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
-    haveI : IsModuleTopology (AF F) (Matrix (Fin m) (Fin n) (AE F E)) :=
+    have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+    have : IsModuleTopology (AF F) (Matrix (Fin m) (Fin n) (AE F E)) :=
       inferInstanceAs (IsModuleTopology (AF F) (Fin m → Fin n → AE F E))
     have hce : Continuous co.e := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap
     have hP : Continuous fun p : UG (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) JA) × UG (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) JB) =>
         (((p⁻¹).1 : GL (Fin m) (AE F E)) : Matrix (Fin m) (Fin m) (AE F E)) :=
-      Units.continuous_val.comp (continuous_subtype_val.comp (continuous_fst.comp continuous_inv))
+      Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_fst.comp continuous_inv))
     have hQ : Continuous fun p : UG (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) JA) × UG (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) JB) =>
         (((p⁻¹).2 : GL (Fin n) (AE F E)) : Matrix (Fin n) (Fin n) (AE F E)) :=
-      Units.continuous_val.comp (continuous_subtype_val.comp (continuous_snd.comp continuous_inv))
+      Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_snd.comp continuous_inv))
     exact continuous_archParts.comp (hce.comp ((hP.matrix_mul continuous_const).matrix_mul hQ.matrix_transpose))
 
 end GlobalTheory.ArchTransportDir

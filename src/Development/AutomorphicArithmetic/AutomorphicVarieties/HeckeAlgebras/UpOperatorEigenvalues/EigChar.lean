@@ -142,8 +142,8 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeRestr :
       exact ⟨s, rfl⟩
     obtain ⟨s', hs', h'⟩ := h
     rwa [← hj h']
-  haveI : IsNoetherian A (Module.End A Y) := isNoetherian_linearMap A Y Y
-  haveI : Module.Finite A T := Module.Finite.of_injective j.toLinearMap hj
+  have : IsNoetherian A (Module.End A Y) := isNoetherian_linearMap A Y Y
+  have : Module.Finite A T := Module.Finite.of_injective j.toLinearMap hj
   obtain ⟨e, he, hnil, h1e, -, -⟩ := _root_.UpperTheory.Reformulated.B.Qe2.locAbs A T ι t a hgen
   have hI : ∀ μ ∈ (maximalIdeal A).map (algebraMap A T), ∀ y,
       j μ y ∈ maximalIdeal A • (⊤ : Submodule A Y) := by
@@ -259,7 +259,7 @@ theorem eigChar {A M ι K E T : Type} [CommRing A] [AddCommGroup M] [Module A M]
     (F : E) (hF : F ∈ Submodule.span K (sp '' Y)) (h0 : F ≠ 0) (μ : ι → K) (hμ : ∀ i, opC i F = μ i • F) :
     ∃ χ : T →+* K, (∀ b, χ (algebraMap A T b) = φ b) ∧ ∀ i, χ (t i) = μ i := by
   classical
-  haveI : Nontrivial A := φ.domain_nontrivial
+  have : Nontrivial A := φ.domain_nontrivial
   let κ := Module.Free.ChooseBasisIndex A Y
   let b : Module.Basis κ A Y := Module.Free.chooseBasis A Y
   let s : Y →ₛₗ[φ] E :=
@@ -380,7 +380,7 @@ theorem eigPt {l : ℕ} [Fact l.Prime] {A M ι E : Type} [CommRing A] [IsCNL A] 
     | algebraMap r => rw [h1']; exact Valued.integer.mem_iff.2 (hx1 _)
     | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
     | mul x y _ _ hx hy => rw [map_mul]; exact mul_mem hx hy
-  haveI : IsLocalRing (Valued.integer (PadicAlgCl l)) :=
+  have : IsLocalRing (Valued.integer (PadicAlgCl l)) :=
     inferInstanceAs (IsLocalRing (Valued.v (R := PadicAlgCl l)).valuationSubring)
   have hm : ∀ z : Valued.integer (PadicAlgCl l), ‖(z : PadicAlgCl l)‖ < 1 → z ∈ maximalIdeal _ := fun z hz hu =>
     hz.ne (Valued.integer.isUnit_iff_norm_eq_one.1 hu)

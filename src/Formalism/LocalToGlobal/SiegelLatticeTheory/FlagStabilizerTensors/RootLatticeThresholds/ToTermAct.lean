@@ -171,7 +171,7 @@ theorem amp_act (hB : Formalism.L2.SG.Pf.SatGramActL.ChiNBiAll) (hAR : Formalism
   show ((scl (Y.FN u) (Y.FN u') (X := X) (u := u) (u' := u') * X.volK2 : ℝ) : ℂ) •
       (chiN X (kOf X u u' ((Y.cs u).h ((Y.cs u).base t.lam) : X.B.I.Gf)
         ((Y.cs u').h ((Y.cs u').base t.lam') : X.B.I.Gf) (t.rep.1.1 * (γ.1 : X.B.I.GA)⁻¹)) •
-        (haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+        (haveI := FiniteDimensional.completeSpace ℂ (X.Vpi u)
          OO (Formalism.L2.SG.ProjRows.muInf X.B.I) (FundOf t) (X.Wu u) (X.Wu u')
           (t.rep.1.1.1 * ((γ.1 : X.B.I.GA).1)⁻¹))) = _
   rw [eχ, Formalism.L2.SG.Pf.SatGramActR.ooR_holds D X u u' γ.1 (FundOf t) t.rep.1.1.1]

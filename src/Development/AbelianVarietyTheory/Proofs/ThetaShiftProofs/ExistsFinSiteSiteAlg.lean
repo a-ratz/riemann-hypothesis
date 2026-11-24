@@ -108,7 +108,7 @@ theorem exists_finSite_siteAlg :
   refine ⟨?_, fun Tv io e hfin ho => ?_⟩
   · obtain ⟨T, io, h1, h2, -⟩ := PlaceCompletion.exists_initial_completion K₁ w
     exact ⟨T, io, h2, h1⟩
-  haveI : Finite (IsLocalRing.ResidueField Tv.V) := hfin
+  have : Finite (IsLocalRing.ResidueField Tv.V) := hfin
   obtain ⟨p, _, _, _⟩ := exists_padicInt_algebra_finite Tv.V
   obtain ⟨i, hinj, hi⟩ := exists_injective_norm_le_one (p := p) Tv.V
     (Nat.cast_ne_zero.mpr (Fact.out : p.Prime).ne_zero)
@@ -138,9 +138,9 @@ theorem exists_finSite_siteAlg :
   refine ⟨Z, ιT, rfl, norm_map_le_one_iff ιT hf hπ (by rw [hι]; exact h1), ?_⟩
   intro (s : Finset ℂ_[p]) hs
   have hsK : (s : Set ℂ_[p]) ⊆ algField p := fun x hx => (hs x hx).1.elim id fun h => h.1
-  haveI := finiteDimensional_genField i hi s.finite_toSet
+  have := finiteDimensional_genField i hi s.finite_toSet
   set L := genField i (s : Set ℂ_[p])
-  haveI : CharZero (integralClosure ℤ_[p] L) := RingHom.charZero (intEmb L)
+  have : CharZero (integralClosure ℤ_[p] L) := RingHom.charZero (intEmb L)
   let T' : CDVR := { V := integralClosure ℤ_[p] L, cpl := isAdicComplete_integralClosure L }
   obtain ⟨j, hj⟩ := exists_comp_eq_of_mem_range _ (intEmb_injective L) i fun a =>
     (mem_range_intEmb_iff _ _).2 ⟨map_mem_genField i hi hsK a, hi a⟩

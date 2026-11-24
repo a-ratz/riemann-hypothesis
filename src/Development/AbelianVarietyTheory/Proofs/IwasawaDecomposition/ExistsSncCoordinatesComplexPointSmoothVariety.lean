@@ -160,7 +160,7 @@ theorem complete_coords : ∀ (n a : ℕ) (v₀ : ReciprocityTheory.L2DbarEstima
       rcases Nat.eq_zero_or_pos n with h0 | hpos
       · subst h0
         exact Subsingleton.elim _ _
-      · haveI : Nonempty (Fin n) := ⟨⟨0, hpos⟩⟩
+      · have : Nonempty (Fin n) := ⟨⟨0, hpos⟩⟩
         exact hf.span_eq_top_of_card_eq_finrank (by simp [hfr])
     have hall : ∀ φ : ReciprocityTheory.L2DbarEstimates.V n →L[ℂ] ℂ, φ v = 0 := by
       intro φ
@@ -495,7 +495,7 @@ theorem exists_der_of_rsp {k R : Type} [Field k] [CommRing R] [IsLocalRing R] [I
       simp only [D0, h1, Module.Basis.repr_self]
     change ∑ i, l i * D0 (f i) ≠ 0
     simp only [hfi]
-    rw [Finset.sum_eq_single j (fun i _ hi => by rw [Finsupp.single_apply, if_neg hi, map_zero, mul_zero])
+    rw [Finset.sum_eq_single j (fun i _ hi => by rw [Finsupp.single_apply, ite_eq_right hi, map_zero, mul_zero])
       (fun h => (h (Finset.mem_univ j)).elim), Finsupp.single_eq_same, map_one, _root_.mul_one]
     exact hj
 
@@ -507,8 +507,8 @@ open IsLocalRing
 
 theorem exists_ptDer_sep : ∀ (k : Type) [Field k] [CharZero k] (Y : Scheme.{0}) (p : Y ⟶ Sp k) (n : ℕ) (σ : k →+* ℂ), SmoothOfRelativeDimension n p → ∀ (x₀ : CxPts p σ) (U : Y.affineOpens) (hy : x₀.1 (IsLocalRing.closedPoint ℂ) ∈ U.1) (m : ℕ) (f : Fin m → Γ(Y, U.1)), ReciprocityTheory.AnForm.R.FinalTheorems.Rsp (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ))) m (fun i => Y.presheaf.germ U.1 _ hy (f i)) → ∀ l : Fin m → ℂ, l ≠ 0 → ∃ δ : Γ(Y, U.1) →+ ℂ, (∀ a : k, δ (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U.1 a) = 0) ∧ (∀ g h : Γ(Y, U.1), δ (g * h) = CxPts.ev p σ U.1 g x₀ * δ h + CxPts.ev p σ U.1 h x₀ * δ g) ∧ ∑ i, l i * δ (f i) ≠ 0 := by
   intro k _ _ Y p n σ hsm x₀ U hy m f hR l hl
-  haveI := hsm
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth n p
+  have := hsm
+  have : Smooth p := SmoothOfRelativeDimension.smooth n p
   let c : k →+* Γ(Y, U.1) := ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U.1
   have hft : c.FiniteType := (p.finiteType_appLE (isAffineOpen_top _) U.2 le_top).comp
     (RingHom.FiniteType.of_surjective _
@@ -516,21 +516,21 @@ theorem exists_ptDer_sep : ∀ (k : Type) [Field k] [CharZero k] (Y : Scheme.{0}
   let germ : Γ(Y, U.1) →+* Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ)) :=
     (Y.presheaf.germ U.1 _ hy).hom
   have hloc : germ.EssFiniteType := by
-    letI := Y.presheaf.algebra_section_stalk (⟨_, hy⟩ : U.1)
-    haveI := U.2.isLocalization_stalk ⟨_, hy⟩
+    let := Y.presheaf.algebra_section_stalk (⟨_, hy⟩ : U.1)
+    have := U.2.isLocalization_stalk ⟨_, hy⟩
     exact Algebra.EssFiniteType.of_isLocalization (Y.presheaf.stalk _)
       (U.2.primeIdealOf ⟨_, hy⟩).asIdeal.primeCompl
   have hnoeth : IsNoetherianRing (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ))) := by
-    letI := c.toAlgebra
-    haveI : Algebra.FiniteType k Γ(Y, U.1) := hft
-    haveI : IsNoetherianRing Γ(Y, U.1) := Algebra.FiniteType.isNoetherianRing k _
-    letI := Y.presheaf.algebra_section_stalk (⟨_, hy⟩ : U.1)
-    haveI := U.2.isLocalization_stalk ⟨_, hy⟩
+    let := c.toAlgebra
+    have : Algebra.FiniteType k Γ(Y, U.1) := hft
+    have : IsNoetherianRing Γ(Y, U.1) := Algebra.FiniteType.isNoetherianRing k _
+    let := Y.presheaf.algebra_section_stalk (⟨_, hy⟩ : U.1)
+    have := U.2.isLocalization_stalk ⟨_, hy⟩
     exact IsLocalization.isNoetherianRing (U.2.primeIdealOf ⟨_, hy⟩).asIdeal.primeCompl _ inferInstance
-  letI : Algebra k (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ))) := (germ.comp c).toAlgebra
-  haveI : Algebra.EssFiniteType k (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ))) :=
+  let : Algebra k (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ))) := (germ.comp c).toAlgebra
+  have : Algebra.EssFiniteType k (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ))) :=
     RingHom.essFiniteType_algebraMap.1 (hft.essFiniteType.comp hloc)
-  haveI : Algebra.EssFiniteType k (ResidueField (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ)))) :=
+  have : Algebra.EssFiniteType k (ResidueField (Y.presheaf.stalk (x₀.1 (IsLocalRing.closedPoint ℂ)))) :=
     .of_surjective (IsScalarTower.toAlgHom k _ _) residue_surjective
   let ψ := (Scheme.stalkClosedPointTo (R := CommRingCat.of ℂ) x₀.1).hom
   obtain ⟨D, h1, h2, h3⟩ := exists_der_of_rsp (k := k) ψ m _ hR l hl
@@ -540,7 +540,7 @@ theorem exists_ptDer_sep : ∀ (k : Type) [Field k] [CharZero k] (Y : Scheme.{0}
     rw [CxPts.ev_eq hx, CxPts.evHom, ← GlobalTheory.Points.germ_stalkClosedPointTo_eq_valMap x₀.1 U.1 hx]
     rfl
   refine ⟨D.comp germ.toAddMonoidHom, fun a => h1 a, fun g h => ?_, h3⟩
-  simp only [AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe, map_mul, h2, hψ]
+  simp only [AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass, map_mul, h2, hψ]
 
 end GlobalTheory.PtDerivSep
 end -- clump:auto
@@ -653,8 +653,8 @@ theorem exists_eq_fderiv : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) (p : Y �
   have hmU : ∀ a b, δ (a * b) = evHom hU a * δ b + evHom hU b * δ a := fun a b => by
     rw [hδm, ev_eq hU, ev_eq hU]
   let ψU := dualHom (evHom hU) δ hmU
-  letI : Algebra Γ(Y, U.1) Γ(Y, Y.basicOpen g) := (resG Y hWU).toAlgebra
-  haveI : IsLocalization.Away f Γ(Y, Y.basicOpen g) :=
+  let : Algebra Γ(Y, U.1) Γ(Y, Y.basicOpen g) := (resG Y hWU).toAlgebra
+  have : IsLocalization.Away f Γ(Y, Y.basicOpen g) :=
     U.2.isLocalization_of_eq_basicOpen f (homOfLE hWU) hfg.symm
   have hfu : IsUnit (ψU f) := by
     rw [TrivSqZeroExt.isUnit_iff_isUnit_fst, dualHom_fst, isUnit_iff_ne_zero, ← ev_eq hU]
@@ -675,12 +675,12 @@ theorem exists_eq_fderiv : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) (p : Y �
   have hdadd (a b) : dW (a + b) = dW a + dW b := by
     have e : ev p σ _ (a + b) ∘ c.e.symm = (ev p σ _ a ∘ c.e.symm) + (ev p σ _ b ∘ c.e.symm) :=
       funext fun _ => ev_add _ _ _
-    simp only [dW, e, fderiv_add (hdW a) (hdW b), ContinuousLinearMap.add_apply]
+    simp only [dW, e, fderiv_add (hdW a) (hdW b), add_apply]
   have hdmul (a b) : dW (a * b) = evHom hxW a * dW b + evHom hxW b * dW a := by
     have e : ev p σ _ (a * b) ∘ c.e.symm = (ev p σ _ a ∘ c.e.symm) * (ev p σ _ b ∘ c.e.symm) :=
       funext fun _ => ev_mul _ _ _
     simp only [dW, e, fderiv_mul (hdW a) (hdW b), Function.comp_apply, c.e.left_inv hx₀,
-      ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, ← ev_eq hxW]
+      add_apply, smul_apply, smul_eq_mul, ← ev_eq hxW]
   have hn : ∀ᶠ w in 𝓝 (c.e x₀), c.e.symm w ∈ ptsIn p σ (Y.basicOpen g) :=
     Filter.eventually_of_mem ((ChartGlue.isOpen_over c.e (isOpen_ptsIn _)).mem_nhds
       (ChartGlue.mem_over c.e hx₀ hxW)) fun _ h => h.2
@@ -692,8 +692,8 @@ theorem exists_eq_fderiv : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) (p : Y �
     refine derivation_eq_zero_of_etale ((resG Y hWc).comp (MvPolynomial.eval₂Hom (algX p c.U) c.x))
       ?_ (evHom hxW) Dd ?_ ?_ ?_
     · have hR : (resG Y hWc).Etale := by
-        letI : Algebra Γ(Y, c.U) Γ(Y, Y.basicOpen g) := (resG Y hWc).toAlgebra
-        haveI : IsLocalization.Away g Γ(Y, Y.basicOpen g) :=
+        let : Algebra Γ(Y, c.U) Γ(Y, Y.basicOpen g) := (resG Y hWc).toAlgebra
+        have : IsLocalization.Away g Γ(Y, Y.basicOpen g) :=
           c.affine.isLocalization_of_eq_basicOpen g (homOfLE hWc) rfl
         exact RingHom.etale_algebraMap.2 (Algebra.Etale.of_isLocalizationAway g)
       exact RingHom.Etale.stableUnderComposition _ _ c.etale hR
@@ -788,8 +788,8 @@ theorem linearIndependent_fderiv_params (k : Type) [Field k] [CharZero k] (Y : S
   obtain ⟨v, hv⟩ := GlobalTheory.T.pointDerivation_affineOpen_eq_fderiv_etaleChart k Y p n σ c x₀ hx U (CxPts.mem_ptsIn.2 hy) δ hc0 hlb
   apply hne'
   have := congrArg (fun F => F v) hl
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
-    Pi.smul_apply, smul_eq_mul, ContinuousLinearMap.zero_apply] at this
+  simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
+    Pi.smul_apply, smul_eq_mul, zero_apply] at this
   simpa [hv] using this
 
 theorem exists_chart_of_fderiv (k : Type) [CommRing k] (Y : Scheme.{0}) (p : Y ⟶ Sp k) (n : ℕ) (σ : k →+* ℂ)
@@ -820,7 +820,7 @@ theorem exists_chart_of_fderiv (k : Type) [CommRing k] (Y : Scheme.{0}) (p : Y �
 
 theorem exists_coords : ∀ (k : Type) [Field k] [CharZero k] (Y : Scheme.{0}) (p : Y ⟶ Sp k) (n : ℕ) (D : TopologicalSpace.Closeds Y) (σ : k →+* ℂ), SmoothOfRelativeDimension n p → ReciprocityTheory.AnForm.R.FinalTheorems.Snc (Scheme.IdealSheafData.vanishingIdeal D) → ∀ x₀ : CxPts p σ, ∃ (a : ℕ) (e : OpenPartialHomeomorph (CxPts p σ) (Fin n → ℂ)), x₀ ∈ e.source ∧ e x₀ = 0 ∧ (∀ j, HolAlong e.source fun x => e x j) ∧ IsHolTo e.target (fun z => (e.symm z).1) ∧ ∀ x ∈ e.source, (x.1 (IsLocalRing.closedPoint ℂ) ∉ D ↔ ∀ j : Fin n, (j : ℕ) < a → e x j ≠ 0) := by
   intro k _ _ Y p n D σ hsm hsnc x₀
-  haveI := hsm
+  have := hsm
   obtain ⟨-, U, hy, m, f, J, hR, hD⟩ := hsnc (x₀.1 (IsLocalRing.closedPoint ℂ))
   obtain ⟨c, hc⟩ := AlgChart.exists_mem_source (D := n) (p := p) (σ := σ) x₀
   have hli := linearIndependent_fderiv_params k Y p n σ c x₀ hc U hy m f hR

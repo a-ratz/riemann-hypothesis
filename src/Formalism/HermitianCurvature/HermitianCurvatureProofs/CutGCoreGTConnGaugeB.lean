@@ -153,7 +153,7 @@ theorem wirtQ_mul (v : M.Var P.r) (f g : SmQ P.r P.TT) (q : Qp P.r P.TT) :
       wirt v (MA.ext (f : Qp P.r P.TT → ℂ)) q.1 * (g : Qp P.r P.TT → ℂ) q +
         (f : Qp P.r P.TT → ℂ) q * wirt v (MA.ext (g : Qp P.r P.TT → ℂ)) q.1 := by
   have h1o : IsOpen {x : MA.E P.r | ∀ l, x.1 l ≠ 0} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite
       (fun l => isOpen_ne_fun ((continuous_apply l).comp continuous_fst) continuous_const)
   have hopen : IsOpen (MA.Qset P.r P.TT) :=
@@ -172,19 +172,19 @@ theorem wirtQ_mul (v : M.Var P.r) (f g : SmQ P.r P.TT) (q : Qp P.r P.TT) :
   have hgq : MA.ext (g : Qp P.r P.TT → ℂ) q.1 = (g : Qp P.r P.TT → ℂ) q := by simp [MA.ext, q.2]
   unfold MA.wirt
   rw [hD]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, hfq, hgq]
+  simp only [add_apply, smul_apply, smul_eq_mul, hfq, hgq]
   ring
 
 theorem fnZ_ev_eq {v : ℂ → ℂ} (hv : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) v (Ann P)) (q : Qp P.r P.TT) :
     MA.ext ((fnZ P v : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) =ᶠ[nhds q.1] (fun x : E P.r => v x.2) := by
   have h1 : IsOpen {x : MA.E P.r | ∀ l, x.1 l ≠ 0} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite
       (fun l => isOpen_ne_fun ((continuous_apply l).comp continuous_fst) continuous_const)
   have hopen : IsOpen (MA.Qset P.r P.TT) :=
     h1.inter (isOpen_lt continuous_const (Complex.continuous_normSq.comp continuous_snd))
   filter_upwards [hopen.mem_nhds q.2] with x hx
-  simp only [MA.ext, dif_pos hx]
+  simp only [MA.ext, dite_eq_left hx]
   exact fnZ_val P hv ⟨x, hx⟩
 
 theorem fderiv_snd_comp {v : ℂ → ℂ} (hv : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) v (Ann P)) (q : Qp P.r P.TT) :
@@ -239,8 +239,8 @@ theorem dZ_conj_unit {u : ℂ → ℂ} (hu : ContDiffOn ℝ ((⊤ : ℕ∞) : Wi
     intro h
     have h2 := congrArg (fun L : ℂ →L[ℝ] ℂ => L h)
       ((fderiv_mul hd hd.star).symm.trans (hconst.fderiv_eq.trans (fderiv_const_apply _)))
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
-      ContinuousLinearMap.zero_apply] at h2
+    simp only [add_apply, smul_apply, smul_eq_mul,
+      zero_apply] at h2
     rw [hstar] at h2
     exact h2
   have hN : star (u ζ) * u ζ = 1 := star_mul_self_eq_one_of_norm_eq_one (h1 ζ hζ)

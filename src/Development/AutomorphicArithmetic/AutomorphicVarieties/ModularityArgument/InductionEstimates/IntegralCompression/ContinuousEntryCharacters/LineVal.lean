@@ -90,7 +90,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.lineVal :
     have hc : ∀ L : G1 K (2 + 2), Continuous fun k : ι → U4 => f (L * fin1 h * arc1 ((C.Φ (2 + 2)).symm k)) := by
       intro L
       refine hf.cont.comp (continuous_const.mul ?_)
-      exact continuous_archP.comp (continuous_subtype_val.comp (C.Φ (2 + 2)).symm.continuous)
+      exact continuous_archP.comp (continuous_subtypeVal.comp (C.Φ (2 + 2)).symm.continuous)
     have hr : ∀ L : G1 K (2 + 2), RFix (Measure.pi fun _ : ι => μ) (fun k => ∏ i, e i (k i))
         fun k : ι → U4 => f (L * fin1 h * arc1 ((C.Φ (2 + 2)).symm k)) := by
       intro L g

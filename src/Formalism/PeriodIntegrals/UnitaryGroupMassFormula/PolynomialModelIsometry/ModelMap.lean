@@ -143,7 +143,7 @@ lemma coeff_scale {σ : Type*} [Fintype σ] [DecidableEq σ] (w : σ → ℂ) (f
 lemma prod_exp {N : ℕ} (m : Fin N × Fin N →₀ ℕ) (θ : Fin N → ℝ) :
     ∏ v : Fin N × Fin N, Complex.exp ((θ v.2 : ℂ) * Complex.I) ^ m v =
       Complex.exp (((∑ v : Fin N × Fin N, (m v : ℝ) * θ v.2 : ℝ) : ℂ) * Complex.I) := by
-  simp_rw [← Complex.exp_nat_mul]
+  simp_rw [← Complex.exp_natCast_mul]
   rw [← Complex.exp_sum]
   congr 1
   push_cast

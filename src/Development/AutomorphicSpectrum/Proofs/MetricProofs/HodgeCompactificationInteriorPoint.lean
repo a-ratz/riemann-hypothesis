@@ -117,8 +117,8 @@ theorem exists_comp_eq_of_mono {O F : Type} [CommRing O] [Field F] [CharZero F] 
   let i : R →+* F := RingHom.kerLift β
   have hi : Function.Injective i := RingHom.kerLift_injective β
   let gb : R →+* ℂ := Ideal.Quotient.lift (RingHom.ker β) g fun a ha => hk a ha
-  haveI : IsDomain R := hi.isDomain i
-  letI : Algebra R F := i.toAlgebra
+  have : IsDomain R := hi.isDomain i
+  let : Algebra R F := i.toAlgebra
   have hinj : Function.Injective gb := by
     rw [RingHom.injective_iff_ker_eq_bot]
     by_contra hne
@@ -126,7 +126,7 @@ theorem exists_comp_eq_of_mono {O F : Type} [CommRing O] [Field F] [CharZero F] 
     have hZ : IsAlgebraic ℤ (algebraMap R F x) :=
       (IsFractionRing.isAlgebraic_iff ℤ ℚ F).2 (Algebra.IsAlgebraic.isAlgebraic _)
     have hxa : IsAlgebraic ℤ x := (isAlgebraic_algebraMap_iff hi).1 hZ
-    refine Ideal.comap_ne_bot_of_algebraic_mem hx0 hx hxa ?_
+    refine Ideal.under_ne_bot_of_algebraic_mem hx0 hx hxa ?_
     have e : Ideal.comap (algebraMap ℤ R) (RingHom.ker gb) = RingHom.ker (gb.comp (algebraMap ℤ R)) :=
       RingHom.comap_ker _ _
     change Ideal.comap (algebraMap ℤ R) (RingHom.ker gb) = ⊥
@@ -134,8 +134,8 @@ theorem exists_comp_eq_of_mono {O F : Type} [CommRing O] [Field F] [CharZero F] 
     have e2 : gb.comp (algebraMap ℤ R) = Int.castRingHom ℂ := RingHom.ext_int _ _
     rw [e2]
     exact Int.cast_injective
-  haveI : FaithfulSMul R F := (faithfulSMul_iff_algebraMap_injective R F).2 hi
-  haveI : IsFractionRing R F := IsFractionRing.of_field R F fun x => by
+  have : FaithfulSMul R F := (faithfulSMul_iff_algebraMap_injective R F).2 hi
+  have : IsFractionRing R F := IsFractionRing.of_field R F fun x => by
     obtain ⟨p, q, hq, hx⟩ := hgen x
     refine ⟨Ideal.Quotient.mk _ p, Ideal.Quotient.mk _ q, ?_⟩
     show x = β p / β q
@@ -152,7 +152,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 theorem exists_spMap_of_point (𝔐 : HodgeCpt Y S y) (hm : Mono (spMap β)) (z : Sp ℂ ⟶ 𝔐.X) :
     ∃ g' : c.F →+* ℂ, (z ≫ 𝔐.f) ≫ Y.s = spMap g' ≫ spMap β := by
-  haveI : FiniteDimensional ℚ c.F := c.fin
+  have : FiniteDimensional ℚ c.F := c.fin
   let g : O →+* ℂ := (Spec.preimage ((z ≫ 𝔐.f) ≫ Y.s)).hom
   have hs : (z ≫ 𝔐.f) ≫ Y.s = spMap g := by
     show _ = Spec.map (CommRingCat.ofHom (Spec.preimage ((z ≫ 𝔐.f) ≫ Y.s)).hom)
@@ -198,7 +198,7 @@ theorem polarisedAt_of_interior_mono (𝔐 : HodgeCpt Y S y) (hm : Mono (spMap �
   have h₃ : Set.range w ⊆ Set.range Y.jQ := by
     rintro _ ⟨q, rfl⟩
     rwa [Subsingleton.elim q p]
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   let v : Sp ℂ ⟶ Xo.XF c := IsOpenImmersion.lift Y.jQ w h₃
   have hv : v ≫ Y.jQ ≫ pullback.fst _ _ = z ≫ 𝔐.f := by
     rw [← Category.assoc, IsOpenImmersion.lift_fac, hw]
@@ -217,12 +217,12 @@ theorem lattices_off_fibres (𝔐 : HodgeCpt Y S y) (q : Cpt 𝔐.ξ) (hq : ∀ 
     iSupIndep 𝔐.Vgen ∧ (∀ s, 𝔐.V s q = 𝔐.dR s q) ∧ 𝔐.M.lat q = ⨆ s, 𝔐.dR s q := by
   classical
   have hcst : Function.Injective 𝔐.cst := 𝔐.cst.injective
-  haveI hchar : CharZero Ω := charZero_of_injective_ringHom hcst
+  have hchar : CharZero Ω := charZero_of_injective_ringHom hcst
   have hinj : Function.Injective 𝔐.emb := by
     intro s s' h
     refine HodgeBasic.labelEmb_injective c (RingHom.ext fun a => hcst ?_)
     exact congrArg (fun m : 𝓞 E →+* Ω => m a) h
-  letI : Fintype (CMType H) := Fintype.ofFinite _
+  let : Fintype (CMType H) := Fintype.ofFinite _
   have hcard : Fintype.card (CMType H ⊕ CMType H) = Module.finrank ℚ E := by
     rw [Fintype.card_of_bijective (HodgeBasic.labelHom_bijective H), Embeddings.card]
   have hint := _root_.GlobalTheory.CompanionTheory.Ar.isInternal_eigSp Ω 𝔐.Li E 𝔐.ρ (CMType H ⊕ CMType H) 𝔐.emb hinj hcard
@@ -253,7 +253,7 @@ theorem exists_gramAt_posDef_of_frame (𝔐 : HodgeCpt Y S y) (z : Sp ℂ ⟶ �
     (hpol : HodgeMetric.PolarisedAt 𝔐.t z) (s : CMType H ⊕ CMType H) {N : ℕ} (b : Fin N → 𝔐.Li)
     (hfr : (𝔐.V s).IsFrameAt b ⟨centre z, hgen⟩) :
     ∃ Γ : Matrix (Fin N) (Fin N) ℂ, 𝔐.M.GramAt 𝔐.t.PP.L z b Γ ∧ Γ.PosDef := by
-  haveI hchar : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have hchar : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   have hξ : IsCptGen 𝔐.ξ := 𝔐.tie.gen
   obtain ⟨hind, hV, hlat⟩ := lattices_off_fibres 𝔐 ⟨centre z, hgen⟩
     fun r hr => GramEx.not_inFibre_centre hgen hr

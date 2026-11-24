@@ -275,7 +275,7 @@ theorem ratio_exp (hR : GaugeRatioSt) (c : Coeff l) (S : Type) [CommRing S] [Alg
       (∀ ℓ ℓ' : Lt1 Dw, MvPowerSeries.coeff (Finsupp.single ((0 : Fin 1), ltIdx Dw ℓ) 1 +
           Finsupp.single ((0 : Fin 1), ltIdx Dw ℓ') 1) q ≠ 0 → ℓ'.1 = ComplexEmbedding.conjugate ℓ.1) ∧
       r = PowerSeries.subst q (PowerSeries.exp S) := by
-  letI : StarRing (𝓞 E) := barStar H
+  let : StarRing (𝓞 E) := barStar H
   let r' : MvPowerSeries (Lt1 Dw) S := fun y => MvPowerSeries.coeff (Finsupp.embDomain (nu Dw).toEmbedding y) r
   have hcr' : ∀ y, MvPowerSeries.coeff y r' = MvPowerSeries.coeff (Finsupp.embDomain (nu Dw).toEmbedding y) r :=
     fun y => rfl
@@ -377,7 +377,7 @@ theorem gam_pull {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (x : Γ(
 
 theorem gam_pullUnit {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (u : Γ(Sp A, ⊤)ˣ) :
     gam B (pullUnit (spMap f) u : Γ(Sp B, ⊤)) = f (gam A u) := by
-  simp only [pullUnit, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [pullUnit, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   exact gam_pull f (u : Γ(Sp A, ⊤))
 
 theorem scaled_genPow {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H}
@@ -405,7 +405,7 @@ theorem value_scaled {S0 : Scheme.{0}} (A : Over S0) [GrpObj A] (L : LB A.left) 
     intro j
     have e := (h j).symm.trans (h' j)
     have e2 := congrArg Units.val (hs j)
-    simp only [res, Units.val_mul, Units.coe_map, MonoidHom.coe_coe] at e2
+    simp only [res, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass] at e2
     simp only [e2] at e
     rw [map_mul]
     refine (Units.mul_left_inj (τ.s j)).mp ?_

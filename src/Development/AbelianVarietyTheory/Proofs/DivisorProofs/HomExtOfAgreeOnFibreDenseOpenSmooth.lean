@@ -99,7 +99,7 @@ theorem annihilator_avoids_fibre_minimalPrimes
   let T : Set (Ideal B) := {Q | Q ∈ I₀.minimalPrimes ∧ Q.comap (algebraMap A B) = p.asIdeal}
   have hTfin : T.Finite := by
     let e := PrimeSpectrum.preimageOrderIsoFiber A B p
-    haveI : IsNoetherianRing (p.asIdeal.Fiber B) :=
+    have : IsNoetherianRing (p.asIdeal.Fiber B) :=
       Algebra.FiniteType.isNoetherianRing p.asIdeal.ResidueField _
     have hM : {j : PrimeSpectrum (p.asIdeal.Fiber B) | j.asIdeal ∈ minimalPrimes (p.asIdeal.Fiber B)}.Finite :=
       (minimalPrimes.finite_of_isNoetherianRing _).preimage (fun x _ y _ h => PrimeSpectrum.ext h)
@@ -135,7 +135,7 @@ theorem annihilator_avoids_fibre_minimalPrimes
       rintro ⟨i, hi, hiQ⟩
       have hiT : i ∈ T := (hsT i).1 (Finset.mem_of_mem_erase hi)
       exact Finset.ne_of_mem_erase hi (le_antisymm hiQ (hQ.1.2 hiT.1.1 hiQ))
-    obtain ⟨f, hfprod, hfQ⟩ := SetLike.not_le_iff_exists.1 hnot
+    obtain ⟨f, hfprod, hfQ⟩ := IsConcreteLE.not_le_iff_exists.1 hnot
     have hfo : ∀ Q'' ∈ T, Q'' ≠ Q → f ∈ Q'' := fun Q'' hQ'' hne =>
       (Ideal.prod_le_inf.trans (Finset.inf_le (Finset.mem_erase.2 ⟨hne, (hsT Q'').2 hQ''⟩))) hfprod
     let Qp : PrimeSpectrum B := ⟨Q, hQprime⟩
@@ -207,7 +207,7 @@ theorem fibre_dense_affine_chart_primes : ∀ (X T : Scheme.{0}) (p : X ⟶ T) (
   refine ⟨?_, ?_⟩
   · let _ : Algebra Γ(X, U) (X.presheaf.stalk (f P)) :=
       TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨f P, hmemU P⟩
-    haveI hloc : IsLocalization P.asIdeal.primeCompl (X.presheaf.stalk (f P)) := hU.isLocalization_stalk' P (hmemU P)
+    have hloc : IsLocalization P.asIdeal.primeCompl (X.presheaf.stalk (f P)) := hU.isLocalization_stalk' P (hmemU P)
     have h0 : algebraMap Γ(X, U) (X.presheaf.stalk (f P)) b = 0 := hb (f P) (hmemU P) hPW
     obtain ⟨⟨s, hs⟩, hsb⟩ := (IsLocalization.map_eq_zero_iff P.asIdeal.primeCompl _ b).mp h0
     exact ⟨s, hs, hsb⟩
@@ -244,27 +244,27 @@ theorem fibre_going_down_tensor : ∀ (S A C : Type) [CommRing S] [CommRing A] [
     simp only [p, p₁, Ideal.comap_comap, ← IsScalarTower.algebraMap_eq]
   let K₁ := p₁.ResidueField
   let K := p.ResidueField
-  letI : Algebra K₁ K := (Ideal.ResidueField.mapₐ p₁ p (Algebra.ofId S A) hp).toAlgebra
-  haveI : IsScalarTower S K₁ K := IsScalarTower.of_algebraMap_eq
+  let : Algebra K₁ K := (Ideal.ResidueField.mapₐ p₁ p (Algebra.ofId S A) hp).toAlgebra
+  have : IsScalarTower S K₁ K := IsScalarTower.of_algebraMap_eq
     (fun s => ((Ideal.ResidueField.mapₐ p₁ p (Algebra.ofId S A) hp).commutes s).symm)
   let F₁ := p₁.Fiber C
   let E := F₁ ⊗[K₁] K
   let e1 : p.Fiber (A ⊗[S] C) ≃ₐ[K] K ⊗[S] C := Algebra.TensorProduct.cancelBaseChange S A K K C
   let e2 : K ⊗[K₁] F₁ ≃ₐ[K] K ⊗[S] C := Algebra.TensorProduct.cancelBaseChange S K₁ K K C
   let e3 : K ⊗[K₁] F₁ ≃ₐ[K₁] E := Algebra.TensorProduct.comm K₁ K F₁
-  haveI : Module.Flat F₁ E := inferInstance
-  haveI : Algebra.HasGoingDown F₁ E := inferInstance
+  have : Module.Flat F₁ E := inferInstance
+  have : Algebra.HasGoingDown F₁ E := inferInstance
   let Φ : p.Fiber (A ⊗[S] C) ≃+* E :=
     (e1.toRingEquiv.trans e2.symm.toRingEquiv).trans e3.toRingEquiv
   have hΦ : ∀ c : C, Φ (Algebra.TensorProduct.includeRight (Algebra.TensorProduct.includeRight c : A ⊗[S] C))
       = algebraMap F₁ E (Algebra.TensorProduct.includeRight c) := by
     intro c
     simp only [Φ, e1, e2, e3, Algebra.TensorProduct.includeRight_apply, RingEquiv.trans_apply,
-      AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv, Algebra.TensorProduct.cancelBaseChange_tmul, one_smul]
+      AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv, Algebra.TensorProduct.cancelBaseChange_tmul, one_smul]
     erw [Algebra.TensorProduct.cancelBaseChange_symm_tmul]
     rfl
 
-  haveI : u.LiesOver p := ⟨rfl⟩
+  have : u.LiesOver p := ⟨rfl⟩
   let isoA := PrimeSpectrum.primesOverOrderIsoFiber A (A ⊗[S] C) p
   let ub := isoA ⟨u, inferInstance, inferInstance⟩
   have hub : ub.asIdeal.comap (Algebra.TensorProduct.includeRight : A ⊗[S] C →ₐ[A] p.Fiber (A ⊗[S] C)) = u := by
@@ -273,7 +273,7 @@ theorem fibre_going_down_tensor : ∀ (S A C : Type) [CommRing S] [CommRing A] [
   have hmem : ∀ y : A ⊗[S] C, (Algebra.TensorProduct.includeRight : A ⊗[S] C →ₐ[A] p.Fiber (A ⊗[S] C)) y
       ∈ ub.asIdeal ↔ y ∈ u := fun y => Iff.of_eq (congrArg (y ∈ ·) hub)
 
-  haveI : Q₁.LiesOver p₁ := ⟨h2.symm⟩
+  have : Q₁.LiesOver p₁ := ⟨h2.symm⟩
   let iso₁ := PrimeSpectrum.primesOverOrderIsoFiber S C p₁
   let Qb := iso₁ ⟨Q₁, inferInstance, inferInstance⟩
   have hQb : Qb.asIdeal.comap (Algebra.TensorProduct.includeRight : C →ₐ[S] F₁) = Q₁ := by
@@ -281,10 +281,10 @@ theorem fibre_going_down_tensor : ∀ (S A C : Type) [CommRing S] [CommRing A] [
     exact this
 
   let ue : Ideal E := ub.asIdeal.comap (Φ.symm : E →+* p.Fiber (A ⊗[S] C))
-  haveI : ue.IsPrime := Ideal.comap_isPrime _ _
+  have : ue.IsPrime := Ideal.comap_isPrime _ _
   let w : Ideal F₁ := ue.comap (algebraMap F₁ E)
-  haveI : w.IsPrime := Ideal.comap_isPrime _ _
-  haveI : ue.LiesOver w := ⟨rfl⟩
+  have : w.IsPrime := Ideal.comap_isPrime _ _
+  have : ue.LiesOver w := ⟨rfl⟩
   have hw : w.comap (Algebra.TensorProduct.includeRight : C →ₐ[S] F₁) =
       u.comap (Algebra.TensorProduct.includeRight : C →ₐ[S] A ⊗[S] C) := by
     ext c
@@ -293,8 +293,8 @@ theorem fibre_going_down_tensor : ∀ (S A C : Type) [CommRing S] [CommRing A] [
     exact hmem _
   have hwle : Qb.asIdeal ≤ w := by
     let u₁ := u.comap (Algebra.TensorProduct.includeRight : C →ₐ[S] A ⊗[S] C)
-    haveI : u₁.IsPrime := Ideal.comap_isPrime _ _
-    haveI : u₁.LiesOver p₁ := ⟨by
+    have : u₁.IsPrime := Ideal.comap_isPrime _ _
+    have : u₁.LiesOver p₁ := ⟨by
       show p₁ = u₁.comap (algebraMap S C)
       ext s
       simp [u₁, p₁]⟩
@@ -319,7 +319,7 @@ theorem fibre_going_down_tensor : ∀ (S A C : Type) [CommRing S] [CommRing A] [
     rw [← hQb, Ideal.mem_comap, ← Ideal.mem_comap, ← Ideal.under_def, ← hPover.over]
   · ext a
     let J : Ideal K := (P.comap (Φ : p.Fiber (A ⊗[S] C) →+* E)).comap (algebraMap K (p.Fiber (A ⊗[S] C)))
-    haveI : J.IsPrime := Ideal.comap_isPrime _ _
+    have : J.IsPrime := Ideal.comap_isPrime _ _
     have hJ : J = ⊥ := Ideal.eq_bot_of_prime J
     have hx : (Algebra.TensorProduct.includeRight : A ⊗[S] C →ₐ[A] p.Fiber (A ⊗[S] C))
         (algebraMap A (A ⊗[S] C) a) = algebraMap K (p.Fiber (A ⊗[S] C)) (algebraMap A K a) := by
@@ -350,7 +350,7 @@ theorem model_data (A B : Type) [CommRing A] [CommRing B] [Algebra A B] [Algebra
       Function.Injective (fun x : B₁ => e (1 ⊗ₜ x)) ∧ e (1 ⊗ₜ b₁) = b ∧ e (1 ⊗ₜ g₁) = g := by
   classical
   obtain ⟨A₀, B₀, _, _, h₀, hB, ⟨β⟩⟩ := Algebra.Smooth.exists_subalgebra_fg ℤ A B
-  haveI : IsNoetherianRing A₀ := isNoetherianRing_of_fg h₀
+  have : IsNoetherianRing A₀ := isNoetherianRing_of_fg h₀
   obtain ⟨S, hS, hsub⟩ := exists_fg_subset_range_incl (C₁ := B₀) ({β b, β g} : Finset _)
   obtain ⟨b₁, hb₁⟩ := hsub (by simp : β b ∈ _)
   obtain ⟨g₁, hg₁⟩ := hsub (by simp : β g ∈ _)
@@ -397,9 +397,9 @@ theorem of_model (hN : (∀ (A B : Type) [CommRing A] [IsNoetherianRing A] [Comm
     simp only at htb
     rw [htb, map_zero]
   intro Q₁ hQ₁ hQ₁u hgQ₁
-  haveI : Q₁.IsPrime := hQ₁.1.1
+  have : Q₁.IsPrime := hQ₁.1.1
   let uT : Ideal (A ⊗[S] B₁) := u.asIdeal.comap e.toAlgHom.toRingHom
-  haveI : uT.IsPrime := Ideal.comap_isPrime _ _
+  have : uT.IsPrime := Ideal.comap_isPrime _ _
   obtain ⟨QT, hQTp, hQTu, hQT1, hQTA⟩ := _root_.GlobalTheory.fibre_going_down_tensor S A B₁ uT Q₁ (fun x hx => hQ₁u hx) (by
     apply le_antisymm
     · intro s hs
@@ -414,7 +414,7 @@ theorem of_model (hN : (∀ (A B : Type) [CommRing A] [IsNoetherianRing A] [Comm
       have : e (algebraMap S (A ⊗[S] B₁) s) ∈ u.asIdeal := hs
       rwa [← (Algebra.TensorProduct.includeRight : B₁ →ₐ[S] A ⊗[S] B₁).commutes] at this)
   let Q' : Ideal B := QT.comap e.symm.toAlgHom.toRingHom
-  haveI : Q'.IsPrime := Ideal.comap_isPrime _ _
+  have : Q'.IsPrime := Ideal.comap_isPrime _ _
   have hQ'u : Q' ≤ u.asIdeal := by
     intro x hx
     have := hQTu hx
@@ -430,7 +430,7 @@ theorem of_model (hN : (∀ (A B : Type) [CommRing A] [IsNoetherianRing A] [Comm
     rw [AlgEquiv.commutes]; exact h1
   obtain ⟨Q, hQmin, hQQ'⟩ := Ideal.exists_minimalPrimes_le hmap
   apply hmin Q hQmin (hQQ'.trans hQ'u)
-  haveI : Q.IsPrime := hQmin.1.1
+  have : Q.IsPrime := hQmin.1.1
   have hJ : Q₁ ≤ Q.comap ι := by
     refine hQ₁.2 ⟨Ideal.comap_isPrime _ _, ?_⟩ ?_
     · rw [Ideal.map_le_iff_le_comap]
@@ -598,11 +598,11 @@ theorem eq_zero_of_mul_eq_zero {A L : Type} [CommRing A] [IsNoetherianRing A] [C
 
 theorem isRadical_map_of_smooth {A B : Type} [CommRing A] [CommRing B] [Algebra A B]
     [Algebra.Smooth A B] (𝔭 : Ideal A) [𝔭.IsPrime] : (𝔭.map (algebraMap A B)).IsRadical := by
-  haveI : _root_.IsReduced ((A ⧸ 𝔭) ⊗[A] B) :=
+  have : _root_.IsReduced ((A ⧸ 𝔭) ⊗[A] B) :=
     GlobalTheory.isReduced_algebra_of_smooth_of_isReduced (A ⧸ 𝔭) _
   let e := (Algebra.TensorProduct.quotIdealMapEquivTensorQuot B 𝔭).toRingEquiv.trans
     (Algebra.TensorProduct.comm A B (A ⧸ 𝔭)).toRingEquiv
-  haveI : _root_.IsReduced (B ⧸ 𝔭.map (algebraMap A B)) :=
+  have : _root_.IsReduced (B ⧸ 𝔭.map (algebraMap A B)) :=
     isReduced_of_injective e.toRingHom e.injective
   exact (Ideal.isRadical_iff_quotient_reduced _).2 this
 
@@ -637,7 +637,7 @@ theorem mem_of_mul_mem {B : Type} [CommRing B] (u : Ideal B) [u.IsPrime] (I₀ :
   rw [← hJrad.radical, ← Ideal.sInf_minimalPrimes, Ideal.mem_sInf] at hyJ
   push_neg at hyJ
   obtain ⟨P, hP, hyP⟩ := hyJ
-  haveI : P.IsPrime := hP.1.1
+  have : P.IsPrime := hP.1.1
   have hgP : algebraMap B L g ∈ P := ((Ideal.IsPrime.mem_or_mem inferInstance (hP.1.2 hy)).resolve_right hyP)
   set Q := P.comap (algebraMap B L)
   have hQu : Q ≤ u := by
@@ -647,10 +647,10 @@ theorem mem_of_mul_mem {B : Type} [CommRing B] (u : Ideal B) [u.IsPrime] (I₀ :
       (Ideal.eq_top_of_isUnit_mem _ hx (IsLocalization.map_units L (⟨x, hxu⟩ : u.primeCompl)))
   have hQmin : Q ∈ I₀.minimalPrimes := by
     refine ⟨⟨inferInstance, Ideal.map_le_iff_le_comap.1 hP.1.2⟩, fun Q' hQ' hle => ?_⟩
-    haveI : Q'.IsPrime := hQ'.1
+    have : Q'.IsPrime := hQ'.1
     have hd : Disjoint (u.primeCompl : Set B) (Q' : Set B) :=
       Set.disjoint_left.2 fun x hxM hxI => hxM (hQu (hle hxI))
-    haveI := IsLocalization.isPrime_of_isPrime_disjoint u.primeCompl L Q' hQ'.1 hd
+    have := IsLocalization.isPrime_of_isPrime_disjoint u.primeCompl L Q' hQ'.1 hd
     have hc := IsLocalization.under_map_of_isPrime_disjoint u.primeCompl L hQ'.1 hd
     have hPP : P ≤ Q'.map (algebraMap B L) :=
       hP.2 ⟨inferInstance, Ideal.map_mono hQ'.2⟩ (Ideal.map_le_iff_le_comap.2 hle)
@@ -666,8 +666,8 @@ theorem localization_eq_zero_of_mul_eq_zero : ∀ (A B : Type) [CommRing A] [IsN
   intro A B _ _ _ _ _ b g u hgb hg
   set 𝔭 := u.asIdeal.comap (algebraMap A B)
   set L := Localization.AtPrime u.asIdeal
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing A B
-  haveI : Module.Flat A L := Module.Flat.trans A B L
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing A B
+  have : Module.Flat A L := Module.Flat.trans A B L
   have hmapeq : 𝔭.map (algebraMap A L) = (𝔭.map (algebraMap A B)).map (algebraMap B L) := by
     rw [Ideal.map_map, ← IsScalarTower.algebraMap_eq]
   have hu : ∀ s ∉ 𝔭, IsUnit (algebraMap A L s) := by
@@ -721,8 +721,8 @@ theorem alg (A B : Type) [CommRing A] [CommRing B] [Algebra A B] [Algebra.Smooth
 theorem dense (X T : Scheme.{0}) (p : X ⟶ T) [Smooth p] (W : X.Opens)
     (hW : ∀ x : X, x ∈ closure ((W : Set X) ∩ p ⁻¹' {p x})) : IsSchemeTheoreticallyDominant W.ι := by
   refine _root_.GlobalTheory.isSchemeTheoreticallyDominant_ι_of_germ_eq_zero_over_affine X T p W fun U V hU hV e b hb => ?_
-  letI := (p.appLE V U e).hom.toAlgebra
-  haveI : Algebra.Smooth Γ(T, V) Γ(X, U) := HasRingHomProperty.appLE @Smooth p ‹_› ⟨V, hV⟩ ⟨U, hU⟩ e
+  let := (p.appLE V U e).hom.toAlgebra
+  have : Algebra.Smooth Γ(T, V) Γ(X, U) := HasRingHomProperty.appLE @Smooth p ‹_› ⟨V, hV⟩ ⟨U, hU⟩ e
   exact alg Γ(T, V) Γ(X, U) b (_root_.GlobalTheory.fibre_dense_affine_chart_primes X T p W U V hU hV e hW b hb)
 
 theorem ext_of_dominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSeparated s] (h : f ≫ s = g ≫ s)
@@ -731,7 +731,7 @@ theorem ext_of_dominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [Is
   let Y' : Over Z := Over.mk s
   let f' : X' ⟶ Y' := Over.homMk f
   let g' : X' ⟶ Y' := Over.homMk g h.symm
-  haveI : IsSeparated Y'.hom := ‹IsSeparated s›
+  have : IsSeparated Y'.hom := ‹IsSeparated s›
   let U' : Over Z := Over.mk (d ≫ f ≫ s)
   let d' : U' ⟶ X' := Over.homMk d
   have e : d' ≫ f' = d' ≫ g' := by
@@ -744,7 +744,7 @@ theorem ext_of_dominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [Is
     apply le_bot_iff.1
     calc _ ≤ (l.left ≫ (equalizer.ι f' g').left).ker := Scheme.Hom.le_ker_comp _ _
       _ = ⊥ := by rw [← hd]; exact d.ker_eq_bot
-  haveI : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
+  have : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
   have h0 : IsIso ((Over.forget Z).map (equalizer.ι f' g')) := (inferInstance : IsIso (equalizer.ι f' g').left)
   have : IsIso (equalizer.ι f' g') := isIso_of_reflects_iso _ (Over.forget Z)
   have hfg : f' = g' := (cancel_epi (equalizer.ι f' g')).1 (equalizer.condition f' g')
@@ -754,7 +754,7 @@ theorem main : ∀ (X T Y : Scheme.{0}) (p : X ⟶ T) [Smooth p] (q : Y ⟶ T) [
     (∀ x : X, x ∈ closure ((W : Set X) ∩ p ⁻¹' {p x})) →
     ∀ f g : X ⟶ Y, f ≫ q = g ≫ q → W.ι ≫ f = W.ι ≫ g → f = g := by
   intro X T Y p _ q _ W hW f g hfg hfgW
-  haveI := dense X T p W hW
+  have := dense X T p W hW
   exact ext_of_dominant q hfg W.ι hfgW
 
 end GlobalTheory.FibreDense

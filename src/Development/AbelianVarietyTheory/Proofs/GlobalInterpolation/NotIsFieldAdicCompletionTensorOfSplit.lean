@@ -64,7 +64,7 @@ private lemma isMaximal_and_algebraMap_mem_iff_of_mem_primesOver (F E : Type) [F
     (h : P ∈ v.asIdeal.primesOver (𝓞 E)) :
     P.IsMaximal ∧ ∀ a : 𝓞 F, algebraMap (𝓞 F) (𝓞 E) a ∈ P ↔ a ∈ v.asIdeal := by
   obtain ⟨hp, ho⟩ := h
-  haveI := hp; haveI := ho; haveI := v.isMaximal
+  have := hp; have := ho; have := v.isMaximal
   refine ⟨Ideal.IsMaximal.of_liesOver_isMaximal P v.asIdeal, fun a => ?_⟩
   rw [Ideal.over_def P v.asIdeal, Ideal.under_def, Ideal.mem_comap]
 
@@ -90,7 +90,7 @@ theorem _root_.GlobalTheory.SplitPlace.not_isField_of_split : ∀ (F E : Type) [
     (by rw [hset]; exact Set.mem_insert _ _)
   obtain ⟨hQmax, hQmem⟩ := isMaximal_and_algebraMap_mem_iff_of_mem_primesOver F E v Q
     (by rw [hset]; exact Set.mem_insert_of_mem _ rfl)
-  obtain ⟨α, hαP, hαQ⟩ := SetLike.not_le_iff_exists.mp
+  obtain ⟨α, hαP, hαQ⟩ := IsConcreteLE.not_le_iff_exists.mp
     (fun h => hPQ (hPmax.eq_of_le hQmax.ne_top h))
   have hαF : (α : E) ∉ (algebraMap F E).range := by
     rintro ⟨a, ha⟩
@@ -101,7 +101,7 @@ theorem _root_.GlobalTheory.SplitPlace.not_isField_of_split : ∀ (F E : Type) [
     have hα : algebraMap (𝓞 F) (𝓞 E) ⟨a, hint⟩ = α := RingOfIntegers.ext (by rw [← ha]; rfl)
     have hav : (⟨a, hint⟩ : 𝓞 F) ∈ v.asIdeal := (hPmem _).mp (hα ▸ hαP)
     exact hαQ (hα ▸ (hQmem _).mpr hav)
-  haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ hrank
+  have : Module.Finite F E := Module.finite_of_finrank_eq_succ hrank
   have hint : IsIntegral (𝓞 F) α := Algebra.IsIntegral.isIntegral α
   have hdeg : (minpoly (𝓞 F) α).natDegree = 2 := by
     have hE : minpoly (𝓞 F) (α : E) = minpoly (𝓞 F) α :=
@@ -139,7 +139,7 @@ theorem _root_.GlobalTheory.SplitPlace.not_isField_of_split : ∀ (F E : Type) [
       rw [hsq]
       exact Q.neg_mem (Q.add_mem (Q.mul_mem_right _ ((hQmem b).mpr hbv)) ((hQmem c).mpr hcv))
     exact hαQ (hQmax.isPrime.mem_of_pow_mem 2 hmem)
-  haveI := _root_.GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := _root_.GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
   obtain ⟨β, hβ⟩ := exists_root_quadratic_of_isUnit_of_mem_maximalIdeal
     (v.adicCompletionIntegers F) (algebraMap (𝓞 F) _ b) (algebraMap (𝓞 F) _ c)
     ((_root_.GlobalTheory.SelfDualGenus.isUnit_algebraMap_iff v b).mpr hbv)
@@ -169,7 +169,7 @@ theorem _root_.GlobalTheory.SplitPlace.not_isField_of_split : ∀ (F E : Type) [
     exact h
   have hprod : (x - y) * (x + y + algebraMap F _ (b : F)) = 0 := by
     linear_combination hxeq - hyeq
-  haveI := hfield.isDomain
+  have := hfield.isDomain
   obtain ⟨z, hz⟩ : ∃ z : v.adicCompletion F,
       y = Algebra.TensorProduct.includeLeft (S := F) (B := E) z := by
     rcases mul_eq_zero.mp hprod with h | h

@@ -88,7 +88,7 @@ theorem isHolTo_slice {g m : ℕ} {X : Scheme.{0}} (e : (Fin m → ℂ) × (Fin 
     (differentiable_const _).prodMk differentiable_id
   refine ⟨?_, ?_⟩
   · have h3 := h1.preimage hj.continuous
-    simpa only [Set.preimage_setOf_eq, Set.mem_prod, Set.mem_univ, true_and] using h3
+    simpa only [Set.preimage_ofPred_eq, Set.mem_prod, Set.mem_univ, true_and] using h3
   · exact h2.comp hj.differentiableOn fun z hz => ⟨⟨trivial, trivial⟩, hz.2⟩
 
 theorem isHolTo_ex {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}

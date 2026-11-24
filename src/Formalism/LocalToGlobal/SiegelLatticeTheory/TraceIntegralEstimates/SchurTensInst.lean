@@ -158,7 +158,7 @@ theorem isUnitRep_tens (hσ : ∀ v, IsUnitRep (σ v)) (h : IsTensAbs σ σs ten
   · apply ContinuousLinearMap.ext_on h.2.2
     rintro _ ⟨x, rfl⟩
     rw [h.2.1]
-    simp only [ContinuousLinearMap.one_apply]
+    simp only [one_apply_eq_self]
     congr 1
     funext v
     show σ v 1 (x v) = x v
@@ -167,7 +167,7 @@ theorem isUnitRep_tens (hσ : ∀ v, IsUnitRep (σ v)) (h : IsTensAbs σ σs ten
   · intro g g'
     apply ContinuousLinearMap.ext_on h.2.2
     rintro _ ⟨x, rfl⟩
-    rw [ContinuousLinearMap.mul_apply, h.2.1, h.2.1, h.2.1]
+    rw [mul_apply_eq_comp, h.2.1, h.2.1, h.2.1]
     congr 1
     funext v
     show σ v (g v * g' v) (x v) = σ v (g v) (σ v (g' v) (x v))
@@ -397,8 +397,8 @@ theorem memLp_two_of_lintegral {u : X → ℂ} (hu : AEStronglyMeasurable u μ) 
     MemLp u 2 μ := by
   refine (memLp_two_iff_integrable_sq_norm hu).2 ⟨aestronglyMeasurable_norm_sq hu, ?_⟩
   have e : ∀ x, ‖‖u x‖ ^ 2‖ₑ = ‖u x‖ₑ ^ 2 := fun x => by
-    rw [Real.enorm_of_nonneg (by positivity), enorm_sq_eq]
-  rw [hasFiniteIntegral_iff_enorm]
+    rw [Real.eNorm_of_nonneg (by positivity), enorm_sq_eq]
+  rw [hasFiniteIntegral_iff_eNorm]
   simp only [e]
   exact h
 
@@ -460,10 +460,10 @@ private theorem lintegral_enorm_sub_limit_sq_le {f : ℕ → X → ℂ} {F : X �
     intro x
     have h1 : Tendsto (fun m => f m x - f n x) atTop (𝓝 (F x - f n x)) := (hpt x).sub_const _
     have h2 : Tendsto (fun m => ‖f m x - f n x‖ₑ) atTop (𝓝 ‖F x - f n x‖ₑ) :=
-      (continuous_enorm.tendsto _).comp h1
+      (continuous_eNorm.tendsto _).comp h1
     exact ((ENNReal.continuous_pow 2).tendsto _).comp h2
   have hmeas : ∀ m, AEMeasurable (fun x => ‖f m x - f n x‖ₑ ^ 2) μ := fun m =>
-    (((hf m).sub (hf n)).enorm).pow_const 2
+    (((hf m).sub (hf n)).eNorm).pow_const 2
   have hfreq : ∃ᶠ m in atTop, ∫⁻ x, ‖f m x - f n x‖ₑ ^ 2 ∂μ ≤ ε :=
     (eventually_atTop.2 ⟨N, h⟩).frequently
   calc ∫⁻ x, ‖F x - f n x‖ₑ ^ 2 ∂μ
@@ -817,7 +817,7 @@ theorem unitRep_of_URepOn {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} 
     let Li : H →ₗᵢ[ℂ] H := { toLinearMap := (σ (uMat x)).toLinearMap, norm_map' := hnorm _ (hmem x) }
     exact Li.inner_map_map a b
   · intro a
-    exact (hcont a).comp_continuous (Units.continuous_val.comp continuous_subtype_val) hmem
+    exact (hcont a).comp_continuous (Units.continuous_val.comp continuous_subtypeVal) hmem
 
 theorem isSchur_of_isFdeg {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} {d : ℝ}
     (h : IsFdeg (Formalism.REAL.muG ε) σ d) : IsSchur (Formalism.REAL.muG ε) (fun g : Formalism.REAL.UJ ε => σ (uMat g)) d :=

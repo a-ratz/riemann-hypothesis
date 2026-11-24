@@ -69,17 +69,17 @@ namespace GlobalTheory.Poinc.NormalClosureRing
 
 theorem exists_integralClosure_finite : ∀ {o₁ Ω₁ : Type} [CommRing o₁] [Field Ω₁] [Algebra o₁ Ω₁] [ArithBase o₁ Ω₁] (R₁ : Subalgebra o₁ Ω₁), R₁.FG → (∀ x : Ω₁, ∃ a ∈ R₁, ∃ b ∈ R₁, x = a / b) → ∀ {o₂ Ω₂ : Type} [CommRing o₂] [Field Ω₂] [Algebra o₂ Ω₂] [ArithBase o₂ Ω₂] [Algebra Ω₁ Ω₂] [FiniteDimensional Ω₁ Ω₂] (κ : o₁ →+* o₂), κ.Finite → (algebraMap o₂ Ω₂).comp κ = (algebraMap Ω₁ Ω₂).comp (algebraMap o₁ Ω₁) → ∃ (R : Subalgebra o₂ Ω₂) (h : R₁ →+* R), R.FG ∧ (∀ x : Ω₂, ∃ a ∈ R, ∃ b ∈ R, x = a / b) ∧ (∀ a, ((h a : R) : Ω₂) = algebraMap Ω₁ Ω₂ a) ∧ h.Finite ∧ IsIntegrallyClosed R ∧ ∀ σ : Ω₂ ≃ₐ[Ω₁] Ω₂, ∀ x ∈ R, σ x ∈ R := by
   intro o₁ Ω₁ _ _ _ _ R₁ hR₁ hfrac o₂ Ω₂ _ _ _ _ _ _ κ hκ hcomp
-  haveI : IsDedekindDomain o₁ := ArithBase.ded (Ω := Ω₁)
-  haveI : CharZero Ω₁ := ArithBase.char (o := o₁)
+  have : IsDedekindDomain o₁ := ArithBase.ded (Ω := Ω₁)
+  have : CharZero Ω₁ := ArithBase.char (o := o₁)
   have hinj₁ : Function.Injective (algebraMap o₁ Ω₁) := ArithBase.inj
-  haveI : CharZero o₁ := (algebraMap o₁ Ω₁).charZero
-  haveI : Algebra.FiniteType o₁ R₁ := (Subalgebra.fg_iff_finiteType R₁).mp hR₁
-  haveI : FaithfulSMul o₁ R₁ := (faithfulSMul_iff_algebraMap_injective _ _).mpr fun a b hab => hinj₁ (congrArg Subtype.val hab)
-  haveI : FaithfulSMul R₁ Ω₁ := (faithfulSMul_iff_algebraMap_injective _ _).mpr Subtype.val_injective
-  haveI : IsFractionRing R₁ Ω₁ := IsFractionRing.of_field _ _ fun z => by
+  have : CharZero o₁ := (algebraMap o₁ Ω₁).charZero
+  have : Algebra.FiniteType o₁ R₁ := (Subalgebra.fg_iff_finiteType R₁).mp hR₁
+  have : FaithfulSMul o₁ R₁ := (faithfulSMul_iff_algebraMap_injective _ _).mpr fun a b hab => hinj₁ (congrArg Subtype.val hab)
+  have : FaithfulSMul R₁ Ω₁ := (faithfulSMul_iff_algebraMap_injective _ _).mpr Subtype.val_injective
+  have : IsFractionRing R₁ Ω₁ := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨a, ha, b, hb, rfl⟩ := hfrac z
     exact ⟨⟨a, ha⟩, ⟨b, hb⟩, rfl⟩
-  haveI : IsScalarTower R₁ Ω₁ Ω₂ := inferInstance
+  have : IsScalarTower R₁ Ω₁ Ω₂ := inferInstance
   let C := integralClosure R₁ Ω₂
   have hmem : ∀ x : o₂, algebraMap o₂ Ω₂ x ∈ C := by
     intro x
@@ -94,7 +94,7 @@ theorem exists_integralClosure_finite : ∀ {o₁ Ω₁ : Type} [CommRing o₁] 
       algebraMap_mem' := hmem }
   let h : R₁ →+* R := (algebraMap R₁ Ω₂).codRestrict R fun a => (isIntegral_algebraMap : IsIntegral R₁ (algebraMap R₁ Ω₂ a))
   have hh : ∀ a, ((h a : R) : Ω₂) = algebraMap Ω₁ Ω₂ a := fun a => rfl
-  haveI : Module.Finite R₁ C := GlobalTheory.finite_integralClosure_dedekind o₁ R₁ Ω₁ Ω₂
+  have : Module.Finite R₁ C := GlobalTheory.finite_integralClosure_dedekind o₁ R₁ Ω₁ Ω₂
   classical
   have hfg : R.FG := by
     obtain ⟨s, hs⟩ := hR₁
@@ -129,9 +129,9 @@ theorem exists_integralClosure_finite : ∀ {o₁ Ω₁ : Type} [CommRing o₁] 
       | smul r y _ hy =>
         convert A.mul_mem (hR₁A r.1 (hs ▸ r.2)) hy using 1
         first | rfl | exact Algebra.smul_def r (y : Ω₂) | simp [Algebra.smul_def]
-  letI : Algebra R₁ R := h.toAlgebra
-  haveI : IsScalarTower R₁ R Ω₂ := .of_algebraMap_eq fun a => rfl
-  haveI : IsIntegralClosure R R₁ Ω₂ :=
+  let : Algebra R₁ R := h.toAlgebra
+  have : IsScalarTower R₁ R Ω₂ := .of_algebraMap_eq fun a => rfl
+  have : IsIntegralClosure R R₁ Ω₂ :=
     { algebraMap_injective := Subtype.val_injective
       isIntegral_iff := fun {x} => ⟨fun hx => ⟨⟨x, hx⟩, rfl⟩, by rintro ⟨y, rfl⟩; exact y.2⟩ }
   have hfin : h.Finite := GlobalTheory.finite_of_isIntegralClosure_dedekind o₁ R₁ Ω₁ Ω₂ R

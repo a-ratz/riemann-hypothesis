@@ -126,7 +126,7 @@ theorem segment_hits_image_null {F : Type} [NormedAddCommGroup F] [NormedSpace �
   refine measure_mono_null hsub (measure_iUnion_null fun j => ?_)
   obtain ⟨K, hK⟩ := radial_lipschitzOnWith x ℓ (β := α - ℓ x) (R := (j : ℝ) + 1)
     (show (0 : ℝ) < ((j : ℝ) + 1)⁻¹ by positivity)
-  have hL := g.lipschitz.comp_lipschitzOnWith (hK.mono (inter_subset_right (s := C)))
+  have hL := g.lipschitzWith.comp_lipschitzOnWith (hK.mono (inter_subset_right (s := C)))
   refine le_antisymm ?_ zero_le
   calc _ ≤ _ := hL.hausdorffMeasure_image_le hd
     _ = 0 := by rw [measure_mono_null inter_subset_left hC, mul_zero]

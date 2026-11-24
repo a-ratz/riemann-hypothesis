@@ -63,7 +63,7 @@ theorem signBlockDeterminant_diagonalPhases_zpow {n : ℕ} (ε : Fin n → Bool)
     rw [signBlockDeterminant, submatrix_diagonal _ _ Subtype.val_injective, det_diagonal]
     simp only [Function.comp_apply]
     rw [← Complex.exp_sum,
-      ← Complex.exp_int_mul,
+      ← Complex.exp_intCast_mul,
       Finset.sum_subtype (Finset.univ.filter fun j => ε j = e) (p := fun j => ε j = e) (by simp)]
     congr 1
     try simp only [Finset.mul_sum]
@@ -79,7 +79,7 @@ theorem diag_mem_Kset {n : ℕ} (ε : Fin n → Bool) (t : Fin n → ℝ) :
     intro j
     rw [Complex.star_def, ← Complex.exp_conj, ← Complex.exp_add]
     simp
-  simp only [Formalism.REAL.Kset, Set.mem_setOf_eq]
+  simp only [Formalism.REAL.Kset, Set.mem_ofPred_eq]
   refine ⟨?_, ?_⟩
   · rw [Matrix.mem_unitaryGroup_iff', star_eq_conjTranspose, diagonal_conjTranspose,
       diagonal_mul_diagonal, ← diagonal_one]

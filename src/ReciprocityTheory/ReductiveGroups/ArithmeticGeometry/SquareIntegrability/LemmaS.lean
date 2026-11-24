@@ -170,7 +170,7 @@ lemma rsm_tail (N : ℕ) (hN : 1 ≤ N) :
           rw [← hk, pow_add]
           ring
     · have h0 : Set.indicator (Ioi (Real.sqrt (2 * N))) (fun y => Real.exp (-y ^ 2)) y = 0 := by
-        simp only [Set.indicator_apply, h, if_false]
+        simp only [Set.indicator_apply, h, ite_false]
       rw [h0, mul_zero]
       exact mul_nonneg (by positivity) (mul_nonneg (pow_nonneg hy'.le _) (Real.exp_pos _).le)
 
@@ -197,7 +197,7 @@ lemma rsm_ball_mass (N : ℕ) :
       simp [hr]
     rw [hb _ (Real.sqrt_nonneg _), Measure.restrict_univ, rsm_gauss_total]
     norm_num
-  · haveI : Nontrivial (EuclideanSpace ℂ (Fin N)) := by
+  · have : Nontrivial (EuclideanSpace ℂ (Fin N)) := by
       first
         | exact Module.nontrivial_of_finrank_pos (R := ℝ) (by rw [rsm_finrank]; omega)
     have hsum : (∫ z in closedBall (0 : EuclideanSpace ℂ (Fin N)) (Real.sqrt (2 * N)), Real.exp (-‖z‖ ^ 2))
@@ -220,7 +220,7 @@ lemma rsm_ball_mass (N : ℕ) :
         have hz1 : z ∉ (closedBall (0 : EuclideanSpace ℂ (Fin N)) (Real.sqrt (2 * N)))ᶜ := fun hc =>
           (Set.mem_compl_iff _ _).mp hc (mem_closedBall.mpr (by rwa [dist_zero_right]))
         simp only [Set.indicator_apply, Set.mem_compl_iff, mem_closedBall, dist_zero_right, Set.mem_Ioi,
-          h, h', not_true_eq_false, not_false_eq_true, if_true, if_false]
+          h, h', not_true_eq_false, not_false_eq_true, ite_true, ite_false]
         first
           | exact Set.indicator_of_not_mem hz1 _
           | exact Set.indicator_of_notMem hz1 _
@@ -228,7 +228,7 @@ lemma rsm_ball_mass (N : ℕ) :
         have hz1 : z ∈ (closedBall (0 : EuclideanSpace ℂ (Fin N)) (Real.sqrt (2 * N)))ᶜ :=
           (Set.mem_compl_iff _ _).mpr (fun hb => h (by rwa [mem_closedBall, dist_zero_right] at hb))
         simp only [Set.indicator_apply, Set.mem_compl_iff, mem_closedBall, dist_zero_right, Set.mem_Ioi,
-          h, h', not_true_eq_false, not_false_eq_true, if_true, if_false]
+          h, h', not_true_eq_false, not_false_eq_true, ite_true, ite_false]
         exact Set.indicator_of_mem hz1 _
     rw [← rsm_gauss_total N]
     exact half_le_of_tail_le_half _ _ _ _ _ _ _ (by positivity)
@@ -657,7 +657,7 @@ lemma lemS_periodic (Y : GT ι) (q : ℕ) {F : EuclideanSpace ℂ ι → ℂ} (h
   have key : Real.exp (q * Real.pi * (Hf v γ).re + q * Real.pi * ‖γ‖ ^ 2 / 2) ^ 2 *
       Real.exp (-(q * Real.pi) * (‖v‖ ^ 2 + 2 * (Hf v γ).re + ‖γ‖ ^ 2)) =
         Real.exp (-(q * Real.pi) * ‖v‖ ^ 2) := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]
     congr 1
     push_cast
     ring
@@ -696,8 +696,8 @@ lemma lemS_cover (Y : GT ι) (q : ℕ) {F : EuclideanSpace ℂ ι → ℂ} (hF :
       rw [Finset.natCast_card_filter]
       refine Finset.sum_congr rfl fun γ _ => ?_
       by_cases h : γ +ᵥ x ∈ closedBall v0 ρ
-      · rw [Set.indicator_of_mem h, if_pos h]
-      · rw [Set.indicator_of_notMem h, if_neg h]
+      · rw [Set.indicator_of_mem h, ite_eq_left h]
+      · rw [Set.indicator_of_notMem h, ite_eq_right h]
     rw [h1]
     have hinj : Function.Injective (fun γ : lat Y.b => (γ +ᵥ x) - v0) := by
       intro a b h
@@ -736,7 +736,7 @@ lemma lemS_cover (Y : GT ι) (q : ℕ) {F : EuclideanSpace ℂ ι → ℂ} (hF :
       (MeasureTheory.volume.restrict (ZSpan.fundamentalDomain Y.b)) := fun γ =>
     (((measurable_const.indicator measurableSet_closedBall).comp (measurable_const_vadd γ)).mul
       hmeas).aemeasurable
-  haveI : MeasureTheory.VAddInvariantMeasure (lat Y.b) (EuclideanSpace ℂ ι) MeasureTheory.volume :=
+  have : MeasureTheory.VAddInvariantMeasure (lat Y.b) (EuclideanSpace ℂ ι) MeasureTheory.volume :=
     ⟨fun c s _ => MeasureTheory.measure_preimage_add _ (c : EuclideanSpace ℂ ι) s⟩
   have hlin : ∫⁻ u in closedBall v0 ρ, ENNReal.ofReal (Y.ptN2 q F u) ≤
       ENNReal.ofReal K * ∫⁻ u in ZSpan.fundamentalDomain Y.b, ENNReal.ofReal (Y.ptN2 q F u) := by

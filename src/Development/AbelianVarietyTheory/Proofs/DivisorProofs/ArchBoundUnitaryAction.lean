@@ -78,7 +78,7 @@ theorem norm_piInf_entry_le_heightGL {m : Type} [Fintype m] [DecidableEq m] (g :
       ≤ heightGL F g := by
     refine ((normInf_le_iff F w).1 le_rfl τ).trans ((le_htOf _ _).trans ?_)
     refine le_trans ?_ (le_mul_of_one_le_right' (one_le_finprod' fun _ => one_le_htOf _ _))
-    exact Finset.single_le_prod' (f := fun w => htInf F w (Formalism.UG.bc (compInf F E w) g))
+    exact Finset.single_le_prod (f := fun w => htInf F w (Formalism.UG.bc (compInf F E w) g))
       (fun _ _ => one_le_htOf _ _) (Finset.mem_univ w)
   exact_mod_cast h1
 

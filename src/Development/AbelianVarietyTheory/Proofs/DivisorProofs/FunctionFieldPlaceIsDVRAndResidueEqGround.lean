@@ -61,7 +61,7 @@ namespace GlobalTheory.Nef
 
 theorem isDiscreteValuationRing_functionFieldPlace_ring {k F : Type} [Field k] [Field F] [Algebra k F] (v : Place k F) :
     IsDiscreteValuationRing v.O := by
-  haveI hn : Nontrivial (MonoidWithZeroHom.valueGroup ((v.1 : F →*₀ WithZero (Multiplicative ℤ)))) := by
+  have hn : Nontrivial (MonoidWithZeroHom.valueGroup ((v.1 : F →*₀ WithZero (Multiplicative ℤ)))) := by
     obtain ⟨z, hz⟩ := v.2.1 ((Multiplicative.ofAdd (1:ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ))
     let u : (WithZero (Multiplicative ℤ))ˣ :=
       Units.mk0 ((Multiplicative.ofAdd (1:ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) WithZero.coe_ne_zero
@@ -97,7 +97,7 @@ theorem functionFieldPlace_exists_const_sub_lt_one {k F : Type} [Field k] [IsAlg
     have := hq q hq0
     rw [hqx, map_zero] at this
     exact zero_ne_one this
-  haveI hfin : FiniteDimensional k⟮x⟯ F := (_root_.GlobalTheory.Nef.isFF_main k F hF).1 x htr
+  have hfin : FiniteDimensional k⟮x⟯ F := (_root_.GlobalTheory.Nef.isFF_main k F hF).1 x htr
   have hK : ∀ y ∈ k⟮x⟯, v.1 y ≤ 1 := by
     intro y hy
     obtain ⟨r, s, rfl⟩ := (IntermediateField.mem_adjoin_simple_iff k y).1 hy

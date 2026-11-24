@@ -374,7 +374,7 @@ theorem lat_all (hψ : IsStdChar F ψ) (lf : Measure (A F)) (hlf : lf.IsAddHaarM
     exact hMc.image (sc c⁻¹ hci).continuous
   · rw [perp_lat hc]
     exact (sc c⁻¹ hci).isOpenMap _ hMo
-  · rw [perp_lat hc, coe_lat, Measure.smul_apply, Measure.smul_apply, smul_eq_mul, smul_eq_mul,
+  · rw [perp_lat hc, coe_lat, smul_apply, smul_apply, smul_eq_mul, smul_eq_mul,
       hs c hc _ hop.measurableSet, hs c⁻¹ hci _ hMo.measurableSet, h1, hMm, mul_one]
     have hr : 0 < |((Algebra.norm ℚ c : ℚ) : ℝ)| :=
       abs_pos.2 (by exact_mod_cast Algebra.norm_ne_zero_iff.2 hc)

@@ -246,7 +246,7 @@ theorem exists_lintegral_eq_of_measurable (N M K : Subgroup G) (hN : IsClosed (N
       _ < ⊤ := by
           rw [lintegral_indicator_const hAc.measurableSet]
           exact ENNReal.mul_lt_top (ENNReal.mul_lt_top hR1 hBc.measure_lt_top) hAc.measure_lt_top
-  haveI : SigmaFinite ρ := ⟨⟨⟨T, fun _ => trivial, hT1, hTu⟩⟩⟩
+  have : SigmaFinite ρ := ⟨⟨⟨T, fun _ => trivial, hT1, hTu⟩⟩⟩
   have hρ0 : ρ Set.univ ≠ 0 := by
     rw [← lintegral_one, hρ _ measurable_const]
     simp only [mul_one, lintegral_const]
@@ -299,7 +299,7 @@ theorem exists_lintegral_eq (N M K : Subgroup G) (hN : IsClosed (N : Set G))
     intro m hm
     simp only [hδ']
     rw [← Measure.map_apply ((measurable_const_mul m).mul_const _) hC.measurableSet, hmod m hm,
-      Measure.smul_apply, smul_eq_mul, mul_div_assoc, ENNReal.div_self hi hC.measure_lt_top.ne, mul_one]
+      smul_apply, smul_eq_mul, mul_div_assoc, ENNReal.div_self hi hC.measure_lt_top.ne, mul_one]
   obtain ⟨c, hc0, hc1, hc⟩ := exists_lintegral_eq_of_measurable N M K hN hM hK hnorm huniq hdec μ μN μM μK hμ
     C hC hi hM0 h1 h2 iN iM iK δ' hm' (fun m hm => by rw [he m hm, hmod m hm])
   refine ⟨c, hc0, hc1, fun φ hφ => ?_⟩
@@ -312,7 +312,7 @@ theorem exists_lintegral_eq (N M K : Subgroup G) (hN : IsClosed (N : Set G))
 theorem finiteOnCompacts_of_nhds (S : Subgroup G) (ν : Measure G) (h : ν (S : Set G)ᶜ = 0)
     (hS : IsClosed (S : Set G)) (hi : ∀ s ∈ S, ν.map (fun g => s * g) = ν) (B : Set G) (hBm : MeasurableSet B)
     (hB : B ∈ nhds (1 : G)) (hf : ν B ≠ ⊤) : IsFiniteMeasureOnCompacts ν := by
-  haveI : IsLocallyFiniteMeasure ν := by
+  have : IsLocallyFiniteMeasure ν := by
     refine ⟨fun x => ?_⟩
     by_cases hx : x ∈ S
     · refine ⟨(fun g => x⁻¹ * g) ⁻¹' B, ?_, ?_⟩

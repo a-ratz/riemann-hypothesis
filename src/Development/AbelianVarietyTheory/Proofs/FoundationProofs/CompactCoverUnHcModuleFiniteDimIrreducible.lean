@@ -89,7 +89,7 @@ theorem map_stable {n : ℕ} (hn : 1 ≤ n) (T : GrpData n 0) (τ : URep T) (M :
 theorem eq_bot_or_top {n : ℕ} (T : GrpData n 0) (τ : URep T) (M : GKMod n 0) (j : M.V →ₗ[ℂ] τ.H)
     (hτ : IrrU τ) (hj : Function.Injective j) (N : Submodule ℂ M.V) [FiniteDimensional ℂ N]
     (hN : ∀ g, ∀ x ∈ N.map j, τ.π g x ∈ N.map j) : N = ⊥ ∨ (N = ⊤ ∧ N.map j = ⊤) := by
-  rcases hτ.2 (N.map j) (Submodule.closed_of_finiteDimensional _) hN with h | h
+  rcases hτ.2 (N.map j) (Submodule.isClosed_of_finiteDimensional _) hN with h | h
   · left
     apply Submodule.map_injective_of_injective hj
     rw [h, Submodule.map_bot]

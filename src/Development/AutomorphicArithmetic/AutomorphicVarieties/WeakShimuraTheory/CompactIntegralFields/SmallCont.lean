@@ -73,7 +73,7 @@ theorem UpperTheory.V.Ws.smallCont :
     have hinv : ((f ϖ : 𝔞.K))⁻¹ ∈ 𝔞.V := by
       rw [he.2, map_inv₀, norm_inv, h1', inv_one]
     have hu : IsUnit (f ϖ) := IsUnit.of_mul_eq_one (⟨_, hinv⟩ : 𝔞.V) (Subtype.ext (mul_inv_cancel₀ hne))
-    haveI := loc
+    have := loc
     exact (isUnit_map_iff f ϖ).mp hu
   have hpow : ∀ n, ∀ x ∈ maximalIdeal A ^ n, ‖y x‖ ≤ ‖y ϖ‖ ^ n := by
     intro n x hx

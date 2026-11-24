@@ -79,7 +79,7 @@ theorem detMul : DetMul D := by
 
 theorem norm_one_unit_ideal : NormOneUnitIdeal D := by
   intro z
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hz : star (z : D.host.E) * (z : D.host.E) = 1 := (show _ ∧ _ from z.2).1
   have hint : ∀ a : 𝓞 D.host.E, star ((algebraMap (𝓞 D.host.E) D.host.E) a) ∈ (algebraMap (𝓞 D.host.E) D.host.E).range := fun a =>
     ⟨RingOfIntegers.mapRingEquiv (IsCMField.complexConj D.host.E : D.host.E ≃+* D.host.E) a, rfl⟩
@@ -185,7 +185,7 @@ private theorem vol_smul_lemma_2 [StarRing D.host.E] {N : ℕ} (L : Submodule (�
 
 theorem detSmul : DetSmul D := by
   intro N L₀ L γ _ hL₀ hL
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hu : star (γ : Matrix (Fin N) (Fin N) D.host.E) * (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 := (show _ ∧ _ from γ.2).1
   have hu2 : (γ : Matrix (Fin N) (Fin N) D.host.E) * star (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 := (show _ ∧ _ from γ.2).2
   rw [detId_eq_vol D hL₀, detId_eq_vol D hL₀, vol_smul_lemma_2 D L _ _ hu hu2, mul_assoc]
@@ -193,14 +193,14 @@ theorem detSmul : DetSmul D := by
 theorem stdH_unitary {N : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E)
     (hu' : (letI := D.host.cmStar; star γ * γ) = 1) (a b : Fin N → D.host.E) :
     (letI := D.host.cmStar; stdH D.host.E N (γ *ᵥ a) (γ *ᵥ b)) = (letI := D.host.cmStar; stdH D.host.E N a b) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have key : ∀ v w : Fin N → D.host.E, stdH D.host.E N v w = star v ⬝ᵥ w := fun v w => rfl
   rw [key, key, Matrix.star_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_vecMul,
     ← Matrix.star_eq_conjTranspose, hu', Matrix.vecMul_one]
 
 theorem smulSD : SmulSD D := by
   intro N L γ hL
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨hfg, hsp, hdual⟩ := hL
   have hu : star (γ : Matrix (Fin N) (Fin N) D.host.E) * (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 := (show _ ∧ _ from γ.2).1
   have hu2 : (γ : Matrix (Fin N) (Fin N) D.host.E) * star (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 := (show _ ∧ _ from γ.2).2

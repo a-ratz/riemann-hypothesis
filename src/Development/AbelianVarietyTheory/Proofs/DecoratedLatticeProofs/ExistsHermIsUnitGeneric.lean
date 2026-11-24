@@ -118,7 +118,7 @@ theorem eval_det_affine_matrix {κ ι : Type} [Field κ] {n : ℕ} (c d : Matrix
 theorem exists_hermitian_det_ne_zero_two :
     ∀ (E κ : Type) [Field E] [CharZero E] [Field κ] (σ : E →+* E) (φ : E →+* κ) (δ : E), δ ≠ 0 → σ δ = -δ → ∀ (n : ℕ) (c d y c' d' y' : Matrix (Fin n) (Fin n) κ), (c * y + d).det ≠ 0 → (c' * y' + d').det ≠ 0 → ∃ x : Matrix (Fin n) (Fin n) E, x.map σ = x.transpose ∧ (c * x.map φ + d).det ≠ 0 ∧ (c' * x.transpose.map φ + d').det ≠ 0 := by
   intro E κ _ _ _ σ φ δ hδ hσ n c d y c' d' y' h h'
-  haveI : CharZero κ := (RingHom.charZero_iff φ.injective).mp inferInstance
+  have : CharZero κ := (RingHom.charZero_iff φ.injective).mp inferInstance
   have he : φ δ ≠ 0 := (map_ne_zero φ).mpr hδ
   set G := hermGenericMatrix n (φ δ) with hG
   have h1 : (c.map C * G + d.map C).det ≠ 0 := by
@@ -323,11 +323,11 @@ theorem matrix_stableRange_one (κ : Type) [Field κ] (n : ℕ) (c d p q : Matri
       Matrix.one_mulVec]
   have hπD : ∀ v, π (D v) = 0 := by
     intro v
-    exact Submodule.linearProjOfIsCompl_apply_right hW.symm ⟨D v, LinearMap.mem_range_self _ _⟩
+    exact Submodule.projectionOnto_apply_right hW.symm ⟨D v, LinearMap.mem_range_self _ _⟩
   have hsurj : Function.Surjective (π ∘ₗ C) := by
     intro w
     refine ⟨p *ᵥ (w : Fin n → κ), ?_⟩
-    have h2 : π (w : Fin n → κ) = w := Submodule.linearProjOfIsCompl_apply_left _ w
+    have h2 : π (w : Fin n → κ) = w := Submodule.projectionOnto_apply_left _ w
     have := congrArg π (hdec w)
     rw [map_add (f := _), hπD, add_zero, h2] at this
     simpa using this
@@ -362,7 +362,7 @@ theorem matrix_stableRange_one (κ : Type) [Field κ] (n : ℕ) (c d p q : Matri
     exact map_zero g
   have hDv : D v = 0 := by rw [hY, map_zero, zero_add] at hv; exact hv
   have hvK : v ∈ LinearMap.ker D := hDv
-  have h4 := Submodule.linearProjOfIsCompl_apply_left hK ⟨v, hvK⟩
+  have h4 := Submodule.projectionOnto_apply_left hK ⟨v, hvK⟩
   have : (⟨v, hvK⟩ : LinearMap.ker D) = 0 := by rw [← h4]; exact hk
   exact hv0 (congrArg Subtype.val this)
 
@@ -423,7 +423,7 @@ theorem exists_herm_notMem (σ : E →+* E) (δ : E) (hδ : δ ≠ 0) (hσδ : �
     (hM : M.IsMaximal) :
     ∃ x : Matrix (Fin n) (Fin n) E, (∀ i j, σ (x i j) = x j i) ∧
       (c * x.map ι + d).det * τ (c * x.map ι + d).det ∉ M := by
-  letI := Ideal.Quotient.field M
+  let := Ideal.Quotient.field M
   let π₀ : R →+* R ⧸ M := Ideal.Quotient.mk M
   let φ : E →+* R ⧸ M := π₀.comp ι
   let π := π₀.mapMatrix (m := Fin n)

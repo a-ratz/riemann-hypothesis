@@ -91,10 +91,10 @@ private theorem pow_prime_pow_mul_eq_self_of_pow_eq_self {K : Type} [Field K] (p
   | succ c ih => rw [Nat.mul_succ, pow_add, pow_mul, ih, hy]
 
 private theorem frobenius_fixed_of_iterate_fixed_pow_prime {k : Type} [Field k] [IsAlgClosed k] (p : ℕ) [Fact p.Prime] [CharP k p] (σ : k →+* k) (n m : ℕ) (hn : 0 < n) (hm : 0 < m) (hσ : ∀ z, (σ^[n]) z = z) (y : k) (hy : y ^ (p ^ m) = y) : σ y = y := by
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
+  let : Algebra (ZMod p) k := ZMod.algebra k p
   have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
   have hN : m * n ≠ 0 := Nat.pos_iff_ne_zero.1 (Nat.mul_pos hm hn)
-  letI : Fintype (GaloisField p (m * n)) := Fintype.ofFinite _
+  let : Fintype (GaloisField p (m * n)) := Fintype.ofFinite _
   let φ : GaloisField p (m * n) →ₐ[ZMod p] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -182,11 +182,11 @@ private theorem charP_residueField_of_valuation_lt_one {Ω : Type} [Field Ω] (p
   simpa using hp
 
 private theorem exists_residue_pow_prime_pow_eq_self {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (p : ℕ) [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.valuation (p : Ω) < 1) (x : A) : ∃ m, 0 < m ∧ (IsLocalRing.residue A x) ^ (p ^ m) = IsLocalRing.residue A x := by
-  haveI := charP_residueField_of_valuation_lt_one p A hp
+  have := charP_residueField_of_valuation_lt_one p A hp
   have hpr : p.Prime := Fact.out
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
   have hxQ : IsAlgebraic ℚ (x : Ω) := Algebra.IsAlgebraic.isAlgebraic _
   have hxZ : IsAlgebraic ℤ (x : Ω) := (IsFractionRing.isAlgebraic_iff ℤ ℚ Ω).2 hxQ
   obtain ⟨P, hP0, hPx⟩ := hxZ
@@ -231,13 +231,13 @@ private theorem exists_residue_pow_prime_pow_eq_self {F Ω : Type} [Field F] [Nu
     exact this.symm
   have hall : ∀ j : ℕ, r ^ (p ^ j) ∈ {s | (Q.map (Int.castRingHom (IsLocalRing.ResidueField A))).IsRoot s} := by
     intro j
-    simp only [Set.mem_setOf_eq, Polynomial.IsRoot, Polynomial.eval_map]
+    simp only [Set.mem_ofPred_eq, Polynomial.IsRoot, Polynomial.eval_map]
     induction j with
     | zero => simpa using hQr
     | succ j ih =>
       rw [pow_succ, pow_mul]
       exact hfrob _ ih
-  obtain ⟨i, j, hij, heq⟩ := Set.Finite.exists_lt_map_eq_of_forall_mem hall (Polynomial.finite_setOf_isRoot hQk)
+  obtain ⟨i, j, hij, heq⟩ := Set.Finite.exists_lt_map_eq_of_forall_mem hall (finite_setOfPred_isRoot hQk)
   refine ⟨j - i, Nat.sub_pos_of_lt hij, ?_⟩
   apply (iterateFrobenius (IsLocalRing.ResidueField A) p i).injective
   simp only [iterateFrobenius_def]
@@ -248,9 +248,9 @@ theorem UpperTheory.V.Ws.Rq.powIne :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (p : ℕ) [Fact p.Prime] (A : ValuationSubring Ω),
       A.valuation (p : Ω) < 1 → ∀ g ∈ Dec (F := F) A, ∀ n : ℕ, 0 < n → g ^ n ∈ Ine (F := F) A → g ∈ Ine (F := F) A := by
   intro F Ω _ _ _ _ _ p _ A hp g hg n hn hgn
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI := isAlgClosed_residueField_valuationSubring A
-  haveI := charP_residueField_of_valuation_lt_one p A hp
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have := isAlgClosed_residueField_valuationSubring A
+  have := charP_residueField_of_valuation_lt_one p A hp
   have hgD : g ∈ A.decompositionSubgroup F := hg
   let g' : A.decompositionSubgroup F := ⟨g, hgD⟩
   have key : ∀ (h : A.decompositionSubgroup F) (a : A),

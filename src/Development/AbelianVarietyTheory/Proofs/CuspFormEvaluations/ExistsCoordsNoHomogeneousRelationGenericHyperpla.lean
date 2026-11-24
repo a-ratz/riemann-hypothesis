@@ -117,7 +117,7 @@ theorem exists_algebraicIndependent_ratios_of_generic_zero :
     have : ((m * (N + 1) : ℕ) : ℕ∞) = (m : ℕ∞) + ((m * N : ℕ) : ℕ∞) := by
       push_cast; ring
     rw [this] at h3
-    exact (WithTop.add_le_add_iff_right (ENat.coe_ne_top _)).mp h3
+    exact (WithTop.add_le_add_iff_right (ENat.natCast_ne_top _)).mp h3
   obtain ⟨I, hIη, hI, hc⟩ := Matroid.le_eRk_iff.mp h4
   have hfin : I.Finite := Set.finite_of_encard_eq_coe hc
   have : Finite I := hfin

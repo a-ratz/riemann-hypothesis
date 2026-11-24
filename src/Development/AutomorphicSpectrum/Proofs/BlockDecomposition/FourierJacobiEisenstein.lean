@@ -119,11 +119,11 @@ theorem zc_shift : ∀ {D : D7} {n ρ p : ℕ} {hn : ρ + p = n} (M : Maps D hn)
   obtain ⟨hadd, hnorm, hrat, -⟩ := GlobalTheory.T.centre_character_properties ψ hψ b₀
   obtain ⟨hl, hFD, -⟩ := m.hz
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D ρ ρ
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : DiscreteTopology (ratHerm D ρ) := GlobalTheory.CompanionTheory.FourierN.discrete_ratHerm
-  haveI : Countable (ratHerm D ρ) := countable_of_Lindelof_of_discrete
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : DiscreteTopology (ratHerm D ρ) := GlobalTheory.CompanionTheory.FourierN.discrete_ratHerm
+  have : Countable (ratHerm D ρ) := countable_of_Lindelof_of_discrete
   have hnz : ∀ z z' : hermA D ρ, M.nzx z 0 * M.nzx z' 0 = M.nzx (z + z') 0 := fun z z' => by
     have := GlobalTheory.T.unipotent_heisenberg_mul M z z' 0 0
     rwa [add_zero] at this
@@ -298,7 +298,7 @@ theorem fold_abs {X ι : Type} [MeasurableSpace X] [Countable ι] (μ : Measure 
     (c a : ι → X → ℂ) (hc : ∀ i, StronglyMeasurable (c i)) (hc1 : ∀ i x, ‖c i x‖ = 1)
     (ha : ∀ y, Summable fun i => ‖a i y‖) (hTs : ∀ y x, T (y, x) = ∑' i, c i x * a i y) :
     ∫ y in S, ∑' i, (∫ x in S, c i x * Z (y, x) ∂μ) * a i y ∂μ = ∫ v in S ×ˢ S, Z v * T v ∂(μ.prod μ) := by
-  haveI : IsFiniteMeasure (μ.restrict S) := ⟨by simp [hS]⟩
+  have : IsFiniteMeasure (μ.restrict S) := ⟨by simp [hS]⟩
   have hZs : ∀ y, StronglyMeasurable fun x => Z (y, x) := fun y => hZ.comp_measurable measurable_prodMk_left
   have inner : ∀ y, ∑' i, (∫ x in S, c i x * Z (y, x) ∂μ) * a i y = ∫ x in S, Z (y, x) * T (y, x) ∂μ := by
     intro y
@@ -326,7 +326,7 @@ theorem fold_abs {X ι : Type} [MeasurableSpace X] [Countable ι] (μ : Measure 
           rw [hTs, ← tsum_mul_left]
           exact tsum_congr fun i => by ring
   simp only [inner]
-  haveI hfin : IsFiniteMeasure ((μ.prod μ).restrict (S ×ˢ S)) := by
+  have hfin : IsFiniteMeasure ((μ.prod μ).restrict (S ×ˢ S)) := by
     rw [← Measure.prod_restrict]; infer_instance
   have hi : IntegrableOn (fun v => Z v * T v) (S ×ˢ S) (μ.prod μ) := by
     refine Integrable.of_bound ((hZ.mul hT).aestronglyMeasurable) (B * B₂) (ae_of_all _ fun v => ?_)
@@ -338,11 +338,11 @@ theorem fj_fold_mean : ∀ {D : D7} {n ρ p : ℕ} {hn : ρ + p = n} (M : Maps D
   intro D n ρ p hn M m ψ hψ b₀ F hF g θ hθ φ hφ B hB hZ
   obtain ⟨hH, hfd, h1⟩ := m.hμ
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D ρ p
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
-  haveI : SFinite m.μ := inferInstance
-  haveI : IsFiniteMeasure (m.μ.restrict m.𝓕) := ⟨by simp [h1]⟩
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.toEquiv.injective.countable
-  haveI : Countable (Matrix (Fin ρ) (Fin p) D.host.E) :=
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : SFinite m.μ := inferInstance
+  have : IsFiniteMeasure (m.μ.restrict m.𝓕) := ⟨by simp [h1]⟩
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.toEquiv.injective.countable
+  have : Countable (Matrix (Fin ρ) (Fin p) D.host.E) :=
     inferInstanceAs (Countable (Fin ρ → Fin p → D.host.E))
   obtain ⟨-, -, hnorm, -, -, hcont⟩ := GlobalTheory.T.heisenberg_character_bilinear_laws (ρ := ρ) (p := p) ψ hψ b₀
   have hφc : Continuous φ := GlobalTheory.RegSch.CentreWeilComm.continuous_of_mem hθ ⟨φ, hφ⟩
@@ -598,7 +598,7 @@ theorem map_eq_of_fundamentalDomain (L : AddSubgroup G) [Countable L] (ν : Meas
     (hT0 : ν F ≠ ∞) (T : G ≃ₜ+ G) (hr : ∀ x, T x ∈ L ↔ x ∈ L) :
     ν.map T = ν ∧ IsAddFundamentalDomain L (T '' F) ν := by
   have hemb : MeasurableEmbedding T := T.toHomeomorph.measurableEmbedding
-  haveI hH : (ν.map T).IsAddHaarMeasure :=
+  have hH : (ν.map T).IsAddHaarMeasure :=
     T.toAddEquiv.isAddHaarMeasure_map ν T.continuous T.symm.continuous
   have e := Measure.isAddLeftInvariant_eq_smul (ν.map T) ν
   have hF2 : IsAddFundamentalDomain L F (ν.map T) :=
@@ -625,7 +625,7 @@ theorem map_eq_of_fundamentalDomain (L : AddSubgroup G) [Countable L] (ν : Meas
     rw [hemb.map_apply, Set.preimage_image_eq _ T.injective]
   have hc : Measure.addHaarScalarFactor (ν.map T) ν = 1 := by
     have h5 : ν.map T F = ν F := h3.trans h4
-    rw [e, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h5
+    rw [e, smul_apply, ENNReal.smul_def, smul_eq_mul] at h5
     have h6 := (ENNReal.mul_eq_right h0 hT0).1 h5
     simpa using h6
   have hm : ν.map T = ν := by rw [e, hc, one_smul]
@@ -653,10 +653,10 @@ namespace GlobalTheory.CompanionTheory.FJE.TransportInt
 theorem transport_int : ∀ {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (T : (Mx D ρ p × Mx D ρ p) ≃ₜ+ (Mx D ρ p × Mx D ρ p)), (∀ ξ₁ ξ₂ : Matrix (Fin ρ) (Fin p) D.host.E, ∃ ξ₁' ξ₂' : Matrix (Fin ρ) (Fin p) D.host.E, T (GlobalTheory.CompanionTheory.FJE.rt ξ₁, GlobalTheory.CompanionTheory.FJE.rt ξ₂) = (GlobalTheory.CompanionTheory.FJE.rt ξ₁', GlobalTheory.CompanionTheory.FJE.rt ξ₂')) → (∀ ξ₁ ξ₂ : Matrix (Fin ρ) (Fin p) D.host.E, ∃ ξ₁' ξ₂' : Matrix (Fin ρ) (Fin p) D.host.E, T.symm (GlobalTheory.CompanionTheory.FJE.rt ξ₁, GlobalTheory.CompanionTheory.FJE.rt ξ₂) = (GlobalTheory.CompanionTheory.FJE.rt ξ₁', GlobalTheory.CompanionTheory.FJE.rt ξ₂')) → ∀ A : Mx D ρ p × Mx D ρ p → ℂ, (∀ (ξ₁ ξ₂ : Matrix (Fin ρ) (Fin p) D.host.E) v, A (v + (GlobalTheory.CompanionTheory.FJE.rt ξ₁, GlobalTheory.CompanionTheory.FJE.rt ξ₂)) = A v) → ∫ v in m.𝓕 ×ˢ m.𝓕, A (T v) ∂(m.μ.prod m.μ) = ∫ v in m.𝓕 ×ˢ m.𝓕, A v ∂(m.μ.prod m.μ) := by
   intro D ρ p m T h1 h2 A hA
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D ρ p
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
-  haveI : Countable (ratMx D ρ p) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : Countable (ratMx D ρ p) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨hμ, hF, hone⟩ := m.hμ
-  haveI : Countable ((ratMx D ρ p).prod (ratMx D ρ p)) :=
+  have : Countable ((ratMx D ρ p).prod (ratMx D ρ p)) :=
     (Function.Injective.countable (f := fun g : (ratMx D ρ p).prod (ratMx D ρ p) =>
       ((⟨g.1.1, g.2.1⟩ : ratMx D ρ p), (⟨g.1.2, g.2.2⟩ : ratMx D ρ p))) fun a b h =>
         Subtype.ext (Prod.ext (congrArg (fun z => z.1.1) h) (congrArg (fun z => z.2.1) h)))
@@ -845,21 +845,21 @@ namespace GlobalTheory.CompanionTheory.FJE
 theorem Wz_stronglyMeasurable : ∀ {D : D7} {n ρ p : ℕ} {hn : ρ + p = n} (M : Maps D hn) (m : Meas D ρ p) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ → ∀ (b₀ : HermE D ρ) (f : G D n → ℂ), Continuous f → ∀ {X : Type} [TopologicalSpace X] [SecondCountableTopology X] [MeasurableSpace X] [BorelSpace X] (c : X → G D n), Continuous c → StronglyMeasurable fun v => Wz M m ψ b₀ f (c v) := by
   intro D n ρ p hn M m ψ hψ b₀ f hf X _ _ _ _ c hc
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D ρ ρ
-  haveI : IsTopologicalAddGroup (Mx D ρ ρ) := i1
-  haveI : LocallyCompactSpace (Mx D ρ ρ) := i2
-  haveI : SecondCountableTopology (Mx D ρ ρ) := i3
-  haveI : T2Space (Mx D ρ ρ) := i4
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D ρ) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (hermA D ρ) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : LocallyCompactSpace (hermA D ρ) :=
+  have : IsTopologicalAddGroup (Mx D ρ ρ) := i1
+  have : LocallyCompactSpace (Mx D ρ ρ) := i2
+  have : SecondCountableTopology (Mx D ρ ρ) := i3
+  have : T2Space (Mx D ρ ρ) := i4
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D ρ) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (hermA D ρ) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : LocallyCompactSpace (hermA D ρ) :=
     (GlobalTheory.CompanionTheory.FourierN.isClosed_hermA (D := D) (n := ρ)).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI := m.hz.1
-  haveI : SFinite m.lz := inferInstance
+  have := m.hz.1
+  have : SFinite m.lz := inferInstance
   have hchz : Continuous fun z : hermA D ρ => conj (chz ψ b₀ z) :=
     Complex.continuous_conj.comp
-      (hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr b₀.1).comp continuous_subtype_val))
+      (hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr b₀.1).comp continuous_subtypeVal))
   have hcont : Continuous fun u : X × hermA D ρ => f (M.w * M.nzx u.2 0 * c u.1) * conj (chz ψ b₀ u.2) := by
     refine (hf.comp ((continuous_const.mul ?_).mul (hc.comp continuous_fst))).mul (hchz.comp continuous_snd)
     exact M.nzx_cont.comp (continuous_snd.prodMk continuous_const)
@@ -1025,7 +1025,7 @@ theorem exists_chv_ne_one (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsCharAF D.hos
     show c * incA D ((b₀.1 * ζ) i j) = _
     rw [hc, mul_assoc, ← map_mul, inv_mul_cancel₀ hij, map_one, mul_one]
   show ψ (trA (Matrix.trace (pr b₀ _ (rt ζ)))) ≠ 1
-  haveI : Nontrivial (AF D.host.F) :=
+  have : Nontrivial (AF D.host.F) :=
     nontrivial_of_ne t 0 (fun h => ht (by rw [h, AddChar.map_zero_eq_one]))
   rw [key, trA_algebraMap_half]
   exact ht
@@ -1121,10 +1121,10 @@ theorem parseval {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddChar (AF D.hos
       ∑' η : Matrix (Fin ρ) (Fin p) D.host.E, a η * conj (b η) := by
   classical
   obtain ⟨-, hadd, hnorm, hneg, -, hcont⟩ := GlobalTheory.T.heisenberg_character_bilinear_laws (p := p) ψ hψ b₀
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
-  haveI : Countable (Matrix (Fin ρ) (Fin p) D.host.E) :=
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : Countable (Matrix (Fin ρ) (Fin p) D.host.E) :=
     inferInstanceAs (Countable (Fin ρ → Fin p → D.host.E))
-  haveI : IsProbabilityMeasure (m.μ.restrict m.𝓕) :=
+  have : IsProbabilityMeasure (m.μ.restrict m.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact m.hμ.2.2⟩
   have hcm : ∀ η : Matrix (Fin ρ) (Fin p) D.host.E,
       StronglyMeasurable (fun x : Mx D ρ p => chv ψ b₀ x (rt η)) := fun η =>
@@ -1149,7 +1149,7 @@ theorem parseval {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddChar (AF D.hos
         have hr : (rt (η - ξ) : Mx D ρ p) = rt η + -rt ξ := by
           rw [← sub_eq_add_neg]; exact rat_sub η ξ
         rw [hr, hadd, hneg, mul_comm]
-      simp only [e, if_neg h]
+      simp only [e, ite_eq_right h]
       exact GlobalTheory.T.heisenberg_character_integral_vanishes m ψ hψ b₀ hb₀ (η - ξ) (sub_ne_zero.2 h)
   have hs : ∀ x : Mx D ρ p, Summable fun η => chv ψ b₀ x (rt η) * a η := fun x =>
     Summable.of_norm (by simpa only [norm_mul, hc1, one_mul] using ha)
@@ -1223,26 +1223,26 @@ set_option synthInstance.maxHeartbeats 400000 in
 set_option maxHeartbeats 1000000 in
 theorem fold_parseval : ∀ {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ → ∀ b₀ : HermE D ρ, b₀.1.det ≠ 0 → ∀ (Φ φ : Mx D ρ p → ℂ) (B₁ B₂ : ℝ), StronglyMeasurable Φ → StronglyMeasurable φ → (∀ y, Summable (fun ξ : Matrix (Fin ρ) (Fin p) D.host.E => ‖Φ (GlobalTheory.CompanionTheory.FJE.rt ξ + y)‖) ∧ ∑' ξ : Matrix (Fin ρ) (Fin p) D.host.E, ‖Φ (GlobalTheory.CompanionTheory.FJE.rt ξ + y)‖ ≤ B₁) → (∀ y, Summable (fun ξ : Matrix (Fin ρ) (Fin p) D.host.E => ‖φ (GlobalTheory.CompanionTheory.FJE.rt ξ + y)‖) ∧ ∑' ξ : Matrix (Fin ρ) (Fin p) D.host.E, ‖φ (GlobalTheory.CompanionTheory.FJE.rt ξ + y)‖ ≤ B₂) → ∫ v in m.𝓕 ×ˢ m.𝓕, GlobalTheory.CompanionTheory.FJE.Ap ψ b₀ Φ φ v ∂(m.μ.prod m.μ) = ∫ y, Φ y * conj (φ y) ∂m.μ := by
   intro D ρ p m ψ hψ b₀ hb Φ φ B₁ B₂ hΦ hφ h1 h2
-  haveI := m.hμ.1
+  have := m.hμ.1
   have hfd : IsAddFundamentalDomain (ratMx D ρ p) m.𝓕 m.μ := m.hμ.2.1
   have hfin : m.μ m.𝓕 = 1 := m.hμ.2.2
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin ρ) (Fin p) D.host.E) :=
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin ρ) (Fin p) D.host.E) :=
     inferInstanceAs (Countable (Fin ρ → Fin p → D.host.E))
-  haveI : Countable (ratMx D ρ p) := by
+  have : Countable (ratMx D ρ p) := by
     unfold GlobalTheory.MixModel.ratMx
     exact (AddMonoidHom.rangeRestrict_surjective _).countable
-  haveI : MeasurableConstVAdd (ratMx D ρ p) (Mx D ρ p) :=
+  have : MeasurableConstVAdd (ratMx D ρ p) (Mx D ρ p) :=
     ⟨fun c => (continuous_const.add continuous_id).measurable⟩
-  haveI : SFinite m.μ := by
+  have : SFinite m.μ := by
     have hs := hfd.sum_restrict
     open scoped Pointwise in
-    haveI : ∀ g : ratMx D ρ p, IsFiniteMeasure (m.μ.restrict (g +ᵥ m.𝓕)) := fun g =>
+    have : ∀ g : ratMx D ρ p, IsFiniteMeasure (m.μ.restrict (g +ᵥ m.𝓕)) := fun g =>
       ⟨by rw [Measure.restrict_apply_univ, measure_vadd, hfin]; exact ENNReal.one_lt_top⟩
     rw [← hs]
     infer_instance
-  haveI : IsFiniteMeasure (m.μ.restrict m.𝓕) :=
+  have : IsFiniteMeasure (m.μ.restrict m.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, hfin]; exact ENNReal.one_lt_top⟩
   have hds : ∀ (Ψ : Mx D ρ p → ℂ) (B : ℝ),
       (∀ y, Summable (fun ξ : Matrix (Fin ρ) (Fin p) D.host.E => ‖Ψ (rt ξ + y)‖) ∧
@@ -1271,7 +1271,7 @@ theorem fold_parseval : ∀ {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddCha
         ≤ ∑' ξ : Matrix (Fin ρ) (Fin p) D.host.E,
             ‖Φ (rt ξ + y)‖ₑ * ∑' η : Matrix (Fin ρ) (Fin p) D.host.E, ‖φ (rt η + y)‖ₑ := by
           refine ENNReal.tsum_le_tsum (fun ξ => ?_)
-          rw [enorm_mul, ← ofReal_norm (conj _), Complex.norm_conj, ofReal_norm]
+          rw [eNorm_mul, ← ofReal_norm (conj _), Complex.norm_conj, ofReal_norm]
           gcongr
           exact ENNReal.le_tsum (f := fun η => ‖φ (rt η + y)‖ₑ) ξ
       _ = (∑' ξ : Matrix (Fin ρ) (Fin p) D.host.E, ‖Φ (rt ξ + y)‖ₑ) *
@@ -1291,7 +1291,7 @@ theorem fold_parseval : ∀ {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddCha
     rw [hfd.lintegral_eq_tsum'']
     beta_reduce
     rw [← lintegral_tsum (f := fun (g : ratMx D ρ p) (x : Mx D ρ p) => ‖Φ (g +ᵥ x) * conj (φ (g +ᵥ x))‖ₑ)
-      (fun g => ((hP.measurable.comp (measurable_const_vadd g)).enorm).aemeasurable)]
+      (fun g => ((hP.measurable.comp (measurable_const_vadd g)).eNorm).aemeasurable)]
     calc ∫⁻ x in m.𝓕, ∑' g : ratMx D ρ p, ‖Φ (g +ᵥ x) * conj (φ (g +ᵥ x))‖ₑ ∂m.μ
         ≤ ∫⁻ _ in m.𝓕, ENNReal.ofReal (B₁ * B₂) ∂m.μ := by
           refine lintegral_mono (fun x => ?_)
@@ -1349,8 +1349,8 @@ open GlobalTheory.CompanionTheory.FJE in
 theorem GlobalTheory.CompanionTheory.FJE.fjEis : ZUnfold → ThTwist → FJEis := by
   intro hZ hTw D n ρ p hn M m ψ hψ b₀ hb χ χ' hχ hχ' θ hθ Ω hΩ s f hf hl hs g
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D ρ p
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
-  haveI : m.μ.IsAddHaarMeasure := m.hμ.1
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : m.μ.IsAddHaarMeasure := m.hμ.1
   obtain ⟨hcM, hcC⟩ := GlobalTheory.T.countable_matrices_and_cosets D ρ p
   have hsum := fun g' => (hZ D n ρ p hn M m ψ hψ b₀ hb χ hχ s f hf hl hs g').1
   have hC := (hZ D n ρ p hn M m ψ hψ b₀ hb χ hχ s f hf hl hs g).2
@@ -1426,7 +1426,7 @@ theorem GlobalTheory.CompanionTheory.FJE.fjEis : ZUnfold → ThTwist → FJEis :
   set ν := (m.μ.prod m.μ).restrict (m.𝓕 ×ˢ m.𝓕) with hν
   have hmass : ν Set.univ = 1 := by
     rw [hν, Measure.restrict_apply_univ, Measure.prod_prod, m.hμ.2.2, one_mul]
-  haveI : IsFiniteMeasure ν := ⟨by rw [hmass]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure ν := ⟨by rw [hmass]; exact ENNReal.one_lt_top⟩
   have hbound : ∀ q v, ‖Sq q v * conj (th ψ b₀ (Ω 1) 0 v.2 v.1)‖ ≤ t q * Bθ := fun q v => by
     rw [norm_mul]
     exact mul_le_mul (hSqle q v) (hthb v) (norm_nonneg _) ((norm_nonneg _).trans (hSqle q v))

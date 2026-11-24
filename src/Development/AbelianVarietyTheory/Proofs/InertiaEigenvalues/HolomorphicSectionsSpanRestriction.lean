@@ -111,9 +111,9 @@ theorem pull_integral : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism
   let io' : C.c'.F →+* T'.Fr := io₂.comp (C.d.eF : C.c'.F →+* C.d.c₂.F)
   let io : T.Q.c.F →+* T'.Fr := io₂.comp C.inc
   have hio : ∀ x, io' (incF T.Q.c C.c' C.hle x) = io x := fun _ => rfl
-  letI := io₂.toAlgebra
-  letI := io'.toAlgebra
-  letI := io.toAlgebra
+  let := io₂.toAlgebra
+  let := io'.toAlgebra
+  let := io.toAlgebra
   obtain ⟨y', hy'⟩ := GlobalTheory.CovPull.below_exists C.d hO hK (S := T'.Fr) (fun _ => rfl) y₂.1
   let y : IntFr (T.Q.Xo j) T.Q.c T' io := ⟨y'.res C.hle hio, GlobalTheory.TransferCompare.allTest_framed _ _ _ _,
     (GlobalTheory.IntCoefExt.integral_res_iff C.hle T' io' io hio _).1
@@ -181,7 +181,7 @@ theorem mem_span_of_image_mem_span {K : Type} [Field K] {M : Type} [AddCommGroup
   refine (Submodule.mem_span_range_iff_exists_fun K).mp ?_
   by_contra hno
   set G := Submodule.span K (Set.range g) with hG
-  haveI : FiniteDimensional K G := FiniteDimensional.span_of_finite _ (Set.finite_range g)
+  have : FiniteDimensional K G := FiniteDimensional.span_of_finite _ (Set.finite_range g)
   let b := Module.finBasis K G
   let v : Fin (Module.finrank K G) → M := fun i => (b i : M)
   have hvsp : Submodule.span K (Set.range v) = G := by

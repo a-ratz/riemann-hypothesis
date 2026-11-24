@@ -386,7 +386,7 @@ theorem deRham_filtered : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Lo
       map_mul' := fun x y => by ext; simp [mul_assoc]
       map_zero' := by ext; simp
       map_add' := fun x y => by ext; simp [add_mul, tmul_add] }
-  letI : Module P.R.BdR (V ⊗[ℚ_[l]] P.R.BdR) := Module.compHom _ φ
+  let : Module P.R.BdR (V ⊗[ℚ_[l]] P.R.BdR) := Module.compHom _ φ
   have hsm : ∀ (b : P.R.BdR) (x : V ⊗[ℚ_[l]] P.R.BdR), b • x =
       AlgebraTensorModule.map (LinearMap.id : V →ₗ[↥LL.1] V) (LinearMap.mulLeft ℚ_[l] b) x := fun _ _ => rfl
   have hD : ∀ x, x ∈ DdR (P.PD K) ρ ↔ ∀ g, actVdR (P.PD K) ρ g x = x := fun x => by

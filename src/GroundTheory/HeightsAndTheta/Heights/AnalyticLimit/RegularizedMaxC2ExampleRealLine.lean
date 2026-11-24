@@ -100,10 +100,10 @@ theorem norm_le_of_symm_diag {H : E →L[ℝ] E →L[ℝ] ℝ} (hs : ∀ v w, H 
   have hx' : ‖x'‖ = 1 := by simp [x', norm_smul, ha.ne']
   have hy' : ‖y'‖ = 1 := by simp [y', norm_smul, hb.ne']
   have hxy : H x y = ‖x‖ * ‖y‖ * H x' y' := by
-    simp only [x', y', map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [x', y', map_smul, smul_apply, smul_eq_mul]
     field_simp
   have key : 4 * H x' y' = H (x' + y') (x' + y') - H (x' - y') (x' - y') := by
-    simp only [map_add (f := _), map_sub, ContinuousLinearMap.add_apply, ContinuousLinearMap.sub_apply]
+    simp only [map_add (f := _), map_sub, add_apply, sub_apply]
     rw [hs y' x']
     ring
   have h1 : ‖x' + y'‖ ^ 2 ≤ 4 := by

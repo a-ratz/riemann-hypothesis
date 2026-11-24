@@ -123,9 +123,9 @@ theorem isIrreducible_of_jhMult_eq_one {s N : ℕ} {d : Fin s → ℕ} (e : (Σ 
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     obtain ⟨S, f, hf⟩ := hsub
-    haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
-    haveI : Subsingleton (Jacquet B (unipRad k e)) := (Submodule.mkQ_surjective _).subsingleton
-    haveI : Subsingleton S.toSubmodule := inferInstance
+    have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
+    have : Subsingleton (Jacquet B (unipRad k e)) := (Submodule.mkQ_surjective _).subsingleton
+    have : Subsingleton S.toSubmodule := inferInstance
     exact not_subsingleton _ (Function.Surjective.subsingleton hf)
   show IsSimpleOrder (Subrepresentation B)
   refine { exists_pair_ne := ⟨⊥, ⊤, fun h => ?_⟩, eq_bot_or_eq_top := fun S => ?_ }
@@ -191,7 +191,7 @@ theorem occurs_of_embedding (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFini
     (φ : Q.π.IntertwiningMap (multiProd e F)) (hφ : Function.Injective φ) :
     IsSubquotient (piTensor fun i => (p i).π) (jac e Q.π) := by
   have hirr : (piTensor fun i => (p i).π).IsIrreducible := _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun i => (p i).toIrrRep
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible Q.irr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible Q.irr
 
   let ψ := Model.evalOne e φ
   have hψ : ∃ x, ψ x ≠ 0 := by

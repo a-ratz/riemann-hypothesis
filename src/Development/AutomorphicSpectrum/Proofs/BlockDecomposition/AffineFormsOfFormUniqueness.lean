@@ -70,10 +70,10 @@ open KaehlerDifferential
 theorem kaehler_basis {K A : Type} [CommRing K] [CommRing A] [Algebra K A] {d : ℕ} (t : Fin d → A)
     (h : (MvPolynomial.eval₂Hom (algebraMap K A) t : MvPolynomial (Fin d) K →+* A).Etale) :
     ∃ b : Module.Basis (Fin d) A Ω[A⁄K], ∀ i, b i = KaehlerDifferential.D K A (t i) := by
-  letI : Algebra (MvPolynomial (Fin d) K) A := (MvPolynomial.eval₂Hom (algebraMap K A) t).toAlgebra
-  haveI : IsScalarTower K (MvPolynomial (Fin d) K) A :=
+  let : Algebra (MvPolynomial (Fin d) K) A := (MvPolynomial.eval₂Hom (algebraMap K A) t).toAlgebra
+  have : IsScalarTower K (MvPolynomial (Fin d) K) A :=
     .of_algebraMap_eq fun r => (MvPolynomial.eval₂_C _ _ _).symm
-  haveI : Algebra.Etale (MvPolynomial (Fin d) K) A := h
+  have : Algebra.Etale (MvPolynomial (Fin d) K) A := h
   refine ⟨((mvPolynomialBasis K (Fin d)).baseChange _).map
     (tensorKaehlerEquivOfFormallyEtale K (MvPolynomial (Fin d) K) _), fun i => ?_⟩
   rw [Module.Basis.map_apply, tensorKaehlerEquivOfFormallyEtale_apply]
@@ -84,8 +84,8 @@ theorem ring_diff {K A B : Type} [CommRing K] [CommRing A] [CommRing B] [Algebra
     (J J' : Ideal B) (hJ : J * J ≤ J') (f f' : A →ₐ[K] B) (hf : ∀ g, f' g - f g ∈ J) (t : Fin d → A) (g : A) (p : Fin d → A)
     (hp : KaehlerDifferential.D K A g = ∑ i, p i • KaehlerDifferential.D K A (t i)) :
     f' g - f g - ∑ i, f (p i) * (f' (t i) - f (t i)) ∈ J' := by
-  letI : Algebra A (B ⧸ J') := ((Ideal.Quotient.mk J').comp f.toRingHom).toAlgebra
-  haveI : IsScalarTower K A (B ⧸ J') := .of_algebraMap_eq fun r => by
+  let : Algebra A (B ⧸ J') := ((Ideal.Quotient.mk J').comp f.toRingHom).toAlgebra
+  have : IsScalarTower K A (B ⧸ J') := .of_algebraMap_eq fun r => by
     change _ = Ideal.Quotient.mk J' (f (algebraMap K A r))
     rw [AlgHom.commutes]
     rfl
@@ -547,13 +547,13 @@ theorem exists_lifts {V : Z.Opens} {s d : ℕ} (hle : SS q 1 s V ≤ inU q V) (E
   let v : ∀ T : (inU q V).FullSubcategory, Sec q V → T.obj.B := fun T g =>
     if hT : SS q 1 s V T.obj then ((sP (SS q 1 s V)).A.map (σ ⟨T.obj, hT⟩)).hom (θ g) else lft V T.obj g
   have hvP : ∀ (T : (SS q 1 s V).FullSubcategory) (g : Sec q V),
-      v ⟨T.obj, hle _ T.property⟩ g = ((sP (SS q 1 s V)).A.map (σ T)).hom (θ g) := fun T g => dif_pos T.property
+      v ⟨T.obj, hle _ T.property⟩ g = ((sP (SS q 1 s V)).A.map (σ T)).hom (θ g) := fun T g => dite_eq_left T.property
   refine ⟨⟨v, fun T g => ?_⟩, fun {a} g₀ g x => ?_⟩
   · by_cases hT : SS q 1 s V T.obj
-    · have e : v T g = ((sP (SS q 1 s V)).A.map (σ ⟨T.obj, hT⟩)).hom (θ g) := dif_pos hT
+    · have e : v T g = ((sP (SS q 1 s V)).A.map (σ ⟨T.obj, hT⟩)).hom (θ g) := dite_eq_left hT
       rw [e]
       exact hpt ⟨T.obj, hT⟩ T.property g
-    · have e : v T g = lft V T.obj g := dif_neg hT
+    · have e : v T g = lft V T.obj g := dite_eq_right hT
       rw [e]
       exact lft_spec _ T.property g
   · unfold Lifts.form liftF

@@ -66,11 +66,11 @@ variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} {N : NData R H what₂
 theorem labTameS_of_labTie {T : GlobalTheory.RowTie.WDTie N A} {τ : ∀ k, Fb (H.g k) (H.g_prime k) →* ℂ}
     {γ : Fin 2 → PlE H → G H.E N.Om} (hT : LabTie T τ γ) : UpperTheory.GalS.LabTameS N A := by
   refine ⟨fun k v a ha σ hσ hw => ?_, fun k v a ha hs hb => ?_⟩
-  · haveI : Fact (H.g k).Prime := ⟨H.g_prime k⟩
+  · have : Fact (H.g k).Prime := ⟨H.g_prime k⟩
     rw [(hT k v).2.2, ← T.dim] at ha
     rw [T.inePol _ a σ hσ, ← T.dim]
     exact WD.inePol_wild_of_natDegree_lab ha hw
-  · haveI : Fact (H.g k).Prime := ⟨H.g_prime k⟩
+  · have : Fact (H.g k).Prime := ⟨H.g_prime k⟩
     rw [(hT k v).2.2, ← T.dim] at ha
     rw [(hT k v).2.2] at hs
     refine (UpperTheory.GalS.nc_iff T a).2 (UpperTheory.GalS.SepW.ncW ⟨WD.tame_of_natDegree_lab ha, _, (hT k v).2.1.1, ?_⟩
@@ -109,12 +109,12 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
   refine ⟨GlobalTheory.LabLaws.tieLab_of_labTie hT, _root_.GlobalTheory.LabLaws.labTameS_of_labTie hT, ?_, ⟨P.ty.rbarSS, P.ty.rbar⟩⟩
   intro i
   refine ⟨P.ty.plB (D.nd.w i), P.ty.plκ (D.nd.w i), fun y => P.ty.plB_loc i y, fun k v x => ?_⟩
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hm := GlobalTheory.ParRay.mem_of_monoidHom (P.ty.plB (D.nd.w i)) (D.ntypes.teichC k) x
   refine ⟨hm, ?_⟩
   rw [P.ty.plB_iota i k v x]
   unfold redThrough
-  exact dif_pos hm
+  exact dite_eq_left hm
 end GlobalTheory.TieLabAt
 end
 end

@@ -86,7 +86,7 @@ theorem dvr_charZero_of_prime (S : UniformizedDVR p O) (hp : p.Prime) : CharZero
   exact not_isUnit_zero hu
 
 theorem dvr_fraction_field_charZero_prime (S : UniformizedDVR p O) (hp : p.Prime) : CharZero (KK O) := by
-  haveI := dvr_charZero_of_prime S hp
+  have := dvr_charZero_of_prime S hp
   refine charZero_of_inj_zero (fun n hn => ?_)
   have h1 : algebraMap O (KK O) (n : O) = algebraMap O (KK O) 0 := by
     rw [map_natCast, map_zero]; exact hn

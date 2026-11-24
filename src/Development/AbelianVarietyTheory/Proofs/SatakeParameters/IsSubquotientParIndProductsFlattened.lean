@@ -537,9 +537,9 @@ theorem stages_equiv (s : ℕ) : ∀ (d t : Fin s → ℕ) (d' : ∀ a, Fin (t a
   induction s with
   | zero =>
     intro d t d' e' X _ _ ρ n _ _ e
-    haveI : IsEmpty n := ⟨fun x => (e.symm x).1.elim0⟩
-    haveI : IsEmpty (Σₗ a : Fin 0, Fin (t a)) := ⟨fun c => (ofLex c).1.elim0⟩
-    haveI : IsEmpty (Σ c : (Σₗ a : Fin 0, Fin (t a)), Fin (d' (ofLex c).1 (ofLex c).2)) :=
+    have : IsEmpty n := ⟨fun x => (e.symm x).1.elim0⟩
+    have : IsEmpty (Σₗ a : Fin 0, Fin (t a)) := ⟨fun c => (ofLex c).1.elim0⟩
+    have : IsEmpty (Σ c : (Σₗ a : Fin 0, Fin (t a)), Fin (d' (ofLex c).1 (ofLex c).2)) :=
       ⟨fun x => (ofLex x.1).1.elim0⟩
     let E : (Σ c : (Σₗ a : Fin 0, Fin (t a)), Fin (d' (ofLex c).1 (ofLex c).2)) ≃ n :=
       Equiv.equivOfIsEmpty _ _

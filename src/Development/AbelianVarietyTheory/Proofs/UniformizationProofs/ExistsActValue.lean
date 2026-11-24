@@ -160,8 +160,8 @@ theorem exists_act_value {R : Type} [CommRing R] [IsDomain R] {A : PolAV (Spec (
 theorem value_at_level : LL → AllUV fun {V} _ _ _ {ϖ} hϖ {D} Q {F} _ _ {v} hv {A} {G} _ _ U => ∀ w₀ ρ, NormW U.toUnifPre w₀ ρ → ∀ (N : ℕ), 1 ≤ N → ∀ (q : QkPt D.toPre F N) (x : TFK (R := V) F ⟶ A.A), QkToAkU U.toUnifPre F N q x → ∀ e : LB.Gen (LB.LinComb A.L (Y := (TFK (R := V) F).left) (K := Fin 1) (fun _ => x.left) (fun _ => 1)), e.IsGen → ∀ w : Frm D.toPre F N q.g.b, w.IsGen → ∃ κ : F, κ ≠ 0 ∧ ∀ (t : SecA A F N) s (c : F), U.ExpandsF F N w₀ t s → (∀ z J, Good A.L z J → sA t (ptSecT A.A x).left z J = @id ((TFK (R := V) F).left.presheaf.stalk z) (cst (R := V) F z c) * (val (powFrame A.A A.L x e N) (𝟙 _) z J).val) → SumV v (coef s q.g w) (κ * c) := by
   intro hL V _ _ _ _ hcpl ϖ hϖ D Q hQ F _ _ _ v hv A G _ _ hG U w₀ ρ hN N hN1 q x hx e he w hw
   have hB : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hcpl⟩
-  haveI : Subsingleton (TFK (R := V) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
-  haveI : Nonempty (TFK (R := V) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
+  have : Subsingleton (TFK (R := V) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
+  have : Nonempty (TFK (R := V) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
   obtain ⟨hxN, hθ⟩ := hx w₀ hN.1
   obtain ⟨θ, rfl⟩ := GlobalTheory.BoxTheta.exists_theta hL.1.kerPow A hN1 (T := TFK (R := V) F) x hxN
   obtain ⟨w', hw', hΦ⟩ := hθ θ rfl

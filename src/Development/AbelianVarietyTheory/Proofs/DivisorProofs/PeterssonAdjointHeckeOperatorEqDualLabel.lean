@@ -52,7 +52,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.HeckeAdjoint
 
 theorem unramified_host (D : D7) : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E) := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   exact Formalism.L2.Pj.unramBridge_holds D.host.E fun P hP => by
     obtain ⟨θ, t, ht, hθ⟩ := D.sp.cm.cmUnram.2.2 P hP
     refine ⟨θ, ?_⟩
@@ -62,18 +62,18 @@ theorem unramified_host (D : D7) : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.ho
     rwa [this]
 
 theorem realUnif (D : D7) (P : HeightOneSpectrum (𝓞 D.host.E)) : GlobalTheory.SphericalOps.RealUnif P := by
-  haveI := P.isPrime
-  haveI : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
+  have := P.isPrime
+  have : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
     Algebra.unramified_iff_forall.1 (unramified_host D) ⟨P.asIdeal, P.isPrime⟩
   have hle : (P.asIdeal.under (𝓞 D.host.F)).map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ P.asIdeal :=
     Ideal.map_comap_le
   have h1 : Ideal.ramificationIdx' (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal = 1 := by
-    letI := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
+    let := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
     exact (Ideal.IsDedekindDomain.ramificationIdx'_eq_one_iff P.ne_bot hle).2
       ((Algebra.isUnramifiedAt_iff_map_eq (𝓞 D.host.F) (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal).1 ‹_›).2
   have h2 : ¬ (P.asIdeal.under (𝓞 D.host.F)).map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ P.asIdeal ^ 2 :=
     fun h => (Ideal.ramificationIdx'_ne_one_iff hle).2 h h1
-  rw [Ideal.map_le_iff_le_comap, SetLike.not_le_iff_exists] at h2
+  rw [Ideal.map_le_iff_le_comap, IsConcreteLE.not_le_iff_exists] at h2
   obtain ⟨x, hx, hx2⟩ := h2
   exact ⟨x, algebraMap _ _ x, rfl, hx, hx2⟩
 
@@ -82,10 +82,10 @@ open GlobalTheory.SphericalOps in
 theorem ipM_heckeOn_dualLab : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (M : DSModel V S) (J : Subgroup (GA D V)) (χ : GA D V → ℂ) (Sb : Finset (HeightOneSpectrum (𝓞 D.host.F))), ∀ (μ : Measure (GA D V)) (𝓕 : Set (GA D V)), IsInfFam θ → μ.IsHaarMeasure → IsFundamentalDomain (GQ V) 𝓕 μ → SchurMult θ M (J : Set (GA D V)) χ μ 𝓕 → ∀ P d R R', Hecke₂ V (J : Set (GA D V)) χ Sb P d R → Hecke₂ V (J : Set (GA D V)) χ Sb P (dualLab d) R' → ∀ T ∈ Mult θ M (J : Set (GA D V)) χ, ∀ T' ∈ Mult θ M (J : Set (GA D V)) χ, heckeOn M R T ∈ Mult θ M (J : Set (GA D V)) χ → heckeOn M R' T' ∈ Mult θ M (J : Set (GA D V)) χ → ipM M μ 𝓕 (heckeOn M R T) T' = ipM M μ 𝓕 T (heckeOn M R' T') := by
   intro D V S θ M J χ Sb μ 𝓕 hθ hμ h𝓕 hS P d R R' h h' T hT T' hT' hRT hRT'
   obtain ⟨R₁, h₁', hcard, K, x, hK, hR, hR₁⟩ := exists_dual (realUnif D P) h
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
-  haveI : μ.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D V μ hμ
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
+  have : μ.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D V μ hμ
   have hS' := hS hθ hμ h𝓕
   have h₁ := ipM_spec M μ 𝓕 _ _ (hS' _ hRT _ hT')
   have h₂ := ipM_spec M μ 𝓕 _ _ (hS' _ hT _ hRT')

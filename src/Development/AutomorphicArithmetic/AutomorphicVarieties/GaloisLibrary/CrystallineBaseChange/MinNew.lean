@@ -59,7 +59,7 @@ theorem UpperTheory.V.Br.minNew :
       have hM0 : M' ≠ 0 := by
         rintro rfl
         exact NeZero.ne N (Nat.eq_zero_of_zero_dvd hdvd)
-      haveI : NeZero M' := ⟨hM0⟩
+      have : NeZero M' := ⟨hM0⟩
       have hlt : M' < N := lt_of_le_of_ne (Nat.le_of_dvd (Nat.pos_of_ne_zero (NeZero.ne N)) hdvd) hne
       obtain ⟨g'', hg''⟩ := UpperTheory.V.Br.eigEx M' k hk χ' g' hc hg0 (coef (⇑g.f))
       obtain ⟨f, hf, h, hhf, hha⟩ := ih M' hlt k hk χ' g''

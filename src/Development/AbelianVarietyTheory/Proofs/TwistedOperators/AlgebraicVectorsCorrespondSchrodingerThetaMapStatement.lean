@@ -252,7 +252,7 @@ theorem hD_finset_sum {G R : Type} [AddCommGroup G] [NormedAddCommGroup R] [Norm
   funext w
   rw [Finset.sum_apply]
 
-  simp only [hD_eq_fderiv ι π om f hf, map_sum, ContinuousLinearMap.sum_apply]
+  simp only [hD_eq_fderiv ι π om f hf, map_sum, sum_apply]
   push_cast
   rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_add_distrib]
 
@@ -279,11 +279,11 @@ theorem deriv_heisO_eq_sum_dRho : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ),
         compAt θ τ' (lineAt θ τ (compAt θ τ (L 1)) 1) i j := fun τ => rfl
     simp only [hc]
     rw [Finset.sum_eq_single τ']
-    · rw [(GlobalTheory.WeilVacMove.isLineAt_lineAt hθ τ' (compAt θ τ' (L 1))).2.2 1 τ', if_pos rfl, Complex.ofReal_one,
+    · rw [(GlobalTheory.WeilVacMove.isLineAt_lineAt hθ τ' (compAt θ τ' (L 1))).2.2 1 τ', ite_eq_left rfl, Complex.ofReal_one,
         one_smul]
       rfl
     · intro b _ hb
-      rw [(GlobalTheory.WeilVacMove.isLineAt_lineAt hθ b (compAt θ b (L 1))).2.2 1 τ', if_neg (Ne.symm hb)]
+      rw [(GlobalTheory.WeilVacMove.isLineAt_lineAt hθ b (compAt θ b (L 1))).2.2 1 τ', ite_eq_right (Ne.symm hb)]
       rfl
     · intro hn; exact absurd (Finset.mem_univ τ') hn
   rw [e1, e3, hD_finset_sum _ _ _ f (theta_sm h hf)]
@@ -755,7 +755,7 @@ theorem exists_indep {Φ : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) :
     funext x
     simp [f₁, pureA, mul_assoc]
   set V := Submodule.span ℂ (Set.range g₀)
-  haveI : FiniteDimensional ℂ V := FiniteDimensional.span_of_finite ℂ (Set.finite_range g₀)
+  have : FiniteDimensional ℂ V := FiniteDimensional.span_of_finite ℂ (Set.finite_range g₀)
   let b := Module.finBasis ℂ V
   have hmem : ∀ i, g₀ i ∈ V := fun i => Submodule.subset_span ⟨i, rfl⟩
   let a : Fin m₀ → Fin (Module.finrank ℂ V) → ℂ := fun i j => b.repr ⟨g₀ i, hmem i⟩ j
@@ -769,8 +769,8 @@ theorem exists_indep {Φ : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) :
   · exact b.linearIndependent.map' V.subtype (Submodule.ker_subtype V)
   · rw [hΦ']
     funext x
-    simp only [Finset.sum_apply, pureA, hg, Finset.mul_sum, Finset.sum_mul, SchwartzMap.sum_apply,
-      SchwartzMap.smul_apply, smul_eq_mul]
+    simp only [Finset.sum_apply, pureA, hg, Finset.mul_sum, Finset.sum_mul, sum_apply,
+      smul_apply, smul_eq_mul]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => by ring
 

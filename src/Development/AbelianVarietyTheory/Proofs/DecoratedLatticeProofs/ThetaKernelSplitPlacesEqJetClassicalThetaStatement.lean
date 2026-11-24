@@ -256,16 +256,16 @@ theorem exists_prime_to_dvd_away {R : Type} [CommRing R] [IsDedekindDomain R] (S
   have hSS : ∀ Q ∈ SS, t0 ∉ Q.asIdeal := by
     intro Q hQ hmem
     have h := ht0 Q (Finset.mem_union_left _ hQ)
-    simp only [if_pos hQ, pow_one] at h
+    simp only [ite_eq_left hQ, pow_one] at h
     exact hone Q (by simpa using Q.asIdeal.sub_mem hmem h)
   have hgood : ∀ Q : HeightOneSpectrum R, Q ∉ SS → ∃ u : R, u ∉ Q.asIdeal ∧ ∃ w : R, u * t0 = m * w := by
     intro Q hQ
     by_cases hQT : Q.asIdeal ∣ Ideal.span {m}
     · have h := ht0 Q (Finset.mem_union_right _ (hT.mem_toFinset.2 hQT))
-      simp only [if_neg hQ, sub_zero] at h
+      simp only [ite_eq_right hQ, sub_zero] at h
       obtain ⟨hnd, hEq⟩ := hJ Q
       rw [Ideal.dvd_iff_le] at hnd
-      obtain ⟨u, huJ, huQ⟩ := SetLike.not_le_iff_exists.1 hnd
+      obtain ⟨u, huJ, huQ⟩ := IsConcreteLE.not_le_iff_exists.1 hnd
       refine ⟨u, huQ, ?_⟩
       have hmem : t0 * u ∈ Ideal.span {m} := by
         rw [hEq]; exact Ideal.mul_mem_mul h huJ
@@ -295,7 +295,7 @@ theorem tmul_mem_of {E : Type} [Field E] [NumberField E] [StarRing E] {W : Type}
   intro Q
   by_cases hQ : Q ∈ SS
   · have h1 := (Formalism.L2.Ker.mem_twO M c _ y).1 hy Q
-    simp only [expS, if_pos hQ, zpow_one] at h1
+    simp only [expS, ite_eq_left hQ, zpow_one] at h1
     obtain ⟨s, hs, hsy⟩ := h1
     refine ⟨s, hs, ?_⟩
     have e : s • (((t : E) * (c : E)⁻¹) • y) = t • (s • ((c : E)⁻¹ • y)) := by
@@ -415,7 +415,7 @@ theorem mem_localization_of_mem_halfBO {E : Type} [Field E] [NumberField E] [Sta
   have h1 := (Formalism.L2.Ker.mem_twO M c _ y).1 hy Q
   have h0 : expS SS Q = 0 := by
     unfold expS
-    rw [if_neg (fun h => hQ (Or.inl h)), if_neg (fun h => hQ (Or.inr h))]
+    rw [ite_eq_right (fun h => hQ (Or.inl h)), ite_eq_right (fun h => hQ (Or.inr h))]
   rw [h0, zpow_zero, inv_one, one_smul] at h1
   exact h1
 
@@ -772,7 +772,7 @@ theorem conjHalf_mem {N : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)} {
       (Submodule.mem_iInf _).1 hx _
     have hexp : expS SS (Formalism.L2.Col.conjPrime₂ PP) = -1 := by
       unfold expS
-      rw [if_neg (hno PP hPP), conjP_conjP, if_pos hPP]
+      rw [ite_eq_right (hno PP hPP), conjP_conjP, ite_eq_left hPP]
     rw [hexp, neg_neg, zpow_one] at h
     exact h
 
@@ -843,14 +843,14 @@ theorem alV_embH_eq_exp_trace (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
     intro τ
 
     simp only [GlobalTheory.LatVac.hRat, hP.gS, hP.gT, inv_one, Matrix.one_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_sum, map_mul, tauE_star, hs]
-    simp only [apply_ite (⇑(tauE D τ)), map_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul, tauE_star]
+    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_sum, map_mul, tauE_star, hs]
+    simp only [apply_ite (⇑(tauE D τ)), map_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul, tauE_star]
     push_cast
     rw [Finset.sum_comm]
     calc _ = ∑ j, ∑ i, ((Complex.normSq (tauE D τ (M i j)) : ℝ) : ℂ) := by
           refine Finset.sum_congr rfl fun j _ => ?_
           rw [Finset.sum_comm]
-          simp only [Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          simp only [Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
           refine Finset.sum_congr rfl fun i _ => ?_
           rw [Complex.normSq_eq_conj_mul_self]
       _ = _ := Finset.sum_comm
@@ -1222,7 +1222,7 @@ theorem fg_of_selfDual (H : Sesq V) (Λ : AddSubgroup V) (hc : Countable Λ) (h�
       exact smul_left_injective ℝ hx0 this
     exact not_countable (α := ℝ) hf.countable
   obtain ⟨b, hbΛ, hbspan, hbli⟩ := exists_linearIndependent ℝ (Λ : Set V)
-  haveI : Finite b := hbli.setFinite.to_subtype
+  have : Finite b := hbli.setFinite.to_subtype
   have hint : ∀ x ∈ Λ, ∀ e ∈ b, ((⌊altE H x e⌋ : ℤ) : ℝ) = altE H x e := by
     intro x hx e he
     have hx' : x ∈ dualLat H Λ := by rw [hΛ]; exact hx
@@ -1251,7 +1251,7 @@ theorem fg_of_selfDual (H : Sesq V) (Λ : AddSubgroup V) (hc : Countable Λ) (h�
       | add y z _ _ hy hz => rw [altE_add_right', hy, hz, add_zero]
       | smul r y _ hy => rw [altE_smul_right', hy, mul_zero]
     exact Subtype.ext (hK x fun y hy => hspan y (hbspan ▸ Submodule.subset_span hy))
-  haveI : IsNoetherian ℤ Λ := isNoetherian_of_injective g.toIntLinearMap hg
+  have : IsNoetherian ℤ Λ := isNoetherian_of_injective g.toIntLinearMap hg
   have : AddGroup.FG Λ := Module.Finite.iff_addGroup_fg.1 inferInstance
   exact (AddGroup.fg_iff_addSubgroup_fg Λ).1 this
 
@@ -1264,9 +1264,9 @@ open Formalism.L2.Th1.H
 theorem countable_lamC {E : Type} [Field E] [NumberField E] {ι : Type} [Fintype ι] {a b : ℕ} (emb : ι → E →+* ℂ) (δ : ℂ)
     (AA0 : Submodule (𝓞 E) E) (N : Submodule (𝓞 E) (Formalism.L2.Col.Sp E a)) (N' : Submodule (𝓞 E) (Formalism.L2.Col.Sp E b)) :
     Countable (Formalism.L2.Ker.LamC emb δ AA0 N N') := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin b) (Fin a) E) := inferInstanceAs (Countable (Fin b → Fin a → E))
-  haveI : Countable (Formalism.L2.Col.HomE E a b) :=
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin b) (Fin a) E) := inferInstanceAs (Countable (Fin b → Fin a → E))
+  have : Countable (Formalism.L2.Col.HomE E a b) :=
     (LinearMap.toMatrix' : ((Fin a → E) →ₗ[E] (Fin b → E)) ≃ₗ[E] Matrix (Fin b) (Fin a) E).injective.countable
   have hsub : ((Formalism.L2.Ker.LamC emb δ AA0 N N' : AddSubgroup _) : Set (Formalism.L2.Ker.VV ι a b)) ⊆
       Set.range (Formalism.L2.Ker.embH emb δ) := by
@@ -1431,9 +1431,9 @@ theorem reads_datum_eq_thC : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
   let py : VV D.what₂.Tau a b → Formalism.L2.Col.HomE D.host.E a b := fun y =>
     if h : ∃ y', y' ∈ MB ∧ embH (tauE D) δ y' = y then h.choose else 0
   have hpx' : ∀ x ∈ SX, px x ∈ MA ∧ embH (tauE D) δ (px x) = x := fun x hx => by
-    simp only [px, dif_pos (hpx x hx)]; exact (hpx x hx).choose_spec
+    simp only [px, dite_eq_left (hpx x hx)]; exact (hpx x hx).choose_spec
   have hpy' : ∀ y ∈ SB, py y ∈ MB ∧ embH (tauE D) δ (py y) = y := fun y hy => by
-    simp only [py, dif_pos (hpy y hy)]; exact (hpy y hy).choose_spec
+    simp only [py, dite_eq_left (hpy y hy)]; exact (hpy y hy).choose_spec
   let mt : Formalism.L2.Col.HomE D.host.E a b → Matrix (Fin T.rank) (Fin S.rank) D.host.E := fun x =>
     (LinearMap.toMatrix' x).reindex (finCongr hT.symm) (finCongr hS.symm)
   have hmt : ∀ x, toHom S T hS hT (mt x) = x := fun x => by

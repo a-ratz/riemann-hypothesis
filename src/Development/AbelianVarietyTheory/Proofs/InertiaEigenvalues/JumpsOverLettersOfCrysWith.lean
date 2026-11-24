@@ -107,7 +107,7 @@ theorem heights_of_finite {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAin
     (hfin : ∀ T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL), FiniteDimensional ↥LL.1 ↥(DdR (P.PD K) T.ρ)) :
     Heights (H.W K s LL h) := by
   intro T U M hh hU hb
-  haveI := hfin T
+  have := hfin T
   exact of_heightBounds _ T M hh
     (hJ K s LL h T hU.1 M hh (jumpsOverLetters_of_crysWith _ T U M hh hU hb)).1
 

@@ -105,7 +105,7 @@ private lemma ae_comp_of_map_eq (B : RowsAut) (φ : B.I.GA → B.I.GA)
       rw [Measure.map_of_not_aemeasurable_of_ne_zero hn h0] at hφ
       apply hn
       rw [← hφ]
-      haveI : T2Space B.I.Gf := (_root_.GlobalTheory.CongTop.adelic_topology B.I).1
+      have : T2Space B.I.Gf := (_root_.GlobalTheory.CongTop.adelic_topology B.I).1
       exact aemeasurable_dirac
     exact ae_of_ae_map hm (by rw [hφ]; exact hp)
 
@@ -158,15 +158,15 @@ theorem mult_props {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar}
     rfl
   | zero =>
     refine ⟨fun v γ _ z => ?_, fun τ g _ v w _ z => ?_⟩ <;>
-      simp only [MultilinearMap.zero_apply, Pi.zero_apply]
+      simp only [zero_apply, Pi.zero_apply]
   | add T₁ T₂ _ _ h₁ h₂ =>
     refine ⟨fun v γ hγ z => ?_, fun τ g hg v w hw z => ?_⟩
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, h₁.1 v γ hγ z, h₂.1 v γ hγ z]
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, h₁.2 τ g hg v w hw z, h₂.2 τ g hg v w hw z]
+    · simp only [add_apply, Pi.add_apply, h₁.1 v γ hγ z, h₂.1 v γ hγ z]
+    · simp only [add_apply, Pi.add_apply, h₁.2 τ g hg v w hw z, h₂.2 τ g hg v w hw z]
   | smul a T _ h =>
     refine ⟨fun v γ hγ z => ?_, fun τ g hg v w hw z => ?_⟩
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, h.1 v γ hγ z]
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, h.2 τ g hg v w hw z]
+    · simp only [smul_apply, Pi.smul_apply, h.1 v γ hγ z]
+    · simp only [smul_apply, Pi.smul_apply, h.2 τ g hg v w hw z]
 
 private lemma star_zero_L2 (B : RowsAut) : (star (0 : B.I.L2 B.μf B.fund)) = 0 := by
   apply Lp.ext
@@ -288,7 +288,7 @@ theorem evF_equiv : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
       intro z
       have hw : ((w' τ : (MP R).sm τ) : (MP R).H τ) = (MP R).rep τ (g' τ)
           (((fun τ' => if τ' ∈ s then w' τ' else vecOf R X c y τ') τ : (MP R).sm τ) : (MP R).H τ) := by
-        simp only [if_neg hτ]
+        simp only [ite_eq_right hτ]
         exact hw' τ
       have e := hS'.2 τ (g' τ) (hg' τ) (fun τ' => if τ' ∈ s then w' τ' else vecOf R X c y τ') (w' τ) hw z
       refine Eq.trans (congrArg (fun v => S v z) ?_) (e.trans ?_)
@@ -401,10 +401,10 @@ theorem mult_lev {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} {M : DSModel 
   | zero => intro v k _ g; simp
   | add x y _ _ hx hy =>
     intro v k hk g
-    simp only [MultilinearMap.add_apply, Pi.add_apply, hx v k hk g, hy v k hk g, mul_add]
+    simp only [add_apply, Pi.add_apply, hx v k hk g, hy v k hk g, mul_add]
   | smul a x _ hx =>
     intro v k hk g
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx v k hk g]
+    simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx v k hk g]
     ring
 
 end GlobalTheory.RowEvalHH.LevelFix
@@ -437,7 +437,7 @@ theorem GlobalTheory.RowEvalHH.Re_evF : ∀ {D : D7} {G : Type} [Group G] [Finty
       rw [hfY, hfY, map_mul, mul_assoc]
       exact hcl.2 _ (iotaX_symm_rat X h γ hγ) _
     have hmeas : Measurable fun x => star (f x) := by
-      haveI : IsTopologicalGroup (GA D (D.sp.Y 0)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+      have : IsTopologicalGroup (GA D (D.sp.Y 0)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
       have : Continuous f := hcl.1.comp ((iotaX X h).symm.continuous.mul continuous_const)
       exact (continuous_star.comp this).measurable
     have hright : ∀ k ∈ X.K2, ∀ x, star (f (x * (1, k))) = X.chi2 k * star (f x) := by
@@ -464,7 +464,7 @@ theorem GlobalTheory.RowEvalHH.Re_evF : ∀ {D : D7} {G : Type} [Group G] [Finty
         rw [X.e_eq g]
         by_cases hg : g ∈ X.K2
         · have hg' : g ∈ Formalism.L2.SG.HidaSetting.K2set X.B.I X.B.g X.e0 X.z0 X.bw := hg
-          rw [if_pos hg', Set.indicator_of_mem hg, hright g hg z]
+          rw [ite_eq_left hg', Set.indicator_of_mem hg, hright g hg z]
           have hn : ‖X.chi2 g‖ = 1 := hK.2.2.2.2 g hg
           have hc : star (X.chi2 g) * X.chi2 g = 1 := by
             rw [RCLike.star_def, RCLike.conj_mul, hn]; simp
@@ -472,7 +472,7 @@ theorem GlobalTheory.RowEvalHH.Re_evF : ∀ {D : D7} {G : Type} [Group G] [Finty
             star (f z) / ((X.B.μf X.K2).toReal : ℂ)
           rw [div_mul_eq_mul_div, ← mul_assoc, hc, one_mul]
         · have hg' : g ∉ Formalism.L2.SG.HidaSetting.K2set X.B.I X.B.g X.e0 X.z0 X.bw := hg
-          rw [if_neg hg', Set.indicator_of_notMem hg, zero_mul]
+          rw [ite_eq_right hg', Set.indicator_of_notMem hg, zero_mul]
       rw [hfun, integral_indicator hKM, setIntegral_const]
       simp only [measureReal_def, Complex.real_smul]
       have hC : ((X.B.μf X.K2).toReal : ℂ) ≠ 0 := by exact_mod_cast hvol

@@ -144,7 +144,7 @@ theorem isAlgebraic_coeff_substF_X (h : ι → Matrix (Fin N) (Fin N) ℂ) (g : 
   simp only [GlobalTheory.CompactHowe.substF_X, coeff_sum, coeff_C_mul]
   refine isAlgebraic_sum _ _ fun a _ => isAlgebraic_sum _ _ fun b _ => ?_
   refine ((hh _ _ _).mul (hg _ _ _)).mul ?_
-  rw [coeff_X']
+  rw [coeff_X]
   split_ifs
   · exact isAlgebraic_one
   · exact isAlgebraic_zero

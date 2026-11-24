@@ -85,8 +85,8 @@ theorem spread_of_trait {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {D 
     (j : splitTorus (Sp V₁) D'.toPre.X ⟶ (Over.pullback (spMap ψ)).obj G) (hj : IsMonHom j)
     (ej : GlobalTheory.TorusPart.pullTorus hn j = GlobalTheory.TorusPart.gtTorus (U'.gt 0) hb hn') :
     ∃ ρ, Spread U U' g β ρ := by
-  haveI := hψ
-  haveI := hj
+  have := hψ
+  have := hj
   have hm₁ := isGrpPullback_pullback G (spMap ψ)
   have hm₀ := isGrpPullback_pullback ((Over.pullback (spMap ψ)).obj G) (spMap (residue V₁))
   have hm₀' := (hm₀.comp hm₁).congr (spMap_comp' ψ (residue V₁)) rfl
@@ -99,9 +99,9 @@ theorem spread_of_trait {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {D 
 
 theorem exists_spread : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (G' : Over (Sp V)) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (D' : DegData V (maximalIdeal V)) (A' : PolAV (Sp (FractionRing V))) (U' : Unif (maximalIdeal V) D' A' G') (g : R →+* V) (β : G'.left ⟶ G.left), IsGrpPullback G' G (spMap g) β → ∃ ρ, Spread U U' g β ρ := by
   intro R _ _ _ hR G _ _ hG D A U V _ _ _ hV G' _ _ hG' D' A' U' g β hβ
-  haveI : IsNoetherianRing R := hR.1.1
+  have : IsNoetherianRing R := hR.1.1
   by_cases hl : IsLocalHom g
-  · haveI := hl
+  · have := hl
     let κ := ResidueField V
     have hC : IsLocalHom (PowerSeries.C (R := κ)) :=
       ⟨fun a ha => by simpa using ha.map (PowerSeries.constantCoeff (R := κ))⟩
@@ -128,7 +128,7 @@ theorem exists_spread : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
       (GlobalTheory.TorusPart.gtTorus (U'.gt 0) hc hmc) inferInstance
       (GlobalTheory.TorusPart.pullTorus_gtTorus (U'.gt 0) hc hb hmc hn' hn rfl rfl)
   · obtain ⟨V₁, _, _, _, ψ, Ω, _, αK, b, hψ, hb, eα, hT⟩ := _root_.GlobalTheory.exists_trait_nonlocal_torusExtension R G hG V g hl
-    haveI := hψ
+    have := hψ
     let alg := algebraMap V₁ (FractionRing V₁)
     have hα : Function.Injective (αK.comp alg) :=
       αK.injective.comp (IsFractionRing.injective V₁ (FractionRing V₁))

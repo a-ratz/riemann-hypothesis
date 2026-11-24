@@ -87,7 +87,7 @@ theorem j_det (j : Etau K τ →ₐ[K] Matrix (Fin 2) (Fin 2) K) (hj : (j ω).tr
 
 theorem mem_ZK {g : GL (Fin 2) K} : g ∈ ZK O K ↔ ∃ (z : Kˣ) (k : GL (Fin 2) O),
     g = Matrix.GeneralLinearGroup.scalar (Fin 2) z * Matrix.GeneralLinearGroup.map (algebraMap O K) k := by
-  haveI hN : ((Matrix.GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range).Normal := by
+  have hN : ((Matrix.GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range).Normal := by
     rw [← Matrix.GeneralLinearGroup.center_eq_range_scalar]
     infer_instance
   rw [ZK, ← SetLike.mem_coe, Subgroup.normal_mul, KG]
@@ -110,7 +110,7 @@ theorem exists_of_gOrb_ne {j : Etau K τ →ₐ[K] Matrix (Fin 2) (Fin 2) K} (hj
         = Matrix.GeneralLinearGroup.scalar (Fin 2) w * Matrix.GeneralLinearGroup.map (algebraMap O K) k := by
       rw [hk, mul_inv_cancel_left]
     have hMat := congrArg Units.val hM
-    simp only [jU, Units.val_mul, Units.coe_map, MonoidHom.coe_coe,
+    simp only [jU, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass,
       AlgHom.coe_toRingHom, Matrix.GeneralLinearGroup.coe_scalar,
       Matrix.scalar_apply, Matrix.GeneralLinearGroup.val_map_apply] at hMat
     have htr : (j z).trace = (((g⁻¹ : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) * j z * (g : Matrix (Fin 2) (Fin 2) K)).trace := by

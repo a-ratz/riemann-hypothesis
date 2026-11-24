@@ -112,7 +112,7 @@ theorem finrank_le_of_span_sup_smul_top {R M : Type} [CommRing R] [IsDomain R] [
     intro u v huv
     have : r • u = r • v := congrArg Subtype.val huv
     exact smul_right_injective M hr0 this
-  haveI : Module.Finite R N := Module.Finite.span_of_finite R (Set.finite_range x)
+  have : Module.Finite R N := Module.Finite.span_of_finite R (Set.finite_range x)
   have h1 := LinearMap.finrank_le_finrank_of_injective hinj
   have h2 : Module.finrank R N ≤ n := by
     simpa [Set.finrank] using finrank_range_le_card (R := R) x
@@ -141,8 +141,8 @@ theorem admissible_columns_le_and_harmonic_map_cover : ∀ (E : Type) [Field E] 
   · have hs : Function.Surjective (d.eF : c.F →+* d.c₂.F) := fun y => ⟨d.eF.symm y, d.eF.apply_symm_apply y⟩
     generalize (d.eF : c.F →+* d.c₂.F) = f at hs ⊢
     exact map_mem_HHa Dw.mult n f hs _ _ _ P hP
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have := Dw.fin
+  have := Dw.proj
   rw [← Dw.rank]
   refine finrank_le_of_span_sup_smul_top x0 (Mfr l) (Mfr_ne_top l) ?_
   unfold AdmX at hx

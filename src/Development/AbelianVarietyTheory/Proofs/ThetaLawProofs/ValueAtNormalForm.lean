@@ -88,7 +88,7 @@ theorem value_at_normalForm :
   dsimp only at h τ M
   subst h
   obtain ⟨u, h₁, h₂, h₃, h₄, h₅, h₆⟩ := hx
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨ex, tan, comp, sgl, bas⟩ := GlobalTheory.LieComb.lieComb_algebra ℂ P.A P.g v hv.1
   choose v₀ hv₀ using fun i => (ex (M⁻¹ i)).exists
   have hb₀ : IsLieBasis v₀ := (bas M⁻¹ v₀ hv hv₀).2 (Matrix.isUnit_nonsing_inv_det M hM.isUnit)

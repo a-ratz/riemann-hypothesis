@@ -525,7 +525,7 @@ theorem tri_symm {f g : Fin n → W} (h : Tri K f g) : Tri K g f := by
   obtain ⟨A, hA, hc⟩ := h
   have hbt : A.BlockTriangular id := fun i j hij => hA.1 i j hij
   have hu : IsUnit A.det := by
-    rw [Matrix.det_of_upperTriangular hbt]; simp [hA.2]
+    rw [Matrix.det_of_isUpperTriangular hbt]; simp [hA.2]
   obtain ⟨i1, i2⟩ := inv_unitri A hA.1 hA.2
   refine ⟨A⁻¹, ⟨i1, i2⟩, fun b => ?_⟩
   have hm := Matrix.mul_nonsing_inv A hu
@@ -642,7 +642,7 @@ theorem NU_of_tri (H : HermSp M V) {f g : Fin (r + 1) → V} (h : Tri E f g) {u 
     · refine Submodule.smul_mem _ _ ?_
       have hcv : c.val ≤ a.val := by
         have h' := Fin.le_iff_val_le_val.1 (not_lt.1 hca)
-        rwa [Fin.coe_castSucc] at h'
+        rwa [Fin.val_castSucc] at h'
       have hcr : c.val < r := lt_of_le_of_lt hcv a.isLt
       have hfc := h1 ⟨c.val, hcr⟩
       have ecs : (⟨c.val, hcr⟩ : Fin r).castSucc = c := Fin.ext rfl

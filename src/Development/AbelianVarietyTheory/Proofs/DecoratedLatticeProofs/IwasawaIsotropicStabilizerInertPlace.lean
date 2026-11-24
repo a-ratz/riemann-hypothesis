@@ -168,14 +168,14 @@ theorem idem_factor [IsLocalRing O] {ι : Type} [Fintype ι] [DecidableEq ι] (P
     rintro y ⟨w, rfl⟩
     show P *ᵥ (P *ᵥ w) = P *ᵥ w
     rw [mulVec_mulVec, hP]
-  haveI : Module.Projective O (LinearMap.range (Matrix.mulVecLin P)) := by
+  have : Module.Projective O (LinearMap.range (Matrix.mulVecLin P)) := by
     refine Module.Projective.of_split (LinearMap.range (Matrix.mulVecLin P)).subtype
       (Matrix.mulVecLin P).rangeRestrict ?_
     apply LinearMap.ext
     intro x
     apply Subtype.ext
     exact hfix _ x.2
-  haveI : Module.Free O (LinearMap.range (Matrix.mulVecLin P)) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O (LinearMap.range (Matrix.mulVecLin P)) := Module.free_of_flat_of_isLocalRing
   set b := Module.finBasis O (LinearMap.range (Matrix.mulVecLin P)) with hb
   have hmul : ∀ c : Fin _ → O, (Matrix.of fun x i => (b i : ι → O) x) *ᵥ c =
       ((b.equivFun.symm c : LinearMap.range (Matrix.mulVecLin P)) : ι → O) := by
@@ -377,12 +377,12 @@ theorem exists_frame (O : Subring A) {K : Type} [Field K] (V : ValuationSubring 
     (hφ : ∀ y, y ∈ O ↔ φ y ∈ V) {X : Matrix (Fin n) (Fin r) A} {P : Matrix (Fin r) (Fin n) A} (h : P * X = 1) :
     ∃ (C : Matrix (Fin n) (Fin r) O) (c : GL (Fin r) A), (∃ L : Matrix (Fin r) (Fin n) O, L * C = 1) ∧
       X = C.map O.subtype * c.1 := by
-  haveI := φ.toEquiv.nontrivial
+  have := φ.toEquiv.nontrivial
   obtain ⟨f₀, h₀⟩ := exists_minor_ne_zero h
-  haveI : Nonempty (Fin r → Fin n) := ⟨f₀⟩
+  have : Nonempty (Fin r → Fin n) := ⟨f₀⟩
   obtain ⟨f, hf⟩ := Finite.exists_max fun f : Fin r → Fin n => V.valuation (φ (X.submatrix f id).det)
   have h1 : 0 < V.valuation (φ (X.submatrix f id).det) :=
-    lt_of_lt_of_le (zero_lt_iff.2 (by simpa using h₀)) (hf f₀)
+    lt_of_lt_of_le (pos_iff_ne_zero.2 (by simpa using h₀)) (hf f₀)
   have hu : IsUnit (X.submatrix f id) := by
     rw [isUnit_iff_isUnit_det, ← MulEquiv.isUnit_map (f := φ), isUnit_iff_ne_zero]
     exact fun e => by simp [e] at h1
@@ -423,7 +423,7 @@ theorem exists_stab (O : Subring A) {K : Type} [Field K] (V : ValuationSubring K
     (ha : ∀ y, (∀ i, y i ∈ O) ↔ a.1 *ᵥ y ∈ Λ) {X : Matrix (Fin n) (Fin r) A} {P : Matrix (Fin r) (Fin n) A}
     (hP : P * X = 1) (hX : cT σ X * J * X = 0) {g : GL (Fin n) A} (hg : g ∈ UJ σ J) :
     ∃ k ∈ UJ σ J, k ∈ stabGL Λ ∧ ∃ β : GL (Fin r) A, (g * k⁻¹).1 * X = X * β.1 := by
-  haveI := isLocalRing_of_equiv O V φ hφ
+  have := isLocalRing_of_equiv O V φ hφ
   obtain ⟨B, hB, eB⟩ := exists_gram O hσ hu hΛ ha
   let s : O →+* O := σ.restrict O O hσ
   have hc : ∀ {a b : Type} (M : Matrix a b O), cT σ (M.map O.subtype) = (cT s M).map O.subtype := fun M => rfl
@@ -570,7 +570,7 @@ open GlobalTheory.Core.Rk.Exh GlobalTheory.RegSW
 
 theorem iwasawa_inert : ∀ (D : D7) (T T₀ : HSp D) (r : ℕ) (d : HypDec T T₀ r) (v : FinPl D), ¬ Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) v → ∀ y : Gv T v, ∃ q k : Gv T v, emb D.sp.cm.sig T.gram v q ∈ stab d ∧ k ∈ stabLoc D.sp.cm.sig T.gram (frameLat T) v ∧ y = q * k := by
   intro D T T₀ r d v hv y
-  haveI := isLattice_frameLat_host T
+  have := isLattice_frameLat_host T
   have := v.isMaximal
   obtain ⟨P, hP, hPv⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 D.host.E) v.asIdeal
   let w : HeightOneSpectrum (𝓞 D.host.E) := ⟨P, hP.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P⟩

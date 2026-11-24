@@ -153,7 +153,7 @@ theorem UpperTheory.exists_linear_preimage_of_successive_approximation :
   let a' : ℕ → M → ι → A := fun k g => if h : g ∈ V k then (hstep k g h).choose else 0
   have ha' : ∀ k g, g ∈ V k → (∀ i, a' k g i ∈ I ^ k) ∧ g - σ (a' k g) ∈ V (k + 1) := by
     intro k g h
-    simp only [a', dif_pos h]
+    simp only [a', dite_eq_left h]
     exact (hstep k g h).choose_spec
   let r : ℕ → M := fun n => Nat.rec f (fun n g => g - σ (a' (j + n) g)) n
   have hrs : ∀ n, r (n + 1) = r n - σ (a' (j + n) (r n)) := fun n => rfl
@@ -454,8 +454,8 @@ private theorem exists_eventually_periodic_mod_V {A M : Type} [CommRing A] [IsCN
     (f : M) (k : ℕ) : ∃ a p : ℕ, (T ^ (a + (p + 1))) f - (T ^ a) f ∈ V k := by
   obtain ⟨ι, hι, s, ev, -, hs⟩ := hlev k
   obtain ⟨n₀, hn₀⟩ := hs f
-  haveI : Finite (A ⧸ maximalIdeal A) := (IsCNL.finite : Finite (ResidueField A))
-  haveI : Finite (A ⧸ maximalIdeal A ^ k) :=
+  have : Finite (A ⧸ maximalIdeal A) := (IsCNL.finite : Finite (ResidueField A))
+  have : Finite (A ⧸ maximalIdeal A ^ k) :=
     Ideal.finite_quotient_pow (IsNoetherian.noetherian _) k
   let F : ℕ → (ι → A ⧸ maximalIdeal A ^ k) :=
     fun n i => Ideal.Quotient.mk _ (ev ((T ^ (n₀ + n)) f) i)
@@ -500,7 +500,7 @@ theorem UpperTheory.V.Hi.ordAbs {A M : Type} [CommRing A] [IsCNL A] [AddCommGrou
       ∃ e : Module.End A M, (∀ f, e f ∈ O) ∧ (∀ f ∈ O, e f = f) ∧
         ∀ f k, ∃ J : ℕ, ∀ j, J ≤ j → (T ^ j.factorial) f - e f ∈ V k := by
   classical
-  haveI : IsAdicComplete (maximalIdeal A) A := IsCNL.complete
+  have : IsAdicComplete (maximalIdeal A) A := IsCNL.complete
   obtain ⟨e, he⟩ := UpperTheory.exists_ordinaryProjector_of_eventually_periodic A M V T hanti hT hsep hcomp (fun f k => exists_eventually_periodic_mod_V V T hm hlev f k)
   have heO : ∀ f, e f ∈ O := fun f => (hO _).2 fun k => (he f k).2.1
   have heV : ∀ k f, f ∈ V k → e f ∈ V k := fun k f hf => (he f k).2.2.1 hf
@@ -571,7 +571,7 @@ theorem UpperTheory.V.Hi.ordAbs {A M : Type} [CommRing A] [IsCNL A] [AddCommGrou
     intro f
     obtain ⟨a, -, ha⟩ := hlift 0 f (hV0 _)
     exact ⟨a, ha⟩
-  haveI hfin : Module.Finite A O := Module.Finite.of_surjective σ hsurj
+  have hfin : Module.Finite A O := Module.Finite.of_surjective σ hsurj
   have hfilt : ∀ j, ∀ f : O, (f : M) ∈ V j → f ∈ (maximalIdeal A ^ j • ⊤ : Submodule A O) := by
     intro j f hf
     obtain ⟨a, ha, rfl⟩ := hlift j f hf
@@ -582,7 +582,7 @@ theorem UpperTheory.V.Hi.ordAbs {A M : Type} [CommRing A] [IsCNL A] [AddCommGrou
     have := hfilt 1 (f - (σ ∘ₗ ι) f) (by simpa [ι, hσ] using h₁ f f.2)
     simpa using this
   let φe := LinearEquiv.ofBijective (σ ∘ₗ ι) hφ
-  haveI : Module.Projective A O := by
+  have : Module.Projective A O := by
     refine Module.Projective.of_split ι (φe.symm.toLinearMap ∘ₗ σ) ?_
     ext f
     simp only [LinearMap.comp_apply, LinearMap.id_apply]

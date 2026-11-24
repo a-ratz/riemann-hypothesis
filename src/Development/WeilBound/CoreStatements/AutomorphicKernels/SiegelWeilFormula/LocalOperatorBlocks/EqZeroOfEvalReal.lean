@@ -212,16 +212,16 @@ theorem continuousOn_of_evX {X : Type} [TopologicalSpace X] {S : Set X} (d : ℕ
   classical
   set W := MvPolynomial.restrictTotalDegree (Fin m × Fin n × Bool) ℂ d
   let e : W ≃ₗ[ℂ] LinearMap.range (evW (m := m) (n := n) d) := LinearEquiv.ofInjective _ (evW_injective d)
-  haveI : FiniteDimensional ℂ (LinearMap.range (evW (m := m) (n := n) d)) := e.finiteDimensional
+  have : FiniteDimensional ℂ (LinearMap.range (evW (m := m) (n := n) d)) := e.finiteDimensional
   let l' : LinearMap.range (evW (m := m) (n := n) d) →ₗ[ℂ] ℂ := l ∘ₗ W.subtype ∘ₗ e.symm.toLinearMap
   have hl' : Continuous l' := LinearMap.continuous_of_finiteDimensional l'
   have hW : ∀ x ∈ S, φ x ∈ W := fun x hx => (MvPolynomial.mem_restrictTotalDegree _ _ _).2 (hd x hx)
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   let g : S → LinearMap.range (evW (m := m) (n := n) d) := fun x => e ⟨φ x, hW x x.2⟩
   have hg : Continuous g := by
     refine Continuous.subtype_mk ?_ _
     refine continuous_pi fun u => ?_
-    exact (hc u).restrict
+    exact (hc u).domRestrict
   refine (hl'.comp hg).congr fun x => ?_
   simp [l', g]
 

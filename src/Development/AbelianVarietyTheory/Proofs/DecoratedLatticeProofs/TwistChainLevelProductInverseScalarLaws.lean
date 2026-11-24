@@ -75,7 +75,7 @@ theorem combAt_aconv {D : D7} {S T : HSp D} (P : GlobalTheory.FinPl.Pl D → Pro
   | nil =>
     intro _ u hu i j
     have h0 : aconv ([] : List (WO S T →₀ ℂ)) = Finsupp.single 0 1 := rfl
-    rw [h0, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hu
+    rw [h0, Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hu
     subst hu
     simpa using (GlobalTheory.FinPl.idAt D P).zero_mem
   | cons e l ih =>

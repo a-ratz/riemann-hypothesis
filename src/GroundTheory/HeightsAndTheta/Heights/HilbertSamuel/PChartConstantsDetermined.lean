@@ -125,7 +125,7 @@ theorem intsMap_apply {y : (Σ k, ι k) → Ω} {c : ∀ k, ι k} (w : ↥(chart
 
 theorem intsMap_injective {y : (Σ k, ι k) → Ω} {c : ∀ k, ι k} (w : ↥(chartRingZ y c ⊔ intsIn F Ω) →+* ℂ) :
     Function.Injective (intsMap w) := by
-  refine (RingHom.injective_iff_ker_eq_bot _).mpr (Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_)
+  refine (RingHom.injective_iff_ker_eq_bot _).mpr (Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_)
   refine eq_bot_iff.2 fun n hn => ?_
   rw [Ideal.mem_bot]
   simpa [Ideal.mem_comap, RingHom.mem_ker] using hn

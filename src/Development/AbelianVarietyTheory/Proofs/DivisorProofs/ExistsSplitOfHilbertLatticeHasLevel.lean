@@ -139,7 +139,7 @@ theorem _root_.GlobalTheory.HilbFam.exists_eq_split_of_hasLevel (F : Type) [Fiel
       fin_cases i <;> simp <;> ring
   have h1 : (1 : F) ∈ (Bf : Submodule (𝓞 F) F) *
       ((Bf⁻¹ : FractionalIdeal (𝓞 F)⁰ F) : Submodule (𝓞 F) F) := by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hBne]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hBne]
     exact FractionalIdeal.one_mem_one _
   obtain ⟨x, hx⟩ := key 1 h1
   refine ⟨Units.mk0 (FractionalIdeal.dual ℤ ℚ Cf) (FractionalIdeal.dual_ne_zero ℤ ℚ hCne),

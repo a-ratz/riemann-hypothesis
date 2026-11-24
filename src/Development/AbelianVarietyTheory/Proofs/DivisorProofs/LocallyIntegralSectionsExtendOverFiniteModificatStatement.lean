@@ -89,9 +89,9 @@ namespace GlobalTheory.Mum
 
 theorem exists_finite_affine_chart_cover : ∀ (R : Type) [CommRing R] [IsDomain R] (M : Modif R) (G : Over M.S), QuasiCompact G.hom → ∀ (L : LB G.left), L.IsLB → ∃ (n : ℕ) (j : Fin n → L.ι) (W : Fin n → G.left.Opens) (U : Fin n → M.S.Opens), (⨆ b, W b = ⊤) ∧ (∀ b, W b ≤ L.U (j b)) ∧ (∀ b, W b ≤ G.hom ⁻¹ᵁ U b) ∧ (∀ b, IsAffineOpen (W b)) ∧ (∀ b, IsAffineOpen (U b)) := by
   intro R _ _ M G hG L hL
-  haveI := M.proper
-  haveI : CompactSpace M.S := QuasiCompact.compactSpace_of_compactSpace M.π
-  haveI : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
+  have := M.proper
+  have : CompactSpace M.S := QuasiCompact.compactSpace_of_compactSpace M.π
+  have : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
   have hx : ∀ x : G.left, ∃ (j : L.ι) (W : G.left.Opens) (U : M.S.Opens),
       x ∈ W ∧ W ≤ L.U j ∧ W ≤ G.hom ⁻¹ᵁ U ∧ IsAffineOpen W ∧ IsAffineOpen U := by
     intro x
@@ -637,7 +637,7 @@ theorem exists_pow_mul_res {S : Scheme.{0}} {U : S.Opens} (hc : IsCompact (U : S
     (a : Γ(S, U')) : ∃ (k : ℕ) (b : Γ(S, U)), (S.presheaf.map (homOfLE hle).op).hom b =
       (S.presheaf.map (homOfLE hle).op).hom g ^ k * a := by
   subst hU'
-  letI := (S.presheaf.map (homOfLE (S.basicOpen_le g)).op).hom.toAlgebra
+  let := (S.presheaf.map (homOfLE (S.basicOpen_le g)).op).hom.toAlgebra
   have := isLocalization_basicOpen_of_qcqs hc hq g
   obtain ⟨⟨y, ⟨_, k, rfl⟩⟩, hy⟩ := IsLocalization.surj (Submonoid.powers g) a
   refine ⟨k, y, ?_⟩
@@ -660,7 +660,7 @@ theorem finFam_basicOpen_loc : ∀ {S : Scheme.{0}} {K : Type} [Field K] (gp : S
     ∃ (k : ℕ) (y : Γ(Sp K, gp ⁻¹ᵁ W)), y ∈ finFam gp V t W ∧
       resK gp (S.basicOpen_le f) y = resK gp (S.basicOpen_le f) ((gp.app W).hom f) ^ k * x := by
   intro S K _ gp _ r V t W hW f x hx
-  haveI : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   let p : Sp K := (IsLocalRing.closedPoint K : PrimeSpectrum K)
   have pre : ∀ U U' : S.Opens, (gp.base p ∈ U ↔ gp.base p ∈ U') → gp ⁻¹ᵁ U = gp ⁻¹ᵁ U' := by
     intro U U' h
@@ -675,10 +675,10 @@ theorem finFam_basicOpen_loc : ∀ {S : Scheme.{0}} {K : Type} [Field K] (gp : S
       ext q
       rw [Subsingleton.elim q p]
       exact ⟨fun h => (hs h).elim, fun h => by simp at h⟩
-    haveI : Subsingleton Γ(Sp K, gp ⁻¹ᵁ S.basicOpen f) := by rw [e]; infer_instance
+    have : Subsingleton Γ(Sp K, gp ⁻¹ᵁ S.basicOpen f) := by rw [e]; infer_instance
     exact ⟨0, 0, Subring.zero_mem _, Subsingleton.elim _ _⟩
   have hsW : gp.base p ∈ W := S.basicOpen_le f hs
-  haveI : IsNoetherianRing Γ(S, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
+  have : IsNoetherianRing Γ(S, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
   have hNW : TopologicalSpace.NoetherianSpace (W : Set S) := noetherianSpace_of_isAffineOpen W hW
   have hcpt : ∀ T ⊆ (W : Set S), IsCompact T := (TopologicalSpace.noetherianSpace_set_iff _).mp hNW
   have hle : ∀ i, S.basicOpen f ⊓ V i ≤ W ⊓ V i := fun i => inf_le_inf_right _ (S.basicOpen_le f)
@@ -774,8 +774,8 @@ theorem exists_finset_pow_smul_mem {R A Rf Af : Type} [CommRing R] [CommRing A] 
     (hM : ∀ x ∈ M, ρ x ∈ Subring.closure (Set.range ψ ∪ T)) :
     ∃ s : Finset A, (s : Set A) ⊆ M ∧ ∀ x ∈ M, ∃ n : ℕ, f ^ n • x ∈ Submodule.span R (s : Set A) := by
   classical
-  letI : Algebra Rf Af := ψ.toAlgebra
-  haveI : IsNoetherianRing Rf := IsLocalization.isNoetherianRing (Submonoid.powers f) Rf inferInstance
+  let : Algebra Rf Af := ψ.toAlgebra
+  have : IsNoetherianRing Rf := IsLocalization.isNoetherianRing (Submonoid.powers f) Rf inferInstance
   have hfg : (Algebra.adjoin Rf T).toSubmodule.FG := fg_adjoin_of_finite hT hI
   have hle : Submodule.span Rf (ρ '' M) ≤ (Algebra.adjoin Rf T).toSubmodule := by
     rw [Submodule.span_le]
@@ -842,14 +842,14 @@ theorem finFam_finite {S : Scheme.{0}} {K : Type} [Field K] (gp : Sp K ⟶ S) [I
     ∃ s : Finset Γ(Sp K, gp ⁻¹ᵁ W), (∀ y ∈ s, y ∈ finFam gp V t W) ∧
       ∀ x ∈ finFam gp V t W, ∃ c : Γ(Sp K, gp ⁻¹ᵁ W) → Γ(S, W), x = ∑ y ∈ s, (gp.app W).hom (c y) * y := by
   classical
-  haveI : IsNoetherianRing Γ(S, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
-  letI : Algebra Γ(S, W) Γ(Sp K, gp ⁻¹ᵁ W) := (gp.app W).hom.toAlgebra
+  have : IsNoetherianRing Γ(S, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
+  let : Algebra Γ(S, W) Γ(Sp K, gp ⁻¹ᵁ W) := (gp.app W).hom.toAlgebra
   have loc : ∀ f : Γ(S, W), (∃ i, S.basicOpen f ≤ V i) → ∃ s : Finset Γ(Sp K, gp ⁻¹ᵁ W),
       (s : Set Γ(Sp K, gp ⁻¹ᵁ W)) ⊆ (finFam gp V t W : Set Γ(Sp K, gp ⁻¹ᵁ W)) ∧
       ∀ x ∈ (finFam gp V t W : Set Γ(Sp K, gp ⁻¹ᵁ W)), ∃ n : ℕ,
         f ^ n • x ∈ Submodule.span Γ(S, W) (s : Set Γ(Sp K, gp ⁻¹ᵁ W)) := by
     rintro f ⟨i, hi⟩
-    haveI := hW.isLocalization_basicOpen f
+    have := hW.isLocalization_basicOpen f
     refine exists_finset_pow_smul_mem (Rf := Γ(S, S.basicOpen f)) f (gp.app (S.basicOpen f)).hom
       (resK gp (S.basicOpen_le f)) (fun a => resK_app gp _ a) ?_ (resK gp hi '' (t i : Set _))
       ((t i).finite_toSet.image _) ?_ _ ?_
@@ -1056,9 +1056,9 @@ theorem mem_closure_of_isIntegralElem_affine_le : ∀ {S : Scheme.{0}} {K : Type
       have hDW : D ≤ W := hg
       have hDV : D ≤ V := hDW.trans hWV
       have := hV.isLocalization_basicOpen g
-      letI : Algebra Γ(S, D) Γ(Sp K, gp ⁻¹ᵁ D) := (gp.app D).hom.toAlgebra
-      letI : Algebra Γ(S, V) Γ(Sp K, gp ⁻¹ᵁ D) := ((gp.app D).hom.comp (algebraMap Γ(S, V) Γ(S, D))).toAlgebra
-      haveI : IsScalarTower Γ(S, V) Γ(S, D) Γ(Sp K, gp ⁻¹ᵁ D) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+      let : Algebra Γ(S, D) Γ(Sp K, gp ⁻¹ᵁ D) := (gp.app D).hom.toAlgebra
+      let : Algebra Γ(S, V) Γ(Sp K, gp ⁻¹ᵁ D) := ((gp.app D).hom.comp (algebraMap Γ(S, V) Γ(S, D))).toAlgebra
+      have : IsScalarTower Γ(S, V) Γ(S, D) Γ(Sp K, gp ⁻¹ᵁ D) := IsScalarTower.of_algebraMap_eq fun _ => rfl
       have sq : (resK gp hDW).comp (gp.app W).hom =
           (gp.app D).hom.comp (S.presheaf.map (homOfLE hDW).op).hom := by
         ext a; exact resK_app gp hDW a
@@ -1139,10 +1139,10 @@ theorem exists_finSub_of_isIntegralElem : ∀ (R : Type) [CommRing R] [IsDomain 
     ∃ F : ∀ V : M.S.Opens, Subring Γ(Sp (FractionRing R), M.gp ⁻¹ᵁ V), IsFinSub M.gp F ∧ ∀ m, b m ∈ F (U m) := by
   classical
   intro R _ _ _ M n U b hU hb
-  haveI := M.proper
-  haveI : IsLocallyNoetherian M.S := LocallyOfFiniteType.isLocallyNoetherian M.π
-  haveI : CompactSpace M.S := QuasiCompact.compactSpace_of_compactSpace M.π
-  haveI : M.S.IsSeparated := ⟨by rw [← terminal.comp_from M.π]; infer_instance⟩
+  have := M.proper
+  have : IsLocallyNoetherian M.S := LocallyOfFiniteType.isLocallyNoetherian M.π
+  have : CompactSpace M.S := QuasiCompact.compactSpace_of_compactSpace M.π
+  have : M.S.IsSeparated := ⟨by rw [← terminal.comp_from M.π]; infer_instance⟩
 
   obtain ⟨s, hs⟩ := isCompact_univ.elim_finite_subcover (fun V : M.S.affineOpens => (V.1 : Set M.S))
     (fun V => V.1.isOpen) (by
@@ -1187,10 +1187,10 @@ theorem exists_finSub_of_isIntegralElem : ∀ (R : Type) [CommRing R] [IsDomain 
 theorem finiteModif_regular : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] (M : Modif R) (n : ℕ) (U : Fin n → M.S.Opens) (b : ∀ m, Γ(Sp (FractionRing R), M.gp ⁻¹ᵁ U m)), (∀ m, IsAffineOpen (U m)) → (∀ m, (M.gp.app (U m)).hom.IsIntegralElem (b m)) → ∃ (M' : Modif R) (h : M'.S ⟶ M.S) (hgp : M'.gp ≫ h = M.gp), IsFinite h ∧ h ≫ M.π = M'.π ∧ ∀ m, ∃ c : Γ(M'.S, h ⁻¹ᵁ U m), (M'.gp.appLE (h ⁻¹ᵁ U m) (M.gp ⁻¹ᵁ U m) (le_preimage_of_comp_eq M.gp M'.gp h hgp (U m))).hom c = b m := by
   intro R _ _ _ M n U b hU hb
   obtain ⟨F, hF, hbF⟩ := exists_finSub_of_isIntegralElem R M n U b hU hb
-  haveI : IsIntegral M.S := M.integral
-  haveI : IsDominant M.gp := M.dominant
+  have : IsIntegral M.S := M.integral
+  have : IsDominant M.gp := M.dominant
   obtain ⟨S', h, gp', hgp, hfin, hint, hdom, hsec⟩ := GlobalTheory.T.exists_finite_normalization_integral_sections M.gp F hF
-  haveI := M.proper
+  have := M.proper
   let M' : Modif R :=
     { S := S', π := h ≫ M.π, proper := inferInstance, integral := hint, gp := gp',
       gp_π := by rw [← Category.assoc, hgp, M.gp_π], dominant := hdom }
@@ -1452,7 +1452,7 @@ theorem finite_modif_eq_gp : ∀ (R : Type) [CommRing R] [IsDomain R] (M M' : Mo
     M'.gp ≫ h = M.gp → ∀ (Z : Scheme.{0}) (a : Z ⟶ M'.S) (c : Z ⟶ Sp (FractionRing R)), a ≫ h = c ≫ M.gp →
     a = c ≫ M'.gp := by
   intro R _ _ M M' h hh e Z a c hac
-  haveI := M'.integral
+  have := M'.integral
   have cA : ∀ {X Y W : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ W) (x : Γ(W, ⊤)),
       (f ≫ g).appTop.hom x = f.appTop.hom (g.appTop.hom x) := fun f g x => by
     rw [Scheme.Hom.comp_appTop]; rfl
@@ -1474,14 +1474,14 @@ theorem finite_modif_eq_gp : ∀ (R : Type) [CommRing R] [IsDomain R] (M M' : Mo
   obtain ⟨a₀, fa⟩ : ∃ a₀, a₀ ≫ (h ⁻¹ᵁ U).ι = a := ⟨_, IsOpenImmersion.lift_fac _ _ ha⟩
   obtain ⟨g₀, fg⟩ : ∃ g₀, g₀ ≫ (h ⁻¹ᵁ U).ι = M'.gp := ⟨_, IsOpenImmersion.lift_fac _ _ hg⟩
   suffices key : a₀ = c ≫ g₀ by rw [← fa, key, Category.assoc, fg]
-  haveI : IsAffine (h ⁻¹ᵁ U) := hV
+  have : IsAffine (h ⁻¹ᵁ U) := hV
   have hq1 : a₀ ≫ ((h ⁻¹ᵁ U).ι ≫ h ≫ M.π) = c ≫ jK R := by
     rw [reassoc_of% fa, reassoc_of% hac, M.gp_π]
   have hq2 : g₀ ≫ ((h ⁻¹ᵁ U).ι ≫ h ≫ M.π) = jK R := by
     rw [reassoc_of% fg, reassoc_of% e, M.gp_π]
   have hinj : Function.Injective g₀.appTop.hom := by
-    haveI : IsDominant (g₀ ≫ (h ⁻¹ᵁ U).ι) := by rw [fg]; exact M'.dominant
-    haveI : IsDominant g₀ := IsDominant.of_comp_of_isOpenImmersion g₀ (h ⁻¹ᵁ U).ι
+    have : IsDominant (g₀ ≫ (h ⁻¹ᵁ U).ι) := by rw [fg]; exact M'.dominant
+    have : IsDominant g₀ := IsDominant.of_comp_of_isOpenImmersion g₀ (h ⁻¹ᵁ U).ι
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx0
     apply eq_zero_of_basicOpen_eq_bot
@@ -1796,8 +1796,8 @@ theorem extend_locInt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     rw [hl1, hgp]; exact hpb
   have hpb' : IsPullback l t (pullback.snd G.hom h) M'.gp :=
     IsPullback.of_right hout hl2 (IsPullback.of_hasPullback G.hom h)
-  haveI := hsm
-  haveI : Flat G.hom := inferInstance
+  have := hsm
+  have : Flat G.hom := inferInstance
   have hflat : Flat (pullback.snd G.hom h) := inferInstance
   have hinj := GlobalTheory.T.genericFibre_sections_injective_flat_integral (FractionRing R) (pullback.snd G.hom h) M'.gp l t hpb' hflat M'.integral M'.dominant
   obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_pulledBackPowerSection_of_local_lifts L (pullback.fst G.hom h) l α hl1 (k i) hinj (s i) n j

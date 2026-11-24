@@ -64,7 +64,7 @@ theorem idFF_rat {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
 
 theorem continuous_idFF {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] :
     Continuous (idFF F E) := by
-  haveI := IsModuleTopology.toContinuousAdd (AF F) (AF F ⊗[F] E)
+  have := IsModuleTopology.toContinuousAdd (AF F) (AF F ⊗[F] E)
   exact Continuous.units_map _
     (IsModuleTopology.continuous_of_linearMap (Algebra.linearMap (AF F) (AF F ⊗[F] E)))
 

@@ -172,7 +172,7 @@ private theorem exists_pos_lminor_gram_mul_eq (τ' : E →+* ℂ) (G : Matrix (F
       (t : ℂ) * ReciprocityTheory.ChartRestriction.G.FD.lminor (ReciprocityTheory.ChartRestriction.G.FD.gram τ' G Xm) i := by
   have hi : (i : ℕ) ≤ r := Nat.le_of_lt_succ i.isLt
   have hBs : (Bm.submatrix (Fin.castLE hi) (Fin.castLE hi)).det ≠ 0 := by
-    rw [Matrix.det_of_upperTriangular (M := Bm.submatrix (Fin.castLE hi) (Fin.castLE hi))
+    rw [Matrix.det_of_isUpperTriangular (M := Bm.submatrix (Fin.castLE hi) (Fin.castLE hi))
       (fun a c hca => hB (Fin.castLE hi a) (Fin.castLE hi c) hca)]
     exact Finset.prod_ne_zero_iff.2 fun a _ => hdiag _
   refine ⟨Complex.normSq (Bm.submatrix (Fin.castLE hi) (Fin.castLE hi)).det,
@@ -196,7 +196,7 @@ private theorem rmul_mem_dom_of_mem_dom {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ 
   obtain ⟨hbd, hbt⟩ := hb τ
   have hB : ∀ a c : Fin r, c < a → ReciprocityTheory.ChartRestriction.G.FD.mat b τ a c = 0 := hbt
   have hdiag : ∀ a : Fin r, ReciprocityTheory.ChartRestriction.G.FD.mat b τ a a ≠ 0 := by
-    have h1 := Matrix.det_of_upperTriangular (M := ReciprocityTheory.ChartRestriction.G.FD.mat b τ) hB
+    have h1 := Matrix.det_of_isUpperTriangular (M := ReciprocityTheory.ChartRestriction.G.FD.mat b τ) hB
     rw [h1] at hbd
     exact fun a => Finset.prod_ne_zero_iff.1 hbd a (Finset.mem_univ a)
   refine ⟨?_, fun i => ?_⟩
@@ -234,7 +234,7 @@ private theorem FD_mat_inv_mem_bor {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
   · show ((ReciprocityTheory.ChartRestriction.G.FD.mat b τ)⁻¹).det ≠ 0
     first
       | exact (Matrix.isUnit_nonsing_inv_det _ (Ne.isUnit hd)).ne_zero
-  · haveI := (ReciprocityTheory.ChartRestriction.G.FD.mat b τ).invertibleOfIsUnitDet (Ne.isUnit hd)
+  · have := (ReciprocityTheory.ChartRestriction.G.FD.mat b τ).invertibleOfIsUnitDet (Ne.isUnit hd)
     have hT : (ReciprocityTheory.ChartRestriction.G.FD.mat b τ).BlockTriangular id := fun a c h => ht a c h
     exact Matrix.blockTriangular_inv_of_blockTriangular hT hca
 
@@ -403,7 +403,7 @@ private theorem continuous_FD_dmin (X : Data E r) (τ : X.Ψ) (i : Fin (r + 1)) 
 private theorem isOpen_dom_of_data (X : Data E r) : IsOpen X.dom := by
   show IsOpen {x : Frame X.Ψ r | ∀ τ : X.Ψ, (ReciprocityTheory.ChartRestriction.G.FD.mat x τ).det ≠ 0 ∧
     ∀ i : Fin (r + 1), 0 < ReciprocityTheory.ChartRestriction.G.FD.psgn X.p0 i * (ReciprocityTheory.ChartRestriction.G.FD.dmin X.Gm x τ i).re}
-  simp only [Set.setOf_forall, Set.setOf_and]
+  simp only [Set.ofPred_forall, Set.ofPred_and]
   refine isOpen_iInter_of_finite fun τ => ?_
   refine IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
   · refine isOpen_ne_fun (Continuous.matrix_det ?_) continuous_const
@@ -622,7 +622,7 @@ private theorem real_invariance_of_measInvStatement (hM : MeasInvStatement (E :=
     hM r X y0 y1 h0 h1 (fun x => ENNReal.ofReal (-g x)) (ENNReal.measurable_ofReal.comp hg.neg)
       (fun x hx b hb => by simp only [hB x hx b hb])
   have hn : ∫⁻ z, ‖g (cpt X y0 z)‖ₑ ∂muF X y0 = ∫⁻ z, ‖g (cpt X y1 z)‖ₑ ∂muF X y1 :=
-    hM r X y0 y1 h0 h1 (fun x => ‖g x‖ₑ) hg.enorm (fun x hx b hb => by simp only [hB x hx b hb])
+    hM r X y0 y1 h0 h1 (fun x => ‖g x‖ₑ) hg.eNorm (fun x hx b hb => by simp only [hB x hx b hb])
   by_cases hi : Integrable (fun z => g (cpt X y0 z)) (muF X y0)
   · have hi' : Integrable (fun z => g (cpt X y1 z)) (muF X y1) := by
       refine ⟨hm1.aestronglyMeasurable, ?_⟩
@@ -646,7 +646,7 @@ theorem cMeasInv (hM : MeasInvStatement (E := E)) (hx0 : IsOrth X x0) {x0' : Fra
   have hm0 : Measurable fun z => ψ (cpt X x0 z) := hψ.comp (continuous_cpt_apply x0).measurable
   have hm1 : Measurable fun z => ψ (cpt X x0' z) := hψ.comp (continuous_cpt_apply x0').measurable
   have hn : ∫⁻ z, ‖ψ (cpt X x0 z)‖ₑ ∂muF X x0 = ∫⁻ z, ‖ψ (cpt X x0' z)‖ₑ ∂muF X x0' :=
-    hM r X x0 x0' hx0 hx0' (fun x => ‖ψ x‖ₑ) hψ.enorm (fun x hx b hb => by simp only [hB x hx b hb])
+    hM r X x0 x0' hx0 hx0' (fun x => ‖ψ x‖ₑ) hψ.eNorm (fun x hx b hb => by simp only [hB x hx b hb])
   by_cases hi : Integrable (fun z => ψ (cpt X x0 z)) (muF X x0)
   · have hi' : Integrable (fun z => ψ (cpt X x0' z)) (muF X x0') := by
       refine ⟨hm1.aestronglyMeasurable, ?_⟩

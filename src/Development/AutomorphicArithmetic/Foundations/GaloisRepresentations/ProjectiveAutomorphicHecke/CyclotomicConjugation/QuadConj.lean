@@ -234,7 +234,7 @@ private theorem fin_conj {d : ℕ} {x : E} (hd : 0 < d) (hx : x ^ 2 = -(d : E)) 
 theorem UpperTheory.Gal.CertificateRingHomMap.ZetaNonvanishing₂.quadConj :
     UpperTheory.Gal.CertificateRingHomMap.ZetaNonvanishing₂.QuadConj := by
   intro E _ _ _ d x hd hx z
-  haveI := isGalois_K hd hx
+  have := isGalois_K hd hx
   let y : IdeleGroup (Kx x) := Units.map (MonoidHom.inr (InfiniteAdeleRing (Kx x)) (FiniteAdeleRing (𝓞 (Kx x)) (Kx x))) z
   have h1 := ideleEmbedding_ideleNorm (K := ℚ) y
   have h2 : (∏ σ : Kx x ≃ₐ[ℚ] Kx x, σ • y) = y * cK hd hx • y := by

@@ -132,7 +132,7 @@ theorem exists_coeff_idempotents_any_level :
     p (IsLocalRing.closedPoint ℂ) ∈ connectedComponent z ∧ t (p ≫ pr) = i}
   have hUc : ∀ z w, w ∈ connectedComponent z → (w ∈ U ↔ z ∈ U) := by
     intro z w h
-    simp only [U, Set.mem_setOf_eq, connectedComponent_eq h]
+    simp only [U, Set.mem_ofPred_eq, connectedComponent_eq h]
   have hU : IsClopen U := by
     refine ⟨⟨isOpen_iff_forall_mem_open.2 fun z hz => ?_⟩, isOpen_iff_forall_mem_open.2 fun z hz => ?_⟩
     · exact ⟨connectedComponent z, fun w hw h => hz ((hUc z w hw).1 h),
@@ -214,10 +214,10 @@ theorem exists_map (F : FamilyUnif Xo σ ty) (hD : 1 ≤ D.p + D.q) (hσ : σ (b
     (pullback.lift _ _ (w _ (hP₀ i))) (pullback.lift_fst _ _ _) (pullback.lift_snd _ _ _)
     (pullback.lift_fst _ _ _) (pullback.lift_snd _ _ _)
   have h₁ := key P hP i' P' hP' hu'
-  rw [hconst, key _ (hP₀ i) (π i) (P₁ i) (hP₁ i) (hu₁ i), if_pos rfl] at h₁
+  rw [hconst, key _ (hP₀ i) (π i) (P₁ i) (hP₁ i) (hu₁ i), ite_eq_left rfl] at h₁
   obtain rfl : i' = π i := by
     by_contra hne
-    rw [if_neg hne] at h₁
+    rw [ite_eq_right hne] at h₁
     exact one_ne_zero h₁
   exact ⟨P', hP', hu'.symm⟩
 

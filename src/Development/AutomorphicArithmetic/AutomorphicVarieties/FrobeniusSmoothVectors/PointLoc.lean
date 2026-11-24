@@ -81,7 +81,7 @@ private theorem cont_sub {Γ S C : Type} [TopologicalSpace Γ] [CommRing S] [IsN
   have hf : f = (fun x => if hx : ∃ g, φ g = x then f hx.choose else 0) ∘ φ := by
     funext g
     have hx : ∃ g', φ g' = φ g := ⟨g, rfl⟩
-    simp only [Function.comp_apply, dif_pos hx]
+    simp only [Function.comp_apply, dite_eq_left hx]
     exact key _ _ hx.choose_spec.symm
   change IsLocallyConstant f
   rw [hf]
@@ -320,7 +320,7 @@ private theorem lc_lemma {X A B : Type} [TopologicalSpace X] (φ : X → A) (g :
   have e : g = (fun a => if ha : ∃ x, φ x = a then g ha.choose else g x₀) ∘ φ := by
     funext x
     have ha : ∃ y, φ y = φ x := ⟨x, rfl⟩
-    simp only [Function.comp_apply, dif_pos ha]
+    simp only [Function.comp_apply, dite_eq_left ha]
     exact h _ _ ha.choose_spec.symm
   rw [e]
   exact hφ.comp _
@@ -366,7 +366,7 @@ theorem UpperTheory.V.Fr.point_loc :
       have hp := cyc_mem hF hn f ρ hρ L h0 h1
       exact ⟨⟨_, hJ _ hp⟩, (hmax _).2 hp, rfl⟩
     · intro i j
-      haveI : IsNoetherian S' C := isNoetherian_of_isNoetherianRing_of_finite S' C
+      have : IsNoetherian S' C := isNoetherian_of_isNoetherianRing_of_finite S' C
       exact IsNoetherian.noetherian _
     · intro i j N
       exact cont_sub (maximalIdeal S') (maximalIdeal C) hJN (fun g => ρ.r g i j) (hρc.1 i j) N

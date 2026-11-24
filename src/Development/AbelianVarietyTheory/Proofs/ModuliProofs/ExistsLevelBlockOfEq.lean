@@ -89,7 +89,7 @@ theorem exists_smul_eq {L : Type} [AddCommGroup L] [Module (𝓞 E) L] (φ : L �
 theorem exists_matrix {L : Type} [AddCommGroup L] [Module (𝓞 E) L] (φ : L →ₗ[𝓞 E] (Fin r → E))
     (hφ : Function.Injective φ) (hspan : Submodule.span E (Set.range φ) = ⊤)
     (ψ : L →ₗ[𝓞 E] (Fin r → E)) : ∃ A : Matrix (Fin r) (Fin r) E, ∀ v, A *ᵥ φ v = ψ v := by
-  haveI : IsLocalizedModule (𝓞 E)⁰ φ :=
+  have : IsLocalizedModule (𝓞 E)⁰ φ :=
     { map_units := fun s => (isLocalizedModule_id (𝓞 E)⁰ (Fin r → E) E).map_units s
       surj := fun u => by
         obtain ⟨c, v, hc, hv⟩ := exists_smul_eq φ hspan u

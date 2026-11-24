@@ -702,7 +702,7 @@ theorem theta_mem_typeP {θ} (hθ : OnTies.IsClassSum R i t U ψ ph θ) (y : Fin
     DFunLike.congr_fun ((h.unif i _).2.2 u (θ y)) _
   have e2 := congrFun (h.clSum_equiv u (srcForm A i t U ψ y)) v
   rw [(mem_range_srcForm i t U ψ _).1 ⟨y, rfl⟩ u, map_smulₛₗ] at e2
-  rw [e1, adForm_smul, MultilinearMap.smul_apply, h.adForm_theta hθ, map_smul, Units.val_mul, map_mul, mul_smul,
+  rw [e1, adForm_smul, smul_apply, h.adForm_theta hθ, map_smul, Units.val_mul, map_mul, mul_smul,
     smul_comm _ ph, smul_comm _ ph, smul_comm _ ph]
   exact congrArg₂ (fun (s : D.what₂.LL →+* ℂ) F => ph • s _ • F) (sign_at_base_place_eq_embedding R) e2.symm
 
@@ -817,7 +817,7 @@ theorem lattices_of_tie (t : OnTie h fw hinj EX p ι wL wF nT O v i z act inc �
           (toForms h fw ι z ∘ₗ O.θ' v i ∘ₗ y.symm.toLinearMap) :=
       Submodule.span_le.2 fun m hm => hS.theta_mem_span hθ hm
     exact h4 ((lvlNab_span_eq_top ι (R.mu v) U ψ hG).ge Submodule.mem_top)
-  haveI : IsNoetherian (𝓞 D.what₂.LL) (O.Im v i) := isNoetherian_of_fg_of_noetherian _ hfg
+  have : IsNoetherian (𝓞 D.what₂.LL) (O.Im v i) := isNoetherian_of_fg_of_noetherian _ hfg
   exact ⟨⟨hfg.of_le hle, le_antisymm ((Submodule.span_mono hle).trans h1) h2⟩,
     ⟨hfg, le_antisymm h1 (h2.trans (Submodule.span_mono hle))⟩, hle⟩
 

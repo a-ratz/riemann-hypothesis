@@ -135,10 +135,10 @@ theorem exists_glue : ∀ (R : Type) [CommRing R] [IsLocalRing R], IsAdicComplet
     ∃ f : Sp R ⟶ X, ∀ e, Out.thick R (IsLocalRing.maximalIdeal R) e ≫ f = x e := by
   intro R _ _ hc X x hx
   classical
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal R) R := hc
-  haveI hnt : ∀ e, Nontrivial (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1)) := fun e =>
+  have : IsAdicComplete (IsLocalRing.maximalIdeal R) R := hc
+  have hnt : ∀ e, Nontrivial (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1)) := fun e =>
     Ideal.Quotient.nontrivial_iff.2 (pow_succ_ne_top R e)
-  haveI hss := subsingleton_primeSpectrum R
+  have hss := subsingleton_primeSpectrum R
   let z : ∀ e, Sp (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1)) := fun e =>
     (Classical.arbitrary (PrimeSpectrum (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1))))
   have hpt : ∀ e (a : Sp (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1))), x e a = x 0 (z 0) := by
@@ -255,11 +255,11 @@ theorem exists_coords_derivs' {k A : Type} [CommRing k] [CommRing A] {α : k →
       (∀ c a b, d c (a * b) = a * d c b + b * d c a) ∧
       (∀ a c, d c (x a) = if a = c then 1 else 0) ∧ ∀ c r, d c (α r) = 0 := by
   classical
-  letI := α.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
+  let := α.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
   obtain ⟨ιv, σv, _, _, P, hP⟩ := ‹Algebra.IsStandardSmoothOfRelativeDimension D k A›.out
-  letI := Fintype.ofFinite ιv
-  letI := Fintype.ofFinite σv
+  let := Fintype.ofFinite ιv
+  let := Fintype.ofFinite σv
   have hc : Fintype.card ((Set.range P.map)ᶜ : Set ιv) = D := by
     rw [Fintype.card_compl_set, Set.card_range_of_injective P.map_inj, ← hP]
     simp [Algebra.Presentation.dimension]
@@ -316,7 +316,7 @@ namespace GlobalTheory.TanPt
 
 theorem exists_tangent_point : ∀ {o : Type} [CommRing o] (X : Scheme.{0}) (s : X ⟶ Sp o) (D : ℕ), SmoothOfRelativeDimension D s → ∀ (K : Type) [Field K] (β : o →+* K) (x₀ : Sp K ⟶ X), x₀ ≫ s = spMap β → ∃ y : Sp (TrivSqZeroExt K (Fin D → K)) ⟶ X, spMap (TrivSqZeroExt.fstHom K K (Fin D → K)).toRingHom ≫ y = x₀ ∧ y ≫ s = spMap ((algebraMap K (TrivSqZeroExt K (Fin D → K))).comp β) ∧ ∀ mu : (Fin D → K) →ₗ[K] K, spMap (dirMap mu) ≫ y = constPt (spMap (dirMap mu) ≫ y) → mu = 0 := by
   intro o _ Y p D hsm K _ β z hz
-  haveI := hsm
+  have := hsm
   obtain ⟨V, hV, hx, -⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.1 Y.isBasis_affineOpens
     (TopologicalSpace.Opens.mem_top (GlobalTheory.Adelic.ptOf z))
   have h := HasRingHomProperty.appLE (@SmoothOfRelativeDimension D) p ‹_›
@@ -476,7 +476,7 @@ theorem isLocalRing_sq (K : Type) [Field K] : IsLocalRing (TrivSqZeroExt K (K ×
     exact IsLocalRing.isUnit_or_isUnit_one_sub_self _
 
 theorem isArtinianRing_sq (K : Type) [Field K] : IsArtinianRing (TrivSqZeroExt K (K × K)) := by
-  haveI : Module.Finite K (TrivSqZeroExt K (K × K)) := inferInstanceAs (Module.Finite K (K × (K × K)))
+  have : Module.Finite K (TrivSqZeroExt K (K × K)) := inferInstanceAs (Module.Finite K (K × (K × K)))
   exact IsArtinianRing.of_finite K _
 
 theorem pbEq {h k : ℕ} {B B' : Type} [CommRing B] [CommRing B'] {ζ : B} {ζ' : B'} {S S' : Scheme.{0}}
@@ -802,15 +802,15 @@ theorem cycAway_dualNumber_factor {n : ℕ} (hn : n ≠ 0) (K : Type) [Field K] 
   let S : Subring (cycAway n) :=
     { carrier := {x | TrivSqZeroExt.snd (β x) = 0}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_mul, TrivSqZeroExt.snd_mul] at *
+        simp only [Set.mem_ofPred_eq, map_mul, TrivSqZeroExt.snd_mul] at *
         simp [ha, hb]
       one_mem' := by simp
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _), TrivSqZeroExt.snd_add] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _), TrivSqZeroExt.snd_add] at *
         simp [ha, hb]
       zero_mem' := by simp
       neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq, map_neg, TrivSqZeroExt.snd_neg] at *
+        simp only [Set.mem_ofPred_eq, map_neg, TrivSqZeroExt.snd_neg] at *
         simp [ha] }
   have hζ : zetaAway n ∈ S := by
     have hz : zetaAway n ^ n = 1 := Subtype.ext (Complex.isPrimitiveRoot_exp n hn).pow_eq_one
@@ -867,8 +867,8 @@ theorem classified_dualNumber : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n �
   let L := AlgebraicClosure K
   obtain ⟨ψ, h1, -, hfl, hsurj⟩ := GlobalTheory.DualOpen.dualNumber_map_flat_surjective K L (algebraMap K L)
   have hff : ψ.FaithfullyFlat := (flat_and_surjective_SpecMap_iff (CommRingCat.ofHom ψ)).1 ⟨hfl, hsurj⟩
-  letI : Algebra (DualNumber K) (DualNumber L) := ψ.toAlgebra
-  haveI : Module.FaithfullyFlat (DualNumber K) (DualNumber L) := RingHom.faithfullyFlat_algebraMap_iff.1 hff
+  let : Algebra (DualNumber K) (DualNumber L) := ψ.toAlgebra
+  have : Module.FaithfullyFlat (DualNumber K) (DualNumber L) := RingHom.faithfullyFlat_algebraMap_iff.1 hff
   refine _root_.GlobalTheory.SiegFpqcDesc.classified_of_faithfullyFlat g n hg hn hodd F (DualNumber K) (DualNumber L) _ c hc ?_
   intro c' hc'
   have hp : c'.Principal := by
@@ -910,8 +910,8 @@ namespace GlobalTheory
 theorem spec_localArtinian_point_eq (P : CommRingCat.{0}) [IsLocalRing P] [IsArtinianRing P]
     (x y : Spec P) : x = y := by
   apply PrimeSpectrum.ext
-  haveI := x.isPrime
-  haveI := y.isPrime
+  have := x.isPrime
+  have := y.isPrime
   rw [IsLocalRing.eq_maximalIdeal (IsArtinianRing.isMaximal_of_isPrime x.asIdeal),
     IsLocalRing.eq_maximalIdeal (IsArtinianRing.isMaximal_of_isPrime y.asIdeal)]
 
@@ -938,7 +938,7 @@ theorem spec_pullback_localArtinian_glue_existsUnique : ∀ (P B₁ B₂ B₀ : 
     have : b (Spec.map g₂ y₀) = a (Spec.map g₁ y₀) := by
       rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, hab]
     rw [this]; exact hzV
-  haveI := hV.isOpenImmersion_fromSpec
+  have := hV.isOpenImmersion_fromSpec
   set φ₁ := Spec.preimage (IsOpenImmersion.lift hV.fromSpec a hza) with hφ₁
   set φ₂ := Spec.preimage (IsOpenImmersion.lift hV.fromSpec b hzb) with hφ₂
   have ha : Spec.map φ₁ ≫ hV.fromSpec = a := by
@@ -1007,10 +1007,10 @@ namespace GlobalTheory.SmallClassify
 
 theorem lift_lemma : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R) (d : ℕ), SmoothOfRelativeDimension d s → ∀ (C : Type) [CommRing C] [IsLocalRing C] (e : C), e * e = 0 → ∀ (β : R →+* C) (x₀ : Sp (C ⧸ Ideal.span {e}) ⟶ X), x₀ ≫ s = spMap ((Ideal.Quotient.mk (Ideal.span {e})).comp β) → ∃ x₁ : Sp C ⟶ X, x₁ ≫ s = spMap β ∧ spMap (Ideal.Quotient.mk (Ideal.span {e})) ≫ x₁ = x₀ := by
   intro R _ X s d hs C _ _ e hee β x₀ hx₀
-  haveI : Smooth s := hs.smooth
+  have : Smooth s := hs.smooth
   let πC : CommRingCat.of C ⟶ CommRingCat.of (C ⧸ Ideal.span {e}) := CommRingCat.ofHom (Ideal.Quotient.mk _)
   have hsurj : Function.Surjective πC := Ideal.Quotient.mk_surjective
-  haveI : IsClosedImmersion (Spec.map πC) := IsClosedImmersion.spec_of_surjective _ hsurj
+  have : IsClosedImmersion (Spec.map πC) := IsClosedImmersion.spec_of_surjective _ hsurj
   have hnil : IsNilpotent (RingHom.ker πC.hom) := by
     refine ⟨2, ?_⟩
     show (RingHom.ker (Ideal.Quotient.mk (Ideal.span {e}))) ^ 2 = ⊥
@@ -1021,7 +1021,7 @@ theorem lift_lemma : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp 
     x₀ (spMap β) hw (IsLocalRing.closedPoint (CommRingCat.of C))
   have hWt : W = ⊤ := (IsLocalRing.closed_point_mem_iff (R := CommRingCat.of C) (U := W)).mp hW
   subst hWt
-  haveI : IsIso (⊤ : (Sp C).Opens).ι := isIso_of_isOpenImmersion_of_opensRange_eq_top _ (by simp)
+  have : IsIso (⊤ : (Sp C).Opens).ι := isIso_of_isOpenImmersion_of_opensRange_eq_top _ (by simp)
   have hU : IsIso ((Spec.map πC) ⁻¹ᵁ (⊤ : (Sp C).Opens)).ι :=
     isIso_of_isOpenImmersion_of_opensRange_eq_top _ (by simp)
   refine ⟨inv (⊤ : (Sp C).Opens).ι ≫ l, by rw [Category.assoc, hl, IsIso.inv_hom_id_assoc], ?_⟩
@@ -1124,11 +1124,11 @@ theorem ring_lemma : ∀ (C : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing
     refine isUnit_iff_exists_inv.2 ⟨⟨_, hmem⟩, Subtype.ext ?_⟩
     show (a, y) * _ = 1
     rw [← hu, Units.mul_inv]
-  haveI : Nontrivial Ps := nontrivial_of_ne 0 1 (fun h ↦ zero_ne_one (α := C) (congrArg (fun z : Ps ↦ (z : C × DualNumber (ResidueField C)).1) h))
+  have : Nontrivial Ps := nontrivial_of_ne 0 1 (fun h ↦ zero_ne_one (α := C) (congrArg (fun z : Ps ↦ (z : C × DualNumber (ResidueField C)).1) h))
   have hloc : IsLocalRing Ps := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun x ↦
     (IsLocalRing.isUnit_or_isUnit_one_sub_self (x : C × DualNumber (ResidueField C)).1).imp (hunit x) (fun h ↦ hunit (1 - x) (by simpa using h))
 
-  letI : Algebra C Ps := i.toAlgebra
+  let : Algebra C Ps := i.toAlgebra
   let ε' : Ps := ⟨(0, TrivSqZeroExt.inr 1), by show residue C 0 = (0 : ResidueField C); simp⟩
   have hfin : Module.Finite C Ps := by
     classical
@@ -1296,7 +1296,7 @@ theorem classify : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F : SF
     (β : cycAway n →+* K) (c : SiegPre g n (zetaAway n) (spMap β)), c.Principal →
     ∃ f : Sp K ⟶ F.X, f ≫ F.s = spMap β ∧ SiegPB c F.univ f := by
   intro g n hg hn hodd F K _ β c hc
-  haveI : Module.FaithfullyFlat K (AlgebraicClosure K) := inferInstance
+  have : Module.FaithfullyFlat K (AlgebraicClosure K) := inferInstance
   refine _root_.GlobalTheory.SiegFpqcDesc.classified_of_faithfullyFlat g n hg hn hodd F K (AlgebraicClosure K) β c hc fun c' hpb => ?_
   have hc' : c'.Principal := GlobalTheory.SiegLevCalc.sRel_principal ((sRel_one_one_iff _ _ _).2 hpb) hc
   exact _root_.GlobalTheory.SiegelFieldClass.classifies_algClosed g n hg hn hodd F (AlgebraicClosure K) ((algebraMap K (AlgebraicClosure K)).comp β) c' hc'
@@ -1363,7 +1363,7 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F : SFam g
   | _ N ih =>
   intro C _ _ _ hN β c hc
   by_cases hm : IsLocalRing.maximalIdeal C = ⊥
-  · letI : Field C := (IsLocalRing.isField_iff_maximalIdeal_eq.mpr hm).toField
+  · let : Field C := (IsLocalRing.isField_iff_maximalIdeal_eq.mpr hm).toField
     exact _root_.GlobalTheory.SiegField.classify g n hg hn hodd F C β c hc
   obtain ⟨e, he0, hem, hann⟩ := exists_socle C hm
   set I : Ideal C := Ideal.span {e}
@@ -1372,15 +1372,15 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F : SFam g
     have : I ≤ IsLocalRing.maximalIdeal C := (Ideal.span_singleton_le_iff_mem _).mpr hem
     rw [h] at this
     exact (IsLocalRing.maximalIdeal.isMaximal C).ne_top (top_le_iff.mp this)
-  haveI : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hIt
-  haveI : IsLocalRing (C ⧸ I) := IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+  have : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hIt
+  have : IsLocalRing (C ⧸ I) := IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
 
   have hlenQ : Module.length C (C ⧸ I) = Module.length (C ⧸ I) (C ⧸ I) :=
     Module.length_eq_of_surjective (R := C ⧸ I) (S := C) (M := C ⧸ I) Ideal.Quotient.mk_surjective
   have hsum : Module.length C C = Module.length C I + Module.length C (C ⧸ I) :=
     Module.length_eq_add_of_exact I.subtype I.mkQ I.injective_subtype I.mkQ_surjective
       (LinearMap.exact_subtype_mkQ I)
-  haveI : Nontrivial I := ⟨⟨⟨e, Ideal.subset_span rfl⟩, 0, fun h => he0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial I := ⟨⟨⟨e, Ideal.subset_span rfl⟩, 0, fun h => he0 (congrArg Subtype.val h)⟩⟩
   have hpos : 0 < Module.length C I := Module.length_pos
   rw [hN, hlenQ] at hsum
   obtain ⟨b, hb⟩ := ENat.ne_top_iff_exists.mp (show Module.length C I ≠ ⊤ from fun h => by
@@ -1531,8 +1531,8 @@ theorem classified_of_complete : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n 
   intro g n hg hn hodd F R _ _ _ hR β c hc
   have hn0 : n ≠ 0 := by omega
   set m := IsLocalRing.maximalIdeal R with hm
-  haveI : ∀ e : ℕ, IsLocalRing (R ⧸ m ^ (e + 1)) := fun e => quot_local R e
-  haveI : ∀ e : ℕ, IsArtinianRing (R ⧸ m ^ (e + 1)) := fun e => quot_artin m (IsLocalRing.maximalIdeal.isMaximal R) e
+  have : ∀ e : ℕ, IsLocalRing (R ⧸ m ^ (e + 1)) := fun e => quot_local R e
+  have : ∀ e : ℕ, IsArtinianRing (R ⧸ m ^ (e + 1)) := fun e => quot_artin m (IsLocalRing.maximalIdeal.isMaximal R) e
   let βe : ∀ e : ℕ, cycAway n →+* (R ⧸ m ^ (e + 1)) := fun e => (Ideal.Quotient.mk _).comp β
   have hthick : ∀ e, Out.thick R m e ≫ spMap β = spMap (βe e) ≫ spMap (RingHom.id (cycAway n)) := by
     intro e
@@ -1586,10 +1586,10 @@ namespace GlobalTheory.SiegelFamLocal
 
 theorem exists_point_of_principal : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F : SFam g n (zetaAway n), ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] (β : cycAway n →+* R) (c : SiegPre g n (zetaAway n) (spMap β)), c.Principal → ∃ f : Sp R ⟶ F.X, f ≫ F.s = spMap β ∧ SiegPB c F.univ f := by
   intro g n hg hn hodd F R _ _ _ β c hc
-  haveI : IsNoetherianRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
+  have : IsNoetherianRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
     GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ _
-  haveI : Module.Flat R (AdicCompletion (IsLocalRing.maximalIdeal R) R) := AdicCompletion.flat_of_isNoetherian _
-  haveI : Module.FaithfullyFlat R (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
+  have : Module.Flat R (AdicCompletion (IsLocalRing.maximalIdeal R) R) := AdicCompletion.flat_of_isNoetherian _
+  have : Module.FaithfullyFlat R (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
     Module.FaithfullyFlat.of_flat_of_isLocalHom
   refine _root_.GlobalTheory.SiegFpqcDesc.classified_of_faithfullyFlat g n hg hn hodd F R (AdicCompletion (IsLocalRing.maximalIdeal R) R) β c hc ?_
   intro c' hc'

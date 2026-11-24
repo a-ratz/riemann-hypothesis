@@ -123,12 +123,12 @@ theorem modK_eq (hH : St.HaarAlg) (hN : St.NormLoc) (h2 : Module.finrank F E = 2
     {p : HeightOneSpectrum (𝓞 F)} (L : LocAt F E sig p) (M : Model L.Fp L.Ep) (hM : M.OK)
     {x : E} (hx : x ≠ 0) :
     M.modK (L.ιE x) = FinitePlace.mk p (Algebra.norm F x) := by
-  haveI := L.lf
-  haveI := hM.borel
-  haveI := hM.haar.haar
-  haveI := L.free
-  haveI := Base.finite L
-  haveI := L.top
+  have := L.lf
+  have := hM.borel
+  have := hM.haar.haar
+  have := L.free
+  have := Base.finite L
+  have := L.top
   unfold Model.modK
   rw [hH L.Fp L.Ep M.mu (L.ιE x) (Base.isUnit_ιE L hx) _, hM.haar.volR, mul_one,
     ENNReal.toReal_ofReal (modF_nonneg _), Base.norm_ιE L h2, hN F p L.Fp L.ιF L.dense L.val]
@@ -229,8 +229,8 @@ theorem clause2 (hT : Tr.TrSum) (hI : St.TrInt) (hR : St.ResCharIff) (h2 : Modul
   have hfib : ∀ p q, p ∈ fib q ↔ resChar p = q := by
     intro p q
     by_cases hq : q.Prime
-    · simp only [fib, dif_pos hq, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
-    · simp only [fib, dif_neg hq, Finset.notMem_empty, false_iff]
+    · simp only [fib, dite_eq_left hq, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
+    · simp only [fib, dite_eq_right hq, Finset.notMem_empty, false_iff]
       rintro rfl
       exact hq (hprime p)
 
@@ -245,7 +245,7 @@ theorem clause2 (hT : Tr.TrSum) (hI : St.TrInt) (hR : St.ResCharIff) (h2 : Modul
     rw [Ideal.dvd_span_singleton]
     by_contra hdp
     apply hp
-    haveI := (L p).ellPrime
+    have := (L p).ellPrime
     have hres : ((resChar p : ℕ) : 𝓞 F) ∈ p.asIdeal := (hR F p (resChar p) (hprime p)).1 rfl
     have hnd : ¬ ((resChar p : ℕ) : ℤ) ∣ d := by
       rintro ⟨k, hk⟩
@@ -256,7 +256,7 @@ theorem clause2 (hT : Tr.TrSum) (hI : St.TrInt) (hR : St.ResCharIff) (h2 : Modul
       le_antisymm (Padic.norm_int_le_one d)
         (not_lt.1 fun h => hnd (Padic.norm_intCast_lt_one_iff.1 h))
     have hint : IsIntegral ℤ ((L p).ιF (d • z)) := hdint.map (L p).ιF.toIntAlgHom
-    haveI := (L p).qlFin
+    have := (L p).qlFin
     have hT1 := hI (resChar p) (L p).Fp ((L p).ιF (d • z)) hint
     have hsm : (L p).ιF (d • z) = algebraMap ℚ_[resChar p] (L p).Fp (d : ℚ_[resChar p]) *
         (L p).ιF z := by
@@ -268,7 +268,7 @@ theorem clause2 (hT : Tr.TrSum) (hI : St.TrInt) (hR : St.ResCharIff) (h2 : Modul
   refine Frac.finprod_exp resChar hprime a ha fib hfib hfin _ fun q hq => ?_
 
   have hfs : Set.Finite {p : HeightOneSpectrum (𝓞 F) | resChar p = q} := fibFin hR hq.out
-  haveI : Fintype {p : HeightOneSpectrum (𝓞 F) // resChar p = q} := hfs.fintype
+  have : Fintype {p : HeightOneSpectrum (𝓞 F) // resChar p = q} := hfs.fintype
   have hsum := hT F q _ (fam L q) (fam_over hR L q) z
   have htr : Algebra.trace ℚ F z = Algebra.trace ℚ E x := Algebra.trace_trace x
   rw [htr] at hsum
@@ -306,7 +306,7 @@ namespace PI.ProdFormulaE.ResCharP
 theorem eq_iff_mem_asIdeal : St.ResCharIff := by
   intro F _ _ p ℓ hℓ
   show ringChar (𝓞 F ⧸ p.asIdeal) = ℓ ↔ _
-  haveI : p.asIdeal.IsPrime := p.isPrime
+  have : p.asIdeal.IsPrime := p.isPrime
   have hz : ((ℓ : 𝓞 F ⧸ p.asIdeal) = 0) ↔ (ℓ : 𝓞 F) ∈ p.asIdeal := by
     rw [← map_natCast (Ideal.Quotient.mk p.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
   rw [← hz]
@@ -352,7 +352,7 @@ theorem exists_eq_ell_mul {F : Type} [Field F] [NumberField F] (ℓ : ℕ) [Fact
       simp
     by_cases hv : (ℓ : 𝓞 F) ∈ v.asIdeal
     · have hpos : v.valuation F (ℓ : F) ≠ 0 := (Valuation.ne_zero_iff _).2 hℓ
-      exact (div_le_one₀ (zero_lt_iff.2 hpos)).2 (h v hv)
+      exact (div_le_one₀ (pos_iff_ne_zero.2 hpos)).2 (h v hv)
     · rw [hℓv, IsDedekindDomain.HeightOneSpectrum.intValuation_eq_one_iff.2 hv, div_one]
       exact IsDedekindDomain.HeightOneSpectrum.valuation_le_one v X
   obtain ⟨Z, hZ⟩ := IsDedekindDomain.HeightOneSpectrum.mem_integers_of_valuation_le_one (R := 𝓞 F) F
@@ -423,7 +423,7 @@ lemma LocFam.valuation_algebraMap_le_one (D : LocFam F ℓ ι) (i : ι) (c : ℚ
   change valuation (D.K i) (algebraMap ℚ_[ℓ] (D.K i) (c' : ℚ_[ℓ])) ≤ 1
   refine PadicInt.denseRange_natCast.induction_on c'
     (p := fun z : ℤ_[ℓ] => valuation (D.K i) (algebraMap ℚ_[ℓ] (D.K i) (z : ℚ_[ℓ])) ≤ 1) ?_ ?_
-  · exact isClosed_setOf_valuation_le_one.preimage ((D.cont i).comp continuous_subtype_val)
+  · exact isClosed_setOf_valuation_le_one.preimage ((D.cont i).comp continuous_subtypeVal)
   · intro n
     simpa using valuation_natCast_le_one' (K := D.K i) n
 
@@ -608,7 +608,7 @@ theorem exists_approx {ι : Type} [Finite ι] (P : ι → HeightOneSpectrum (�
       (P i).valuation F (algebraMap (𝓞 F) F (d : 𝓞 F)) * (P i).valuation F c := by
     rw [← map_mul, ← map_mul, h3]
     exact h2
-  exact (mul_le_mul_iff_right₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hd0))).1 key
+  exact (mul_le_mul_iff_right₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hd0))).1 key
 
 theorem t2Space_of_isValuativeTopology_alt (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsValuativeTopology K] : T2Space K := by
@@ -679,7 +679,7 @@ theorem toPi_surjective : TrSurj := by
     simp_rw [Algebra.smul_def]
     exact ((D.cont i).comp continuous_fst).mul continuous_snd⟩
   have hcl : IsClosed (LinearMap.range D.Φ.toLinearMap : Set (∀ i, D.K i)) :=
-    Submodule.closed_of_finiteDimensional _
+    Submodule.isClosed_of_finiteDimensional _
   have hdense : Dense (LinearMap.range D.Φ.toLinearMap : Set (∀ i, D.K i)) := by
     refine Dense.mono ?_ (LocFam.denseDiag D hD.1)
     rintro _ ⟨x, rfl⟩

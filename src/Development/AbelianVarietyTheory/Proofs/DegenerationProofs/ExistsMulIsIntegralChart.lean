@@ -78,7 +78,7 @@ theorem exists_finite_span_isIntegral_chart [IsDedekindDomain o] [CharZero Ω] [
       ∀ x, IsIntegral (Algebra.adjoin o (Set.range fun j => t j / t i)) x →
         x ∈ Submodule.span (Algebra.adjoin o (Set.range fun j => t j / t i)) G := by
   set A := Algebra.adjoin o (Set.range fun j => t j / t i) with hA
-  haveI : Algebra.FiniteType o A := .adjoin_of_finite (Set.finite_range _)
+  have : Algebra.FiniteType o A := .adjoin_of_finite (Set.finite_range _)
   have hK : Subfield.closure (Set.range (algebraMap o Ω) ∪ {x | ∃ i j, x = t j / t i}) ≤
       Subfield.closure (A : Set Ω) := by
     refine Subfield.closure_le.mpr ?_
@@ -89,7 +89,7 @@ theorem exists_finite_span_isIntegral_chart [IsDedekindDomain o] [CharZero Ω] [
       rw [this]
       exact div_mem (Subfield.subset_closure (Algebra.subset_adjoin ⟨j, rfl⟩))
         (Subfield.subset_closure (Algebra.subset_adjoin ⟨k, rfl⟩))
-  haveI : Algebra.EssFiniteType A Ω := by
+  have : Algebra.EssFiniteType A Ω := by
     obtain ⟨σ, hσ⟩ := hfin
     refine (Algebra.essFiniteType_iff _ _).mpr ⟨σ, fun s => ?_⟩
     have hs : s ∈ Submodule.span _ (σ : Set Ω) := hσ ▸ Submodule.mem_top
@@ -121,7 +121,7 @@ theorem exists_finite_span_isIntegral_chart [IsDedekindDomain o] [CharZero Ω] [
           field_simp
         rw [this]
         exact mul_mem hy' hx
-  haveI := finite_integralClosure_of_essFiniteType_field o A Ω
+  have := finite_integralClosure_of_essFiniteType_field o A Ω
   obtain ⟨s, hs⟩ := (inferInstance : Module.Finite A (integralClosure A Ω))
   refine ⟨(integralClosure A Ω).val.toLinearMap '' s, s.finite_toSet.image _, ?_, fun x hx => ?_⟩
   · rintro _ ⟨x, -, rfl⟩
@@ -264,7 +264,7 @@ theorem exists_tuple_normalisation_charts (o Ω : Type) [CommRing o] [Field Ω] 
   have hmem : ∀ i j, t j / t i ∈ A i := fun i j => Algebra.subset_adjoin ⟨j, rfl⟩
   choose G hG hGi hGs using fun i : {i // t i ≠ 0} =>
     exists_finite_span_isIntegral_chart (o := o) t i.2 hfin
-  haveI : ∀ i, Finite (G i) := fun i => (hG i).to_subtype
+  have : ∀ i, Finite (G i) := fun i => (hG i).to_subtype
   choose N hN using fun a : (Σ i, G i) × J =>
     exists_isIntegral_mul_pow_of_subalgebra (A a.1.1) (A a.2) (hmem a.2 a.1.1)
       (fun r hr => exists_mul_pow_mem_chart t a.2 a.1.1.2 hr) (hGi _ _ a.1.2.2)
@@ -414,11 +414,11 @@ theorem exists_mul_isIntegral_chart {o Ω : Type} [CommRing o] [Field Ω] [Algeb
     | algebraMap a => exact Subfield.subset_closure (Or.inl ⟨a, rfl⟩)
     | add x y _ _ hx hy => exact add_mem hx hy
     | mul x y _ _ hx hy => exact mul_mem hx hy
-  letI : Algebra A K := (A.val.toRingHom.codRestrict K fun y => hAK y y.2).toAlgebra
-  haveI : IsScalarTower A K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FaithfulSMul A K := (faithfulSMul_iff_algebraMap_injective A K).2 fun a b h =>
+  let : Algebra A K := (A.val.toRingHom.codRestrict K fun y => hAK y y.2).toAlgebra
+  have : IsScalarTower A K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FaithfulSMul A K := (faithfulSMul_iff_algebraMap_injective A K).2 fun a b h =>
     Subtype.ext (congrArg (fun c : K => (c : Ω)) h)
-  haveI : IsFractionRing A K := by
+  have : IsFractionRing A K := by
     refine IsFractionRing.of_field _ _ fun c => ?_
     obtain ⟨y, hy, w, hw, hc⟩ := Subfield.mem_closure_iff.mp (hK c.2)
     have hAA : Subring.closure (A : Set Ω) = A.toSubring := Subring.closure_eq A.toSubring

@@ -196,11 +196,11 @@ private theorem IB.of_tr (hτ : τ ∈ (algebraMap O K).range) (u : Oˣ) (hu : a
   refine ⟨int_unit u ?_, int_unit u ?_⟩
   · convert (((hi.mul hi).sub (isIntegral_one.add isIntegral_one)).mul h1).sub (hi.mul h2) using 1
     rw [hu]
-    simp only [trace_def, re_mul, im_mul, omega_re, omega_im, map_sub, map_pow, map_ofNat]
+    simp only [trace_def, re_mul, im_mul, re_omega, im_omega, map_sub, map_pow, map_ofNat]
     ring
   · convert (h2.add h2).sub (hi.mul h1) using 1
     rw [hu]
-    simp only [trace_def, re_mul, im_mul, omega_re, omega_im, map_sub, map_pow, map_ofNat]
+    simp only [trace_def, re_mul, im_mul, re_omega, im_omega, map_sub, map_pow, map_ofNat]
     ring
 
 
@@ -458,7 +458,7 @@ private theorem fx_gen [IsDomain O] [IsDiscreteValuationRing O] (hl : IsLoc O Δ
     (hu : algebraMap O K u = 2 - τ) :
     ∃ (y : (Etau K τ)ˣ) (v : Oˣ), algebraMap O K v = t * QuadraticAlgebra.norm (y : Etau K τ) ∧
       ((0, ofE Δ (y : Etau K τ)) : Sp Δ τ) ∈ S := by
-  haveI := hl.frac
+  have := hl.frac
   by_contra hne
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hπ0 : algebraMap O K π ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective O K)).2 hπ.ne_zero
@@ -582,7 +582,7 @@ private theorem normE (hl : IsLoc O Δ) (hτ : τ ∈ (algebraMap O K).range) (u
 
 private theorem IB_of_int (hl : IsLoc O Δ) (hτ : τ ∈ (algebraMap O K).range) (u : Oˣ)
     (hu : algebraMap O K u = τ ^ 2 - 4) {x : Etau K τ} (hx : IsIntegral O x) : IB O (ofE Δ x) := by
-  haveI := hl.frac
+  have := hl.frac
   let φ : Etau K τ →ₐ[O] Etau K τ :=
     { starRingEnd (Etau K τ) with
       commutes' := fun r => by
@@ -619,7 +619,7 @@ private theorem main (hl : IsLoc O Δ) (hτ : τ ∈ (algebraMap O K).range) (u 
   split_ifs with ht
   · obtain ⟨z₀, hz₀⟩ := (hsNE O K Δ τ hl hD t).2 ht
     have hz : QuadraticAlgebra.norm (z₀ : Etau K τ) = t := congrArg Units.val hz₀
-    letI := torAct (K := K) Δ τ
+    let := torAct (K := K) Δ τ
     have hsm : ∀ (z y : (Etau K τ)ˣ), z • lat O Δ r y = lat O Δ r (z * star z⁻¹ * y) := fun z y => tor_lat r y z
     have h := wCard (Etau K τ)ˣ (Set (Sp Δ τ)) (Cint O τ) {S | IsFix O c d ((t : K) • 1) S} {lat O Δ r z₀⁻¹}
       ?_ ?_ (Set.finite_singleton _) ?_ ?_ ?_
@@ -677,7 +677,7 @@ open UpperTheory.V.Z.Sym.Loc.CG in
 theorem UpperTheory.V.Z.Sym.Loc.caseG :
     UpperTheory.V.Z.Sym.Loc.CaseG := by
   rintro O K _ _ _ _ _ Δ τ hl ⟨u, hu⟩ c ⟨e, r, hr, hc⟩ lam hlam hn z hz t
-  haveI := hl.frac
+  have := hl.frac
   have hD : τ ^ 2 - 4 ≠ 0 := hu ▸ (u.isUnit.map (algebraMap O K)).ne_zero
   obtain ⟨a, ha⟩ : ∃ a : O, algebraMap O K a = τ := by
     refine IsIntegrallyClosed.isIntegral_iff.mp (IsIntegral.of_pow two_pos ?_)

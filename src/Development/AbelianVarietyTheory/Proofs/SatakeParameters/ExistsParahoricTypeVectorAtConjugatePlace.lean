@@ -141,24 +141,24 @@ theorem exists_conj (r t : ℕ) : ∃ m : GL (Fin (r + t)) k, ∀ h : GL (Fin (r
   have hlt : ∀ a b : Fin (r + t), a.val < r → ¬ b.val < r → valuation k ((m * h * m⁻¹).val a b) < 1 := by
     intro a b ha hb
     rw [key]
-    simp only [e, ha, hb, if_true, if_false, inv_one, mul_one, map_mul]
+    simp only [e, ha, hb, ite_true, ite_false, inv_one, mul_one, map_mul]
     exact lt_of_le_of_lt (mul_le_of_le_one_right' (h1 a b)) hγ1
   refine ⟨fun a b => ?_, fun a b ha => ?_, fun i j => ?_⟩
   · by_cases ha : a.val < r <;> by_cases hb : b.val < r
     · rw [key]
-      simp only [e, ha, hb, if_true]
+      simp only [e, ha, hb, ite_true]
       rw [mul_right_comm, mul_inv_cancel₀ h0', one_mul]
       exact h1 a b
     · exact (hlt a b ha hb).le
     · rw [key]
-      simp only [e, ha, hb, if_true, if_false, one_mul, map_mul, map_inv₀]
-      rw [mul_inv_le_iff₀ (zero_lt_iff.2 h0), one_mul]
+      simp only [e, ha, hb, ite_true, ite_false, one_mul, map_mul, map_inv₀]
+      rw [mul_inv_le_iff₀ (pos_iff_ne_zero.2 h0), one_mul]
       have := h2 ⟨a.val - r, by omega⟩ ⟨b.val, hb⟩
       have ea : Fin.natAdd r (⟨a.val - r, by omega⟩ : Fin t) = a := by ext; simp; omega
       rw [ea] at this
       exact hγ _ this
     · rw [key]
-      simp only [e, ha, hb, if_false, one_mul, inv_one, mul_one]
+      simp only [e, ha, hb, ite_false, one_mul, inv_one, mul_one]
       exact h1 a b
   · by_cases hb : b.val < r
     · exact Or.inr hb
@@ -186,7 +186,7 @@ theorem isEquiv_of_continuous (c : p.adicCompletion F ≃+* q.adicCompletion E) 
   have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F p
   have ho : IsOpenMap c := AddMonoidHom.isOpenMap_of_sigmaCompact c.toAddEquiv.toAddMonoidHom c.surjective hc
   have hc' : Continuous c.symm := c.toEquiv.continuous_symm_iff.2 ho
-  haveI : (Valued.v : Valuation (q.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (q.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   refine Valuation.IsEquiv.trans ?_ (ValuativeRel.isEquiv
     (Valued.v : Valuation (q.adicCompletion E) (WithZero (Multiplicative ℤ))) _)
@@ -206,10 +206,10 @@ theorem exists_global (N : ℕ) (d : (p.adicCompletion F)ˣ) : ∃ y : F, y ≠ 
       Valued.v z} := by
     have h1 := (Valued.isOpen_ball (p.adicCompletion F) (Valued.v.restrict z)).preimage
       ((continuous_mul_const ((d⁻¹ : (p.adicCompletion F)ˣ) : p.adicCompletion F)).sub (continuous_const (y := 1)))
-    simpa only [Set.preimage_setOf_eq, Valuation.restrict_lt_iff, Pi.sub_apply] using h1
+    simpa only [Set.preimage_ofPred_eq, Valuation.restrict_lt_iff, Pi.sub_apply] using h1
   obtain ⟨y, hy'⟩ := (p.denseRange_algebraMap F).exists_mem_open hU ⟨d, by
-    simpa [zero_lt_iff] using hz0⟩
-  rw [Set.mem_setOf_eq, hz] at hy'
+    simpa [pos_iff_ne_zero] using hz0⟩
+  rw [Set.mem_ofPred_eq, hz] at hy'
   refine ⟨y, ?_, hy'⟩
   rintro rfl
   simp only [map_zero, zero_mul, zero_sub, Valuation.map_neg, map_one] at hy'

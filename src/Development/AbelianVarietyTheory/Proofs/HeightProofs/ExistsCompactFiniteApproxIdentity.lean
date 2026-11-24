@@ -76,7 +76,7 @@ theorem approx_identity : ∀ (n : ℕ) (ε : Fin n → Bool) (X : Type) [Topolo
   have hfnn : ∀ k, 0 ≤ f k := fun k => (hf01 k).1
   have hfU : ∀ k, k ∉ U → f k = 0 := fun k hk => by simpa using hf0 hk
   have hIpos : 0 < ∫ k, f k ∂(muK ε) :=
-    Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero f.continuous
+    Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero f.continuous
       (isClosed_tsupport _).isCompact (fun k => hfnn k) (x := 1) (by rw [hf1']; norm_num)
   obtain ⟨I, hIdef⟩ : ∃ I, ∫ k, f k ∂(muK ε) = I := ⟨_, rfl⟩
   rw [hIdef] at hIpos

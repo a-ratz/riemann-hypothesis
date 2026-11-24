@@ -67,7 +67,7 @@ theorem le_of_conj (l : Level H) (F : IntermediateField ℚ ℂ) (hc : ∀ (τ :
     · have : H.rt0 = τ (-(H.rt : E)) := by rw [map_neg, h, neg_neg]
       rw [this]; exact hc τ _
   · have hM : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
-    haveI : NeZero l.M' := ⟨hM.ne'⟩
+    have : NeZero l.M' := ⟨hM.ne'⟩
     have hp : zeta l.A ^ l.M' = 1 := by
       obtain ⟨c, hc⟩ : l.A ∣ l.M' := Nat.dvd_lcm_right _ _
       rw [hc, pow_mul, (zeta_prim _ l.A_pos).pow_eq_one, one_pow]
@@ -82,7 +82,7 @@ theorem coeff_nonempty (l : Level H) : Nonempty (Coeff l) := by
   have hc : ∀ (τ : E →+* ℂ) (a : E), τ a ∈ F := fun τ a =>
     (le_sup_left : _ ≤ F) (AlgHom.fieldRange_le_normalClosure τ.toRatAlgHom ⟨a, rfl⟩)
   have hz : zeta l.M' ∈ F := (le_sup_right : _ ≤ F) (IntermediateField.mem_adjoin_simple_self _ _)
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {zeta l.M'}) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {zeta l.M'}) :=
     IntermediateField.adjoin.finiteDimensional ((zeta_prim _ hM).isIntegral hM).tower_top
   exact ⟨⟨F, inferInstance, hc, hz, le_of_conj l F hc hz⟩⟩
 

@@ -372,7 +372,7 @@ theorem phiC_le_normalized_valuation_local_model_base_change (E : Type) [Field E
         (xs : J → Fin n → LatMod Dw (R ^ 4)) (f : Rul Xo c), GlobalTheory.EtaAn.Spans xs → IsEtaRule Xo c R cf xs f →
         ((((Nat.card (LevGrp Dw (R ^ 4)) : ℝ) / (R : ℝ) ^ 4 *
           (Formalism.BasicNotions.eWL c.F la * Formalism.MainNotions.ModuliIntegralCharts.phiC cj bA) : ℝ)) : EReal) ≤ nval T.V e (evI y f) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨G, ⟨I⟩⟩ := (GlobalTheory.T.integralThetaSection_exists_and_baseChange E H Dw l Xo c).1 T io y
   obtain ⟨T', φ, G', m, hφi, hφf, -, -, U, hU, hUt⟩ :=
     GlobalTheory.UnifAfterExt.exists_finite_ext_uniformised E H Dw l Xo T G I.t' I.m2 y.1.x I.m1 hAlg
@@ -398,7 +398,7 @@ theorem phiC_le_normalized_valuation_local_model_base_change (E : Type) [Field E
   refine ⟨A, bA, fun a b => ?_, ?_⟩
   · rw [hbA, hA, hβ _ _ _ hfi' hf1]
   intro R hR hR1 J _ n cf xs g hsp hg
-  letI : Algebra c.F T'.Fr := (i.comp io).toAlgebra
+  let : Algebra c.F T'.Fr := (i.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { i with commutes' := fun _ => rfl }
   obtain ⟨y', hy'⟩ := GlobalTheory.FramedBaseChange.exists_frMap GlobalTheory.firstFiveLaws.1 E H Dw l Xo c T.Fr T'.Fr ψ y.1
   obtain ⟨I'⟩ := (GlobalTheory.T.integralThetaSection_exists_and_baseChange E H Dw l Xo c).2 T.V T'.V φ ψ y.1 y' G G' m I hi hy'
@@ -491,7 +491,7 @@ theorem recPJ_phiC {D : D7} {T : Top D} (h : LawsP T) {j : ℕ} (hj : InR D j) (
     (recPJ h j hj).phiC la y =
       (eWL T.Q.c.F la : ℝ) * (T.G.P.loc (T.G.dat j) (WeightAlgebra.resCh la)).phiCy (imgV y) := by
   unfold WeightAlgebra.PJ.phiC
-  rw [if_pos h2]
+  rw [ite_eq_left h2]
   rfl
 
 theorem etVal_of_isEtaRule : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (h1 : 1 ≤ j) (h2 : j < D.R.m) (i : ℕ) (η : (recB h.toLawsCore).Cusp j (wEt D j i)) (J : Type) [Fintype J] (n : ℕ) (cf : J → ℤ) (xs : J → Fin n → LatMod (T.Q.Dw j) (5 ^ 4)), Nat.card (LevGrp (T.Q.Dw j) (5 ^ 4)) = 2 * 5 ^ 4 * i → Spans xs → IsEtaRule (T.Q.Xo j) T.Q.c 5 cf xs η.1 → EtVal h j ⟨h1, h2.le⟩ i η := by
@@ -577,7 +577,7 @@ theorem exists_form_four_clauses (D : D7) (T : Top D) (h : LawsP T) (DF q : ℕ)
         supC (T.Q.Xo j) T.Q.c (T.U j) (xiR D) (goodOf T.Q.c σ) 0 (2 * 5 ^ 4 * D.R.r * i) f := by
       change cutN T.C T.Ns j (wEt D j i) σ ⟨f, hmem⟩ = _
       unfold cutN
-      rw [if_pos hj]
+      rw [ite_eq_left hj]
       unfold Core.Ns
       rw [hw, hn]
     have hs0 := (recB h.toLawsCore).supN_nonneg j _ σ ⟨f, hmem⟩

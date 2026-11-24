@@ -89,7 +89,7 @@ theorem weilIs_fieldExt : ∀ {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMo
     change τ ≫ (V.ι ≫ q) = (V'.ι ≫ q') ≫ 𝟙 X
     rw [← Category.assoc, hτι, hq]
     simp
-  haveI : IsMonHom (Iso.refl G).hom := by
+  have : IsMonHom (Iso.refl G).hom := by
     show IsMonHom (𝟙 G)
     infer_instance
   have hp : IsGrpPullback G G (𝟙 X) (𝟙 G.left) :=

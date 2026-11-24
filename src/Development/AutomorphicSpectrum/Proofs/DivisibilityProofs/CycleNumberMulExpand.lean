@@ -83,7 +83,7 @@ theorem BaseChangeColon.cycNum_mul_expansion : ∀ (O : Type) [CommRing O] [IsDo
   have hmon : ∀ (κ : σ →₀ ℕ) (c : ℝ), cycNum Z cls (monomial κ c) Q = c * (cycList Z (classList cls κ ++ Q) : ℝ) := by
     intro κ c
     rw [key _ Q {κ} MvPolynomial.support_monomial_subset, Finset.sum_singleton,
-      MvPolynomial.coeff_monomial, if_pos rfl]
+      MvPolynomial.coeff_monomial, ite_eq_left rfl]
   have hperm : ∀ ν μ : σ →₀ ℕ, cycList Z (classList cls (ν + μ) ++ Q) = cycList Z (classList cls ν ++ (classList cls μ ++ Q)) := by
     intro ν μ
     have hp : (classList cls (ν + μ)).Perm (classList cls ν ++ classList cls μ) := by
@@ -93,7 +93,7 @@ theorem BaseChangeColon.cycNum_mul_expansion : ∀ (O : Type) [CommRing O] [IsDo
     exact BaseChangeColon.intersection_numbers_perm_invariant.2 O K ι Z _ _ (hp.append_right Q)
   conv_lhs => rw [H.as_sum, G.as_sum, Finset.sum_mul_sum]
   rw [hsum]
-  simp_rw [hsum, MvPolynomial.monomial_mul, hmon]
+  simp_rw [hsum, monomial_mul_monomial, hmon]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun μ _ => ?_)
   rw [key H (classList cls μ ++ Q) H.support subset_rfl, Finset.mul_sum]

@@ -207,7 +207,7 @@ def evP (P : HeightOneSpectrum (𝓞 E)) : AfE F E →+* P.adicCompletion E wher
 
 theorem le_exp_neg_one {γ : WithZero (Multiplicative ℤ)} (h : γ < 1) : γ ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
   rcases eq_or_ne γ 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -248,7 +248,7 @@ theorem valued_le_of_supp {v : HeightOneSpectrum (𝓞 F)} {y : (AfE F E)ˣ} (hy
     Valued.v (evP F P (y - 1)) ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
   have h : evP F P y = 1 := (mem_suppAt_iff F E v y).1 hy P hP
   rw [map_sub, h, map_one, sub_self, map_zero]
-  exact zero_le'
+  exact zero_le
 
 theorem exists_congN {ξ : HChar E} (ht : ∀ P, ξ.TameAt P) :
     ∃ N : ℕ, 0 < N ∧ ∀ y ∈ congN F E N, ξ.1 (toIdl F E y) = 1 := by
@@ -287,7 +287,7 @@ theorem afIso_one_tmul {a : FiniteAdeleRing (𝓞 F) F} {k : F} {P : HeightOneSp
     (h : a (P.under (𝓞 F)) = algebraMap F _ k) : afIso F E (1 ⊗ₜ[F] a) P = algebraMap E _ (algebraMap F E k) := by
   have h1 : ∀ n : ℕ, Valued.v (afIso F E (1 ⊗ₜ[F] a) P - algebraMap E _ (algebraMap F E k)) ≤ WithZero.exp (-(n : ℤ)) :=
     fun n => (GlobalTheory.AdeleBaseChange.exists_finiteAdele_baseChange_equiv F E).choose_spec.2.2.2 a k P n
-      (by rw [h, sub_self, map_zero]; exact zero_le')
+      (by rw [h, sub_self, map_zero]; exact zero_le)
   by_contra hne
   have h0 : Valued.v (afIso F E (1 ⊗ₜ[F] a) P - algebraMap E _ (algebraMap F E k)) ≠ 0 := by
     rw [Valuation.ne_zero_iff]

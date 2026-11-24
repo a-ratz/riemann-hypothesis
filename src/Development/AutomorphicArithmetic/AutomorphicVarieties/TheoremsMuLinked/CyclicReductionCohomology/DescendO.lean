@@ -140,7 +140,7 @@ theorem UpperTheory.V.Th.descendO :
             rw [← (T.h N).η]
             exact T.H_η _ hh⟩
       exact (plKill l L G0 T O n y m (T.GN N) (T.h N) hPL (fun g => z' g)
-        (hz.1.comp_continuous continuous_subtype_val) hcoc ⟨a, hη⟩ ha).1
+        (hz.1.comp_continuous continuous_subtypeVal) hcoc ⟨a, hη⟩ ha).1
   obtain ⟨Z, z1, z2⟩ := factor_lc rep' z' hz (T.h N).p (T.h N).cont (T.h N).surj fun g hg => hker hg
   have hs : ∀ g0 : G0.G₀, ∃ g : (T.GN N).G₀, (T.h N).p₀ g = g0 := by
     intro g0
@@ -149,7 +149,7 @@ theorem UpperTheory.V.Th.descendO :
     rw [MonoidHom.mem_ker, ← (T.h N).η, hg]
     exact g0.2
   have z3 : ∀ g : (T.GN N).G₀, Z ((T.h N).p₀ g : G0.G₀) = z' g := fun g => (z2 g).symm
-  refine ⟨fun g0 => Z g0, ⟨z1.comp_continuous continuous_subtype_val, fun g0 h0 => ?_, fun g0 => ?_⟩,
+  refine ⟨fun g0 => Z g0, ⟨z1.comp_continuous continuous_subtypeVal, fun g0 h0 => ?_, fun g0 => ?_⟩,
     fun g => by rw [← z3]⟩
   · obtain ⟨g, rfl⟩ := hs g0
     obtain ⟨h, rfl⟩ := hs h0

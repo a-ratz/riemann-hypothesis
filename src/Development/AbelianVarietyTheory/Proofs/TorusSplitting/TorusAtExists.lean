@@ -80,7 +80,7 @@ private lemma span_col_mul_castLE_eq_span_col {r i : ℕ} (hi : i ≤ r)
     refine Submodule.sum_mem _ fun a _ => ?_
     by_cases ha : (a : ℕ) < i
     · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨a, ha⟩, rfl⟩)
-    · rw [hB a _ (by rw [Fin.lt_def]; simp only [Fin.coe_castLE]; omega), zero_smul]
+    · rw [hB a _ (by rw [Fin.lt_def]; simp only [Fin.val_castLE]; omega), zero_smul]
       exact zero_mem _
   apply Submodule.eq_of_le_of_finrank_le hle
   have h1 := finrank_span_eq_card (R := ℂ) (hli.comp _ (Fin.castLE_injective hi))

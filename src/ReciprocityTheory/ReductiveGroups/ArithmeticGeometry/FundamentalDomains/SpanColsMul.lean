@@ -168,7 +168,7 @@ theorem dmin_Zb (u : Fin 2 → Fin r → E) (hu : ∀ i k, herm X.Gm (u i) (u k)
 theorem Zb_dom (u : Fin 2 → Fin r → E) (hu : ∀ i k, herm X.Gm (u i) (u k) = 0)
     (b : X.Ψ → Fin 2 → Fin 2 → ℂ) (hb : IsHermFam b) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
     X.Zb u b x ∈ X.dom := by
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hx ⊢
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hx ⊢
   intro τ
   refine ⟨?_, fun i => ?_⟩
   · rw [X.mat_Zb, Matrix.det_mul, X.zmat_det u hu, one_mul]

@@ -60,15 +60,15 @@ variable {k r : ℕ}
 
 theorem measurable_lmul_mt (a : Mat k r) :
     @Measurable (Mt k r) (Mt k r) _ _ (fun x => (a * Matrix.of x : Mat k r)) := by
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro i
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro j
   simp only [Matrix.mul_apply, Matrix.of_apply]
   fun_prop
 
 theorem sigmaFinite_of_haarOn {U : Set (Mat k r)} {μ : Measure (Mt k r)} (hH : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => hH.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => hH.finite_compact K hK⟩
   infer_instance
 
 theorem ae_mem_of_haarOn {U : Set (Mat k r)} {μ : Measure (Mt k r)} (hH : IsHaarOn U μ) :
@@ -156,7 +156,7 @@ theorem fix_inv {a : Mat k r} (ha : a ∈ GV k r) {v : Fin (2 * r + k + 1) → �
     _ = v := by rw [Matrix.mulVec_mulVec, gv_inv_mul ha, Matrix.one_mulVec]
 
 theorem uw_inv {z : Fin (2 * r + k + 1) → ℂ} {a : Mat k r} (ha : a ∈ UWset k r z) : a⁻¹ ∈ UWset k r z := by
-  simp only [UWset, Set.mem_setOf_eq] at ha ⊢
+  simp only [UWset, Set.mem_ofPred_eq] at ha ⊢
   obtain ⟨ha1, ha2, ha3⟩ := ha
   exact ⟨gv_inv ha1, fun i => ⟨fix_inv ha1 (ha2 i).1, fix_inv ha1 (ha2 i).2⟩, fix_inv ha1 ha3⟩
 

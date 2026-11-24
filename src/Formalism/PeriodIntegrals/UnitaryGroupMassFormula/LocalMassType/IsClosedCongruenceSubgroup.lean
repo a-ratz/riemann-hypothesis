@@ -70,19 +70,19 @@ variable (v : HeightOneSpectrum (𝓞 F))
 theorem t2Space_fv : T2Space (Fv F v) := inferInstance
 
 theorem t2Space_fv_tensorProduct : T2Space (Fv F v ⊗[F] E) := by
-  haveI := t2Space_fv (F := F) v
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := t2Space_fv (F := F) v
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   exact LocMassOrdSF.t2_tensor_product (F := F) (E := E) (R := Fv F v)
 
 theorem sc_tensV : SecondCountableTopology (Fv F v ⊗[F] E) := by
-  haveI := LocMassOrdSF.secondCountable_Fv (F := F) (v := v)
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := LocMassOrdSF.secondCountable_Fv (F := F) (v := v)
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   exact LocMassOrdSF.sc_tens (F := F) (E := E) (R := Fv F v)
 
 theorem lc_tensV : LocallyCompactSpace (Fv F v ⊗[F] E) := by
-  haveI := t2Space_fv (F := F) v
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := LocMassOrdSF.locallyCompact_Fv (F := F) (v := v)
+  have := t2Space_fv (F := F) v
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := LocMassOrdSF.locallyCompact_Fv (F := F) (v := v)
   exact LocMassOrdSF.lc_tens (F := F) (E := E) (R := Fv F v)
 
 theorem borel_tensV : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
@@ -96,8 +96,8 @@ section HATop
 variable (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (v : HeightOneSpectrum (𝓞 F))
 
 theorem continuous_sigR : Continuous (sigR (Fv F v) σ) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := LocMassOrdSF.isModTop_tens (F := F) (E := E) (R := Fv F v)
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := LocMassOrdSF.isModTop_tens (F := F) (E := E) (R := Fv F v)
   let f : (Fv F v ⊗[F] E) →ₗ[Fv F v] (Fv F v ⊗[F] E) :=
     TensorProduct.AlgebraTensorModule.map LinearMap.id σ.toLinearMap
   have hf : Continuous f := IsModuleTopology.continuous_of_linearMap f
@@ -120,20 +120,20 @@ theorem isClosed_HR : IsClosed (HR (Fv F v) σ J : Set (GL (Fin n) (Fv F v ⊗[F
   exact isClosed_eq ((hm.matrix_mul continuous_const).matrix_mul hv) continuous_const
 
 theorem lc_HA : LocallyCompactSpace (HA (Fv F v) σ J) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
     (inferInstance : LocallyCompactSpace (Fin n → Fin n → Fv F v ⊗[F] E))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))).symm.isClosedEmbedding.locallyCompactSpace
-  haveI : LocallyCompactSpace (GL (Fin n) (Fv F v ⊗[F] E)) :=
+  have : LocallyCompactSpace (GL (Fin n) (Fv F v ⊗[F] E)) :=
     Units.isClosedEmbedding_embedProduct.locallyCompactSpace
   exact (isClosed_HR σ J v).isClosedEmbedding_subtypeVal.locallyCompactSpace
 
 theorem sc_HA : SecondCountableTopology (HA (Fv F v) σ J) := by
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
     (inferInstance : SecondCountableTopology (Fin n → Fin n → Fv F v ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))).symm.isInducing.secondCountableTopology
-  haveI : SecondCountableTopology (GL (Fin n) (Fv F v ⊗[F] E)) :=
+  have : SecondCountableTopology (GL (Fin n) (Fv F v ⊗[F] E)) :=
     Units.isEmbedding_embedProduct.isInducing.secondCountableTopology
   exact (isClosed_HR σ J v).isClosedEmbedding_subtypeVal.isInducing.secondCountableTopology
 
@@ -144,8 +144,8 @@ theorem continuous_smulTup {a : ℕ} (X : TupV (E := E) v n a) :
 
 theorem measurableSet_image_closed {a : ℕ} {C : Set (HA (Fv F v) σ J)} (hC : IsClosed C)
     (X : TupV (E := E) v n a) : MeasurableSet ((fun c : HA (Fv F v) σ J => c • X) '' C) := by
-  haveI := lc_HA σ J v
-  haveI := sc_HA σ J v
+  have := lc_HA σ J v
+  have := sc_HA σ J v
   obtain ⟨K, hK, hKU⟩ := IsSigmaCompact.image (continuous_smulTup σ J v X)
     (isSigmaCompact_univ.of_isClosed_subset hC (Set.subset_univ _))
   rw [← hKU]
@@ -187,8 +187,8 @@ theorem v_natCast_lt_one {g : ℕ} (hgv : (g : 𝓞 F) ∈ v.asIdeal) : Valued.v
 
 theorem eventually_pow_smul_mem {g : ℕ} (hgv : (g : 𝓞 F) ∈ v.asIdeal) {a : ℕ}
     (c : Fin a → Fv F v ⊗[F] E) : ∃ N : ℕ, ∀ i, (g : Fv F v) ^ N • c i ∈ OEv (E := E) v := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := LocMassOrdSF.isModTop_tens (F := F) (E := E) (R := Fv F v)
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := LocMassOrdSF.isModTop_tens (F := F) (E := E) (R := Fv F v)
   have ht := Valued.tendsto_zero_pow_of_v_lt_one (v_natCast_lt_one v hgv)
   have hev : ∀ i, ∀ᶠ N in atTop, (g : Fv F v) ^ N • c i ∈ OEv (E := E) v := fun i => by
     have h2 : Tendsto (fun N : ℕ => (g : Fv F v) ^ N • c i) atTop (𝓝 ((0 : Fv F v) • c i)) :=
@@ -211,7 +211,7 @@ theorem compl_congruence_tuples {g : ℕ} (hgv : (g : 𝓞 F) ∈ v.asIdeal) (a 
   ext X
   constructor
   · intro hX
-    simp only [Set.mem_compl_iff, P2, Set.mem_setOf_eq, not_forall, exists_prop] at hX
+    simp only [Set.mem_compl_iff, P2, Set.mem_ofPred_eq, not_forall, exists_prop] at hX
     obtain ⟨c, hs, i0, hi0⟩ := hX
     have hex : ∃ N : ℕ, ∀ i, (g : Fv F v) ^ N • c i ∈ OEv (E := E) v := eventually_pow_smul_mem v hgv c
     have hN := Nat.find_spec hex
@@ -240,8 +240,8 @@ theorem compl_congruence_tuples {g : ℕ} (hgv : (g : 𝓞 F) ∈ v.asIdeal) (a 
     exact hi (hP c hs i)
 
 theorem isCompact_Sg {g : ℕ} (hg : g.Prime) (a : ℕ) : IsCompact (Sg (E := E) v g a) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := LocMassOrdSF.isModTop_tens (F := F) (E := E) (R := Fv F v)
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := LocMassOrdSF.isModTop_tens (F := F) (E := E) (R := Fv F v)
   have hg0 : (g : Fv F v) ≠ 0 := by
     rw [← map_natCast (algebraMap F (Fv F v)) g]
     exact (map_ne_zero _).mpr (by exact_mod_cast hg.ne_zero)
@@ -260,12 +260,12 @@ theorem isCompact_Sg {g : ℕ} (hg : g.Prime) (a : ℕ) : IsCompact (Sg (E := E)
 
 theorem isOpen_congruence_tuples (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (hSD : IsSDLoc σ J v Λ)
     {g : ℕ} (hg : g.Prime) (hgv : (g : 𝓞 F) ∈ v.asIdeal) (a : ℕ) : IsOpen (P2 v Λ a) := by
-  haveI : CompactSpace (Sg (E := E) v g a) := isCompact_iff_compactSpace.mp (isCompact_Sg v hg a)
+  have : CompactSpace (Sg (E := E) v g a) := isCompact_iff_compactSpace.mp (isCompact_Sg v hg a)
   have hC : IsClosed {p : Sg (E := E) v g a × (Fin a → Fin n → Fv F v ⊗[F] E) |
       (∑ i, (p.1 : Fin a → Fv F v ⊗[F] E) i • p.2 i) ∈ latLoc (E := E) v Λ} := by
     refine (LocMassOrdKv.isClosed_latLoc (σ := σ) (J := J) (v := v) Λ hSD).preimage ?_
     exact continuous_finsetSum _ fun i _ =>
-      ((continuous_apply i).comp (continuous_subtype_val.comp continuous_fst)).smul
+      ((continuous_apply i).comp (continuous_subtypeVal.comp continuous_fst)).smul
         ((continuous_apply i).comp continuous_snd)
   have himg : (P2 v Λ a)ᶜ = Prod.snd '' {p : Sg (E := E) v g a × (Fin a → Fin n → Fv F v ⊗[F] E) |
       (∑ i, (p.1 : Fin a → Fv F v ⊗[F] E) i • p.2 i) ∈ latLoc (E := E) v Λ} := by
@@ -313,7 +313,7 @@ theorem isClosed_cong (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (hSD :
       ⋂ a, (fun z => sc (E := E) v (g : Fv F v)⁻¹ • (locF v (f2 z) a - locF v (f1 z) a)) ⁻¹'
         (latLoc (E := E) v Λ : Set (Fin n → Fv F v ⊗[F] E)) := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
     exact forall_congr' fun a => mem_gLat_iff v Λ hg0 _
   rw [heq]
   refine isClosed_iInter fun a => (LocMassOrdKv.isClosed_latLoc (σ := σ) (J := J) (v := v) Λ hSD).preimage ?_

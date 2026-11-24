@@ -126,9 +126,9 @@ theorem bigM_conjTranspose (g : ι → Matrix (Fin n) (Fin n) ℂ) : (bigM g)ᴴ
   simp only [bigM]
   by_cases h : x.1 = y.1 ∧ x.2.2 = y.2.2
   · have h' : y.1 = x.1 ∧ y.2.2 = x.2.2 := ⟨h.1.symm, h.2.symm⟩
-    rw [if_pos h', if_pos h, Matrix.conjTranspose_apply, h.1]
+    rw [ite_eq_left h', ite_eq_left h, Matrix.conjTranspose_apply, h.1]
   · have h' : ¬ (y.1 = x.1 ∧ y.2.2 = x.2.2) := fun h' => h ⟨h'.1.symm, h'.2.symm⟩
-    rw [if_neg h', if_neg h, star_zero]
+    rw [ite_eq_right h', ite_eq_right h, star_zero]
 
 theorem fockF_blockAct (g : ι → Matrix (Fin n) (Fin n) ℂ) (f h : MvPolynomial (ι × Fin n × Fin n) ℂ) :
     fockF (blockAct ℂ g f) h = fockF f (blockAct ℂ (fun τ => (g τ)ᴴ) h) := by
@@ -535,7 +535,7 @@ theorem CSpan_le_span (s : K →+* ℂ) (lam : ι → DomWeight n) :
 theorem linearIndependent_map {σ κ : Type} (s : K →+* ℂ) (v : κ → MvPolynomial σ K) (hv : LinearIndependent K v) :
     LinearIndependent ℂ fun i => MvPolynomial.map s (v i) := by
   classical
-  letI : Algebra K ℂ := s.toAlgebra
+  let : Algebra K ℂ := s.toAlgebra
   have B : Module.Basis _ K ℂ := Module.Basis.ofVectorSpace K ℂ
   rw [linearIndependent_iff'] at hv ⊢
   intro t g hg i hi

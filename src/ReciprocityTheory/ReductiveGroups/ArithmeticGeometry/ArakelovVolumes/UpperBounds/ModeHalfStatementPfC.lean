@@ -66,7 +66,7 @@ theorem posDef_int_lower {N : ℕ} {A : Matrix (Fin N) (Fin N) ℝ} (hA : A.PosD
   rcases Nat.eq_zero_or_pos N with hN | hN
   · subst hN
     exact ⟨1, one_pos, fun x hx => absurd (Subsingleton.elim x 0) hx⟩
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   let q : (Fin N → ℝ) → ℝ := fun y => y ⬝ᵥ (A *ᵥ y)
   have hqc : Continuous q :=
     continuous_id.dotProduct (continuous_const.matrix_mulVec continuous_id)

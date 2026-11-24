@@ -188,17 +188,17 @@ theorem exists_basis_of_dual {K R : Type} [CommRing R] [IsNoetherianRing R] (hQ 
     have h2 : g l * u l = 0 := by
       rw [← hsum (fun k => g k * u k) l, h1]; rfl
     by_cases hl : l ∈ Set.range e
-    · simp only [u, if_pos hl] at h2
+    · simp only [u, ite_eq_left hl] at h2
       exact mem_of_mul_mem hQ (d l) ⊥ (fun r hr => by rw [Ideal.mem_bot.1 hr, map_zero]; exact zero_mem _)
         (t := z l) (by simp [hd]) (by rw [mul_comm, h2]; exact zero_mem _)
-    · simpa only [u, if_neg hl, mul_one] using h2
+    · simpa only [u, ite_eq_right hl, mul_one] using h2
   have hsp : ⊤ ≤ Submodule.span R (Set.range v) := by
     rintro ⟨D, hD⟩ -
     obtain ⟨hD0, hD1⟩ := (hM D).1 hD
     have hdiv : ∀ k, u k ∣ D (z k) := by
       intro k
       by_cases hk : k ∈ Set.range e
-      · simp only [u, if_pos hk]
+      · simp only [u, ite_eq_left hk]
         obtain ⟨j, rfl⟩ := hk
         have h1 := Ideal.mem_span_singleton.1 (hD1 _ (Ideal.mem_span_singleton_self _))
         rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ j), D.leibniz, smul_eq_mul, smul_eq_mul] at h1
@@ -216,7 +216,7 @@ theorem exists_basis_of_dual {K R : Type} [CommRing R] [IsNoetherianRing R] (hQ 
             exact Ideal.mem_span_singleton.1 (mem_of_mul_mem hQ (d (e i)) _
               (mem_span_of_dvd _ (by simp [hd, hij])) (by simp [hd]) (Ideal.mem_span_singleton.2 ha))
         exact h3 _ (Finset.notMem_erase _ _) _ h2
-      · simp only [u, if_neg hk, one_dvd]
+      · simp only [u, ite_eq_right hk, one_dvd]
     choose g hg using hdiv
     refine (Submodule.mem_span_range_iff_exists_fun R).2 ⟨g, Subtype.ext ?_⟩
     conv_rhs => rw [show (⟨D, hD⟩ : M).1 = D from rfl, hspan D hD0]
@@ -322,12 +322,12 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
   have ha (j : Fin m) : dFun (algX p U) (z₀ j) = ∑ l, a j l • dFun (algX p U) (x l) := by
     conv_lhs => rw [← b.sum_repr (dFun (algX p U) (z₀ j))]
     simp only [hb, a]
-  letI iΓ : Algebra k Γ(X, U) := (algX p U).toAlgebra
-  letI iA : Algebra k (X.presheaf.stalk y) :=
+  let iΓ : Algebra k Γ(X, U) := (algX p U).toAlgebra
+  let iA : Algebra k (X.presheaf.stalk y) :=
     ((X.presheaf.germ U y hyU).hom.comp (algX p U)).toAlgebra
-  letI iΓA : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hyU).hom.toAlgebra
-  haveI : IsScalarTower k Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI := formallySmooth_residueField (n := n) p hU y hyU rfl
+  let iΓA : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hyU).hom.toAlgebra
+  have : IsScalarTower k Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' rfl
+  have := formallySmooth_residueField (n := n) p hU y hyU rfl
   have hw := linearIndependent_tmul_D (k := k) f hf hli
   let ρ : Γ(X, U) →+* IsLocalRing.ResidueField (X.presheaf.stalk y) :=
     (IsLocalRing.residue (X.presheaf.stalk y)).comp (X.presheaf.germ U y hyU).hom
@@ -390,16 +390,16 @@ theorem exists_coords {k : Type} [Field k] [CharZero k] {X : Scheme.{0}} [IsLoca
   have hVU : X.basicOpen c.det ≤ U := X.basicOpen_le _
   refine ⟨X.basicOpen c.det, hVU.trans hUO, e, hyW, he, fun W hW hWa => ?_⟩
   have hWU : W ≤ U := hW.trans hVU
-  letI : Algebra k Γ(X, W) := (algX p W).toAlgebra
-  letI : Algebra Γ(X, U) Γ(X, W) := (resG X hWU).toAlgebra
-  haveI : IsScalarTower k Γ(X, U) Γ(X, W) := IsScalarTower.of_algebraMap_eq' (resG_comp_algX p hWU).symm
-  haveI : Algebra.FormallyEtale Γ(X, U) Γ(X, W) := by
+  let : Algebra k Γ(X, W) := (algX p W).toAlgebra
+  let : Algebra Γ(X, U) Γ(X, W) := (resG X hWU).toAlgebra
+  have : IsScalarTower k Γ(X, U) Γ(X, W) := IsScalarTower.of_algebraMap_eq' (resG_comp_algX p hWU).symm
+  have : Algebra.FormallyEtale Γ(X, U) Γ(X, W) := by
     have h := HasRingHomProperty.appLE @Etale (𝟙 X) inferInstance ⟨U, hU⟩ ⟨W, hWa⟩ hWU
     have e : ((𝟙 X : X ⟶ X).appLE U W hWU).hom = resG X hWU := by
       ext r
       rfl
     rw [e] at h
-    haveI : Algebra.Etale Γ(X, U) Γ(X, W) := h
+    have : Algebra.Etale Γ(X, U) Γ(X, W) := h
     infer_instance
   have hu : IsUnit (algebraMap Γ(X, U) Γ(X, W) c.det) := by
     have := (RingedSpace.isUnit_res_basicOpen X.toRingedSpace c.det).map (resG X hW)
@@ -416,8 +416,8 @@ theorem exists_logDer_basis_of_snc {k : Type} [Field k] [CharZero k] {X : Scheme
       I.ideal W = Ideal.span {∏ i, t i} ∧
       ∀ (i : Fin m) (l : Fin n), ((b l).1 : Derivation ℤ Γ(X, W.1) Γ(X, W.1)) (t i) = if (l : ℕ) = i then t i else 0 := by
   classical
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth n p
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
+  have : Smooth p := SmoothOfRelativeDimension.smooth n p
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
   obtain ⟨-, O, hxO, r, s, J, hrsp, hO⟩ := hI x
   obtain ⟨V, hV, e, hxV, he, H⟩ := exists_coords p n x O.1 hxO s hrsp
   obtain ⟨f, hfV, hxf⟩ := U.2.exists_basicOpen_le ⟨x, hxV⟩ hx
@@ -431,8 +431,8 @@ theorem exists_logDer_basis_of_snc {k : Type} [Field k] [CharZero k] {X : Scheme
       ← J.equivFin.symm.prod_comp]
     simp only [hz]
     rfl
-  letI : Algebra k Γ(X, W.1) := (algX p W.1).toAlgebra
-  haveI : IsNoetherianRing Γ(X, W.1) := IsLocallyNoetherian.component_noetherian W
+  let : Algebra k Γ(X, W.1) := (algX p W.1).toAlgebra
+  have : IsNoetherianRing Γ(X, W.1) := IsLocallyNoetherian.component_noetherian W
   obtain ⟨b, hb'⟩ := exists_basis_of_kaehler (K := k) z bΩ hb (e ∘ ix) (he.comp hix) (LogKS.logDer p I W)
     (fun D => by
       change ((∀ a, D (constFn p W.1 a) = 0) ∧ ∀ g ∈ I.ideal W, D g ∈ I.ideal W) ↔ _
@@ -456,7 +456,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem GlobalTheory.LogBasis.exists_logDer_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (RingHom.id c.F)), 1 ≤ Dw.p + Dw.q → SmoothOfRelativeDimension Dw.dim (genStr Y) → ReciprocityTheory.AnForm.R.FinalTheorems.Snc (genBdIdeal Y) → ∀ (U : Y.X.affineOpens) (x : Y.X), x ∈ U.1 → ∃ (f : Γ(Y.X, U.1)) (W : Y.X.affineOpens) (hW : W.1 ≤ U.1) (m : ℕ) (t : Fin m → Γ(Y.X, W.1)) (b : Module.Basis (Fin Dw.dim) Γ(Y.X, W.1) (logDer Y.s (Scheme.IdealSheafData.vanishingIdeal (interior Y).compl) W)), x ∈ W.1 ∧ W.1 = Y.X.basicOpen f ∧ (∀ g ∈ (Scheme.IdealSheafData.vanishingIdeal (interior Y).compl).ideal W, g ∈ Ideal.span {∏ i, t i}) ∧ ∏ i, t i ∈ (Scheme.IdealSheafData.vanishingIdeal (interior Y).compl).ideal W ∧ ∀ (i : Fin m) (k : Fin Dw.dim), ((b k).1 : Derivation ℤ Γ(Y.X, W.1) Γ(Y.X, W.1)) (t i) = if (k : ℕ) = i then t i else 0 := by
   intro E _ _ _ H Dw l Xo c Y _ hs hsnc U x hx
-  haveI := smooth_gen_iff.1 hs
+  have := smooth_gen_iff.1 hs
   obtain ⟨f, W, m, t, b, h1, h2, h3, h4⟩ :=
     GlobalTheory.LogBasis.exists_logDer_basis_of_snc Y.s Dw.dim _ (snc_gen_iff.1 hsnc) U x hx
   have h3' : (Scheme.IdealSheafData.vanishingIdeal (interior Y).compl).ideal W = Ideal.span {∏ i, t i} := h3

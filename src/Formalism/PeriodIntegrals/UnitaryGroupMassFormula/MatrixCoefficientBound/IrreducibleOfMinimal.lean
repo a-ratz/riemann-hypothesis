@@ -134,7 +134,7 @@ theorem gam_one_real (ψ₀ : AddChar F ℂ) :
     · rfl
   have hpsi : psiNat ψ₀ (1 : GL (Fin k) F) = 1 := by
     unfold psiNat psiU
-    rw [if_pos isUni_one, Units.val_one, hsd, AddChar.map_zero_eq_one]
+    rw [ite_eq_left isUni_one, Units.val_one, hsd, AddChar.map_zero_eq_one]
   unfold gam
   have h1 : ∀ y : GL (Fin k) F, y * 1 * y⁻¹ = 1 := fun y => by group
   have h2 : ∀ y : GL (Fin k) F, y * y⁻¹ = 1 := fun y => by group
@@ -146,7 +146,7 @@ theorem gam_one_re_pos (ψ₀ : AddChar F ℂ) : 0 < (gam ψ₀ (1 : GL (Fin k) 
   rw [gam_one_real, Complex.ofReal_re]
   have hU : 0 < cardU F k := by
     unfold cardU
-    haveI : Nonempty {x : GL (Fin k) F // IsUni k x} := ⟨⟨1, isUni_one⟩⟩
+    have : Nonempty {x : GL (Fin k) F // IsUni k x} := ⟨⟨1, isUni_one⟩⟩
     exact Nat.card_pos
   have hG : 0 < Fintype.card (GL (Fin k) F) := Fintype.card_pos
   exact div_pos (by exact_mod_cast hG) (by exact_mod_cast hU)
@@ -195,7 +195,7 @@ theorem eig_place (hC : ConvScalar) (hR : GenericRatio) (ψ₀ : AddChar F ℂ) 
       (Fintype.card (GL (Fin k) F) : ℝ) / (cardU F k : ℝ) := by
     rw [hreal, Complex.ofReal_re]
   by_cases hgen : Generic ψ₀ W.toRepresentation
-  · rw [if_pos hgen] at k0
+  · rw [ite_eq_left hgen] at k0
     have k1 : (gam ψ₀ (1 : GL (Fin k) F) *
         ((cardU F k : ℂ) / (Module.finrank ℂ W.toSubmodule : ℂ))) • u = c • u := by
       rw [← k0, mul_smul]
@@ -212,7 +212,7 @@ theorem eig_place (hC : ConvScalar) (hR : GenericRatio) (ψ₀ : AddChar F ℂ) 
       apply mul_le_mul_of_nonneg_left _ (by positivity)
       exact (hR F k ψ₀ hψ W.toSubmodule W.toRepresentation hirr hgen).trans
         (ratio_numeric k _ (by exact_mod_cast hq))
-  · rw [if_neg hgen, smul_zero] at k0
+  · rw [ite_eq_right hgen, smul_zero] at k0
     have hcu : c • u = 0 := by
       rw [← k0]
       rfl

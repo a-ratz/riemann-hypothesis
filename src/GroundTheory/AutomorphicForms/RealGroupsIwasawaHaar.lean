@@ -243,7 +243,7 @@ theorem haarGLReal_eq_smul_map_kbHomeomorph (μ₀ : Measure (Matrix n n ℝ)) [
   refine ⟨c, ?_, ?_⟩
   · intro hc
     rw [hc, zero_smul] at key
-    have h0 : H Set.univ = 0 := by rw [hH, key, Measure.map_zero, Measure.coe_zero, Pi.zero_apply]
+    have h0 : H Set.univ = 0 := by rw [hH, key, Measure.map_zero, FunLike.coe_zero, Pi.zero_apply]
     exact (IsOpenPosMeasure.open_pos Set.univ isOpen_univ Set.univ_nonempty) h0
   · rw [hH, key, Measure.map_smul c f.symm.measurable.aemeasurable]
     congr 1

@@ -190,8 +190,8 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.TwV.DelA.cmp_valsAt : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => J.Dict std → S.Pos → ∀ ι : ℂ →+* ℂ_[D.what₂.places.resChar w], (∀ z : TaylorLogMetric.Qbar, ι z = S.lam z) → letI := wittFractionAlgebraCp (D.what₂.places.resChar w); letI := algKfC S.E.toCEmb; ∀ (d : Dec J std) j (hj : j + 1 ≤ D.R.m) (h : ((sysS H X std).Pj (j + 1)).m + 1 = D.R.N (j + 1)) (La : (sysS H X std).Lt (j + 1)), ((sysS H X std).Pj (j + 1)).IsLatTup La.2 → ∀ x : ((ex.tw.fm u μ).lat (j + 1)).V, ∃ V : XR ((sysS H X std).Pj (j + 1)) ℂ, MvPolynomial.map (algebraMap (sysS H X std).G.Kf ℂ_[D.what₂.places.resChar w]) ((kaAt X H hT).cmp (j + 1) x La.1 La.2) = MvPolynomial.map ι V ∧ RealAt d (j + 1) hj h La ((ex.tw.fm u μ).emb (j + 1) x) V) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hDict hPos ι hι
-  letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
-  letI := algKfC S.E.toCEmb
+  let := wittFractionAlgebraCp (D.what₂.places.resChar w)
+  let := algKfC S.E.toCEmb
   intro d j hj h La hLa x
   have hr := (GlobalTheory.TwV.DelA.posTie_at S hPos ι hι).2
   obtain ⟨c, κ, _, hκ, hy, hiff⟩ := GlobalTheory.T.realAt_succ_iff_decomposition_values S d j hj h La hLa
@@ -204,7 +204,7 @@ theorem GlobalTheory.TwV.DelA.cmp_valsAt : AllSites (fun {D L hT Gi Gl Kc Dx cX 
     ((I.at' j hj).eps.symm x) ((I.at' j hj).st.eC.symm La.1).2 La.2), ?_, ?_⟩
   · rw [kaAt_cmp X H hT j hj x]
     show MvPolynomial.map _ (cmpC _ _ _ _ _ _ _ _ _ _ _ _) = _
-    simp only [cmpC, hLa, if_true]
+    simp only [cmpC, hLa, ite_true]
     rw [MvPolynomial.map_map, MvPolynomial.map_map]
     refine congrArg (fun f => MvPolynomial.map f _) ?_
     exact RingHom.ext fun r => (hr r).symm
@@ -284,14 +284,14 @@ theorem blk_frame_eq {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ v 
     by_cases hs : Even s.val
     · have ho : ¬ IsOddPos s := by
         unfold IsOddPos; rw [← Nat.odd_iff, ← Nat.not_even_iff_odd]; exact not_not.2 hs
-      rw [if_neg ho] at e1
-      simp only [hAt, hs, if_true]
+      rw [ite_eq_right ho] at e1
+      simp only [hAt, hs, ite_true]
       rw [one_mul, inv_one, mul_one]
       exact e1.symm
     · have ho : IsOddPos s := by
         unfold IsOddPos; rw [← Nat.odd_iff, ← Nat.not_even_iff_odd]; exact hs
-      rw [if_pos ho] at e1
-      simp only [hAt, hs, if_false, invT]
+      rw [ite_eq_left ho] at e1
+      simp only [hAt, hs, ite_false, invT]
       rw [one_mul, inv_one, mul_one, ← map_inv]
       exact e1.symm
   | succ j =>
@@ -316,14 +316,14 @@ theorem blk_frame_eq {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ v 
     by_cases hs : Even s.val
     · have ho : ¬ IsOddPos s := by
         unfold IsOddPos; rw [← Nat.odd_iff, ← Nat.not_even_iff_odd]; exact not_not.2 hs
-      rw [if_neg ho] at e1
-      simp only [hAt, hs, if_true]
+      rw [ite_eq_right ho] at e1
+      simp only [hAt, hs, ite_true]
       rw [one_mul, inv_one, mul_one]
       exact e1.symm
     · have ho : IsOddPos s := by
         unfold IsOddPos; rw [← Nat.odd_iff, ← Nat.not_even_iff_odd]; exact hs
-      rw [if_pos ho] at e1
-      simp only [hAt, hs, if_false, invT]
+      rw [ite_eq_left ho] at e1
+      simp only [hAt, hs, ite_false, invT]
       rw [one_mul, inv_one, mul_one, ← map_inv]
       exact e1.symm
 
@@ -451,7 +451,7 @@ theorem evD_numD_denD : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos :
   rw [Equiv.symm_apply_apply]
   obtain ⟨k1, k2, k3⟩ := key v s
   by_cases hs : IsOddPos s
-  · simp only [if_pos hs]
+  · simp only [ite_eq_left hs]
     have hY : evD X D pos ι hN d f' (YtMat X Kc j v s).det
         = ι ((zT X D pos f' (pos ⟨v, s⟩)).det ^ D.R.N j * sgRev (D.R.N j) * (dfr X D hN d f' (pos ⟨v, s⟩)).det) := by
       rw [evD_det, k3 hs, Matrix.det_smul, det_map_cast, det_rev_transpose, Fintype.card_fin,
@@ -471,7 +471,7 @@ theorem evD_numD_denD : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos :
       rw [exT, show NN X.G.P.m X.t j = D.R.N j from hN.1.symm]
     rw [h1, h2]
     ring
-  · simp only [if_neg hs]
+  · simp only [ite_eq_right hs]
     rw [map_one, one_mul, map_pow (evD X D pos ι hN d f'), evD_det, k2 hs, det_map_cast, map_pow]
 
 end GlobalTheory.TwV.DelA
@@ -558,7 +558,7 @@ theorem evD_ySub (Kc : Type) [Field Kc] [Algebra X.G.Kf Kc] (ι : ℂ →+* Kc) 
       rintro _ rfl; exact Iff.rfl
     exact hb _ (Equiv.symm_apply_apply _ _)
   by_cases ho : IsOddPos s
-  · rw [if_pos ho, ySub_odd X Kc j v s ho]
+  · rw [ite_eq_left ho, ySub_odd X Kc j v s ho]
     have h1 := RingHom.map_adjugate (evD X D pos ι hN d f') (YtMat X Kc j v s)
     simp only [RingHom.mapMatrix_apply] at h1
     have h2 := congrFun (congrFun h1 a) t
@@ -570,16 +570,16 @@ theorem evD_ySub (Kc : Type) [Field Kc] [Algebra X.G.Kf Kc] (ι : ℂ →+* Kc) 
     simp only [RingHom.mapMatrix_apply] at h3
     rw [← h3, adjugate_transpose_rev _ (hd _)]
     have hz : zT X D pos (dfr X D hN d f') (pos ⟨v, s⟩) = ((dfr X D hN d f' (pos ⟨v, s⟩))⁻¹).transpose.submatrix id Fin.rev := by
-      unfold zT; rw [if_pos (hsym.2 ho)]
+      unfold zT; rw [ite_eq_left (hsym.2 ho)]
     have hpos : 1 ≤ D.R.N j := by have := rkS X D hN; omega
     have he : ((D.R.N j : ℤ) - 1) = ((NN X.G.P.m X.t j - 1 : ℕ) : ℤ) := by
       rw [← hN.1]; push_cast [Nat.cast_sub hpos]; ring
     rw [hz, kOdd, he, zpow_natCast]
     simp only [Matrix.smul_apply, Matrix.submatrix_apply, Matrix.map_apply, smul_eq_mul, map_mul, map_pow, mul_assoc]
-  · rw [if_neg ho, one_mul]
-    have h0 : ySub X Kc j v s = dyMat X Kc j v s := by unfold ySub; rw [if_neg ho]
+  · rw [ite_eq_right ho, one_mul]
+    have h0 : ySub X Kc j v s = dyMat X Kc j v s := by unfold ySub; rw [ite_eq_right ho]
     have hz : zT X D pos (dfr X D hN d f') (pos ⟨v, s⟩) = dfr X D hN d f' (pos ⟨v, s⟩) := by
-      unfold zT; rw [if_neg (fun h => ho (hsym.1 h))]
+      unfold zT; rw [ite_eq_right (fun h => ho (hsym.1 h))]
     have h2 := congrFun (congrFun (hE ho) a) t
     rw [Matrix.map_apply] at h2
     rw [h0, h2, hz]
@@ -640,9 +640,9 @@ theorem evD_subD : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ 
     rw [h2]
     by_cases hb : IsOddPos b.2
     · simp only [H]
-      rw [if_pos hb, if_pos hb, hN.1, ← hO m hm b hb, zpow_natCast, map_pow]
+      rw [ite_eq_left hb, ite_eq_left hb, hN.1, ← hO m hm b hb, zpow_natCast, map_pow]
     · simp only [H]
-      rw [if_neg hb, if_neg hb, one_pow, map_one]
+      rw [ite_eq_right hb, ite_eq_right hb, one_pow, map_one]
 
 end GlobalTheory.TwV.DelA
 end -- clump:auto
@@ -706,7 +706,7 @@ theorem leftSide_det_zT_odd {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos :
     (f : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ) (τ : D.what₂.Tau) (h : IsOddPos (pos.symm τ).2) :
     (zT X D pos f τ).det = sgRev n * ((f τ).det)⁻¹ := by
   unfold zT
-  rw [if_pos h]
+  rw [ite_eq_left h]
   have := Matrix.det_permute' (Fin.revPerm : Equiv.Perm (Fin n)) ((f τ)⁻¹).transpose
   rw [show (⇑(Fin.revPerm : Equiv.Perm (Fin n))) = Fin.rev from rfl] at this
   rw [this, Matrix.det_transpose, Matrix.det_nonsing_inv, Ring.inverse_eq_inv']
@@ -715,7 +715,7 @@ theorem leftSide_det_zT_odd {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos :
 theorem leftSide_zT_even {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ v : X.Pl, Fin (X.G.P.n' v)) ≃ D.what₂.Tau) {n : ℕ}
     (f : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ) (τ : D.what₂.Tau) (h : ¬ IsOddPos (pos.symm τ).2) :
     zT X D pos f τ = f τ := by
-  unfold zT; rw [if_neg h]
+  unfold zT; rw [ite_eq_right h]
 
 end GlobalTheory.TwV.DelA
 end
@@ -752,10 +752,10 @@ theorem leftSide_at_point : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (p
   refine Finset.prod_congr rfl fun τ _ => ?_
   obtain ⟨h1, h2⟩ := hex τ
   by_cases ho : IsOddPos (pos.symm τ).2
-  · simp only [if_pos ho] at h1 h2 ⊢
+  · simp only [ite_eq_left ho] at h1 h2 ⊢
     rw [h1, h2, leftSide_det_zT_odd X D pos f' τ ho, leftSide_det_zT_odd X D pos (dfr X D hN d f') τ ho]
     exact leftSide_odd _ _ _ _ _ _ _ _ _ (hdf τ) (hf' τ) (leftSide_sgRev_sq _) (leftSide_sgRev_sq _) rfl
-  · simp only [if_neg ho] at h1 h2 ⊢
+  · simp only [ite_eq_right ho] at h1 h2 ⊢
     rw [h1, h2, leftSide_zT_even X D pos f' τ ho, leftSide_zT_even X D pos (dfr X D hN d f') τ ho, ← zpow_natCast,
       Int.toNat_of_nonneg (hnn τ), zpow_sub₀ (hdf τ)]
     simp only [zpow_neg]
@@ -893,19 +893,19 @@ theorem zT_fOf {n : ℕ} (g : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ) (hg 
   funext τ
   unfold zT fOf
   by_cases ho : IsOddPos (pos.symm τ).2
-  · rw [if_pos ho, if_pos ho,
+  · rw [ite_eq_left ho, ite_eq_left ho,
       Matrix.nonsing_inv_nonsing_inv _ (isUnit_iff_ne_zero.mpr (det_rev_ne_zero (g τ) (hg τ)))]
     ext a b
     simp
-  · rw [if_neg ho, if_neg ho]
+  · rw [ite_eq_right ho, ite_eq_right ho]
 
 theorem det_fOf {n : ℕ} (g : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ) (hg : ∀ τ, (g τ).det ≠ 0) (τ : D.what₂.Tau) :
     (fOf X D pos g τ).det ≠ 0 := by
   unfold fOf
   by_cases ho : IsOddPos (pos.symm τ).2
-  · rw [if_pos ho]
+  · rw [ite_eq_left ho]
     exact (Matrix.isUnit_nonsing_inv_det _ (isUnit_iff_ne_zero.mpr (det_rev_ne_zero (g τ) (hg τ)))).ne_zero
-  · rw [if_neg ho]; exact hg τ
+  · rw [ite_eq_right ho]; exact hg τ
 
 def yv {Kc : Type} [Field Kc] (ι : ℂ →+* Kc) (f' : D.what₂.Tau → Matrix (Fin (D.R.N (j + 1))) (Fin (D.R.N (j + 1))) ℂ) :
     Formalism.L2.G.Cmp.Var (X.Pj (j + 1)) → Kc := fun y =>
@@ -1345,8 +1345,8 @@ namespace GlobalTheory.TwV.DelA
 
 theorem moved_forms_at_source : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => J.Dict std → S.Pos → ∀ ι : ℂ →+* ℂ_[D.what₂.places.resChar w], (∀ z : TaylorLogMetric.Qbar, ι z = S.lam z) → letI := wittFractionAlgebraCp (D.what₂.places.resChar w); letI := algKfC S.E.toCEmb; ∀ (d : Dec J std), ∀ j < D.R.m, Nonempty (Lv.comp (j + 1)) → ∀ (hN : RankTie (sysS H X std) D j), MoveH S.Y u μ (kaAt X H hT).cmp (fun j La => glInv (sysS H X std) j (BOf d.fd2 j La)) (gmS d) j ∧ TieOpS (Y := S.Y) t u μ (clsAt X H) (gmS d) (sO d ι) j (eIdx (sysS H X std) D (hT.gat_pos u w hg) j hN) (ι := ι) (phi0 (sysS H X std) D (hT.gat_pos u w hg) ι j) ∧ KernelEntryDegreeCondition (Y := S.Y) t u μ (clsAt X H) j (eIdx (sysS H X std) D (hT.gat_pos u w hg) j hN)) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hDict hPos ι hι
-  letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
-  letI := algKfC S.E.toCEmb
+  let := wittFractionAlgebraCp (D.what₂.places.resChar w)
+  let := algKfC S.E.toCEmb
   intro d j hjm hne hN
   have hj : j ≤ D.R.m := hjm.le
   have h : ((sysS H X std).Pj j).m + 1 = D.R.N j := rkS _ _ hN
@@ -1397,7 +1397,7 @@ theorem moved_forms_at_source : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w h
     obtain ⟨h1, h2, -⟩ := core La hLa x Q hQ
     exact ⟨GlobalTheory.T.naturalAction_inverseFrame_undoes_move (sysS H X std) D (hT.gat_pos u w hg) d.fd2 j La _, h1, h2⟩
   · rw [(core La hLa x Q hQ).2.2 n]
-    simp only [sO, dif_pos hj]
+    simp only [sO, dite_eq_left hj]
   · exact polDY_goodDeg (sysS H X std) D (hT.gat_pos u w hg) j hN (nuT D u j) hWt.nu _ (hQ.1 _) _ α hα
 
 end GlobalTheory.TwV.DelA

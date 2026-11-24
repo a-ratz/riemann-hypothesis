@@ -91,13 +91,13 @@ end loc
 
 theorem complRel_lt_one (p : HeightOneSpectrum (𝓞 F)) (x : p.adicCompletion F) :
     ValuativeRel.valuation (p.adicCompletion F) x < 1 ↔ Valued.v x < 1 := by
-  haveI : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation _) Valued.v).lt_one_iff_lt_one
 
 theorem complRel_le_one (p : HeightOneSpectrum (𝓞 F)) (x : p.adicCompletion F) :
     ValuativeRel.valuation (p.adicCompletion F) x ≤ 1 ↔ Valued.v x ≤ 1 := by
-  haveI : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation _) Valued.v).le_one_iff_le_one
 
@@ -198,7 +198,7 @@ theorem comp_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (s :
     have hS : {y : s.v.adicCompletion (maximalRealSubfield L) | Valued.v (y - 1) < WithZero.exp (-(N : ℤ))} ∈
         𝓝 (1 : s.v.adicCompletion (maximalRealSubfield L)) := by
       refine Valued.mem_nhds.2 ⟨Units.mk0 _ hr0, fun y hy => ?_⟩
-      simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hy
+      simp only [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hy
       rw [← hvz]; exact hy
     have := Units.continuous_val.continuousAt (x := (1 : (s.v.adicCompletion (maximalRealSubfield L))ˣ)) hS
     refine Filter.mem_of_superset this fun u hu => ?_

@@ -87,7 +87,7 @@ theorem modDepthGE_two_of_isIntegrallyClosed_of_isRegularLocalRing :
       2 ≤ ringKrullDim R → ReciprocityTheory.CA.ModDepthGE R A 2 := by
   intro R A _ _ _ _ _ _ _ _ hdim
   obtain ⟨hRd, hRic⟩ := isDomain_and_isIntegrallyClosed_of_isRegularLocalRing R
-  haveI : IsNoetherianRing A := isNoetherian_of_tower R inferInstance
+  have : IsNoetherianRing A := isNoetherian_of_tower R inferInstance
   have hinj := FaithfulSMul.algebraMap_injective R A
   obtain ⟨q, hq, hq0, hqm⟩ := exists_isPrime_ne_bot_lt_maximalIdeal_of_two_le_ringKrullDim R hdim
   have hm0 : maximalIdeal R ≠ ⊥ := (bot_le.trans_lt hqm).ne'
@@ -139,7 +139,7 @@ theorem modDepthGE_two_of_isIntegrallyClosed_of_isRegularLocalRing :
     have hzq : (Ideal.Quotient.mk I z : A ⧸ I) ≠ 0 := by
       rwa [ne_eq, Ideal.Quotient.eq_zero_iff_mem]
     obtain ⟨P, hP, hle⟩ := exists_le_isAssociatedPrime_of_isNoetherianRing A _ hzq
-    haveI hPp : P.IsPrime := hP.isPrime
+    have hPp : P.IsPrime := hP.isPrime
     have hmP : maximalIdeal R ≤ P.comap (algebraMap R A) := by
       intro a ha
       apply hle
@@ -148,7 +148,7 @@ theorem modDepthGE_two_of_isIntegrallyClosed_of_isRegularLocalRing :
       exact hmz a ha
     have hPm : P.comap (algebraMap R A) = maximalIdeal R :=
       ((maximalIdeal.isMaximal R).eq_of_le (Ideal.comap_isPrime _ P).ne_top hmP).symm
-    haveI : P.LiesOver (maximalIdeal R) := ⟨hPm.symm⟩
+    have : P.LiesOver (maximalIdeal R) := ⟨hPm.symm⟩
     obtain ⟨Q, hQP, hQp, hQq⟩ := Ideal.exists_ideal_lt_liesOver_of_lt (S := A) P hqm
     have h1 : P.height = 1 := height_eq_one_of_mem_associatedPrimes hx' hP
     have hlt : Q.height < P.height := Ideal.height_strict_mono_of_isPrime hQP

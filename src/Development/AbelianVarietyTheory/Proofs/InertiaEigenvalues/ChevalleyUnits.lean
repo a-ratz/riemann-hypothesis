@@ -74,8 +74,8 @@ theorem exists_finite_galois_mem_of_pow_eq_unit : ∀ (E F Ω : Type) [Field E] 
     (∃ ζ : F, IsPrimitiveRoot ζ M) → ∃ L : IntermediateField F Ω, FiniteDimensional F L ∧ IsGalois F L ∧
       ∀ (u : (𝓞 E)ˣ) (w : Ω), w ^ M = algebraMap E Ω ((u : 𝓞 E) : E) → w ∈ L := by
   intro E F Ω _ _ _ _ _ _ _ _ _ M hM ⟨ζ, hζ⟩
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap E F).injective
+  have : NeZero M := ⟨hM.ne'⟩
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap E F).injective
   obtain ⟨S, hS⟩ := Monoid.exists_of_isMulFG (𝓞 E)ˣ
   let c : (𝓞 E)ˣ → F := fun u => algebraMap E F ((u : 𝓞 E) : E)
   let p : F[X] := ∏ s ∈ S, (X ^ M - C (c s))
@@ -83,8 +83,8 @@ theorem exists_finite_galois_mem_of_pow_eq_unit : ∀ (E F Ω : Type) [Field E] 
   let L := IntermediateField.adjoin F (p.rootSet Ω)
   have hsp : p.IsSplittingField F L :=
     IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
-  haveI := Polynomial.IsSplittingField.finiteDimensional L p
-  haveI := Normal.of_isSplittingField (F := F) (E := L) p
+  have := Polynomial.IsSplittingField.finiteDimensional L p
+  have := Normal.of_isSplittingField (F := F) (E := L) p
   refine ⟨L, inferInstance, ⟨⟩, ?_⟩
   have hζΩ : IsPrimitiveRoot (algebraMap F Ω ζ) M := hζ.map_of_injective (algebraMap F Ω).injective
   have hroot : ∀ ξ : Ω, ξ ^ M = 1 → ξ ∈ L := by
@@ -149,13 +149,13 @@ theorem normFacts (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (�
   refine ⟨?_, ?_, ?_⟩
   · rw [hN]; exact Nat.pos_of_ne_zero (by rw [Ne, Ideal.absNorm_eq_zero_iff]; exact hne)
   · rw [hN]; exact Ideal.absNorm_mem _
-  · haveI : v.asIdeal.IsMaximal := v.isMaximal
-    letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
-    haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
-    letI : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
+  · have : v.asIdeal.IsMaximal := v.isMaximal
+    let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+    have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
+    let : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
     obtain ⟨p, hp⟩ := CharP.exists (𝓞 F ⧸ v.asIdeal)
-    haveI := hp
-    haveI : Fact p.Prime := ⟨CharP.char_is_prime (𝓞 F ⧸ v.asIdeal) p⟩
+    have := hp
+    have : Fact p.Prime := ⟨CharP.char_is_prime (𝓞 F ⧸ v.asIdeal) p⟩
     obtain ⟨n, hp', hcard⟩ := FiniteField.card (𝓞 F ⧸ v.asIdeal) p
     have hNv : normV v = p ^ (n : ℕ) := by
       unfold normV; rw [Nat.card_eq_fintype_card, hcard]
@@ -178,14 +178,14 @@ theorem core (E : Type) [Field E] [NumberField E] (l r b : ℕ) (hl : l.Prime) (
   set m := l ^ r with hmdef
   obtain ⟨M, hM0, hmM, hD⟩ := _root_.GlobalTheory.exists_pow_descent_cyclotomic E l r hl
   let Ω := AlgebraicClosure E
-  haveI : NeZero (M : Ω) := ⟨by exact_mod_cast hM0.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : NeZero (M : Ω) := ⟨by exact_mod_cast hM0.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   let K : IntermediateField E Ω := IntermediateField.adjoin E {ζ}
-  haveI : FiniteDimensional E K :=
+  have : FiniteDimensional E K :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral ζ)
-  haveI : NumberField K := NumberField.of_module_finite E K
-  haveI : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := E) K
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
+  have : NumberField K := NumberField.of_module_finite E K
+  have : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := E) K
+  have : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
   let ζK : K := ⟨ζ, IntermediateField.mem_adjoin_simple_self E ζ⟩
   have hζK : IsPrimitiveRoot ζK M :=
     (show IsPrimitiveRoot (algebraMap K Ω ζK) M from hζ).of_map_of_injective (algebraMap K Ω).injective
@@ -205,9 +205,9 @@ theorem core (E : Type) [Field E] [NumberField E] (l r b : ℕ) (hl : l.Prime) (
     exact ⟨v, hv, B, hB, σ, hσ, hg⟩
   choose v hvS B hB σ hσ hg using hchoice
   have hvb : ∀ g, ((b : ℕ) : 𝓞 K) ∉ (v g).asIdeal := fun g h =>
-    hvS g (by simp only [S, Set.mem_setOf_eq, Nat.cast_mul]; exact Ideal.mul_mem_left _ _ h)
+    hvS g (by simp only [S, Set.mem_ofPred_eq, Nat.cast_mul]; exact Ideal.mul_mem_left _ _ h)
   have hvM : ∀ g, ((M : ℕ) : 𝓞 K) ∉ (v g).asIdeal := fun g h =>
-    hvS g (by simp only [S, Set.mem_setOf_eq, Nat.cast_mul]; exact Ideal.mul_mem_right _ _ h)
+    hvS g (by simp only [S, Set.mem_ofPred_eq, Nat.cast_mul]; exact Ideal.mul_mem_right _ _ h)
   have hnf := fun g => normFacts K (v g) b (hvb g)
   let a : ℕ := ∏ g : L ≃ₐ[K] L, normV (v g)
   refine ⟨a, Finset.prod_pos fun g _ => (hnf g).1, Nat.Coprime.prod_left fun g _ => (hnf g).2.2, ?_⟩

@@ -62,7 +62,7 @@ private theorem UpperTheory.V.CF.exists_quadratic_gauss_sum {K : Type} [Field K]
     ∃ G : K, G ^ 2 = (pStar d : ℤ) ∧ G ∈ ℚ⟮ζ⟯ ∧ ∀ (σ : K →+* K) (a : ℕ), σ ζ = ζ ^ a →
       σ G = (legendreSym d a : ℤ) * G := by
   classical
-  haveI : NeZero d := ⟨hd.out.ne_zero⟩
+  have : NeZero d := ⟨hd.out.ne_zero⟩
   have hζd : ζ ^ d = 1 := hζ.pow_eq_one
   let χ : MulChar (ZMod d) K := (quadraticChar (ZMod d)).ringHomComp (Int.castRingHom K)
   let ψ : AddChar (ZMod d) K := AddChar.zmodChar d hζd

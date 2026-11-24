@@ -132,14 +132,14 @@ def galRestrict [Normal K H] : (L ≃ₐ[K] L) →* (H ≃ₐ[K] H) :=
 
 theorem galRestrict_apply [Normal K H] (σ : L ≃ₐ[K] L) (z : H) :
     ((galRestrict h σ z : H) : Ω) = (σ (inclusion h z) : Ω) := by
-  letI : Algebra H L := (inclusion h).toAlgebra
-  haveI : IsScalarTower K H L := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let : Algebra H L := (inclusion h).toAlgebra
+  have : IsScalarTower K H L := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   exact congrArg Subtype.val (AlgEquiv.restrictNormal_commutes σ H z)
 
 theorem galRestrict_surjective [Normal K H] [Normal K L] :
     Function.Surjective (galRestrict h) := by
-  letI : Algebra H L := (inclusion h).toAlgebra
-  haveI : IsScalarTower K H L := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let : Algebra H L := (inclusion h).toAlgebra
+  have : IsScalarTower K H L := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   exact AlgEquiv.restrictNormalHom_surjective (F := K) (K₁ := H) (E := L)
 
 theorem mem_fixingSubgroup_restrict_iff [Normal K H] (σ : L ≃ₐ[K] L) :
@@ -167,8 +167,8 @@ theorem exists_isArithFrobAt_galRestrict {H L : IntermediateField K ℂ} [Number
     (hσ : IsArithFrobAt (𝓞 K) σ w.asIdeal) :
     ∃ w' : HeightOneSpectrum (𝓞 H), w'.asIdeal.LiesOver v.asIdeal ∧
       IsArithFrobAt (𝓞 K) (galRestrict h σ) w'.asIdeal := by
-  letI : Algebra H L := (inclusion h).toAlgebra
-  haveI : IsScalarTower K H L := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let : Algebra H L := (inclusion h).toAlgebra
+  have : IsScalarTower K H L := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   refine ⟨HeightOneSpectrum.under (𝓞 H) w, ?_, ?_⟩
   · have : w.asIdeal.LiesOver (HeightOneSpectrum.under (𝓞 H) w).asIdeal :=
       ⟨by rw [HeightOneSpectrum.under_asIdeal]⟩
@@ -207,7 +207,7 @@ theorem galClassOf_eq_artin (L : IntermediateField K ℂ) [FiniteDimensional K L
     (hiso : ∀ x y, Nonempty (Isogeny (E x) (E y))) (τ : L ≃ₐ[K] L) :
     galClassOf hK L hL τ = (hilbertClassFieldArtinEquiv K ℂ).symm (galRestrict hHL τ) := by
   classical
-  haveI : NumberField L := NumberField.of_module_finite K L
+  have : NumberField L := NumberField.of_module_finite K L
   set β : (L ≃ₐ[K] L) →* ClassGroup (𝓞 K) :=
     (hilbertClassFieldArtinEquiv K ℂ).symm.toMonoidHom.comp (galRestrict hHL)
   change galClassOf hK L hL τ = β τ
@@ -226,7 +226,7 @@ theorem galClassOf_eq_artin (L : IntermediateField K ℂ) [FiniteDimensional K L
     IsConj.trans hσ (isConj_iff.2 ⟨ρ, rfl⟩)
   have hdens := hasDirichletDensity_setOf_arithFrobAt_mem C hC
   rw [← hasDirichletDensity_inter_degreeOnePrimes_iff ℚ] at hdens
-  haveI : Nonempty C := ⟨⟨τ, IsConj.refl τ⟩⟩
+  have : Nonempty C := ⟨⟨τ, IsConj.refl τ⟩⟩
   have hpos : (0 : ℝ) < Nat.card C / Nat.card (L ≃ₐ[K] L) :=
     div_pos (Nat.cast_pos.2 Nat.card_pos) (Nat.cast_pos.2 Nat.card_pos)
   obtain ⟨v, ⟨hvA, hv1⟩, hvS⟩ :
@@ -234,7 +234,7 @@ theorem galClassOf_eq_artin (L : IntermediateField K ℂ) [FiniteDimensional K L
         w.asIdeal.LiesOver v.asIdeal → w.asIdeal.ramificationIdx (𝓞 K) = 1 ∧
           arithFrobAt (𝓞 K) (L ≃ₐ[K] L) w.asIdeal ∈ C} ∩ degreeOnePrimes ℚ K) \ S).Nonempty := by
     by_contra hne
-    rw [Set.not_nonempty_iff_eq_empty, Set.diff_eq_empty] at hne
+    rw [Set.not_nonempty_iff_eq_empty, Set.sdiff_eq_empty] at hne
     have h0 := hasDirichletDensity_zero_of_finite (hS.subset hne)
     have := hdens.dirichletDensity_eq.symm.trans h0.dirichletDensity_eq
     linarith

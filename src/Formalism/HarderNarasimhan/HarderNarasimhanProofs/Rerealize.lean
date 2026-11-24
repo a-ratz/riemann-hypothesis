@@ -133,8 +133,8 @@ theorem covol_rk_eq (α : G →+ E) (β : G →+ F) (hn : ∀ g, ‖β g‖ = �
     (hβ : DiscreteTopology (H.map β).toIntSubmodule) :
     Formalism.F.covol (H.map β).toIntSubmodule = Formalism.F.covol (H.map α).toIntSubmodule ∧
       Formalism.F.rk (H.map β).toIntSubmodule = Formalism.F.rk (H.map α).toIntSubmodule := by
-  haveI := hα
-  haveI := hβ
+  have := hα
+  have := hβ
   have ex : ∀ y : (H.map α).toIntSubmodule, ∃ g ∈ H, α g = (y : E) := fun y =>
     AddSubgroup.mem_map.mp y.2
   let τf : (H.map α).toIntSubmodule →+ (H.map β).toIntSubmodule :=
@@ -184,7 +184,7 @@ variable {R V E E₂ : Type*} [Ring R] [AddCommGroup V] [Module R V] [NormedAddC
 theorem covol_eq_exp {E' : Type*} [NormedAddCommGroup E'] [InnerProductSpace ℝ E']
     [FiniteDimensional ℝ E'] (L : Submodule ℤ E') (h : DiscreteTopology L) :
     Formalism.F.covol L = Real.exp (- Formalism.F.deg L) := by
-  haveI := h
+  have := h
   rw [Formalism.F.deg, neg_neg, Real.exp_log (Formalism.F.covol_pos L)]
 
 theorem transfer (ρ : V →+ E) (ρ₂ : V →+ E₂) (hn : ∀ x, ‖ρ₂ x‖ = ‖ρ x‖) (L : Submodule R V)

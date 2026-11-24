@@ -345,8 +345,8 @@ private theorem core [_root_.NumberField.IsTotallyComplex E] {S : Set (Pl E)} {�
   by_contra hcon
   push_neg at hcon
   obtain ⟨x₀, y₀, hne⟩ := hcon
-  haveI : FiniteDimensional ℂ (GS S Ea) := Submodule.finiteDimensional_of_le (fun φ (h : φ ∈ GS S Ea) => h.1)
-  haveI : FiniteDimensional ℂ (GS S Eb) := Submodule.finiteDimensional_of_le (fun φ (h : φ ∈ GS S Eb) => h.1)
+  have : FiniteDimensional ℂ (GS S Ea) := Submodule.finiteDimensional_of_le (fun φ (h : φ ∈ GS S Ea) => h.1)
+  have : FiniteDimensional ℂ (GS S Eb) := Submodule.finiteDimensional_of_le (fun φ (h : φ ∈ GS S Eb) => h.1)
   have hψ0 : F x₀ ≠ 0 := fun e => hne (congrFun e y₀)
   obtain ⟨b', hb'in, hb'⟩ := blo_gs hb Ab rb (h2 x₀) hψ0
   obtain ⟨a, c, φ, ψ, xs, ys, s, t, hφ, hψ, hexp⟩ := tens (GS S Ea) (GS S Eb)

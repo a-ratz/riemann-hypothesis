@@ -137,8 +137,8 @@ theorem res_chg {H : Type} [Group H] [TopologicalSpace H] (phi : H →* Γ) (hph
   | H z => rfl
 
 theorem chg_ur (J : Subgroup Γ) (x : H1 rho) (hx : x ∈ H1ur rho J) : chg rho rho' h x ∈ H1ur rho' J := by
-  have h0 : resH1 rho J.subtype continuous_subtype_val x = 0 := hx
-  exact (res_chg rho rho' h J.subtype continuous_subtype_val x).trans
+  have h0 : resH1 rho J.subtype continuous_subtypeVal x = 0 := hx
+  exact (res_chg rho rho' h J.subtype continuous_subtypeVal x).trans
     ((congrArg _ h0).trans (chg_zero _ _ _))
 
 end Chg
@@ -173,7 +173,7 @@ theorem chg_mem_selOn (Q : Finset (PlE D.host)) (x : H1 (repOn ρ κ B))
     (hx : x ∈ selOn bkP i ρ κ B Q) : chg _ (repOn ρ κ' B) h x ∈ selOn bkP i ρ κ' B Q := by
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
-  refine (res_chg (repOn ρ κ B) (repOn ρ κ' B) h (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x) ▸ ?_
+  refine (res_chg (repOn ρ κ B) (repOn ρ κ' B) h (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x) ▸ ?_
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with h1 h2
   · exact chg_mem_bkOn bkP i ρ κ κ' h hs ho v _ hv
@@ -226,10 +226,10 @@ theorem represents_of_computes {s : X.Sig i} {M : ℕ} {ι : Type} {d : ι → (
     fun B _ _ _ _ u hu => ?_, fun B _ _ _ _ u u' hu hu' huu => ?_, fun B _ _ _ _ y hy => ?_,
     fun B B' _ _ _ _ _ _ _ _ f u hu => ?_⟩
   · rw [hk] at hu
-    simp only [dif_pos hu]
+    simp only [dite_eq_left hu]
     exact chg_mem_selOn bkP i _ _ _ (hr B) (fun x => ⟨p x, hsm B x⟩) (ho B) Q _ (e B (tor B) ⟨u, hu⟩).2
   · rw [hk] at hu hu'
-    simp only [dif_pos hu, dif_pos hu'] at huu
+    simp only [dite_eq_left hu, dite_eq_left hu'] at huu
     have h1 := congrArg (chg _ _ fun g m => (hr B g m).symm) huu
     rw [chg_chg, chg_chg] at h1
     exact congrArg Subtype.val ((e B (tor B)).injective (Subtype.ext h1))
@@ -238,7 +238,7 @@ theorem represents_of_computes {s : X.Sig i} {M : ℕ} {ι : Type} {d : ι → (
     obtain ⟨u, hu⟩ := (e B (tor B)).surjective ⟨_, h1⟩
     have hu0 : matAct Φ u.1 = 0 := u.2
     refine ⟨u.1, hu0, ?_⟩
-    simp only [dif_pos hu0]
+    simp only [dite_eq_left hu0]
     rw [show (⟨u.1, hu0⟩ : LinearMap.ker (matAct (M := B) Φ)) = u from rfl, hu]
     exact chg_chg _ _ _ y
   · rw [hk] at hu
@@ -249,7 +249,7 @@ theorem represents_of_computes {s : X.Sig i} {M : ℕ} {ι : Type} {d : ι → (
       have := congrArg f' (congrFun hu c)
 
       simpa [matAct, map_sum] using this
-    simp only [dif_pos hu, dif_pos hu']
+    simp only [dite_eq_left hu, dite_eq_left hu']
     obtain ⟨z, hz⟩ := Submodule.Quotient.mk_surjective _ (e B (tor B) ⟨u, hu⟩).1
     rw [he B B' (tor B) (tor B') f' ⟨u, hu⟩ ⟨_, hu'⟩ z (cocycles1MapOfEquivariant _ _ (f'.compLeft _) continuous_of_discreteTopology
       (repOn_map _ _ f') z) (fun _ => rfl) (fun _ _ => rfl) hz.symm, ← hz]
@@ -407,8 +407,8 @@ theorem coeff_mem_of_toLam_mem : ∀ (D : Formalism.BasicNotions.D7) (N : NData 
     have := hI _ h4
     rwa [map_pow, map_natCast] at this
   have h1 : 1 < X.l i ^ M := Nat.one_lt_pow (by omega) hp.one_lt
-  haveI : Fact (1 < X.l i ^ M) := ⟨h1⟩
-  haveI : NeZero (X.l i ^ M) := ⟨by omega⟩
+  have : Fact (1 < X.l i ^ M) := ⟨h1⟩
+  have : NeZero (X.l i ^ M) := ⟨by omega⟩
   have hu : ∀ q, (1 + π (MvPolynomial.X q)) ^ (X.l i ^ M) = 1 := by
     intro q
     refine KStar.Tree.one_add_pow_prime_pow_eq_one hp h4' hM ?_
@@ -640,14 +640,14 @@ theorem mem_bkCond_of {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebr
     y ∈ Formalism.GaloisCohomology.bkCond rho A l S' L v := by
   unfold Formalism.GaloisCohomology.bkCond at hy ⊢
   by_cases h1 : ((l : ℕ) : 𝓞 F) ∈ v.asIdeal
-  · rwa [if_pos h1] at hy ⊢
-  rw [if_neg h1] at hy ⊢
+  · rwa [ite_eq_left h1] at hy ⊢
+  rw [ite_eq_right h1] at hy ⊢
   by_cases h2 : v ∈ S'
-  · rw [if_pos h2]
+  · rw [ite_eq_left h2]
     exact Submodule.mem_top
-  rw [if_neg h2]
+  rw [ite_eq_right h2]
   rcases h h1 h2 with h3 | h3
-  · rwa [if_neg h3] at hy
+  · rwa [ite_eq_right h3] at hy
   · exact h3
 
 variable {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂ D.LL0 N} {bkP : BKPh X}
@@ -676,7 +676,7 @@ theorem mem_selOn_iff {B : Type} [AddCommGroup B] [Module R B] [TopologicalSpace
   · exact mem_bkCond_of (h v) fun _ h2 => Or.inl fun h3 => h2 (Or.imp id (fun h => (hQ v).2 (Or.inl h)) h3)
   · have hv := h (V j)
     unfold Formalism.GaloisCohomology.bkCond at hv
-    rw [if_neg (hV j).1, if_neg fun h => h.elim (hV j).2.1 (hV j).2.2] at hv
+    rw [ite_eq_right (hV j).1, ite_eq_right fun h => h.elim (hV j).2.1 (hV j).2.2] at hv
     exact (mem_unrAt_iff (hI j) z).1 hv
   · refine mem_bkCond_of (h v) fun _ h3 => ?_
     by_cases h2 : v ∈ Spl i ∪ (Q' : Set (PlE D.host))
@@ -787,7 +787,7 @@ theorem toLam_genPoly [Fintype ι] (g : Del X i M ι) :
     rw [toAdd_prod]
     funext j
     simp only [toAdd_pow, toAdd_ofAdd, Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_ite, smul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, nsmul_one, ZMod.natCast_zmod_val]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, nsmul_one, ZMod.natCast_zmod_val]
   conv_rhs => rw [h1]
   simp only [genPoly, toLam, map_sub, map_prod, map_pow, map_add (f := _), map_one, MvPolynomial.aeval_X, sub_add_cancel]
 
@@ -1025,7 +1025,7 @@ theorem compare (hT : TameQuotient) (hn : n < R) (hM : nu X i + 1 ≤ M) (hL : S
   refine ⟨genPoly X i M (δ φ), genPoly_coeff_zero X i M _, ?_, ?_, f2.imp id fun f2 b c => ?_⟩
   · have h1 : Multiplicative.toAdd (δ φ) (.inl ⟨n, hn⟩) = 1 := by
       have := hfr ⟨n, hn⟩ φ hφ
-      rw [if_pos (Fin.val_last n)] at this
+      rw [ite_eq_left (Fin.val_last n)] at this
       exact congrArg Multiplicative.toAdd ((congrArg (fun v => d v φ) (hE (.inl ⟨n, hn⟩))).symm.trans this)
     have : Fact (1 < X.l i ^ M) := ⟨Nat.one_lt_pow (by omega) hp.one_lt⟩
     rw [genPoly_coeff_single, h1, ZMod.val_one, Nat.cast_one]

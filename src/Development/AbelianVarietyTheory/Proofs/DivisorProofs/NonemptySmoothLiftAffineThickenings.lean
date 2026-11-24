@@ -89,7 +89,7 @@ theorem exists_pt (D : Data) (U : D.X.affineOpens) : ∃ x : Sp (Sec D.s U.1 ⧸
 
 theorem exists_dp (D : Data) (U : D.X.affineOpens) :
     ∃ δ : DividedPowers (ext D U), IsDPMorphism D.κ δ (algebraMap D.R (Sec D.s U.1)) := by
-  haveI := D.sec_smooth U
+  have := D.sec_smooth U
   exact _root_.GlobalTheory.DPFlat.exists_isDPMorphism_of_flat D.R (Sec D.s U.1) D.I D.κ
 
 theorem thick_hom_ext {R : Type} [CommRing R] {I : Ideal R}
@@ -108,7 +108,7 @@ theorem nonempty_lift : ∀ D : Data, Nonempty (Lift D) := by
   intro D
   choose δ hδ using exists_dp D
   choose x hx hw using exists_pt D
-  haveI := D.mono_i
+  have := D.mono_i
   let T : D.X.affineOpens → Thick D.κ D.t := fun U ↦
     { B := Sec D.s U.1
       J := ext D U

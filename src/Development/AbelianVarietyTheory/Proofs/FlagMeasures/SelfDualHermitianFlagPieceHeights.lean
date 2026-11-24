@@ -58,7 +58,7 @@ private theorem hform_eq_dotProduct_mulVec {E : Type} [Field E] [StarRing E] {n 
 theorem pieceHt_dualFlag : ∀ (I : AutInst) (xf : I.Gf) (a : ℕ) (j : Fin a → ℕ), (∀ i, 1 ≤ j i) → ∀ (S : Fin (a + 1) → Submodule (𝓞 I.E) (Fin I.n → I.E)), IsSatFlag I (lamX I (1, xf)) j S → ∀ F : ℕ → Submodule (𝓞 I.E) (Fin I.n → I.E), IsDualFlag I.J F (2 * a + 1) → F (2 * a + 1) = lamX I (1, xf) → (∀ i : Fin (a + 1), F i = S i) → (∀ i : Fin a, 0 < Formalism.HN.sizeQ (bas I) (frm I (1, xf)) (S i.succ) (S i.castSucc) ∧ pieceHt (frm I (1, xf)) F i = Formalism.HN.sizeQ (bas I) (frm I (1, xf)) (S i.succ) (S i.castSucc) ^ (2 * I.f * j i) ∧ pieceHt (frm I (1, xf)) F (2 * a - i) = (Formalism.HN.sizeQ (bas I) (frm I (1, xf)) (S i.succ) (S i.castSucc) ^ (2 * I.f * j i))⁻¹) ∧ pieceHt (frm I (1, xf)) F a = 1 ∧ ∀ b, 2 * a + 1 ≤ b → pieceHt (frm I (1, xf)) F b = 1 := by
   intro I xf a j hj S hS F hF hFm hFS
   have hmaj := GlobalTheory.Count.FrameMajorant.frames_give_majorants I (1, xf)
-  haveI : IsTotallyComplex I.E := hmaj.1
+  have : IsTotallyComplex I.E := hmaj.1
   have hf : Formalism.HN.nPl I.E = I.f := hmaj.2.1
   have hX : ∀ w, IsUnit (frm I (1, xf) w).det := fun w => GlobalTheory.Count.FrameMajorant.frm_unit I (1, xf) w
   have hΛfg : (lamX I (1, xf)).FG := (GlobalTheory.PointLattice.lamX_selfDual I (1, xf)).2.1
@@ -67,7 +67,7 @@ theorem pieceHt_dualFlag : ∀ (I : AutInst) (xf : I.Gf) (a : ℕ) (j : Fin a �
   have hperp := hmain.2.2.2
   have hfg : ∀ N : Submodule (𝓞 I.E) (Fin I.n → I.E), N ≤ lamX I (1, xf) → N.FG := by
     intro N hN
-    haveI := isNoetherian_of_fg_of_noetherian _ hΛfg
+    have := isNoetherian_of_fg_of_noetherian _ hΛfg
     have h1 : (N.comap (lamX I (1, xf)).subtype).FG := IsNoetherian.noetherian _
     have h2 := h1.map (lamX I (1, xf)).subtype
     rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hN] at h2

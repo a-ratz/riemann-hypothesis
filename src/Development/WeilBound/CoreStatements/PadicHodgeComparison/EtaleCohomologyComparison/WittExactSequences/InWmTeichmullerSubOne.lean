@@ -341,7 +341,7 @@ theorem exists_rt_dvd (a : CrystallineSemistableComparison.Ob l) (ha : ¬ IsUnit
 
 theorem obFacts : ∀ (l : ℕ) [Fact l.Prime], CrystallineSemistableComparison.D.ObFacts l := by
   intro l _
-  haveI := isDomain_ob l
+  have := isDomain_ob l
   refine ⟨inferInstance, ?_, exists_dvd_pFlat_pow l, exists_rt_dvd l⟩
   refine (ValuationRing.iff_dvd_total).2 ⟨fun a b => ?_⟩
   rcases le_total ‖a‖ ‖b‖ with h | h

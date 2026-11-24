@@ -71,7 +71,7 @@ theorem left_inv_of_mem_Minf {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} {
   · intro γ _ g
     rfl
   · intro z w hz hw γ hγ g
-    simp only [MultilinearMap.add_apply, Pi.add_apply, hz γ hγ g, hw γ hγ g]
+    simp only [add_apply, Pi.add_apply, hz γ hγ g, hw γ hγ g]
 
 theorem ipM_congr_of_iff {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} {M : DSModel V S} {μ : Measure (GA D V)}
     {𝓕 : Set (GA D V)} {T T' U U' : MMap M} (h : ∀ c, IsMultIP M μ 𝓕 T T' c ↔ IsMultIP M μ 𝓕 U U' c) :

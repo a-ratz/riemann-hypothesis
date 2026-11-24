@@ -233,7 +233,7 @@ theorem exists_root : ∃ ω : ℤ_[l], IsPrimitiveRoot ω (l - 1) ∧
 theorem image_mu : (mu l).image PadicInt.zmodRepr = (Finset.range l).erase 0 ∧
     Set.InjOn PadicInt.zmodRepr (mu l : Set ℤ_[l]) := by
   obtain ⟨ω, hω, hu⟩ := exists_root (l := l)
-  haveI : NeZero (l - 1) := ⟨pred_pos.ne'⟩
+  have : NeZero (l - 1) := ⟨pred_pos.ne'⟩
   have inj : Set.InjOn PadicInt.zmodRepr (mu l : Set ℤ_[l]) := by
     intro x hx y hy e
     obtain ⟨i, hi, rfl⟩ := hω.eq_pow_of_pow_eq_one (mem_mu.1 hx)

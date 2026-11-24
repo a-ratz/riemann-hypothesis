@@ -381,7 +381,7 @@ theorem mem_maximalIdeal_and_mem_nonZeroDivisors_of_pow (S L : Type) [CommRing S
     algebraMap D (Localization.AtPrime Q) t ∈ maximalIdeal (Localization.AtPrime Q) ∧
       algebraMap D (Localization.AtPrime Q) t ∈ nonZeroDivisors (Localization.AtPrime Q) := by
   have htDm : t ∈ maximalIdeal D := htu
-  haveI hQmax : (Q.comap (algebraMap D (integralClosure D (D ⊗[S] L)))).IsMaximal :=
+  have hQmax : (Q.comap (algebraMap D (integralClosure D (D ⊗[S] L)))).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := D) Q
   have hcomap : Q.comap (algebraMap D (integralClosure D (D ⊗[S] L))) = maximalIdeal D :=
     IsLocalRing.eq_maximalIdeal hQmax
@@ -459,10 +459,10 @@ theorem artinian_quot_root_adjoin_kummer (A : Type) [CommRing A] [IsDomain A] [I
     simp at hm
   have hfm : f.Monic := monic_X_pow_sub_C _ hm0
   have hgm : g.Monic := monic_X_pow_sub_C _ hk.ne'
-  haveI : Module.Finite A R1 := (AdjoinRoot.powerBasis' hfm).finite
-  haveI : Module.Finite R1 R := (AdjoinRoot.powerBasis' hgm).finite
-  haveI : Module.Finite A R := Module.Finite.trans R1 R
-  haveI : Module.Finite A (R ⧸ I) :=
+  have : Module.Finite A R1 := (AdjoinRoot.powerBasis' hfm).finite
+  have : Module.Finite R1 R := (AdjoinRoot.powerBasis' hgm).finite
+  have : Module.Finite A R := Module.Finite.trans R1 R
+  have : Module.Finite A (R ⧸ I) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ A I).toLinearMap Ideal.Quotient.mk_surjective
 
   have hzero : algebraMap A (R ⧸ I) ϖ = 0 := by
@@ -488,14 +488,14 @@ theorem artinian_quot_root_adjoin_kummer (A : Type) [CommRing A] [IsDomain A] [I
     exact h4
   have hmax : (Ideal.span {ϖ} : Ideal A).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
   let K := A ⧸ (Ideal.span {ϖ} : Ideal A)
-  letI : Field K := Ideal.Quotient.field _
+  let : Field K := Ideal.Quotient.field _
   let φ : K →+* R ⧸ I := Ideal.Quotient.lift _ (algebraMap A (R ⧸ I)) (by
     intro a ha
     obtain ⟨b, rfl⟩ := Ideal.mem_span_singleton'.mp ha
     simp [hzero])
-  letI : Algebra K (R ⧸ I) := φ.toAlgebra
-  haveI : IsScalarTower A K (R ⧸ I) := IsScalarTower.of_algebraMap_eq (fun a => rfl)
-  haveI : Module.Finite K (R ⧸ I) := Module.Finite.of_restrictScalars_finite A K (R ⧸ I)
+  let : Algebra K (R ⧸ I) := φ.toAlgebra
+  have : IsScalarTower A K (R ⧸ I) := IsScalarTower.of_algebraMap_eq (fun a => rfl)
+  have : Module.Finite K (R ⧸ I) := Module.Finite.of_restrictScalars_finite A K (R ⧸ I)
   exact IsArtinianRing.of_finite K (R ⧸ I)
 
 end GlobalTheory
@@ -545,8 +545,8 @@ theorem kummerUnit_quotRoot_isReduced : ∀ (A : Type) [CommRing A] [IsDomain A]
   have hspan : Ideal.span {c} = (Ideal.span {ϖ}).map (AdjoinRoot.of f) := by
     rw [Ideal.map_span, Set.image_singleton, hc]
     exact Ideal.span_singleton_mul_right_unit hy _
-  haveI : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  letI : Field (A ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
+  have : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  let : Field (A ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
   have hredK : IsReduced ((A ⧸ Ideal.span {ϖ})[X] ⧸ Ideal.span {f.map (Ideal.Quotient.mk (Ideal.span {ϖ}))}) := by
     rw [← Ideal.isRadical_iff_quotient_reduced, ← isRadical_iff_span_singleton]
     apply Squarefree.isRadical
@@ -770,16 +770,16 @@ private lemma maximalIdeal_eq_span_of_kummer_tower (A W : Type) [CommRing A] [Is
       (∀ b, g (AdjoinRoot.of _ b) = gB b) ∧ g (AdjoinRoot.root _) = τ :=
     ⟨AdjoinRoot.lift gB τ (by simp [hgB_of, hgB_root, hτ]), fun b => AdjoinRoot.lift_of _,
       AdjoinRoot.lift_root _⟩
-  haveI hn : (Ideal.comap g (maximalIdeal W)).IsPrime := Ideal.comap_isPrime g (maximalIdeal W)
+  have hn : (Ideal.comap g (maximalIdeal W)).IsPrime := Ideal.comap_isPrime g (maximalIdeal W)
   have hTn : AdjoinRoot.root (X ^ k - C (AdjoinRoot.of (X ^ m - C (u : A)) ϖ *
       AdjoinRoot.root (X ^ m - C (u : A)))) ∈ Ideal.comap g (maximalIdeal W) := by
     rw [Ideal.mem_comap, hg_root]
     exact hτm
   have hmaxV := _root_.GlobalTheory.maximalIdeal_localization_eq_span_of_reduced_artinian _ _ (_root_.GlobalTheory.kummerUnit_quotRoot_isReduced A ϖ u m k hϖ hm hk)
     (_root_.GlobalTheory.T.isArtinianRing_kummerAdjoinRoot_quotient_root A ϖ u m k hϖ hm hk) _ hTn
-  haveI : IsNoetherianRing (AdjoinRoot (X ^ k - C (AdjoinRoot.of (X ^ m - C (u : A)) ϖ *
+  have : IsNoetherianRing (AdjoinRoot (X ^ k - C (AdjoinRoot.of (X ^ m - C (u : A)) ϖ *
       AdjoinRoot.root (X ^ m - C (u : A))))) := inferInstance
-  haveI : IsNoetherianRing (Localization.AtPrime (Ideal.comap g (maximalIdeal W))) :=
+  have : IsNoetherianRing (Localization.AtPrime (Ideal.comap g (maximalIdeal W))) :=
     IsLocalization.isNoetherianRing (Ideal.comap g (maximalIdeal W)).primeCompl _ inferInstance
   have hunit : ∀ s : (Ideal.comap g (maximalIdeal W)).primeCompl, IsUnit (g s) := by
     intro s
@@ -819,8 +819,8 @@ theorem _root_.GlobalTheory.abhyankar_ramificationIdx_eq_one : ∀ (S K L : Type
     ∀ [IsDomain D] [IsDiscreteValuationRing D] (Q : Ideal (integralClosure D (TensorProduct S D L))) [Q.IsMaximal],
     Q.ramificationIdx D = 1 := by
   intro S K L _ _ _ _ _ _ _ _ _ _ _ _ π e D _ _ ⟨ψ⟩ hπ he hdiv _ _ _ Q _
-  haveI : Q.IsPrime := Ideal.IsMaximal.isPrime inferInstance
-  haveI : IsDedekindDomain (integralClosure S L) := integralClosure.isDedekindDomain S K L
+  have : Q.IsPrime := Ideal.IsMaximal.isPrime inferInstance
+  have : IsDedekindDomain (integralClosure S L) := integralClosure.isDedekindDomain S K L
   have he0 : 0 < e := by
     rcases Nat.eq_zero_or_pos e with h | h
     · subst h
@@ -859,7 +859,7 @@ theorem _root_.GlobalTheory.abhyankar_ramificationIdx_eq_one : ∀ (S K L : Type
         Algebra.algebraMap_self, RingHom.id_apply]
     rw [hpow]
     exact Ideal.pow_mem_of_mem Q htQ e he0
-  haveI hPmax : (Ideal.comap (_root_.GlobalTheory.AbhyankarLocal.toNorm S L D) Q).IsMaximal := by
+  have hPmax : (Ideal.comap (_root_.GlobalTheory.AbhyankarLocal.toNorm S L D) Q).IsMaximal := by
     refine Ideal.IsPrime.isMaximal inferInstance ?_
     intro h
     rw [h] at hπP
@@ -872,7 +872,7 @@ theorem _root_.GlobalTheory.abhyankar_ramificationIdx_eq_one : ∀ (S K L : Type
     intro h
     rw [h] at hπP
     exact hπO hπP
-  haveI : IsDiscreteValuationRing
+  have : IsDiscreteValuationRing
       (Localization.AtPrime (Ideal.comap (_root_.GlobalTheory.AbhyankarLocal.toNorm S L D) Q)) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (integralClosure S L) hP0 _
   have hk0 : 0 < k := by
@@ -954,9 +954,9 @@ theorem adjoinRoot_uniformiser_isDVR : ∀ (R : Type) [CommRing R] [IsDomain R] 
   set f : R[X] := X ^ e - C π with hf
   have hmon : f.Monic := monic_X_pow_sub_C π he.ne'
   have hdeg : f.natDegree = e := natDegree_X_pow_sub_C _
-  haveI : Module.Finite R (AdjoinRoot f) := (AdjoinRoot.powerBasis' hmon).finite
-  haveI : Algebra.IsIntegral R (AdjoinRoot f) := Algebra.IsIntegral.of_finite R _
-  haveI : IsNoetherianRing (AdjoinRoot f) := IsNoetherianRing.of_finite R _
+  have : Module.Finite R (AdjoinRoot f) := (AdjoinRoot.powerBasis' hmon).finite
+  have : Algebra.IsIntegral R (AdjoinRoot f) := Algebra.IsIntegral.of_finite R _
+  have : IsNoetherianRing (AdjoinRoot f) := IsNoetherianRing.of_finite R _
   set x : AdjoinRoot f := AdjoinRoot.root f with hx
   have hxe : x ^ e = algebraMap R (AdjoinRoot f) π := by
     have h0 : AdjoinRoot.mk f f = 0 := AdjoinRoot.mk_self
@@ -978,7 +978,7 @@ theorem adjoinRoot_uniformiser_isDVR : ∀ (R : Type) [CommRing R] [IsDomain R] 
   have hcomap : ∀ M : Ideal (AdjoinRoot f), M.IsMaximal →
       M.comap (algebraMap R (AdjoinRoot f)) = maximalIdeal R := by
     intro M hM
-    letI : M.IsMaximal := hM
+    let : M.IsMaximal := hM
     exact IsLocalRing.eq_maximalIdeal
       (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal
         (algebraMap R (AdjoinRoot f))
@@ -999,7 +999,7 @@ theorem adjoinRoot_uniformiser_isDVR : ∀ (R : Type) [CommRing R] [IsDomain R] 
     have hrN : algebraMap R _ r ∈ N := by
       rw [← Ideal.mem_comap, hcomap N hN]; exact hr'
     exact N.add_mem hrN (N.mul_mem_right y (hxM N hN))
-  haveI : IsLocalRing (AdjoinRoot f) :=
+  have : IsLocalRing (AdjoinRoot f) :=
     IsLocalRing.of_unique_max_ideal (by
       obtain ⟨M, hM⟩ := Ideal.exists_maximal (AdjoinRoot f)
       exact ⟨M, hM, fun N hN => le_antisymm (hle N M hN hM) (hle M N hM hN)⟩)
@@ -1077,11 +1077,11 @@ theorem adjoinRoot_X_pow_sub_C_uniformizer_isDomain :
       exact fun h => hP.ne_top ((Ideal.eq_top_iff_one _).2 h)
     · intro n hn
       rw [hdeg] at hn
-      rw [coeff_sub, coeff_X_pow, if_neg hn.ne, zero_sub, coeff_C]
+      rw [coeff_sub, coeff_X_pow, ite_eq_right hn.ne, zero_sub, coeff_C]
       split_ifs
       · exact neg_mem (Ideal.mem_span_singleton_self _)
       · rw [neg_zero]; exact zero_mem _
-    · rw [coeff_sub, coeff_X_pow, if_neg he.ne, zero_sub, coeff_C_zero, Ideal.span_singleton_pow,
+    · rw [coeff_sub, coeff_X_pow, ite_eq_right he.ne, zero_sub, coeff_C_zero, Ideal.span_singleton_pow,
         Ideal.mem_span_singleton]
       rintro ⟨c, hc⟩
       have h1 : π * (1 + π * c) = 0 := by linear_combination -hc
@@ -1152,22 +1152,22 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
     rcases Nat.eq_zero_or_pos e with h | h
     · subst h; simp at he
     · exact h
-  haveI hAd := GlobalTheory.T.adjoinRoot_X_pow_sub_uniformizer_isDomain S π e hπ he0
-  haveI hAv := GlobalTheory.T.isDVR_adjoinRoot_X_pow_sub_C_of_irreducible S π e hπ he0
-  haveI : IsDomain D := φ.toMulEquiv.isDomain
-  haveI : IsPrincipalIdealRing D :=
+  have hAd := GlobalTheory.T.adjoinRoot_X_pow_sub_uniformizer_isDomain S π e hπ he0
+  have hAv := GlobalTheory.T.isDVR_adjoinRoot_X_pow_sub_C_of_irreducible S π e hπ he0
+  have : IsDomain D := φ.toMulEquiv.isDomain
+  have : IsPrincipalIdealRing D :=
     IsPrincipalIdealRing.of_surjective φ.symm.toRingHom φ.symm.surjective
-  haveI : IsLocalRing D := IsLocalRing.of_surjective' φ.symm.toRingHom φ.symm.surjective
-  haveI : IsDiscreteValuationRing D :=
+  have : IsLocalRing D := IsLocalRing.of_surjective' φ.symm.toRingHom φ.symm.surjective
+  have : IsDiscreteValuationRing D :=
     { not_a_field' := by
         intro h
         apply IsDiscreteValuationRing.not_isField (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π))
         refine MulEquiv.isField ?_ φ.symm.toMulEquiv
         exact (IsLocalRing.isField_iff_maximalIdeal_eq).2 h }
-  haveI : Module.Finite S (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π)) :=
+  have : Module.Finite S (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π)) :=
     (AdjoinRoot.powerBasis' (Polynomial.monic_X_pow_sub_C π he0.ne')).finite
-  haveI : Module.Finite S D := Module.Finite.equiv φ.symm.toLinearEquiv
-  haveI : FaithfulSMul S D := by
+  have : Module.Finite S D := Module.Finite.equiv φ.symm.toLinearEquiv
+  have : FaithfulSMul S D := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro a b hab
     have h1 : algebraMap S (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π)) a =
@@ -1183,10 +1183,10 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
       rw [Algebra.algebraMap_eq_smul_one, ← h0, map_smul, Module.Basis.repr_self]
       simp
     rw [← key a, ← key b, h1]
-  haveI : Module.Finite D (integralClosure D (TensorProduct S D L)) := _root_.GlobalTheory.NormFin.main S K L D
-  haveI : Module.Flat S K := IsLocalization.flat K (nonZeroDivisors S)
-  haveI : Module.Flat S L := Module.Flat.trans S K L
-  haveI : Module.Flat D (integralClosure D (TensorProduct S D L)) := by
+  have : Module.Finite D (integralClosure D (TensorProduct S D L)) := _root_.GlobalTheory.NormFin.main S K L D
+  have : Module.Flat S K := IsLocalization.flat K (nonZeroDivisors S)
+  have : Module.Flat S L := Module.Flat.trans S K L
+  have : Module.Flat D (integralClosure D (TensorProduct S D L)) := by
     rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     intro x hx
     obtain ⟨a, hax⟩ := (Submodule.mem_torsion_iff x).1 hx
@@ -1204,7 +1204,7 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
     rw [hsmul, ← map_zero (LinearMap.rTensor L (LinearMap.mulLeft S (a : D)))] at h1
     simp only [Submodule.mem_bot]
     exact Subtype.ext (hinj h1)
-  haveI : Algebra.FinitePresentation D (integralClosure D (TensorProduct S D L)) :=
+  have : Algebra.FinitePresentation D (integralClosure D (TensorProduct S D L)) :=
     Algebra.FinitePresentation.of_finiteType.mp inferInstance
   have hmax : ∀ (Q : Ideal (integralClosure D (TensorProduct S D L))) [Q.IsMaximal],
       Algebra.IsUnramifiedAt D Q := by
@@ -1214,14 +1214,14 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
         (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap D
           (integralClosure D (TensorProduct S D L)))
           (algebraMap_isIntegral_iff.mpr inferInstance) Q)
-    haveI : Q.LiesOver (maximalIdeal D) := ⟨hQu.symm⟩
+    have : Q.LiesOver (maximalIdeal D) := ⟨hQu.symm⟩
     exact isUnramifiedAt_of_ramificationIdx_eq_one_of_isSeparable (maximalIdeal D) Q
       (GlobalTheory.T.abhyankar_ramificationIdx_eq_one_alt S K L π e D ⟨φ⟩ hπ he hram hsep Q) (GlobalTheory.T.abhyankar_residueField_isSeparable_alt S K L π e D ⟨φ⟩ hπ he hram hsep Q)
-  haveI : Algebra.FormallyUnramified D (integralClosure D (TensorProduct S D L)) := by
+  have : Algebra.FormallyUnramified D (integralClosure D (TensorProduct S D L)) := by
     rw [Algebra.formallyUnramified_iff_forall]
     intro q
     obtain ⟨Q, hQ, hqQ⟩ := Ideal.exists_le_maximal q.1 q.2.ne_top
-    haveI := hQ
+    have := hQ
     have hU := hmax Q
     have hopen := Algebra.isOpen_unramifiedLocus (R := D)
       (A := integralClosure D (TensorProduct S D L))
@@ -1369,8 +1369,8 @@ theorem GlobalTheory.AbhyankarBC.tensor_map_val_bijective_of_smul_mem : ∀ (D B
   intro D B F _ _ _ _ _ N M hM hN
   let Dm := Localization M
   have hM' : ∀ y : M, IsUnit (algebraMap D F y) := fun y => hM y y.2
-  letI : Algebra Dm F := (IsLocalization.lift (M := M) (S := Dm) (g := algebraMap D F) hM').toAlgebra
-  haveI : IsScalarTower D Dm F :=
+  let : Algebra Dm F := (IsLocalization.lift (M := M) (S := Dm) (g := algebraMap D F) hM').toAlgebra
+  have : IsScalarTower D Dm F :=
     IsScalarTower.of_algebraMap_eq (fun x => (IsLocalization.lift_eq (M := M) (S := Dm) hM' x).symm)
   let ι : Dm ⊗[D] N →ₐ[Dm] Dm ⊗[D] B := Algebra.TensorProduct.map (AlgHom.id Dm Dm) N.val
   have hι : Function.Bijective ι := by
@@ -1453,17 +1453,17 @@ theorem GlobalTheory.AbhyankarBC.etale_integralClosure_of_root_uniformizer : ∀
   have hD : Algebra.Etale D (integralClosure D (D ⊗[S] L)) :=
     GlobalTheory.T.abhyankar_dvr_of_isSeparable_alt S K L π q D ⟨AlgEquiv.refl⟩ hπ hqu hram hsep
   let φ : D →ₐ[S] S₁ := AdjoinRoot.liftAlgHom f (Algebra.ofId S S₁) y (by simp [f, hy])
-  letI : Algebra D S₁ := φ.toRingHom.toAlgebra
-  letI : Algebra D K₁ := ((algebraMap S₁ K₁).comp φ.toRingHom).toAlgebra
-  haveI : IsScalarTower D S₁ K₁ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower S D S₁ := IsScalarTower.of_algebraMap_eq (fun x => (φ.commutes x).symm)
-  haveI : IsScalarTower S D K₁ := IsScalarTower.of_algebraMap_eq (fun x => by
+  let : Algebra D S₁ := φ.toRingHom.toAlgebra
+  let : Algebra D K₁ := ((algebraMap S₁ K₁).comp φ.toRingHom).toAlgebra
+  have : IsScalarTower D S₁ K₁ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower S D S₁ := IsScalarTower.of_algebraMap_eq (fun x => (φ.commutes x).symm)
+  have : IsScalarTower S D K₁ := IsScalarTower.of_algebraMap_eq (fun x => by
     rw [IsScalarTower.algebraMap_apply S S₁ K₁, IsScalarTower.algebraMap_apply S D S₁]; rfl)
   let N := integralClosure D (D ⊗[S] L)
   let T := S₁ ⊗[D] N
-  haveI : Algebra.Etale S₁ T := Algebra.Etale.baseChange D N S₁
-  haveI : Algebra.IsIntegral S₁ T := Algebra.IsIntegral.tensorProduct D S₁ N
-  haveI hT := GlobalTheory.T.etale_integralClosure_tensor S₁ K₁ T inferInstance inferInstance
+  have : Algebra.Etale S₁ T := Algebra.Etale.baseChange D N S₁
+  have : Algebra.IsIntegral S₁ T := Algebra.IsIntegral.tensorProduct D S₁ N
+  have hT := GlobalTheory.T.etale_integralClosure_tensor S₁ K₁ T inferInstance inferInstance
   have hunit : ∀ m ∈ Algebra.algebraMapSubmonoid D (nonZeroDivisors S), IsUnit (algebraMap D K₁ m) := by
     rintro _ ⟨s, hs, rfl⟩
     rw [← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply S S₁ K₁]

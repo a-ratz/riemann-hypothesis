@@ -89,7 +89,7 @@ theorem dd_eq : dd Z = dB Z := by
       Subalgebra.toSubmodule (Subalgebra.centralizer k (Z : Set (Matrix (Fin n) (Fin n) k))) := by
     ext x
     simp only [PositivityTheory.RgUd.T.Nil.Four.Phi2.BzL, Bz, Submodule.mem_mk, AddSubmonoid.mem_mk,
-      AddSubsemigroup.mem_mk, Set.mem_setOf_eq, Subalgebra.mem_toSubmodule, Subalgebra.mem_centralizer_iff,
+      AddSubsemigroup.mem_mk, Set.mem_ofPred_eq, Subalgebra.mem_toSubmodule, Subalgebra.mem_centralizer_iff,
       SetLike.mem_coe]
   unfold dd dB
   rw [e, Subalgebra.finrank_toSubmodule]

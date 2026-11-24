@@ -128,7 +128,7 @@ theorem comap_inl_mem_stLat {g₁ : A₁} {g₂ : A₂} {M : Submodule O (A₁ �
     (hM : M ∈ stLat O E ((g₁, g₂) : A₁ × A₂)) :
     M.comap (LinearMap.inl O A₁ A₂) ∈ stLat O E g₁ := by
   refine ⟨⟨?_, ?_⟩, ?_⟩
-  · haveI := isNoetherian_of_fg_of_noetherian M hM.1.1
+  · have := isNoetherian_of_fg_of_noetherian M hM.1.1
     have hle : (M.comap (LinearMap.inl O A₁ A₂)).map (LinearMap.inl O A₁ A₂) ≤ M := Submodule.map_comap_le _ _
     have h1 : (((M.comap (LinearMap.inl O A₁ A₂)).map (LinearMap.inl O A₁ A₂)).comap M.subtype).FG :=
       IsNoetherian.noetherian _

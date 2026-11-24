@@ -110,7 +110,7 @@ private theorem dcG_le {H : Type} [Group H] (K : Subgroup H) (s : H → H)
   let φ : H ⧸ K → H ⧸ K := fun p => ((k⁻¹ * s (p.out⁻¹ * z) * 1 : H) : H ⧸ K)
   refine Finset.card_le_card_of_injOn (fun a => (φ a.1, (φ a.1).out⁻¹ • (z : H ⧸ K))) ?_ ?_
   · rintro ⟨p, q⟩ ha
-    simp only [Finset.coe_filter, Finset.mem_product, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at ha ⊢
+    simp only [Finset.coe_filter, Finset.mem_product, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at ha ⊢
     obtain ⟨⟨hp, hq⟩, hpq⟩ := ha
     have hq' : q = ((p.out⁻¹ * z : H) : H ⧸ K) := by
       change q = p.out⁻¹ • (z : H ⧸ K)
@@ -128,7 +128,7 @@ private theorem dcG_le {H : Type} [Group H] (K : Subgroup H) (s : H → H)
       rw [this]
       exact (dcG_mem K _ _).mpr (hD _ _ hp _ (inv_mem m.2) _ (inv_mem hk'))
   · rintro ⟨p, q⟩ ha ⟨p', q'⟩ ha' h
-    simp only [Finset.coe_filter, Set.mem_setOf_eq] at ha ha'
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq] at ha ha'
     have h2 : φ p = φ p' := congrArg Prod.fst h
     have h3 := hK _ (QuotientGroup.eq.mp h2)
     have h4 : (k⁻¹ * s (p.out⁻¹ * z) * 1)⁻¹ * (k⁻¹ * s (p'.out⁻¹ * z) * 1) = s (p'.out⁻¹ * p.out) := by
@@ -189,7 +189,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem sphC_fin {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     {K : Subgroup G} (hL : IsCompact (K : Set G)) (hK' : IsOpen (K : Set G)) (x : G) :
     (MulAction.orbit K (x : G ⧸ K)).Finite := by
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK'
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK'
   have hc : Continuous fun g : G => ((g * x : G) : G ⧸ K) :=
     QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const)
   refine ((hL.image hc).finite_of_discrete).subset ?_

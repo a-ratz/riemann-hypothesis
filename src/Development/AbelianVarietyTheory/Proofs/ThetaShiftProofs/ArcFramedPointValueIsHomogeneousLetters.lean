@@ -85,7 +85,7 @@ theorem evR_letters_equivariant (h1 : Out.Laws) (h2 : Out.Laws2) (hev : GlobalTh
   obtain ⟨hdom, -, -, hconst⟩ := GlobalTheory.ArcConst.algebraic_const E H Dw K₁
   obtain ⟨f₀, hf₀⟩ := hconst c.F (algebraMap c.F (ArcS Dw K₁))
   have hι : φ.comp (arcι Dw K₁) = ψ.comp (arcι Dw K₁) := RingHom.ext fun p => hφψ _
-  letI : Algebra c.F T := (φ.comp (algebraMap c.F (ArcS Dw K₁))).toAlgebra
+  let : Algebra c.F T := (φ.comp (algebraMap c.F (ArcS Dw K₁))).toAlgebra
   let φ' : ArcS Dw K₁ →ₐ[c.F] T := { φ with commutes' := fun _ => rfl }
   let ψ' : ArcS Dw K₁ →ₐ[c.F] T :=
     { ψ with

@@ -70,8 +70,8 @@ def NonSqCase : Prop :=
 
 theorem locOProj_of (hS : SqCase) (hN : NonSqCase) : PI.LocHerm.LocOProj := by
   intro F _ _ _ E _ _ _ _ M hM
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   obtain ⟨θ, hθ, hc, D, hD0, hD⟩ := PI.LocHerm.SlopeTestRemainingChoices.exists_theta (L := M.L)
   by_cases hs : ∃ s : F, s * s = D
   · exact hS F E M hM θ hθ hc D hD0 hD hs

@@ -191,15 +191,15 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
          C' * (L.sc.b' / L.sc.x + L.etaSz + L.Sc + (L.sc.w'' D.R.n + D.R.t) * Real.log L.sc.x / L.sc.delta1) + bo
        else 0) else 0) := by
     by_cases hc : D.host.cls p = PrimeClass.inertClass
-    · rw [if_pos hc, if_pos hc]
+    · rw [ite_eq_left hc, ite_eq_left hc]
       by_cases h0 : (p : ℝ) < L.sc.p0 D.R.k
-      · rw [if_pos h0, if_pos h0, ← rG_eq]
+      · rw [ite_eq_left h0, ite_eq_left h0, ← rG_eq]
         have h1 : 0 ≤ (rG L.sc : ℝ) * L.sc.b' * Real.log L.sc.x :=
           mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hb') hlx
         nlinarith [mul_nonneg (sub_nonneg.2 hCC') h1]
-      · rw [if_neg h0, if_neg h0]
+      · rw [ite_eq_right h0, ite_eq_right h0]
         by_cases h1 : (p : ℝ) < L.sc.X'
-        · rw [if_pos h1, if_pos h1]
+        · rw [ite_eq_left h1, ite_eq_left h1]
           have e1 : 0 ≤ L.sc.b' / L.sc.x := div_nonneg hb' hx.le
           have e2 : 0 ≤ L.sc.w'' D.R.n * Real.log L.sc.x / L.sc.delta1 := div_nonneg (mul_nonneg hw hlx) hd.le
           have e3 : 0 ≤ (D.R.t : ℝ) * Real.log L.sc.x / L.sc.delta1 := div_nonneg (mul_nonneg ht hlx) hd.le
@@ -211,8 +211,8 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
           rw [e4, e5]
           nlinarith [mul_nonneg (sub_nonneg.2 hCC') e2, mul_nonneg (sub_nonneg.2 hC'1) e1,
             mul_nonneg (sub_nonneg.2 hC'1) hη.le, mul_nonneg hC'0 hSc.le, mul_nonneg hC'0 e3]
-        · rw [if_neg h1, if_neg h1]
-    · rw [if_neg hc, if_neg hc]
+        · rw [ite_eq_right h1, ite_eq_right h1]
+    · rw [ite_eq_right hc, ite_eq_right hc]
 
   have hor : (if IsResidueClassZero D p ∧ (p : ℝ) < L.sc.X' then
       C * Real.log L.sc.x * (La K L.sc * L.sc.a / ((p : ℝ) * D.R.k) +
@@ -223,7 +223,7 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
         (if (p : ℝ) < L.sc.p0 D.R.k then L.sc.a * (p : ℝ) ^ (-(leastPowerExponent L p : ℝ)) else L.sc.a / (p : ℝ) ^ 2))
       else 0) := by
     by_cases hc : D.host.cls p = PrimeClass.inertClass ∧ (p : ℝ) < L.sc.X'
-    · rw [if_pos hc, if_pos hc, hLa]
+    · rw [ite_eq_left hc, ite_eq_left hc, hLa]
       have e1 : 0 ≤ L.LaG * L.sc.a / ((p : ℝ) * D.R.k) :=
         div_nonneg (mul_nonneg hLaG (by linarith)) (mul_nonneg hp0.le hk)
       have key : ∀ Z Z' : ℝ, 0 ≤ Z → Z ≤ Z' →
@@ -233,7 +233,7 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
         exact mul_le_mul (mul_le_mul_of_nonneg_right hCC' hlx) (by linarith) (by linarith)
           (mul_nonneg hC'0 hlx)
       by_cases h0 : (p : ℝ) < L.sc.p0 D.R.k
-      · rw [if_pos h0, if_pos h0]
+      · rw [ite_eq_left h0, ite_eq_left h0]
         apply key
         · exact mul_nonneg (by linarith) (Real.rpow_nonneg hp0.le _)
         · apply mul_le_mul_of_nonneg_left _ (by linarith)
@@ -241,9 +241,9 @@ theorem lo_le_loG (K : Consts) (L : SizeData₂ D) (hK : 0 ≤ K.La) (hLa : La K
           have := exponent_ge_least_exponent L p hp h0
           have h2 : (leastPowerExponent L p : ℝ) ≤ (L1 D L.sc p : ℝ) := by exact_mod_cast this
           linarith
-      · rw [if_neg h0, if_neg h0]
+      · rw [ite_eq_right h0, ite_eq_right h0]
         exact key _ _ (div_nonneg (by linarith) (by positivity)) le_rfl
-    · rw [if_neg hc, if_neg hc]
+    · rw [ite_eq_right hc, ite_eq_right hc]
   unfold lo loG
   exact add_le_add (add_le_add hcp hpr) hor
 
@@ -274,7 +274,7 @@ theorem ask_eq_askP (X : Inst D L) (p : ℕ) (hp : p.Prime)
   · intro i hi
     rw [Finset.mem_range, not_lt] at hi
     by_cases ho : Odd i
-    · rw [if_pos ho, aL_top, ← hw]
+    · rw [ite_eq_left ho, aL_top, ← hw]
       apply max_eq_left
       have h1 : (L.aT t).toNat < p ^ i :=
         lt_of_lt_of_le (Nat.lt_pow_succ_log_self hp.one_lt _) (Nat.pow_le_pow_right hp.pos (by omega))
@@ -284,7 +284,7 @@ theorem ask_eq_askP (X : Inst D L) (p : ℕ) (hp : p.Prime)
       have h5 : (L.aT t : ℝ) / (p : ℝ) ^ i < 1 := by rw [div_lt_one h4]; linarith
       have := L.wPart_ge j t p i
       linarith
-    · rw [if_neg ho]
+    · rw [ite_eq_right ho]
 
 theorem vUnit_pos {p : ℕ} (G : GAtP p) (v : Fin G.P.nV) : 0 < vUnit G := by
   have S := G.P.setting v
@@ -334,7 +334,7 @@ theorem cand_of_VV_ne (X : Inst D L) (K : Consts) (a b : HH D → ℤ) (p : ℕ)
     Cand D L K p := by
   unfold VV at h
   by_contra hc
-  exact h (if_neg (fun hh => hc hh.1))
+  exact h (ite_eq_right (fun hh => hc hh.1))
 
 def ServedGIdx (X : Inst D L) (K : Consts) : Prop :=
   ∀ (u : D.what₂.Word) (p : ℕ), VV X K (aL L) (bL L) p ≠ ∅ → p ≠ (D.mem u).A.T → GIdx D.host (D.mem u).A.T p
@@ -418,7 +418,7 @@ theorem fill_nonneg (X : Inst D L) (j : ℕ) (z : Bool × HH D) : 0 ≤ fill X (
   have hx := sc_x_pos L.sc
   unfold fill
   by_cases ht : z.1 = false ∧ z.2 ∈ D.host.TT
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     have h1 := (X.off_top j z ht).1
     have h2 : L.sc.b' ≤ (bL L z.2 : ℝ) := by
       unfold bL
@@ -426,7 +426,7 @@ theorem fill_nonneg (X : Inst D L) (j : ℕ) (z : Bool × HH D) : 0 ≤ fill X (
       exact L.bT_ge _
     have h3 : 0 ≤ L.sc.b' / L.sc.x := div_nonneg hb hx.le
     linarith
-  · rw [if_neg ht]
+  · rw [ite_eq_right ht]
     by_cases hth : IsThickPl D z
     · have := (X.off_thick j z hth).1
       have := sc_one_le_b L.sc
@@ -520,7 +520,7 @@ theorem svBound_of (X : Inst D L) (K : Consts) (hK : K.Nonneg) (P : ParameterCho
         have hs' := hTT s (Finset.mem_filter.1 hs).1
         have h1 : fill X (bL L) j (false, s) = (bL L s : ℝ) + X.off j (false, s) := by
           unfold fill
-          rw [if_pos ⟨rfl, hs'⟩]
+          rw [ite_eq_left ⟨rfl, hs'⟩]
         have h2 := (X.off_top j (false, s) ⟨rfl, hs'⟩).1
         have h3 := kaJ_le P j hj
         unfold fillG
@@ -742,7 +742,7 @@ theorem linkG_at_core (X : Inst D L) (Y : LatInst D) (K : Consts) (hK : K.Nonneg
   · intro u w hw
     obtain ⟨_, _, _, _, htau, hio, _⟩ := hfill w
     by_cases hV : VV X K (aL L) (bL L) (D.what₂.places.resChar w) = ∅
-    · have ht0 : L.tau w = 0 := by rw [htau]; unfold tauP; rw [if_pos hV]
+    · have ht0 : L.tau w = 0 := by rw [htau]; unfold tauP; rw [ite_eq_left hV]
       have hi0 : L.io w = 0 := by
         rw [hio]; unfold ioP
         rw [dite_eq_right (by rw [hV]; exact Finset.not_nonempty_empty)]

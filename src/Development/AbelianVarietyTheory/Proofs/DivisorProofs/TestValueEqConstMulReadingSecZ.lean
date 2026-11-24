@@ -130,7 +130,7 @@ theorem test_value_eq_const_mul_reading_secZ (hS : Out.SecBaseChangeSt) {Xo : Mo
   obtain ⟨-, -, hW, -, -, -, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hS E H Dw l Xo c
   obtain ⟨z, hz⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hS E H Dw l Xo c p.R (CAt σ) ψ y
   obtain ⟨k, x, t, ht⟩ := hU.2.2.1 z
-  haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+  have : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
   refine ⟨k, x, Formalism.L2.Pj.toC ((∏ i, t i ^ e i : (CAt σ)ˣ) : CAt σ), fun f hf => ?_⟩
   have hft : FromTest (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) z := ⟨p, ψ, y, hz⟩
   have hev : evR Xo c f z = ψ (f p y) := by
@@ -182,7 +182,7 @@ theorem cuspW_finiteDimensional_of_isUnf (hS : Out.SecBaseChangeSt) {Xo : Moduli
       smul_mem' := fun t P hP => ⟨Submodule.smul_mem _ t hP.1, fun k x hx => by
         change t • P k x = 0
         rw [hP.2 k x hx, smul_zero]⟩ }
-  haveI : FiniteDimensional ℂ W :=
+  have : FiniteDimensional ℂ W :=
     _root_.GlobalTheory.CuspSecFinData.finiteDimensional_of_le_holSub E r (U σ).Comp (U σ).X (modelWt (U σ) G) W (fun P hP => hP.1) (fun P hP => hP.2)
   have key : ∀ s : Finset (cuspW Xo c U G),
       LinearIndependent c.F (fun i : s => (i : cuspW Xo c U G)) → s.card ≤ Module.finrank ℂ W := by
@@ -203,7 +203,7 @@ theorem cuspW_finiteDimensional_of_isUnf (hS : Out.SecBaseChangeSt) {Xo : Moduli
     have hc' : LinearIndependent ℂ b' := LinearIndependent.of_comp W.subtype hc
     have := hc'.fintype_card_le_finrank
     simpa using this
-  haveI : Module.Free c.F ↥(cuspW Xo c U G) := Module.Free.of_divisionRing _ _
+  have : Module.Free c.F ↥(cuspW Xo c U G) := Module.Free.of_divisionRing _ _
   exact Module.rank_lt_aleph0_iff.mp ((rank_le key).trans_lt (Cardinal.natCast_lt_aleph0))
 
 end GlobalTheory

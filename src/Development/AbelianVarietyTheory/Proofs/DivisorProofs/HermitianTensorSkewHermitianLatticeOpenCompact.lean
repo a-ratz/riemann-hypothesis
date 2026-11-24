@@ -126,8 +126,8 @@ theorem vecMulVec_mem {E : Type} [Field E] [NumberField E] {n d : ℕ} {LX : Sub
 
 theorem exists_gen {E : Type} [Field E] [NumberField E] {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E))
     (hL : L.IsLattice E) : ∃ s : Finset L, Submodule.span ℤ (s : Set L) = ⊤ := by
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.mpr hL.fg
-  haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.mpr hL.fg
+  have : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
   exact Module.Finite.fg_top
 
 theorem locCo_smul {F : Type} [Field F] [NumberField F] {W : Type} [AddCommGroup W] [Module (AF F) W]

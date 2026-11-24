@@ -226,7 +226,7 @@ theorem heckeAct_eq_sum {f : G → ℂ} {v : V} (hfin : (range fun g => f g • 
   apply hw
   have : {g | f g • ρ g v = w} = ∅ := by
     ext g
-    simp only [mem_setOf_eq, mem_empty_iff_false, iff_false]
+    simp only [mem_ofPred_eq, mem_empty_iff_false, iff_false]
     exact fun hg => h ⟨g, hg⟩
   simp [this]
 
@@ -246,7 +246,7 @@ theorem dual_heckeAct [IsFiniteMeasureOnCompacts μ] {f : G → ℂ}
     · rw [Set.indicator_of_mem (show g ∈ {x | f x • ρ x v = f g • ρ g v} from rfl), map_smul,
         smul_eq_mul]
     · intro b _ hb
-      exact Set.indicator_of_notMem (by simpa [Set.mem_setOf_eq, eq_comm] using hb) _
+      exact Set.indicator_of_notMem (by simpa [mem_ofPred_eq, eq_comm] using hb) _
     · intro h
       exact absurd ((Set.Finite.mem_toFinset hfin).2 (Set.mem_range_self g)) h
   have hmeas : ∀ w, MeasurableSet {x | f x • ρ x v = w} := fun w =>

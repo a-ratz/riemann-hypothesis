@@ -186,7 +186,7 @@ theorem UMem.mono_ne_zero (mu : Fin 8 → X) : mono W t δ mu ≠ 0 :=
 
 include 𝔪 in
 theorem UMem.mono_mem {mu : Fin 8 → X} (h : mu ≠ 0) : mono W t δ mu ∈ maximalIdeal V := by
-  haveI := 𝔪.cn.2.2.2
+  have := 𝔪.cn.2.2.2
   obtain ⟨u, hu⟩ := 𝔪.psi mu
   obtain ⟨r, hr, -, hm, -⟩ := (PsiCoordLocal.main V 𝔪.D 𝔪.cn.2.1 (𝔪.e₈ mu)).1
   obtain ⟨v, hv⟩ := PsiCoordLocal.exists_unit_of_coord hr hu
@@ -232,7 +232,7 @@ theorem exists_unif_good {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] (h
       rigid := PolBaseChange.rigidified_pull (isGrpPullback_pullback P.A f) P.rigid,
       sym := PolBaseChange.sym_pull (isGrpPullback_pullback P.A f) P.sym,
       ample := by
-        haveI := P.isAb.proper
+        have := P.isAb.proper
         exact AmpleBaseChange.relAmple_of_isPullback P.isLB P.ample (IsPullback.of_hasPullback P.A.hom f)
       ktriv := by
         obtain ⟨w, hw⟩ := PolBaseChange.lbIso_refl (LB.isLB_pull P.isLB (pullback.fst P.A.hom f))
@@ -289,17 +289,17 @@ theorem UMem.nonempty_of_regular {X₁ : Setup F W i} {z₁ : X₁.M.Z} {act : M
       rigid := PolBaseChange.rigidified_pull (isGrpPullback_pullback P.A f) P.rigid,
       sym := PolBaseChange.sym_pull (isGrpPullback_pullback P.A f) P.sym,
       ample := by
-        haveI := P.isAb.proper
+        have := P.isAb.proper
         exact AmpleBaseChange.relAmple_of_isPullback P.isLB P.ample (IsPullback.of_hasPullback P.A.hom f)
       ktriv := by
         obtain ⟨w, hw⟩ := PolBaseChange.lbIso_refl (LB.isLB_pull P.isLB (pullback.fst P.A.hom f))
         exact kTriv_pull (isGrpPullback_pullback P.A f) P.isLB (LB.isLB_pull P.isLB _) ((isGen_iff w).1 hw) P.ktriv } 
   let P := polPull X₁.ρ.P (spMap yV)
-  letI := P.isAb.comm
+  let := P.isAb.comm
   obtain ⟨D, A, U, ψ, hX, hψ, hL, hE⟩ := exists_unif_good hV P
   have r : LBIso P.L (X₁.ρ.P.L.pull (pullback.fst X₁.ρ.P.A.hom (spMap yV))) := PolBaseChange.lbIso_refl P.isLB
   obtain ⟨wl, hwl⟩ := LBIso.trans A.isLB (LB.isLB_pull P.isLB _) (LB.isLB_pull X₁.ρ.P.isLB _) hL (lbIso_pull_comp r ψ)
-  haveI := hV.2.2.2
+  have := hV.2.2.2
   obtain ⟨r₀, hr₀, -, -, hu⟩ := (PsiCoordLocal.main V D hV.2.1 0).1
   refine ⟨{
     cn := hV

@@ -465,7 +465,7 @@ theorem kFinite_average_isTypeAt : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
   obtain ⟨H, i1, i2, σ, lam, ε', P, hE, hD, hP, hJ, hx⟩ := hφ.2.2 τ
   obtain ⟨-, hε⟩ := GlobalTheory.SignedParTest.isEnum_unique hE (N.M.enum τ)
   subst hε
-  haveI : CompleteSpace H := hD.1
+  have : CompleteSpace H := hD.1
   have hσ : Std (N.M.ε τ) σ := std_of_isDS hPr.harishChandraModules hD
   have hσ1 := hσ.1
   set fr := N.M.fr τ with hfr
@@ -1099,7 +1099,7 @@ theorem exists_form_cuspSub (hP : GlobalTheory.Published.CuspRapidDecay) (hθ : 
   have hPm : ∀ x, IsAutFunSm θ V (P x) ∧ IsCuspFun V (P x) := fun x =>
     (Submodule.linearProjOfIsCompl (cuspSub θ V) q hq x).2
   have hPfix : ∀ x ∈ cuspSub θ V, P x = x := fun x hx =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hq ⟨x, hx⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hq ⟨x, hx⟩)
   have hPI : ∀ x y, IntegrableOn (fun g => star (P x g) * P y g) 𝓕 μ := fun x y =>
     hint (hPm x).1 (hPm y).1 (hPm y).2
   let B : (GA D V → ℂ) → (GA D V → ℂ) → ℂ := fun x y => ∫ g in 𝓕, star (P x g) * P y g ∂μ

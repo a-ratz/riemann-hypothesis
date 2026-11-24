@@ -63,7 +63,7 @@ theorem etale_quotient_of_etale_punctured :
   set S := R ⧸ Ideal.span {f}
   set T := Localization.AtPrime P
   set p : Ideal R := P.comap (algebraMap R S) with hpdef
-  haveI : p.IsPrime := Ideal.comap_isPrime _ _
+  have : p.IsPrime := Ideal.comap_isPrime _ _
   have hp : p ≠ maximalIdeal R := by
     intro h
     apply hP
@@ -76,14 +76,14 @@ theorem etale_quotient_of_etale_punctured :
       exact (mem_maximalIdeal _).1 hx (hu.map _)
     rw [← h] at hr
     exact hr
-  haveI := H p hp
+  have := H p hp
   let φ : Localization.AtPrime p →+* T := Localization.localRingHom p P (algebraMap R S) rfl
-  letI : Algebra (Localization.AtPrime p) T := φ.toAlgebra
-  haveI : IsScalarTower R (Localization.AtPrime p) T :=
+  let : Algebra (Localization.AtPrime p) T := φ.toAlgebra
+  have : IsScalarTower R (Localization.AtPrime p) T :=
     IsScalarTower.of_algebraMap_eq (fun r => by
       show algebraMap R T r = φ (algebraMap R _ r)
       rw [Localization.localRingHom_to_map, IsScalarTower.algebraMap_apply R S T])
-  haveI : Algebra.Etale T (TensorProduct (Localization.AtPrime p) T
+  have : Algebra.Etale T (TensorProduct (Localization.AtPrime p) T
       (TensorProduct R (Localization.AtPrime p) A)) :=
     Algebra.Etale.baseChange _ _ _
   let e1 := Algebra.TensorProduct.cancelBaseChange R (Localization.AtPrime p) T T A

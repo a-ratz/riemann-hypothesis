@@ -389,7 +389,7 @@ theorem res_of_integral (hF : F.Ok C₀) (hn : n = 2 ∨ n = 3) (C : Type) [Comm
       res O C c = ((F.Ψ g ^ w n i : (ResidueField O)ˣ) : ResidueField O)) ∧
     ∀ i j, i ≠ j → ∀ x ∈ Submodule.span C (Set.range fun g => ρ.r g i j),
       ∀ y ∈ Submodule.span C (Set.range fun g => ρ.r g j i), ∃ c ∈ maximalIdeal C, algebraMap C K c = x * y := by
-  letI : Algebra C (ResidueField O) := (res O C).toRingHom.toAlgebra
+  let : Algebra C (ResidueField O) := (res O C).toRingHom.toAlgebra
   have halg : ∀ c, algebraMap C (ResidueField O) c = res O C c := fun _ => rfl
   obtain ⟨t, ⟨_, ht⟩, htr⟩ := hI.tr
   obtain ⟨ζ, hζ, hzd⟩ := hI.ze
@@ -687,7 +687,7 @@ private theorem ofRep_conj [CommRing K] (ρ ρ' : G →* Matrix (Fin n) (Fin n) 
 private theorem kills_map {A' : Type} [CommRing A'] (D : GDet n A G) (f : A →+* A') (g : G)
     (h : D.Kills (MonoidAlgebra.single g 1 - 1)) : (D.map f).Kills (MonoidAlgebra.single g 1 - 1) := by
   intro B _ _ x
-  letI : Algebra A B := ((algebraMap A' B).comp f).toAlgebra
+  let : Algebra A B := ((algebraMap A' B).comp f).toAlgebra
   have := h B x
   simp only [map_sub, map_one, MonoidAlgebra.mapRingHom_single] at this ⊢
   exact this
@@ -739,7 +739,7 @@ private theorem ac_closed {I : Ideal R} [IsHausdorff I R] {f : Γ → R} (hf : A
     IsClosed {x | f x = a} := by
   have : {x | f x = a} = ⋂ N : ℕ, {x | Ideal.Quotient.mk (I ^ N) (f x) = Ideal.Quotient.mk (I ^ N) a} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     refine ⟨fun h N => by rw [h], fun h => ?_⟩
     refine sub_eq_zero.1 (IsHausdorff.haus (I := I) inferInstance _ fun N => ?_)
     rw [SModEq.zero, smul_eq_mul, Ideal.mul_top]
@@ -849,7 +849,7 @@ private theorem mem_ker_iff (hn : 1 ≤ n) (g : G.G₀) : g ∈ (unt L r0).ker �
 include h0 hs in
 private theorem tame_ker [CharP (ResidueField O) l] (hj : Function.Injective j) (hn : 1 ≤ n) (u : G.St) (g : G.G₀)
     (hg : g ∈ G.Iu u) (hΨ : F.Ψ (L.π g) = 1) : g ∈ (unt L r0).ker := by
-  haveI : IsLocalRing C := IsCO.toIsLocalRing O (R := C)
+  have : IsLocalRing C := IsCO.toIsLocalRing O (R := C)
   obtain ⟨m, hm, h1, h2⟩ := L.tame u g hg
   have hI : g ^ m ∈ r.Ip u := by
     refine ⟨pow_mem hg m, Subgroup.mem_iInf.2 fun i => ?_⟩
@@ -873,7 +873,7 @@ private theorem tame_ker [CharP (ResidueField O) l] (hj : Function.Injective j) 
     have h6 : res O C m = 0 := (res_eq_zero_iff O C _).2 hu
     rw [map_natCast] at h6
     exact hm ((CharP.cast_eq_zero_iff _ l m).1 h6)
-  letI : Algebra C K := (j : C →+* K).toAlgebra
+  let : Algebra C K := (j : C →+* K).toAlgebra
   let y : MonoidAlgebra C G.G₀ := MonoidAlgebra.single g (((L.κA C g)⁻¹ : Cˣ) : C)
   have hK : (p.D.chi y).map (j : C →+* K) = (unt L r0 g).charpoly := by
     rw [chi_of_map p.D _ r0 h0, rep_single, unt_apply, ← κ_map_inv L j]; rfl
@@ -901,7 +901,7 @@ private theorem ker_le [CharP (ResidueField O) l] (hj : Function.Injective j) (h
   refine L.ker _ inferInstance ?_ (fun g hg => ?_) (tame_ker L p j r0 h0 hs hj hn) fun g hg => ?_
   · have : ((unt L r0).ker : Set G.G₀) = ⋂ h, {g | tt L p (h * g) = tt L p h} := by
       ext g
-      simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_ofPred_eq]
       exact mem_ker_iff L p j hj r0 h0 hs hn g
     rw [this]
     exact isClosed_iInter fun h => ac_closed (ac_comp (tt_cont L p) (continuous_const_mul h)) _
@@ -916,7 +916,7 @@ private theorem ker_le [CharP (ResidueField O) l] (hj : Function.Injective j) (h
     simp
 
 private theorem π_quot : Topology.IsQuotientMap L.π := by
-  haveI : CompactSpace G.G₀ := isCompact_iff_compactSpace.1 (G.η.ker.isClosed_of_isOpen G.η_open).isCompact
+  have : CompactSpace G.G₀ := isCompact_iff_compactSpace.1 (G.η.ker.isClosed_of_isOpen G.η_open).isCompact
   exact L.π_cont.isClosedMap.isQuotientMap L.π_cont L.π_surj
 
 private theorem desc {M : Type} [Monoid M] (a : G.G₀ →* M) (h : L.π.ker ≤ a.ker) :
@@ -931,7 +931,7 @@ private theorem desc {M : Type} [Monoid M] (a : G.G₀ →* M) (h : L.π.ker ≤
 
 private theorem chi_ex : ∃ χ : ∀ v, Fin n → F.Gv v →* Cˣ, IsPsi O F n (fun v i g => (χ v i g : C)) ∧
     ∀ v i g, χ (L.e v) i (L.lam v g) * L.κA C (G.φ v g) = p.ψ v i g := by
-  haveI : IsLocalRing C := IsCO.toIsLocalRing O (R := C)
+  have : IsLocalRing C := IsCO.toIsLocalRing O (R := C)
   have key : ∀ v : F.V, ∃ χ : Fin n → F.Gv v →* Cˣ, (∀ i, AdicCont (maximalIdeal C) (fun g => (χ i g : C)) ∧
       ∀ g, res O C (χ i g) = ((F.Ψ (F.loc v g) ^ w n i : (ResidueField O)ˣ) : ResidueField O)) ∧
       ∀ u (h : L.e u = v) i g, χ i (h ▸ L.lam u g) * L.κA C (G.φ u g) = p.ψ u i g := fun v => by
@@ -1085,16 +1085,16 @@ open UpperTheory.V.Pr in
 theorem UpperTheory.V.Pr.seedOf :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [UpperTheory.V.Fr.IsCoef l O] [Algebra ℤ_[l] O] (F : UpperTheory.V.Fr.Frame l (IsLocalRing.ResidueField O)) (n : ℕ) (T : UpperTheory.V.Pr.Setup F n), T.CurveSpecializationHypothesis := by
   intro l _ O _ _ _ _ _ F n T Φ hΦ J hU hD ⟨K', _, _, _, φ, ρ', hirr, hJ, hφ⟩
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   obtain ⟨Z, hZ, hZφ⟩ := Ideal.exists_minimalPrimes_le hJ
-  haveI : Z.IsPrime := hZ.1.1
+  have : Z.IsPrime := hZ.1.1
   have hJZ : J ≤ Z := hZ.1.2
   let C := T.B.B ⧸ Z
   let q : T.B.B →ₐ[O] C := Ideal.Quotient.mkₐ O Z
   have hq : Function.Surjective q := Ideal.Quotient.mkₐ_surjective O Z
-  haveI : IsDomain C := Ideal.Quotient.isDomain Z
-  haveI : Nontrivial C := IsDomain.toNontrivial
-  haveI : IsCO O C := co_quot O T.B.B C q hq
+  have : IsDomain C := Ideal.Quotient.isDomain Z
+  have : Nontrivial C := IsDomain.toNontrivial
+  have : IsCO O C := co_quot O T.B.B C q hq
   let K := AlgebraicClosure (FractionRing C)
   have hj : Function.Injective (algebraMap C K) := by
     rw [IsScalarTower.algebraMap_eq C (FractionRing C) K]

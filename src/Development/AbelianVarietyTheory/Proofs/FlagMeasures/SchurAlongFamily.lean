@@ -183,14 +183,14 @@ theorem exists_mass_eq (hH : GlobalTheory.GapIn.Hyp) {k r : ℕ} {ε : Fin (2 * 
   rw [← lintegral_const_mul' _ _ (ENNReal.pow_ne_top ENNReal.coe_ne_top)]
   refine lintegral_congr_ae ?_
   filter_upwards [hae hS'] with x hx
-  rw [ha _ (hsm _ hx v hv), nnnorm_smul, ENNReal.coe_mul, mul_pow]
+  rw [ha _ (hsm _ hx v hv), nnNorm_smul, ENNReal.coe_mul, mul_pow]
 
 theorem bessel_schur : GlobalTheory.GapIn.Hyp → ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT CT C0 : ℝ), 1000 ≤ Cl →
     (∀ τ w w' θ (W : LocW D.R.k D.R.rS), GoodW D τ w w' θ W → 0 < θ) → (∀ w, 0 < Tr D w) →
     BSch D large₂ C' Cl Cg cb Cu cT CT C0 := by
   intro hH D large₂ C' Cl Cg cb Cu cT CT C0 hCl hθ _ hZ τ w w' θ W hW A hA hT v hv
   have hθ0 := hθ τ w w' θ W hW
-  have := FiniteDimensional.complete ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wp
   have hU : ∀ i : Fin D.R.k, uOne D w τ (i.val + 1) = uS D w τ i := fun i => by
     unfold uOne
     rw [dite_eq_left ⟨by omega, i.isLt⟩]

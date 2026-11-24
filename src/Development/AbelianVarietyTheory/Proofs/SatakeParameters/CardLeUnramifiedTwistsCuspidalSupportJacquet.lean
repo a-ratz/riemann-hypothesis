@@ -108,7 +108,7 @@ theorem equiv_detRep_of_isIrreducible : ∀ (k : Type) [Field k] [ValuativeRel k
     intro g v
     conv_lhs => rw [GlobalTheory.ProdSupport.eq_scalar_det hd g]
     exact hω _ v
-  haveI : Nontrivial V := by
+  have : Nontrivial V := by
     by_contra hV
     rw [not_nontrivial_iff_subsingleton] at hV
     have : (⊥ : Subrepresentation σ) = ⊤ :=
@@ -402,7 +402,7 @@ theorem card_le_ncard_unrTwist : GlobalTheory.Published.BernsteinZelevinskyFinit
     exact Finset.sum_eq_zero_iff.1 h0 i' (Finset.mem_erase.2 ⟨hi', Finset.mem_univ i'⟩)
   rcases A.eq_empty_or_nonempty with rfl | ⟨j₀, hj₀⟩
   · simp
-  haveI : Nonempty (Fin s) := ⟨(hcolj j₀ hj₀).choose⟩
+  have : Nonempty (Fin s) := ⟨(hcolj j₀ hj₀).choose⟩
   choose! ι hι1 hι0 using hcolj
 
   have hrow1 : ∀ i j j', 0 < b.1 i j → 0 < b.1 i j' → j = j' := fun i =>

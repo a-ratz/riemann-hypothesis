@@ -176,8 +176,8 @@ open scoped ContDiff BigOperators Real Topology Manifold in
 theorem _root_.GlobalTheory.exists_smooth_periodic_partition_of_unity :
     ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)), DiscreteTopology Λ → Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤ → ∀ (ι : Type) (U : ι → Set (Fin g → ℂ)), (∀ i, IsOpen (U i)) → (∀ i (l : Λ) z, z ∈ U i → z + l ∈ U i) → (∀ z, ∃ i, z ∈ U i) → ∃ (s : Finset ι) (ρ : ι → (Fin g → ℂ) → ℝ), (∀ i, ContDiff ℝ ∞ (ρ i) ∧ (∀ (l : Λ) z, ρ i (z + l) = ρ i z) ∧ tsupport (ρ i) ⊆ U i) ∧ ∀ z, ∑ i ∈ s, ρ i z = 1 := by
   intro g Λ hdisc hspan ι U hU hper hcov
-  haveI := hdisc
-  haveI : IsZLattice ℝ Λ := ⟨hspan⟩
+  have := hdisc
+  have : IsZLattice ℝ Λ := ⟨hspan⟩
   obtain ⟨t, ht⟩ := _root_.GlobalTheory.PeriodicPartition.exists_finite_subcover Λ
     (fun x : Fin g → ℂ => {z | ∃ l : Λ, z + (l : Fin g → ℂ) ∈ Metric.ball x 1})
     (fun x => by
@@ -219,7 +219,7 @@ theorem _root_.GlobalTheory.exists_smooth_periodic_partition_of_unity :
     · have hsum : ∑ᶠ i, p i y = ∑ i ∈ s, p i y := by
         apply finsum_eq_sum_of_support_subset
         intro i hi
-        simp only [s, Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+        simp only [s, Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
         exact ⟨y, hi, subset_tsupport _ hy⟩
       rw [← hsum, p.sum_eq_one (Set.mem_univ y), mul_one]
   let a : ι → (Fin g → ℂ) → ℝ := fun i z => θ z * p i z

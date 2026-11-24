@@ -100,7 +100,7 @@ theorem exists_pairB_of_range_eq {ι : Type} [Fintype ι] {n : ℕ} (G G' : ι �
     refine ⟨v, Subtype.ext ?_⟩
     rw [hφ', hφ, hv, key]
   let e := LinearEquiv.ofBijective φ' ⟨inj, surj⟩
-  haveI : FiniteDimensional ℂ (Formalism.L2.DIV.VV ℂ lam) := Module.Finite.of_basis (Formalism.L2.DIV.bVV ℂ lam)
+  have : FiniteDimensional ℂ (Formalism.L2.DIV.VV ℂ lam) := Module.Finite.of_basis (Formalism.L2.DIV.bVV ℂ lam)
   let ψ : Module.Dual ℂ (Formalism.L2.DIV.VV ℂ lam) := ℓ ∘ₗ e.symm.toLinearMap
   have hB : (pairBK (K := ℂ) lam).flip.Nondegenerate := by
     have := pairingBNondegenerate_holds ℂ ι n lam

@@ -54,20 +54,20 @@ theorem isFreeGen_dForm_of_formallyEtale_mvPolynomial :
     (∀ i, b i = dFun α (z i)) → ∀ (t : Fin r → A), (MvPolynomial.eval₂Hom ρ t).FormallyEtale →
     IsFreeGen A (dForm β (Fin.append t (fun i => ρ (z i)))) := by
   intro k A₀ A _ _ _ α β ρ hc n r z b hb t hφ
-  letI := α.toAlgebra
-  letI := β.toAlgebra
-  letI := ρ.toAlgebra
-  haveI : IsScalarTower k A₀ A := IsScalarTower.of_algebraMap_eq' hc.symm
+  let := α.toAlgebra
+  let := β.toAlgebra
+  let := ρ.toAlgebra
+  have : IsScalarTower k A₀ A := IsScalarTower.of_algebraMap_eq' hc.symm
   let φ := MvPolynomial.eval₂Hom ρ t
-  letI : Algebra (MvPolynomial (Fin r) A₀) A := φ.toAlgebra
-  haveI : IsScalarTower A₀ (MvPolynomial (Fin r) A₀) A :=
+  let : Algebra (MvPolynomial (Fin r) A₀) A := φ.toAlgebra
+  have : IsScalarTower A₀ (MvPolynomial (Fin r) A₀) A :=
     IsScalarTower.of_algebraMap_eq fun a ↦ by
       change _ = φ (MvPolynomial.C a)
       simp [φ, RingHom.algebraMap_toAlgebra]
-  haveI : Algebra.FormallyEtale (MvPolynomial (Fin r) A₀) A := hφ
-  haveI : Algebra.FormallySmooth A₀ A :=
+  have : Algebra.FormallyEtale (MvPolynomial (Fin r) A₀) A := hφ
+  have : Algebra.FormallySmooth A₀ A :=
     Algebra.FormallySmooth.comp A₀ (MvPolynomial (Fin r) A₀) A
-  haveI : Subsingleton (Algebra.H1Cotangent A₀ A) :=
+  have : Subsingleton (Algebra.H1Cotangent A₀ A) :=
     Algebra.FormallySmooth.subsingleton_h1Cotangent
   have hinj : Function.Injective (KaehlerDifferential.mapBaseChange k A₀ A) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]

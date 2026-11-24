@@ -75,7 +75,7 @@ private theorem subalgebra_end_eq_whole_of_isSimpleModule {V : Type} [AddCommGro
   have hPN : ∀ x, P x ∈ N := fun x => (Submodule.linearProjOfIsCompl N W hW x).2
   have hPfix : ∀ x ∈ N, P x = x := fun x hx => by
     simp only [P, LinearMap.comp_apply, Submodule.subtype_apply]
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hW ⟨x, hx⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hW ⟨x, hx⟩)
   have hcomm : ∀ (T : Module.End ℂ V) (x : ι → V), P (fun i => T (x i)) = fun i => T (P x i) := by
     intro T x
     have hsingle : ∀ (i j : ι) (y : V), P (Pi.single j (T y)) i = T (P (Pi.single j y) i) := by
@@ -124,7 +124,7 @@ theorem _root_.GlobalTheory.ClassFin.span_range_eq_top_of_isIrreducible :
     rw [this, Submonoid.closure_eq]
   let φ : Submodule A V → Subrepresentation ρ := fun M =>
     ⟨M.restrictScalars ℂ, fun g v hv => M.smul_mem (⟨ρ g, hρA g⟩ : A) hv⟩
-  haveI : IsSimpleModule A V := by
+  have : IsSimpleModule A V := by
     refine { exists_pair_ne := ⟨⊥, ⊤, fun hbt => ?_⟩, eq_bot_or_eq_top := fun M => ?_ }
     · obtain ⟨S, S', hS'⟩ := h.exists_pair_ne
       have hzero : ∀ x : V, x = 0 := fun x => by

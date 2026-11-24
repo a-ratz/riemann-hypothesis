@@ -102,7 +102,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 
 theorem isSm_entry (h : IsCMExt F E σ) {w : InfinitePlace F} (τ : EmbOver E w) (i j : Fin n) :
     IsSm σ J fun g => archMat σ J τ (projArch σ J w g) i j := by
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   intro k γ hγ g
   choose Z hZ using fun a => exists_exp h τ (hγ a)
   have key : ∀ l : List (Fin k), ContDiff ℝ ∞ fun t : Fin k → ℝ =>
@@ -162,8 +162,8 @@ theorem isAut_of_open {U K : Subgroup (GAd σ J)} (hU : IsOpen (U : Set (GAd σ 
 theorem infinite_fin (K : Type) [Field K] [NumberField K] : Infinite (IsDedekindDomain.HeightOneSpectrum (𝓞 K)) := by
   have h : ∀ p : Nat.Primes, ∃ la : IsDedekindDomain.HeightOneSpectrum (𝓞 K), la.asIdeal.comap (algebraMap ℤ (𝓞 K)) =
       Ideal.span {((p : ℕ) : ℤ)} := fun p => by
-    haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
-    haveI : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
+    have : Fact (p : ℕ).Prime := ⟨p.2⟩
+    have : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
     obtain ⟨M, hM, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 K) (Ideal.span {((p : ℕ) : ℤ)})
       (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 K)).injective_int]; exact bot_le)
     exact ⟨⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField K)⟩, hc⟩
@@ -181,8 +181,8 @@ theorem ratLoc_inj (v : IsDedekindDomain.HeightOneSpectrum (𝓞 F)) : Function.
 theorem exists_isAut_nonconst (hn : 0 < n) (hc : IsCompact (infPts σ J : Set (GAd σ J))) :
     ∃ φ : GAd σ J → ℂ, (∀ K ≤ infPts σ J, IsAut σ J K φ) ∧ φ 1 = 1 ∧ ∃ g, φ g = 0 := by
   classical
-  haveI := infinite_fin F
-  haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GFin σ J
+  have := infinite_fin F
+  have := GlobalTheory.Doubling.nonarchimedeanGroup_GFin σ J
   obtain ⟨v, v', hv⟩ := exists_pair_ne (IsDedekindDomain.HeightOneSpectrum (𝓞 F))
   let m : GRat σ J := ⟨-1, show _ * _ * _ = _ by
     ext i j; simp [Formalism.UG.cT, Matrix.mul_apply, Matrix.one_apply, apply_ite]⟩
@@ -191,7 +191,7 @@ theorem exists_isAut_nonconst (hn : 0 < n) (hc : IsCompact (infPts σ J : Set (G
     norm_num [m] at this
   let g₀ := emb σ J v (ratLoc σ J v m)
   let S : Set (GAd σ J) := Set.image2 (· * ·) (ratPts σ J : Set (GAd σ J)) (infPts σ J : Set (GAd σ J))
-  have hS : IsClosed S := IsClosed.mul_right_of_isCompact Subgroup.isClosed_of_discrete hc
+  have hS : IsClosed S := IsClosed.mul_right_of_isCompact Subgroup.isClosed_of_discreteTopology hc
   have h0 : g₀ ∉ S := by
     rintro ⟨γ, hγ, a, ha, e⟩
     obtain ⟨γ, rfl⟩ : γ ∈ (ratEmb σ J).range := range_ratEmb σ J ▸ hγ
@@ -206,7 +206,7 @@ theorem exists_isAut_nonconst (hn : 0 < n) (hc : IsCompact (infPts σ J : Set (G
   let T : Set (GAd σ J) := {g | ∃ γ ∈ ratPts σ J, γ * g ∈ U}
   refine ⟨fun g => if g ∈ T then 1 else 0, fun K hK => isAut_of_open (U := U)
     (V.isOpen.preimage (continuous_projFin σ J)) (fun a ha => ?_) hK (fun γ hγ g => ?_) (fun u hu g => ?_)
-    fun g => by split_ifs <;> simp, if_pos ⟨1, one_mem _, by simp⟩, g₀, if_neg ?_⟩
+    fun g => by split_ifs <;> simp, ite_eq_left ⟨1, one_mem _, by simp⟩, g₀, ite_eq_right ?_⟩
   · change projFin σ J a ∈ (V : Subgroup (GFin σ J))
     rw [mem_infPts.1 ha]; exact one_mem _
   · refine if_congr ⟨fun ⟨δ, hδ, h⟩ => ⟨δ * γ, mul_mem hδ hγ, by rwa [mul_assoc]⟩,
@@ -238,7 +238,7 @@ theorem exists_nonconst_one (h : IsCMExt F E σ) (hn : 0 < n) : ∃ K φ, IsMaxC
 
 theorem hasDerivAt_entry {Z : Matrix (Fin n) (Fin n) ℂ} (P A : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
     HasDerivAt (fun t : ℝ => (P * NormedSpace.exp (t • Z) * A) i j) ((P * Z * A) i j) 0 := by
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have hd : HasDerivAt (fun t : ℝ => NormedSpace.exp (t • Z)) Z 0 := by
     have := hasDerivAt_exp_smul_const (𝕂 := ℝ) Z 0
     rw [zero_smul, NormedSpace.exp_zero, one_mul] at this
@@ -324,7 +324,7 @@ theorem not_zfin_exp (h : IsCMExt F E σ) (hJ : IsHermND σ J) {w : InfinitePlac
     @Submodule.finiteDimensional_of_le _ _ _ _ _ _ _ hfin (Submodule.span_mono (by
       rintro _ ⟨k, rfl⟩
       exact ⟨_, hcen k, funext fun g => by simpa [dop, M] using (congrFun (h2 k) g).symm⟩))
-  haveI : Finite ℕ := Module.Finite.finite_basis (Module.Basis.span h6)
+  have : Finite ℕ := Module.Finite.finite_basis (Module.Basis.span h6)
   exact not_finite ℕ
 
 end GlobalTheory.UAut.Model

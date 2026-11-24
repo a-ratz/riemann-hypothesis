@@ -78,7 +78,7 @@ theorem de_chi_eq {D : D7} {ρ : Setup D.ntw} (hρ : ρ.Good) (i : D.ntw.Tw) (j 
       ext σ
       cases b <;> simp [hψ, Formalism.MainNotions.BlochKatoReduction.Gen.psiAt, MonoidHom.mem_ker]
     rw [this]; exact D.ntw.delta_open i
-  haveI : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
+  have : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
   have hpow : ∀ σ, ψ σ ^ ψ.ker.index = 1 := fun σ => by
     rw [← map_pow]; exact ψ.ker.pow_index_mem σ
   obtain ⟨σ, hσ⟩ := ρ.rc.exists_sym x

@@ -78,8 +78,8 @@ namespace GlobalTheory
 
 theorem exists_lift_of_etale_surjective : ∀ (K : Type) [Field K] [IsAlgClosed K] (X Y : Scheme.{0}) (π : Y ⟶ X), Etale π → Surjective π → ∀ x : Sp K ⟶ X, ∃ y : Sp K ⟶ Y, y ≫ π = x := by
   intro K _ _ X Y π hE hS x
-  haveI := hE
-  haveI := hS
+  have := hE
+  have := hS
   have : LocallyOfFiniteType π := inferInstance
   let t : Sp K := IsLocalRing.closedPoint K
   obtain ⟨w, hw⟩ := π.surjective (x t)
@@ -338,9 +338,9 @@ private theorem fet_lift {I : Type} [Finite I] {ZM ZN Q Pw : Scheme.{0}} (s₁ :
     refine Nat.card_congr (Equiv.ofBijective
       (fun y => ⟨y.1.2.1 ≫ Sigma.ι (fun _ : I => ZM) y.1.1, ?_⟩) ⟨?_, ?_⟩)
     · apply pullback.hom_ext
-      · rw [Category.assoc, Category.assoc, pullback.lift_fst, Sigma.ι_desc]
+      · rw [Category.assoc, Category.assoc, pullback.lift_fst, Sigma.ι_comp_desc]
         exact y.1.2.2
-      · rw [Category.assoc, Category.assoc, pullback.lift_snd, Sigma.ι_desc]
+      · rw [Category.assoc, Category.assoc, pullback.lift_snd, Sigma.ι_comp_desc]
         exact y.2
     · rintro ⟨⟨c, v, hv⟩, hk⟩ ⟨⟨c', v', hv'⟩, hk'⟩ h
       have h' := hb.1 (a₁ := ⟨c, v⟩) (a₂ := ⟨c', v'⟩) (congrArg Subtype.val h)
@@ -350,9 +350,9 @@ private theorem fet_lift {I : Type} [Finite I] {ZM ZN Q Pw : Scheme.{0}} (s₁ :
     · rintro ⟨y, hy⟩
       obtain ⟨⟨c, v⟩, rfl⟩ := hb.2 y
       have a1 : v ≫ s₁ = x ≫ pullback.fst π f := by
-        rw [← hy, Category.assoc, Category.assoc, pullback.lift_fst, Sigma.ι_desc]
+        rw [← hy, Category.assoc, Category.assoc, pullback.lift_fst, Sigma.ι_comp_desc]
       have a2 : v ≫ κ c = x ≫ pullback.snd π f := by
-        rw [← hy, Category.assoc, Category.assoc, pullback.lift_snd, Sigma.ι_desc]
+        rw [← hy, Category.assoc, Category.assoc, pullback.lift_snd, Sigma.ι_comp_desc]
       exact ⟨⟨(c, ⟨v, a1⟩), a2⟩, rfl⟩
 
 private theorem KN_conj {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p} (L : Link D G) {n : ℕ} {u v : G.GAf}
@@ -605,11 +605,11 @@ theorem UpperTheory.heckeCorrespondence_lies_in_tower_of_lift_count :
     exact ⟨fun h => Subtype.ext h, fun h => congrArg Subtype.val h⟩
   have e0 : (Sigma.desc fun _ : (g j).I => tr1) ≫ S.pi T C = Sigma.desc κc ≫ Lj.ksP k := by
     refine Sigma.hom_ext _ _ fun cc => ?_
-    rw [Sigma.ι_desc_assoc, Sigma.ι_desc_assoc]
+    rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc_assoc]
     exact e1 cc
   have e3 : Sigma.desc κc ≫ Lj.ksR k = (Sigma.desc fun c : (g j).I => T.X.tr (T.lev (g j).M) (T.lev N) _ (A2 c) (B2 c)) ≫ S.pi T C := by
     refine Sigma.hom_ext _ _ fun cc => ?_
-    rw [Sigma.ι_desc_assoc, Sigma.ι_desc_assoc]
+    rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc_assoc]
     exact e2 cc
   exact ⟨Nat.pos_of_ne_zero fun h0 => hidxM (Subgroup.relIndex_eq_zero_of_le_right inf_le_left h0), Sigma.desc κc, e0, e3,
     fet_lift tr1 (S.pi T C) (Lj.ksP k) κc _ e1 hm e0⟩

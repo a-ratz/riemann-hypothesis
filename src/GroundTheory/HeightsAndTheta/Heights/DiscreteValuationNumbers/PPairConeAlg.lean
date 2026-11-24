@@ -139,7 +139,7 @@ theorem PairConeAlg.proof : PairConeAlg.Statement := by
   obtain ⟨l, hl⟩ : ∃ l : Fin N → Fin M, LinearIndependent Ω (φ ∘ l) := by
     obtain ⟨κ, a, ha, hsp, hind⟩ := exists_linearIndependent' Ω φ
     have : Finite κ := Finite.of_injective a ha
-    haveI := Fintype.ofFinite κ
+    have := Fintype.ofFinite κ
     have hcard : Fintype.card κ = N := by
       rw [← finrank_span_eq_card hind, hsp, TwistedDualGensSpan.proof O Ω K ι y N E B a₀ M φ hφ c hyc,
         finrank_top, Subspace.dual_finrank_eq, Module.finrank_eq_card_basis e, Fintype.card_fin]

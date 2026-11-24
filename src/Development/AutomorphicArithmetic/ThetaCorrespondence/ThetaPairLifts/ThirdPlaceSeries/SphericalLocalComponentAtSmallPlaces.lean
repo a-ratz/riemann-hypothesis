@@ -376,7 +376,7 @@ theorem valued_le_one_of_map {F E : Type} [Field F] [NumberField F] [Field E] [N
   have hy0 : y ≠ 0 := by
     rintro rfl
     rw [map_zero, map_zero] at hne
-    exact absurd hne (not_lt.2 zero_le')
+    exact absurd hne (not_lt.2 zero_le)
   have h1 : Valued.v (c y⁻¹) < 1 := by
     rw [map_inv₀, map_inv₀]
     exact inv_lt_one_of_one_lt₀ hne
@@ -384,7 +384,7 @@ theorem valued_le_one_of_map {F E : Type} [Field F] [NumberField F] [Field E] [N
   rw [map_inv₀] at h2
   have h3 : 1 < Valued.v y := by
     have hpos : 0 < Valued.v y := by
-      rw [zero_lt_iff]; exact (map_ne_zero _).2 hy0
+      rw [pos_iff_ne_zero]; exact (map_ne_zero _).2 hy0
     exact (inv_lt_one₀ hpos).1 h2
   exact absurd hy (not_le.2 h3)
 
@@ -634,7 +634,7 @@ theorem levS_of_kO_conj : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 
     · rw [GlobalTheory.T.frameComponent_eq_one_off_splitPlace_of_trivOutside D (Yc D 0) D.R.r Y.hF Y.PY (R.βY 0) Y.stdPsi.1 s κ' hκ' Q hQ a c, Matrix.one_apply]
       split_ifs
       · rw [map_one, map_one]
-      · rw [map_zero, map_zero]; exact zero_le'
+      · rw [map_zero, map_zero]; exact zero_le
   refine ⟨h, fun b κ hκ hk => ?_⟩
   classical
   have hk' : h⁻¹ * s.loc D.R.r κ⁻¹ * h ∈ GlobalTheory.SplitWeil.KO (s.v.adicCompletion (maximalRealSubfield D.host.E)) (Fin D.R.r) := by
@@ -678,7 +678,7 @@ theorem levS_of_kO_conj : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 
     Finset.subset_union_left Finset.subset_union_right (Y.PY.into κ) hK
 
 theorem exists_fixed_of_level (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (σ : D.what₂.FT) (U : Set (Formalism.AUTREP.GAf D.host.E D.R.r)) (hU : ∀ (b : Bool), ∀ κ ∈ U, Y.PY.ψ κ ∈ levS _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)) ∧ levChi _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)) (Y.PY.ψ κ) = 1) : ∃ f ∈ (principalLevelFrame.rowRepR R.θ (Y.eFT σ)).S, f ≠ 0 ∧ ∀ κ ∈ U, NG.rt D.host.E D.R.r κ f = f := by
-  haveI hE : IsEmpty Empty := ⟨fun e => e.elim⟩
+  have hE : IsEmpty Empty := ⟨fun e => e.elim⟩
   obtain ⟨b, hb⟩ := principalLevelFrame.rowRepR_occ R.θ (Y.eFT σ)
   set π := principalLevelFrame.rowRepR R.θ (Y.eFT σ) with hπ
   obtain ⟨y, hy, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hb

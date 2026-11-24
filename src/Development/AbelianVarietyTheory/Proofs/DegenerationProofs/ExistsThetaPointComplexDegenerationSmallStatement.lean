@@ -341,14 +341,14 @@ theorem fibPrim : FibPrimSt := by
     have a₃ := fac ⟨F l, hF l l.2⟩ (F v)
     have c := chi_add hL hAH l ⟨F l, hF l l.2⟩
     have s : Complex.exp (Real.pi * Complex.I * (hermForm Hm l (F l)).im) = (-1) ^ Ef l ⟨F l, hF l l.2⟩ := by
-      rw [← hEf l ⟨F l, hF l l.2⟩, ← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+      rw [← hEf l ⟨F l, hF l l.2⟩, ← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
       congr 1
       push_cast
       ring
     have x : Complex.exp (Real.pi * hermForm Hm (v + F v) (l + F l) + Real.pi / 2 * hermForm Hm (l + F l) (l + F l)) =
         Complex.exp (Real.pi * hermForm Hm v l + Real.pi / 2 * hermForm Hm l l) ^ 2 *
         Complex.exp (Real.pi * hermForm Hm (F v) (F l) + Real.pi / 2 * hermForm Hm (F l) (F l)) := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [← Complex.exp_natCast_mul, ← Complex.exp_add]
       congr 1
       simp only [EigenNorm.hermForm_add_left, EigenNorm.hermForm_add_right]
       push_cast
@@ -737,7 +737,7 @@ theorem _root_.GlobalTheory.Ex.Arch.towerSt_of : _root_.GlobalTheory.Ex.BrGtSt �
   beta_reduce at hGt hWp hPt hQk hWA
   unfold _root_.GlobalTheory.Ex.Arch.TowerSt _root_.GlobalTheory.Ex.AllD
   intro E _ _ _ H D R _ _ _ A B dd hl
-  letI := H.starRing
+  let := H.starRing
   have hG := hGt R A.D₀ A.even A.bimult ℂ A.N A.ν
   have hW := hWp R A.D₀ A.even A.bimult ℂ A.N A.ν
   have hV := hPt (𝓞 E) A.N _ dd
@@ -1133,7 +1133,7 @@ theorem perFactor_of_isPrim {w₀ : O} (hp : IsPrim B w₀) (w : ℂ) (a : B.La)
     omega
   have hq : (B.be a.y a.y : ℂ) = 2 * B.q a.y := by rw [← B.two_mul_q]; push_cast; ring
   have hs : ((-1 : ℂ)) ^ (a.n a.y + 2 * (-a.n (w₀ • a.y))) = Complex.exp (Real.pi * Complex.I * a.n a.y) := by
-    rw [zpow_add₀ (by norm_num), zpow_mul, mul_comm _ (a.n a.y : ℂ), Complex.exp_int_mul, Complex.exp_pi_mul_I]
+    rw [zpow_add₀ (by norm_num), zpow_mul, mul_comm _ (a.n a.y : ℂ), Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
     norm_num
   rw [hE, zpow_add₀ (by norm_num), hs, AnArc.perFactor, AnArc.ah, h2, h3, lin_period, hT, hq, lin, AnArc.H_add_left,
     ← AnArc.e_add, ← AnArc.e_add, eTwoPi, ← Complex.exp_neg, mul_assoc (_ ^ _), mul_assoc (_ ^ _), ← Complex.exp_add,
@@ -1261,12 +1261,12 @@ theorem typeSt : TypeSt := by
         if φ (H.rt : E) = H.rt0 then D.p else D.q := by
       have h3 := hB (φ.comp (algebraMap (𝓞 E) E))
       by_cases hφ : φ (H.rt : E) = H.rt0
-      · rw [if_pos hφ]; exact h3.trans (if_pos hφ)
-      · rw [if_neg hφ]; exact h3.trans (if_neg hφ)
+      · rw [ite_eq_left hφ]; exact h3.trans (ite_eq_left hφ)
+      · rw [ite_eq_right hφ]; exact h3.trans (ite_eq_right hφ)
     rw [← h2]
     push_cast
     ring
-  exact ⟨g, ty, h, fun φ => ⟨fun hφ => (hc φ).trans (if_pos hφ), fun hφ => (hc φ).trans (if_neg hφ)⟩, hh⟩
+  exact ⟨g, ty, h, fun φ => ⟨fun hφ => (hc φ).trans (ite_eq_left hφ), fun hφ => (hc φ).trans (ite_eq_right hφ)⟩, hh⟩
 
 end GlobalTheory.Ex.Arch
 
@@ -1289,7 +1289,7 @@ namespace GlobalTheory.Ex.Arch
 
 theorem tripleSt_of_laws : Laws → ThetaUnifAV → TripleSt := by
   intro laws hθ E _ _ _ H D La _ _ EF g ty P Hm hty hbij hadj hlin hinj hdisc hspan hH hpos him
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨D', e, -, -, hEF⟩ := PeriodDatum.exists_datum E H La EF D.p D.q g ty P Hm hty hbij hadj hlin hinj hdisc hspan
     hH hpos him
   let P' : D'.La →+ (Fin g → ℂ) := P.comp e.toAddEquiv.toAddMonoidHom
@@ -1468,7 +1468,7 @@ theorem IsPrim.tx_sign {w₀ : O} (h : IsPrim B w₀) (la : B.La) :
     rw [this, map_add (f := _), ← B.T_adj, B.T_symm (w₀ • la.y), two_mul]
   have hn : la.n la.y = la.n (w₀ • la.y) + la.n (star w₀ • la.y) := by rw [← map_add (f := _), ← hy]
   have hm : ∀ z : ℤ, (-1 : ℂ) ^ z = Complex.exp (z * (Real.pi * Complex.I)) := fun z => by
-    rw [Complex.exp_int_mul, Complex.exp_pi_mul_I]
+    rw [Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
   rw [h3, AnArc.ah, h2, hm, hm, eTwoPi, ← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_add,
     Complex.exp_eq_exp_iff_exists_int]
   refine ⟨-(la.n (star w₀ • la.y) + B.Ef la.l (B.FLam w₀ la.l)), ?_⟩
@@ -1493,7 +1493,7 @@ theorem txSt_of_ptSt (h : PtSt) : TxSt := by
     field_simp
   rw [← Prod.smul_snd (m : ℂ), hmm] at hq
   rw [hmm] at hv
-  rw [hw.tx_sign, mul_right_comm _ (B.ah _ _), mul_left_inj' (B.ah_ne_zero _ _), mul_assoc, ← Complex.exp_nat_mul,
+  rw [hw.tx_sign, mul_right_comm _ (B.ah _ _), mul_left_inj' (B.ah_ne_zero _ _), mul_assoc, ← Complex.exp_natCast_mul,
     ← Complex.exp_add] at hQ
   have hterm : B.term 1 0 d.th x ((m : ℂ)⁻¹ • B.Pw w la) =
       B.term 1 0 d.th x ((m : ℂ)⁻¹ • B.P0 la) * eTwoPi ((m : ℂ)⁻¹ * (w * B.be la.y x)) := by
@@ -1778,7 +1778,7 @@ theorem isThetaPt_classical (hL : Laws) (hL2 : Laws2) (hT : ThetaUnifAV) (P : Po
   have hN0 : (N : ℂ) ≠ 0 := by exact_mod_cast hN.pos.ne'
   refine ⟨hN, isUnit_natCast_sp hN0, fun q => ⟨⊤, trivial, ?_⟩⟩
   let T : Over (Sp ℂ) := overRes (T := baseOver (Sp ℂ)) ⊤
-  haveI : IsIso T.hom := by
+  have : IsIso T.hom := by
     show IsIso ((⊤ : (Sp ℂ).Opens).ι ≫ 𝟙 _)
     rw [Category.comp_id]
     exact inferInstanceAs (IsIso (Sp ℂ).topIso.hom)
@@ -1832,7 +1832,7 @@ theorem exists_tateIso (D : Datum H) {La : Type} [AddCommGroup La] [Module (𝓞
     · obtain ⟨c, hc⟩ := (hf n h).1 a b
       rw [hc, md n h, map_add (f := _), smul_add, eadd]
   · rcases n.eq_zero_or_pos with rfl | h
-    · haveI := hact c
+    · have := hact c
       simp only [Nat.cast_zero, inv_zero, zero_smul, e0, MonObj.one_comp]
     · obtain ⟨b, hb⟩ := (hf n h).2.1 c a
       rw [hb, md n h]
@@ -1868,7 +1868,7 @@ theorem exists_log (T : ℝ) (u : ℂˣ) (hu : ‖(u : ℂ)‖ < Real.exp (-(2 *
 theorem of_steps (hL : Laws) (hL2 : Laws2) (hT : ThetaUnifAV) (hdict : DictSt) (htow : TowerSt) (hty : TypeSt)
     (hobj : ObjSt) (hth : ThetaSt) (htx : TxSt) : AllD fun {_} _ _ _ {H} D => ∀ (R : Type) [CommRing R] [IsDomain R] [Algebra (FractionRing R) ℂ] (A : ArcF D R ℂ), A.ρ = H.rt0 → ∀ (k : ℕ) (β : A.N.Form k), A.Bal β → ∀ (m : ℕ) (hm : m ^ 2 ∣ k), Odd m → ∃ ε : ℝ, 0 < ε ∧ ∀ u : ℂˣ, ‖(u : ℂ)‖ < ε → (∀ x, Summable fun χ => ‖(A.N.twist β u).txT m (A.N.twQ β u hm (A.q _ x)) χ‖) ∧ ∃ o : Full D ℂ, o.ρ = H.rt0 ∧ o.I.ζ (m ^ 2) = A.I.ζ (m ^ 2) ∧ o.Theta m fun x => (A.N.twist β u).tx m (A.N.twQ β u hm (A.q _ x)) := by
   intro E _ _ _ H D R _ _ _ A hρ k β hβ m hm hodd
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨B, d, hact, hbe, hprim, hth0, hsig⟩ := hdict E H D R A k β hβ
   obtain ⟨f, hf, hrep⟩ := htow E H D R A B d hact
   obtain ⟨g, ty, h, htyp, hh⟩ := hty E H D B (hρ ▸ hsig)

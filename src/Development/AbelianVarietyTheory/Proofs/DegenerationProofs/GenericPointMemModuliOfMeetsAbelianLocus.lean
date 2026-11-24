@@ -63,7 +63,7 @@ theorem exists_extend {F K : Type} [Field F] [CharZero F] [Algebra.IsAlgebraic �
       (IsFractionRing.isAlgebraic_iff ℤ ℚ F).2 (Algebra.IsAlgebraic.isAlgebraic _)
     have hV : IsAlgebraic ℤ a :=
       (isAlgebraic_algHom_iff (V.subtype.toIntAlgHom) Subtype.val_injective).1 hF
-    refine Ideal.comap_ne_bot_of_algebraic_mem h0 ha hV (eq_bot_iff.2 fun n hn => ?_)
+    refine Ideal.under_ne_bot_of_algebraic_mem h0 ha hV (eq_bot_iff.2 fun n hn => ?_)
     have e : (n : K) = 0 := by simpa using hn
     exact_mod_cast e
   exact ⟨IsFractionRing.lift hinj, RingHom.ext fun a => IsFractionRing.lift_algebraMap hinj a⟩

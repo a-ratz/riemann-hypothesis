@@ -179,7 +179,7 @@ theorem det_mR_ne (h : GR n) : (mR h).det ≠ 0 := by
   exact this.ne_zero
 
 theorem continuous_mR : Continuous (mR (n := n)) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_group_lower_left_block : Continuous fun h : GR n => (mR h).toBlocks₂₁ :=
   continuous_mR.matrix_submatrix (fun i : Fin n => (Sum.inr i : Fin n ⊕ Fin n)) (fun j : Fin n => (Sum.inl j : Fin n ⊕ Fin n))

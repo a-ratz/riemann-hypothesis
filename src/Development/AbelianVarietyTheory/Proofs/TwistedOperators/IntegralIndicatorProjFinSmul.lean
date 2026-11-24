@@ -92,7 +92,7 @@ theorem locallyCompactSpace_GfC (V : HSp D) : LocallyCompactSpace (GfC V) :=
 theorem tensorFin_unitLoc (V : HSp D) (g : GFin D.sp.cm.sig V.gram) :
     tensorFin D.sp.cm.sig V.gram (unitLoc D.sp.cm.sig V.gram (frameLat V)) g =
       (levelOffFin D.sp.cm.sig V.gram (frameLat V) ∅ : Set (GFin D.sp.cm.sig V.gram)).indicator 1 g := by
-  letI : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
+  let : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
   by_cases hg : g ∈ levelOffFin D.sp.cm.sig V.gram (frameLat V) ∅
   · rw [Set.indicator_of_mem hg]
     have hv := (mem_levelOffFin.1 hg).2
@@ -112,14 +112,14 @@ theorem finMeas_eq : ∀ (D : D7) (V : HSp D) (μf : ∀ v, Measure (GLoc D.sp.c
     ∀ (ν : Measure (GfC V)), IsFinMeas V μf ν → ∀ s : Set (GfC V), IsCompact (closure s) →
       ν s = νF ((finPtsEquiv D.sp.cm.sig V.gram) ⁻¹' s) := by
   intro D V μf νF hF ν hν s hs
-  letI : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
-  haveI := locallyCompactSpace_GfC V
-  haveI : ν.IsHaarMeasure := hν.1
+  let : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
+  have := locallyCompactSpace_GfC V
+  have : ν.IsHaarMeasure := hν.1
   set e := finPtsEquiv D.sp.cm.sig V.gram
   set ν' : Measure (GfC V) := νF.map e with hν'
   have hmap : ∀ t : Set (GfC V), ν' t = νF (e ⁻¹' t) := fun t =>
     e.toHomeomorph.toMeasurableEquiv.map_apply t
-  haveI : ν'.IsHaarMeasure := (isRestrictedProdFinPts_iff.1 hF.map_finPts).2.1
+  have : ν'.IsHaarMeasure := (isRestrictedProdFinPts_iff.1 hF.map_finPts).2.1
 
   set Kf : Set (GFin D.sp.cm.sig V.gram) := (levelOffFin D.sp.cm.sig V.gram (frameLat V) ∅ : Set (GFin D.sp.cm.sig V.gram))
   set K : Set (GfC V) := e.symm ⁻¹' Kf with hK
@@ -223,7 +223,7 @@ theorem aestronglyMeasurable_pi_of_forall {α : Type*} {m0 : MeasurableSpace α}
       AEStronglyMeasurable (fun x (i : ι) => if i ∈ s then f i x else 0) ν := by
     intro s
     induction s using Finset.induction_on with
-    | empty => simp only [Finset.notMem_empty, if_false]; exact aestronglyMeasurable_const
+    | empty => simp only [Finset.notMem_empty, ite_false]; exact aestronglyMeasurable_const
     | insert a s ha ih =>
       have hc : Continuous (fun p : E a × (∀ i, E i) => Function.update p.2 a p.1) :=
         continuous_snd.update a continuous_fst
@@ -248,10 +248,10 @@ theorem integrable_vecOn (μ : ∀ i, Measure (X i)) [∀ i, SigmaFinite (μ i)]
   have hmeas : AEStronglyMeasurable (fun x => vecOn g s m x) (Measure.pi fun i : s => μ i) := by
     refine aestronglyMeasurable_pi_of_forall (f := fun i x => vecOn g s m x i) fun i => ?_
     by_cases hi : i ∈ s
-    · simp only [vecOn, dif_pos hi]
+    · simp only [vecOn, dite_eq_left hi]
       exact (hg i).1.comp_quasiMeasurePreserving
         (Measure.quasiMeasurePreserving_eval (fun j : s => μ j) ⟨i, hi⟩)
-    · simp only [vecOn, dif_neg hi]; exact aestronglyMeasurable_const
+    · simp only [vecOn, dite_eq_right hi]; exact aestronglyMeasurable_const
   have hdom : Integrable (fun x : ∀ j : s, X j => ‖Φ‖ * ((∏ j : s, ‖g j (x j)‖) * ∏ i ∈ sᶜ, ‖m i‖))
       (Measure.pi fun i : s => μ i) :=
     ((Integrable.fintype_prod_dep (f := fun (j : s) (y : X j) => ‖g j y‖)
@@ -285,7 +285,7 @@ theorem integral_vecOn (μ : ∀ i, Measure (X i)) [∀ i, SigmaFinite (μ i)]
     rw [Finset.insert_eq]
     have hd : Disjoint ({a} : Finset ι) s := Finset.disjoint_singleton_left.2 ha
     have hmp := measurePreserving_piFinsetUnion hd μ
-    letI : Unique ↥({a} : Finset ι) :=
+    let : Unique ↥({a} : Finset ι) :=
       ⟨⟨⟨a, Finset.mem_singleton_self a⟩⟩, fun j => Subtype.ext (Finset.mem_singleton.1 j.2)⟩
     have hpt : ∀ p : (∀ i : ({a} : Finset ι), X i) × (∀ i : s, X i),
         vecOn g ({a} ∪ s) m (MeasurableEquiv.piFinsetUnion X hd p) =
@@ -297,15 +297,15 @@ theorem integral_vecOn (μ : ∀ i, Measure (X i)) [∀ i, SigmaFinite (μ i)]
       by_cases hia : i = a
       · subst hia
         have h1 : i ∈ ({i} : Finset ι) ∪ s := by simp
-        simp only [vecOn, dif_pos h1, dif_neg ha, Function.update_self, he]
+        simp only [vecOn, dite_eq_left h1, dite_eq_right ha, Function.update_self, he]
         rw [Equiv.piFinsetUnion_left X hd (Finset.mem_singleton_self i)]
         rfl
       · by_cases his : i ∈ s
         · have h1 : i ∈ ({a} : Finset ι) ∪ s := by simp [his]
-          simp only [vecOn, dif_pos h1, dif_pos his, he]
+          simp only [vecOn, dite_eq_left h1, dite_eq_left his, he]
           rw [Equiv.piFinsetUnion_right X hd his]
         · have h1 : i ∉ ({a} : Finset ι) ∪ s := by simp [his, hia]
-          simp only [vecOn, dif_neg h1, dif_neg his, Function.update_of_ne hia]
+          simp only [vecOn, dite_eq_right h1, dite_eq_right his, Function.update_of_ne hia]
     have hint : Integrable (fun p => Φ (vecOn g ({a} ∪ s) m (MeasurableEquiv.piFinsetUnion X hd p)))
         ((Measure.pi fun i : ({a} : Finset ι) => μ i).prod (Measure.pi fun i : s => μ i)) :=
       (hmp.integrable_comp_emb (MeasurableEquiv.measurableEmbedding _)).2
@@ -353,7 +353,7 @@ theorem integral_multilinear_pi : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] 
         (fun i => g i (MeasurableEquiv.piCongrLeft X e z i)) = vecOn g Finset.univ 0 z := by
       intro z; funext i
       have h := Equiv.piCongrLeft_apply_apply X e z ⟨i, Finset.mem_univ i⟩
-      simp only [vecOn, dif_pos (Finset.mem_univ i)]
+      simp only [vecOn, dite_eq_left (Finset.mem_univ i)]
       rw [MeasurableEquiv.coe_piCongrLeft]
       exact congrArg (g i) h
     refine ((integral_congr_ae (ae_of_all _ fun z => congrArg Φ (hpt z))).trans
@@ -397,7 +397,7 @@ theorem integral_indicator_smul_of_measurePreserving {X Y Z E : Type} [Measurabl
   have hmeasS : MeasurableSet (univ ×ˢ B : Set (Y × Z)) := MeasurableSet.univ.prod hB
   have hres : (m.prod ν).restrict (univ ×ˢ B) = m.prod (ν.restrict B) := by
     rw [← Measure.prod_restrict, Measure.restrict_univ]
-  haveI : IsFiniteMeasure (ν.restrict B) := ⟨by simpa using hBf.lt_top⟩
+  have : IsFiniteMeasure (ν.restrict B) := ⟨by simpa using hBf.lt_top⟩
   have hint : Integrable Φ (m.prod ν) := by
     rw [hΦdef, integrable_indicator_iff hmeasS, IntegrableOn, hres]
     exact ha.comp_fst _
@@ -411,13 +411,13 @@ theorem integral_indicator_smul_of_measurePreserving {X Y Z E : Type} [Measurabl
 
 theorem integral_indicatorFin_smul_arch : ∀ (D : D7) (V : HSp D) (μa : ∀ w, Measure (GArch D.sp.cm.sig V.gram w)) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)) (μ : Measure (GA D V)), IsRestrictedProd D.sp.cm.sig V.gram (frameLat V) μa μf μ → ∀ (νF : Measure (GFin D.sp.cm.sig V.gram)), IsRestrictedProdFin D.sp.cm.sig V.gram (frameLat V) μf νF → ∀ (E : Type) [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E] (B : Set (GFin D.sp.cm.sig V.gram)), MeasurableSet B → νF B ≠ ⊤ → ∀ (a : (∀ w, GArch D.sp.cm.sig V.gram w) → E), Integrable a (Measure.pi μa) → Integrable (fun g : GA D V => B.indicator (fun _ => (1 : ℂ)) (projFin D.sp.cm.sig V.gram g) • a fun w => projArch D.sp.cm.sig V.gram w g) μ ∧ ∫ g, B.indicator (fun _ => (1 : ℂ)) (projFin D.sp.cm.sig V.gram g) • a (fun w => projArch D.sp.cm.sig V.gram w g) ∂μ = (νF B).toReal • ∫ x, a x ∂Measure.pi μa := by
   intro D V μa μf μ hμ νF hF E _ _ _ B hB hBf a ha
-  haveI := SelfDual.isLattice_frameLat V
+  have := SelfDual.isLattice_frameLat V
   have hmap := hμ.map_archFin hF
-  haveI : ∀ w, (μa w).IsHaarMeasure := hμ.1
-  haveI : νF.IsHaarMeasure := hF.2.2.1
-  haveI : ∀ w, SigmaFinite (μa w) := fun w => inferInstance
-  haveI : SigmaFinite (Measure.pi μa) := Measure.pi.sigmaFinite _
-  haveI : SigmaFinite νF := inferInstance
+  have : ∀ w, (μa w).IsHaarMeasure := hμ.1
+  have : νF.IsHaarMeasure := hF.2.2.1
+  have : ∀ w, SigmaFinite (μa w) := fun w => inferInstance
+  have : SigmaFinite (Measure.pi μa) := Measure.pi.sigmaFinite _
+  have : SigmaFinite νF := inferInstance
   exact integral_indicator_smul_of_measurePreserving
     (archFinEquiv D.sp.cm.sig V.gram).toHomeomorph.toMeasurableEquiv
     ⟨(archFinEquiv D.sp.cm.sig V.gram).toHomeomorph.toMeasurableEquiv.measurable, hmap⟩ hB hBf ha
@@ -470,9 +470,9 @@ theorem exists_sum_indicator {X W : Type} [TopologicalSpace X] [T2Space X] [AddC
       ∀ x, F x = ∑ r ∈ s, (F ⁻¹' {r}).indicator (fun _ => (1 : ℂ)) x • r := by
   classical
   have hfin : (Set.range F).Finite := by
-    haveI : CompactSpace ↥(tsupport F) := isCompact_iff_compactSpace.1 hc
+    have : CompactSpace ↥(tsupport F) := isCompact_iff_compactSpace.1 hc
     have h1 : (Set.range (fun x : tsupport F => F x)).Finite :=
-      (hF.comp_continuous continuous_subtype_val).range_finite
+      (hF.comp_continuous continuous_subtypeVal).range_finite
     refine (h1.union (Set.finite_singleton 0)).subset ?_
     rintro _ ⟨x, rfl⟩
     by_cases hx : x ∈ tsupport F
@@ -553,7 +553,7 @@ theorem integral_pi_dsRep {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M :
         (∏ w, fa w (x w)) • Φ (fun τ => dsRep M τ (x (placeOf D τ)) (y τ))) (Measure.pi μa) ∧
     ∫ x, (∏ w, fa w (x w)) • Φ (fun τ => dsRep M τ (x (placeOf D τ)) (y τ)) ∂Measure.pi μa =
       Φ fun τ => ∫ z, fa (placeOf D τ) z • dsRep M τ z (y τ) ∂μa (placeOf D τ) := by
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (isIrrUnitary_dsRep M τ).complete
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (isIrrUnitary_dsRep M τ).complete
   have hgen := _root_.GlobalTheory.MultilinFubini.integral_multilinear_pi D.what₂.Tau (fun τ => GArch D.sp.cm.sig V.gram (placeOf D τ))
     (fun τ => μa (placeOf D τ)) M.H H Φ (fun τ z => fa (placeOf D τ) z • dsRep M τ z (y τ)) hfa
   obtain ⟨e, he⟩ : ∃ e : D.what₂.Tau ≃ InfinitePlace D.host.F, e = Equiv.ofBijective _ (placeOf_bijective D) := ⟨_, rfl⟩
@@ -658,16 +658,16 @@ theorem opTensor : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DS
         a r (fun w' => projArch D.sp.cm.sig V.gram w' g) := by
     intro g
 
-    rw [apply_homFinDS hT, tensor, ← finFn_toFin, mul_smul, ← ContinuousMultilinearMap.smul_apply,
-    ← LinearMap.map_smul, hsum, map_sum, ContinuousMultilinearMap.sum_apply, Finset.smul_sum]
+    rw [apply_homFinDS hT, tensor, ← finFn_toFin, mul_smul, ← smul_apply,
+    ← LinearMap.map_smul, hsum, map_sum, sum_apply, Finset.smul_sum]
     refine Finset.sum_congr rfl fun r _ => ?_
-    rw [map_smul, ContinuousMultilinearMap.smul_apply, smul_comm]
+    rw [map_smul, smul_apply, smul_comm]
     rfl
 
   rw [(hR (T w y)).2, integral_congr_ae (.of_forall hpt), integral_finsetSum _ fun r hr => (hL r hr).1,
-  hAw, map_sum, ContinuousMultilinearMap.sum_apply]
+  hAw, map_sum, sum_apply]
   refine Finset.sum_congr rfl fun r hr => ?_
-  rw [(hL r hr).2, (hpi r).2, map_smul, ContinuousMultilinearMap.smul_apply, hνB r hr, Complex.coe_smul]
+  rw [(hL r hr).2, (hpi r).2, map_smul, smul_apply, hνB r hr, Complex.coe_smul]
   congr 2
   funext τ
   exact ((hD τ (y τ)).2).symm

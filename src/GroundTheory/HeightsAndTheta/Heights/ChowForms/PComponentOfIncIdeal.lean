@@ -67,7 +67,7 @@ namespace ComponentOfIncIdeal
 
 theorem ringKrullDim_quot_add_one_le {A : Type} [CommRing A] {P Q : Ideal A} [P.IsPrime]
     (hPQ : P ≤ Q) (hne : P ≠ Q) : ringKrullDim (A ⧸ Q) + 1 ≤ ringKrullDim (A ⧸ P) := by
-  obtain ⟨x, hxQ, hxP⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hPQ hne)
+  obtain ⟨x, hxQ, hxP⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hPQ hne)
   have hne' : Q.map (Ideal.Quotient.mk P) ≠ ⊥ := by
     intro h0
     have hx : Ideal.Quotient.mk P x ∈ Q.map (Ideal.Quotient.mk P) := Ideal.mem_map_of_mem _ hxQ

@@ -52,7 +52,7 @@ open ReciprocityTheory.Aut
 
 theorem le_exp_neg_one_of_lt_one {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-(1 : ℕ) : ℤ) := by
   by_cases hx : x = 0
-  · rw [hx]; exact zero_le'
+  · rw [hx]; exact zero_le
   rw [← WithZero.exp_log hx] at h ⊢
   rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
   rw [WithZero.exp_le_exp]; push_cast; omega

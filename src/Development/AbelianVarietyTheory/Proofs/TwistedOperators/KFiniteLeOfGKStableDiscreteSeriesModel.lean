@@ -70,8 +70,8 @@ theorem mem_of_dense (h : Std ε σ) {W : Submodule ℂ H} (hd : Dense (W : Set 
   have havgW : ∀ e : KG ε → ℂ, Continuous e → ∀ x ∈ W, kAvg ε σ e x ∈ W := by
     intro e he x hx
     obtain ⟨S, hS, hxS, hKS⟩ := hW x hx
-    haveI := hS
-    haveI : FiniteDimensional ℂ (S ⊓ W : Submodule ℂ H) := Submodule.finiteDimensional_inf_left S W
+    have := hS
+    have : FiniteDimensional ℂ (S ⊓ W : Submodule ℂ H) := Submodule.finiteDimensional_inf_left S W
     have hKSW : IsKStableOn ε σ (S ⊓ W) := fun g hg y hy =>
       Submodule.mem_inf.2 ⟨hKS g hg y (Submodule.mem_inf.1 hy).1, hK g hg y (Submodule.mem_inf.1 hy).2⟩
     exact (Submodule.mem_inf.1 (c4 e he _ inferInstance hKSW x (Submodule.mem_inf.2 ⟨hxS, hx⟩))).2
@@ -80,10 +80,10 @@ theorem mem_of_dense (h : Std ε σ) {W : Submodule ℂ H} (hd : Dense (W : Set 
     obtain ⟨m, b, c, -, -, -, hbc⟩ := kAvg_finite_rank n ε H σ h e he
     obtain ⟨Q, hQ⟩ := c3 e hc
     let F : Submodule ℂ H := Submodule.span ℂ (Set.range b)
-    haveI : FiniteDimensional ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range b)
-    haveI : FiniteDimensional ℂ (W ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_inf_right W F
+    have : FiniteDimensional ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range b)
+    have : FiniteDimensional ℂ (W ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_inf_right W F
     have hcl : IsClosed (Q ⁻¹' ((W ⊓ F : Submodule ℂ H) : Set H)) :=
-      (Submodule.closed_of_finiteDimensional _).preimage Q.continuous
+      (Submodule.isClosed_of_finiteDimensional _).preimage Q.continuous
     have hsub : (W : Set H) ⊆ Q ⁻¹' ((W ⊓ F : Submodule ℂ H) : Set H) := by
       intro x hx
       refine Submodule.mem_inf.2 ⟨?_, ?_⟩
@@ -94,8 +94,8 @@ theorem mem_of_dense (h : Std ε σ) {W : Submodule ℂ H} (hd : Dense (W : Set 
     rw [← hQ]
     exact (Submodule.mem_inf.1 this).1
   obtain ⟨S, hS, hvS, hKS⟩ := hv
-  haveI := hS
-  haveI : FiniteDimensional ℂ (S ⊓ W : Submodule ℂ H) := Submodule.finiteDimensional_inf_left S W
+  have := hS
+  have : FiniteDimensional ℂ (S ⊓ W : Submodule ℂ H) := Submodule.finiteDimensional_inf_left S W
   obtain ⟨w, hw, y, hy, hvwy⟩ := (S ⊓ W).exists_add_mem_mem_orthogonal v
   have hyS : y ∈ S := by
     have := S.sub_mem hvS (Submodule.mem_inf.1 hw).1
@@ -208,7 +208,7 @@ theorem kFin_le_of_stable : GlobalTheory.Published.HarishChandraModules → ∀ 
     (∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.maxCpt M τ, ∀ w ∈ W, M.rep τ k w ∈ W) → W ≠ ⊥ → GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ ≤ W := by
   intro hHC D V S M τ W hWk hX hK h0
   obtain ⟨hc, -, hU, hI, -⟩ := M.ds τ
-  haveI := hc
+  have := hc
   have hfr : IsUnit (M.fr τ) := M.fr_unit τ
   have hd := (Matrix.isUnit_iff_isUnit_det _).1 hfr
   have hW : ∀ w ∈ W, IsKFin (M.ε τ) (M.σ τ) w := fun w hw => hWk hw

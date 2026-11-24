@@ -79,7 +79,7 @@ theorem _root_.GlobalTheory.GoodTop.integrableOn_cut_mixTop_smooth :
       (fun v => (ρ v : ℂ) * _root_.GlobalTheory.GoodTop.mixTop fun _ => _root_.GlobalTheory.GoodTop.curvAt G₀ v) K :=
     fun v hv => (continuousAt_cutoff_mul_chern_form_coeff (hG₀ v (hKU hv)).1 (hG₀ v (hKU hv)).2
       (hρ.contDiffAt (hU.mem_nhds (hKU hv))).continuousAt).continuousWithinAt
-  refine (hcont.integrableOn_compact hK).of_forall_diff_eq_zero hU.measurableSet
+  refine (hcont.integrableOn_compact hK).of_forall_sdiff_eq_zero hU.measurableSet
     fun v hv => ?_
   rw [hρK v hv.1 hv.2, Complex.ofReal_zero, zero_mul]
 

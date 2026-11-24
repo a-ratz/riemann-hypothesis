@@ -75,14 +75,14 @@ open GlobalTheory.Published.GrothendieckMessing in
 theorem exists_crysRed : ∀ (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing C] [CommRing C₀] (π : C →+* C₀), Function.Surjective π → ∀ (hsq : RingHom.ker π ^ 2 = 0) (A₀ : Over (Sp C₀)) [GrpObj A₀] [IsCommMonObj A₀], IsAbelianScheme A₀ → ∀ (O : Type) [Ring O] (a : GlobalTheory.UPel.HT.OActN O A₀), ∃ red : Crys (divided₂ hsq) (spMap π) A₀ →ₛₗ[π] HdR A₀, Module.Finite C (Crys (divided₂ hsq) (spMap π) A₀) ∧ Module.Projective C (Crys (divided₂ hsq) (spMap π) A₀) ∧ Function.Surjective red ∧ (∀ x, red x = 0 → x ∈ RingHom.ker π • (⊤ : Submodule C (Crys (divided₂ hsq) (spMap π) A₀))) ∧ (∀ d y, (GlobalTheory.Published.GrothendieckMessing.crysRedMor (divided₂ hsq) rfl A₀).Corr d y ↔ red d = y) ∧ (∀ (c : O) d, red (GlobalTheory.HTSummand.crysAct (divided₂ hsq) (spMap π) a c d) = GlobalTheory.HTSummand.crysAct (dp0 C₀) (𝟙 _) a c (red d)) ∧ ∃ E' M : Submodule C (Crys (divided₂ hsq) (spMap π) A₀), IsCompl E' M ∧ ∀ y, y ∈ Fil A₀ ↔ ∃ d ∈ E', red d = y := by
   intro C C₀ _ _ _ _ π hπ hsq A₀ _ _ hA₀ O _ a
   have hI2 : RingHom.ker π ^ 2 = ⊥ := hsq
-  haveI : Nontrivial C₀ := by
+  have : Nontrivial C₀ := by
     refine ⟨⟨0, 1, fun h ↦ ?_⟩⟩
     have h1 : (1 : C) ∈ RingHom.ker π := by rw [RingHom.mem_ker, map_one]; exact h.symm
     have h2 : (1 : C) ∈ RingHom.ker π ^ 2 := by
       rw [pow_two]; simpa using Ideal.mul_mem_mul h1 h1
     rw [hI2] at h2
     exact one_ne_zero ((Submodule.mem_bot C).1 h2)
-  haveI : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
+  have : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
   let κ := divided₂ hsq
   have hκ : IsNilDP κ := isDPNilpotent_squareZero hsq
   have ADR : GlobalTheory.Published.AbelianDeRham := GlobalTheory.abelianDeRham
@@ -94,11 +94,11 @@ theorem exists_crysRed : ∀ (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArt
   obtain ⟨bij, ⟨N0, hN0⟩, hAdm⟩ := HC g A₀ A' i' h' hA' hg
   let e := LinearEquiv.ofBijective (crysToDR κ h') (HC.crysToDR_bijective h' hA' hg)
   have ee : ∀ xA, crysToDR κ h' (e.symm xA) = xA := e.apply_symm_apply
-  letI : Algebra C C₀ := π.toAlgebra
+  let : Algebra C C₀ := π.toAlgebra
   have hBC := (ADR.2.2.1 C A' g hA' hg C₀ A₀ i' h').1
   obtain ⟨hfinA, hprojA, -⟩ := ADR.1.prim hA' hg
-  haveI := hfinA
-  haveI := hprojA
+  have := hfinA
+  have := hprojA
   have hfin : Module.Finite C (Crys κ (spMap π) A₀) := Module.Finite.equiv e.symm
   have hproj : Module.Projective C (Crys κ (spMap π) A₀) := Module.Projective.of_equiv e.symm
   let red : Crys κ (spMap π) A₀ →ₛₗ[π] HdR A₀ := hBC.bcMap.comp (crysToDR κ h')
@@ -130,7 +130,7 @@ theorem exists_crysRed : ∀ (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArt
   have hact : ∀ (c : O) d, red (GlobalTheory.HTSummand.crysAct κ (spMap π) a c d) =
       GlobalTheory.HTSummand.crysAct (dp0 C₀) (𝟙 _) a c (red d) := by
     intro c d
-    haveI := a.hom c
+    have := a.hom c
     refine (hcorr _ _).1 ?_
     rw [GlobalTheory.HTSummand.crysAct_apply, GlobalTheory.HTSummand.crysAct_apply]
     exact GrpMor.Corr.push (m := crysRedMor κ rfl A₀) (crysRedMor κ rfl A₀) (a.act c) (a.act c) (by simp) (hm d)

@@ -82,7 +82,7 @@ open Polynomial in
 theorem _root_.GlobalTheory.exists_eigen_projector_ringOfIntegers : ∀ (E K : Type) [Field E] [NumberField E] [Field K] (emb : (E →+* ℂ) → (E →+* K)), Function.Injective emb → ∀ τ : E →+* ℂ, ∃ (m : ℕ) (a : Fin m → 𝓞 E) (κ : Fin m → K), ∀ (R : Type) [CommRing R] [Algebra K R] (n : ℕ) (ρ : 𝓞 E →+* Matrix (Fin n) (Fin n) R), (∀ b : 𝓞 E, ρ b * (∑ k, algebraMap K R (κ k) • ρ (a k)) = algebraMap K R (emb τ (b : E)) • ∑ k, algebraMap K R (κ k) • ρ (a k)) ∧ ∀ x : Fin n → R, (∀ b : 𝓞 E, (ρ b).mulVec x = algebraMap K R (emb τ (b : E)) • x) → (∑ k, algebraMap K R (κ k) • ρ (a k)).mulVec x = x := by
   intro E K _ _ _ emb hemb τ
   classical
-  haveI : CharZero K := ⟨fun a b h => by
+  have : CharZero K := ⟨fun a b h => by
     have : (emb τ) (a : E) = (emb τ) (b : E) := by simpa using h
     exact Nat.cast_injective ((emb τ).injective this)⟩
   obtain ⟨α0, hα0⟩ := Field.exists_primitive_element ℚ E

@@ -291,7 +291,7 @@ theorem val_recursion (h2 : finrank K L = 2) (hM : IsHerm (Fintype.card K) M)
   have hS : {v | v ∈ W ∧ hf (Fintype.card K) M v v = a} =
       F '' {p | p.1 ^ (Fintype.card K + 1) * (hf (Fintype.card K) M e e) + hf (Fintype.card K) M (p.2 : Fin n → L) p.2 = a} := by
     ext v
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨hvW, hva⟩
       obtain ⟨l, hl⟩ : ∃ l : L, l = hf (Fintype.card K) M v e / (hf (Fintype.card K) M e e) := ⟨_, rfl⟩
@@ -321,7 +321,7 @@ theorem val_recursion (h2 : finrank K L = 2) (hM : IsHerm (Fintype.card K) M)
     have h3 : {v | v ∈ (valPerp (Fintype.card K) M W e) ∧ hf (Fintype.card K) M v v = a} =
         Subtype.val '' {w : (valPerp (Fintype.card K) M W e) | hf (Fintype.card K) M (w : Fin n → L) w = a} := by
       ext v
-      simp only [Set.mem_setOf_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
+      simp only [Set.mem_ofPred_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
       constructor
       · rintro ⟨hv, hva⟩
         exact ⟨hv, hva⟩
@@ -352,10 +352,10 @@ theorem val_recursion (h2 : finrank K L = 2) (hM : IsHerm (Fintype.card K) M)
     rw [h5]
     by_cases hc : hf (Fintype.card K) M (w : Fin n → L) w = a
     · have h6 : a - hf (Fintype.card K) M (w : Fin n → L) w = 0 := by rw [hc, sub_self]
-      rw [if_pos h6, if_pos hc]
+      rw [ite_eq_left h6, ite_eq_left hc]
       norm_num
     · have h6 : a - hf (Fintype.card K) M (w : Fin n → L) w ≠ 0 := sub_ne_zero.2 (Ne.symm hc)
-      rw [if_neg h6, if_neg hc]
+      rw [ite_eq_right h6, ite_eq_right hc]
       push_cast
       ring
   have hprod : ((Finset.univ.filter (fun p : L × (valPerp (Fintype.card K) M W e) =>
@@ -404,22 +404,22 @@ theorem val_main (h2 : finrank K L = 2) (hM : IsHerm (Fintype.card K) M) :
       have hs : {v | v ∈ (⊥ : Submodule L (Fin n → L)) ∧ hf (Fintype.card K) M v v = 0} =
           ({0} : Set (Fin n → L)) := by
         ext v
-        simp only [Submodule.mem_bot, Set.mem_setOf_eq, Set.mem_singleton_iff]
+        simp only [Submodule.mem_bot, Set.mem_ofPred_eq, Set.mem_singleton_iff]
         constructor
         · exact fun h => h.1
         · rintro rfl
           exact ⟨rfl, h00⟩
-      rw [hs, Set.ncard_singleton, if_pos rfl]
+      rw [hs, Set.ncard_singleton, ite_eq_left rfl]
       simp [valZ]
     · have hs : {v | v ∈ (⊥ : Submodule L (Fin n → L)) ∧ hf (Fintype.card K) M v v = a} =
           (∅ : Set (Fin n → L)) := by
         ext v
-        simp only [Submodule.mem_bot, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false,
+        simp only [Submodule.mem_bot, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false,
           not_and]
         rintro rfl
         rw [h00]
         exact fun h => ha0 h.symm
-      rw [hs, Set.ncard_empty, if_neg ha0]
+      rw [hs, Set.ncard_empty, ite_eq_right ha0]
       simp [valN]
   | succ d ih =>
     intro W hW hd a ha
@@ -439,10 +439,10 @@ theorem val_main (h2 : finrank K L = 2) (hM : IsHerm (Fintype.card K) M) :
       exact_mod_cast h
     rw [hfr, hcardL, hih] at hrec
     split_ifs with ha0
-    · rw [if_pos ha0] at hrec
+    · rw [ite_eq_left ha0] at hrec
       have h := valZ_succ (Fintype.card K) d
       linarith
-    · rw [if_neg ha0] at hrec
+    · rw [ite_eq_right ha0] at hrec
       have h := valN_succ (Fintype.card K) d
       linarith
 

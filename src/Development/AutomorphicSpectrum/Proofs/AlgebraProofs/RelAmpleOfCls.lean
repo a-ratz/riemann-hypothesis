@@ -243,7 +243,7 @@ theorem isOpenImmersion_spMap_fraction :
   intro C _ R _ _ _ _ _ _
   obtain ⟨π, hπ0, h⟩ := exists_pow_mem_of_ne_zero R
   have inj := IsFractionRing.injective R C
-  haveI : IsLocalization.Away π C := by
+  have : IsLocalization.Away π C := by
     refine IsLocalization.Away.mk π ?_ ?_ ?_
     · exact ((map_ne_zero_iff _ inj).2 hπ0).isUnit
     · intro s
@@ -551,25 +551,25 @@ theorem exists_open_pull_eq_zero {O K : Type} [CommRing O] [IsDomain O] [Valuati
     {fK : XK ⟶ Sp K} (H : IsPullback j fK f (spMap (algebraMap O K))) [Smooth f] [GeometricallyIntegral f]
     {x : X} (hfx : f x = IsLocalRing.closedPoint O) (l : Pic XK) :
     ∃ V : X.Opens, (∃ y ∈ V, f y = IsLocalRing.closedPoint O) ∧ pull (j ⁻¹ᵁ V).ι l = 0 := by
-  haveI : IsIntegral XK := GeometricallyIntegral.geometrically_isIntegral _ _ _ H
+  have : IsIntegral XK := GeometricallyIntegral.geometrically_isIntegral _ _ _ H
   obtain ⟨V, hV, hxV, -, n, φ, hφ, hφ'⟩ := exists_etale_chart f (U := ⊤) (x := x) trivial
   have hp := isPrime_map f hV hxV hfx
   have hinj := app_injective H V
-  haveI : Nonempty V := ⟨⟨x, hxV⟩⟩
+  have : Nonempty V := ⟨⟨x, hxV⟩⟩
   have hne : Nonempty (j ⁻¹ᵁ V) :=
     nonempty_of_ne_zero (a := 1) fun h => one_ne_zero (hinj ((map_one _).trans (h.trans (map_zero _).symm)))
-  haveI : IsDomain Γ(X, V) := hinj.isDomain _
+  have : IsDomain Γ(X, V) := hinj.isDomain _
   obtain ⟨⟨p, hpV⟩⟩ := id hne
   obtain ⟨W, hpW, hW⟩ := exists_pull_eq_zero l p
   have hjV : IsAffineOpen (j ⁻¹ᵁ V) := by
-    haveI : IsAffineHom j := MorphismProperty.of_isPullback (P := @IsAffineHom) H.flip inferInstance
+    have : IsAffineHom j := MorphismProperty.of_isPullback (P := @IsAffineHom) H.flip inferInstance
     exact hV.preimage j
   obtain ⟨σ, hσW, hpσ⟩ := hjV.exists_basicOpen_le (V := W) ⟨p, hpW⟩ hpV
   obtain ⟨π, b, hπ, hb⟩ := exists_numerator H hV σ
   have hπ' : algebraMap O K π ≠ 0 := fun h => hπ (IsFractionRing.injective O K (h.trans (map_zero _).symm))
   have hc : ∀ c : K, c ≠ 0 → ∀ z ∈ j ⁻¹ᵁ V, z ∈ XK.basicOpen (AbLaw.cst fK (j ⁻¹ᵁ V) c) := fun c hc z hz =>
     (mem_basicOpen_cst fK _ c hz).2 fun h => hc (by
-      haveI := (fK z).isPrime
+      have := (fK z).isPrime
       have e : (fK z).asIdeal = ⊥ := Ideal.eq_bot_of_prime _
       rw [e] at h
       exact h)
@@ -581,10 +581,10 @@ theorem exists_open_pull_eq_zero {O K : Type} [CommRing O] [IsDomain O] [Valuati
       exact ⟨hc _ hπ' p hpV, hpσ⟩
     rw [Scheme.basicOpen_zero] at h0
     exact h0
-  letI := (AbLaw.cst f V).toAlgebra
-  letI := φ.toAlgebra
-  haveI : IsScalarTower O (MvPolynomial (Fin n) O) Γ(X, V) := .of_algebraMap_eq' hφ.symm
-  haveI : Algebra.Etale (MvPolynomial (Fin n) O) Γ(X, V) := hφ'
+  let := (AbLaw.cst f V).toAlgebra
+  let := φ.toAlgebra
+  have : IsScalarTower O (MvPolynomial (Fin n) O) Γ(X, V) := .of_algebraMap_eq' hφ.symm
+  have : Algebra.Etale (MvPolynomial (Fin n) O) Γ(X, V) := hφ'
   obtain ⟨ρ, b', e, hb'⟩ := GlobalTheory.etale_mvPolynomial_exists_content O K n Γ(X, V) hp b hb0
   obtain ⟨y, hy⟩ := hV.isoSpec.hom.surjective
     (⟨(IsLocalRing.maximalIdeal O).map (AbLaw.cst f V), hp⟩ : PrimeSpectrum Γ(X, V))
@@ -904,8 +904,8 @@ theorem integers_valuationRing_dimensionLEOne_isFractionRing :
     ∀ (C : Type) [Field C] [IsAlgClosed C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R →
     ∃ (_ : IsDomain R), ValuationRing R ∧ Ring.DimensionLEOne R ∧ IsFractionRing R C := by
   intro C _ _ v R _ _ hv
-  haveI hdom : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
-  haveI hval : ValuationRing R := ValuationRing.of_integers v hv
+  have hdom : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
+  have hval : ValuationRing R := ValuationRing.of_integers v hv
   refine ⟨hdom, hval, ⟨?_⟩, ?_⟩
   · intro p hp0 hp
     have hle : IsLocalRing.maximalIdeal R ≤ p := by
@@ -918,7 +918,7 @@ theorem integers_valuationRing_dimensionLEOne_isFractionRing :
       have hvx : v (algebraMap R C x) < 1 :=
         lt_of_le_of_ne (hv.map_le_one x) fun e => hxu (hv.isUnit_iff_valuation_eq_one.2 e)
       have hvy : 0 < v (algebraMap R C y) := by
-        rw [zero_lt_iff, Valuation.ne_zero_iff]
+        rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
         exact fun e => hy0 (hv.hom_inj (by rw [e, map_zero]))
       obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hvy hvx
       have hdvd : y ∣ x ^ n := by
@@ -929,7 +929,7 @@ theorem integers_valuationRing_dimensionLEOne_isFractionRing :
       le_antisymm (IsLocalRing.le_maximalIdeal hp.ne_top) hle
     rw [heq]
     exact IsLocalRing.maximalIdeal.isMaximal R
-  · haveI : FaithfulSMul R C := (faithfulSMul_iff_algebraMap_injective R C).2 hv.hom_inj
+  · have : FaithfulSMul R C := (faithfulSMul_iff_algebraMap_injective R C).2 hv.hom_inj
     refine IsFractionRing.of_field R C fun z => ?_
     by_cases hz0 : z = 0
     · exact ⟨0, 1, by simp [hz0]⟩
@@ -1090,7 +1090,7 @@ theorem near : ∀ (C : Type) [Field C] [IsAlgClosed C] (R : Type) [CommRing R] 
       ∃ V : A.left.Opens, y ∈ V ∧ pull (jj A (spMap (algebraMap R C)) ⁻¹ᵁ V).ι l = 0 := by
   intro C _ _ R _ _ _ _ _ _ A _ hA c l h y hy hyc
   obtain ⟨hH, hk⟩ := GlobalTheory.T.henselian_alg_closed_residue C R
-  haveI := hA.comm
+  have := hA.comm
   have hs₀ := hA.smooth
   obtain ⟨V₀, hV₀, e₀⟩ := GlobalTheory.T.picard_generic_trivial_near_special C R A hA l
   obtain ⟨b₀, hb₀⟩ := (GlobalTheory.T.section_through_closed_point R A hs₀).2 V₀ hV₀
@@ -1211,7 +1211,7 @@ theorem symmetricBundle (hD : GlobalTheory.Published.DualAbelianScheme) (hC : Gl
   intro C _ _ v R _ _ hv A _ hA c hc
   obtain ⟨_, _, _, _⟩ := GlobalTheory.T.valuation_integers_rank_one C v R hv
   obtain ⟨hH, hk⟩ := GlobalTheory.T.henselian_alg_closed_residue C R
-  haveI := hA.comm
+  have := hA.comm
   have hs₀ := hA.smooth
   have hp₀ := hA.proper
   have hc₀ := hA.geomConnected

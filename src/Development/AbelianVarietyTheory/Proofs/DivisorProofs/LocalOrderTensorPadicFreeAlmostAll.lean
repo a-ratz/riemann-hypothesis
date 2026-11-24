@@ -95,7 +95,7 @@ theorem combMap_surjective {F B : Type} [Field F] [NumberField F] [Ring B] [Alge
 theorem combMap_injective {F B : Type} [Field F] [NumberField F] [Ring B] [Algebra F B]
     [Algebra ℚ B] [IsScalarTower ℚ F B] [FiniteDimensional F B] (ℓ : ℕ) [Fact ℓ.Prime] {d : ℕ}
     (v : Module.Basis (Fin d) F B) : Function.Injective (combMap (F := F) ℓ v) := by
-  haveI : FiniteDimensional ℚ B := Module.Finite.trans F B
+  have : FiniteDimensional ℚ B := Module.Finite.trans F B
   have hdim : Module.finrank ℚ_[ℓ] (Fin d → ℚ_[ℓ] ⊗[ℚ] F) = Module.finrank ℚ_[ℓ] (ℚ_[ℓ] ⊗[ℚ] B) := by
     rw [Module.finrank_pi_fintype, Module.finrank_baseChange, Module.finrank_baseChange,
       ← Module.finrank_mul_finrank ℚ F B, Module.finrank_eq_card_basis v]
@@ -132,7 +132,7 @@ theorem exists_den {F B : Type} [Field F] [NumberField F] [Ring B] [Algebra F B]
     { carrier := {y | ∀ i, IsIntegral ℤ ((D : F) * v.repr (y : B) i)}
       add_mem' := by
         intro y z hy hz i
-        simp only [Set.mem_setOf_eq, Subring.coe_add, map_add (f := _), Finsupp.add_apply, mul_add] at hy hz ⊢
+        simp only [Set.mem_ofPred_eq, Subring.coe_add, map_add (f := _), Finsupp.add_apply, mul_add] at hy hz ⊢
         exact (hy i).add (hz i)
       zero_mem' := by
         intro i
@@ -140,7 +140,7 @@ theorem exists_den {F B : Type} [Field F] [NumberField F] [Ring B] [Algebra F B]
         exact isIntegral_zero
       smul_mem' := by
         intro c y hy i
-        simp only [Set.mem_setOf_eq] at hy ⊢
+        simp only [Set.mem_ofPred_eq] at hy ⊢
         have h2 : v.repr ((c • y : Λ) : B) i = (c : F) * v.repr (y : B) i := by
           rw [show ((c • y : Λ) : B) = c • (y : B) from rfl, map_zsmul, Finsupp.smul_apply,
             zsmul_eq_mul]
@@ -211,7 +211,7 @@ theorem locOrder_free : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Alg
   obtain ⟨v, hvΛ⟩ := exists_basis_mem (F := F) Λ hspan
   obtain ⟨D, hD, hDΛ⟩ := exists_den Λ hfin v
   refine ⟨D, hD, fun ℓ _ hℓ => ?_⟩
-  letI := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
+  let := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
   let w : Fin (Module.finrank F B) → locOrder ℓ Λ := fun i =>
     ⟨(1 : ℚ_[ℓ]) ⊗ₜ v i, Algebra.subset_adjoin ⟨_, hvΛ i, rfl⟩⟩
   have hsmul : ∀ (c : cenOrder ℓ F) (x : locOrder ℓ Λ),
@@ -234,7 +234,7 @@ theorem locOrder_free : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Alg
     obtain ⟨c, hc⟩ := exists_coeffs ℓ Λ v D hDΛ hℓ z hz
     rw [Submodule.mem_span_range_iff_exists_fun]
     exact ⟨c, Subtype.ext ((hsum c).trans hc.symm)⟩
-  haveI : Nontrivial (ℚ_[ℓ] ⊗[ℚ] F) := by
+  have : Nontrivial (ℚ_[ℓ] ⊗[ℚ] F) := by
     apply Module.nontrivial_of_finrank_pos (R := ℚ_[ℓ])
     rw [Module.finrank_baseChange]
     exact Module.finrank_pos

@@ -269,7 +269,7 @@ theorem lintegral_sq_split {Z X Y : Type} [TopologicalSpace Z] [AddCommGroup Z] 
       continuous_invFun := e.symm.continuous }
   let eM : Z ≃ᵐ X × Y := e.toMeasurableEquiv
   let μY : Measure Y := Measure.addHaar
-  haveI hν : (μ.map E).IsAddHaarMeasure := inferInstance
+  have hν : (μ.map E).IsAddHaarMeasure := inferInstance
   have hE : (E : Z → X × Y) = eM := rfl
   set s := Measure.addHaarScalarFactor (μ.map E) (μX.prod μY)
   have hs : μ.map E = s • (μX.prod μY) := Measure.isAddLeftInvariant_eq_smul _ _
@@ -277,14 +277,14 @@ theorem lintegral_sq_split {Z X Y : Type} [TopologicalSpace Z] [AddCommGroup Z] 
       ∫⁻ z, ‖F z‖ₑ ^ 2 ∂μ = s * ∫⁻ y, ∫⁻ x, ‖F (e.symm (x, y))‖ₑ ^ 2 ∂μX ∂μY := by
     intro F hF
     have hm : Measurable fun p : X × Y => ‖F (e.symm p)‖ₑ ^ 2 :=
-      ((hF.comp e.symm.continuous).measurable.enorm.pow_const 2)
+      ((hF.comp e.symm.continuous).measurable.eNorm.pow_const 2)
     calc ∫⁻ z, ‖F z‖ₑ ^ 2 ∂μ = ∫⁻ p, ‖F (e.symm p)‖ₑ ^ 2 ∂(μ.map E) := by
           rw [hE, lintegral_map_equiv]; simp [eM]
       _ = s * ∫⁻ y, ∫⁻ x, ‖F (e.symm (x, y))‖ₑ ^ 2 ∂μX ∂μY := by
           rw [hs, lintegral_smul_measure, lintegral_prod_symm _ hm.aemeasurable]; rfl
   rw [key f hf, key g hg]
   have hmg : Measurable fun p : X × Y => ‖g (e.symm p)‖ₑ ^ 2 :=
-    ((hg.comp e.symm.continuous).measurable.enorm.pow_const 2)
+    ((hg.comp e.symm.continuous).measurable.eNorm.pow_const 2)
   simp_rw [h]
   rw [lintegral_const_mul _ (hmg.lintegral_prod_left' )]
   ring
@@ -302,19 +302,19 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : Type) [Fintype
     (∀ μ : @Measure (κ' ⊕ κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
       ∃ c : ℝ≥0∞, ∀ Φ ∈ schA F (κ' ⊕ κ), ∫⁻ x, ‖partR (κ := κ') A Φ x‖ₑ ^ 2 ∂μ = c * ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ) := by
   intro F _ _ κ κ' _ _ A hA hL2
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  letI mX : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mY : MeasurableSpace (κ' → AF F) := borel _
-  haveI : BorelSpace (κ' → AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  let mX : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mY : MeasurableSpace (κ' → AF F) := borel _
+  have : BorelSpace (κ' → AF F) := ⟨rfl⟩
   let μX : Measure (κ → AF F) := Measure.addHaar
   obtain ⟨c, hc⟩ := hL2 μX inferInstance
   constructor
   · intro μ hμ
-    letI mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
-    haveI : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
+    let mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
+    have : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
     refine ⟨c, fun Φ hΦ => ?_⟩
     have hP := IsTame.mapsTo (_root_.GlobalTheory.DoublingEv.PartLTame.isTame_partL F κ κ κ' A hA) Φ hΦ
     refine lintegral_sq_split (Homeomorph.sumPiEquivProdPi κ κ' (fun _ => AF F)) (fun a b => rfl) μ μX
@@ -322,8 +322,8 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : Type) [Fintype
       fun y => ?_
     exact hc _ (GlobalTheory.DoublingEvLaw.sliceL hΦ y)
   · intro μ hμ
-    letI mZ : MeasurableSpace (κ' ⊕ κ → AF F) := borel _
-    haveI : BorelSpace (κ' ⊕ κ → AF F) := ⟨rfl⟩
+    let mZ : MeasurableSpace (κ' ⊕ κ → AF F) := borel _
+    have : BorelSpace (κ' ⊕ κ → AF F) := ⟨rfl⟩
     refine ⟨c, fun Φ hΦ => ?_⟩
     have hP := IsTame.mapsTo (_root_.GlobalTheory.TamePartR.isTame_partR F κ' κ κ A hA) Φ hΦ
     refine lintegral_sq_split ((Homeomorph.sumPiEquivProdPi κ' κ (fun _ => AF F)).trans
@@ -439,7 +439,7 @@ theorem hasDbl_of_tame {F : Type} [Field F] [NumberField F] {E : Type} [CommRing
     obtain ⟨c₀, hc₀⟩ := hunit μ hμ
     refine ⟨c₀, fun φ hφ => ?_⟩
     have h := hc₀ (star φ) (hstar φ hφ)
-    simp only [conjMap_apply, Pi.star_apply, enorm_eq_nnnorm, nnnorm_star, LinearEquiv.coe_coe] at h ⊢
+    simp only [conjMap_apply, Pi.star_apply, eNorm_eq_nnNorm, nnNorm_star, LinearEquiv.coe_coe] at h ⊢
     exact h
   refine ⟨dblCo c d₁, dblE T, conjE T, dblCo_isDblCoord c d₁,
     ⟨fun φ => ⟨fun h => hD.mapsTo φ h, fun h => ?_⟩, fun w φ hφ => ?_, fun l => ⟨fun hl => hD.comp_adm hl, fun hl => ?_⟩,

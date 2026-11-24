@@ -126,7 +126,7 @@ theorem ker_triv (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (T T' : ℝ) (hG :
     have e2 := congrFun e i
     rw [hv] at e2
     simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul, mul_ite, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at e2
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at e2
     exact e2.symm
   have hβ := key Z β _ hZβ
   have hα := key Zᴴ α _ hZα
@@ -164,13 +164,13 @@ theorem ker_triv (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (T T' : ℝ) (hG :
     have hβ' : (Z.submatrix Fin.castSucc Fin.castSucc) *ᵥ (fun b => β (Fin.castSucc b)) = 0 := by
       funext a
       have h := h1 (Fin.castSucc a)
-      rw [if_neg (Fin.castSucc_lt_last a).ne, zero_add, Fin.sum_univ_castSucc, hbL, mul_zero,
+      rw [ite_eq_right (Fin.castSucc_lt_last a).ne, zero_add, Fin.sum_univ_castSucc, hbL, mul_zero,
         add_zero] at h
       simpa [Matrix.mulVec, dotProduct] using h
     have hα' : (Z.submatrix Fin.castSucc Fin.castSucc)ᴴ *ᵥ (fun b => α (Fin.castSucc b)) = 0 := by
       funext a
       have h := h2 (Fin.castSucc a)
-      rw [if_neg (Fin.castSucc_lt_last a).ne, add_zero, Fin.sum_univ_castSucc, haL, mul_zero,
+      rw [ite_eq_right (Fin.castSucc_lt_last a).ne, add_zero, Fin.sum_univ_castSucc, haL, mul_zero,
         add_zero] at h
       simpa [Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply] using h
     have e3 := Matrix.eq_zero_of_mulVec_eq_zero hm hβ'
@@ -379,17 +379,17 @@ private theorem sub_zhatOM {K : Type*} [CommRing K] (Z : Matrix (Fin (r + 1)) (F
 private theorem lead_zhatOM {E : Type} [Field E] [NumberField E] [StarRing E]
     (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) E) {l : ℕ} (h : l ≤ r + 1) :
     leadMinorE (ZhatOM Z) l = leadMinorE Z l * sgnP E r l h := by
-  simp only [leadMinorE, dif_pos h, sub_zhatOM Z h, Matrix.det_mul, Matrix.det_diagonal, sgnP]
+  simp only [leadMinorE, dite_eq_left h, sub_zhatOM Z h, Matrix.det_mul, Matrix.det_diagonal, sgnP]
 
 private theorem dl_zhatO (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) {l : ℕ} (h : l ≤ r + 1) :
     RealObj.Dl (RealObj.ZhatO Z) l = RealObj.Dl Z l * sgnP ℂ r l h := by
   have e : RealObj.ZhatO Z = ZhatOM Z := rfl
-  simp only [RealObj.Dl, dif_pos h, e, sub_zhatOM Z h, Matrix.det_mul, Matrix.det_diagonal, sgnP]
+  simp only [RealObj.Dl, dite_eq_left h, e, sub_zhatOM Z h, Matrix.det_mul, Matrix.det_diagonal, sgnP]
 
 private theorem dl_map {E : Type} [Field E] [NumberField E] [StarRing E] (ψ : E →+* ℂ)
     (A : Matrix (Fin (r + 1)) (Fin (r + 1)) E) {l : ℕ} (h : l ≤ r + 1) :
     RealObj.Dl (A.map ψ) l = ψ (leadMinorE A l) := by
-  simp only [RealObj.Dl, leadMinorE, dif_pos h, Matrix.submatrix_map, RingHom.map_det, RingHom.mapMatrix_apply]
+  simp only [RealObj.Dl, leadMinorE, dite_eq_left h, Matrix.submatrix_map, RingHom.map_det, RingHom.mapMatrix_apply]
 
 private theorem famSc_one' {n : ℕ} (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) : RealObj.famSc 1 e z = RealObj.fam e z := by
   funext a
@@ -436,12 +436,12 @@ private theorem isLoUni_sgnT {U : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ} (h : I
 
 private theorem det_lo {K : Type*} [Field K] {L : Matrix (Fin (r + 1)) (Fin (r + 1)) K} (h : IsLoUni L) :
     L.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular L (fun i j hij => (h i j).1 (OrderDual.toDual_lt_toDual.mp hij))]
+  rw [det_of_isLowerTriangular L (fun i j hij => (h i j).1 (OrderDual.toDual_lt_toDual.mp hij))]
   exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
 
 private theorem det_up {K : Type*} [Field K] {U : Matrix (Fin (r + 1)) (Fin (r + 1)) K} (h : IsUpUni U) :
     U.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => (h i j).1 hij)]
+  rw [det_of_isUpperTriangular (fun i j hij => (h i j).1 hij)]
   exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
 
 private theorem isUpUni_map {K : Type*} [Field K] (ψ : K →+* ℂ) {U : Matrix (Fin (r + 1)) (Fin (r + 1)) K}
@@ -543,7 +543,7 @@ private theorem frame_fvec (t : TermOp.GTerm X u u' (X.Fu u) (X.Fu u') what₂ r
     t.frame.fl.fvec b = t.lin ((X.Fu u').fvec b) := by
   have hiso : t.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t.rep.2.2.1
   unfold TermOp.GTerm.frame TermOp.mapLF
-  rw [dif_pos hiso]
+  rw [dite_eq_left hiso]
   exact snoc_comp t.lin (X.Fu u').e (X.Fu u').z b
 
 private theorem phi_embS (v : InfinitePlace X.B.I.F) (y : D.host.E) :
@@ -666,7 +666,7 @@ theorem liftDecompC_of_atSome (κ : TermDef.Term D u u' (X.Fu u) (Y.what₂ u) �
   obtain ⟨hex, hall⟩ := realDecompC_of X Y u u' hAt s.1 hs hG
   refine ⟨hex, hall _ ?_⟩
   unfold RealObj.gamW
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   exact hex.choose_spec
 
 end Main
@@ -687,7 +687,7 @@ theorem gv_eq_embedding (w : Point D.host.E (D.R.rS + 1)) (γ : X.B.I.Ginf) (hγ
     have e1 := dl_zhatO (RealObj.ZX X u u' 1 γ v) h
     rw [hγ v, hptC, dl_map _ _ h] at e1
     have hD : leadMinorE (ptMat w) l = LocalSplitGroups.Dmin w l := by
-      unfold leadMinorE LocalSplitGroups.Dmin; simp only [dif_pos h]
+      unfold leadMinorE LocalSplitGroups.Dmin; simp only [dite_eq_left h]
     rw [hD] at e1
     have hs := localSign_sq ℂ D.R.rS l h
     have e2 : RealObj.Dl (RealObj.ZX X u u' 1 γ v) l = embS D (X.pl v) (LocalSplitGroups.Dmin w l) * sgnP ℂ D.R.rS l h := by
@@ -725,11 +725,11 @@ theorem gx_pos_of (γ : X.B.I.Ginf) (v : InfinitePlace X.B.I.F) (sc : ℝ) (hsc 
             Matrix.diagonal (fun b : Fin l => ((sc : ℂ) ^ (D.R.rS - b.1))⁻¹) := by
     intro l hl
     ext a b
-    simp only [Matrix.submatrix_apply, Matrix.mul_diagonal, Matrix.diagonal_mul, hE, Fin.coe_castLE]
+    simp only [Matrix.submatrix_apply, Matrix.mul_diagonal, Matrix.diagonal_mul, hE, Fin.val_castLE]
   have hDl : ∀ l (hl : l ≤ D.R.rS + 1), RealObj.Dl (RealObj.ZX X u u' sc γ v) l =
       (∏ b : Fin l, ((sc : ℂ) ^ (D.R.rS - b.1))⁻¹) ^ 2 * RealObj.Dl (RealObj.ZX X u u' 1 γ v) l := by
     intro l hl
-    simp only [RealObj.Dl, dif_pos hl, hsub l hl, Matrix.det_mul, Matrix.det_diagonal]
+    simp only [RealObj.Dl, dite_eq_left hl, hsub l hl, Matrix.det_mul, Matrix.det_diagonal]
     ring
   have hP1 : ∏ b : Fin (D.R.rS + 1), ((sc : ℂ) ^ (D.R.rS - b.1))⁻¹ =
       ∏ b : Fin D.R.rS, ((sc : ℂ) ^ (D.R.rS - b.1))⁻¹ := by
@@ -758,13 +758,13 @@ theorem liftGPosC_of (κ : TermDef.Term D u u' (X.Fu u) (Y.what₂ u) → ℕ)
   have hγ : RealObj.IsPtRep X u u' (PairVal.ptOf s.1.toTerm)
       (RealObj.gamW X u u' (PairVal.ptOf s.1.toTerm)) := by
     unfold RealObj.gamW
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     exact hex.choose_spec
   have hw : s.1.toTerm.atPt (PairVal.ptOf s.1.toTerm) := by
     obtain ⟨w, hw⟩ := hAt s.1.toTerm hG hs
     have hx : ∃ w, s.1.toTerm.atPt w ∧ s.1.toTerm.relevant := ⟨w, hw, hs⟩
     unfold PairVal.ptOf
-    rw [dif_pos hx]
+    rw [dite_eq_left hx]
     exact hx.choose_spec.1
   have hT := hTP s.1.toTerm _ hw (X.pl v)
   have he := congrArg Complex.re (gv_eq_embedding X u u' (PairVal.ptOf s.1.toTerm) _ hγ v)

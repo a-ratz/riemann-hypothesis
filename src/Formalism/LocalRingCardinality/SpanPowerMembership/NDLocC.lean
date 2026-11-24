@@ -62,8 +62,8 @@ omit hl in
 variable (E Ω) in
 include E in
 theorem isAlgClosureQ : IsAlgClosure ℚ Ω := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   exact ⟨inferInstance, Algebra.IsAlgebraic.trans ℚ E Ω⟩
 
 variable [IsAlgClosure ℚ Ω] (j : Ω →+* PadicAlgCl l)
@@ -79,9 +79,9 @@ def resQ (σ : GQ l) : Ω ≃ₐ[ℚ] Ω :=
 
 omit [IsAlgClosure E Ω] [Algebra E Ω] [NumberField E] [Field E] in
 theorem j_resQ (σ : GQ l) (x : Ω) : j (resQ j σ x) = σ (j x) := by
-  letI : Algebra Ω (PadicAlgCl l) := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω (PadicAlgCl l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  let : Algebra Ω (PadicAlgCl l) := j.toAlgebra
+  have : IsScalarTower ℚ Ω (PadicAlgCl l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   exact AlgHom.restrictNormal_commutes _ Ω x
 
 def resE (σ : GQ l) (hσ : σ ∈ (KwF (E := E) j).fixingSubgroup) : G E Ω :=
@@ -135,7 +135,7 @@ theorem continuous_aut (σ : GQ l) : Continuous σ := by
 
 theorem rHom_injective : Function.Injective (rHom (E := E) hj) := by
   intro σ τ h
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hd := denseRange_emb l j
   have heq : ((σ : GQ l) : PadicAlgCl l → PadicAlgCl l) = (τ : GQ l) :=
     hd.equalizer (continuous_aut _) (continuous_aut _) (funext fun x => by
@@ -164,9 +164,9 @@ theorem norm_le_pow (g : G E Ω) (hg : g ∈ Dec (F := E) A) (z : Ω) (n : ℕ)
 include hj in
 theorem exists_ext (g : G E Ω) (hg : g ∈ Dec (F := E) A) :
     ∃ σ : GQ l, ∀ x, σ (j x) = j (g x) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   let iC : Ω →+* ℂ_[l] := (algebraMap (PadicAlgCl l) ℂ_[l]).comp j
-  letI : PseudoMetricSpace Ω := PseudoMetricSpace.induced iC inferInstance
+  let : PseudoMetricSpace Ω := PseudoMetricSpace.induced iC inferInstance
   have ue : IsUniformInducing iC := ⟨rfl⟩
   have dr : DenseRange iC :=
     (UniformSpace.Completion.denseRange_coe (α := PadicAlgCl l)).comp (denseRange_emb l j)
@@ -216,7 +216,7 @@ theorem rHom_surjective : Function.Surjective (rHom (E := E) hj) := by
     rw [hσ, AlgEquiv.commutes]
   have hmem : σ ∈ (KwF (E := E) j).fixingSubgroup := by
     have hz : Subgroup.zpowers σ ≤ (KwF (E := E) j).fixingSubgroup := by
-      rw [← IntermediateField.le_iff_le]
+      rw [← IntermediateField.le_fixedField_iff_le_fixingSubgroup]
       unfold KwF
       rw [IntermediateField.adjoin_le_iff]
       intro y hy

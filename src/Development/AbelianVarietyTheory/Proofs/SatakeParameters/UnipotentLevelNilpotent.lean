@@ -55,7 +55,7 @@ section Group
 
 theorem index_eq_prime_pow {G : Type*} [Group G] (H : Subgroup G) [H.FiniteIndex] {p : ℕ} (hp : p.Prime)
     (hroot : ∀ (g : G) (m : ℕ), m.Coprime p → g ^ m ∈ H → g ∈ H) : ∃ k, H.index = p ^ k := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hN : ∀ (g : G) (m : ℕ), m.Coprime p → g ^ m ∈ H.normalCore → g ∈ H.normalCore := by
     intro g m hm hg
     have hg' : ∀ b : G, b * g ^ m * b⁻¹ ∈ H := hg
@@ -183,9 +183,9 @@ theorem nil_Ufl {g : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hg : g 
     have e : v = Loc.inX k n c fun l => v (Fin.castAdd c l) := by
       funext l
       by_cases h : l.1 < n
-      · simp only [Loc.inX, LinearMap.pi_apply, dif_pos h]
+      · simp only [Loc.inX, LinearMap.pi_apply, dite_eq_left h]
         rfl
-      · simp only [Loc.inX, LinearMap.pi_apply, dif_neg h]
+      · simp only [Loc.inX, LinearMap.pi_apply, dite_eq_right h]
         exact hv l (by simpa using h)
     have h1 : g v = v := by
       rw [e]
@@ -205,7 +205,7 @@ theorem nil_Ufl {g : (Fin (n + c) → k) ≃ₗ[k] (Fin (n + c) → k)} (hg : g 
           rw [Pi.sub_apply, Pi.smul_apply, h1, h2]
           simp
         · have : l.1 ∉ {l | l < n + (i + 1)} := by
-            simp only [Set.mem_setOf_eq]
+            simp only [Set.mem_ofPred_eq]
             omega
           simp [he, Loc.eN, h, hv l this]
       have e1 : ((T (k := k) _ g - 1)) v =

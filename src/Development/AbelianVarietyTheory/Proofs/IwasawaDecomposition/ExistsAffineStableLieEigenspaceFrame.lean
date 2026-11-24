@@ -152,7 +152,7 @@ theorem vec_bc_of_chart {S : Type} [CommRing S] {x : Sp S ⟶ X} {n : ℕ}
     ∃ (xc' : ∀ m : ℕ, sp (R₀ := S') (ReciprocityTheory.ChartRestriction.G.Chart.JetR S' (Fin n) m) ⟶ (Over.pullback x').obj t.G),
       IsUnivChart _ n xc' ∧ Compat t ψ xc xc' := by
   subst h
-  letI : Algebra S S' := ψ.toAlgebra
+  let : Algebra S S' := ψ.toAlgebra
   obtain ⟨x₁, hx₁, hcomp⟩ := LieChart.univChart_baseChange_of_chart (R := S) (R' := S') _ C n xc hx
   have h₁ := IsGrpPullback.comp
     (isGrpPullback_pullback ((Over.pullback x).obj t.G) (ReciprocityTheory.ChartRestriction.G.Chart.fB S S'))
@@ -209,9 +209,9 @@ theorem exists_projectors {L : Type} [CommRing L] (φ : c.F →+* L) {x : Sp L �
   have : CharZero c.F := RingHom.charZero c.F.val.toRingHom
   obtain ⟨α, hinj, ⟨f, hf, hfs⟩, hN⟩ :=
     exists_sepElt (E := E) (F := c.F) c.F.val.toRingHom (embK c) (fun τ a => embK_coe c τ a)
-  letI : Algebra c.F L := φ.toAlgebra
+  let : Algebra c.F L := φ.toAlgebra
   refine ⟨fun τ => LinearMap.toMatrix' (proj (rho hx) (embK c) α τ), fun {k} _ ψ {x' xc'} hx' hv τ => ?_⟩
-  letI : Algebra c.F k := (ψ.comp φ).toAlgebra
+  let : Algebra c.F k := (ψ.comp φ).toAlgebra
   have e₁ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) (proj (rho hx') (embK c) α τ m) := fun m =>
     eig_of_alpha _ _ α hN τ (proj_eig_alpha _ _ α hinj f hf hfs τ m)
   have e₂ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) m → proj (rho hx') (embK c) α τ m = m := fun m hm => by
@@ -219,7 +219,7 @@ theorem exists_projectors {L : Type} [CommRing L] (φ : c.F →+* L) {x : Sp L �
       by_cases h : τ' = τ
       · subst h; rwa [Pi.single_eq_same]
       · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-    rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+    rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
   have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (ψ ∘ cc) = ψ ∘ rho hx a cc :=
     fun a cc => vec_inj hx' (by
       show vec t _ xc' (tmap hx' _ _) = vec t _ xc' (_ ∘ tmap hx _ _)
@@ -266,7 +266,7 @@ theorem GlobalTheory.ShFam.EigSpread.exists_stable_eigFrame : ∀ (E : Type) [Fi
     fun ψ => by rw [Category.assoc, ← hφ₀, ReciprocityTheory.ChartRestriction.G.PullbackSections.spMap_comp_spMap]
   obtain ⟨P, hP⟩ := exists_projectors c φ₀ hx
   let L : Type := (gen Z).presheaf.stalk z
-  letI : Algebra Γ(gen Z, U₀) L := TopCat.Presheaf.algebra_section_stalk (gen Z).presheaf ⟨z, hz⟩
+  let : Algebra Γ(gen Z, U₀) L := TopCat.Presheaf.algebra_section_stalk (gen Z).presheaf ⟨z, hz⟩
   have hloc := hU₀.isLocalization_stalk ⟨z, hz⟩
   obtain ⟨fL⟩ := exists_eigFrame E H Dw l Xo c O β Z L _ _ (hov (algebraMap Γ(gen Z, U₀) L))
   obtain ⟨xL, hxL, hvL⟩ := vec_bc_of_chart C hx (algebraMap Γ(gen Z, U₀) L)

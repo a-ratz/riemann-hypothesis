@@ -69,7 +69,7 @@ theorem sb_sec (p : SplitPt D k) {S T : HSp D} {LS : Lat S} {LT : Lat T} (hS : S
     (hΦ : IsSBHalf p.e (latO S T (LS : Set _) (LT : Set _) (· = p.v)) Φ) :
     (fun x : Matrix (Fin T.rank) (Fin S.rank) k => Φ (x.map p.sec)) ∈ SB (Matrix (Fin T.rank) (Fin S.rank) k) := by
   classical
-  haveI := Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := Fin T.rank) (n' := Fin S.rank)
+  have := Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := Fin T.rank) (n' := Fin S.rank)
   have : CharZero k := charZero_of_injective_ringHom (f := p.pr.comp (incA D)) (RingHom.injective _)
   obtain ⟨-, k0, hk0, hinv, hsup⟩ := hΦ
   obtain ⟨hUo, hUc⟩ := HalfInd.open_compact_sec p hS hT
@@ -123,7 +123,7 @@ theorem line_sum {L : HSp D} {ζ : Fin L.rank → D.host.E} (hζ : IsLineVec L �
 
 theorem isLattice_span {L : HSp D} {ζ : Fin L.rank → D.host.E} (hζ : IsLineVec L ζ) :
     Submodule.IsFullLattice D.host.E (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) := by
-  haveI : Submodule.IsLattice D.host.E (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) :=
+  have : Submodule.IsLattice D.host.E (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) :=
     Submodule.IsLattice.of_fg D.host.E (Submodule.fg_span_singleton ζ)
   refine ⟨?_⟩
   rw [Submodule.span_span_of_tower]
@@ -142,7 +142,7 @@ theorem exists_colFun (p : SplitPt D k) {n : Type} [Fintype n] [DecidableEq n] {
     (hΦ : IsSBHalf p.e (latO L S (LL : Set _) (LS : Set _) (· = p.v)) Φ) :
     ∃ b ∈ SB (n → k), colFun β ζ b = Φ := by
   classical
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
   set z : Fin L.rank → k := fun j => p.pr (incA D (ζ j)) with hz
   have hz0 : ∀ j, z j ≠ 0 := fun j h =>
     line_ne hζ j ((p.pr.comp (incA D)).injective (by rw [map_zero]; exact h))
@@ -154,14 +154,14 @@ theorem exists_colFun (p : SplitPt D k) {n : Type} [Fintype n] [DecidableEq n] {
     funext t
     unfold colFun
     by_cases ht : IsHalf p.e t
-    · rw [if_pos ht]
+    · rw [ite_eq_left ht]
       beta_reduce
       congr 1
       ext i j
       rw [Matrix.map_apply, Matrix.of_apply, ExtZero.zcol, Matrix.mulVec_mulVec, β.bb', Matrix.one_mulVec]
       simp only [Matrix.mulVec, dotProduct]
       rw [line_sum hζ _ j, map_mul p.pr, mul_assoc, mul_inv_cancel₀ (hz0 j), mul_one, p.sec_pr, ht i j]
-    · rw [if_neg ht]
+    · rw [ite_eq_right ht]
       by_contra h
       exact ht (hΦ.1 t (Ne.symm h))
   · refine continuous_matrix fun i j => ?_
@@ -178,7 +178,7 @@ theorem exists_colFun (p : SplitPt D k) {n : Type} [Fintype n] [DecidableEq n] {
 theorem isSBHalf_halfInd {m n : ℕ} (e : AE D) (Λ : AddSubgroup (Mx D m n)) : IsSBHalf e Λ (halfInd e Λ) := by
   have h0 : ∀ t, halfInd e Λ t ≠ 0 → t ∈ Λ ∧ IsHalf e t := fun t ht => by
     by_contra h
-    exact ht (by unfold halfInd; rw [if_neg h])
+    exact ht (by unfold halfInd; rw [ite_eq_right h])
   refine ⟨fun t ht => (h0 t ht).2, 1, one_pos, fun u hu hh t => ?_, fun t ht => by simpa using (h0 t ht).1⟩
   have h1 : IsHalf e (t + u) ↔ IsHalf e t :=
     forall_congr' fun i => forall_congr' fun j => by rw [Matrix.add_apply, mul_add, hh i j, add_left_inj]
@@ -186,8 +186,8 @@ theorem isSBHalf_halfInd {m n : ℕ} (e : AE D) (Λ : AddSubgroup (Mx D m n)) : 
   rw [one_smul]
   unfold halfInd
   by_cases h : t ∈ Λ ∧ IsHalf e t
-  · rw [if_pos h, if_pos ⟨h2.2 h.1, h1.2 h.2⟩]
-  · rw [if_neg h, if_neg fun h' => h ⟨h2.1 h'.1, h1.1 h'.2⟩]
+  · rw [ite_eq_left h, ite_eq_left ⟨h2.2 h.1, h1.2 h.2⟩]
+  · rw [ite_eq_right h, ite_eq_right fun h' => h ⟨h2.1 h'.1, h1.1 h'.2⟩]
 
 theorem heisO_resS_symm_right (ψ : AddChar (AF D.host.F) ℂ) {S A L T : HSp D} (o : OrthDec S A L) (a : WO L T)
     (F : WO S T → ℂ) (w : WO A T) (y : WO L T) :

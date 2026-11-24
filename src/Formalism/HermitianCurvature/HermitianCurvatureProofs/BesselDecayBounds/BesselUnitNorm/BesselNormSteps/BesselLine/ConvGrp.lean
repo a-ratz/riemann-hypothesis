@@ -124,7 +124,7 @@ theorem maps_low {n : Mx k r} (hn : ∀ (a : Fin r) (i : Fin (2 * r + k + 1)), a
     have h1 := hn ⟨l.val, hlr⟩ i (by show (l : ℕ) ≤ i; omega)
     have heq : eI k r ⟨l.val, hlr⟩ = l := Fin.ext (eI_val _)
     rw [heq] at h1
-    rw [h1, if_neg (fun h => by subst h; omega), zero_mul]
+    rw [h1, ite_eq_right (fun h => by subst h; omega), zero_mul]
 
 theorem onto_low {g : Mx k r} (hg : g⁻¹ * g = 1) {a : ℕ} (hmaps : ∀ y ∈ lowS k r a, g *ᵥ y ∈ lowS k r a) :
     ∀ y ∈ lowS k r a, ∃ x ∈ lowS k r a, g *ᵥ x = y := by
@@ -155,7 +155,7 @@ private lemma mem_lowS_of_apply_mem_lowS {g : Mx k r} (hg : g⁻¹ * g = 1) {a :
 
 theorem n_inv {n : Mx k r} (hn : n ∈ Nset k r) : n⁻¹ ∈ Nset k r := by
   unfold Nset at hn ⊢
-  simp only [Set.mem_setOf_eq] at hn ⊢
+  simp only [Set.mem_ofPred_eq] at hn ⊢
   obtain ⟨hU, hcol, hmid⟩ := hn
   obtain ⟨h1, h2, hUi⟩ := uh_inv hU
   have key : ∀ a ≤ r, ∀ c, n *ᵥ bvec c - bvec c ∈ lowS k r a →
@@ -270,7 +270,7 @@ theorem herm_eI (y : Fin (2 * r + k + 1) → ℂ) (b : Fin r) :
 theorem uw_inWb {z : Fin (2 * r + k + 1) → ℂ} {h : Mx k r} (hh : h ∈ UWset k r z)
     {v : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v) : inWb k r (h *ᵥ v) := by
   unfold UWset at hh
-  simp only [Set.mem_setOf_eq] at hh
+  simp only [Set.mem_ofPred_eq] at hh
   obtain ⟨hU, hfix, -⟩ := hh
   have hv' : ∀ i : Fin (2 * r + k + 1), ↑i < r ∨ r + k < ↑i → v i = 0 := hv
   show ∀ i : Fin (2 * r + k + 1), ↑i < r ∨ r + k < ↑i → (h *ᵥ v) i = 0
@@ -294,7 +294,7 @@ theorem uw_inWb {z : Fin (2 * r + k + 1) → ℂ} {h : Mx k r} (hh : h ∈ UWset
 
 theorem uw_inv {z : Fin (2 * r + k + 1) → ℂ} {h : Mx k r} (hh : h ∈ UWset k r z) : h⁻¹ ∈ UWset k r z := by
   unfold UWset at *
-  simp only [Set.mem_setOf_eq] at hh ⊢
+  simp only [Set.mem_ofPred_eq] at hh ⊢
   obtain ⟨hU, hfix, hz⟩ := hh
   obtain ⟨-, h2, hinvU⟩ := uh_inv hU
   have key : ∀ v, h *ᵥ v = v → h⁻¹ *ᵥ v = v := fun v hv => by
@@ -305,7 +305,7 @@ theorem uw_inv {z : Fin (2 * r + k + 1) → ℂ} {h : Mx k r} (hh : h ∈ UWset 
 theorem uw_mul {z : Fin (2 * r + k + 1) → ℂ} {a b : Mx k r} (ha : a ∈ UWset k r z) (hb : b ∈ UWset k r z) :
     a * b ∈ UWset k r z := by
   unfold UWset at *
-  simp only [Set.mem_setOf_eq] at ha hb ⊢
+  simp only [Set.mem_ofPred_eq] at ha hb ⊢
   obtain ⟨haU, hafix, haz⟩ := ha
   obtain ⟨hbU, hbfix, hbz⟩ := hb
   refine ⟨uh_mul haU hbU, fun c => ⟨?_, ?_⟩, ?_⟩
@@ -316,7 +316,7 @@ theorem uw_mul {z : Fin (2 * r + k + 1) → ℂ} {a b : Mx k r} (ha : a ∈ UWse
 theorem n_on_Wb {n : Mx k r} (hn : n ∈ Nset k r) {u : Fin (2 * r + k + 1) → ℂ} (hu : inWb k r u) :
     n *ᵥ u - u ∈ lowS k r r := by
   unfold Nset at hn
-  simp only [Set.mem_setOf_eq] at hn
+  simp only [Set.mem_ofPred_eq] at hn
   obtain ⟨-, -, hmid⟩ := hn
   have hu' : ∀ i : Fin (2 * r + k + 1), ↑i < r ∨ r + k < ↑i → u i = 0 := hu
   show ∀ i : Fin (2 * r + k + 1), r ≤ i.val → (n *ᵥ u - u) i = 0
@@ -325,11 +325,11 @@ theorem n_on_Wb {n : Mx k r} (hn : n ∈ Nset k r) {u : Fin (2 * r + k + 1) → 
   simp only [Matrix.mulVec, dotProduct]
   rw [Finset.sum_eq_single i]
   · by_cases hm : i.val ≤ r + k
-    · rw [hmid i i hi hm hi, if_pos rfl, one_mul]
+    · rw [hmid i i hi hm hi, ite_eq_left rfl, one_mul]
     · rw [hu' i (Or.inr (by omega)), mul_zero]
   · intro l _ hl
     by_cases hlm : r ≤ l.val ∧ l.val ≤ r + k
-    · rw [hmid i l hlm.1 hlm.2 hi, if_neg (fun h => hl h.symm), zero_mul]
+    · rw [hmid i l hlm.1 hlm.2 hi, ite_eq_right (fun h => hl h.symm), zero_mul]
     · rw [hu' l (by omega), mul_zero]
   · intro h
     exact absurd (Finset.mem_univ _) h
@@ -340,7 +340,7 @@ theorem conj_n {z : Fin (2 * r + k + 1) → ℂ} {h n : Mx k r} (hh : h ∈ UWse
   have hn0 := hn
   unfold UWset at hh
   unfold Nset at hn ⊢
-  simp only [Set.mem_setOf_eq] at hh hn ⊢
+  simp only [Set.mem_ofPred_eq] at hh hn ⊢
   obtain ⟨hU, hfix, hz⟩ := hh
   obtain ⟨hnU, hcol, hmid⟩ := hn
   obtain ⟨h1, h2, hUi⟩ := uh_inv hU
@@ -373,7 +373,7 @@ theorem conj_n {z : Fin (2 * r + k + 1) → ℂ} {h n : Mx k r} (hh : h ∈ UWse
       show ∀ i' : Fin (2 * r + k + 1), ↑i' < r ∨ r + k < ↑i' → bvec j i' = 0
       intro i' hi'
       unfold bvec
-      rw [Pi.single_apply, if_neg (fun h => by subst h; omega)]
+      rw [Pi.single_apply, ite_eq_right (fun h => by subst h; omega)]
     have hv := uw_inWb hh0 hej
     have hw := n_on_Wb hn0 hv
     have hw' : ∀ i' : Fin (2 * r + k + 1), r ≤ i'.val →

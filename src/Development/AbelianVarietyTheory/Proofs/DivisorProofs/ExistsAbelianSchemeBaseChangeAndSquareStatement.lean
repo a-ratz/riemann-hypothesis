@@ -73,15 +73,15 @@ theorem exists_baseChange_and_sq : ∀ (R₀ R₁ : Type) [CommRing R₀] [CommR
   let f : Sp R₁ ⟶ Sp R₀ := spMap (algebraMap R₀ R₁)
   let F := Over.pullback f
   let B : Over (Sp R₁) := F.obj A
-  letI : GrpObj B := Functor.grpObjObj
+  let : GrpObj B := Functor.grpObjObj
   have hB : IsGrpPullback B A f (pullback.fst A.hom f) := isGrpPullback_pullback A f
   obtain ⟨hAB, hgB⟩ := GlobalTheory.AbBaseChange.isAbelianScheme_and_relDim_of_isGrpPullback _ A B _ g hB hA hg
   have mapL : ∀ {X Y : Over (Sp R₀)} (a : X ⟶ Y),
       (F.map a).left ≫ pullback.fst Y.hom f = pullback.fst X.hom f ≫ a.left := fun a => pullback.lift_fst _ _ _
   let m := Functor.LaxMonoidal.μ F A A
   refine ⟨B, inferInstance, pullback.fst A.hom f, m.left ≫ pullback.fst (A ⊗ A).hom f, hAB, hgB, hB.1, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · haveI : IsIso m := inferInstanceAs (IsIso (Functor.Monoidal.μIso F A A).hom)
-    haveI : IsIso m.left := (Over.forget _).map_isIso m
+  · have : IsIso m := inferInstanceAs (IsIso (Functor.Monoidal.μIso F A A).hom)
+    have : IsIso m.left := (Over.forget _).map_isIso m
     have h1 : IsPullback m.left (B ⊗ B).hom (F.obj (A ⊗ A)).hom (𝟙 _) :=
       IsPullback.of_horiz_isIso ⟨by rw [Category.comp_id]; exact Over.w m⟩
     have h2 := h1.paste_horiz (IsPullback.of_hasPullback (A ⊗ A).hom f)

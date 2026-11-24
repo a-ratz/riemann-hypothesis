@@ -98,11 +98,11 @@ def nfMat {r : ℕ} {k : Type} [CommRing k] (c : Fin (r + 1) → k) : Matrix (Fi
 
 theorem nfMat_mulVec_castSucc {r : ℕ} {k : Type} [CommRing k] (c : Fin (r + 1) → k) (v : Fin (r + 1) → k)
     (i : Fin r) : (nfMat c *ᵥ v) (Fin.castSucc i) = v i.succ := by
-  simp only [Matrix.mulVec, dotProduct, nfMat, Matrix.of_apply, Fin.castSucc_ne_last, if_false]
+  simp only [Matrix.mulVec, dotProduct, nfMat, Matrix.of_apply, Fin.castSucc_ne_last, ite_false]
   rw [Finset.sum_eq_single i.succ]
   · simp
   · intro j _ hj
-    rw [if_neg]; · simp
+    rw [ite_eq_right]; · simp
     intro h; apply hj; ext; simp [h]
   · simp
 
@@ -211,7 +211,7 @@ theorem eL_vecMul_embHom (k : Type) [CommRing k] (r : ℕ) (g : Matrix (Fin r) (
 theorem act_emb_lift (k : Type) [CommRing k] (r : ℕ) (g : GL (Fin r) k) (Z : Gl r k) (μ l : k) :
     act (GlobalTheory.JR.Step.emb r k g) (GlobalTheory.JR.Step.lift Z μ l) = GlobalTheory.JR.Step.lift (act g Z) μ l := by
   have hinv : ((emb r k g)⁻¹ : GL (Fin (r + 1)) k) = emb r k g⁻¹ := (map_inv _ _).symm
-  simp only [act, lift, hinv, emb, Units.coe_map, MonoidHom.coe_coe]
+  simp only [act, lift, hinv, emb, Units.coe_map, MonoidHom.coe_ofClass]
   refine Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ rfl))
   · exact embHom_mul_full_mul k r _ _ Z
   · simp only [Matrix.mulVec_smul, embHom_mulVec_eL]
@@ -277,7 +277,7 @@ theorem exists_glO_pair {F : Type} [NormedField F] [IsUltrametricDist F] (r : �
       | cast c' =>
         simp only [row, col, Fin.lastCases_castSucc, ρ, sub_dotProduct, smul_dotProduct,
           single_dotProduct, hwu, smul_eq_mul, mul_zero, sub_zero, one_mul, u, Pi.sub_apply,
-          Pi.smul_apply, Pi.single_apply, hs c, if_false, mul_zero, sub_zero, Matrix.one_apply,
+          Pi.smul_apply, Pi.single_apply, hs c, ite_false, mul_zero, sub_zero, Matrix.one_apply,
           Fin.castSucc_inj]
         by_cases h : c = c'
         · subst h; simp
@@ -327,7 +327,7 @@ theorem glO_transitive_pairs : ∀ (F E : Type) [NontriviallyNormedField F] [Non
     (∀ i, ‖w i‖ ≤ 1) → w ⬝ᵥ v = 1 → ∃ k ∈ glO (r + 1) F,
       (k : Matrix _ _ F) *ᵥ Pi.single (Fin.last r) 1 = v ∧ w ᵥ* (k : Matrix _ _ F) = Pi.single (Fin.last r) 1 := by
   intro F E _ _ _ _ hU r v w hv hw hwv
-  haveI : IsUltrametricDist F := hU.ultraF
+  have : IsUltrametricDist F := hU.ultraF
   exact exists_glO_pair r v w hv hw hwv
 
 end GlobalTheory.LatL
@@ -547,7 +547,7 @@ theorem glO_isOpen_isCompact : ∀ (F : Type) [NontriviallyNormedField F] [IsUlt
     B ×ˢ (MulOpposite.unop ⁻¹' B)
   have hS : glO n F = Units.embedProduct _ ⁻¹' S := by
     ext g
-    simp only [glO, Set.mem_setOf_eq, Set.mem_preimage, S, Set.mem_prod, hB, Units.embedProduct_apply,
+    simp only [glO, Set.mem_ofPred_eq, Set.mem_preimage, S, Set.mem_prod, hB, Units.embedProduct_apply,
       MulOpposite.unop_op]
     constructor
     · intro h; exact ⟨fun i j => (h i j).1, fun i j => (h i j).2⟩
@@ -714,7 +714,7 @@ theorem emb_preimage_glO : ∀ (F : Type) [NormedField F] (r : ℕ),
     ⇑(GlobalTheory.JR.Step.emb r F) ⁻¹' glO (r + 1) F = glO r F := by
   intro F _ r
   ext g
-  simp only [Set.mem_preimage, glO, Set.mem_setOf_eq, coe_emb, coe_emb_inv]
+  simp only [Set.mem_preimage, glO, Set.mem_ofPred_eq, coe_emb, coe_emb_inv]
   constructor
   · intro h i j
     have := h (Fin.castSucc i) (Fin.castSucc j)
@@ -873,15 +873,15 @@ theorem unitG_lift : ∀ (F : Type) [NormedField F] (r : ℕ) (Z : Gl r F) (μ l
       {Y : Gl (r + 1) F | (∀ i j, ‖Y.1 i j‖ ≤ 1) ∧ (∀ i, ‖Y.2.1 i‖ ≤ 1) ∧ (∀ i, ‖Y.2.2.1 i‖ ≤ 1) ∧ ‖Y.2.2.2‖ ≤ 1} ↔
       (Z ∈ {Y : Gl r F | (∀ i j, ‖Y.1 i j‖ ≤ 1) ∧ (∀ i, ‖Y.2.1 i‖ ≤ 1) ∧ (∀ i, ‖Y.2.2.1 i‖ ≤ 1) ∧ ‖Y.2.2.2‖ ≤ 1}
         ∧ ‖l‖ ≤ 1) := by
-    simp only [Set.mem_setOf_eq, GlobalTheory.JR.Step.lift]
+    simp only [Set.mem_ofPred_eq, GlobalTheory.JR.Step.lift]
     rw [norm_full_le_one_iff]
     exact ⟨fun ⟨h1, _, _, h4⟩ => ⟨h1, h4⟩, fun ⟨h1, h4⟩ => ⟨h1, hb, norm_eL_le_one, h4⟩⟩
   unfold unitG
   by_cases hZ : Z ∈ {Y : Gl r F | (∀ i j, ‖Y.1 i j‖ ≤ 1) ∧ (∀ i, ‖Y.2.1 i‖ ≤ 1) ∧ (∀ i, ‖Y.2.2.1 i‖ ≤ 1) ∧ ‖Y.2.2.2‖ ≤ 1}
   · by_cases hl : ‖l‖ ≤ 1
-    · rw [Set.indicator_of_mem (hmem.2 ⟨hZ, hl⟩), Set.indicator_of_mem hZ, if_pos hl]
+    · rw [Set.indicator_of_mem (hmem.2 ⟨hZ, hl⟩), Set.indicator_of_mem hZ, ite_eq_left hl]
       simp
-    · rw [Set.indicator_of_notMem (fun h => hl (hmem.1 h).2), if_neg hl, zero_mul]
+    · rw [Set.indicator_of_notMem (fun h => hl (hmem.1 h).2), ite_eq_right hl, zero_mul]
   · rw [Set.indicator_of_notMem (fun h => hZ (hmem.1 h).1), Set.indicator_of_notMem hZ, mul_zero]
 
 end GlobalTheory.JR.UnitGLift
@@ -917,18 +917,18 @@ theorem orbG_lift : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNo
     Delta (inv (GlobalTheory.JR.Step.lift Z μ l)) ≠ 0 →
     orbG M (unitG (r + 1) F) (GlobalTheory.JR.Step.lift Z μ l) = (if ‖l‖ ≤ 1 then 1 else 0) * orbG M' (unitG r F) Z := by
   intro F E _ _ _ _ hU r M M' Z μ l hμ hΔ
-  haveI := hU.ultraF
-  haveI := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have := hU.ultraF
+  have := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨lc1, sc1⟩ := gl_lc_sc F (r + 1)
-  letI := M.mG
-  haveI := M.bG
-  letI := M'.mG
-  haveI := M'.bG
-  haveI := M.haarG
-  haveI := M'.haarG
-  haveI := gl_unimodular F E (r + 1) M
-  haveI := gl_unimodular F E r M'
+  let := M.mG
+  have := M.bG
+  let := M'.mG
+  have := M'.bG
+  have := M.haarG
+  have := M'.haarG
+  have := gl_unimodular F E (r + 1) M
+  have := gl_unimodular F E r M'
   obtain ⟨hO, hC⟩ := _root_.GlobalTheory.JR.GLift.glO_isOpen_isCompact F (r + 1)
   have hemb := _root_.GlobalTheory.JR.Step.EmbClosed.isClosedEmbedding_emb F r
   have key := GlobalTheory.CosetIntegral.integral_eq_of_coset_support (GL (Fin (r + 1)) F) (GL (Fin r) F)
@@ -1092,7 +1092,7 @@ theorem hasInv_of_lift : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
   have ecL : ∀ a : Fin r, G (Fin.castSucc a) (Fin.last r) = 0 := by
     intro a
     have := hcol (Fin.castSucc a)
-    simp only [eL, Pi.single_apply, Fin.castSucc_ne_last, if_false, mul_zero] at this
+    simp only [eL, Pi.single_apply, Fin.castSucc_ne_last, ite_false, mul_zero] at this
     exact (mul_eq_zero.mp this).resolve_right hμ'
   set H : Matrix (Fin (r + 1)) (Fin (r + 1)) E := star ν • G with hH
   set h' : Matrix (Fin r) (Fin r) E := H.submatrix Fin.castSucc Fin.castSucc with hh'
@@ -1424,7 +1424,7 @@ variable (r : ℕ)
 theorem entryBall_compact_open (K : Type) [NontriviallyNormedField K] [IsUltrametricDist K] [LocallyCompactSpace K] :
     IsCompact {A : Matrix (Fin r) (Fin r) K | ∀ i j, ‖A i j‖ ≤ 1} ∧
       IsOpen {A : Matrix (Fin r) (Fin r) K | ∀ i j, ‖A i j‖ ≤ 1} := by
-  haveI : ProperSpace K := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace K
+  have : ProperSpace K := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace K
   have e : {A : Matrix (Fin r) (Fin r) K | ∀ i j, ‖A i j‖ ≤ 1} =
       Set.pi Set.univ fun _ : Fin r => Set.pi Set.univ fun _ : Fin r => Metric.closedBall (0 : K) 1 := by
     ext A
@@ -1464,7 +1464,7 @@ theorem uO_isCompact_isOpen (E : Type) [NontriviallyNormedField E] [StarRing E] 
   have hcl : IsClosed (Matrix.unitaryGroup (Fin r) E : Set (Matrix (Fin r) (Fin r) E)) :=
     (isClosed_eq (continuous_star.mul continuous_id) continuous_const).inter
       (isClosed_eq (continuous_id.mul continuous_star) continuous_const)
-  exact ⟨hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hc, ho.preimage continuous_subtype_val,
+  exact ⟨hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hc, ho.preimage continuous_subtypeVal,
     1, fun i j => norm_one_entry_le r E i j⟩
 
 def positiveCompactsOf {X : Type} [TopologicalSpace X] (s : Set X) (h : IsCompact s ∧ IsOpen s ∧ s.Nonempty) :
@@ -1475,22 +1475,22 @@ theorem unitBall_isCompact_isOpen (K : Type) [NontriviallyNormedField K] [IsUltr
     [LocallyCompactSpace K] :
     IsCompact (Metric.closedBall (0 : K) 1) ∧ IsOpen (Metric.closedBall (0 : K) 1) ∧
       (Metric.closedBall (0 : K) 1).Nonempty := by
-  haveI : ProperSpace K := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace K
+  have : ProperSpace K := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace K
   exact ⟨isCompact_closedBall _ _, IsUltrametricDist.isOpen_closedBall _ one_ne_zero, 0, by simp⟩
 
 theorem meas_nonempty : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (r : ℕ), Nonempty (Meas r F E) := by
   intro F E _ _ _ _ h r
-  haveI := h.ultraF; haveI := h.ultraE; haveI := h.lcF; haveI := h.lcE
-  haveI := continuousStar_of_norm_star E h.norm_star
-  letI : MeasurableSpace (GL (Fin r) F) := borel _
-  haveI : BorelSpace (GL (Fin r) F) := ⟨rfl⟩
-  letI : MeasurableSpace (Matrix.unitaryGroup (Fin r) E) := borel _
-  haveI : BorelSpace (Matrix.unitaryGroup (Fin r) E) := ⟨rfl⟩
-  letI : MeasurableSpace F := borel _
-  haveI : BorelSpace F := ⟨rfl⟩
-  letI : MeasurableSpace E := borel _
-  haveI : BorelSpace E := ⟨rfl⟩
+  have := h.ultraF; have := h.ultraE; have := h.lcF; have := h.lcE
+  have := continuousStar_of_norm_star E h.norm_star
+  let : MeasurableSpace (GL (Fin r) F) := borel _
+  have : BorelSpace (GL (Fin r) F) := ⟨rfl⟩
+  let : MeasurableSpace (Matrix.unitaryGroup (Fin r) E) := borel _
+  have : BorelSpace (Matrix.unitaryGroup (Fin r) E) := ⟨rfl⟩
+  let : MeasurableSpace F := borel _
+  have : BorelSpace F := ⟨rfl⟩
+  let : MeasurableSpace E := borel _
+  have : BorelSpace E := ⟨rfl⟩
   exact ⟨{ μG := Measure.haarMeasure (positiveCompactsOf _ (glO_isCompact_isOpen r F))
            μU := Measure.haarMeasure (positiveCompactsOf _ (uO_isCompact_isOpen r E))
            μF := Measure.addHaarMeasure (positiveCompactsOf _ (unitBall_isCompact_isOpen F))
@@ -1542,8 +1542,8 @@ theorem matchAt_unit_of_one_lt_norm :
       [Unram F E] (r : ℕ) (M : Meas (r + 1) F E) (a : Inv (r + 1) F), 1 < ‖a.2.1 0‖ →
       MatchAt M (unitG (r + 1) F) (unitU (r + 1) F E) a := by
   intro F E _ _ _ _ hU r M a ha
-  haveI := hU.ultraF
-  haveI := hU.ultraE
+  have := hU.ultraF
+  have := hU.ultraE
   have hG : orbG M (unitG (r + 1) F) (sec a) = 0 := by
     have h : ∀ g, unitG (r + 1) F (act g (sec a)) = 0 := by
       intro g

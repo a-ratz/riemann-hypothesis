@@ -140,7 +140,7 @@ theorem perp_mapFlag :
       | simp [FlagG.X, Formalism.L2.SG.Saturated.mapFlag, Submodule.map_span, ← Set.range_comp, Set.image_union]
   ext y
   rw [hX, Submodule.mem_map_equiv]
-  simp only [perpS, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+  simp only [perpS, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
   constructor
   · intro h x hx
     have h1 := h (β x) (Submodule.mem_map_of_mem hx)

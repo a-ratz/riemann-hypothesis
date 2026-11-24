@@ -150,8 +150,8 @@ theorem dual_basis : ∀ (q : ℕ) [Fact q.Prime] (g : ℕ) (S : Setup g) (r : �
     intro x _
     have : x ∈ Submodule.span ℝ (S.La : Set (Fin g → ℂ)) := by rw [hspan]; trivial
     exact h1 this
-  haveI : DiscreteTopology S.La := hdisc
-  haveI : IsZLattice ℝ S.La := ⟨hspan⟩
+  have : DiscreteTopology S.La := hdisc
+  have : IsZLattice ℝ S.La := ⟨hspan⟩
   have hrk : Module.finrank ℤ S.La = 2 * g := by
     rw [ZLattice.rank ℝ S.La]
     simp [Module.finrank_pi_fintype, Complex.finrank_real_complex]
@@ -244,8 +244,8 @@ theorem dual_basis : ∀ (q : ℕ) [Fact q.Prime] (g : ℕ) (S : Setup g) (r : �
     rintro n _ ⟨c, hc, rfl⟩
     exact ⟨fun i => (n : ℂ) * c i, fun i => okMul n _ (hc i), by rw [Finset.smul_sum]; simp [smul_smul]⟩
 
-  haveI : Module.Finite ℤ S.La := ZLattice.module_finite ℝ S.La
-  haveI : Module.Free ℤ S.La := ZLattice.module_free ℝ S.La
+  have : Module.Finite ℤ S.La := ZLattice.module_finite ℝ S.La
+  have : Module.Free ℤ S.La := ZLattice.module_free ℝ S.La
   obtain ⟨ι, _, ⟨eB⟩⟩ : ∃ (ι : Type) (_ : Fintype ι), Nonempty (Module.Basis ι ℤ S.La) :=
     ⟨_, inferInstance, ⟨Module.Free.chooseBasis ℤ S.La⟩⟩
   classical
@@ -298,7 +298,7 @@ theorem dual_basis : ∀ (q : ℕ) [Fact q.Prime] (g : ℕ) (S : Setup g) (r : �
       apply L0
       intro i
       rw [← hy, hf_sub_left, hf_sum_left, hβ' i]
-      simp only [hbs2, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [hbs2, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       ring
     conv_lhs => rw [key]
     rw [Finset.smul_sum]

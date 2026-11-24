@@ -135,7 +135,7 @@ theorem mem_of_memE (c : Coef l) {x : Qbar l} (hx : MemE c x) (h1 : ‖x‖ ≤ 
       rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
     have t2 : IsDiscreteValuationRing.addVal c.O b ≠ ⊤ := by
       rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
-    rw [← ENat.coe_toNat t1, ← ENat.coe_toNat t2]
+    rw [← ENat.natCast_toNat t1, ← ENat.natCast_toNat t2]
     exact_mod_cast h2
   obtain ⟨w, hw⟩ := IsDiscreteValuationRing.addVal_le_iff_dvd.1 hv
   have h3 : (b : Qbar l) = (L : Qbar l) * (w : Qbar l) := by rw [hw]; rfl
@@ -640,7 +640,7 @@ lemma exists_preimage {l : ℕ} (hfin : Finite {x : X // l • x = 0}) {y : X} (
     ∃ z : X, l • z = y ∧ DivAll l z := by
   obtain ⟨z0, hz0⟩ := hy 1
   rw [pow_one] at hz0
-  haveI := finite_fiber hfin y z0 hz0
+  have := finite_fiber hfin y z0 hz0
   by_contra hcon
   push_neg at hcon
   have hm : ∀ z : {z : X // l • z = y}, ∃ m : ℕ, ∀ w : X, l ^ m • w ≠ z.1 := by

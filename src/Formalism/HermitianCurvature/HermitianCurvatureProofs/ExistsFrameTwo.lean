@@ -67,7 +67,7 @@ section Closed
 
 variable {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [FiniteDimensional ℂ W]
 
-theorem closedS (S : Submodule ℂ W) : IsClosed (S : Set W) := Submodule.closed_of_finiteDimensional S
+theorem closedS (S : Submodule ℂ W) : IsClosed (S : Set W) := Submodule.isClosed_of_finiteDimensional S
 
 theorem deriv_mem (S : Submodule ℂ W) {f : ℝ → W} {f' : W} (h : HasDerivAt f f' 0) (hf : ∀ t, f t ∈ S) : f' ∈ S := by
   have h1 := h.tendsto_slope_zero
@@ -84,7 +84,7 @@ theorem pow_mem (S : Submodule ℂ W) {A : W →L[ℂ] W} (hA : ∀ v ∈ S, A v
 
 theorem exp_mem (S : Submodule ℂ W) {A : W →L[ℂ] W} (hA : ∀ v ∈ S, A v ∈ S) : ∀ v ∈ S, NormedSpace.exp A v ∈ S := by
   intro v hv
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have h := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) A
   have h2 := (ContinuousLinearMap.apply ℂ W v).hasSum h
   refine (closedS S).mem_of_tendsto h2 (Eventually.of_forall fun s => ?_)

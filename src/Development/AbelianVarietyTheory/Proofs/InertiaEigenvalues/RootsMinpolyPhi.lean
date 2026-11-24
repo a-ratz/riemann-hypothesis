@@ -96,7 +96,7 @@ theorem isIrr_comp (σ : ℂ ≃+* ℂ) {χ : G → ℂ} (h : IsIrr χ) : IsIrr 
 
 theorem coeff_zOf (χ : G → ℂ) (y : G) :
     (zOf χ).coeff y = χ 1 / (Fintype.card G : ℂ) * χ y⁻¹ := by
-  simp only [zOf, MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_single, Finsupp.coe_finsetSum, Finset.sum_apply, Finsupp.single_apply, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [zOf, MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_single, Finsupp.coe_finsetSum, Finset.sum_apply, Finsupp.single_apply, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem mapRange_zOf (σ : ℂ ≃+* ℂ) (χ : G → ℂ) :
     (zOf χ).coeff.mapRange σ (map_zero σ) = (zOf (σ ∘ χ)).coeff := by
@@ -182,10 +182,10 @@ open Formalism.CyclotomicNorms
 variable {g : ℕ} [Fact g.Prime]
 
 theorem finOrder {x : Fbar g} (hx : x ≠ 0) : IsOfFinOrder x := by
-  haveI : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
+  have : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
   have hi : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
-  haveI := IntermediateField.adjoin.finiteDimensional hi
-  haveI : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
+  have := IntermediateField.adjoin.finiteDimensional hi
+  have : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
   let y : IntermediateField.adjoin (ZMod g) {x} := ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
   have hy : y ≠ 0 := fun h => hx (congrArg Subtype.val h)
   have h1 : IsOfFinOrder (Units.mk0 y hy) := isOfFinOrder_of_finite _
@@ -221,7 +221,7 @@ theorem teich_injective (L : LabelDatum g) : Function.Injective L.teich := by
 
 theorem map_eq_pow {R : Type} [CommRing R] [IsDomain R] (s : R →* R) {x : R} (hx : IsOfFinOrder x) :
     ∃ a : ℕ, s x = x ^ a := by
-  haveI : NeZero (orderOf x) := ⟨hx.orderOf_pos.ne'⟩
+  have : NeZero (orderOf x) := ⟨hx.orderOf_pos.ne'⟩
   have h1 : s x ^ orderOf x = 1 := by rw [← map_pow, pow_orderOf_eq_one, map_one]
   obtain ⟨a, -, ha⟩ := (IsPrimitiveRoot.orderOf x).eq_pow_of_pow_eq_one h1
   exact ⟨a, ha.symm⟩
@@ -282,7 +282,7 @@ theorem mem_roots_minpoly {x y : Fbar g} :
 
 theorem nodup_minpoly (x : Fbar g) : (rootsBar (minpoly (ZMod g) x)).Nodup := by
   have hi : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
-  haveI : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
+  have : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
   exact nodup_roots (PerfectField.separable_of_irreducible (minpoly.irreducible hi)).map
 
 theorem roots_minpoly_phi (L : LabelDatum g) (τ : ℂ ≃+* ℂ) (x : Fbar g) :
@@ -450,7 +450,7 @@ theorem eSerC_map (L : LabelDatum g) (τ : ℂ ≃+* ℂ) (n : ℕ) {f f' : (ZMo
 
 theorem eSer_galois : Green → ∀ D : Formalism.BasicNotions.D7, ESerTie D → ∀ (τ : ℂ ≃+* ℂ) (k : Fin 2) (f : (ZMod (D.host.g k))[X]), IsLabel D k f → (D.ntypes.eSer k f).coeff.mapRange τ (map_zero τ) = (D.ntypes.eSer k (labAct D τ k f)).coeff := by
   intro _ D hD τ k f hf
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   obtain ⟨L, hL, he⟩ := hD k
   rw [he, he]
   apply eSerC_map L τ _ hf.1

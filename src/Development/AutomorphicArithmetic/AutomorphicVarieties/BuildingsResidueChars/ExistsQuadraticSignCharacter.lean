@@ -58,7 +58,7 @@ private theorem exists_gen (F E : Type) [Field F] [NumberField F] [Field E] [Alg
     (h : Module.finrank F E = 2) :
     ∃ (d : 𝓞 F) (t : E), d ≠ 0 ∧ t * t = algebraMap F E d ∧ (∀ c : F, algebraMap F E c ≠ t) ∧
       ∀ x : E, ∃ a b : F, x = algebraMap F E a + algebraMap F E b * t := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h⟩
   obtain ⟨δ, e, hδ, h0, h1⟩ := GlobalTheory.QuadSymbol.AlmostNorm.exists_basis_sq F E
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 F) δ
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
@@ -87,10 +87,10 @@ theorem UpperTheory.exists_quadratic_sign_character :
   intro F E Ω _ _ _ _ _ _ _ _ _ _ l _ h
   classical
   obtain ⟨d, t, hd, ht, hn, hx⟩ := exists_gen F E h
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.trans F E Ω
-  haveI : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.trans F E Ω
+  have : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
   set θ : Ω := algebraMap E Ω t with hθ
   have hθ2 : θ * θ = algebraMap F Ω d := by
     rw [hθ, ← map_mul, ht, ← IsScalarTower.algebraMap_apply]

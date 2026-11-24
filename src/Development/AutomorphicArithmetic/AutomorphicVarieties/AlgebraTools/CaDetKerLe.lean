@@ -66,9 +66,9 @@ theorem UpperTheory.V.AlgebraTools.genKer_le_ker :
       simp [hlc]
     · exact MvPolynomial.eval₂Hom_X' φ l j
   let M0 : Ideal (MvPolynomial ι P) := Ideal.map MvPolynomial.C (maximalIdeal P)
-  haveI hM0 : M0.IsPrime := UpperTheory.V.AlgebraTools.isPrime_map_C (maximalIdeal P)
+  have hM0 : M0.IsPrime := UpperTheory.V.AlgebraTools.isPrime_map_C (maximalIdeal P)
   let Q : Ideal (MvPolynomial ι P) := Ideal.comap ψ (maximalIdeal D)
-  haveI : Q.IsPrime := Ideal.comap_isPrime ψ (maximalIdeal D)
+  have : Q.IsPrime := Ideal.comap_isPrime ψ (maximalIdeal D)
   have hMQ : M0 ≤ Q := by
     refine Ideal.map_le_iff_le_comap.mpr fun a ha => ?_
     show ψ (MvPolynomial.C a) ∈ maximalIdeal D

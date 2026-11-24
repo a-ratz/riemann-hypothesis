@@ -95,9 +95,9 @@ theorem box_eq_preimage (ϖ : kˣ) (C : Matrix A D k) (e : A → ℕ) :
     box ϖ C e = (fun X : Matrix A D k => Matrix.of fun i j => (((ϖ ^ e i)⁻¹ : kˣ) : k) * (X i j - C i j)) ⁻¹'
       {Y | ∀ i j, Y i j ∈ 𝒪[k]} := by
   ext X
-  simp only [box, Set.mem_setOf_eq, Set.mem_preimage, of_apply, Valuation.mem_integer_iff, map_mul]
+  simp only [box, Set.mem_ofPred_eq, Set.mem_preimage, of_apply, Valuation.mem_integer_iff, map_mul]
   refine forall₂_congr fun i j => ?_
-  have h0 : 0 < valuation k ((ϖ ^ e i : kˣ) : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k ((ϖ ^ e i : kˣ) : k) := pos_iff_ne_zero.2 (by simp)
   rw [Units.val_inv_eq_inv_val, map_inv₀, inv_mul_le_iff₀ h0, mul_one]
 
 

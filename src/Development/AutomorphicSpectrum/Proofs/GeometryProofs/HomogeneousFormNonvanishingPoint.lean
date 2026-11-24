@@ -150,7 +150,7 @@ theorem multiHomog_rename_inl {g : MRing ι} {d : K → ℕ} (hg : IsMultiHomog 
     rw [Sum.elim_inl, ← hg m' hm' k]
     exact Finset.sum_congr rfl fun i _ => Finsupp.mapDomain_apply_of_injective joinInl_inj m' ⟨k, i⟩
   | inr k =>
-    refine Finset.sum_eq_zero fun i _ => Finsupp.mapDomain_notin_range _ _ ?_
+    refine Finset.sum_eq_zero fun i _ => Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨q, hq⟩
     exact Sum.inl_ne_inr (congrArg Sigma.fst hq)
 

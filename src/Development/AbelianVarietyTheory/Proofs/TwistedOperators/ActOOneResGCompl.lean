@@ -116,12 +116,12 @@ theorem actO_one_resG_compl {D : D7} {S T : HSp D} {e : AE D} (he2 : e * e = e) 
 
 theorem isSBHalf_halfInd {D : D7} {m n : ℕ} (e : AE D) (Λ : AddSubgroup (Mx D m n)) : IsSBHalf e Λ (halfInd e Λ) := by
   refine ⟨fun x hx => ?_, 1, one_pos, fun u hu hu' x => ?_, fun x hx => ?_⟩
-  · by_contra h; exact hx (if_neg fun h' => h h'.2)
+  · by_contra h; exact hx (ite_eq_right fun h' => h h'.2)
   · rw [one_smul]
     have h1 : IsHalf e (x + u) ↔ IsHalf e x := forall₂_congr fun i j => by
       rw [Matrix.add_apply, mul_add, hu' i j, add_left_inj]
     exact halfInd_congr (and_congr (AddSubgroup.add_mem_cancel_right _ hu) h1)
-  · rw [one_smul]; by_contra h; exact hx (if_neg fun h' => h h'.1)
+  · rw [one_smul]; by_contra h; exact hx (ite_eq_right fun h' => h h'.1)
 
 end GlobalTheory.TopLevelInv
 

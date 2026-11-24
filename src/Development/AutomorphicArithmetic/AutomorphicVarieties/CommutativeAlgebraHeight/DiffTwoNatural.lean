@@ -156,11 +156,11 @@ private theorem scale_coeff {A G : Type} [CommRing A] (P : MvPolynomial G A) (k 
     by_cases hmd : m = d
     · subst hmd
       by_cases hk : k = m.degree
-      · rw [if_pos hk, if_pos hk.symm]
-      · rw [if_neg hk, if_neg fun h => hk h.symm, MvPolynomial.coeff_zero, Finsupp.zero_apply]
+      · rw [ite_eq_left hk, ite_eq_left hk.symm]
+      · rw [ite_eq_right hk, ite_eq_right fun h => hk h.symm, MvPolynomial.coeff_zero, Finsupp.zero_apply]
     · classical
       have hz : AddMonoidAlgebra.coeff (MvPolynomial.monomial m c) d = 0 := by
-        rw [MvPolynomial.coeff_monomial, if_neg hmd]
+        rw [MvPolynomial.coeff_monomial, ite_eq_right hmd]
       split_ifs <;> simp only [hz, MvPolynomial.coeff_zero, Finsupp.zero_apply]
   | add p q hp hq =>
     rw [map_add (f := _), Polynomial.coeff_add, MvPolynomial.coeff_add, hp, hq, MvPolynomial.coeff_add]
@@ -172,9 +172,9 @@ private theorem homog_of_scale {A G : Type} [CommRing A] (P : MvPolynomial G A) 
   intro d hd
   have key : d.degree = n := by
     have e := scale_coeff P d.degree d
-    rw [h, mul_comm, Polynomial.coeff_C_mul_X_pow, if_pos (rfl : d.degree = d.degree)] at e
+    rw [h, mul_comm, Polynomial.coeff_C_mul_X_pow, ite_eq_left (rfl : d.degree = d.degree)] at e
     by_contra hne
-    rw [if_neg hne, MvPolynomial.coeff_zero] at e
+    rw [ite_eq_right hne, MvPolynomial.coeff_zero] at e
     exact hd e.symm
   show (Finsupp.weight (fun _ => 1)) d = n
   rw [← Finsupp.degree_eq_weight_one]
@@ -203,7 +203,7 @@ private theorem ex_rep (D : GDet n A G) : ∃ P, PRep D P := by
   have hy : MonoidAlgebra.mapRingHom G (f : MvPolynomial G A →+* S) (el MvPolynomial.X) = y := by
     apply MonoidAlgebra.ext
     ext g
-    rw [MonoidAlgebra.mapRingHom_apply, el_coeff]
+    rw [MonoidAlgebra.coeff_mapRingHom, el_coeff]
     simp [f]
   have := D.nat (MvPolynomial G A) S f (el MvPolynomial.X)
   rw [hy] at this
@@ -225,7 +225,7 @@ omit [Fintype G] [DecidableEq G] in
 private theorem PRep.map {D : GDet n A G} {P : MvPolynomial G A} (h : PRep D P) (f : A →+* A') :
     PRep (D.map f) (MvPolynomial.map f P) := by
   intro S _ _ y
-  letI : Algebra A S := ((algebraMap A' S).comp f).toAlgebra
+  let : Algebra A S := ((algebraMap A' S).comp f).toAlgebra
   show D.D S y = _
   rw [h S y, MvPolynomial.aeval_def, MvPolynomial.aeval_def, MvPolynomial.eval₂_map]
   rfl
@@ -307,7 +307,7 @@ private theorem PRep.d2 {D : GDet n A G} {P : MvPolynomial G A} (h : PRep D P) :
     rw [Finset.sum_eq_single (a⁻¹ * g)]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hab
       exact hb (eq_inv_mul_of_mul_eq hab)
     · intro hn
@@ -348,7 +348,7 @@ private theorem pol_coeff (a : Mn G n → A) (s : Mn G n) : AddMonoidAlgebra.coe
   rw [MvPolynomial.coeff_sum, Finset.sum_eq_single s]
   · simp
   · intro t _ hts
-    rw [MvPolynomial.coeff_monomial, if_neg]
+    rw [MvPolynomial.coeff_monomial, ite_eq_right]
     intro h
     exact hts (Subtype.ext h)
   · intro hs
@@ -391,7 +391,7 @@ private theorem points (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing
         ∃! f : R →ₐ[O] R', ∀ s, f (a s) = a' s := by
   classical
   choose a0 ha0 using fun s => IsLocalRing.residue_surjective (abar s)
-  haveI : IsCO O (MvPowerSeries (Mn G n) O) := co_mvps O O (Mn G n)
+  have : IsCO O (MvPowerSeries (Mn G n) O) := co_mvps O O (Mn G n)
   let a : Mn G n → MvPowerSeries (Mn G n) O := fun s => MvPowerSeries.C (a0 s) + MvPowerSeries.X s
   have hres : ∀ s, res O (MvPowerSeries (Mn G n) O) (a s) = abar s := by
     intro s
@@ -415,10 +415,10 @@ private theorem points (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing
     exact (res_eq_zero_iff O _ x).1 (this x hx)
   have hJt : defI (pol a) ≠ ⊤ := fun h =>
     (IsLocalRing.maximalIdeal.isMaximal (MvPowerSeries (Mn G n) O)).ne_top (top_le_iff.1 (h ▸ hJ))
-  haveI : Nontrivial (MvPowerSeries (Mn G n) O ⧸ defI (pol a)) :=
+  have : Nontrivial (MvPowerSeries (Mn G n) O ⧸ defI (pol a)) :=
     ⟨⟨0, 1, fun h => hJt ((Ideal.eq_top_iff_one _).2
       ((Ideal.Quotient.eq_zero_iff_mem (a := (1 : MvPowerSeries (Mn G n) O))).1 (by rw [map_one]; exact h.symm)))⟩⟩
-  haveI : IsCO O (MvPowerSeries (Mn G n) O ⧸ defI (pol a)) :=
+  have : IsCO O (MvPowerSeries (Mn G n) O ⧸ defI (pol a)) :=
     co_quot O _ _ (Ideal.Quotient.mkₐ O (defI (pol a))) (Ideal.Quotient.mkₐ_surjective O _)
   have hq := (defI_iff (pol a) (Ideal.Quotient.mkₐ O (defI (pol a)) :
       MvPowerSeries (Mn G n) O →+* MvPowerSeries (Mn G n) O ⧸ defI (pol a))).1
@@ -463,7 +463,7 @@ theorem UpperTheory.V.CA.u_fin :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] {n : ℕ} {G : Type} [Group G] [Finite G] [TopologicalSpace G] [DiscreteTopology G] (Dbar : GDet n (ResidueField O) G), ∃ (R : Type) (_ : CommRing R) (_ : Algebra O R) (_ : IsCO O R) (D : GDet n R G), IsUnivDet O Dbar D := by
   intro O _ _ _ _ _ n G _ _ _ _ Dbar
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   obtain ⟨Pbar, hPbar⟩ := ex_rep Dbar
   have hhom := hPbar.homog
   have hpolbar : (pol fun s : Mn G n => AddMonoidAlgebra.coeff Pbar s.1) = Pbar := pol_eq hhom

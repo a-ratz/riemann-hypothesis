@@ -95,8 +95,8 @@ theorem iSup_jointEigenspace_eq_top {E I : Type} [AddCommGroup E] [Module ℂ E]
         have := hpos x h
         rw [hx] at this
         simp at this }
-  letI : NormedAddCommGroup E := InnerProductSpace.Core.toNormedAddCommGroup (cd := core)
-  letI : InnerProductSpace ℂ E := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup E := InnerProductSpace.Core.toNormedAddCommGroup (cd := core)
+  let : InnerProductSpace ℂ E := InnerProductSpace.ofCore core.toCore
   have hin : ∀ x y : E, inner ℂ x y = ip x y := fun _ _ => rfl
   have h := GlobalTheory.normalFamily_orthogonal_decomposition op (fun i j => hc i j) (fun i => by
     obtain ⟨i', hi'⟩ := hadj i
@@ -129,7 +129,7 @@ theorem multT_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
     refine Submodule.eq_top_iff'.2 fun u => ?_
     have h0 : PiTensorProduct.lift.symm (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ)) = 0 := by
       refine MultilinearMap.ext fun v => ?_
-      rw [MultilinearMap.zero_apply]
+      rw [zero_apply]
       have hv : ((v τ : s.M.sm τ) : s.M.H τ) = 0 := (Submodule.eq_bot_iff _).1 hτ _ (v τ).2
       exact MultilinearMap.map_coord_zero (PiTensorProduct.lift.symm (u : SmT s.M →ₗ[ℂ] (GA D s.V → ℂ))) τ
         (Subtype.ext hv)
@@ -140,7 +140,7 @@ theorem multT_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
     exact zero_mem _
   have hschur := GlobalTheory.MultFinite.schurMult (θ := c.θ) (M := s.M) (J := levS s.V s.β s.L)
     (χ := Lev.levChi s.V s.β s.L) hP s.ν s.fd
-  haveI := hs.haar
+  have := hs.haar
   have hright : s.ν.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds s.V s.ν hs.haar
   obtain ⟨hlin, hpos⟩ := GlobalTheory.SchurConst.ipM_posDef D c.θ s.V s.par s.M (levS s.V s.β s.L)
     (Lev.levChi s.V s.β s.L) s.ν s.fd hc.inf hs.haar hs.fund hschur hsm
@@ -153,7 +153,7 @@ theorem multT_span_partFull : GlobalTheory.Published.CuspRapidDecay → ∀ D : 
     (LinearEquiv.injective _) (Mult c.θ s.M (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L))
   haveI : FiniteDimensional ℂ ((Mult c.θ s.M (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L)).map
       (PiTensorProduct.lift : MMap s.M ≃ₗ[ℂ] _).toLinearMap) := hfd c hc j hj s hs
-  haveI : FiniteDimensional ℂ (Mult c.θ s.M (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L)) :=
+  have : FiniteDimensional ℂ (Mult c.θ s.M (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L)) :=
     LinearEquiv.finiteDimensional φ.symm
   let I := {t : HeightOneSpectrum (𝓞 D.host.E) × List ℤ × Finset (GA D s.V) //
     Hecke₂ s.V (levS s.V s.β s.L) (Lev.levChi s.V s.β s.L) c.S t.1 t.2.1 t.2.2}

@@ -60,7 +60,7 @@ theorem exists_box_superset_of_isCompact (k : Type) [Field k] [ValuativeRel k] [
     IsCompact K → ∀ r : kˣ, ∃ R : kˣ, valuation k (r : k) ≤ valuation k (R : k) ∧ K ⊆ box n R := by
   intro hK r
   let ι := {s : kˣ // valuation k (r : k) ≤ valuation k (s : k)}
-  haveI : Nonempty ι := ⟨⟨r, le_rfl⟩⟩
+  have : Nonempty ι := ⟨⟨r, le_rfl⟩⟩
   have hcov : K ⊆ ⋃ s : ι, box n (s : kˣ) := by
     intro x _
     rw [Set.mem_iUnion]
@@ -74,7 +74,7 @@ theorem exists_box_superset_of_isCompact (k : Type) [Field k] [ValuativeRel k] [
         have hx0 : x i0 ≠ 0 := by
           intro h0
           rw [h0, map_zero] at hle
-          exact not_lt_zero' hle
+          exact not_lt_zero hle
         refine ⟨⟨Units.mk0 (x i0) hx0, by simpa using hle.le⟩, fun i _ => ?_⟩
         simpa [cball] using hi0 i (Finset.mem_univ i)
     · refine ⟨⟨r, le_rfl⟩, fun i _ => (hn ⟨i⟩).elim⟩

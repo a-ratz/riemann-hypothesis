@@ -124,7 +124,7 @@ theorem phi_single (hv : ∀ k ∈ K, σ k v = v) (x : G) (c : ℂ) :
     phi K σ v (Finsupp.single (x : G ⧸ K) c) = c • σ x v := by
   rw [phi, Finsupp.linearCombination_single]
   obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul K x
-  rw [hk, map_mul, ContinuousLinearMap.mul_apply, hv k k.2]
+  rw [hk, map_mul, mul_apply_eq_comp, hv k k.2]
 
 theorem lam_single (g x : G) (c : ℂ) :
     lam K g (Finsupp.single (x : G ⧸ K) c) = Finsupp.single ((g * x : G) : G ⧸ K) c := by
@@ -138,7 +138,7 @@ theorem phi_lam (hv : ∀ k ∈ K, σ k v = v) (g : G) (f : (G ⧸ K) →₀ ℂ
   | add f₁ f₂ h₁ h₂ => simp only [map_add (f := _), h₁, h₂]
   | single y c =>
     obtain ⟨x, rfl⟩ := QuotientGroup.mk_surjective y
-    rw [lam_single, phi_single hv, phi_single hv, map_mul, ContinuousLinearMap.mul_apply,
+    rw [lam_single, phi_single hv, phi_single hv, map_mul, mul_apply_eq_comp,
       ContinuousLinearMap.map_smul]
 
 theorem lam_dlt {k : G} (hk : k ∈ K) : lam K k (dlt K) = dlt K := by
@@ -191,7 +191,7 @@ theorem avg_sigma {E : H →L[ℂ] H} (hA : IsAvg σ K E) (hv : ∀ k ∈ K, σ 
     obtain ⟨k, rfl⟩ := hy'
     show E (phi K σ v (Finsupp.single (((k : G) * g : G) : G ⧸ K) 1)) = E (σ g v)
     rw [phi_single hv, one_smul, map_mul,
-      ContinuousLinearMap.mul_apply, hA.2.2 _ _ k.2]
+      mul_apply_eq_comp, hA.2.2 _ _ k.2]
   have hfix := phi_fixed hv (((S.card : ℂ)⁻¹ • T : Hk K))
   rw [← hA.2.1 _ hfix, Subalgebra.coe_smul, LinearMap.smul_apply, hT]
 
@@ -207,10 +207,10 @@ theorem word_apply {E : H →L[ℂ] H} (hA : IsAvg σ K E) (b : G → Hk K)
   induction l with
   | nil =>
     simp only [List.map_nil, word_nil, List.reverse_nil, List.prod_nil, OneMemClass.coe_one,
-      Module.End.one_apply, dlt, phi_single hv, one_smul, map_one, ContinuousLinearMap.one_apply]
+      Module.End.one_apply, dlt, phi_single hv, one_smul, map_one, one_apply_eq_self]
     exact hA.2.1 v hv
   | cons g l ih =>
-    simp only [List.map_cons, word_cons, ContinuousLinearMap.mul_apply]
+    simp only [List.map_cons, word_cons, mul_apply_eq_comp]
     rw [ih, hb _ (phi_fixed hv _) g, phi_phi hv]
     simp only [List.reverse_cons, List.prod_append, List.prod_cons, List.prod_nil, mul_one,
       MulMemClass.coe_mul, Module.End.mul_apply]
@@ -263,7 +263,7 @@ theorem stTransfer : StTransfer := by
           simp only [map_zsmul]
       _ = 0 := by rw [h0, map_zero]
   ext v
-  rw [ContinuousLinearMap.zero_apply, ← hpoly, ContinuousLinearMap.mul_apply]
+  rw [zero_apply, ← hpoly, mul_apply_eq_comp]
   exact key _ (hA.1 v)
 
 end GlobalTheory.CompanionTheory.HeckeTransfer

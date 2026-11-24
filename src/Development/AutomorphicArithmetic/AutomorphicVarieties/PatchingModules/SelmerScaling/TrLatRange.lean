@@ -183,7 +183,7 @@ private theorem trLat_pow {A B R : Type} [CommRing A] [CommRing B] [CommRing R] 
     (φ : B →+* R) (f : B →+* A) (J : Ideal R) (N : ℕ) (hJ : J ^ N = ⊥)
     (h1 : Function.Surjective f) (h2 : ∀ b, φ b - algebraMap A R (f b) ∈ J) (M : Subalgebra A R) (hM : ∀ b, φ b ∈ M) (j : ℕ) :
     ∀ b ∈ maximalIdeal B ^ (j + N), ∃ y ∈ M, φ b = t ^ j • y := by
-  haveI : IsLocalHom f := IsLocalHom.of_surjective f h1
+  have : IsLocalHom f := IsLocalHom.of_surjective f h1
   let φ' : B →+* M := φ.codRestrict M hM
   let J' : Ideal M := J.comap M.val.toRingHom
   have hJ' : J' ^ N = ⊥ := by
@@ -227,8 +227,8 @@ theorem UpperTheory.V.Pa.trLat :
   intro l _ S R _ _ _ _ e θ T
   classical
   obtain ⟨N, hN⟩ := T.nil
-  haveI : Nontrivial R := e.toRingHom.domain_nontrivial
-  haveI : IsNoetherianRing S.B := inferInstance
+  have : Nontrivial R := e.toRingHom.domain_nontrivial
+  have : IsNoetherianRing S.B := inferInstance
   let φ : S.B →+* R := θ.comp (algebraMap S.B S.U.AA)
   have hφ : ∀ b, φ b = θ (algebraMap S.Bh S.U.AA (algebraMap S.B S.Bh b)) := fun b => by
     rw [← IsScalarTower.algebraMap_apply]; rfl

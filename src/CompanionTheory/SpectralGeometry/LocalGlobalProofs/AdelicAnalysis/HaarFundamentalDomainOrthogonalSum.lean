@@ -303,41 +303,41 @@ theorem ratTup_adele_injective {F E : Type} [Field F] [NumberField F] [Field E] 
 theorem theta_stage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ t : F, t ≠ 0 → ∀ (n : ℕ) (T : Matrix (Fin n) (Fin n) E) (μ : Measure (HA (AF F) σ (blockOne (algebraMap F E t) J))) 𝓕, IsHaarH F E σ (M + 1) _ μ → IsFDH F E σ (M + 1) _ μ 𝓕 → ∀ (μ₁ : Measure (HA (AF F) σ J)) 𝓕₁, IsHaarH F E σ M J μ₁ → IsFDH F E σ M J μ₁ 𝓕₁ → ∀ (Φ : (Fin (n + 1) → Fin (M + 1) → AF F ⊗[F] E) → ℝ≥0∞) (Ψ : (Fin 1 → Fin (M + 1) → AF F ⊗[F] E) → ℝ≥0∞), Measurable Φ → Measurable Ψ → (∀ h : HA (AF F) σ (blockOne (algebraMap F E t) J), Ψ (actW (AF F) σ _ h (fun _ => Fin.cons 1 (fun _ => 0))) = ∫⁻ X, Φ (actW (AF F) σ _ h (consTup X)) ∂(thetaMeas σ J μ₁ 𝓕₁ {X | gramE σ J X = T})) → ∫⁻ X, Φ X ∂(thetaMeas σ _ μ 𝓕 {X | gramE σ (blockOne (algebraMap F E t) J) X = blockOne (algebraMap F E t) T}) = ∫⁻ y, Ψ y ∂(thetaMeas σ _ μ 𝓕 {y : Fin 1 → Fin (M + 1) → E | gramE σ (blockOne (algebraMap F E t) J) y = fun _ _ => algebraMap F E t}) := by
   intro F E _ _ _ _ _ σ hσ M J hJ t ht n T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ Φ Ψ hΦ hΨ hyp
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   have ht' : algebraMap F E t ≠ 0 := by simpa using ht
   obtain ⟨b1, b2, -, -⟩ := BlockAlg.block_alg F E σ hσ M J t
   have hJb : IsHermND σ (blockOne (algebraMap F E t) J) :=
     ⟨b2 hJ.1, by rw [b1]; exact mul_ne_zero ht' hJ.2⟩
   obtain ⟨tg, lc, sc, t2, bs, act⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ (M + 1) _ hJb (AF F)
   obtain ⟨tg₁, lc₁, sc₁, t2₁, bs₁, act₁⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
-  haveI := tg
-  haveI := lc
-  haveI := sc
-  haveI := t2
-  haveI := bs
-  haveI := tg₁
-  haveI := lc₁
-  haveI := sc₁
-  haveI := t2₁
-  haveI := bs₁
+  have := tg
+  have := lc
+  have := sc
+  have := t2
+  have := bs
+  have := tg₁
+  have := lc₁
+  have := sc₁
+  have := t2₁
+  have := bs₁
   obtain ⟨-, -, -, -, -, -, -, hB, -, -⟩ := TopK.topTens_props F E σ hσ (AF F)
-  haveI := hB (n + 1) (M + 1)
-  haveI := hB 1 (M + 1)
-  haveI := hB n M
-  haveI := hB n (M + 1)
-  haveI : μ.IsHaarMeasure := hμ
-  haveI : μ₁.IsHaarMeasure := hμ₁
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
-  haveI hc : Countable (HFinIn (AF F) σ (blockOne (algebraMap F E t) J)) :=
+  have := hB (n + 1) (M + 1)
+  have := hB 1 (M + 1)
+  have := hB n M
+  have := hB n (M + 1)
+  have : μ.IsHaarMeasure := hμ
+  have : μ₁.IsHaarMeasure := hμ₁
+  have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
+  have hc : Countable (HFinIn (AF F) σ (blockOne (algebraMap F E t) J)) :=
     (rational_countable_discrete F E σ hσ (M + 1) _ hJb).1
-  haveI hc₁ : Countable (HFinIn (AF F) σ J) := (rational_countable_discrete F E σ hσ M J hJ).1
+  have hc₁ : Countable (HFinIn (AF F) σ J) := (rational_countable_discrete F E σ hσ M J hJ).1
   let Γ : Subgroup (HA (AF F) σ (blockOne (algebraMap F E t) J)) :=
     HFinIn (AF F) σ (blockOne (algebraMap F E t) J)
   let Γ₁ : Subgroup (HA (AF F) σ J) := HFinIn (AF F) σ J
-  haveI hc' : Countable Γ := hc
-  haveI hc₁' : Countable Γ₁ := hc₁
+  have hc' : Countable Γ := hc
+  have hc₁' : Countable Γ₁ := hc₁
   have hfin : μ₁ 𝓕₁ < ⊤ := ((finVol_unitaryGroup F E σ hσ M J hJ).2 μ₁ hμ₁).2 𝓕₁ h𝓕₁
   obtain ⟨ι, hιc, -, hιrange, hιF, hιcons⟩ :=
     StabFirst.stab_first F E σ hσ M J hJ t ht (AF F)

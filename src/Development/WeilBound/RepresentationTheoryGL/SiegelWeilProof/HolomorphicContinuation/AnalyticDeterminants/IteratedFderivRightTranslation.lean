@@ -90,9 +90,9 @@ theorem iterated_fderiv_right_translation {N : ℕ} (F : M2 n → ℂ) (U : Set 
   refine (congrArg (fun L => L (x * W 0)) h.fderiv).trans ?_
   have hs : ∀ L : Fin N → (M2 n →L[ℂ] ℂ), (∀ i, L i (x * W 0) = 0) → (∑ i, L i) (x * W 0) = 0 := by
     intro L hL
-    rw [ContinuousLinearMap.sum_apply]
+    rw [sum_apply]
     exact Finset.sum_eq_zero fun i _ => hL i
-  rw [ContinuousLinearMap.add_apply, hs _ (fun i => by rw [ContinuousLinearMap.comp_apply, hz, map_zero]), add_zero,
+  rw [add_apply, hs _ (fun i => by rw [ContinuousLinearMap.comp_apply, hz, map_zero]), add_zero,
     ContinuousLinearMap.comp_apply, ContinuousMultilinearMap.apply_apply, iteratedFDeriv_succ_apply_left]
   rfl
 

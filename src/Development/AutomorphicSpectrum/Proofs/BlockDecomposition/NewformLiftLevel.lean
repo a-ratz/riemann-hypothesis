@@ -589,7 +589,7 @@ theorem form_ne (hf : IsForm k N χ f a) (h1 : a 1 = 1) : ∃ z, (f : UpperHalfP
       Complex.exp (2 * Real.pi * Complex.I * n * ((⟨y * Complex.I, by simpa using hy⟩ : UpperHalfPlane) : ℂ)) =
         ((Real.exp (-2 * Real.pi * y) : ℝ) : ℂ) ^ n := by
     intro y hy n
-    rw [Complex.ofReal_exp, ← Complex.exp_nat_mul]
+    rw [Complex.ofReal_exp, ← Complex.exp_natCast_mul]
     congr 1
     push_cast
     linear_combination (2 * Real.pi * y * n) * Complex.I_sq

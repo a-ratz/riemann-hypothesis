@@ -130,8 +130,8 @@ theorem exists_action (L : Mat p q → (Fin p → Fin q → ℂ)) (hL : Continuo
 theorem haar_polar : ∀ (p q : ℕ) (m : Measure (UpqT p q)), m.IsHaarMeasure → ∃ (c : ℝ) (mK : Measure (UpqT p q)), 0 < c ∧ IsProbabilityMeasure mK ∧ mK (Kc p q)ᶜ = 0 ∧ (∀ k ∈ Kc p q, Measure.map (fun x => k * x) mK = mK) ∧ ∀ f : UpqT p q → ENNReal, Measurable f → ∫⁻ g, f g ∂m = ENNReal.ofReal c * ∫⁻ B : Fin p → Fin q → ℂ, (∫⁻ k, f (k * eP B) ∂mK) * ENNReal.ofReal (polJ (pY B)) := by
   intro p q m hm
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc p q
-  haveI := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure p q m hm
-  haveI := isInvInvariant_of_right m
+  have := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure p q m hm
+  have := isInvInvariant_of_right m
   obtain ⟨mK, hprob, hK0, hleft, hright⟩ :=
     GlobalTheory.exists_biinvariant_probability_on_compact_subgroup (UpqT p q) (Ksg p q) isCompact_Kc
   obtain ⟨L, hLc, hL⟩ := GlobalTheory.PolarLogCont.exists_continuousOn_polar_log p q
@@ -142,7 +142,7 @@ theorem haar_polar : ∀ (p q : ℕ) (m : Measure (UpqT p q)), m.IsHaarMeasure �
   have hdet : ∀ B : Fin p → Fin q → ℂ, LinearMap.det (sP (pY B)) = polJ (pY B) :=
     fun B => det_sinhc_eq_polarJacobian p q _ (SinhcPres.sAd_pY p q B)
   have hem : Measurable (eP : (Fin p → Fin q → ℂ) → UpqT p q) := continuous_eP.measurable
-  haveI : IsLocallyFiniteMeasure
+  have : IsLocallyFiniteMeasure
       ((volume : Measure (Fin p → Fin q → ℂ)).withDensity fun B => ENNReal.ofReal (polJ (pY B))) :=
     IsLocallyFiniteMeasure.withDensity_ofReal hJc
   obtain ⟨c, hc, hf⟩ := GlobalTheory.Twist.lintegral_haar_eq_transversal (UpqT p q) (Fin p → Fin q → ℂ) m mK
@@ -150,9 +150,9 @@ theorem haar_polar : ∀ (p q : ℕ) (m : Measure (UpqT p q)), m.IsHaarMeasure �
     (by
       intro h0
       rw [withDensity_eq_zero_iff hJm.aemeasurable] at h0
-      haveI : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-      haveI : (volume : Measure (Fin p → Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-      haveI : (ae (volume : Measure (Fin p → Fin q → ℂ))).NeBot :=
+      have : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+      have : (volume : Measure (Fin p → Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+      have : (ae (volume : Measure (Fin p → Fin q → ℂ))).NeBot :=
         ae_neBot.2 fun h => (isOpen_univ.measure_ne_zero (volume : Measure (Fin p → Fin q → ℂ))
           Set.univ_nonempty) (by rw [h]; rfl)
       obtain ⟨B, hB⟩ := h0.exists

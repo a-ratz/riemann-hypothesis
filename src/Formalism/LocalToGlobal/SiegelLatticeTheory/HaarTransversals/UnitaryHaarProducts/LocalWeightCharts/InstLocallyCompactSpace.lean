@@ -147,7 +147,7 @@ theorem hmeas_haar (U : Set (Mx k r)) (h : ClSub U) : IsHaarOn U (hmeas U h) := 
   refine ⟨sigma_of_compact _ (hmeas_compact U h), ?_, ?_, ?_⟩
   · intro h0
     have h1 := congrArg (fun μ : Measure (Mt k r) => μ Set.univ) h0
-    simp only [hmeas, Measure.map_apply hmeas' MeasurableSet.univ, Measure.coe_zero,
+    simp only [hmeas, Measure.map_apply hmeas' MeasurableSet.univ, FunLike.coe_zero,
       Pi.zero_apply] at h1
     rw [Set.preimage_univ] at h1
     exact (NeZero.ne (Measure.haar : Measure (Grp U h))) (Measure.measure_univ_eq_zero.mp h1)
@@ -225,7 +225,7 @@ theorem haar_unique (U : Set (Mx k r)) (h : ClSub U) (μ : Measure (Mt k r)) (h�
       have hlt := measure_spanningSets_lt_top ν i
       have hS : ν (spanningSets ν i) = (c • (Measure.haar : Measure (Grp U h))) (spanningSets ν i) :=
         congrArg (fun m : Measure (Grp U h) => m (spanningSets ν i)) heq
-      rw [hS, Measure.smul_apply, smul_eq_mul, htop] at hlt
+      rw [hS, smul_apply, smul_eq_mul, htop] at hlt
       by_contra hne
       rw [ENNReal.top_mul hne] at hlt
       exact lt_irrefl _ hlt
@@ -251,9 +251,9 @@ theorem hpk_row (i m : Fin (2 * r + k + 1)) :
 theorem hpk_mul_apply (A : Mx k r) (i j : Fin (2 * r + k + 1)) :
     (Hpk k r * A) i j = sgn k r i * A (tau k r i) j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (tau k r i)]
-  · rw [hpk_row, if_pos rfl]
+  · rw [hpk_row, ite_eq_left rfl]
   · intro m _ hm
-    rw [hpk_row, if_neg hm, zero_mul]
+    rw [hpk_row, ite_eq_right hm, zero_mul]
   · intro h
     exact absurd (Finset.mem_univ _) h
 
@@ -276,8 +276,8 @@ theorem hpk_sq : Hpk k r * Hpk k r = 1 := by
   ext i j
   rw [hpk_mul_apply, hpk_row, tau_tau, sgn_tau, Matrix.one_apply]
   by_cases h : j = i
-  · rw [if_pos h, if_pos h.symm, sgn_mul_self]
-  · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm, sgn_mul_self]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), mul_zero]
 
 theorem isUnit_of_uh {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : IsUnit g.det := by
   apply Matrix.isUnit_det_of_left_inverse (B := Hpk k r * gᴴ * Hpk k r)

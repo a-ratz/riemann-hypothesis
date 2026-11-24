@@ -50,17 +50,17 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem cls_onto {Ω : Type} [Field Ω] [inst : Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (N : ℕ) [NeZero N] :
     Function.Surjective (Chr.cls ℚ Ω N) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   obtain rfl : inst = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   exact (Chr.clsOnto Ω N).1
 
 private theorem red_chi {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime]
     {O k : Type} [CommRing O] [Algebra ℤ_[l] O] [Field k] [CharP k l] (red : O →+* k) (g : G ℚ Ω)
     (h : ∀ t : Ω, t ^ l = 1 → g t = t) : red (chiO ℚ Ω l O g : O) = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have hpow : ∀ t : Ω, t ^ l ^ 1 = 1 → t ^ (1 : ZMod (l ^ 1)).val = t := by
     intro t ht
     rw [ZMod.val_one_eq_one_mod, ← pow_eq_pow_mod _ ht, pow_one]
@@ -108,7 +108,7 @@ private theorem xd_inv {l d : ℕ} {R : Type} [CommRing R] {f n : ℕ} {φ : Dir
 private theorem xd_map {l d : ℕ} {R S : Type} [CommRing R] [CommRing S] (j : R →+* S) (hj : Function.Injective j) {f n : ℕ}
     {φ : DirichletCharacter R f} {ξ : DirichletCharacter R (2 ^ n)} (h : XData l d φ ξ) :
     XData l d (φ.ringHomComp j) (ξ.ringHomComp j) := by
-  haveI : NeZero f := ⟨h.f_odd.pos.ne'⟩
+  have : NeZero f := ⟨h.f_odd.pos.ne'⟩
   refine ⟨h.d_pos, h.four, h.f_odd, ?_, ?_, ?_, h.big, ?_⟩
   · rw [DirichletCharacter.isPrimitive_def, (Bern.b_condmap j hj φ).1]; exact h.prim
   · rw [orderOf_dvd_iff_pow_eq_one, MulChar.ringHomComp_pow, orderOf_dvd_iff_pow_eq_one.1 h.ord, MulChar.ringHomComp_one]
@@ -191,7 +191,7 @@ private theorem xd_gal {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
     refine Nat.Coprime.mul_right ?_ ?_
     · rw [Nat.Coprime, ha1.gcd_eq]; simp
     · rw [Nat.Coprime, ha2.gcd_eq]; exact ZMod.val_coe_unit_coprime b
-  haveI : NeZero (l * f * 2 ^ n) := ⟨mul_ne_zero hodd.pos.ne' (by positivity)⟩
+  have : NeZero (l * f * 2 ^ n) := ⟨mul_ne_zero hodd.pos.ne' (by positivity)⟩
   obtain ⟨g, hg⟩ := cls_onto (Ω := Ω) (l * f * 2 ^ n) (ZMod.unitOfCoprime a hc)
   refine ⟨g, fun t ht => ?_, ?_⟩
   · have hM : t ^ (l * f * 2 ^ n) = 1 := by rw [mul_assoc, pow_mul, ht, one_pow]

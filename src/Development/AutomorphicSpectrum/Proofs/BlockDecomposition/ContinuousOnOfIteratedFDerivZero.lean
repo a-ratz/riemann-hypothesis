@@ -198,7 +198,7 @@ theorem contDiffOn_integral {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V
 
 theorem intSmooth : PositivityTheory.RgBcC.VC.IntSmooth := by
   intro n X _ _ _ _ ν _ V _ _ _ F h1 h2 h3
-  haveI : CompleteSpace V := FiniteDimensional.complete ℂ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
   have hU : IsOpen (PositivityTheory.RgBcC.GLs n) := by
     have h : Continuous fun g : PositivityTheory.RgTw.Mat n => g.det := Continuous.matrix_det continuous_id
     exact isOpen_ne_fun h continuous_const

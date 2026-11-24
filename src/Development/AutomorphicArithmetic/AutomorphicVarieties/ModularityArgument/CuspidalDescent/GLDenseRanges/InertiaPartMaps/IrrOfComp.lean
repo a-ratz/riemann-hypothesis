@@ -124,7 +124,7 @@ private theorem datEnd {O A B M : Type} [CommRing O] [CommRing A] [IsDomain A] [
     [AddCommGroup M] [Module A M] [Module.Free A M] [Module.Finite A M] (j : A →ₐ[O] B) (φ : B →+* Module.End A M)
     (hj : ∀ a, φ (j a) = algebraMap A _ a) (J : Ideal B) (hJ : ∀ b, b ∈ J ↔ φ b = 0) (hr : J.IsRadical) :
     ∃ _ : Module B M, (∀ (b : B) (m : M), b • m = φ b m) ∧ UpperTheory.V.J.Dat j J M := by
-  letI : Module B M := Module.compHom M φ
+  let : Module B M := Module.compHom M φ
   have h0 : ∀ (b : B) (m : M), b • m = φ b m := fun _ _ => rfl
   have h1 : Module.annihilator B M = J := by
     ext b

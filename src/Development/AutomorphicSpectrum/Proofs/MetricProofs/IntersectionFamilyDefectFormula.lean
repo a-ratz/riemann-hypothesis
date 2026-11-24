@@ -95,7 +95,7 @@ def blockSet (ι : K → Type) [∀ k, Fintype (ι k)] : Set ((Σ k, ι k) → �
 
 theorem smul_mem_blockSet {c : K → ℂ} (hc : ∀ k, c k ≠ 0) {z : (Σ k, ι k) → ℂ} :
     (fun p => c p.1 * z p) ∈ blockSet ι ↔ z ∈ blockSet ι := by
-  simp only [blockSet, mem_setOf_eq, ne_eq, mul_eq_zero, not_or]
+  simp only [blockSet, mem_ofPred_eq, ne_eq, mul_eq_zero, not_or]
   exact forall_congr' fun k => exists_congr fun i => ⟨fun h => h.2, fun h => ⟨hc k, h⟩⟩
 
 def fsOfDeg (γ : K → ℕ) : HermLine ι where
@@ -163,7 +163,7 @@ theorem mInt_congr_null {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtl
     refine Finset.sum_congr rfl fun j _ => integral_congr_ae ?_
     refine (ae_restrict_iff' (A.chart j).open_target.measurableSet).mpr ?_
     refine ae_iff.mpr (measure_mono_null (fun y hy => ?_) (h j))
-    simp only [mem_setOf_eq, Classical.not_imp] at hy
+    simp only [mem_ofPred_eq, Classical.not_imp] at hy
     refine ⟨hy.1, fun he => hy.2 ?_⟩
     have he' : g ((A.chart j).symm y) = g' ((A.chart j).symm y) := he
     rw [he']

@@ -114,7 +114,7 @@ theorem exists_bound_of_coeff_ne_zero (hσ : IsSmooth σ) (hc : IsCuspidal σ) (
   have hQ : Finite (K₀ ⧸ K.subgroupOf K₀) := by
     refine Subgroup.quotient_finite_of_isOpen _ ?_
     rw [Subgroup.coe_subgroupOf]
-    exact (hKMo m).preimage continuous_subtype_val
+    exact (hKMo m).preimage continuous_subtypeVal
   have := Fintype.ofFinite (K₀ ⧸ K.subgroupOf K₀)
   let R : Finset (levi F n β) :=
     Finset.univ.image fun q : K₀ ⧸ K.subgroupOf K₀ => ((Quotient.out q : K₀) : levi F n β)
@@ -200,11 +200,11 @@ theorem exists_bound_of_coeff_ne_zero (hσ : IsSmooth σ) (hc : IsCuspidal σ) (
         exact ⟨μ k, Finset.mem_image_of_mem _ (by simp [hk])⟩) else 0
     have hcb_le : ∀ k, cb (β k) ≤ μ k := by
       intro k
-      simp only [cb, dif_pos (⟨k, rfl⟩ : ∃ j, β j = β k)]
+      simp only [cb, dite_eq_left (⟨k, rfl⟩ : ∃ j, β j = β k)]
       exact Finset.min'_le _ _ (Finset.mem_image_of_mem _ (by simp))
     have hcb_mem : ∀ j, ∃ k, β k = β j ∧ cb (β j) = μ k := by
       intro j
-      simp only [cb, dif_pos (⟨j, rfl⟩ : ∃ k, β k = β j)]
+      simp only [cb, dite_eq_left (⟨j, rfl⟩ : ∃ k, β k = β j)]
       obtain ⟨k, hk, hkeq⟩ := Finset.mem_image.1
         (Finset.min'_mem ((Finset.univ.filter fun k => β k = β j).image μ) _)
       exact ⟨k, (Finset.mem_filter.1 hk).2, hkeq.symm⟩
@@ -399,7 +399,7 @@ theorem blockOrd_diagPow (b : Set.range β) (μ : Fin n → ℤ) :
     simp only [blocks, Cartan.coe_diagPow, Matrix.diagonal_apply]
     by_cases h : i = j
     · subst h; simp
-    · rw [if_neg (fun e => h (Subtype.ext e)), if_neg h]
+    · rw [ite_eq_right (fun e => h (Subtype.ext e)), ite_eq_right h]
   rw [blockOrd, hmat, Matrix.det_diagonal,
     ord_prod _ fun i _ => zpow_ne_zero _ (Cartan.uniformizer_ne_zero F)]
   exact Finset.sum_congr rfl fun i _ => ord_zpow_uniformizer (μ i.1)
@@ -513,7 +513,7 @@ theorem IsLeviSchwartz.isLocallyConstant {Ψ : Matrix (Fin n) (Fin n) F → ℂ}
   refine ⟨⋂ i, ⋂ j, (fun x : levi F n β => (x : GL (Fin n) F) i j) ⁻¹'
       {x : F | (uniformizer F : F) ^ (-(r : ℤ)) * (x - (m : GL (Fin n) F) i j) ∈ 𝒪[F]},
     isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
-      (isOpen_small r _).preimage ((continuous_entry F n i j).comp continuous_subtype_val),
+      (isOpen_small r _).preimage ((continuous_entry F n i j).comp continuous_subtypeVal),
     ?_, fun x hx => ?_⟩
   · simp only [Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq, sub_self, mul_zero]
     exact fun _ _ => (𝒪[F]).zero_mem
@@ -806,7 +806,7 @@ theorem map_mul_right_eq_self_of_mem_unipotentRadical [MeasurableSpace (levi F n
   have hVT : μ V ≠ ⊤ := hVc.measure_lt_top.ne
   have hc : MeasureTheory.Measure.haarScalarFactor (MeasureTheory.Measure.map (· * u) μ) μ = 1 := by
     have h1 := congrArg (fun ν : MeasureTheory.Measure (levi F n β) => ν V) key
-    simp only [MeasureTheory.Measure.smul_apply] at h1
+    simp only [smul_apply] at h1
     rw [MeasureTheory.Measure.map_apply hmeas hVo.measurableSet, hpre] at h1
     have : ((MeasureTheory.Measure.haarScalarFactor (MeasureTheory.Measure.map (· * u) μ) μ :
         NNReal) : ENNReal) = 1 := by

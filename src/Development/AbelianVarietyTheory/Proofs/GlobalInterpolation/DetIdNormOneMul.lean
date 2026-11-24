@@ -67,7 +67,7 @@ def relDet (L L' : Submodule (𝓞 E) (Sp E n)) : Submodule (𝓞 E) E :=
 
 omit [StarRing E] in
 theorem val_pos {P : HeightOneSpectrum (𝓞 E)} {a : E} (h : a ≠ 0) : 0 < P.valuation E a :=
-  zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h)
+  pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h)
 
 omit [StarRing E] in
 theorem gen_mul {P : HeightOneSpectrum (𝓞 E)} {I J : Submodule (𝓞 E) E} {a b : E} (ha : Gen P I a) (hb : Gen P J b) :
@@ -203,7 +203,7 @@ end General
 theorem detId_normOne_mul (D : D7) (n : ℕ) (L L' L'' : Submodule (𝓞 D.host.E) (Fin n → D.host.E))
     (hL : StandardLatticesGL3.SD D L) (hL' : StandardLatticesGL3.SD D L') (hL'' : StandardLatticesGL3.SD D L'') :
     TaylorLogMetric.N1 D (TaylorLogMetric.detId D L L') ∧ TaylorLogMetric.detId D L L'' = TaylorLogMetric.detId D L L' * TaylorLogMetric.detId D L' L'' := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hs : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   have hfull {N : Submodule (𝓞 D.host.E) (Fin n → D.host.E)} (h : IsSDLat D.host.E n N) :
       Submodule.IsFullLattice D.host.E N :=

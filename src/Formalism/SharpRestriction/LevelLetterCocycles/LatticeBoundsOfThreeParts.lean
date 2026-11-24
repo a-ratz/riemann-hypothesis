@@ -358,8 +358,8 @@ theorem openC_of_steps [NeZero n] (W : LocWach PD LL O v n) (hG : LatticeFiniteC
   obtain ⟨s, hs, hcard⟩ := hG d T₁ T₂ F b S η m hset
   obtain ⟨g, hg⟩ := cover_of_gen T₂ s hs
   obtain ⟨hdomO, hdvr, -⟩ := hset.2.2.2.1
-  haveI := hdomO
-  haveI := hdvr
+  have := hdomO
+  have := hdvr
   refine ⟨e₀, e0_le_eBd_of_ExpC hset.2.1 hE,
     lengthCount_of_kerChain F (↥s → O) g hg n (finrank LL T₂.V) m _ e₀ ?_ (hK (↥s → O) g hg), hL0⟩
   rw [Module.finrank_fintype_fun_eq_card, Fintype.card_coe]
@@ -454,15 +454,15 @@ theorem PChain.trans {lenO : ℕ∞} {m : ℕ} {c : ℝ} {A B C : Submodule O FF
   obtain ⟨k₂, F₂, g₂, h0₂, hk₂, hs₂, hg₂, hl₂, hst₂⟩ := h₂
   let Fl : ℕ → Submodule O FF := fun i => if i ≤ k₁ then F₁ i else F₂ (i - k₁)
   let gen : Finset ℕ := g₁ ∪ g₂.map (addRightEmbedding k₁)
-  have hFl₁ : ∀ i, i ≤ k₁ → Fl i = F₁ i := fun i hi => if_pos hi
+  have hFl₁ : ∀ i, i ≤ k₁ → Fl i = F₁ i := fun i hi => ite_eq_left hi
   have hFl₂ : ∀ i, k₁ ≤ i → Fl i = F₂ (i - k₁) := by
     intro i hi
     by_cases h : i ≤ k₁
     · have hik : i = k₁ := le_antisymm h hi
       rw [hik]
       show (if k₁ ≤ k₁ then F₁ k₁ else F₂ (k₁ - k₁)) = F₂ (k₁ - k₁)
-      rw [if_pos le_rfl, Nat.sub_self, hk₁, h0₂]
-    · exact if_neg h
+      rw [ite_eq_left le_rfl, Nat.sub_self, hk₁, h0₂]
+    · exact ite_eq_right h
   have hdisj : Disjoint g₁ (g₂.map (addRightEmbedding k₁)) := by
     rw [Finset.disjoint_left]
     intro a ha hb
@@ -556,7 +556,7 @@ theorem two_mul_card_evens_le {n : ℕ} [NeZero n] (hn : Even n) (d : ℕ) :
     · intro c hc
       have hc' : (c.val + d) % 2 = 0 := by simpa [evens] using hc
       have := parity_succ hn d c
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
       omega
     · intro a _ b _ hab
       exact add_right_cancel hab

@@ -140,10 +140,10 @@ variable {N K J : Type} [Fintype N] [Fintype K] [Fintype J] [DecidableEq N] [Dec
 
 theorem exp_semiconj (X : Matrix N N ℂ) (B : Matrix K K ℂ) (V : Matrix N K ℂ) (h : X * V = V * B) :
     NormedSpace.exp X * V = V * NormedSpace.exp B := by
-  letI : NormedRing (Matrix N N ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix N N ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedRing (Matrix K K ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix K K ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix N N ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix N N ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix K K ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix K K ℂ) := Matrix.linftyOpNormedAlgebra
   have hp : ∀ n : ℕ, X ^ n * V = V * B ^ n := by
     intro n
     induction n with
@@ -260,12 +260,12 @@ private theorem hpk_col_es_lemma_2 (k r : ℕ) (c : Fin r) (t : Fin (2 * r + k +
 theorem herm_e_left (w : Fin (2 * r + k + 1) → ℂ) (c : Fin r) :
     herm (Hpk k r) (bvec (eI k r c)) w = star (w (esI k r c)) := by
   simp only [herm, dotProduct, mulVec, bvec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, Pi.star_apply, hpk_col_e_lemma]
+    Finset.mem_univ, ite_true, Pi.star_apply, hpk_col_e_lemma]
 
 theorem herm_es_left (w : Fin (2 * r + k + 1) → ℂ) (c : Fin r) :
     herm (Hpk k r) (bvec (esI k r c)) w = star (w (eI k r c)) := by
   simp only [herm, dotProduct, mulVec, bvec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, Pi.star_apply, hpk_col_es_lemma_2]
+    Finset.mem_univ, ite_true, Pi.star_apply, hpk_col_es_lemma_2]
 
 theorem bvec_ee (c c' : Fin r) : bvec (eI k r c') (eI k r c) = if c = c' then 1 else 0 := by
   have := c.isLt

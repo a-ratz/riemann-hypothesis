@@ -159,7 +159,7 @@ theorem irr_of_scalar (ρ : G →* Module.End ℂ M) (S : Submodule ℂ M) (hS :
     intro u hu
     have h1 : ρK q.out (w u) = ρK q'.out (w u) := congrArg Subtype.val (congrFun h ⟨u, hu⟩)
     rw [map_mul, Module.End.mul_apply, ← h1, ← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
-  letI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  let : Fintype (K ⧸ H) := Fintype.ofFinite _
   have havW : ∀ y ∈ W', GlobalTheory.IsotSph.avg H ρK y ∈ W' := fun y hy => by
     simp only [GlobalTheory.IsotSph.avg, LinearMap.smul_apply, LinearMap.sum_apply]
     exact W'.smul_mem _ (W'.sum_mem fun q _ => hst _ (hK q.out.2) y hy)
@@ -208,7 +208,7 @@ theorem descent {K H H' ι : Type} [Field K] [AddCommGroup H] [Module ℂ H] [Ad
     rw [hj]
     simp only [← hb]
     exact congrFun (b.repr_sum_self _) k
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   obtain ⟨k0, hk0⟩ : ∃ k, b.repr z k ≠ 0 := by
     by_contra h
     push Not at h
@@ -298,7 +298,7 @@ theorem conj_eq_of_normalises {E : Type} [Field E] [NumberField E] (w : HeightOn
   have hc : a.1 p q ≠ 0 := fun h0 => by
     have hz : a.1 = 0 := Matrix.ext fun i j => by
       have := hmax (i, j) (Finset.mem_univ _)
-      simp only [h0, map_zero, le_zero_iff, map_eq_zero] at this
+      simp only [h0, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
       exact this
     have := congrFun (congrFun a.mul_inv i0) i0
     rw [hz, zero_mul, Matrix.one_apply_eq] at this
@@ -308,7 +308,7 @@ theorem conj_eq_of_normalises {E : Type} [Field E] [NumberField E] (w : HeightOn
     by rw [smul_mul_smul_comm, mul_inv_cancel₀ hc, one_smul, Units.inv_mul]⟩
   refine ⟨k, hm.2 ⟨fun i j => ?_, fun i j => ?_⟩, fun g => Units.ext ?_⟩
   · show Valued.v ((a.1 p q)⁻¹ * a.1 i j) ≤ 1
-    rw [map_mul, map_inv₀, inv_mul_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 hc))]
+    rw [map_mul, map_inv₀, inv_mul_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 hc))]
     exact hmax (i, j) (Finset.mem_univ _)
   · show a.1 p q * (a⁻¹).1 i j ∈ Ov E w
     rw [mul_comm]; exact hall _ _ _ _

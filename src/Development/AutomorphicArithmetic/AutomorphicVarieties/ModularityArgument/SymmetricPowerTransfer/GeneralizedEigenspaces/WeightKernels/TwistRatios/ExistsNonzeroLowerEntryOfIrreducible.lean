@@ -462,7 +462,7 @@ theorem UpperTheory.V.Z.Sym.Ga.sym4Irr :
   have hcont : ∀ i j, Continuous fun x : H => (r x : Matrix (Fin 2) (Fin 2) (Qbar l)) i j := by
     intro i j
     have h1 : Continuous fun x : H => ((ρ x : GL (Fin 2) (Qbar l)) : Matrix (Fin 2) (Fin 2) (Qbar l)) :=
-      Units.continuous_val.comp (hc.comp continuous_subtype_val)
+      Units.continuous_val.comp (hc.comp continuous_subtypeVal)
     have h2 : Continuous fun x : H => ((Q⁻¹ : GL (Fin 2) (Qbar l)) : Matrix (Fin 2) (Fin 2) (Qbar l)) *
         (ρ x : Matrix (Fin 2) (Fin 2) (Qbar l)) * (Q : Matrix (Fin 2) (Fin 2) (Qbar l)) :=
       (continuous_const.matrix_mul h1).matrix_mul continuous_const
@@ -473,7 +473,7 @@ theorem UpperTheory.V.Z.Sym.Ga.sym4Irr :
     intro K hK
     have hK' : IsOpen ((K.map H.subtype : Subgroup Γ) : Set Γ) := by
       rw [Subgroup.coe_map]
-      exact hH.isOpenMap_subtype_val _ hK
+      exact hH.isOpenMap_subtypeVal _ hK
     exact S4.irr_conj _ (ρ.comp (K.map H.subtype).subtype) Q (fun x => by
       show ρ x = Q * c (ρ x) * Q⁻¹
       rw [hcx]; group) (hI _ hK')

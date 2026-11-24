@@ -286,13 +286,13 @@ theorem test_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   intro F E _ _ _ _ _ σ hCM M J _ R _ _ _ _ _ hLoc n φ hφ hφc hφs
   have hKu := GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hCM R hLoc
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hLoc
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨i1, -, -, i4, hsig, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := i1
-  haveI := i4
+  have := i1
+  have := i4
   have hinv := GlobalTheory.CompanionTheory.SW.KUnits.continuousOn_ringInverse hKu
   set ψ := fun p : (Fin 1 → Fin (M + 2) → R ⊗[F] E) × (Fin 1 → Fin n → R ⊗[F] E) ×
     (Fin 1 → Fin n → R ⊗[F] E) × (Fin n → Fin M → R ⊗[F] E) => φ (chartS R σ J p.1 p.2.1 p.2.2.1 p.2.2.2) with hψ
@@ -734,7 +734,7 @@ variable [TopologicalSpace R]
 
 theorem continuous_entry (σ : E →ₐ[F] E) {m : ℕ} (a b : Fin m) :
     Continuous fun S : HermR R σ m => (S : Matrix (Fin m) (Fin m) (R ⊗[F] E)) a b :=
-  (continuous_subtype_val (p := fun S => S ∈ HermR R σ m)).matrix_elem a b
+  (continuous_subtypeVal (p := fun S => S ∈ HermR R σ m)).matrix_elem a b
 
 def blockHomeo {σ : E →ₐ[F] E} (hinv : ∀ x, σ (σ x) = x) (hsig : Continuous (sigR R σ)) (n : ℕ) :
     HermR R σ (n + 1) ≃ₜ (HermR R σ 1 × (Fin 1 → Fin n → R ⊗[F] E) × HermR R σ n) where
@@ -804,10 +804,10 @@ theorem coordHerm_equiv {F E : Type} [Field F] [NumberField F] [Field E] [Number
   obtain ⟨t1, t2, t3, t4, t5, t6, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   have h2 : Module.finrank F E = 2 := hcm.2.2.1
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hcm
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
-  haveI : BorelSpace (HermR R σ m) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
+  have : BorelSpace (HermR R σ m) := ⟨rfl⟩
   have hh := HaarCoord.hermCoord_isHomeomorph R hinv h2 hδ hσδ m t5 t6
   let ge := (hh.homeomorph _).toMeasurableEquiv
   refine ⟨ge, fun _ => rfl, ge.measurable, ?_⟩
@@ -821,24 +821,24 @@ theorem coordHerm_equiv {F E : Type} [Field F] [NumberField F] [Field E] [Number
 theorem hermSplit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ (n d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R), lam.IsAddHaarMeasure → ∃ e : HermR R σ (n + 1) ≃ₜ (HermR R σ 1 × (Fin 1 → Fin n → R ⊗[F] E) × HermR R σ n), (∀ S, ((e S).1 : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) 0 0 = (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) 0 0 ∧ (∀ j : Fin n, (e S).2.1 0 j = (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) 0 j.succ) ∧ ∀ i j : Fin n, ((e S).2.2 : Matrix (Fin n) (Fin n) (R ⊗[F] E)) i j = (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) i.succ j.succ) ∧ MeasurePreserving e (coordHerm R σ b lam (n + 1)) ((coordHerm R σ b lam 1).prod ((coordW R b lam 1 n).prod (coordHerm R σ b lam n))) := by
   intro F E _ _ _ _ _ σ hcm M J hJ R _ _ _ _ _ hloc n d b lam hlam
   obtain ⟨l1, l2, l3, l4, -⟩ := hloc
-  haveI := l1
-  haveI := l2
-  haveI := l3
-  haveI := l4
+  have := l1
+  have := l2
+  have := l3
+  have := l4
   obtain ⟨t1, t2, t3, t4, t5, t6, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   obtain ⟨hinv, -⟩ := HaarCoord.conj_facts hcm
   obtain ⟨hK, -, hH⟩ := coord_measures_haar F E σ hcm R d b lam hlam
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : SigmaFinite (coordK R b lam) := inferInstance
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : SigmaFinite (coordK R b lam) := inferInstance
   obtain ⟨a1, a2, a3, a4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hcm R 1
   obtain ⟨c1, c2, c3, c4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hcm R n
-  haveI : (coordHerm R σ b lam 1).IsAddHaarMeasure := hH 1
-  haveI : (coordHerm R σ b lam n).IsAddHaarMeasure := hH n
-  haveI : SigmaFinite (coordW R b lam 1 n) := by
+  have : (coordHerm R σ b lam 1).IsAddHaarMeasure := hH 1
+  have : (coordHerm R σ b lam n).IsAddHaarMeasure := hH n
+  have : SigmaFinite (coordW R b lam 1 n) := by
     unfold coordW
     infer_instance
-  haveI : SigmaFinite (coordHerm R σ b lam 1) := inferInstance
-  haveI : SigmaFinite (coordHerm R σ b lam n) := inferInstance
+  have : SigmaFinite (coordHerm R σ b lam 1) := inferInstance
+  have : SigmaFinite (coordHerm R σ b lam n) := inferInstance
   refine ⟨blockHomeo R hinv t5 n, fun S => ⟨rfl, fun j => rfl, fun i j => rfl⟩, ?_⟩
   obtain ⟨h1, hh1, mp1⟩ := coordHerm_equiv σ hcm R b lam 1
   obtain ⟨hn, hhn, mpn⟩ := coordHerm_equiv σ hcm R b lam n
@@ -1266,7 +1266,7 @@ theorem disint_base [AddCommGroup H₃] {μ₁ : Measure V₁} {ν₁ : Measure 
       f z * ∫⁻ x, ENNReal.ofReal (ξ (x, z.2.1, z.2.2)) ∂(m₁ z.1) := hf.mul hL.measurable
   rw [lintegral_prod _ hfm.aemeasurable]
   refine lintegral_congr fun t => ?_
-  haveI := GlobalTheory.CompanionTheory.WeilSiegel.FreeLocal.sigmaFinite_fib hm₁ hU₁ t
+  have := GlobalTheory.CompanionTheory.WeilSiegel.FreeLocal.sigmaFinite_fib hm₁ hU₁ t
   have hh : Measurable fun p : V₁ × P × H₃ => f (t, p.2.1, p.2.2) * ENNReal.ofReal (ξ p) :=
     (hf.comp (by fun_prop)).mul hξm
   have e1 : ∫⁻ x, ∫⁻ s, ∫⁻ Z, f (q₁ x, s, Z) * ENNReal.ofReal (ξ (x, s, Z)) ∂ν₃ ∂ρ ∂(m₁ t) =
@@ -1357,10 +1357,10 @@ theorem stages_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have hLoc' := hLoc
   obtain ⟨_, _, _, _, -, -, -, -⟩ := hLoc'
   obtain ⟨_, _, _, _, hsigc, -, -, hbor, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := hbor 1 (M + 2)
-  haveI := hbor n M
-  haveI := hbor 1 n
-  haveI := hbor (n + 1) (M + 2)
+  have := hbor 1 (M + 2)
+  have := hbor n M
+  have := hbor 1 n
+  have := hbor (n + 1) (M + 2)
   obtain ⟨_, _, _, _, hl1⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R 1
   obtain ⟨_, _, _, _, hl3⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R n
   obtain ⟨_, _, _, _, hlN⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R (n + 1)
@@ -1372,11 +1372,11 @@ theorem stages_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   obtain ⟨hψc, hψs, hψt⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStage.ChartTest.test_chart F E σ hσ M J hJ R hLoc n φ hφc hφs hφt
   obtain ⟨-, hcellF, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStage.Cell.freeCell_props F E σ hσ M J hJ R hLoc n
   obtain ⟨-, hWh, hHh⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R d b lam hlam
-  haveI := hWh 1 (M + 2)
-  haveI := hWh n M
-  haveI := hWh 1 n
-  haveI := hHh 1
-  haveI := hHh n
+  have := hWh 1 (M + 2)
+  have := hWh n M
+  have := hWh 1 n
+  have := hHh 1
+  have := hHh n
   have hU1 : IsOpen {X : Fin 1 → Fin (M + 2) → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} :=
     _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ hσ R hLoc 1 (M + 2)
   have hU3 : IsOpen {X : Fin n → Fin M → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} :=
@@ -1403,7 +1403,7 @@ theorem stages_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       (continuous_apply i).comp ((continuous_apply 0).comp (continuous_fst.comp continuous_snd))
     have ct : Continuous fun p : HermR R σ 1 × (Fin 1 → Fin n → R ⊗[F] E) × (Fin 1 → Fin n → R ⊗[F] E) =>
         (p.1 : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) 0 0 :=
-      (continuous_fst.subtype_val).matrix_elem 0 0
+      (continuous_fst.subtypeVal).matrix_elem 0 0
     exact ((((hsigc.comp (ca i)).mul (cs j)).add ((hsigc.comp (cs i)).mul (ca j))).sub
       (ct.mul ((hsigc.comp (ca i)).mul (ca j))))
   let ψ : (Fin 1 → Fin (M + 2) → R ⊗[F] E) × (Fin 1 → Fin n → R ⊗[F] E) × (Fin 1 → Fin n → R ⊗[F] E) ×
@@ -1634,24 +1634,24 @@ theorem stages_zero_unit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hOpen0 := (_root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStage.Cell.freeCell_props F E σ hCM M J hJ R hR 0).1
   have hR' := hR
   obtain ⟨r1, r2, r3, r4, -⟩ := hR'
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
+  have := r1
+  have := r2
+  have := r3
+  have := r4
   obtain ⟨t1, t2, t3, t4, -, -, -, t8, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := t8 (n + 1) (M + 2)
-  haveI := t8 1 (M + 2)
-  haveI := t8 1 n
-  haveI := t8 n M
-  haveI : SigmaFinite (m₁ 0) :=
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have := t8 (n + 1) (M + 2)
+  have := t8 1 (M + 2)
+  have := t8 1 n
+  have := t8 n M
+  have : SigmaFinite (m₁ 0) :=
     GlobalTheory.CompanionTheory.WeilSiegel.FreeLocal.sigmaFinite_free σ hCM (hypOne J) R hR 1 _ _ m₁ hm₁ 0
-  haveI : SigmaFinite (m' 0) :=
+  have : SigmaFinite (m' 0) :=
     GlobalTheory.CompanionTheory.WeilSiegel.FreeLocal.sigmaFinite_free σ hCM J R hR n _ _ m' hm' 0
-  haveI : (coordW R b lam 1 n).IsAddHaarMeasure :=
+  have : (coordW R b lam 1 n).IsAddHaarMeasure :=
     (_root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM R d b lam hlam).2.1 1 n
   have hOx : MeasurableSet {x : Fin 1 → Fin (M + 2) → R ⊗[F] E | IsUnit (x 0 0)} := by
     have e : {x : Fin 1 → Fin (M + 2) → R ⊗[F] E | IsUnit (x 0 0)} =

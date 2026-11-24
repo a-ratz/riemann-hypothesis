@@ -291,7 +291,7 @@ theorem isOpen_zariski (O : w.W.Opens) : IsOpen {x : w.M | x.1 ∈ O} := by
       ((w.pres c.1 c.2).exists_basicOpen_cover O),
       w.src c ∩ w.coord c ⁻¹' {z | eval z g ≠ 0} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_inter_iff, Set.mem_preimage, exists_prop]
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_inter_iff, Set.mem_preimage, exists_prop]
     constructor
     · intro hxO
       obtain ⟨c, hc⟩ := w.cover x

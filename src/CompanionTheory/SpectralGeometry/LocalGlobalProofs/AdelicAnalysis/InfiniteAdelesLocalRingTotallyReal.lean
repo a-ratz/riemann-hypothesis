@@ -85,7 +85,7 @@ theorem isOpenEmbedding_sq (ι : Type) [Fintype ι] :
   have hj : IsOpenEmbedding j := hv.comp (isOpen_posU ι).isOpenEmbedding_subtypeVal
   set g : posU ι → (ι → ℝ) := Units.val ∘ (fun u : posU ι => ((u : (ι → ℝ)ˣ) ^ 2 : (ι → ℝ)ˣ)) with hgdef
   have hg : Continuous g :=
-    Units.continuous_val.comp (continuous_subtype_val.pow 2)
+    Units.continuous_val.comp (continuous_subtypeVal.pow 2)
   let r : (ι → ℝ) → (ι → ℝ) := fun x i => Real.sqrt (x i)
   have hr : Continuous r := continuous_pi fun i => (continuous_apply i).sqrt
   have hrg : r ∘ g = j := by

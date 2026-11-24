@@ -64,7 +64,7 @@ theorem ringKrullDim_le_of_isIntegral' {R S : Type*} [CommRing R] [CommRing S] [
   unfold ringKrullDim
   refine Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap R S)) ?_
   intro P Q hPQ
-  exact Ideal.IsIntegral.comap_lt_comap (I := P.asIdeal) (J := Q.asIdeal) hPQ
+  exact Ideal.IsIntegral.under_lt_under (I := P.asIdeal) (J := Q.asIdeal) hPQ
 
 section Arith
 

@@ -114,7 +114,7 @@ theorem det_aC (X : Fin n → ℝ) (z : ℂ) : (aC X z).det = 1 := by
   rw [← Complex.exp_add, add_neg_cancel, Complex.exp_zero]
 
 theorem zpow_exp_neg (w : ℂ) (p : ℕ) : Complex.exp (-w) ^ (-(p : ℤ)) = Complex.exp ((p : ℂ) * w) := by
-  rw [← Complex.exp_int_mul]
+  rw [← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring
@@ -188,7 +188,7 @@ theorem famC_one (ε : Fin m → Bool) (t c : ℝ) (e : ℤ) (X : Fin n → ℝ)
   have e2 : ∀ j, Complex.exp (2 * (s : ℂ) * (X j : ℂ)) = ((Real.exp (s * X j) ^ 2 : ℝ) : ℂ) := by
     intro j
     push_cast
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1; push_cast; ring
   unfold nS
   push_cast
@@ -268,7 +268,7 @@ theorem sq_vS_le (u : Fin m → Fin n → ℂ) (X : Fin n → ℝ) (s R : ℝ) (
     nlinarith
   have hterm : ∀ a j, ‖vS u X s a j‖ ^ 2 = ‖u a j‖ ^ 2 * Real.exp (2 * s * X j) := by
     intro a j
-    rw [norm_vS, ← Real.exp_nat_mul]; push_cast; ring_nf
+    rw [norm_vS, ← Real.exp_natCast_mul]; push_cast; ring_nf
   unfold sqN
   simp only [hterm]
   constructor
@@ -408,7 +408,7 @@ theorem l2conv (c : ℝ) (hc : 0 < c) (X : Fin n → ℝ) (P : PX m n) (s : ℝ)
     calc ‖(fF c X P u (s + h) - fF c X P u s) / (h : ℂ) - fF c X (dil c X P) u s‖ ^ 2
         ≤ (2 * K * Real.exp (-(a * sqN u))) ^ 2 := pow_le_pow_left₀ (norm_nonneg _) e3 2
       _ = (2 * K) ^ 2 * Real.exp (-(2 * a * sqN u)) := by
-        rw [mul_pow, ← Real.exp_nat_mul]; push_cast; ring_nf
+        rw [mul_pow, ← Real.exp_natCast_mul]; push_cast; ring_nf
   · exact (integrable_gauss (2 * a) (by positivity)).const_mul _
   · refine Eventually.of_forall fun u => ?_
     have : Tendsto (fun h : ℝ => (fF c X P u (s + h) - fF c X P u s) / (h : ℂ) - fF c X (dil c X P) u s) (𝓝[≠] 0) (𝓝 0) := by
@@ -491,11 +491,11 @@ theorem leftInv_thS (V : HSp D) (f : Mx D V.rank n → ℂ) : LeftInv (GQ V) (th
   simp only [invPt, e, Equiv.coe_fn_mk, h2, h1, Matrix.mul_assoc, Matrix.map_mul]
 
 theorem enorm_thS_le (V : HSp D) (f : Mx D V.rank n → ℂ) (h : GA D V) : ‖thS V f h‖ₑ ≤ absTheta V f h :=
-  enorm_tsum_le_tsum_enorm
+  eNorm_tsum_le_tsum_eNorm
 
 theorem absTheta_mono (V : HSp D) {f M : Mx D V.rank n → ℂ} (hfM : ∀ x, ‖f x‖ ≤ ‖M x‖) (h : GA D V) :
     absTheta V f h ≤ absTheta V M h :=
-  ENNReal.tsum_le_tsum fun _ => enorm_le_iff_norm_le.2 (hfM _)
+  ENNReal.tsum_le_tsum fun _ => eNorm_le_iff_norm_le.2 (hfM _)
 
 theorem absThetaInt_mono (V : HSp D) (ν : Measure (GA D V)) {f M : Mx D V.rank n → ℂ} (hfM : ∀ x, ‖f x‖ ≤ ‖M x‖) :
     absThetaInt V ν f ≤ absThetaInt V ν M :=
@@ -507,8 +507,8 @@ theorem absThetaInt_smul_lt (V : HSp D) (ν : Measure (GA D V)) (c : ℂ) {M : M
   have : ∀ q, descend (GQ V) (absTheta V (c • M)) q = ‖c‖ₑ * descend (GQ V) (absTheta V M) q := fun q =>
     GlobalTheory.AbsThetaSemi.absTheta_smul V c M q.out
   simp_rw [this]
-  rw [lintegral_const_mul' _ _ enorm_ne_top]
-  exact ENNReal.mul_lt_top enorm_lt_top hM
+  rw [lintegral_const_mul' _ _ eNorm_ne_top]
+  exact ENNReal.mul_lt_top eNorm_lt_top hM
 
 theorem aestronglyMeasurable_thS (V : HSp D) (ν : Measure (GA D V)) [ν.IsHaarMeasure] {f : Mx D V.rank n → ℂ} (hf : Continuous f)
     (hfin : absThetaInt V ν f < ⊤) : AEStronglyMeasurable (descend (GQ V) (thS V f)) (autMeasure V ν) := by
@@ -523,7 +523,7 @@ theorem aestronglyMeasurable_thS (V : HSp D) (ν : Measure (GA D V)) [ν.IsHaarM
   have : Countable (Matrix (Fin V.rank) (Fin n) D.host.E) :=
     inferInstanceAs (Countable (Fin V.rank → Fin n → D.host.E))
   have hsum : ∀ᵐ h ∂ν, Summable fun ξ : Matrix (Fin V.rank) (Fin n) D.host.E => f (invPt V h ξ) :=
-    hae'.mono fun h hh => Summable.of_enorm hh.ne
+    hae'.mono fun h hh => Summable.of_eNorm hh.ne
   exact aestronglyMeasurable_of_tendsto_ae (μ := ν)
     (Filter.atTop : Filter (Finset (Matrix (Fin V.rank) (Fin n) D.host.E)))
     (f := fun F h => ∑ ξ ∈ F, f (invPt V h ξ))
@@ -819,14 +819,14 @@ theorem dHol : DHol := by
     have hsumM : ∀ q : Quot (GQ V), descend (GQ V) (absTheta V M) q < ⊤ →
         Summable fun ξ : Matrix (Fin V.rank) (Fin n) D.host.E => ‖M (invPt V q.out ξ)‖ := by
       intro q hq
-      refine Summable.of_enorm ?_
+      refine Summable.of_eNorm ?_
       simpa [GlobalTheory.AutomorphicL2Unitary.descend, absTheta] using hq.ne
     have htsM : ∀ q : Quot (GQ V), descend (GQ V) (absTheta V M) q < ⊤ →
         ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, ‖M (invPt V q.out ξ)‖ =
           (descend (GQ V) (absTheta V M) q).toReal := by
       intro q hq
       simp only [GlobalTheory.AutomorphicL2Unitary.descend, absTheta]
-      rw [ENNReal.tsum_toReal_eq fun ξ => enorm_ne_top]
+      rw [ENNReal.tsum_toReal_eq fun ξ => eNorm_ne_top]
       simp
     have hs : Set.univ ×ˢ U ∈ 𝓝[Set.univ ×ˢ U] (p₀, z₀) := self_mem_nhdsWithin
     have hNs : N ∩ Set.univ ×ˢ U ∈ 𝓝[Set.univ ×ˢ U] (p₀, z₀) := inter_mem (mem_nhdsWithin_of_mem_nhds hN) hs
@@ -974,7 +974,7 @@ theorem schScale : SchScale := by
   refine ⟨a • SchwartzMap.compCLMOfContinuousLinearEquiv ℂ
     (DilDH.scaleL m n s X).toContinuousLinearEquiv S, ?_⟩
   funext u
-  simp only [SchwartzMap.smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply,
+  simp only [smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply,
     Function.comp_apply, smul_eq_mul, ← hS]
   rfl
 

@@ -107,7 +107,7 @@ private theorem emb_tor {R : Type} [CommRing R] (t : Rˣ) :
   show (if (1 : ℤˣ) = 1 then Matrix.fromBlocks (tor R t : Matrix (Fin 3) (Fin 3) R) 0 0
     (theta (tor R t) : Matrix (Fin 3) (Fin 3) R) else Matrix.fromBlocks 0 (tor R t : Matrix (Fin 3) (Fin 3) R)
     (theta (tor R t) : Matrix (Fin 3) (Fin 3) R) 0) = _
-  rw [if_pos rfl, theta_tor, tor_val, Matrix.fromBlocks_diagonal]
+  rw [ite_eq_left rfl, theta_tor, tor_val, Matrix.fromBlocks_diagonal]
   congr 1
   funext i
   rcases i with i | i <;> rfl
@@ -178,8 +178,8 @@ theorem UpperTheory.V.U3.exists_locPres :
   intro O _ _ _ _ _ H _ _ _ η Ψ U I _ hL
   obtain ⟨x, τ, _, w, φ, -, hφ, -⟩ := hL.chart
   have hne : I ≠ ⊤ := hφ.ker ▸ RingHom.ker_ne_top φ
-  haveI : Nontrivial (U.R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsCO O (U.R ⧸ I) :=
+  have : Nontrivial (U.R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsCO O (U.R ⧸ I) :=
     co_quot O U.R (U.R ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
   have hent : ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (f : (U.R ⧸ I) →ₐ[O] R') g a b,
       f (emb (push (Ideal.Quotient.mkₐ O I) U.r.hom g) a b) =
@@ -265,17 +265,17 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     (h : ∀ (M : Type) [AddCommGroup M] [Module (ZMod n) M] [TopologicalSpace M] [DiscreteTopology M] [Finite M]
       (ρ : Representation (ZMod n) Γ M), ContAction ρ → Finite (ReciprocityTheory.Gal.H1 ρ)) : PhiCond Γ n := by
   intro H hH
-  haveI : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
-  haveI : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
-  letI : TopologicalSpace (ZMod n) := ⊥
-  haveI : DiscreteTopology (ZMod n) := ⟨rfl⟩
+  have : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
+  have : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
+  let : TopologicalSpace (ZMod n) := ⊥
+  have : DiscreteTopology (ZMod n) := ⟨rfl⟩
   have hs : ∀ x : Γ ⧸ H, Continuous fun g : Γ => g⁻¹ • x := fun x => continuous_inv.smul continuous_const
   have hc : ContAction (permR (ZMod n) H) := by
     refine continuous_pi fun x => ?_
     have h1 : Continuous fun p : (Γ ⧸ H → ZMod n) × (Γ ⧸ H) => p.1 p.2 := continuous_of_discreteTopology
     exact h1.comp (continuous_snd.prodMk ((hs x).comp continuous_fst))
-  haveI h1 := h _ _ hc
-  haveI : Finite (ReciprocityTheory.Gal.Z1 (permR (ZMod n) H)) := by
+  have h1 := h _ _ hc
+  have : Finite (ReciprocityTheory.Gal.Z1 (permR (ZMod n) H)) := by
     have hB : Finite (ReciprocityTheory.Gal.B1 (permR (ZMod n) H)) := (Set.finite_range _).to_subtype
     have hB' : Finite ((ReciprocityTheory.Gal.B1 (permR (ZMod n) H)).comap
         (ReciprocityTheory.Gal.Z1 (permR (ZMod n) H)).subtype).toAddSubgroup :=
@@ -314,10 +314,10 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
 
 private theorem phi_surj {Γ Δ : Type} [Group Γ] [TopologicalSpace Γ] [Group Δ] [TopologicalSpace Δ] (π : Γ →* Δ)
     (hc : Continuous π) (hπ : Function.Surjective π) {l : ℕ} (h : PhiCond Γ l) : PhiCond Δ l := fun H hH => by
-  haveI := h (H.comap π) (hH.preimage hc)
+  have := h (H.comap π) (hH.preimage hc)
   let p : H.comap π →* H := π.subgroupComap H
-  have hp : Continuous p := (hc.comp continuous_subtype_val).subtype_mk _
-  have hs : Function.Surjective p := MonoidHom.subgroupComap_surjective_of_surjective _ _ hπ
+  have hp : Continuous p := (hc.comp continuous_subtypeVal).subtype_mk _
+  have hs : Function.Surjective p := MonoidHom.subgroupComap_surjective _ _ hπ
   refine Finite.of_injective
     (β := {φ : H.comap π →* Multiplicative (ZMod l) // IsOpen (φ.ker : Set (H.comap π))})
     (fun φ => ⟨φ.1.comp p, φ.2.preimage hp⟩) fun φ φ' e => ?_
@@ -329,7 +329,7 @@ private theorem fin_above {n : ℕ} (hn : n ≠ 0) :
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hn
   refine (Ideal.finite_factors h0).subset fun v hv => ?_
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_span_singleton]; exact hv
 
 private theorem phi_kill (hGF : GlobalFiniteness) {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {K : Type}
@@ -337,10 +337,10 @@ private theorem phi_kill (hGF : GlobalFiniteness) {Ω : Type} [Field Ω] [CharZe
     {ψ : DirichletCharacter c.O N} (D : Dat Ω K c e ψ) (M : Subgroup (G ℚ Ω)) [M.Normal]
     (hM : M = (Subgroup.normalClosure D.Kill).topologicalClosure) : PhiCond (G ℚ Ω ⧸ M) l := by
   subst hM
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   obtain ⟨-, -, -, -, -, -, -, -, -, hK, -⟩ := dat_facts D
   obtain ⟨⟨T, hT⟩, -⟩ := ramFinite ℚ ℚ K Ω
   obtain ⟨-, -, -, -, hIne⟩ := Chr.clsFacts ℚ Ω N
@@ -371,8 +371,8 @@ private theorem phi_kill (hGF : GlobalFiniteness) {Ω : Type} [Field Ω] [CharZe
       rwa [← D.η_ker] at h1
     · have h1 : Chr.cls ℚ Ω N g = 1 := hIne A (fun h => hv' (v.asIdeal.mul_mem_left _ (hval A v hA N h))) hg
       rw [Chr.dirG, MonoidHom.comp_apply, h1, map_one]
-  haveI hc : CompactSpace (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) := inferInstance
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have hc : CompactSpace (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) := inferInstance
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have key : PhiCond (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) (l ^ 1) :=
     phi_condition_of_finite_cohomology (l ^ 1) fun M _ _ _ _ _ ρ hρ => by
       obtain ⟨-, f1, -⟩ := hGF ℚ Ω l 1 M S ρ one_pos hS hρ
@@ -389,21 +389,21 @@ theorem UpperTheory.V.U3.exists_model :
     CohInp → LemmaP → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {K : Type} [Field K] [NumberField K] [Algebra K Ω]
       {l : ℕ} [Fact l.Prime] {c : Coef l} {N : ℕ} [NeZero N] {e : ℕ} {ψ : DirichletCharacter c.O N} (D : Dat Ω K c e ψ) {U : (_root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition _ (D.η.comp D.ι) (D.Ψ.comp D.ι)))} {g₁ : G ℚ Ω}, D.Marked g₁ → ∀ (S : D.Ring U g₁), Nonempty (Model S (PadicAlgCl l)) := by
   intro hC hP Ω _ _ _ K _ _ _ l hl c N _ e ψ D U g₁ hg S
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨-, -, -, hη, hΨ, hK, -⟩ := dat_facts D
-  haveI : IsLocalRing c.O := c.dvr.toIsLocalRing
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (dvrFacts l c.O).2.2.2.1
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
-  haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField c.O) l := by
+  have : IsLocalRing c.O := c.dvr.toIsLocalRing
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (dvrFacts l c.O).2.2.2.1
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
+  have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
     intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   have hL : LocGood U (D.loc.It U) := Loc.locGood hC.loc D.loc U
   have hcont : ∀ j : ℤ, AdicCont (maximalIdeal c.O) fun g => ((D.Ψ g ^ j : (c.O)ˣ) : c.O) := D.Ψ_cont
-  haveI := Subgroup.is_normal_topologicalClosure (Subgroup.normalClosure D.Kill)
+  have := Subgroup.is_normal_topologicalClosure (Subgroup.normalClosure D.Kill)
   have hV := exists_univ l D.η D.Ψ hη hΨ D.Kill (fun g h => h.choose_spec.2.2) _ rfl (phi_kill hC.gf D _ rfl)
   obtain ⟨⟨B⟩, -⟩ := exists_sRing D.ι_cont U (D.loc.It U) D.cc g₁ hg hL hcont hK hV
   obtain ⟨WB, hWB⟩ := exists_locPres U (D.loc.It U) (hη.comp_continuous D.ι_cont) hL

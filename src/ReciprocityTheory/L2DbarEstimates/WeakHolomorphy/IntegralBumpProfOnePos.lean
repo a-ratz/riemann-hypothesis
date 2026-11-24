@@ -106,7 +106,7 @@ theorem integral_bumpProf_one_pos (n : ℕ) : 0 < ∫ z : V n, bumpProf 1 ‖z�
     refine HasCompactSupport.intro (isCompact_closedBall (0 : V n) (1 / 2)) fun z hz => ?_
     rw [mem_closedBall, dist_zero_right, not_le] at hz
     exact bumpProf_eq_zero_of_half_lt one_pos hz
-  refine (continuous_bumpProf_norm n 1).integral_pos_of_hasCompactSupport_nonneg_nonzero hcs
+  refine (continuous_bumpProf_norm n 1).integral_pos_of_hasCompactSupport_nonneg_ne_zero hcs
     (fun z => Real.smoothTransition.nonneg _) (x := 0) ?_
   simp [bumpProf]
 

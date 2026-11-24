@@ -74,7 +74,7 @@ theorem χZ_spec (g : GQ l) (m : ℕ) (ζ : Om l) (h : ζ ^ (l ^ m) = 1) :
 variable (l)
 
 theorem exists_root_ne_one : ∃ z : Om l, z ^ l = 1 ∧ z ≠ 1 := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ 1)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ 1)
   rw [pow_one] at hζ
   exact ⟨ζ, hζ.pow_eq_one, hζ.ne_one (Fact.out : l.Prime).one_lt⟩
 

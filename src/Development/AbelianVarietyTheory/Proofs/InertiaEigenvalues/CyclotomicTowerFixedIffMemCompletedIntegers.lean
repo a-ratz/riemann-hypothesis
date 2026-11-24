@@ -169,7 +169,7 @@ theorem exists_field (F : IntermediateField ℚ_[l] (Om l)) (x : Om l) :
   set N := (MulAction.stabilizer (GQ l) x).normalCore with hN
   set L := IntermediateField.fixedField (F.fixingSubgroup ⊓ N) with hL
   have hle : F.fixingSubgroup ⊓ N ≤ L.fixingSubgroup :=
-    (IntermediateField.le_iff_le _ _).1 le_rfl
+    (IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).1 le_rfl
   have hfi : (L.fixingSubgroup.subgroupOf F.fixingSubgroup).FiniteIndex := by
     refine Subgroup.finiteIndex_of_le (H := N.subgroupOf F.fixingSubgroup) ?_
     intro g hg
@@ -179,7 +179,7 @@ theorem exists_field (F : IntermediateField ℚ_[l] (Om l)) (x : Om l) :
   · rw [hL, IntermediateField.mem_fixedField_iff]
     intro g hg
     exact Subgroup.normalCore_le _ hg.2
-  · exact (IntermediateField.le_iff_le _ _).2 inf_le_left
+  · exact (IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).2 inf_le_left
   · intro h hh y hy
     rw [hL, IntermediateField.mem_fixedField_iff] at hy ⊢
     intro g hg

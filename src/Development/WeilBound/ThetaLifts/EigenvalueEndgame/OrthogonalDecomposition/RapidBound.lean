@@ -138,17 +138,17 @@ theorem th_cont (hB : ThetaBasic) (hp : IsPair B M χX χW om r s r' s') {f} (hf
 theorem th_int (hB : ThetaBasic) (hE : EpsOf) (hV : FinVolU) (hp : IsPair B M χX χW om r s r' s') {μ : Measure (UA σ W.J)}
     {D : Set (UA σ W.J)} (hμ : μ.IsHaarMeasure) (hD : IsFundamentalDomain (ratU σ W.J) D μ) {f} (hf : IsRapid (Y := W) f) {Ψ}
     (hΨ : Ψ ∈ schA F _) (g) : Integrable (fun h => f h * star (theta om Ψ g h)) (μ.restrict D) := by
-  haveI := finW hE hV hp hμ hD
-  haveI : BorelSpace (UA σ W.J) := ⟨rfl⟩
+  have := finW hE hV hp hμ hD
+  have : BorelSpace (UA σ W.J) := ⟨rfl⟩
   obtain ⟨K, hK⟩ := th_bd hB hp hf hΨ (ht g)
   exact .of_bound ((th_cont hB hp hf hΨ).comp (continuous_const.prodMk continuous_id)).aestronglyMeasurable K
     (.of_forall (hK g le_rfl))
 
 theorem thAut_of (hB : ThetaBasic) (hG : GrpTop) (hE : EpsOf) (hV : FinVolU) : ThAut := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hp μ D hμ hD f hf Ψ hΨ
-  haveI := finW hE hV hp hμ hD
+  have := finW hE hV hp hμ hD
   obtain ⟨lc, sc, -, -, -, -, -, hb⟩ := hG F E σ hp.base.cm n _ (hE F E σ B hp.base n X _ _ (Or.inl hp.herm)).1
-  haveI : BorelSpace (UA σ W.J) := ⟨rfl⟩
+  have : BorelSpace (UA σ W.J) := ⟨rfl⟩
   refine ⟨gen_cont (th_cont hB hp hf hΨ) fun Ω hΩ => ?_, fun γ hγ g => integral_congr_ae (.of_forall fun h => ?_)⟩
   · obtain ⟨b, hb⟩ := hb Ω hΩ
     obtain ⟨K, hK⟩ := th_bd hB hp hf hΨ b
@@ -159,11 +159,11 @@ theorem thAut_of (hB : ThetaBasic) (hG : GrpTop) (hE : EpsOf) (hV : FinVolU) : T
 
 theorem thPerp_of (hB : ThetaBasic) (hG : GrpTop) (hE : EpsOf) (hV : FinVolU) : ThPerp := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hp f hf Ψ hΨ hc ⟨C, k, hC⟩ h0 μ D hμ hD
-  haveI := finW hE hV hp hμ hD
-  haveI := finX hE hV hp
-  haveI := (hG F E σ hp.base.cm n _ (hE F E σ B hp.base n X _ _ (Or.inl hp.herm)).1).2.1
-  haveI : BorelSpace (UA σ W.J) := ⟨rfl⟩
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have := finW hE hV hp hμ hD
+  have := finX hE hV hp
+  have := (hG F E σ hp.base.cm n _ (hE F E σ B hp.base n X _ _ (Or.inl hp.herm)).1).2.1
+  have : BorelSpace (UA σ W.J) := ⟨rfl⟩
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
   obtain ⟨K, -, hK⟩ := rapid_bound hf k
   exact gen_perp ((hB F E σ B n d X W M χX χW om r s r' s' hp).1 Ψ hΨ).1 hf.1 hc
     (hK (fun h => ∫ g in M.dom, ‖theta om Ψ g h‖ ∂M.μ) C (fun γ hγ h => by simp only [theta_rat hB hp hΨ _ γ hγ]) hC) (h0 μ D hμ hD)

@@ -443,11 +443,11 @@ theorem exists_continuous_latBasis_of_arc : ∀ (E : Type) [Field E] [NumberFiel
   have hsv : ∀ s : ℂ, ‖sv s‖ = ‖s‖ := fun s => pi_norm_const s
   have hdom : ∀ s : ℂ, s.re < 0 → sv s ∈ GlobalTheory.ShFam.Hor.logDom 1 1 := fun s hsr k => by
     show if (k : ℕ) < 1 then (sv s k).re < 0 else ‖sv s k‖ < 1
-    rw [if_pos k.isLt]
+    rw [ite_eq_left k.isLt]
     exact hsr
   have hlogExp : ∀ s : ℂ, GlobalTheory.ShFam.Hor.logExp 1 (sv s) = sv (Complex.exp s) := fun s => funext fun k => by
     show (if (k : ℕ) < 1 then Complex.exp (sv s k) else sv s k) = Complex.exp s
-    rw [if_pos k.isLt]
+    rw [ite_eq_left k.isLt]
   have hexpball : ∀ s : ℂ, s.re < 0 → sv (Complex.exp s) ∈ Metric.ball (0 : Fin 1 → ℂ) 1 := fun s hsr => by
     rw [mem_ball_zero_iff, hsv, Complex.norm_exp]
     exact Real.exp_lt_one_iff.mpr hsr
@@ -541,8 +541,8 @@ theorem exists_frame_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       have ex : ∃ f : EigFrame Z ((ψ u).comp φ) (spMap (ψ u) ≫ (x ≫ genι Z)), ∀ τ i, f.v τ i = spMap (dualMap (ψ u)) ≫ fr.v τ i := by
         open ReciprocityTheory.ChartRestriction.G.PullbackSections GlobalTheory.LieMet GlobalTheory.LocM GlobalTheory.LocM.FrameBC in
         have h : GlobalTheory.LocM.IsFrame Z.t ((ψ u).comp φ) (spMap (ψ u) ≫ (x ≫ genι Z)) ((fun τ i => spMap (dualMap (ψ u)) ≫ fr.v τ i)) := by
-          letI : Algebra c.F A := φ.toAlgebra
-          letI : Algebra c.F ℂ := ((ψ u).comp φ).toAlgebra
+          let : Algebra c.F A := φ.toAlgebra
+          let : Algebra c.F ℂ := ((ψ u).comp φ).toAlgebra
           let v : ∀ τ, Fin (Dw.mult τ) → TanM (x ≫ genι Z) Z.t.G := fun τ i => tanOf (fr.tan τ i)
           have eps_dual (a : A) : spMap (dualMap (ψ u)) ≫ spMap (epsMul a) = spMap (epsMul ((ψ u) a)) ≫ spMap (dualMap (ψ u)) := by
             rw [spMap_comp_spMap, spMap_comp_spMap]
@@ -641,7 +641,7 @@ theorem continuousOn_coords_of_linearIndependent :
       ContinuousOn μ U → ContinuousOn v U → (∀ s ∈ U, LinearIndependent ℝ (μ s)) →
       (∀ s ∈ U, v s = ∑ i, c s i • μ s i) → ContinuousOn c U := by
   intro g m U μ v c hμ hv hli hc
-  rw [continuousOn_iff_continuous_restrict] at hμ hv ⊢
+  rw [continuousOn_iff_continuous_domRestrict] at hμ hv ⊢
   let G : U → Matrix (Fin m) (Fin m) ℝ := fun s a b => realDotC (μ s a) (μ s b)
   let b : U → Fin m → ℝ := fun s a => realDotC (μ s a) (v s)
   have hdot : Continuous (fun p : (Fin g → ℂ) × (Fin g → ℂ) => realDotC p.1 p.2) := by
@@ -837,7 +837,7 @@ theorem strip_growth : ∀ (g m : ℕ) (lam : ℂ → Fin m → Fin g → ℂ) (
   have hre : ∀ s : ℂ, (s + 2 * Real.pi * Complex.I).re = s.re := by intro s; simp
   have hshift : ContinuousOn (fun s => lam (s + 2 * Real.pi * Complex.I)) {s : ℂ | s.re < 0} :=
     hcont.comp (continuousOn_id.add continuousOn_const) (fun s hs => by
-      simpa [Set.mem_setOf_eq, hre] using hs)
+      simpa [Set.mem_ofPred_eq, hre] using hs)
   have hli' : ∀ s ∈ {s : ℂ | s.re < 0}, LinearIndependent ℝ (lam (s + 2 * Real.pi * Complex.I)) :=
     fun s hs => hli _ (by simpa [hre] using hs)
   have hsingle : ∀ (v : Fin m → Fin g → ℂ) (j : Fin m), v j = ∑ i, (Pi.single j 1 : Fin m → ℤ) i • v i := by
@@ -1104,7 +1104,7 @@ theorem periods_le_of_mem_lattice : ∀ (E : Type) [Field E] [NumberField E] [Is
   have hT₁ : ∀ w : ℂ, T₁ < w.im → T < w.im ∧ T₀ < w.im := fun w hw =>
     ⟨(le_max_left _ _).trans_lt hw, (le_max_right _ _).trans_lt hw⟩
   let B := {w : ℂ // w ∈ {w : ℂ | T₁ < w.im}}
-  haveI : PreconnectedSpace B := Subtype.preconnectedSpace (convex_halfSpace_im_gt T₁).isPreconnected
+  have : PreconnectedSpace B := Subtype.preconnectedSpace (convex_halfSpace_im_gt T₁).isPreconnected
   have hdom : ∀ b : B, xx b ∈ (U.X k).dom := fun b => hxm b (hT₁ b b.2).1
   choose Pm hPm hper hpt hder hrest using fun b : B => hfr k ⟨xx b, hdom b⟩
   clear hrest
@@ -1130,12 +1130,12 @@ theorem periods_le_of_mem_lattice : ∀ (E : Type) [Field E] [NumberField E] [Is
     exact ⟨n, hn.trans (zComb_apply _ _).symm⟩
   choose n hn using key
   have hxc : Continuous fun b : B => xx b :=
-    (hxd.continuousOn.mono fun w hw => (hT₁ w hw).1).restrict
+    (hxd.continuousOn.mono fun w hw => (hT₁ w hw).1).domRestrict
   have hPc : ∀ z, Continuous fun b : B => Pm b z := fun z => continuous_pi fun jj => by
     simp only [hPm]
     exact PerLim.continuous_perFr _ hdom hxc _ _ _
   have hlc : ∀ j, Continuous fun b : B => lam b j := fun j =>
-    (continuous_apply j).comp (hcont.comp_continuous continuous_subtype_val fun b => (hT₁ b b.2).2)
+    (continuous_apply j).comp (hcont.comp_continuous continuous_subtypeVal fun b => (hT₁ b b.2).2)
   have hZc : ∀ z, Continuous fun b : B => zComb (lam b) z := fun z => by
     simp only [zComb_apply]
     exact continuous_finsetSum _ fun j _ => (hlc j).const_smul (z j)
@@ -1164,13 +1164,13 @@ theorem periods_le_of_mem_lattice : ∀ (E : Type) [Field E] [NumberField E] [Is
     intro τ i hτ
     rcases hτ with ⟨h1, h2⟩ | ⟨h1, h2⟩
     · obtain ⟨s, -, hs⟩ := hidx τ (N - (U.X k).p0) (by
-        rw [if_pos (((hX k).2 _).1 h1), (hX k).1, hN, Nat.add_sub_cancel])
+        rw [ite_eq_left (((hX k).2 _).1 h1), (hX k).1, hN, Nat.add_sub_cancel])
       exact ⟨s ⟨i, h2⟩, hs _⟩
     · have hcc : NumberField.ComplexEmbedding.conjugate (conjEmb τ) = τ := RingHom.ext fun a => by
         simp [conjEmb, NumberField.ComplexEmbedding.conjugate_coe_eq]
       have hne : ¬ τ (H.rt : E) = H.rt0 := fun h =>
         ((U.X k).cmType (conjEmb τ)).1 h1 (by rw [hcc]; exact ((hX k).2 τ).2 h)
-      obtain ⟨s, -, hs⟩ := hidx τ (U.X k).p0 (by rw [if_neg hne, (hX k).1])
+      obtain ⟨s, -, hs⟩ := hidx τ (U.X k).p0 (by rw [ite_eq_right hne, (hX k).1])
       exact ⟨s ⟨i, h2⟩, hs _⟩
   refine ⟨(∑ j, (|n b₀ j| : ℝ)) * C, Bx, ?_⟩
   filter_upwards [(tendsto_comap (f := Complex.im) (x := atTop)).eventually (eventually_gt_atTop T₁)]

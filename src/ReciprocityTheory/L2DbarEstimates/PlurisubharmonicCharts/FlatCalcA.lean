@@ -90,7 +90,7 @@ theorem fc_wd_sum (n : ℕ) (j : Fin n) {ι : Type*} (s : Finset ι) (f : ι →
     funext y
     simp
   rw [e, fderiv_sum hf]
-  simp only [ContinuousLinearMap.sum_apply]
+  simp only [sum_apply]
   rw [Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.sum_div]
 
 theorem fc_leviV_congr (n : ℕ) (g₁ g₂ : V n → ℂ) (v : V n) (h : g₁ =ᶠ[𝓝 v] g₂)

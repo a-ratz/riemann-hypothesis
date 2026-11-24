@@ -223,7 +223,7 @@ theorem exists_bump (z : ι → AdeleRing (𝓞 K) K) (U : Set (ι → AdeleRing
     b.hasCompactSupport.comp_left (g := fun r : ℝ => (r : ℂ)) (by simp)
   let φ : 𝓢(ι → mixedSpace K, ℂ) := h1.toSchwartzMap (Complex.ofRealCLM.contDiff.comp b.contDiff)
   have hφ : ∀ u, φ u = ((b u : ℝ) : ℂ) := fun u => rfl
-  haveI : TotallyDisconnectedSpace (FiniteAdeleRing (𝓞 K) K) :=
+  have : TotallyDisconnectedSpace (FiniteAdeleRing (𝓞 K) K) :=
     GlobalTheory.TamePartR.totallyDisconnected_finiteAdele K
   obtain ⟨Kc, hKn, hKs, hKc⟩ := local_compact_nhds hB
   obtain ⟨C, hCo, hv, hCs⟩ :=
@@ -275,7 +275,7 @@ theorem selfDual_std : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
     (fun x y => ((adelicChar K (∑ i, x i * y i) : Circle) : ℂ)) := by
   refine selfDual_of_rich inferInstance _ ?_ (fun _ _ => Circle.norm_coe _) ?_
     (schwartzBruhatPi (K := K) (ι := ι) : Set _) ?_ exists_bump
-  · exact continuous_subtype_val.comp ((continuous_adelicChar (K := K)).comp
+  · exact continuous_subtypeVal.comp ((continuous_adelicChar (K := K)).comp
       (continuous_finsetSum _ fun i _ =>
         ((continuous_apply i).comp continuous_fst).mul ((continuous_apply i).comp continuous_snd)))
   · intro x y

@@ -138,7 +138,7 @@ theorem isLattice_tr (φ : V ≃ₗ[K] V') {M : Submodule (𝓞 K) V} (hM : Subm
 
 theorem isFullLattice_tr (φ : V ≃ₗ[K] V') {M : Submodule (𝓞 K) V}
     (hM : Submodule.IsFullLattice K M) : Submodule.IsFullLattice K (latMap φ M) := by
-  letI : Submodule.IsLattice K (latMap φ M) := isLattice_tr φ hM.toIsLattice
+  let : Submodule.IsLattice K (latMap φ M) := isLattice_tr φ hM.toIsLattice
   constructor
   change Submodule.span K ((M.map ((φ : V →ₗ[K] V').restrictScalars (𝓞 K)) :
     Submodule (𝓞 K) V') : Set V') = ⊤

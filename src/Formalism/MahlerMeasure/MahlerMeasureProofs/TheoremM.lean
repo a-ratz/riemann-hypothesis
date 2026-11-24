@@ -89,7 +89,7 @@ theorem setTies_deg_eta (LL : Letters N) (T : TieData) (hT : StrictMono T.pos) (
     (h : T.pos i + 1 < N) : (LL.setTies T n).deg ⟨T.pos i + 1, h⟩ = n i := by
   unfold Letters.setTies
   have hex : ∃ j, T.pos j + 1 = ((⟨T.pos i + 1, h⟩ : Fin N) : ℕ) := ⟨i, rfl⟩
-  simp only [dif_pos hex]
+  simp only [dite_eq_left hex]
   congr 1
   have := Classical.choose_spec hex
   exact hT.injective (by simpa using this)
@@ -118,7 +118,7 @@ theorem takeD_total_eq (LL : Letters N) (T : TieData) (i : Fin T.t) (h : T.pos i
     rw [← Fin.sum_univ_eq_sum_range g N]
     apply Finset.sum_congr rfl
     intro a _
-    simp only [g, dif_pos a.isLt]
+    simp only [g, dite_eq_left a.isLt]
   rw [e1, e2, ← Finset.sum_range_add_sum_Ico g (by omega : T.pos i + 1 ≤ N)]
   have : ∑ a ∈ Ico (T.pos i + 1) N, g a = 0 := by
     apply Finset.sum_eq_zero
@@ -408,7 +408,7 @@ theorem filL_top (L : Submodule ℤ_[p] (MvPolynomial σ ℚ_[p])) (v : σ) (D :
     exact hne (MvPolynomial.support_eq_empty.mp (Finset.eq_empty_of_forall_notMem hc))
   have := hD x h1 m hm
   have := h2 (Finset.mem_coe.mpr hm)
-  simp only [Set.mem_setOf_eq] at this
+  simp only [Set.mem_ofPred_eq] at this
   omega
 
 def AdStep (L : Submodule ℤ_[p] (MvPolynomial σ ℚ_[p])) (v : σ) (e : ℕ) : Prop :=
@@ -437,8 +437,8 @@ theorem adStep_succ (L : Submodule ℤ_[p] (MvPolynomial σ ℚ_[p])) (v : σ) (
   let Fe1 := filL L v (e + 1)
   let Im : Submodule ℤ_[p] (MvPolynomial σ ℚ_[p] ⧸ Fe1) := Fe.map Fe1.mkQ
   have hFeFG : Fe.FG := Submodule.FG.of_le hFG inf_le_left
-  haveI : Module.Finite ℤ_[p] Im := Module.Finite.iff_fg.mpr (hFeFG.map _)
-  haveI : Module.IsTorsionFree ℤ_[p] Im := by
+  have : Module.Finite ℤ_[p] Im := Module.Finite.iff_fg.mpr (hFeFG.map _)
+  have : Module.IsTorsionFree ℤ_[p] Im := by
     apply Module.IsTorsionFree.of_smul_eq_zero
     rintro a ⟨y, hy⟩ h
     obtain ⟨x, hx, rfl⟩ := Submodule.mem_map.mp hy
@@ -519,13 +519,13 @@ theorem adStep_succ (L : Submodule ℤ_[p] (MvPolynomial σ ℚ_[p])) (v : σ) (
         intro m hm
         have h3 : e ≤ m v := h2 hm
         have h4 : m v ≠ e := hc m hm
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         omega
   ·
     intro e' he'
     rcases Nat.eq_or_lt_of_le he' with rfl | hlt
     · have : {b : ι ⊕ Fin k | e ≤ Sum.elim ord (fun _ => e) b} = Set.univ := by
-        ext b; simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+        ext b; simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
         rcases b with i | j
         · exact le_trans (Nat.le_succ e) (hord i).2
         · exact le_rfl
@@ -537,7 +537,7 @@ theorem adStep_succ (L : Submodule ℤ_[p] (MvPolynomial σ ℚ_[p])) (v : σ) (
         · rintro ⟨b, hb, rfl⟩
           rcases b with i | j
           · exact ⟨i, hb, rfl⟩
-          · simp only [Set.mem_setOf_eq, Sum.elim_inr] at hb; omega
+          · simp only [Set.mem_ofPred_eq, Sum.elim_inr] at hb; omega
         · rintro ⟨i, hi, rfl⟩
           exact ⟨Sum.inl i, hi, rfl⟩
       rw [this]
@@ -564,7 +564,7 @@ theorem adapted_of_fg (L : Submodule ℤ_[p] (MvPolynomial σ ℚ_[p])) (v : σ)
       · rintro ⟨b, hb, rfl⟩; exact ⟨eq.symm b, hb, rfl⟩
       · rintro ⟨i, hi, rfl⟩
         refine ⟨eq i, ?_, ?_⟩
-        · simp only [Set.mem_setOf_eq, Function.comp_apply, Equiv.symm_apply_apply]; exact hi
+        · simp only [Set.mem_ofPred_eq, Function.comp_apply, Equiv.symm_apply_apply]; exact hi
         · simp only [Function.comp_apply, Equiv.symm_apply_apply]
     rw [this]
     exact hfil e (Nat.zero_le e)

@@ -91,7 +91,7 @@ theorem map_mem_pow {E' : Type} [Field E'] [NumberField E'] (σ : E →+* E') {x
   rw [FractionalIdeal.extended_spanSingleton, hm]
 
 theorem exists_aut [IsGalois ℚ E] (φ τ : E →+* ℂ) : ∃ σ : E ≃ₐ[ℚ] E, ∀ x, τ x = φ (σ x) := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   let t : E →ₐ[ℚ] ℂ := τ.toRatAlgHom
   exact ⟨t.restrictNormal' E, fun x => (t.restrictNormal_commutes E x).symm⟩
 

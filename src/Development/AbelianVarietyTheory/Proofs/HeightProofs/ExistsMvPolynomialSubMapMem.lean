@@ -158,7 +158,7 @@ theorem gaussRing_completion :
     ext a
     simp
   refine ⟨f, hf', ?_, ?_, hmax, ?_⟩
-  · haveI := Op_isDVR D N la
+  · have := Op_isDVR D N la
     algebraize [f]
     have : Module.IsTorsionFree (Op D N la) O₂ := by
       rw [Module.isTorsionFree_iff_algebraMap_injective]

@@ -139,13 +139,13 @@ theorem UpperTheory.V.AlgebraTools.Conn.adjoin :
       ∃ _ : IsLocalRing (Algebra.adjoin A {f}), ReciprocityTheory.CA.IsCM (Algebra.adjoin A {f}) := by
   intro A R _ _ _ _ _ _ _ _ _ hA f
   have hf : IsIntegral A f := Algebra.IsIntegral.isIntegral f
-  haveI : IsIntegrallyClosed A := hA.normal
-  haveI : Algebra.IsIntegral (Algebra.adjoin A {f}) R := Algebra.IsIntegral.tower_top A
-  haveI : IsLocalRing (Algebra.adjoin A {f}) :=
+  have : IsIntegrallyClosed A := hA.normal
+  have : Algebra.IsIntegral (Algebra.adjoin A {f}) R := Algebra.IsIntegral.tower_top A
+  have : IsLocalRing (Algebra.adjoin A {f}) :=
     RingHom.domain_isLocalRing (algebraMap (Algebra.adjoin A {f}) R)
   refine ⟨inferInstance, ?_⟩
-  haveI : Module.Free A (Algebra.adjoin A {f}) := .of_basis (Algebra.adjoin.powerBasis' hf).basis
-  haveI : Module.Finite A (Algebra.adjoin A {f}) := .of_basis (Algebra.adjoin.powerBasis' hf).basis
+  have : Module.Free A (Algebra.adjoin A {f}) := .of_basis (Algebra.adjoin.powerBasis' hf).basis
+  have : Module.Finite A (Algebra.adjoin A {f}) := .of_basis (Algebra.adjoin.powerBasis' hf).basis
   exact cmFree hA.cm
 end -- clump:auto
 end -- clump:auto
@@ -554,7 +554,7 @@ private theorem UpperTheory.V.AlgebraTools.Conn.core_pow_mem {R : Type} [CommRin
 private theorem UpperTheory.V.AlgebraTools.Conn.core_krull {R : Type} [CommRing R] [IsDomain R]
     [IsNoetherianRing R] (P : Ideal R) (hP : P.IsPrime) (y r : R) (hy : y ∉ P)
     (h : ∀ n : ℕ, ∃ K : ℕ, y ^ K * r ∈ P ^ n) : r = 0 := by
-  haveI := hP
+  have := hP
   have hmem : ∀ n : ℕ, algebraMap R (Localization.AtPrime P) r ∈
       (maximalIdeal (Localization.AtPrime P)) ^ n := by
     intro n
@@ -588,7 +588,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.core :
       algebraMap A R y ∉ P → algebraMap A R z ∉ Q → False := by
   intro A R _ _ _ _ _ _ _ _ I _ J u v b c P Q y z hJ hJI hreg hIJ hbc hu hv hP hQ hbP hcQ hIP hIQ
     hy hz hyP hzQ
-  haveI : IsNoetherianRing R := IsNoetherianRing.of_finite A R
+  have : IsNoetherianRing R := IsNoetherianRing.of_finite A R
   obtain ⟨a, ha⟩ := UpperTheory.V.AlgebraTools.Conn.limit (R := R) I J u v b c hJ hJI hreg hIJ hbc
     (IsNoetherian.noetherian b) (IsNoetherian.noetherian c) hu hv
   obtain ⟨d, r, hd, hr⟩ := UpperTheory.V.AlgebraTools.Conn.bidual (M := R) a
@@ -659,12 +659,12 @@ private theorem UpperTheory.V.AlgebraTools.Conn.exists_system_of_parameters {A :
       ∀ P : Ideal A, P.IsPrime → J ≤ P → (∀ y ∈ ys, y ∈ P) → P = maximalIdeal A := by
   have hne : J ≠ ⊤ := fun h =>
     (maximalIdeal.isMaximal A).ne_top (top_le_iff.mp (h ▸ hle))
-  haveI : Nontrivial (A ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hne
-  haveI : IsLocalRing (A ⧸ J) :=
+  have : Nontrivial (A ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hne
+  have : IsLocalRing (A ⧸ J) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
   set π := Ideal.Quotient.mk J with hπ
   have hsurj : Function.Surjective π := Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom π := IsLocalHom.of_surjective π hsurj
+  have : IsLocalHom π := IsLocalHom.of_surjective π hsurj
   obtain ⟨s, hs, hcard⟩ :=
     Ideal.exists_finset_card_eq_height_of_isNoetherianRing (maximalIdeal (A ⧸ J))
   obtain ⟨g, hg⟩ := hsurj.hasRightInverse
@@ -716,7 +716,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.reg2 :
       ∃ u ∈ maximalIdeal A, ∃ v ∈ maximalIdeal A, ∀ m K : ℕ,
         Reg2 (Ideal.ofList (xs.map (· ^ (m + 1)))) (u ^ K) (v ^ K) := by
   intro A _ _ hA xs hxs hdim h2
-  haveI := hA.1
+  have := hA.1
   obtain ⟨ys, hys, hlen, hP⟩ := exists_system_of_parameters (Ideal.ofList xs) (Ideal.span_le.2 hxs)
   rw [← hlen] at hdim h2
   have h2' : 2 ≤ ys.length := by exact_mod_cast h2
@@ -808,7 +808,7 @@ private theorem base_exists_out {A R : Type} [CommRing A] [IsLocalRing A] [CommR
     ∃ y ∈ maximalIdeal A, algebraMap A R y ∉ P := by
   by_contra hcon
   push_neg at hcon
-  haveI := hP
+  have := hP
   have hle : maximalIdeal A ≤ P.comap (algebraMap A R) := fun y hy => hcon y hy
   have hne : P.comap (algebraMap A R) ≠ ⊤ := (Ideal.comap_isPrime (algebraMap A R) P).ne_top
   have heq : P.comap (algebraMap A R) = maximalIdeal A :=
@@ -834,17 +834,17 @@ theorem UpperTheory.V.AlgebraTools.Conn.base :
       (b ⊓ c).radical = ((Ideal.ofList xs).map (algebraMap A R)).radical → (b ⊔ c).radical = maximalIdeal R →
       0 < ringKrullDim (R ⧸ b) → 0 < ringKrullDim (R ⧸ c) → False := by
   intro A R _ _ _ _ _ _ _ _ _ _ hCM xs b c hxs hdim h2 hrad hsup hb hc
-  haveI : IsNoetherianRing A := hCM.1
+  have : IsNoetherianRing A := hCM.1
   have hIm : Ideal.ofList xs ≤ maximalIdeal A := base_ofList_le hxs
   have hIne : Ideal.ofList xs ≠ ⊤ := ne_top_of_le_ne_top (maximalIdeal.isMaximal A).ne_top hIm
-  haveI : IsAdicComplete (Ideal.ofList xs) A := cplFinite (A := A) (B := A) (Ideal.ofList xs) hIne
+  have : IsAdicComplete (Ideal.ofList xs) A := cplFinite (A := A) (B := A) (Ideal.ofList xs) hIne
   obtain ⟨u, hu, v, hv, hreg⟩ := reg2 hCM xs hxs hdim h2
   obtain ⟨P, hP, hbP, hPm⟩ := base_exists_prime b hb
   obtain ⟨Q, hQ, hcQ, hQm⟩ := base_exists_prime c hc
   obtain ⟨y, hy, hyP⟩ := base_exists_out (A := A) P hP hPm
   obtain ⟨z, hz, hzQ⟩ := base_exists_out (A := A) Q hQ hQm
   have hcom : (maximalIdeal R).comap (algebraMap A R) = maximalIdeal A := by
-    haveI := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (R := A) (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal R)
+    have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (R := A) (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal R)
     exact IsLocalRing.eq_maximalIdeal this
   have hmem : ∀ a ∈ maximalIdeal A, algebraMap A R a ∈ (b ⊔ c).radical := by
     intro a ha
@@ -946,15 +946,15 @@ theorem UpperTheory.V.AlgebraTools.Conn.drop :
   have hTprime : ∀ q ∈ T, q.IsPrime := by
     intro q hq
     obtain ⟨I, _, p, hp, rfl⟩ := (memT q).mp hq
-    haveI := hp.1.1
+    have := hp.1.1
     infer_instance
   have hnot : ¬ ∃ q ∈ hT.toFinset, maximalIdeal A ≤ id q := by
     rintro ⟨q, hq, hle⟩
     obtain ⟨I, hI, p, hp, rfl⟩ := (memT _).mp (hT.mem_toFinset.mp hq)
-    haveI := hp.1.1
+    have := hp.1.1
     have heq : maximalIdeal A = Ideal.comap (algebraMap A R) p :=
       (IsLocalRing.maximalIdeal.isMaximal A).eq_of_le Ideal.IsPrime.ne_top' hle
-    haveI : (Ideal.comap (algebraMap A R) p).IsMaximal := heq ▸ IsLocalRing.maximalIdeal.isMaximal A
+    have : (Ideal.comap (algebraMap A R) p).IsMaximal := heq ▸ IsLocalRing.maximalIdeal.isMaximal A
     have hpm : p = maximalIdeal R :=
       IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_of_isIntegral_of_isMaximal_under p this)
     exact UpperTheory.V.AlgebraTools.Conn.max_notMem_minimalPrimes I (hS I hI) (hpm ▸ hp)
@@ -988,7 +988,7 @@ private theorem cut_rad_iff {R : Type} [CommRing R] (I J : Ideal R) :
     rw [Ideal.radical_eq_sInf I, Ideal.radical_eq_sInf J]
     congr 1
     ext p
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact ⟨fun ⟨h1, h2⟩ => ⟨(h p h2).mp h1, h2⟩, fun ⟨h1, h2⟩ => ⟨(h p h2).mpr h1, h2⟩⟩
 
 private theorem cut_dim_congr {R : Type} [CommRing R] {I J : Ideal R} (h : I.radical = J.radical) :
@@ -999,8 +999,8 @@ private theorem cut_dim_congr {R : Type} [CommRing R] {I J : Ideal R} (h : I.rad
 
 private theorem cut_dim_nat {R : Type} [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     {I : Ideal R} (h : I ≠ ⊤) : ∃ n : ℕ, ringKrullDim (R ⧸ I) = n := by
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr h
-  haveI : IsLocalRing (R ⧸ I) :=
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr h
+  have : IsLocalRing (R ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   have h1 := ringKrullDim_ne_top (R := R ⧸ I)
   have h2 := ringKrullDim_ne_bot (R := R ⧸ I)
@@ -1023,7 +1023,7 @@ private theorem cut_dim_map {A R : Type} [CommRing A] [CommRing R] [Algebra A R]
   · intro h
     exact le_trans Ideal.le_comap_map h
   · intro hJ
-    haveI := hp
+    have := hp
     obtain ⟨Q, -, hQ, hQp⟩ := Ideal.exists_ideal_over_prime_of_isIntegral p (⊥ : Ideal R)
       (by simp [← RingHom.ker_eq_comap_bot,
         (RingHom.injective_iff_ker_eq_bot _).mp (FaithfulSMul.algebraMap_injective A R)])
@@ -1040,11 +1040,11 @@ private theorem cut_rad_max {R : Type} [CommRing R] [IsLocalRing R] {I : Ideal R
   intro p hp
   constructor
   · intro hIp
-    haveI : Ring.KrullDimLE 0 (R ⧸ I) := Ring.krullDimLE_iff.mpr (by simp [h])
-    haveI := hp
-    haveI hpm : (p.map (Ideal.Quotient.mk I)).IsPrime :=
+    have : Ring.KrullDimLE 0 (R ⧸ I) := Ring.krullDimLE_iff.mpr (by simp [h])
+    have := hp
+    have hpm : (p.map (Ideal.Quotient.mk I)).IsPrime :=
       Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rwa [Ideal.mk_ker])
-    haveI hmax : (p.map (Ideal.Quotient.mk I)).IsMaximal := hpm.isMaximal'
+    have hmax : (p.map (Ideal.Quotient.mk I)).IsMaximal := hpm.isMaximal'
     have hpc : p = (p.map (Ideal.Quotient.mk I)).comap (Ideal.Quotient.mk I) := by
       rw [Ideal.comap_map_of_surjective _ Ideal.Quotient.mk_surjective, ← RingHom.ker_eq_comap_bot,
         Ideal.mk_ker, sup_eq_left.mpr hIp]
@@ -1058,7 +1058,7 @@ private theorem cut_rad_max {R : Type} [CommRing R] [IsLocalRing R] {I : Ideal R
 private theorem cut_ne_top {R : Type} [CommRing R] {I : Ideal R} {k : WithBot ℕ∞}
     (h : ringKrullDim (R ⧸ I) + 1 = k) (hk : k ≠ ⊥) : I ≠ ⊤ := by
   rintro rfl
-  haveI : Subsingleton (R ⧸ (⊤ : Ideal R)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+  have : Subsingleton (R ⧸ (⊤ : Ideal R)) := Ideal.Quotient.subsingleton_iff.mpr rfl
   rw [ringKrullDim_eq_bot_of_subsingleton, WithBot.bot_add] at h
   exact hk h.symm
 
@@ -1070,8 +1070,8 @@ theorem UpperTheory.V.AlgebraTools.Conn.cut :
       ringKrullDim R ≤ ringKrullDim (R ⧸ (b ⊔ c)) + 1 + xs.length := by
   classical
   intro A R _ _ _ _ _ _ _ _ _ _ hCM
-  haveI : IsNoetherianRing A := hCM.1
-  haveI : IsNoetherianRing R := isNoetherian_of_tower A inferInstance
+  have : IsNoetherianRing A := hCM.1
+  have : IsNoetherianRing R := isNoetherian_of_tower A inferInstance
   have hRA : ringKrullDim R = ringKrullDim A :=
     ReciprocityTheory.CA.ringKrullDim_eq_of_isIntegral_of_injective (FaithfulSMul.algebraMap_injective A R)
   obtain ⟨N, hN, -⟩ := hCM.2
@@ -1218,12 +1218,12 @@ theorem UpperTheory.V.AlgebraTools.Conn.one :
       ringKrullDim R ≤ ringKrullDim (R ⧸ (b ⊔ c)) + 2 := by
   intro R _ _ _ hB f b c hf hrad hb hc hdb hdc
   obtain ⟨A, _, _, i, hA, hinj, hfin⟩ := hB
-  letI : Algebra A R := i.toAlgebra
-  haveI : Module.Finite A R := hfin
-  haveI : FaithfulSMul A R := (faithfulSMul_iff_algebraMap_injective A R).mpr hinj
-  haveI : IsDomain A := hA.dom
-  haveI : IsNoetherianRing A := hA.cm.1
-  haveI : IsAdicComplete (maximalIdeal A) A := hA.complete
+  let : Algebra A R := i.toAlgebra
+  have : Module.Finite A R := hfin
+  have : FaithfulSMul A R := (faithfulSMul_iff_algebraMap_injective A R).mpr hinj
+  have : IsDomain A := hA.dom
+  have : IsNoetherianRing A := hA.cm.1
+  have : IsAdicComplete (maximalIdeal A) A := hA.complete
   by_cases hf0 : f = 0
   · exfalso
     subst hf0
@@ -1241,12 +1241,12 @@ theorem UpperTheory.V.AlgebraTools.Conn.one :
       rw [sup_bot_eq] at hdb
       exact lt_irrefl _ hdb
   obtain ⟨hloc, hcm⟩ := adjoin hA f
-  haveI : IsNoetherianRing (Algebra.adjoin A {f}) := hcm.1
-  haveI : Module.Finite A (Algebra.adjoin A {f}) :=
+  have : IsNoetherianRing (Algebra.adjoin A {f}) := hcm.1
+  have : Module.Finite A (Algebra.adjoin A {f}) :=
     Module.Finite.of_injective (IsScalarTower.toAlgHom A (Algebra.adjoin A {f}) R).toLinearMap Subtype.val_injective
-  haveI : IsAdicComplete (maximalIdeal (Algebra.adjoin A {f})) (Algebra.adjoin A {f}) :=
+  have : IsAdicComplete (maximalIdeal (Algebra.adjoin A {f})) (Algebra.adjoin A {f}) :=
     cplFinite (A := A) (maximalIdeal _) (maximalIdeal.isMaximal _).ne_top
-  haveI : Module.Finite (Algebra.adjoin A {f}) R := Module.Finite.of_restrictScalars_finite A _ R
+  have : Module.Finite (Algebra.adjoin A {f}) R := Module.Finite.of_restrictScalars_finite A _ R
   let x : Algebra.adjoin A {f} := ⟨f, Algebra.self_mem_adjoin_singleton A f⟩
   have hx0 : x ≠ 0 := fun h => hf0 (congrArg Subtype.val h)
   have hxm : x ∈ maximalIdeal (Algebra.adjoin A {f}) := by
@@ -1380,7 +1380,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.hyper :
     intro J h hJ h2
     apply hJ
     rw [← hcm J h, h2, Ideal.comap_top]
-  haveI : IsLocalRing (R ⧸ p) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
+  have : IsLocalRing (R ⧸ p) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
   have hamap : a.map (Ideal.Quotient.mk p) = Ideal.span {Ideal.Quotient.mk p f} := by
     rw [ha, Ideal.map_sup, Ideal.map_quotient_self, bot_sup_eq, Ideal.map_span, Set.image_singleton]
   have key := one (hC p hp) (Ideal.Quotient.mk p f) (b.map (Ideal.Quotient.mk p))
@@ -1451,7 +1451,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.step :
   have hmem : ∀ (b : Ideal R) (z : PrimeSpectrum R),
       z ∈ X b ↔ (b ≤ z.asIdeal ∧ Ideal.span {f} ≤ z.asIdeal) ∧ ¬ I ≤ z.asIdeal := by
     intro b z
-    simp only [hX, Set.mem_diff, PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe, sup_le_iff]
+    simp only [hX, Set.mem_sdiff, PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe, sup_le_iff]
   have hXc : ∀ p ∈ a.minimalPrimes, IsConnected (X p) := by
     intro p hp
     have h := hyper hC p f k hp.1.1 hf (hdim p hp) ((p ⊔ Ideal.span {f}) ⊔ I) le_sup_left
@@ -1459,7 +1459,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.step :
     convert h using 1
     ext z
     rw [hmem]
-    simp only [Set.mem_diff, PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe, sup_le_iff]
+    simp only [Set.mem_sdiff, PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe, sup_le_iff]
     tauto
   have hsub : ∀ p ∈ a.minimalPrimes, X p ⊆ X a := by
     intro p hp z hz
@@ -1600,7 +1600,7 @@ private theorem dim_of_univ {R : Type} [CommRing R] (I : Ideal R)
 private theorem connOn_irr {R : Type} [CommRing R] [IrreducibleSpace (PrimeSpectrum R)]
     (j : WithBot ℕ∞) (hj : j ≤ ringKrullDim R) : ConnOn (⊥ : Ideal R) j := by
   intro I _ hI
-  rw [PrimeSpectrum.zeroLocus_bot, ← Set.compl_eq_univ_diff]
+  rw [PrimeSpectrum.zeroLocus_bot, ← Set.compl_eq_univ_sdiff]
   have hne : (PrimeSpectrum.zeroLocus (I : Set R))ᶜ.Nonempty := by
     rw [Set.nonempty_compl]
     intro h
@@ -1669,7 +1669,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.clConn :
       [CommRing R] [IsLocalRing R] [Algebra O R] [IrreducibleSpace (PrimeSpectrum R)], UpperTheory.V.CA.IsCL O R → ∀ (a : Ideal R) (h k : ℕ), a ≠ ⊤ →
       ReciprocityTheory.CA.AraLE a h → ((k + h + 1 : ℕ) : WithBot ℕ∞) ≤ ringKrullDim R → ReciprocityTheory.CA.ConnInDim (R ⧸ a) k := by
   intro O R _ _ _ _ _ _ _ _ hR a h k ha hh hd
-  haveI := hR.noeth
+  have := hR.noeth
   exact UpperTheory.V.AlgebraTools.Conn.main (UpperTheory.V.AlgebraTools.Conn.cohen hR) a h k ha hh hd
 end -- clump:auto
 end -- clump:auto
@@ -1689,7 +1689,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.clChain :
       ∀ p ∈ a.minimalPrimes, ∀ q ∈ a.minimalPrimes,
         Relation.ReflTransGen (fun x y : Ideal R => x ∈ a.minimalPrimes ∧ y ∈ a.minimalPrimes ∧ ReciprocityTheory.CA.Linked R k x y) p q := by
   intro O R _ _ _ _ _ _ _ _ hCL a h k ha hara hdim p hp q hq
-  haveI : IsNoetherianRing R := hCL.noeth
+  have : IsNoetherianRing R := hCL.noeth
   exact chain a (k : WithBot ℕ∞) ((bridge a _).2 (clConn hCL a h k ha hara hdim)) p hp q hq
 end -- clump:auto
 end -- clump:auto

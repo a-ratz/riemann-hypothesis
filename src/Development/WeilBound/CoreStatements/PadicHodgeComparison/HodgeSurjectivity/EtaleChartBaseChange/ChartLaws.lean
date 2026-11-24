@@ -365,11 +365,11 @@ theorem chart_etale_of_univ {R A S B : Type} [CommRing R] [CommRing A] [CommRing
       ∃ γ : B →+* T, γ.comp φ = α ∧ γ.comp h = β)
     (hE : ∀ (T : Type) [CommRing T] (γ γ' : B →+* T), γ.comp φ = γ'.comp φ → γ.comp h = γ'.comp h → γ = γ') :
     h.Etale := by
-  letI : Algebra R A := f.toAlgebra
-  letI : Algebra R S := g.toAlgebra
-  letI : Algebra R B := (φ.comp f).toAlgebra
-  haveI : Algebra.Etale R A := RingHom.etale_algebraMap.1 hf
-  haveI : Algebra.Etale S (TensorProduct R S A) := Algebra.Etale.baseChange R A S
+  let : Algebra R A := f.toAlgebra
+  let : Algebra R S := g.toAlgebra
+  let : Algebra R B := (φ.comp f).toAlgebra
+  have : Algebra.Etale R A := RingHom.etale_algebraMap.1 hf
+  have : Algebra.Etale S (TensorProduct R S A) := Algebra.Etale.baseChange R A S
   let hA : S →ₐ[R] B := { h with commutes' := fun r => (RingHom.congr_fun hsq r).symm }
   let φA : A →ₐ[R] B := { φ with commutes' := fun r => rfl }
   let e : TensorProduct R S A →ₐ[R] B := Algebra.TensorProduct.lift hA φA (fun _ _ => Commute.all _ _)

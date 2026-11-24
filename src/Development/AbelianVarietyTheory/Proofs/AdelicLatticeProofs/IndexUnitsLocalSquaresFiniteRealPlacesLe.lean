@@ -164,7 +164,7 @@ theorem relIndex_hiUnits_succ_le :
     intro x
     have hx : w (((x : Kˣ) : K) - 1) ≤ WithZero.exp (-(n : ℤ)) := x.2.2
     obtain ⟨r, hr, h⟩ := hR ((((x : Kˣ) : K) - 1) / π ^ n) (by
-      rw [map_div₀, div_le_one₀ (zero_lt_iff.mpr hπn0), hπn]; exact hx)
+      rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.mpr hπn0), hπn]; exact hx)
     exact ⟨⟨r, hr⟩, h⟩
   choose f hf using hex
   have key : ∀ x y : hiUnits w n, f x = f y →
@@ -179,7 +179,7 @@ theorem relIndex_hiUnits_succ_le :
     have h4 : (((y : Kˣ) : K) - 1) / π ^ n - (f x : K) -
         ((((x : Kˣ) : K) - 1) / π ^ n - (f x : K)) =
         (((y : Kˣ) : K) - ((x : Kˣ) : K)) / π ^ n := by ring
-    rw [h4, map_div₀, div_lt_one₀ (zero_lt_iff.mpr hπn0), hπn] at h3
+    rw [h4, map_div₀, div_lt_one₀ (pos_iff_ne_zero.mpr hπn0), hπn] at h3
     have h5 := le_exp_sub_one_of_lt_exp h3
     rw [Subgroup.mem_subgroupOf]
     have hv : ((((x⁻¹ * y : hiUnits w n) : Kˣ)) : K) =
@@ -227,7 +227,7 @@ theorem relIndex_le_two_of_coset {G : Type} [CommGroup G] (H K : Subgroup G) (ε
     (h : ∀ x ∈ K, x ∈ H ∨ x * ε⁻¹ ∈ H) : H.relIndex K ≤ 2 := by
   by_cases hK : K ≤ H
   · rw [Subgroup.relIndex_eq_one.mpr hK]; norm_num
-  · obtain ⟨a, haK, haH⟩ := SetLike.not_le_iff_exists.mp hK
+  · obtain ⟨a, haK, haH⟩ := IsConcreteLE.not_le_iff_exists.mp hK
     have ha := (h a haK).resolve_left haH
     apply le_of_eq
     unfold Subgroup.relIndex

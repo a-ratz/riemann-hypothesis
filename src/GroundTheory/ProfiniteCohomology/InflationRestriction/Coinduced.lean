@@ -114,7 +114,7 @@ theorem isLocallyConstant_restrictSlice (f : LocallyConstant G X) :
     IsLocallyConstant (restrictSlice X N hs f) := by
   rw [IsLocallyConstant.iff_eventually_eq]
   intro m₀
-  have hc : Continuous fun m : N => (m₀ : G)⁻¹ * m := continuous_const.mul continuous_subtype_val
+  have hc : Continuous fun m : N => (m₀ : G)⁻¹ * m := continuous_const.mul continuous_subtypeVal
   have h1 : Tendsto (fun m : N => (m₀ : G)⁻¹ * m) (𝓝 m₀) (𝓝 1) := by
     simpa using hc.tendsto m₀
   filter_upwards [h1.eventually (eventually_forall_mul_eq f)] with m hm

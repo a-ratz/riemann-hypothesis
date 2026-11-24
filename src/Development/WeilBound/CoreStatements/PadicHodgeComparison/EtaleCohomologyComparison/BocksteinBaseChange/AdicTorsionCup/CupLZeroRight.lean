@@ -114,7 +114,7 @@ include p hq
 
 theorem vanish (hI : ZIn) (n : ℤ) (hn : 2 * (d : ℤ) < n) : Subsingleton (Ht q (sch.obj Y) n 0) := by
   obtain ⟨tr, htr⟩ := hI.e8 q k hq p d
-  haveI : Subsingleton (Ht q (sch.obj Y) (2 * d - n) (d - 0)) :=
+  have : Subsingleton (Ht q (sch.obj Y) (2 * d - n) (d - 0)) :=
     (hI.a9 (ZMod q) (tw q ((d : ℤ) - 0))).1 _ _ (by omega)
   obtain ⟨c, -, hc⟩ := htr n 0 0
   refine ⟨fun a b => (hc a fun y => ?_).trans (hc b fun y => ?_).symm⟩ <;>

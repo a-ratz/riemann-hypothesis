@@ -133,7 +133,7 @@ theorem pow_eq_one_eq_of_residue {S : Type*} [CommRing S] [IsLocalRing S] {n : �
 theorem card_sub_one_isUnit (S : Type*) [CommRing S] [IsLocalRing S] [Finite (ResidueField S)] :
     IsUnit ((Nat.card (ResidueField S) - 1 : ℕ) : S) := by
   rw [← IsLocalRing.residue_ne_zero_iff_isUnit, map_natCast, Nat.cast_sub Nat.card_pos, Nat.cast_one]
-  haveI := Fintype.ofFinite (ResidueField S)
+  have := Fintype.ofFinite (ResidueField S)
   rw [Nat.card_eq_fintype_card, FiniteField.cast_card_eq_zero]
   simp
 
@@ -155,20 +155,20 @@ theorem exists_unr_embedding : ∀ (K : UQ), K.Odd → ∀ B : InvAlg K, B.g * B
     rw [hq', one_pow] at hcardR
     have : Subsingleton (ResidueField R) := (Nat.card_eq_one_iff_unique.1 hcardR).1
     exact not_subsingleton (ResidueField R) this
-  haveI : Finite (ResidueField R) := Nat.finite_of_card_ne_zero (by rw [hcardR, hq']; exact pow_ne_zero _ (pow_ne_zero _ hq0))
+  have : Finite (ResidueField R) := Nat.finite_of_card_ne_zero (by rw [hcardR, hq']; exact pow_ne_zero _ (pow_ne_zero _ hq0))
 
-  haveI : Module.Finite K.O R := Algebra.finite_adjoin_simple_of_isIntegral hi
-  haveI : HenselianLocalRing K.O := GlobalTheory.henselianLocalRing_of_henselianRing K.O
-  haveI : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_finite K.O R
+  have : Module.Finite K.O R := Algebra.finite_adjoin_simple_of_isIntegral hi
+  have : HenselianLocalRing K.O := GlobalTheory.henselianLocalRing_of_henselianRing K.O
+  have : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_finite K.O R
   have h1q : 1 < K'.q ^ 2 := by rw [← K'.card_res]; exact Finite.one_lt_card
   have hN : N ≠ 0 := by omega
   have hNR : IsUnit (N : R) := by
     have := card_sub_one_isUnit R
     rwa [hcardR] at this
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
-  haveI : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FaithfulSMul K.O K'.E := (faithfulSMul_iff_algebraMap_injective _ _).2
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
+  have : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FaithfulSMul K.O K'.E := (faithfulSMul_iff_algebraMap_injective _ _).2
     (φ.injective.comp (IsFractionRing.injective K.O K.E))
   have hzN : z ^ N = 1 := hzp.pow_eq_one
   have hzint : IsIntegral K.O z :=
@@ -197,7 +197,7 @@ theorem exists_unr_embedding : ∀ (K : UQ), K.Odd → ∀ B : InvAlg K, B.g * B
   let ψ : K'.E →+* B.A := (pb.lift (yR : B.A) hy).toRingHom
   have hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e := fun e => (pb.lift (yR : B.A) hy).commutes e
   have hψz : ψ z = yR := pb.lift_gen _ hy
-  haveI : Nontrivial B.A := nontrivial_of_ne (0 : B.A) 1 fun h => zero_ne_one (Subtype.ext h : (0 : R) = 1)
+  have : Nontrivial B.A := nontrivial_of_ne (0 : B.A) 1 fun h => zero_ne_one (Subtype.ext h : (0 : R) = 1)
   have hψi : Function.Injective ψ := ψ.injective
 
   let τR : R →+* R := (B.σ : B.A →+* B.A).restrict R R fun x hx => Orbit.adjoin_stable B hu hi hx
@@ -270,7 +270,7 @@ theorem exists_unr_embedding : ∀ (K : UQ), K.Odd → ∀ B : InvAlg K, B.g * B
     | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
     | mul x y _ _ hx hy => rw [map_mul]; exact mul_mem hx hy
   refine ⟨ψ, hψ, hσ, hO, ?_⟩
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   have hcoe : ∀ n : ℕ, ((yR ^ n : R) : B.A) = ψ (z ^ n) := fun n => by rw [map_pow, hψz]; rfl
   have hwp : IsPrimitiveRoot (residue R yR) N := by
     refine ⟨by rw [← map_pow, hyN, map_one], fun l hl => hzp.dvd_of_pow_eq_one l ?_⟩
@@ -283,7 +283,7 @@ theorem exists_unr_embedding : ∀ (K : UQ), K.Odd → ∀ B : InvAlg K, B.g * B
   have hgu : gR * τR gR = 1 := Subtype.ext hu
   have hg0 : residue R gR ≠ 0 := (IsUnit.map (residue R) (⟨⟨gR, τR gR, hgu, by rw [mul_comm]; exact hgu⟩, rfl⟩ : IsUnit gR)).ne_zero
   have hgN : residue R gR ^ N = 1 := by
-    haveI := Fintype.ofFinite (ResidueField R)
+    have := Fintype.ofFinite (ResidueField R)
     have := FiniteField.pow_card_sub_one_eq_one _ hg0
     rwa [← Nat.card_eq_fintype_card, hcardR] at this
   obtain ⟨j, -, hj⟩ := hwp.eq_pow_of_pow_eq_one hgN
@@ -678,7 +678,7 @@ theorem involution_pair_representatives :
         ∀ i, s i = i ∨ ∃ j, i = e j ∨ i = s (e j) := by
   intro ι _ s hs
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   set enc : ι → ℕ := fun i => (Fintype.equivFin ι i : ℕ) with henc_def
   have henc : Function.Injective enc := fun a b h =>
     (Fintype.equivFin ι).injective (Fin.ext h)
@@ -725,8 +725,8 @@ theorem exists_surjective_valuation_isIntegral_iff (K : UQ) (L : Type) [Field L]
     [Algebra K.O L] [IsScalarTower K.O K.E L] [FiniteDimensional K.E L] :
     ∃ v : Lˣ →* Multiplicative ℤ, Function.Surjective v ∧
       ∀ x : Lˣ, IsIntegral K.O (x : L) ↔ 0 ≤ Multiplicative.toAdd (v x) := by
-  haveI hdvr := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure K.O K.E L
-  haveI hfr := integralClosure.isFractionRing_of_finite_extension (A := K.O) K.E L
+  have hdvr := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure K.O K.E L
+  have hfr := integralClosure.isFractionRing_of_finite_extension (A := K.O) K.E L
   set R := integralClosure K.O L
   let P := IsDiscreteValuationRing.maximalIdeal R
   let u : Lˣ →* Multiplicative ℤ := WithZero.unitsWithZeroEquiv.toMonoidHom.comp
@@ -801,13 +801,13 @@ namespace GlobalTheory.UnitLemma
 
 theorem isIntegral_iff_forall_maximalSpectrum (K : UQ) (B : InvAlg K) (hred : IsReduced B.A) (x : B.A) :
     IsIntegral K.O x ↔ ∀ m : MaximalSpectrum B.A, IsIntegral K.O (Ideal.Quotient.mk m.asIdeal x) := by
-  haveI : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
+  have : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
   constructor
   · intro h m
     have := h.map (Ideal.Quotient.mkₐ K.O m.asIdeal)
     simpa [Ideal.Quotient.mkₐ_eq_mk] using this
   · intro h
-    letI : Fintype (MaximalSpectrum B.A) := Fintype.ofFinite _
+    let : Fintype (MaximalSpectrum B.A) := Fintype.ofFinite _
     choose p hpm hp using fun m : MaximalSpectrum B.A => h m
     refine ⟨∏ m, p m, monic_prod_of_monic _ _ (fun m _ => hpm m), ?_⟩
     have hmem : ∀ m : MaximalSpectrum B.A, eval₂ (algebraMap K.O B.A) x (∏ m, p m) ∈ m.asIdeal := by
@@ -959,8 +959,8 @@ namespace GlobalTheory.NotIntegral
 theorem inv_small_not_integral : ∀ (K : UQ) (B : InvAlg K) (a : K.O), K.Small a → ∀ m : MaximalSpectrum B.A, ¬ IsIntegral K.O (algebraMap K.E (B.A ⧸ m.asIdeal) (algebraMap K.O K.E a)⁻¹) := by
   intro K B a ha m hint
   obtain ⟨ha0, hmax, -⟩ := ha
-  haveI : m.asIdeal.IsMaximal := m.isMaximal
-  letI : Field (B.A ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
+  have : m.asIdeal.IsMaximal := m.isMaximal
+  let : Field (B.A ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
   let f : K.E →ₐ[K.O] (B.A ⧸ m.asIdeal) := IsScalarTower.toAlgHom K.O K.E (B.A ⧸ m.asIdeal)
   have hf : Function.Injective f := (algebraMap K.E (B.A ⧸ m.asIdeal)).injective
   have hE : IsIntegral K.O (algebraMap K.O K.E a)⁻¹ := (isIntegral_algHom_iff f hf).1 hint
@@ -1052,14 +1052,14 @@ theorem UnitLemma.exists_unit_residue (K : UQ) (B : InvAlg K) (hB : IsReduced B.
     ∃ y : B.Aˣ, Ideal.Quotient.mk m.asIdeal (y : B.A) = z ∧
       ∀ m' : MaximalSpectrum B.A, m' ≠ m → Ideal.Quotient.mk m'.asIdeal (y : B.A) = 1 := by
   classical
-  haveI : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
+  have : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
   let e := IsArtinianRing.equivPi B.A
   let v : (I : MaximalSpectrum B.A) → B.A ⧸ I.asIdeal := fun I =>
     if h : I = m then h ▸ z else 1
   have hv : IsUnit v := by
     rw [Pi.isUnit_iff]
     intro I
-    letI := Ideal.Quotient.field I.asIdeal
+    let := Ideal.Quotient.field I.asIdeal
     rw [isUnit_iff_ne_zero]
     by_cases h : I = m
     · subst h; simpa [v] using hz
@@ -1175,7 +1175,7 @@ theorem valsAt_torus_surjective : ∀ (G : Type) [CommGroup G] (τ : G →* G), 
     split_ifs with hij
     · subst hij; rw [hy1]; rfl
     · rw [hy2 j (e i) fun h => hij (he _ _ h)]; rfl
-  simp only [hc, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hc, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 end GlobalTheory.UnitLemma
 end -- clump:auto
@@ -1194,14 +1194,14 @@ namespace GlobalTheory.UnitLemma
 theorem torus_mod_intUnits_structure : ∀ (K : UQ) (B : InvAlg K), B.LieReg → ∀ a : K.O, K.Small a → ∃ (r : ℕ) (φ : B.T →* Multiplicative (Fin r → ℤ)) (c : Fin r → ℕ), Function.Surjective φ ∧ (∀ t : B.T, φ t = 1 ↔ (t : B.Aˣ) ∈ intUnits K.O B.A) ∧ (∀ i, 0 < c i) ∧ ∀ (t : B.T) (k : ℕ), IsIntegral K.O ((((t : B.Aˣ)⁻¹ : B.Aˣ) : B.A) * algebraMap K.O B.A a ^ k) ↔ ∀ i, |Multiplicative.toAdd (φ t) i| ≤ ((k * c i : ℕ) : ℤ) := by
   intro K B hL a ha
   have hred : IsReduced B.A := _root_.GlobalTheory.UnitLemma.InvAlg.isReduced_of_lieReg K B hL
-  haveI : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
+  have : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
   have hv : ∀ m : MaximalSpectrum B.A, ∃ v : (B.A ⧸ m.asIdeal)ˣ →* Multiplicative ℤ,
       Function.Surjective v ∧ ∀ x : (B.A ⧸ m.asIdeal)ˣ,
         IsIntegral K.O (x : B.A ⧸ m.asIdeal) ↔ 0 ≤ Multiplicative.toAdd (v x) := by
     intro m
-    haveI := m.isMaximal
-    letI : Field (B.A ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
-    haveI : FiniteDimensional K.E (B.A ⧸ m.asIdeal) :=
+    have := m.isMaximal
+    let : Field (B.A ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
+    have : FiniteDimensional K.E (B.A ⧸ m.asIdeal) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ K.E m.asIdeal).toLinearMap
         (Ideal.Quotient.mkₐ_surjective K.E m.asIdeal)
     exact _root_.GlobalTheory.UnitLemma.exists_surjective_valuation_isIntegral_iff K (B.A ⧸ m.asIdeal)
@@ -1419,7 +1419,7 @@ theorem orbit_count : ∀ (K : UQ) (B : InvAlg K) (L : Submodule K.O B.A), stabL
     have h2 := congrArg Prod.snd h
     exact Prod.ext h1 h2
   have hYfin : Finite Y := by
-    haveI := hRfin (k + m)
+    have := hRfin (k + m)
     exact Finite.of_injective U hU
 
   have key2 : ∀ g : B.T,
@@ -1448,7 +1448,7 @@ theorem orbit_count : ∀ (K : UQ) (B : InvAlg K) (L : Submodule K.O B.A), stabL
   · rw [← hcardXY, hidx_eq, hrho_eq, mul_comm]
     exact (Nat.card_prod _ _).symm.trans_le (Nat.card_le_card_of_injective D hD)
   · rw [← hcardXY, hidx_eq, hrho_eq, mul_comm]
-    haveI := hRfin (k + m)
+    have := hRfin (k + m)
     exact (Nat.card_le_card_of_injective U hU).trans_eq (Nat.card_prod _ _)
 
 end Main
@@ -1550,7 +1550,7 @@ theorem torusOrb_UU_eq_finsum (x w : B.A) (hfin : Finite (Orb K.O B.T (B.X x)))
       (∃ t ∈ B.T, M = mulLat K.O (t : B.A) (Quot.out o).1) ∧ w ∈ M}) :
     B.UU x w = ∑ᶠ o : Orb K.O B.T (B.X x), Nat.card {M : Submodule K.O B.A //
       (∃ t ∈ B.T, M = mulLat K.O (t : B.A) (Quot.out o).1) ∧ w ∈ M} := by
-  haveI := Fintype.ofFinite (Orb K.O B.T (B.X x))
+  have := Fintype.ofFinite (Orb K.O B.T (B.X x))
   unfold UU
   rw [Nat.card_congr (B.torusOrb_orbSplit x w), Nat.card_sigma, finsum_eq_sum_of_fintype]
 
@@ -1596,7 +1596,7 @@ theorem unitaryLimit : UnitaryLimit := by
     rw [hrho]; exact Finset.prod_pos fun i _ => by omega
   obtain ⟨hfin, hstab⟩ := L0 K B hB.2 x hx.1 hx.2
   choose m hm using fun o : Orb K.O B.T (B.X x) => S1 K B hB a ha _ (Quot.out o).2.1
-  haveI := Fintype.ofFinite (Orb K.O B.T (B.X x))
+  have := Fintype.ofFinite (Orb K.O B.T (B.X x))
   set M := Finset.univ.sup m with hMdef
   have hmM : ∀ o, m o ≤ M := fun o => Finset.le_sup (Finset.mem_univ o)
   have key := fun (k : ℕ) (hk : M ≤ k) (o : Orb K.O B.T (B.X x)) =>

@@ -83,8 +83,8 @@ theorem sum_alt_card_subElem_ge : ∀ (O K : Type) [CommRing O] [IsDomain O] [Is
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective P x
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero, Submodule.mem_comap]
     exact Submodule.mem_sup_right (Submodule.smul_mem_smul a.2 y.2)
-  letI : Module (IsLocalRing.ResidueField O) (L.1 ⧸ P) := htor.module
-  haveI : IsScalarTower O (IsLocalRing.ResidueField O) (L.1 ⧸ P) := htor.isScalarTower
+  let : Module (IsLocalRing.ResidueField O) (L.1 ⧸ P) := htor.module
+  have : IsScalarTower O (IsLocalRing.ResidueField O) (L.1 ⧸ P) := htor.isScalarTower
   have hq2 : 2 ≤ qRes O := two_le_qRes
   have hqn : 0 < qRes O ^ n := pow_pos (by omega) _
   have hcardV : Nat.card (L.1 ⧸ P) = A.toAddSubgroup.relIndex L.1.toAddSubgroup := rfl
@@ -92,8 +92,8 @@ theorem sum_alt_card_subElem_ge : ∀ (O K : Type) [CommRing O] [IsDomain O] [Is
     ((Submodule.toAddSubgroup_le _ _).2 le_sup_left) ((Submodule.toAddSubgroup_le _ _).2 hAL)
   have hdvd : Nat.card (L.1 ⧸ P) ∣ qRes O ^ n := ⟨M.1.toAddSubgroup.relIndex A.toAddSubgroup, by
     rw [hcardV, mul_comm, hmul, hM.2]⟩
-  haveI : Finite (L.1 ⧸ P) := Nat.finite_of_card_ne_zero (Nat.pos_of_dvd_of_pos hdvd hqn).ne'
-  haveI : FiniteDimensional (IsLocalRing.ResidueField O) (L.1 ⧸ P) := Module.Finite.of_finite
+  have : Finite (L.1 ⧸ P) := Nat.finite_of_card_ne_zero (Nat.pos_of_dvd_of_pos hdvd hqn).ne'
+  have : FiniteDimensional (IsLocalRing.ResidueField O) (L.1 ⧸ P) := Module.Finite.of_finite
   set d := Module.finrank (IsLocalRing.ResidueField O) (L.1 ⧸ P) with hd
   have hcardq : Nat.card (L.1 ⧸ P) = qRes O ^ d :=
     Module.natCard_eq_pow_finrank (K := IsLocalRing.ResidueField O)
@@ -123,8 +123,8 @@ theorem sum_alt_card_subElem_ge : ∀ (O K : Type) [CommRing O] [IsDomain O] [Is
   have hΦA : ∀ W, A ≤ Φ W := fun W => hPA ▸ Submodule.map_mono (hPC W)
   have hΦL : ∀ W, Φ W ≤ L.1 := fun W => Submodule.map_subtype_le _ _
   have hlat : ∀ W, (Φ W).IsFullLattice K := fun W => by
-    haveI := (maxMul L).2
-    exact Submodule.IsLattice.of_le_of_isLattice_of_fg K
+    have := (maxMul L).2
+    exact Submodule.IsFullLattice.of_le_of_fg K
       (show (maxMul L).1 ≤ Φ W from le_trans le_sup_right (hΦA W)) (L.2.fg.of_le (hΦL W))
   let f : Submodule k V → Lat O K r := fun W => ⟨Φ W, hlat W⟩
   have hinj : Function.Injective f := by
@@ -147,7 +147,7 @@ theorem sum_alt_card_subElem_ge : ∀ (O K : Type) [CommRing O] [IsDomain O] [Is
       f '' {W | Module.finrank k (V ⧸ W) = j} := by
     intro j
     ext M'
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨⟨⟨hle, hi⟩, hmL⟩, hMM⟩
       set C := M'.1.comap L.1.subtype
@@ -185,7 +185,7 @@ theorem sum_alt_card_subElem_ge : ∀ (O K : Type) [CommRing O] [IsDomain O] [Is
         (({M' | M' ∈ subElem x L ∧ M.1 ≤ M'.1} : Set (Lat O K r)).ncard : ℂ) = 0 := by
     intro x _ hx
     rw [Finset.mem_range] at hx
-    haveI : IsEmpty {W : Submodule k V // Module.finrank k (V ⧸ W) = x} :=
+    have : IsEmpty {W : Submodule k V // Module.finrank k (V ⧸ W) = x} :=
       ⟨fun ⟨W, hW⟩ => by have := Submodule.finrank_quotient_le W; rw [hdV] at this; omega⟩
     rw [hcount, Nat.card_of_isEmpty]
     simp

@@ -96,10 +96,10 @@ theorem continuous_conjU (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.hos
   refine Continuous.subtype_mk ?_ _
   have hv : Continuous fun g : GA D V =>
       ((matHom V g : GL (Fin V.rank) (AE D)) : Matrix (Fin V.rank) (Fin V.rank) (AE D)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hi : Continuous fun g : GA D V =>
       (((matHom V g)⁻¹ : GL (Fin V.rank) (AE D)) : Matrix (Fin V.rank) (Fin V.rank) (AE D)) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   rw [Units.continuous_iff]
   exact ⟨hv.matrix_map (continuous_conj D), hi.matrix_map (continuous_conj D)⟩
 

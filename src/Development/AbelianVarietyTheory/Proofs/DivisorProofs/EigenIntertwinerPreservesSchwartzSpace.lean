@@ -93,14 +93,14 @@ theorem lintegral_partL_eq : ∀ {F : Type} [Field F] [NumberField F] {κ κ' : 
     ∀ μ : @Measure (κ ⊕ κ' → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
       ∃ C : ℝ≥0∞, ∀ Φ ∈ schA F (κ ⊕ κ'), ∫⁻ x, ‖partL T Φ x‖ₑ ^ 2 ∂μ = C * ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ := by
   intro F _ _ κ κ' _ _ T hT hmem μ hμ
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  letI mX : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mY : MeasurableSpace (κ' → AF F) := borel _
-  haveI : BorelSpace (κ' → AF F) := ⟨rfl⟩
-  letI mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
-  haveI : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  let mX : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mY : MeasurableSpace (κ' → AF F) := borel _
+  have : BorelSpace (κ' → AF F) := ⟨rfl⟩
+  let mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
+  have : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
   let μ₁ : Measure (κ → AF F) := Measure.addHaar
   let μ₂ : Measure (κ' → AF F) := Measure.addHaar
   obtain ⟨C₁, hC₁⟩ := hT μ₁ inferInstance
@@ -109,7 +109,7 @@ theorem lintegral_partL_eq : ∀ {F : Type} [Field F] [NumberField F] {κ κ' : 
   let eA : ((κ → AF F) × (κ' → AF F)) ≃ₜ+ (κ ⊕ κ' → AF F) :=
     { e.symm with map_add' := fun a b => by funext i; cases i <;> rfl }
   let ν : Measure (κ ⊕ κ' → AF F) := (μ₁.prod μ₂).map eA
-  haveI : ν.IsAddHaarMeasure := eA.isAddHaarMeasure_map _
+  have : ν.IsAddHaarMeasure := eA.isAddHaarMeasure_map _
   obtain ⟨c, hμν⟩ : ∃ c : ℝ≥0, μ = c • ν := ⟨_, Measure.isAddLeftInvariant_eq_smul μ ν⟩
   have key : ∀ f : (κ ⊕ κ' → AF F) → ℝ≥0∞, Measurable f →
       ∫⁻ z, f z ∂μ = c * ∫⁻ y, ∫⁻ x, f (Sum.elim x y) ∂μ₁ ∂μ₂ := by
@@ -121,12 +121,12 @@ theorem lintegral_partL_eq : ∀ {F : Type} [Field F] [NumberField F] {κ κ' : 
     rfl
   have hc1 := GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F (hmem Φ hΦ)
   have hc2 := GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hΦ
-  rw [key _ (hc1.measurable.enorm.pow_const 2), key _ (hc2.measurable.enorm.pow_const 2)]
+  rw [key _ (hc1.measurable.eNorm.pow_const 2), key _ (hc2.measurable.eNorm.pow_const 2)]
   have inner : ∀ y, ∫⁻ x, ‖partL T Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ = C₁ * ∫⁻ x, ‖Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ :=
     fun y => hC₁ _ (sliceL_mem hΦ y)
   have hm : Measurable fun y => ∫⁻ x, ‖Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ :=
     Measurable.lintegral_prod_left' (f := fun p : (κ → AF F) × (κ' → AF F) => ‖Φ (eA p)‖ₑ ^ 2)
-      ((hc2.comp eA.continuous).measurable.enorm.pow_const 2)
+      ((hc2.comp eA.continuous).measurable.eNorm.pow_const 2)
   simp_rw [inner]
   rw [lintegral_const_mul _ hm]
   ring
@@ -308,7 +308,7 @@ theorem hasDbl_of_loc {E' : Type} [CommRing E'] [Algebra (AF F) E'] (c : E' →�
     refine ⟨C, fun Φ hΦ => ?_⟩
     have h1 := hC _ (hconj Φ hΦ)
     have hce : ∀ z : ℂ, ‖starRingEnd ℂ z‖ₑ = ‖z‖ₑ := fun z => by
-      rw [enorm_eq_nnnorm, enorm_eq_nnnorm]
+      rw [eNorm_eq_nnNorm, eNorm_eq_nnNorm]
       congr 1
       ext
       simp
@@ -556,7 +556,7 @@ theorem bijective_arch : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [F
 
     rw [map_sum]
     have hs : (∑ i, ei ((cs i / c) • f i)) x = ∑ i, (cs i / c) * ei (f i) x := by
-      rw [SchwartzMap.sum_apply]
+      rw [sum_apply]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [map_smul]; rfl
     rw [hs]
@@ -688,7 +688,7 @@ theorem isLocOp_inv : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fint
     intro v ψ hψ
     simp only [ev', LinearMap.coe_comp, Function.comp_apply, Submodule.coe_subtype, LinearEquiv.coe_coe]
     have hp : Submodule.linearProjOfIsCompl _ _ (hCv v) ψ = ⟨ψ, hψ⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left (hCv v) ⟨ψ, hψ⟩
+      Submodule.projectionOnto_apply_left (hCv v) ⟨ψ, hψ⟩
     rw [hp]
   have hev'SB : ∀ v, ∀ ψ ∈ SB (κ → Fv F v), ev' v ψ ∈ SB (κ → Fv F v) := fun v ψ hψ => by
     rw [hev'1 v ψ hψ]; exact Subtype.property _
@@ -716,7 +716,7 @@ theorem isLocOp_inv : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fint
     have h1 : e Φ ∈ schA F κ := hbij.mapsTo hΦ
     simp only [e', LinearMap.coe_comp, Function.comp_apply, Submodule.coe_subtype, LinearEquiv.coe_coe]
     have hp : Submodule.linearProjOfIsCompl _ _ hC (e Φ) = ⟨e Φ, h1⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hC ⟨e Φ, h1⟩
+      Submodule.projectionOnto_apply_left hC ⟨e Φ, h1⟩
     rw [hp]
     have : Le ⟨Φ, hΦ⟩ = ⟨e Φ, h1⟩ := rfl
     rw [← this, LinearEquiv.symm_apply_apply]

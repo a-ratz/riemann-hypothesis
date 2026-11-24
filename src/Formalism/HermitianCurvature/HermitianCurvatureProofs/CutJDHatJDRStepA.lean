@@ -183,9 +183,9 @@ private theorem skip1_eq_succAbove {t : ℕ} (s : Fin (t + 1)) (w : Fin t) : ski
   apply Fin.ext
   rw [skip1_val_eq_ite]
   by_cases h : (w : ℕ) < s
-  · rw [if_pos h, Fin.succAbove_of_castSucc_lt s w (by rw [Fin.lt_def, Fin.coe_castSucc]; exact h)]
+  · rw [ite_eq_left h, Fin.succAbove_of_castSucc_lt s w (by rw [Fin.lt_def, Fin.val_castSucc]; exact h)]
     simp
-  · rw [if_neg h, Fin.succAbove_of_le_castSucc s w (by rw [Fin.le_def, Fin.coe_castSucc]; omega)]
+  · rw [ite_eq_right h, Fin.succAbove_of_le_castSucc s w (by rw [Fin.le_def, Fin.val_castSucc]; omega)]
     simp
 
 private theorem skip1_skip1_val_eq_skip2_min_max {t : ℕ} (s : Fin (t + 1)) (w : Fin t) (j : Fin (t + 1 - 2)) :
@@ -257,7 +257,7 @@ theorem comb {M : Type*} [AddCommGroup M] [Module ℂ M] {t : ℕ} (β α' : Fin
   rw [← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun j _ => ?_
   have hTj : ¬T = T.succAbove j := (Fin.succAbove_ne T j).symm
-  rw [if_pos hTj, ← skip1_eq_succAbove s i, ← skip1_eq_succAbove T j]
+  rw [ite_eq_left hTj, ← skip1_eq_succAbove s i, ← skip1_eq_succAbove T j]
   have h1 : (skip1 s ∘ skip1 i : Fin (t + 1 - 2) → Fin (t + 1)) = skip2 (min (skip1 s i) s) (max (skip1 s i) s) :=
     funext fun k => Fin.ext (skip1_skip1_val_eq_skip2_min_max s i k)
   have h2 : (skip1 T ∘ skip1 j : Fin (t + 1 - 2) → Fin (t + 1)) = skip2 (min T (skip1 T j)) (max T (skip1 T j)) := by

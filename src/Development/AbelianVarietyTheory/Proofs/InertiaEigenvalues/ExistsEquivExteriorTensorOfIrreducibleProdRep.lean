@@ -141,8 +141,8 @@ open GlobalTheory.TensorFactor in
 theorem GlobalTheory.TensorFactor.exists_equiv_extTensor : ∀ (G H X Y : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y] (τ : Representation ℂ (G × H) X) (ρ : Representation ℂ H Y), IsSmooth τ → τ.IsIrreducible → ρ.IsIrreducible → (∀ (M : Submodule ℂ (Y →ₗ[ℂ] X)), (∀ φ ∈ M, ∀ g v, φ (ρ g v) = τ (1, g) (φ v)) → Function.Injective (TensorProduct.lift M.subtype)) → (∃ ι : Y →ₗ[ℂ] X, ι ≠ 0 ∧ ∀ g v, ι (ρ g v) = τ (1, g) (ι v)) → ∃ (W : Type) (_ : AddCommGroup W) (_ : Module ℂ W) (σ : Representation ℂ G W), IsSmooth σ ∧ σ.IsIrreducible ∧ Nonempty (τ.Equiv (extTensor σ ρ)) := by
   intro G H X Y _ _ _ _ _ _ _ _ _ _ τ ρ hτs hτ hρ hinj hex
   obtain ⟨ι, hι0, hι⟩ := hex
-  haveI := hτ
-  haveI := hρ
+  have := hτ
+  have := hρ
   have hev : Function.Injective (evMap τ ρ) := hinj (homSpace τ ρ) fun φ hφ => hφ
   let ι' : homSpace τ ρ := ⟨ι, hι⟩
   obtain ⟨y0, hy0⟩ : ∃ v, ι v ≠ 0 := by
@@ -162,7 +162,7 @@ theorem GlobalTheory.TensorFactor.exists_equiv_extTensor : ∀ (G H X Y : Type) 
     have : ((1 : G), (1 : H)) = (1 : G × H) := rfl
     show τ ((1 : G), (1 : H)) _ = _
     simp [this]
-  · haveI : Nontrivial (Subrepresentation (homRep τ ρ)) := ⟨⊥, ⊤, fun h => by
+  · have : Nontrivial (Subrepresentation (homRep τ ρ)) := ⟨⊥, ⊤, fun h => by
       have h1 : ι' ∈ (⊤ : Subrepresentation (homRep τ ρ)).toSubmodule := Submodule.mem_top
       rw [← h] at h1
       have h2 : ι' = 0 := (Submodule.mem_bot ℂ).1 h1

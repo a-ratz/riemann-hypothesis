@@ -63,11 +63,11 @@ theorem continuous_haMap {R R' : Type} [CommRing R] [Algebra F R] [TopologicalSp
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · have hc : Continuous fun g : HA R σ J =>
         ((HA.mat R σ J g : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     exact hc.matrix_map hφ
   · have hc : Continuous fun g : HA R σ J =>
         (((HA.mat R σ J g)⁻¹ : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
-      Units.continuous_coe_inv.comp continuous_subtype_val
+      Units.continuous_coe_inv.comp continuous_subtypeVal
     exact hc.matrix_map hφ
 
 variable (R1 R2 : Type) [CommRing R1] [Algebra F R1] [CommRing R2] [Algebra F R2]
@@ -170,11 +170,11 @@ theorem continuous_mix {X : Type} [TopologicalSpace X] [TopologicalSpace R1] [To
   exact (continuous_QQ_symm R1 R2).comp ((hA.matrix_elem i j).prodMk (hB.matrix_elem i j))
 
 theorem continuous_matHA (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] :
-    Continuous fun g : HA R σ J => ((HA.mat R σ J g : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) := Units.continuous_val.comp continuous_subtype_val
+    Continuous fun g : HA R σ J => ((HA.mat R σ J g : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) := Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_matHA_inv (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] :
     Continuous fun g : HA R σ J =>
-      (((HA.mat R σ J g)⁻¹ : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) := Units.continuous_coe_inv.comp continuous_subtype_val
+      (((HA.mat R σ J g)⁻¹ : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) := Units.continuous_coe_inv.comp continuous_subtypeVal
 
 theorem splitIso_gen [TopologicalSpace R1] [TopologicalSpace R2] :
     ∃ e : HA (R1 × R2) σ J ≃ₜ* HA R1 σ J × HA R2 σ J,

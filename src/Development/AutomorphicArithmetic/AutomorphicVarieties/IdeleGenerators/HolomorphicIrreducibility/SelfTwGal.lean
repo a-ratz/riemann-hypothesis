@@ -113,9 +113,9 @@ theorem UpperTheory.V.Sd.selfTwGal :
     refine Multiset.map_congr rfl fun b _ => ?_
     simp only [Function.comp_apply, Units.val_mul, mul_assoc]
   · intro E _ _ _ _ _ hN
-    haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-    haveI : Algebra.IsAlgebraic E Ω := Algebra.IsAlgebraic.tower_top (K := F) E
-    haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, inferInstance⟩
+    have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic E Ω := Algebra.IsAlgebraic.tower_top (K := F) E
+    have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, inferInstance⟩
     have hw : ∀ᶠ w : HeightOneSpectrum (𝓞 E) in Filter.cofinite, CharEig ι (δ.comp (res F Ω E)) w 1 := by
       filter_upwards [hN.2.2, (tendsto_under' (K := F) (K' := E)).eventually hT] with w h1 h2
       have hf := normV_under (K := F) w

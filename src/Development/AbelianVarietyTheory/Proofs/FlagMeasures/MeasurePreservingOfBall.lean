@@ -120,7 +120,7 @@ theorem measurePreserving_of_ball (μ : Measure V) [μ.IsAddHaarMeasure] (ν : M
   have htop : ν (Metric.closedBall 0 1) ≠ ⊤ :=
     (isCompact_closedBall (0 : W) 1).measure_lt_top.ne
   have hk1 : k = 1 := by
-    rw [hk, Measure.smul_apply] at hball
+    rw [hk, smul_apply] at hball
     have : ((k : ENNReal)) * ν (Metric.closedBall 0 1) = 1 * ν (Metric.closedBall 0 1) := by
       rw [one_mul]
       exact hball
@@ -147,7 +147,7 @@ theorem HasCov.pi {ι : Type} [Fintype ι] {μ : Measure V} [μ.IsAddHaarMeasure
   have hD : DiscreteTopology (Submodule.pi Set.univ L) := by
     let f : Submodule.pi Set.univ L → ∀ i, L i := fun g i => ⟨g.1 i, g.2 i (Set.mem_univ i)⟩
     have hf : Continuous f := continuous_pi fun i =>
-      ((continuous_apply i).comp continuous_subtype_val).subtype_mk _
+      ((continuous_apply i).comp continuous_subtypeVal).subtype_mk _
     have hinj : Function.Injective f := by
       intro g g' hg
       ext i
@@ -451,7 +451,7 @@ private theorem exists_matrix_fractionalIdeals_coords_of_fg : ∀ (j : ℕ) (Λ 
     let I : FractionalIdeal (𝓞 E)⁰ E := ⟨Λ.map π, FractionalIdeal.isFractional_of_fg (hΛ.map π)⟩
     have hI : ∀ x, x ∈ I ↔ ∃ y ∈ Λ, y 0 = x := by
       intro x
-      rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_mk, Submodule.mem_map]
+      rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_mk, Submodule.mem_map]
       rfl
     obtain ⟨v, hv0, hv⟩ := exists_vec_one_smul_mem_of_first_coord E Λ I hI
     have htl : ∀ y z : Fin (j + 1) → E, Fin.tail (y + z) = Fin.tail y + Fin.tail z := fun _ _ => rfl
@@ -645,7 +645,7 @@ theorem maps_iff {r s : ℕ} (Λ : Submodule (𝓞 E) (Fin r → E)) (Λ' : Subm
       by_cases hl : l = k
       · subst hl
         simpa using hx
-      · rw [Pi.single_eq_of_ne hl, ← FractionalIdeal.mem_coe]
+      · rw [Pi.single_eq_of_ne hl, ← FractionalIdeal.mem_coeToSubmodule]
         exact Submodule.zero_mem _
     have := (hΛ _).mp (h _ hy) i
     rw [key, Matrix.mulVec_single] at this
@@ -658,9 +658,9 @@ theorem maps_iff {r s : ℕ} (Λ : Submodule (𝓞 E) (Fin r → E)) (Λ' : Subm
         Matrix.one_mulVec]
     rw [hy', key]
     simp only [Matrix.mulVec, dotProduct]
-    rw [← FractionalIdeal.mem_coe]
+    rw [← FractionalIdeal.mem_coeToSubmodule]
     refine Submodule.sum_mem _ fun k _ => ?_
-    rw [FractionalIdeal.mem_coe]
+    rw [FractionalIdeal.mem_coeToSubmodule]
     have h1 := (FractionalIdeal.mem_div_iff_of_ne_zero (hc' k)).mp (h i k) _ ((hΛ' y).mp hy k)
     exact h1
 

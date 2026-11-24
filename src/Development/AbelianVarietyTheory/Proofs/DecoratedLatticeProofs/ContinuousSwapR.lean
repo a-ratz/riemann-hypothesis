@@ -89,12 +89,12 @@ def swapR : R ⊗[F] E ≃+* E ⊗[F] R := (Algebra.TensorProduct.comm F R E).to
 theorem continuous_swapR :
     @Continuous _ _ _ (tensTopL (F := F) (E := E) R) (swapR (F := F) (E := E) R) ∧
     @Continuous _ _ (tensTopL (F := F) (E := E) R) _ (swapR (F := F) (E := E) R).symm := by
-  letI : Algebra R (E ⊗[F] R) := Algebra.TensorProduct.rightAlgebra
-  letI := tensTopL (F := F) (E := E) R
-  haveI : IsModuleTopology R (E ⊗[F] R) := ⟨rfl⟩
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd R (E ⊗[F] R)
-  haveI := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
+  let : Algebra R (E ⊗[F] R) := Algebra.TensorProduct.rightAlgebra
+  let := tensTopL (F := F) (E := E) R
+  have : IsModuleTopology R (E ⊗[F] R) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd R (E ⊗[F] R)
+  have := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
   let L : R ⊗[F] E ≃ₗ[R] E ⊗[F] R :=
     { (swapR (F := F) (E := E) R).toAddEquiv with
       map_smul' := fun c y => by
@@ -142,7 +142,7 @@ end Fin
 theorem exists_finIso : ∀ (D : D7) (V : HSp D) (n : ℕ) (hn : V.rank = n), letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F); ∃ e : ↥(GfC V) ≃ₜ* ↥(UPts (sigD D) (V.gram.reindex (finCongr hn) (finCongr hn)) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)), ∀ g, (e g).1.1 = finM V hn g.1 := by
   intro D V n hn
   subst hn
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
   exact ⟨(finEquiv D.sp.cm.sig V.gram).trans
     (swapU (FiniteAdeleRing (𝓞 D.host.F) D.host.F) D.sp.cm.sig V.gram), fun g => rfl⟩
 

@@ -132,7 +132,7 @@ theorem continuous_upqOfMatrix {X : Type*} [TopologicalSpace X] {f : X → 𝔐}
 
 theorem continuous_coe_indefiniteUnitary :
     Continuous fun g : G => ((g : GL (Fin p ⊕ Fin q) ℂ) : 𝔐) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem polarPos_preservesIndefJ (g : G) :
     (polarPos (g : GL (Fin p ⊕ Fin q) ℂ))ᴴ * J * polarPos (g : GL (Fin p ⊕ Fin q) ℂ) = J := by

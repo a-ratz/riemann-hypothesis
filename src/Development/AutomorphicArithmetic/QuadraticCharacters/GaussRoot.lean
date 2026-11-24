@@ -60,7 +60,7 @@ theorem exists_gauss {K : Type} [Field K] [CharZero K] {d : ℕ} [hd : Fact d.Pr
     (hd4 : d % 4 = 3) {ζ : K} (hζ : IsPrimitiveRoot ζ d) :
     ∃ G : K, G ^ 2 = -(d : K) ∧ ∀ (σ : K →+* K) (a : ℕ), a.Coprime d → σ ζ = ζ ^ a →
       σ G = ((quadraticChar (ZMod d) (a : ZMod d) : ℤ) : K) * G := by
-  haveI : NeZero d := ⟨hd.out.ne_zero⟩
+  have : NeZero d := ⟨hd.out.ne_zero⟩
   have hζ1 : ζ ^ d = 1 := hζ.pow_eq_one
   let χ : MulChar (ZMod d) K := (quadraticChar (ZMod d)).ringHomComp (Int.castRingHom K)
   let ψ : AddChar (ZMod d) K := AddChar.zmodChar d hζ1

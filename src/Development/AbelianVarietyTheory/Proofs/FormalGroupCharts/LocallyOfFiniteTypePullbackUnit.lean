@@ -82,7 +82,7 @@ theorem isArtinianRing_of_finite_points (k B : Type) [Field k] [CommRing B] [Alg
   have hJ : IsJacobsonRing B := isJacobsonRing_of_finiteType (A := k)
   have hsur : ∀ m : Ideal B, m.IsMaximal → ∃ f : B →ₐ[k] AlgebraicClosure k, RingHom.ker f = m := by
     intro m hm
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     have : Module.Finite k (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ m)
     let g : (B ⧸ m) →ₐ[k] AlgebraicClosure k := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -173,7 +173,7 @@ theorem surjective_spMap_aug {k Q : Type} [Field k] [CommRing Q] [Algebra k Q] (
   intro p
   have hq : Function.Surjective q.toRingHom := fun c => ⟨algebraMap k Q c, q.commutes c⟩
   let p' : PrimeSpectrum Q := p
-  haveI := p'.isPrime
+  have := p'.isPrime
   have hker : RingHom.ker q.toRingHom ≤ p'.asIdeal :=
     p'.isPrime.le_of_pow_le (n := j + 1) (le_of_eq_of_le hj bot_le)
   have hprime : (p'.asIdeal.map q.toRingHom).IsPrime := Ideal.map_isPrime_of_surjective hq hker
@@ -191,8 +191,8 @@ theorem exists_universal_thickening : ∀ (k : Type) [Field k] (K : Over (Spec (
     (Set.mem_univ (e.left o)) isOpen_univ
   change IsAffineOpen U at hU
   let v : Chart.sp (R₀ := k) Γ(K.left, U) ⟶ K := affinePoint hU
-  haveI : IsOpenImmersion v.left := hU.isOpenImmersion_fromSpec
-  haveI : Mono v := Over.mono_of_mono_left v
+  have : IsOpenImmersion v.left := hU.isOpenImmersion_fromSpec
+  have : Mono v := Over.mono_of_mono_left v
   have hinj : ∀ (Q : Type) [CommRing Q] [Algebra k Q],
       Function.Injective fun f : Γ(K.left, U) →ₐ[k] Q => Chart.spMap f ≫ v := by
     intro Q _ _ f g h
@@ -202,9 +202,9 @@ theorem exists_universal_thickening : ∀ (k : Type) [Field k] (K : Over (Spec (
     rw [Over.w v] at h
     have h2 := (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 h
     exact RingHom.finiteType_algebraMap.1 h2
-  haveI : Finite (Chart.sp (R₀ := k) (AlgebraicClosure k) ⟶ K) := hfin _ _
-  haveI : Finite (Γ(K.left, U) →ₐ[k] AlgebraicClosure k) := Finite.of_injective _ (hinj _)
-  haveI := isArtinianRing_of_finite_points k Γ(K.left, U)
+  have : Finite (Chart.sp (R₀ := k) (AlgebraicClosure k) ⟶ K) := hfin _ _
+  have : Finite (Γ(K.left, U) →ₐ[k] AlgebraicClosure k) := Finite.of_injective _ (hinj _)
+  have := isArtinianRing_of_finite_points k Γ(K.left, U)
   have he : Set.range e.left ⊆ Set.range v.left := by
     rintro _ ⟨y, rfl⟩
     have : y = o := Subsingleton.elim (α := PrimeSpectrum k) _ _
@@ -289,14 +289,14 @@ theorem locallyOfFiniteType_pullback_unit {S : Scheme.{0}} (G : Over S) [GrpObj 
 
 theorem exists_pow_le_span_sup_pow_succ : ∀ (k : Type) [Field k] (G : Over (Spec (CommRingCat.of k))) [GrpObj G] [LocallyOfFiniteType G.hom] (f : G ⟶ G), η[G] ≫ f = η[G] → (∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ Spec (CommRingCat.of k)), Finite {x : Over.mk t ⟶ G // x ≫ f = 1}) → ∀ (d : ℕ) (x : GlobalTheory.JetSer.Fam G (Fin d)), Chart.IsUnivChart G d x → ∀ φ : Pt k 1 d, GlobalTheory.JetSer.IsMapOf x x f φ → ∃ M : ℕ, Ideal.span (Set.range (MvPowerSeries.X : Fin 1 × Fin d → PS k 1 d)) ^ M ≤ Ideal.span (Set.range φ) ⊔ Ideal.span (Set.range (MvPowerSeries.X : Fin 1 × Fin d → PS k 1 d)) ^ (M + 1) := by
   intro k _ G _ _ f hf hfin d x hx φ hφ
-  haveI := locallyOfFiniteType_pullback_unit G f
+  have := locallyOfFiniteType_pullback_unit G f
   have hext : ∀ {T : Over (Spec (CommRingCat.of k))} (u v : T ⟶ pullback f η[G]),
       u ≫ pullback.fst f η[G] = v ≫ pullback.fst f η[G] → u = v := fun u v h =>
     pullback.hom_ext h (toUnit_unique _ _)
   have hfinK : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ Spec (CommRingCat.of k)),
       Finite (Over.mk t ⟶ pullback f η[G]) := by
     intro Ω _ _ t
-    haveI := hfin Ω t
+    have := hfin Ω t
     refine Finite.of_injective (β := {x : Over.mk t ⟶ G // x ≫ f = 1})
       (fun u => ⟨u ≫ pullback.fst f η[G], ?_⟩) (fun u v h => hext u v (congrArg Subtype.val h))
     rw [Category.assoc, pullback.condition, ← Category.assoc, Hom.one_def]

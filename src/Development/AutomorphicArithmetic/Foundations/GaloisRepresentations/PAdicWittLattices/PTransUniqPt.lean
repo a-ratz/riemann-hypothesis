@@ -63,10 +63,10 @@ theorem UpperTheory.Gal.G3.pTransUniqPt :
     (fun Ω _ _ t a => (hK Ω t).1 a)
   have lin₁ := tr₁.2.1
   have lin₂ := tr₂.2.1
-  haveI := f₁
-  haveI := et₁
-  haveI := sj₁
-  haveI : Epi ψ₁.left := Flat.epi_of_flat_of_surjective _
+  have := f₁
+  have := et₁
+  have := sj₁
+  have : Epi ψ₁.left := Flat.epi_of_flat_of_surjective _
   have cancel : ∀ {X : Over (Sp k)} (a b : o₁.A ⟶ X), ψ₁ ≫ a = ψ₁ ≫ b → a = b := fun a b e =>
     Over.OverMorphism.ext ((cancel_epi ψ₁.left).1 (by simpa using congrArg (·.left) e))
   have lin : ∀ c, o₁.act.act c ≫ θ = θ ≫ o₂.act.act c := fun c => cancel _ _ (by

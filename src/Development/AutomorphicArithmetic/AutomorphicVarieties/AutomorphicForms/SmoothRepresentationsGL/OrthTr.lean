@@ -56,7 +56,7 @@ private theorem UpperTheory.V.Af.Smo.coeFn_tr {E : Type} [Field E] [NumberField 
       =ᵐ[quotientMeasure (Reduction.rationalGLOne (K := E) (n := n)) μ] quotTr φ g := by
   rw [toLp_cuspRepT, rightRegularRep_apply, toLp_cuspVecL, quotTr_eq_comp hφ, quotTr_one]
   refine (coeFn_rightTranslate _ μ _ _).trans ?_
-  exact (measurePreserving_rightMul μ (toOne g)).quasiMeasurePreserving.ae_eq (coeFn_cuspToL2 μ φ)
+  exact (measurePreserving_rightMul μ (toOne g)).quasiMeasurePreserving.ae_eq_comp (coeFn_cuspToL2 μ φ)
 
 private theorem UpperTheory.V.Af.Smo.inner_closure {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {S T : Submodule ℂ H} (h : ∀ x ∈ S, ∀ y ∈ T, inner ℂ x y = 0) {x y : H}

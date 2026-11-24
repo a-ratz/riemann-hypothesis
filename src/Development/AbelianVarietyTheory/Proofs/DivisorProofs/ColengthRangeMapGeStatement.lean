@@ -69,13 +69,13 @@ theorem colength_range_map_ge (p : ℕ) [Fact p.Prime] (T : GlobalTheory.Dieu.Th
       (Module.finrank k (G.dual.Lie ⧸ LinearMap.range (lieMap H.dual G.dual (dualHom G H q))) : ℕ∞) ≤
         Module.length (WittVector p k) (T.M G ⧸ LinearMap.range (T.map q)) := by
   have hp : (p : k) = 0 := CharP.cast_eq_zero k p
-  haveI : Module.Finite k G.RigExt := (_root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p k hp G).2.1
+  have : Module.Finite k G.RigExt := (_root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p k hp G).2.1
   obtain ⟨θ, hθ⟩ := GlobalTheory.Dieu.theta_exists p T k
   have hred : ∀ m : T.M H, T.red G (T.map q m) = rigExtMap q (T.red H m) := fun m => by
     show T.base.red G trivial (T.base.smap trivial trivial (SemiHom.ofHom q) m) = _
     rw [T.base.red_smap, SemiHom.ofHom_rig]
   constructor
-  · haveI : Module.Finite k G.omega :=
+  · have : Module.Finite k G.omega :=
       Module.Finite.of_injective G.rigOfOmega (G.rigOfOmega_injective_of_eq_zero hp)
     obtain ⟨-, hsurj, -, hsemi, hnat⟩ := hθ G
     let Q := LinearMap.range (omegaMap G H q)
@@ -88,7 +88,7 @@ theorem colength_range_map_ge (p : ℕ) [Fact p.Prime] (T : GlobalTheory.Dieu.Th
       show Q.mkQ (θ G (T.map q m)) = 0
       rw [hnat, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
       exact ⟨_, rfl⟩
-  · haveI : Module.Finite k G.dual.Lie := Module.Finite.of_surjective (G.rigToLie hp) (G.rigToLie_surjective hp)
+  · have : Module.Finite k G.dual.Lie := Module.Finite.of_surjective (G.rigToLie hp) (G.rigToLie_surjective hp)
     let Q := LinearMap.range (lieMap H.dual G.dual (dualHom G H q))
     refine (_root_.GlobalTheory.Dieu.length_ge_finrank_of_semilinear_surj p k (T.M G) (G.dual.Lie ⧸ Q) (RingEquiv.refl _)
       ((Q.mkQ ∘ₗ G.rigToLie hp).toAddMonoidHom.comp (T.red G).toAddMonoidHom)

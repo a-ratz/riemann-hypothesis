@@ -202,17 +202,17 @@ theorem isPst_exact {AI : LocAinf l P} (T : LocTied l P AI) (h1 : Function.Injec
     (h3 : Function.Surjective p) (hV : IsPst P ρ₁) :
     IsPst P ρ₀ ∧ IsPst P ρ₂ ∧ Function.Surjective (dmap P hp) := by
   obtain ⟨hdom, hfrac, -⟩ := GlobalTheory.Pst.stRegular l P AI ⟨T⟩
-  haveI := LL.2
-  haveI : FiniteDimensional ℚ_[l] V₀ := Module.Finite.trans ↥LL.1 V₀
-  haveI : FiniteDimensional ℚ_[l] V₁ := Module.Finite.trans ↥LL.1 V₁
-  haveI : FiniteDimensional ℚ_[l] V₂ := Module.Finite.trans ↥LL.1 V₂
+  have := LL.2
+  have : FiniteDimensional ℚ_[l] V₀ := Module.Finite.trans ↥LL.1 V₀
+  have : FiniteDimensional ℚ_[l] V₁ := Module.Finite.trans ↥LL.1 V₁
+  have : FiniteDimensional ℚ_[l] V₂ := Module.Finite.trans ↥LL.1 V₂
   have b₀ := _root_.GlobalTheory.PstRank.rank_DpstUr_le P hdom hfrac ρ₀
   have b₂ := _root_.GlobalTheory.PstRank.rank_DpstUr_le P hdom hfrac ρ₂
-  haveI f₀ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₀) :=
+  have f₀ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₀) :=
     Module.rank_lt_aleph0_iff.mp (b₀.trans_lt (Cardinal.natCast_lt_aleph0))
-  haveI f₂ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₂) :=
+  have f₂ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₂) :=
     Module.rank_lt_aleph0_iff.mp (b₂.trans_lt (Cardinal.natCast_lt_aleph0))
-  haveI := hV.finite
+  have := hV.finite
   rw [← finrank_eq_rank, Nat.cast_le] at b₀ b₂
   have b₁ := ((isPst_iff P ρ₁).1 hV).2
   obtain ⟨e1, e2⟩ := dmap_exact P hi hp h1 h2
@@ -255,13 +255,13 @@ theorem charPol_exact
   obtain ⟨p₀, p₂, hs⟩ := isPst_exact P hi hp T h1 h2 h3 hV
   obtain ⟨-, e2⟩ := dmap_exact P hi hp h1 h2
   refine ⟨p₀, p₂, fun σ => ?_⟩
-  haveI := p₀.finite
-  haveI := hV.finite
-  haveI := p₂.finite
+  have := p₀.finite
+  have := hV.finite
+  have := p₂.finite
   rw [charPol_wdPst P ι Bw h hj ρ₀ p₀, charPol_wdPst P ι Bw h hj ρ₁ hV, charPol_wdPst P ι Bw h hj ρ₂ p₂]
   refine charpoly_exact (wdLin P ι hi) (wdLin P ι hp) ?_ ?_ ?_ (fun x => ?_) _ _ _
     (wdLin_wdRho P ι Bw h hj hi σ) (wdLin_wdRho P ι Bw h hj hp σ)
-  · letI := algC ι LL
+  · let := algC ι LL
     exact letter_exact _ _ _ ℂ (urC ι) _ _ _ _ e2 hs
   · rw [← LinearMap.range_eq_top, eq_top_iff, ← span_wdMk P ι ρ₂, Submodule.span_le]
     rintro _ ⟨x, rfl⟩

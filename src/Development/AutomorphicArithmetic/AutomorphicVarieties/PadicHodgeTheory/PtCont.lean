@@ -224,22 +224,22 @@ private theorem ptc_finite {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [IsL
     [Algebra ℤ_[l] R] (hR : ∀ a : R, ∃ c, IsIntegral ℤ_[l] c ∧ a - c ∈ maximalIdeal R)
     {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B]
     (x : R →ₐ[ℤ_[l]] B) : Module.Finite ℤ_[l] x.range := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite ℚ_[l] B
-  haveI : IsNoetherianRing x.range := isNoetherianRing_of_surjective R _ x.rangeRestrict.toRingHom
+  have : IsArtinianRing B := IsArtinianRing.of_finite ℚ_[l] B
+  have : IsNoetherianRing x.range := isNoetherianRing_of_surjective R _ x.rangeRestrict.toRingHom
     x.rangeRestrict_surjective
   have hfin : ∀ m : MaximalSpectrum B, Module.Finite ℤ_[l] (integralClosure ℤ_[l] (B ⧸ m.asIdeal)) := fun m => by
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
     exact IsIntegralClosure.finite ℤ_[l] ℚ_[l] (B ⧸ m.asIdeal) _
   have hint : ∀ (m : MaximalSpectrum B) (z : x.range),
       ((Ideal.Quotient.mkₐ ℤ_[l] m.asIdeal).comp x.range.val) z ∈ integralClosure ℤ_[l] (B ⧸ m.asIdeal) := by
     rintro m ⟨_, a, rfl⟩
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
     exact ptc_field' hR ((Ideal.Quotient.mkₐ ℤ_[l] m.asIdeal).comp x) a
   let g : x.range →ₐ[ℤ_[l]] ∀ m : MaximalSpectrum B, integralClosure ℤ_[l] (B ⧸ m.asIdeal) :=
     Pi.algHom _ _ fun m => AlgHom.codRestrict _ _ (hint m)
-  haveI : Module.Finite ℤ_[l] g.range :=
+  have : Module.Finite ℤ_[l] g.range :=
     Module.Finite.of_injective g.range.val.toLinearMap Subtype.val_injective
   refine Module.finite_of_surjective_of_ker_le_nilradical g.rangeRestrict g.rangeRestrict_surjective ?_
     (IsNoetherian.noetherian _)
@@ -271,7 +271,7 @@ private theorem ptc_pow {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [IsLoca
         exact hP (Ideal.subset_span rfl)
       rw [← (maximalIdeal.isMaximal _).eq_of_le (Ideal.IsPrime.ne_top inferInstance) this]
       infer_instance
-    haveI : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := ℤ_[l]) P hc
+    have : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := ℤ_[l]) P hc
     have := eq_maximalIdeal (Ideal.comap_isMaximal_of_surjective y hy (K := P))
     rw [Ideal.map_le_iff_le_comap, this]
   obtain ⟨N, hN⟩ := Ideal.exists_pow_le_of_le_radical_of_fg h1 (Ideal.FG.map (IsNoetherian.noetherian _) y)
@@ -315,17 +315,17 @@ private theorem ptc_cont {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [IsLoc
 theorem UpperTheory.V.Loc.ptCont :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (B : Type) [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra O B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] O B] [IsScalarTower ℤ_[l] ℚ_[l] B] (x : R →ₐ[O] B), (∀ (X : Type) [TopologicalSpace X] (f : X → R), AdicCont (maximalIdeal R) f → QCont l fun g => x (f g)) ∧ (IsField B → (∀ a, IsIntegral ℤ_[l] (x a)) ∧ ∀ a ∈ maximalIdeal R, ∃ n : ℕ, ∃ b, IsIntegral ℤ_[l] b ∧ x a ^ n = (l : B) * b) := by
   intro l _ O _ _ _ _ _ _ _ R _ _ _ B _ _ _ _ _ _ _ x
-  letI : Algebra ℤ_[l] R := ((algebraMap O R).comp (algebraMap ℤ_[l] O)).toAlgebra
-  haveI : IsScalarTower ℤ_[l] O R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra ℤ_[l] R := ((algebraMap O R).comp (algebraMap ℤ_[l] O)).toAlgebra
+  have : IsScalarTower ℤ_[l] O R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hR : ∀ a : R, ∃ c, IsIntegral ℤ_[l] c ∧ a - c ∈ maximalIdeal R := fun a => by
     obtain ⟨c, hc⟩ := IsCO.res_surj (O := O) a
     exact ⟨_, (Algebra.IsIntegral.isIntegral (R := ℤ_[l]) c).algebraMap, hc⟩
   let x' : R →ₐ[ℤ_[l]] B := x.restrictScalars ℤ_[l]
   refine ⟨fun X _ f hf => ?_, fun hB => ?_⟩
-  · haveI := ptc_finite hR x'
-    letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-    haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-    haveI : ContinuousAdd B := IsModuleTopology.toContinuousAdd ℚ_[l] B
+  · have := ptc_finite hR x'
+    let : TopologicalSpace B := moduleTopology ℚ_[l] B
+    have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+    have : ContinuousAdd B := IsModuleTopology.toContinuousAdd ℚ_[l] B
     let e := (Module.finBasis ℚ_[l] B).equivFun
     have he : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
     have h1 : Continuous fun g => e (x (f g)) := continuous_pi fun i =>
@@ -333,7 +333,7 @@ theorem UpperTheory.V.Loc.ptCont :
         ((((LinearMap.proj i).comp e.toLinearMap).restrictScalars ℤ_[l]).comp x'.range.val.toLinearMap) f hf
     have h2 := he.comp h1
     simpa [QCont, Function.comp_def] using h2
-  · letI := hB.toField
+  · let := hB.toField
     exact ⟨ptc_field' hR x', fun a ha => (ptc_field x' a ha).2⟩
 end -- clump:auto
 end -- clump:auto

@@ -189,7 +189,7 @@ theorem map_eq_self_of_iterate {G : Type*} [Group G] [TopologicalSpace G] [IsTop
     (μ : Measure G) [μ.IsHaarMeasure] (ψ : G ≃ₜ* G) (N : ℕ) (hN : N ≠ 0)
     (hψ : ∀ x, ψ^[N] x = x) : μ.map ψ = μ := by
   have hm : Measurable ψ := ψ.continuous.measurable
-  haveI : (μ.map ψ).IsHaarMeasure := inferInstance
+  have : (μ.map ψ).IsHaarMeasure := inferInstance
   set c := (μ.map ψ).haarScalarFactor μ with hc
   have hμc : μ.map ψ = c • μ := isMulLeftInvariant_eq_smul _ _
   have hk : ∀ k : ℕ, μ.map (ψ^[k]) = c ^ k • μ := by
@@ -206,7 +206,7 @@ theorem map_eq_self_of_iterate {G : Type*} [Group G] [TopologicalSpace G] [IsTop
   have htop : μ K ≠ ⊤ := hK.measure_lt_top.ne
   have hKeq : ((c ^ N : NNReal) : ENNReal) * μ K = 1 * μ K := by
     have := congrArg (fun ν : Measure G => ν K) hN'
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at this
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at this
     rw [one_mul]
     exact this.symm
   have hcN : (c : ℝ) ^ N = 1 := by
@@ -274,7 +274,7 @@ theorem tie_set {P Q n : ℕ} {ε : Fin n → Bool} (e : Fin P ⊕ Fin Q ≃ Fin
     {g : Formalism.BasicNotions.UpqT P Q | ∃ a ∈ A, PI.CdHaarScale.umat a = reindex e e (Formalism.BasicNotions.UpqT.mat g)} =
       (phi e h1 h2) ⁻¹' A := by
   ext g
-  simp only [Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage]
   constructor
   · rintro ⟨a, ha, h⟩
     have : a = phi e h1 h2 g := umat_injective (h.trans (umat_phi e h1 h2 g).symm)

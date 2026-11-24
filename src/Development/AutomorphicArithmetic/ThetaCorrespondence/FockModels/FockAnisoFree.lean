@@ -846,7 +846,7 @@ theorem measurePreserving_of_covol {G : Type*} [AddCommGroup G] [TopologicalSpac
     (hT : ∀ γ ∈ Γ, T γ ∈ Γ) (hT' : ∀ γ ∈ Γ, T.symm γ ∈ Γ) : MeasurePreserving T μ μ := by
   let e : G ≃ᵐ G := (Homeomorph.mk T.toEquiv hc hc').toMeasurableEquiv
   have he : ∀ x, e x = T x := fun _ => rfl
-  haveI hH : (μ.map e).IsAddHaarMeasure := T.isAddHaarMeasure_map μ hc hc'
+  have hH : (μ.map e).IsAddHaarMeasure := T.isAddHaarMeasure_map μ hc hc'
   have hs : μ.map e = Measure.addHaarScalarFactor (μ.map e) μ • μ := Measure.isAddLeftInvariant_eq_smul _ _
   have hpos := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure (μ.map e) μ
   set c := Measure.addHaarScalarFactor (μ.map e) μ with hcdef
@@ -870,7 +870,7 @@ theorem measurePreserving_of_covol {G : Type*} [AddCommGroup G] [TopologicalSpac
   have hmap : (μ.map e) 𝓕 = 1 := by rw [e.map_apply, heq, h1]
   have hc1 : c = 1 := by
     rw [hs] at hmap
-    simp only [Measure.smul_apply, h1] at hmap
+    simp only [smul_apply, h1] at hmap
     have : ((c : ENNReal)) = 1 := by simpa [ENNReal.smul_def] using hmap
     exact_mod_cast this
   have : μ.map e = μ := by rw [hs, hc1, one_smul]
@@ -934,11 +934,11 @@ theorem integral_mulRight {m r : ℕ} {μ : Measure (Mx D m r)} {𝓕 : Set (Mx 
     (hμ : IsCovolOne (ratMx D m r) μ 𝓕) (a : Matrix (Fin r) (Fin r) D.host.E) (ha : a.det ≠ 0)
     (g : Mx D m r → ℂ) : ∫ y, g (y ⬝ rat a) ∂μ = ∫ y, g y ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.TowerRestrict.lattice_Mx D m r
-  haveI : BorelSpace (Mx D m r) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
-  haveI i6 : DiscreteTopology (ratMx D m r) := i5
-  haveI i7 : SecondCountableTopology (ratMx D m r) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : Countable (ratMx D m r) := TopologicalSpace.separableSpace_iff_countable.1
+  have : BorelSpace (Mx D m r) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
+  have i6 : DiscreteTopology (ratMx D m r) := i5
+  have i7 : SecondCountableTopology (ratMx D m r) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : Countable (ratMx D m r) := TopologicalSpace.separableSpace_iff_countable.1
     (TopologicalSpace.SecondCountableTopology.to_separableSpace)
   obtain ⟨hH, hF, h1⟩ := hμ
   exact integral_comp_of_covol (ratMx D m r) μ 𝓕 hF h1
@@ -952,25 +952,25 @@ theorem integral_congA {r : ℕ} {lam : Measure (hermA D r)} {𝓖 : Set (hermA 
     (g : hermA D r → ℂ) :
     ∫ b, g (congA (rat a) (rat a⁻¹) (rat_mul_inv a ha) (rat_inv_mul a ha) b) ∂lam = ∫ b, g b ∂lam := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.TowerRestrict.lattice_Mx D r r
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
-  haveI i6 : DiscreteTopology (ratMx D r r) := i5
-  haveI i7 : SecondCountableTopology (ratMx D r r) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : Countable (ratMx D r r) := TopologicalSpace.separableSpace_iff_countable.1
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
+  have i6 : DiscreteTopology (ratMx D r r) := i5
+  have i7 : SecondCountableTopology (ratMx D r r) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : Countable (ratMx D r r) := TopologicalSpace.separableSpace_iff_countable.1
     (TopologicalSpace.SecondCountableTopology.to_separableSpace)
-  haveI i8 : SecondCountableTopology (hermA D r) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI i9 : BorelSpace (hermA D r) := Subtype.borelSpace _
+  have i8 : SecondCountableTopology (hermA D r) := TopologicalSpace.Subtype.secondCountableTopology _
+  have i9 : BorelSpace (hermA D r) := Subtype.borelSpace _
   have hcl : IsClosed ((hermA D r : AddSubgroup (Mx D r r)) : Set (Mx D r r)) :=
     isClosed_eq continuous_adj continuous_id
-  haveI : LocallyCompactSpace (hermA D r) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : Countable (ratHerm D r) := by
+  have : LocallyCompactSpace (hermA D r) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : Countable (ratHerm D r) := by
     let f : ratHerm D r → ratMx D r r := fun x => ⟨x.1.1, x.2⟩
     have hf : Function.Injective f := fun x y h =>
       Subtype.ext (Subtype.ext (congrArg (fun z : ratMx D r r => z.1) h))
     exact hf.countable
   obtain ⟨hH, hF, h1⟩ := hl
   have hcont : ∀ A : Mx D r r, Continuous (fun b : hermA D r => A ⬝ b.1 ⬝ adj A) := fun A =>
-    (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
   have hrat : ∀ (c : Matrix (Fin r) (Fin r) D.host.E) (γ : hermA D r), γ ∈ ratHerm D r →
       rat c ⬝ γ.1 ⬝ adj (rat c) ∈ ratMx D r r := by
     rintro c ⟨_, _⟩ ⟨γ, rfl⟩

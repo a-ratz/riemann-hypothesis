@@ -91,7 +91,7 @@ theorem continuous_char : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (F
     exact (Formalism.IndefR.Eqv.G5.ha_facts (AF D.host.F) D.sp.cm.deg2 D.sp.cm.sig W.gram).2.2.2.1
   have hres := GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hs ψ hω.std μ 𝓨 hμ
   obtain ⟨f₀, hf₀, hne⟩ := hres.2
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) :=
+  have : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
   set g := GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 f₀ with hgdef
   have hg : IsThetaFunO ψ V' W g := (hres.1 f₀ hf₀).2.1
@@ -119,7 +119,7 @@ theorem continuous_char : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (F
 
   set Nu : GA D W → ℂ := fun h => GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 (ω (1, h) f₀) x with hNu
   have hNc : ContinuousAt Nu h₀ := by
-    haveI : SecondCountableTopology (GA D W) := hg4
+    have : SecondCountableTopology (GA D W) := hg4
     obtain ⟨K, hK, hKn⟩ := exists_compact_mem_nhds h₀
     obtain ⟨c₀, hc₀⟩ := GlobalTheory.WeilSupBound.exists_sup_bound D ψ V W χS χT ω hω f₀ hf₀
       ({(1 : GA D V)} ×ˢ K) (isCompact_singleton.prod hK)
@@ -429,13 +429,13 @@ theorem integral_leftMul_eq_smul : ∀ (D : D7) (a : AE D) (m n : ℕ) (M M' : M
     M * M' = 1 → M' * M = 1 → ∃ κ : ℝ, 0 < κ ∧ ∀ φ : halfMx a m n → ℂ,
       ∫ t, φ (leftMul a M t) ∂haarHalf a m n = κ * ∫ t, φ t ∂haarHalf a m n := by
   intro D a m n M M' h1 h2
-  haveI : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
-  haveI : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
-  haveI : SecondCountableTopology (Mx D m n) :=
+  have : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
+  have : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
+  have : SecondCountableTopology (Mx D m n) :=
     inferInstanceAs (SecondCountableTopology (Fin m → Fin n → AE D))
-  haveI : SecondCountableTopology (halfMx a m n) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : SecondCountableTopology (halfMx a m n) := Topology.IsInducing.subtypeVal.secondCountableTopology
   have hc : ∀ N : Matrix (Fin m) (Fin m) (AE D), Continuous (leftMul a (n := n) N) := fun N =>
-    (continuous_const.matrix_mul continuous_subtype_val).subtype_mk _
+    (continuous_const.matrix_mul continuous_subtypeVal).subtype_mk _
   let e : halfMx a m n ≃ₜ+ halfMx a m n :=
     { toFun := leftMul a M
       invFun := leftMul a M'
@@ -447,7 +447,7 @@ theorem integral_leftMul_eq_smul : ∀ (D : D7) (a : AE D) (m n : ℕ) (M M' : M
         rw [AddSubgroup.coe_add, leftMul_coe, leftMul_coe, leftMul_coe, AddSubgroup.coe_add, Matrix.mul_add])
       continuous_toFun := hc M
       continuous_invFun := hc M' }
-  haveI : ((haarHalf a m n).map e).IsAddHaarMeasure := e.isAddHaarMeasure_map _
+  have : ((haarHalf a m n).map e).IsAddHaarMeasure := e.isAddHaarMeasure_map _
   have heq := Measure.isAddLeftInvariant_eq_smul ((haarHalf a m n).map e) (haarHalf a m n)
   refine ⟨(Measure.addHaarScalarFactor ((haarHalf a m n).map e) (haarHalf a m n) : ℝ),
     by exact_mod_cast Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _, fun φ => ?_⟩

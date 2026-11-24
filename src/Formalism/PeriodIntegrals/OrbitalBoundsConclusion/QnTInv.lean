@@ -167,7 +167,7 @@ lemma exp_fix (Y : Mx k r) (c : Fin (2 * r + k + 1)) (hY : ∀ x, Y x c = 0) :
 lemma exp_mem_glev (i : Fin (r + 1)) (X : Mx k r) (hX : Xᴴ = -(Hpk k r * X * Hpk k r))
     (hc : ∀ a : Fin r, a.val < i.val → ∀ x, X x (eI k r a) = 0 ∧ X x (esI k r a) = 0) (t : ℝ) :
     NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i := by
-  simp only [Glev, Set.mem_setOf_eq]
+  simp only [Glev, Set.mem_ofPred_eq]
   refine ⟨exp_mem_UH _ (skew_real X hX t), fun a ha => ⟨exp_fix _ _ fun x => ?_, exp_fix _ _ fun x => ?_⟩⟩
   · rw [Matrix.smul_apply, (hc a ha x).1, smul_zero]
   · rw [Matrix.smul_apply, (hc a ha x).2, smul_zero]
@@ -406,7 +406,7 @@ theorem transfer_invariance_right : StepRight := by
   have hiG := glev_inv hs'
   have hsU : s' ∈ UH (Hpk k r) := by
     have h0 := hs'
-    simp only [Glev, Set.mem_setOf_eq] at h0
+    simp only [Glev, Set.mem_ofPred_eq] at h0
     exact h0.1
   have hEH : ∀ Z : Mx k r, (∀ t : ℝ, NormedSpace.exp ((t : ℂ) • hpart1 (Hpk k r) Z) ∈ Glev k r i) →
       (∀ t : ℝ, NormedSpace.exp ((t : ℂ) • hpart2 (Hpk k r) Z) ∈ Glev k r i) →

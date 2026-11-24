@@ -90,7 +90,7 @@ private lemma UpperTheory.Reformulated.B.SubgroupFixed.core {R M N : Type*} [Rin
     have h1 : p w = 0 := by
       have : w ∈ LinearMap.ker p := htop ▸ Submodule.mem_top
       exact this
-    have h2 : p w = ⟨w, hw⟩ := Submodule.linearProjOfIsCompl_apply_left hC ⟨w, hw⟩
+    have h2 : p w = ⟨w, hw⟩ := Submodule.projectionOnto_apply_left hC ⟨w, hw⟩
     have h3 : (⟨w, hw⟩ : W) = 0 := h2.symm.trans h1
     simpa using congrArg Subtype.val h3
   obtain ⟨f, hf⟩ := hex
@@ -117,7 +117,7 @@ theorem UpperTheory.Reformulated.B.SubgroupFixed.sub_fixed :
                     UpperTheory.Reformulated.B.SubgroupFixed.HasFixed σ K → ∃ v ∈ W, v ≠ (0 : V) ∧ ∀ u ∈ K, ((τ : Γ → V →ₗ[ℂ] V) u : V → V) v = v := by
   intro Γ X V _ _ _ _ _ σ hσ τ h W hWinv hW K hK
   obtain ⟨x0, hx0, hfix⟩ := hK
-  haveI : IsSimpleModule (MonoidAlgebra ℂ Γ) σ.asModule :=
+  have : IsSimpleModule (MonoidAlgebra ℂ Γ) σ.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule σ).mp hσ
   let W' : Submodule (MonoidAlgebra ℂ Γ) τ.asModule :=
     { carrier := {x | τ.asModuleEquiv x ∈ W}

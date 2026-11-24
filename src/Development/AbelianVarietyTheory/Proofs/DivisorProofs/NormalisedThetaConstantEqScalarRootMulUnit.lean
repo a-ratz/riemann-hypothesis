@@ -423,8 +423,8 @@ theorem value_eq_root_mul_term {V : Type} [CommRing V] [IsDomain V] [IsLocalRing
       IsValueAt D.P.A D.P.L ((1 : ℕ) : ℤ) th x (powFrame D.P.A D.P.L x τ ((1 : ℕ) : ℤ))
         ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom c) →
       ∃ (c₀ : C) (ζ : K), ζ ^ (N ^ 2) = 1 ∧ c = ζ * (lam * ev (Tm 0 c₀)) := by
-  haveI : IsNoetherianRing V := hV.1
-  haveI : IsIntegrallyClosed V := hV.2.1
+  have : IsNoetherianRing V := hV.1
+  have : IsIntegrallyClosed V := hV.2.1
   obtain ⟨θ, hθ₁, -, hθ₂, -⟩ := ThetaOne.main hV D
   obtain ⟨b, a₁, hb, hc⟩ := integral_terms hN θ (fun th' => (hθ₂ _ th').exists) e Tm hT
   obtain ⟨r, hr⟩ := exists_scalar θ ev (hθ₁ K ev _ (ThetaOne.isPullSecLC_pullTo D ev θ)) th
@@ -537,7 +537,7 @@ theorem GlobalTheory.USep.thetaConst_eq_lam_root_mul_unit : ∀ (n : ℕ), n.Pri
   have hmu : IsUnit ((n ^ j : ℕ) : V₁) := by push_cast; exact hunit.pow j
   obtain ⟨M, lam, hM, H⟩ := GlobalTheory.T.theta_terms_separation_algebraically_closed (n ^ j) (hodd.pow) hm3 V₁ hV hmu D X C e u mo hmo hT K ev ρ₀ hρ₀ th hth
   refine ⟨M, lam, hM, fun y c hc => ?_⟩
-  haveI : IsNoetherianRing V₁ := hV.1
+  have : IsNoetherianRing V₁ := hV.1
   obtain ⟨τ, hτ, hv⟩ := GlobalTheory.T.exists_torsionFrame_isValueAt_thetaConstant (Sp V₁) D.P ρ₀ hρ₀ (n ^ j) (hodd.pow) _ th y _ hc
   exact H (y ^ n ^ j) τ c (GlobalTheory.USep.isTorsFrame_sq _ D.P ρ₀ (n ^ j) _ (y ^ n ^ j) τ hτ) hv
 end -- clump:auto

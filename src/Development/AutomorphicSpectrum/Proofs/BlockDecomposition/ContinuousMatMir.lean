@@ -90,7 +90,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem continuous_matMir (n : ℕ) :
     Continuous fun g : Mir k (n + 1) => ((g : GL (Fin (n + 2)) k) : Matrix (Fin (n + 2)) (Fin (n + 2)) k) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_rowQ (n : ℕ) : Continuous (rowQ k n) :=
   continuous_pi fun j => (continuous_apply _).comp ((continuous_apply _).comp (continuous_matMir n))
@@ -101,13 +101,13 @@ theorem continuous_unipM (n : ℕ) :
     refine continuous_matrix fun i j => ?_
     unfold GlobalTheory.BZMir.colMat
     by_cases hj : j = Fin.last (n + 1)
-    · simp only [if_pos hj]
+    · simp only [ite_eq_left hj]
       rcases Fin.eq_castSucc_or_eq_last i with ⟨i, rfl⟩ | rfl
       · simp only [Fin.lastCases_castSucc]
         exact continuous_apply i
       · simp only [Fin.lastCases_last]
         exact continuous_const
-    · simp only [if_neg hj]
+    · simp only [ite_eq_right hj]
       exact continuous_const
   have hval : Continuous fun v : Fin (n + 1) → k =>
       (1 : Matrix (Fin (n + 2)) (Fin (n + 2)) k) + GlobalTheory.BZMir.colMat k (n + 1) v :=

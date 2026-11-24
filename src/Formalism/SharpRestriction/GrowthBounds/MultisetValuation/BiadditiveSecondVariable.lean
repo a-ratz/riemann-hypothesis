@@ -390,7 +390,7 @@ theorem sx_root (ζ : K0 p) (hζ : ζ ^ (p ^ 2 - 1) = 1) :
     have : 4 ≤ p ^ 2 := by nlinarith
     omega
   have := Formalism.FG.WittVectorsCharZero.neZero_cast p 2 (by norm_num)
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (kb p) (p ^ 2 - 1)
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (kb p) (p ^ 2 - 1)
   have hinj : Function.Injective (WittVector.teichmuller p : kb p →* WW p) := by
     intro a b h
     have := congrArg (fun x => WittVector.coeff x 0) h

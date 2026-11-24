@@ -84,8 +84,8 @@ theorem Deep.ext {n M : ℕ} (hM : M = n + 1) {P : HeightOneSpectrum (𝓞 E)} {
   · rw [extGL_val]
     refine Fin.lastCases ?_ (fun i => ?_) a <;> refine Fin.lastCases ?_ (fun j => ?_) b
     · simp [extM_last_last]
-    · rw [extM_last_castSucc, if_neg (Fin.castSucc_lt_last j).ne', map_zero]
-    · rw [extM_castSucc_last, if_neg (Fin.castSucc_lt_last i).ne, map_zero]
+    · rw [extM_last_castSucc, ite_eq_right (Fin.castSucc_lt_last j).ne', map_zero]
+    · rw [extM_castSucc_last, ite_eq_right (Fin.castSucc_lt_last i).ne, map_zero]
     · rw [extM_castSucc, hw.1 P' h1 h2]
       simp [Fin.castSucc_inj]
   · rw [extGL_val]
@@ -289,7 +289,7 @@ theorem ext_mem (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) {Ch : Type} {ch
     ∃ h : extGL (N_m_succ B.R) κ.1 ∈ U β, chi β ⟨_, h⟩ = chi' κ := by
   obtain ⟨n, hn0, hn⟩ := hn
   obtain ⟨n', hn0', hn'⟩ := hn'
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     have := Formalism.L2.Col.rank_X'_eq B.R; have := B.R.m_add_three_le_k; unfold Ranks.r at *; omega⟩
   let c : (I.stX a).Cl := ⟨(), Quotient.mk'' ⟨(DecoF.base _ _ _ _ _, ∅), Set.mem_singleton _⟩⟩
   let H : Subgroup (GA B (B.R.N B.R.m - 1)) :=
@@ -359,10 +359,10 @@ theorem isExt_iff (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I
     refine ⟨TwP.extM_mul_incl hN g' _ fun b j => ?_, TwP.extM_mulVec_fix hN g' _ fun b hb => ?_⟩
     · refine (congrArg φ (TilX.iXm_apply hiX hN b j)).trans ?_
       by_cases h : b = Br.iC hN j
-      · rw [if_pos h]
-        exact (congrArg φ (if_pos h)).trans φ.map_one
-      · rw [if_neg h]
-        exact (congrArg φ (if_neg h)).trans φ.map_zero
+      · rw [ite_eq_left h]
+        exact (congrArg φ (ite_eq_left h)).trans φ.map_one
+      · rw [ite_eq_right h]
+        exact (congrArg φ (ite_eq_right h)).trans φ.map_zero
     · show φ (TC.z0 X u b) = 0
       rw [e, lastCoordinateUniformizerVector_eq_single, Pi.single_eq_of_ne hb]
       exact φ.map_zero

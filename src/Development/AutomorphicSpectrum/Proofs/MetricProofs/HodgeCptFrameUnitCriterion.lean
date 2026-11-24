@@ -99,9 +99,9 @@ variable (Ω : Type) [Field Ω] [CharZero Ω] {S : Type} (r : S → ℕ)
 theorem trdeg_genField [inst : Algebra ℤ (GenField Ω r)] :
     Algebra.trdeg ℤ (GenField Ω r) = Algebra.trdeg ℤ Ω + Cardinal.mk (GenIx r) := by
   obtain rfl : inst = OreLocalization.instAlgebra := Subsingleton.elim _ _
-  haveI : Algebra.IsAlgebraic (MvPolynomial (GenIx r) Ω) (GenField Ω r) :=
+  have : Algebra.IsAlgebraic (MvPolynomial (GenIx r) Ω) (GenField Ω r) :=
     IsLocalization.isAlgebraic _ (nonZeroDivisors (MvPolynomial (GenIx r) Ω))
-  haveI : FaithfulSMul ℤ Ω := (faithfulSMul_iff_algebraMap_injective ℤ Ω).mpr
+  have : FaithfulSMul ℤ Ω := (faithfulSMul_iff_algebraMap_injective ℤ Ω).mpr
     (by simpa using (Int.cast_injective (α := Ω)))
   have h1 := trdeg_add_eq ℤ Ω (A := GenField Ω r)
   have h2 := trdeg_add_eq Ω (MvPolynomial (GenIx r) Ω) (A := GenField Ω r)
@@ -144,7 +144,7 @@ theorem trdeg_of_isArithVar (x : (Σ k, ι k) → G) (d : ℕ) (hx : IsArithVar 
     rw [← add_assoc, h1]
     ring
   have h2 : (Algebra.trdeg ℤ (blockFnField x)).toENat = (d : ℕ∞) :=
-    WithTop.add_right_cancel (ENat.coe_ne_top _) h3
+    WithTop.add_right_cancel (ENat.natCast_ne_top _) h3
   exact Cardinal.toENat_eq_natCast.mp h2
 
 end Dim
@@ -186,7 +186,7 @@ theorem isArithVar_yv (hB : ∀ s, ∃ B : Matrix (Fin (rk Ψ p q s)) (Fin (n s)
   obtain ⟨c₀, hc₀, htr⟩ := trdeg_of_isArithVar x₀ d hx
   have hs : seg x₀ c₀ ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => hc₀ k
   obtain ⟨J, hJ, hfrac⟩ := CoordGen.flagCoord_generate Ω E (Ψ ⊕ Ψ) (rk Ψ p q) n _ (seg x₀) φ c c₀ hs (hgen c₀ hs) hB
-  haveI : CharZero (GenField Ω (rk Ψ p q)) :=
+  have : CharZero (GenField Ω (rk Ψ p q)) :=
     charZero_of_injective_algebraMap (algebraMap Ω (GenField Ω (rk Ψ p q))).injective
   have hy : ∀ k, yv (vals φ c) x₀ ⟨k, chartOf J k⟩ ≠ 0 := by
     rw [flagCoord_eq_prod] at hJ
@@ -194,7 +194,7 @@ theorem isArithVar_yv (hB : ∀ s, ∃ B : Matrix (Fin (rk Ψ p q s)) (Fin (n s)
   have htop := blockFnField_eq_top (yv (vals φ c) x₀) (flagCoord _ (seg x₀) φ c) J
     (fun j => by rw [flagCoord_eq_prod, flagCoord_eq_prod]; exact prod_div_mem _ _ _) hfrac
   have htop0 := blockFnField_eq_top x₀ (seg x₀) c₀ (fun j => prod_div_mem x₀ _ _) (hgen c₀ hs)
-  haveI : Nonempty (K₀ ⊕ StepIx Ψ p q) := ⟨.inl hx.1.some⟩
+  have : Nonempty (K₀ ⊕ StepIx Ψ p q) := ⟨.inl hx.1.some⟩
   refine isArithVar_of_trdeg _ (chartOf J) hy _ ?_
   rw [htop, trdeg_top, trdeg_genField, ← trdeg_top (G := Ω), ← htop0, htr, mk_genIx]
   push_cast

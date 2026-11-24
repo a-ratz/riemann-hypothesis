@@ -227,7 +227,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coLaws :
   intro K _ _ _ ι _ C
   refine ⟨haar _ _ (measurePreserving_mul_left μK) (measurePreserving_mul_right μK), fun μ hμ => ?_, un_eq C, fun i => ?_,
     fun i a b => ?_, fun i j hij a b => ?_, fun i a h => cmm _ h, spl C, lst C, blkA C, fun n k h => cmm _ h, dec⟩
-  · haveI := hμ.prob
+  · have := hμ.prob
     exact haar _ μ hμ.left hμ.right
   · exact continuous_archP.comp ((C.Ψ 2).symm.continuous.comp (ms_cont i))
   · rw [gl_eq, gl_eq, gl_eq, Pi.mulSingle_mul, map_mul]

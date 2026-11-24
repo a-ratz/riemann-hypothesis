@@ -54,8 +54,8 @@ private theorem unitAt_of_ord_eq_zero_coheight_one {X : Scheme.{0}} [IsIntegral 
     (hufd : ∀ x : X, UniqueFactorizationMonoid (X.presheaf.stalk x)) {v : X}
     (hv : Order.coheight v = 1) {h : X.functionField} (h0 : h ≠ 0)
     (hord : Scheme.ord h v = 0) : UnitAt v h := by
-  haveI := hufd v
-  haveI : Ring.KrullDimLE 1 (X.presheaf.stalk v) := krullDimLE_of_coheight_le hv.le
+  have := hufd v
+  have : Ring.KrullDimLE 1 (X.presheaf.stalk v) := krullDimLE_of_coheight_le hv.le
   by_cases hF : IsField (X.presheaf.stalk v)
   · obtain ⟨a, b, hb, hab⟩ := IsFractionRing.div_surjective (A := X.presheaf.stalk v) h
     have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
@@ -75,7 +75,7 @@ private theorem unitAt_of_ord_eq_zero_coheight_one {X : Scheme.{0}} [IsIntegral 
         rw [← map_mul, hbb', map_one]
       rw [eq_div_iff (fun h' => hb0 (IsFractionRing.injective (X.presheaf.stalk v) X.functionField
         (by rw [h', map_zero]))), mul_assoc, mul_comm _ (algebraMap _ _ b), this, mul_one]
-  · haveI : IsDiscreteValuationRing (X.presheaf.stalk v) := by
+  · have : IsDiscreteValuationRing (X.presheaf.stalk v) := by
       have hmax : ∀ I : Ideal (X.presheaf.stalk v), I ≠ ⊥ → I.IsPrime → I.IsMaximal :=
         Ring.krullDimLE_one_iff_of_isPrime_bot.mp inferInstance
       have hne : IsLocalRing.maximalIdeal (X.presheaf.stalk v) ≠ ⊥ :=
@@ -122,8 +122,8 @@ private theorem unitAt_of_ord_eq_zero_on_open {X : Scheme.{0}} [IsIntegral X] [I
     (hufd : ∀ x : X, UniqueFactorizationMonoid (X.presheaf.stalk x)) {y : X} (U : X.Opens)
     (hy : y ∈ U) (h : (X.functionField)ˣ)
     (hord : ∀ v ∈ U, Scheme.ord (h : X.functionField) v = 0) : UnitAt y (h : X.functionField) := by
-  haveI : GlobalTheory.IsNormalScheme X :=
-    ⟨fun x => inferInstance, fun x => by haveI := hufd x; infer_instance⟩
+  have : GlobalTheory.IsNormalScheme X :=
+    ⟨fun x => inferInstance, fun x => by have := hufd x; infer_instance⟩
   have key : ∀ g : (X.functionField)ˣ, (∀ v ∈ U, Scheme.ord (g : X.functionField) v = 0) →
       RegAt y (g : X.functionField) := by
     intro g hg

@@ -107,7 +107,7 @@ private theorem UpperTheory.valuation_det_le_one_of_entries_le_one' {K Γ ι : T
   rw [Matrix.det_apply]
   refine v.map_sum_le fun σ _ => ?_
   rw [UpperTheory.valuation_perm_term]
-  exact Finset.prod_le_one' fun i _ => h1 _ _
+  exact Finset.prod_le_one fun i _ => h1 _ _
 
 private theorem UpperTheory.val_det_eq_one_iff {K Γ ι : Type} [Field K] [LinearOrderedCommGroupWithZero Γ]
     (v : Valuation K Γ) [Fintype ι] [DecidableEq ι] [LinearOrder ι] (M : Matrix ι ι K)
@@ -117,7 +117,7 @@ private theorem UpperTheory.val_det_eq_one_iff {K Γ ι : Type} [Field K] [Linea
       v (Equiv.Perm.sign σ • ∏ i, M (σ i) i) < 1 := by
     intro σ j hj
     rw [UpperTheory.valuation_perm_term, ← Finset.mul_prod_erase _ _ (Finset.mem_univ j)]
-    exact lt_of_le_of_lt (mul_le_of_le_one_right' (Finset.prod_le_one' fun i _ => h1 _ _)) hj
+    exact lt_of_le_of_lt (mul_le_of_le_one_right' (Finset.prod_le_one fun i _ => h1 _ _)) hj
   have hσ : ∀ σ : Equiv.Perm ι, σ ≠ 1 → v (Equiv.Perm.sign σ • ∏ i, M (σ i) i) < 1 := by
     intro σ hσ
     have : ∃ j, j < σ j := by
@@ -166,11 +166,11 @@ private theorem UpperTheory.prod_lt_of_strictMono {Γ ι : Type} [LinearOrderedC
   obtain ⟨c, hcm, hcmax⟩ := Finset.exists_max_image (S \ T) id hS
   have key : ∏ i ∈ S \ T, f i < ∏ i ∈ T \ S, f i := by
     calc ∏ i ∈ S \ T, f i ≤ ∏ _i ∈ S \ T, f c :=
-          Finset.prod_le_prod' fun i hi => hf.monotone (hcmax i hi)
+          Finset.prod_le_prod fun i hi => hf.monotone (hcmax i hi)
       _ = ∏ _i ∈ T \ S, f c := by simp [hc']
       _ < _ := Finset.prod_lt_prod_of_nonempty₀ (fun _ _ => h0 c)
           (fun i hi => hf (hT _ _ (Finset.mem_sdiff.1 hcm).2 (Finset.mem_sdiff.1 hi).1)) hT'
-  rw [← Finset.prod_inter_mul_prod_diff S T, ← Finset.prod_inter_mul_prod_diff T S,
+  rw [← Finset.prod_inter_mul_prod_sdiff S T, ← Finset.prod_inter_mul_prod_sdiff T S,
     Finset.inter_comm T S]
   exact mul_lt_mul_of_pos_left key (Finset.prod_pos fun i _ => h0 i)
 
@@ -219,7 +219,7 @@ theorem UpperTheory.charpoly_coeff_valuation :
   refine lt_of_le_of_lt
     (mul_le_of_le_one_right' (UpperTheory.valuation_det_le_one_of_entries_le_one' v _ fun i j => h1 _ _)) ?_
   refine UpperTheory.prod_lt_of_strictMono (fun i => v (d i)) hmono
-    (fun i => zero_lt_iff.2 ((v.ne_zero_iff).2 (hd i))) S T (hS.1.2.trans hcard.symm) hS.2 ?_
+    (fun i => pos_iff_ne_zero.2 ((v.ne_zero_iff).2 (hd i))) S T (hS.1.2.trans hcard.symm) hS.2 ?_
   intro i j hi hj
   simp only [hT, Finset.mem_filter, Finset.mem_univ, true_and, not_le] at hi hj
   exact Fin.lt_def.2 (lt_of_lt_of_le hi hj)
@@ -271,9 +271,9 @@ theorem UpperTheory.iwahori_subgroup_open :
     fun i j => Units.continuous_val.matrix_elem i j
   have c2 : ∀ i j, Continuous fun g : Matrix.GeneralLinearGroup (Fin n) k => (g⁻¹).val i j :=
     fun i j => Units.continuous_coe_inv.matrix_elem i j
-  haveI : T2Space k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := by
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
     infer_instance
   constructor
   · have e : S = (⋂ i, ⋂ j, (fun g : Matrix.GeneralLinearGroup (Fin n) k => g.val i j) ⁻¹'
@@ -384,7 +384,7 @@ private lemma no_double_zero {L Γ : Type} [Field L] [LinearOrderedCommGroupWith
     (hc : ∀ k, k + 2 ≤ n → w (b k * b (k + 2)) < w (b (k + 1) * b (k + 1)))
     (h1 : ∑ k ∈ Finset.range (n + 1), b k = 0)
     (h2 : ∑ k ∈ Finset.range (n + 1), (k : L) * b k = 0) : False := by
-  have hpos : ∀ k ≤ n, 0 < w (b k) := fun k hk => zero_lt_iff.2 ((map_ne_zero w).2 (h0 k hk))
+  have hpos : ∀ k ≤ n, 0 < w (b k) := fun k hk => pos_iff_ne_zero.2 ((map_ne_zero w).2 (h0 k hk))
   obtain ⟨j, hjn, hj⟩ := exists_peak n (fun k => w (b k)) hpos
     (fun k hk => by simpa only [map_mul] using hc k hk)
   have hs : ∑ k ∈ Finset.range (n + 1), (((k + 1 : ℕ) : L) - (j : L)) * b k = 0 := by
@@ -424,12 +424,12 @@ private lemma exists_extension {K L Γ : Type} [Field K] [Field L]
   let z : v.valuationSubring := ⟨x / y, hlt.le⟩
   have hz : z ∈ IsLocalRing.maximalIdeal v.valuationSubring :=
     (Valuation.mem_maximalIdeal_iff _ _).2 hlt
-  haveI : IsLocalRing A.toSubring := inferInstanceAs (IsLocalRing A)
+  have : IsLocalRing A.toSubring := inferInstanceAs (IsLocalRing A)
   have hz' := (A.valuation_lt_one_iff _).1 (map_nonunit
     ((f.comp v.valuationSubring.subtype).codRestrict A.toSubring h) z hz)
   have hz'' : A.valuation (f (x / y)) < 1 := hz'
   rw [map_div₀, map_div₀] at hz''
-  exact (div_lt_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 ((map_ne_zero f).2 hy0)))).1 hz''
+  exact (div_lt_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 ((map_ne_zero f).2 hy0)))).1 hz''
 
 private lemma tail_succ {Γ : Type} [CommMonoid Γ] {n : ℕ} (γ : Fin n → Γ) (k : ℕ) (hk : k < n) :
     ∏ i ∈ Finset.univ.filter (fun i : Fin n => k ≤ i.val), γ i =
@@ -458,7 +458,7 @@ theorem UpperTheory.separable_of_newton_polygon :
     have e2 := hstep (k + 1) (by omega)
     have hlt : γ ⟨k, by omega⟩ < γ ⟨k + 1, by omega⟩ := hγ (by simp [Fin.lt_def])
     have hp : 0 < v (p.coeff (k + 1)) * v (p.coeff (k + 2)) :=
-      mul_pos (zero_lt_iff.2 (hv0 _ (by omega))) (zero_lt_iff.2 (hv0 _ hk))
+      mul_pos (pos_iff_ne_zero.2 (hv0 _ (by omega))) (pos_iff_ne_zero.2 (hv0 _ hk))
     calc v (p.coeff k * p.coeff (k + 2))
         = γ ⟨k, by omega⟩ * (v (p.coeff (k + 1)) * v (p.coeff (k + 2))) := by
           rw [map_mul, e1, mul_assoc]
@@ -487,7 +487,7 @@ theorem UpperTheory.separable_of_newton_polygon :
         f (p.coeff (k + 1) * p.coeff (k + 1)) * r ^ (2 * k + 2) := by rw [map_mul]; ring
     rw [e1, e2, map_mul A.valuation, map_mul A.valuation]
     exact mul_lt_mul_of_pos_right (hA _ _ (hconc k hk))
-      (zero_lt_iff.2 ((map_ne_zero _).2 (pow_ne_zero _ hr)))
+      (pos_iff_ne_zero.2 ((map_ne_zero _).2 (pow_ne_zero _ hr)))
   · rw [Polynomial.aeval_eq_sum_range, hn] at hp
     simpa only [Algebra.smul_def] using hp
   · have hX : Polynomial.aeval r (Polynomial.derivative p * Polynomial.X) = 0 := by rw [map_mul, hd, zero_mul]
@@ -559,7 +559,7 @@ private theorem UpperTheory.Reformulated.B.DoubleCosetSeparation.sep {k : Type} 
     (a * GlobalTheory.SmGL.diagT k (Fin n) (fun i => ϖ ^ x i) * b).val.charpoly.Separable := by
   have hM := mul_mem hb ha
   obtain ⟨h1, -, h3⟩ := (mem_iw _).1 hM
-  have h0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 (by simp)
   have hs : StrictMono fun i => valuation k ((ϖ ^ x i : kˣ) : k) := by
     intro i j hij
     simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
@@ -582,7 +582,7 @@ private theorem UpperTheory.Reformulated.B.DoubleCosetSeparation.supp {G : Type}
 theorem UpperTheory.Reformulated.B.DoubleCosetSeparation.dcosSep :
     UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.DcosSep := by
   intro E _ _ _ n w ϖ hϖ x hx
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   obtain ⟨hop, hc⟩ := UpperTheory.iwahori_subgroup_open (w.adicCompletion E) n
     (GlobalTheory.SmGL.iwahori (w.adicCompletion E) (Fin n)) fun g => mem_iw g
@@ -780,7 +780,7 @@ private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.supp_
     [IsTopologicalGroup G] (H : Subgroup G) (hH : IsOpen (H : Set G)) {C : Set G} (hC : IsCompact C)
     (f : G → ℂ) (hf : ∀ y, f y ≠ 0 → y ∈ C) :
     (Function.support fun q : G ⧸ H ↦ f (Quotient.out q)).Finite := by
-  haveI : DiscreteTopology (G ⧸ H) := QuotientGroup.discreteTopology hH
+  have : DiscreteTopology (G ⧸ H) := QuotientGroup.discreteTopology hH
   refine (hC.image (QuotientGroup.continuous_mk (N := H))).finite_of_discrete.subset ?_
   intro q hq
   exact ⟨_, hf _ hq, QuotientGroup.out_eq' q⟩
@@ -788,9 +788,9 @@ private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.supp_
 private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.relIndex_ne {G : Type} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] (K I : Subgroup G) (hK : IsCompact (K : Set G))
     (hI : IsOpen (I : Set G)) : I.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have h : IsOpen ((I.subgroupOf K : Subgroup K) : Set K) := hI.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ h
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have h : IsOpen ((I.subgroupOf K : Subgroup K) : Set K) := hI.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ h
   exact Subgroup.index_ne_zero_of_finite
 
 private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.out_mk {G M : Type} [Group G] (H : Subgroup G) (F : G → M)
@@ -803,8 +803,8 @@ private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.finsu
     (hIJ : I ≤ J) (hne : I.relIndex J ≠ 0) (F : G → M) (hF : ∀ a ∈ J, ∀ y, F (y * a) = F y)
     (hs : (Function.support fun q : G ⧸ J ↦ F (Quotient.out q)).Finite) :
     ∑ᶠ q : G ⧸ I, F (Quotient.out q) = I.relIndex J • ∑ᶠ q : G ⧸ J, F (Quotient.out q) := by
-  haveI : Finite (J ⧸ I.subgroupOf J) := Nat.finite_of_card_ne_zero hne
-  haveI := Fintype.ofFinite (J ⧸ I.subgroupOf J)
+  have : Finite (J ⧸ I.subgroupOf J) := Nat.finite_of_card_ne_zero hne
+  have := Fintype.ofFinite (J ⧸ I.subgroupOf J)
   have key : ∀ q : G ⧸ I, F (Quotient.out q) =
       F (Quotient.out (Subgroup.quotientEquivProdOfLE hIJ q).1) := by
     intro q
@@ -862,7 +862,7 @@ private theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.trace
     (h : ∀ v ∈ Q, T v ∈ P) :
     LinearMap.trace ℂ P (T.restrict fun v hv ↦ h v (hle hv)) =
       LinearMap.trace ℂ Q (T.restrict fun v hv ↦ hle (h v hv)) := by
-  haveI : FiniteDimensional ℂ P := Submodule.finiteDimensional_of_le hle
+  have : FiniteDimensional ℂ P := Submodule.finiteDimensional_of_le hle
   exact LinearMap.trace_comp_comm' (Submodule.inclusion hle) (T.restrict h)
 
 theorem UpperTheory.Reformulated.B.trace_eq_twisted_trace_of_fixed.trc_eq :
@@ -1075,12 +1075,12 @@ private theorem levOp_eq (ρ : Representation ℂ G V) (K I : Subgroup G) (x : G
   have h2 : (∑ᶠ q : G ⧸ I, f q.out • (ρ q.out ∘ₗ LinearMap.id)) = ∑ q ∈ hx'.toFinset, ρ q.out := by
     rw [finsum_eq_sum_of_support_subset (s := hx'.toFinset)]
     · refine Finset.sum_congr rfl fun q hq => ?_
-      rw [hf, if_pos ((hmem q).1 (hx'.mem_toFinset.1 hq)), one_smul]
+      rw [hf, ite_eq_left ((hmem q).1 (hx'.mem_toFinset.1 hq)), one_smul]
       rfl
     · intro q hq
       rw [Finset.mem_coe, hx'.mem_toFinset, hmem]
       by_contra hn
-      exact hq (by show f q.out • _ = 0; rw [hf, if_neg hn, zero_smul])
+      exact hq (by show f q.out • _ = 0; rw [hf, ite_eq_right hn, zero_smul])
   unfold levOp
   rw [h2, h1, LinearMap.smul_apply, LinearMap.sum_apply]
 
@@ -1129,7 +1129,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 private theorem dom_pow {ϖ : kˣ} (hϖ : valuation k (ϖ : k) < 1) {a : Fin n → ℤ} (ha : Antitone a) :
     Dom fun i => ϖ ^ a i := by
   intro i j hij
-  have h0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
+  have h0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
   exact (zpow_le_zpow_iff_right_of_lt_one₀ h0 hϖ).2 (ha hij)
 
@@ -1203,10 +1203,10 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.dcosTr :
   have hIK : I ≤ KGL w n := GlobalTheory.CompanionTheory.IwLevels.iwGL_le_KGL w n
   have hfd : FiniteDimensional ℂ (fixed τ.ρ I) :=
     (PositivityTheory.PfBern.Props1.irrSmoothAdmissible_holds _ _ _ τ.ρ τ.smooth τ.irred).2 _ hIo hIc
-  haveI hfd' : FiniteDimensional ℂ (UpperTheory.V.Hi.fixd τ.ρ I) := by
+  have hfd' : FiniteDimensional ℂ (UpperTheory.V.Hi.fixd τ.ρ I) := by
     rw [← fixed_eq]
     exact hfd
-  haveI hnt : Nontrivial (UpperTheory.V.Hi.fixd τ.ρ I) := by
+  have hnt : Nontrivial (UpperTheory.V.Hi.fixd τ.ρ I) := by
     rw [Submodule.nontrivial_iff_ne_bot, ← fixed_eq]
     intro hb
     refine hτ (eq_bot_iff.2 fun v hv => ?_)
@@ -1225,7 +1225,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.dcosTr :
     exact (heckePairIwC (w.adicCompletion E) n ⊤).1 _
   rw [trc_eq τ.ρ (KGL w n) I hKo hKc hIo hIc hIK _ _ hfx hfd, twTr_eq τ.ρ _ I _ hfin _ hfx]
   refine mul_ne_zero (inv_ne_zero (Nat.cast_ne_zero.2 ?_)) hne
-  haveI := GlobalTheory.TwTrLevel.finite_quot (KGL w n) (KGL w n) I hKc hKo hIo le_rfl
+  have := GlobalTheory.TwTrLevel.finite_quot (KGL w n) (KGL w n) I hKc hKo hIo le_rfl
   exact Subgroup.index_ne_zero_of_finite
 end -- clump:auto
 end -- clump:auto

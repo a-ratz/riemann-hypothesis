@@ -1233,7 +1233,7 @@ theorem mem_interior_image (hB : BrouwerFixedPoint.Statement) {f : (Fin n → �
     have : CompactSpace (closedBall a r) := isCompact_iff_compactSpace.mp hK
     have hce : Topology.IsClosedEmbedding ((closedBall a r).domRestrict f) :=
       hc.domRestrict.isClosedEmbedding hi.injective
-    obtain ⟨G, hG⟩ := ContinuousMap.exists_extension' hce ⟨Subtype.val, continuous_subtype_val⟩
+    obtain ⟨G, hG⟩ := ContinuousMap.exists_extension' hce ⟨Subtype.val, continuous_subtypeVal⟩
     exact ⟨G, fun x hx => congrFun hG ⟨x, hx⟩⟩
   have hGa : G (f a) = a := hGf a (mem_closedBall_self hr.le)
   by_contra hno
@@ -1421,7 +1421,7 @@ theorem ringKrullDim_curveNormalisation_le (I : Ideal (MvPolynomial (Fin n) ℂ)
     ringKrullDim (curveNormalisation I q) ≤ ringKrullDim (curveLocalRing I q) :=
   Order.krullDim_le_of_strictMono
     (fun Q ↦ ⟨Q.asIdeal.comap (algebraMap (curveLocalRing I q) (curveNormalisation I q)), inferInstance⟩)
-    fun _ _ h ↦ Ideal.IsIntegral.comap_lt_comap (R := curveLocalRing I q) h
+    fun _ _ h ↦ Ideal.IsIntegral.under_lt_under (R := curveLocalRing I q) h
 
 theorem exists_ord_eq_ord_polynomial (I : Ideal (MvPolynomial (Fin n) ℂ)) (q : Fin n → ℂ)
     (a : curveLocalRing I q) : ∃ f : MvPolynomial (Fin n) ℂ, ∀ P : MaximalSpectrum (curveNormalisation I q),
@@ -1582,7 +1582,7 @@ theorem exists_clm_ne_zero_of_countable {σ : Type} [Fintype σ] {T : Set (σ �
   refine ⟨∑ i, v i • ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : σ => ℂ) i, fun u hu => ?_⟩
   have hvu : φ u v ≠ 0 := fun h => hv (Set.mem_biUnion hu (LinearMap.mem_ker.2 h))
   rw [hφ] at hvu
-  simpa [ContinuousLinearMap.sum_apply] using hvu
+  simpa [sum_apply] using hvu
 
 theorem ParametrisationSheetsConnected.proof (h₁ : SheetPieceProductAnalytic.Statement)
     (h₂ : SheetPieceReachesCentre.Statement) : ParametrisationSheetsConnected.Statement := by

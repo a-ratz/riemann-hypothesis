@@ -193,7 +193,7 @@ theorem flatOver_of_comp_base {S₀ : Scheme.{0}} {g : Y ⟶ S₀} {u : S₀ ⟶
 theorem flatOver_descend {S'' : Scheme.{0}} {g : Y ⟶ S} {t : S' ⟶ S} (σ : S'' ⟶ S')
     [Surjective σ] [Flat σ] [QuasiCompact σ] (H : FlatOver f g (σ ≫ t)) : FlatOver f g t := by
   intro W Z a b j h sq e
-  haveI := flat_descendsAlong_fpqc
+  have := flat_descendsAlong_fpqc
   have sq1 := IsPullback.of_hasPullback b (pullback.fst h σ)
   have h1 : Flat (pullback.snd b (pullback.fst h σ)) :=
     H _ _ _ (pullback.snd h σ) (sq1.paste_horiz sq)
@@ -230,7 +230,7 @@ theorem flat_of_flatOver_fields (f : X ⟶ Y) (g : Y ⟶ S) (hY : IsLocallyNoeth
       (Y.affineCover.f i ≫ g) (by rw [e]; infer_instance) (fun k _ t => (H k t).target sq) ⟨_, rfl⟩
   obtain ⟨A, rfl⟩ := hA
   wlog hX : ∃ B, X = Spec B generalizing X
-  · haveI hX' : IsAffine X := isAffine_of_isAffineHom f
+  · have hX' : IsAffine X := isAffine_of_isAffineHom f
     rw [← MorphismProperty.cancel_left_of_respectsIso @Flat X.isoSpec.inv]
     exact this (X.isoSpec.inv ≫ f) inferInstance (by rw [Category.assoc]; infer_instance)
       (fun k _ t => (H k t).source _) ⟨_, rfl⟩
@@ -241,12 +241,12 @@ theorem flat_of_flatOver_fields (f : X ⟶ Y) (g : Y ⟶ S) (hY : IsLocallyNoeth
   rw [Flat.SpecMap_iff] at h1 ⊢
   rw [IsFinite.SpecMap_iff] at h2
   rw [isLocallyNoetherian_Spec] at hY
-  letI : Algebra R A := g.hom.toAlgebra
-  letI : Algebra A B := f.hom.toAlgebra
-  letI : Algebra R B := (g ≫ f).hom.toAlgebra
-  haveI : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Flat R B := h1
-  haveI : Module.Finite A B := h2
+  let : Algebra R A := g.hom.toAlgebra
+  let : Algebra A B := f.hom.toAlgebra
+  let : Algebra R B := (g ≫ f).hom.toAlgebra
+  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Flat R B := h1
+  have : Module.Finite A B := h2
   refine flat_of_flat_fibres (R := R) (A := A) (B := B) fun k C _ _ _ t h e => ?_
   have sq := isPullback_SpecMap_of_isPushout _ _ _ _ (CommRingCat.isPushout_tensorProduct A C B)
   have := H k (Spec.map (CommRingCat.ofHom t)) _ _ _ (Spec.map (CommRingCat.ofHom h)) sq.flip

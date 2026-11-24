@@ -80,7 +80,7 @@ theorem mem_twKer_of_map (f : π₁.IntertwiningMap π) (hπ : IsSmooth π) (hf 
     rw [hset]
     exact hπ (f w)
   obtain ⟨U, -, hU, hUv⟩ := GlobalTheory.LocGL.exists_normal_fix h₁ hH v
-  letI : Fintype (H ⧸ U) := U.fintypeQuotientOfFiniteIndex
+  let : Fintype (H ⧸ U) := U.fintypeQuotientOfFiniteIndex
   have hUf : ∀ u ∈ U, π (u : H) (f v) = f v := fun u hu => by rw [← map_apply', hUv u hu]
   rw [← GlobalTheory.LocGL.idem_eq_zero_iff h₁ hH]
   apply hf
@@ -145,7 +145,7 @@ private theorem eventually_valuation_le_uniformizer_pow_of_mem_unipRad (e : (Σ 
   ·
     exact Filter.Eventually.of_forall fun M => by
       rw [hP i j h, map_zero]
-      exact zero_le'
+      exact zero_le
 
 theorem eventually_mem_grp (e : (Σ a, m a) ≃ n) {u : GL n k} (hu : u ∈ unipRad k e) :
     ∀ᶠ M : ℕ in Filter.atTop, u ∈ grp k (conc_wt e M) := by

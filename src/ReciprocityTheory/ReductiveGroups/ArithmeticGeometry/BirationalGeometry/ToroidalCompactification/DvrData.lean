@@ -105,7 +105,7 @@ private theorem jQ_mem_preimage_abLocus (p : Xo.XF c) :
 private theorem exists_lift_fractionRing_comp_algebraMap (P : ValPt Y) (W : UnramExt P.V) :
     ∃ f : P.K' →+* FractionRing W.W, f.comp (algebraMap P.V P.K') =
       (algebraMap W.W (FractionRing W.W)).comp (algebraMap P.V W.W) := by
-  haveI := P.frac
+  have := P.frac
   have hinj : Function.Injective
       ((algebraMap W.W (FractionRing W.W)).comp (algebraMap P.V W.W)) := by
     rw [RingHom.coe_comp]
@@ -130,9 +130,9 @@ theorem ValPt.ξ_ab (P : ValPt Y) (W : UnramExt P.V) : (P.ξ W ⁻¹' abLocus Y.
 
 theorem dvrData_of_splitting (h3 : Y.N3) (P : ValPt Y) (hs : SplitsAt P) : DvrDataAt P := by
   obtain ⟨W, t, m, hsp⟩ := hs
-  haveI : CharZero P.K' := P.char0
-  haveI : CharZero P.V := (algebraMap P.V P.K').charZero
-  haveI : CharZero W.W := ⟨fun a b h => by
+  have : CharZero P.K' := P.char0
+  have : CharZero P.V := (algebraMap P.V P.K').charZero
+  have : CharZero W.W := ⟨fun a b h => by
     apply Nat.cast_injective (R := P.V)
     apply W.inj
     simpa using h⟩

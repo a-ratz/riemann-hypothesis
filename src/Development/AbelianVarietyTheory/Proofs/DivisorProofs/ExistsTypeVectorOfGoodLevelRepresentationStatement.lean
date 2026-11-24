@@ -133,7 +133,7 @@ theorem mem_fixed_iff {x : W} :
     x ∈ GlobalTheory.PRep.fixed σ ((levG V β (flag1L L)).subgroupOf (GfC V)) ↔
       ∀ h : GfC V, (h : GA D V) ∈ levG V β (flag1L L) → σ h x = x := by
   unfold GlobalTheory.PRep.fixed GlobalTheory.PRep.eig
-  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq,
+  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, mem_ofPred_eq,
     MonoidHom.one_apply, Units.val_one, one_smul]
   constructor
   · intro H h hh
@@ -249,7 +249,7 @@ theorem exists_irreducible_subrep_fixed : ∀ (G G' W : Type) [Group G] [Finite 
     intro T hT
     rw [hm]
     exact Nat.find_min' hex ⟨T, hT, rfl⟩
-  haveI := hSfd
+  have := hSfd
   let E : S.toSubmodule →ₗ[ℂ] S.toSubmodule := ∑ g, c g • S.toRepresentation (i g)
   have hEapp : ∀ z, E z = ∑ g, c g • S.toRepresentation (i g) z := by
     intro z
@@ -282,7 +282,7 @@ theorem exists_irreducible_subrep_fixed : ∀ (G G' W : Type) [Group G] [Finite 
   have hy'0 : y' ≠ 0 := fun h => hy0 (congrArg Subtype.val h)
   have hy'fix : E y' = y' := Subtype.ext (by rw [hE]; exact hyfix)
   refine ⟨S, hSfd, ?_, y', hy'0, by rw [← hEapp]; exact hy'fix⟩
-  haveI : Nontrivial (Subrepresentation S.toRepresentation) :=
+  have : Nontrivial (Subrepresentation S.toRepresentation) :=
     ⟨⊥, ⊤, fun h => by
       have h' : (⊥ : Submodule ℂ S.toSubmodule) = ⊤ := congrArg Subrepresentation.toSubmodule h
       have hm' : y' ∈ (⊥ : Submodule ℂ S.toSubmodule) := h' ▸ Submodule.mem_top
@@ -291,7 +291,7 @@ theorem exists_irreducible_subrep_fixed : ∀ (G G' W : Type) [Group G] [Finite 
   by_contra hne
   push Not at hne
   obtain ⟨hTb, hTt⟩ := hne
-  haveI hss : S.toRepresentation.IsSemisimpleRepresentation := by
+  have hss : S.toRepresentation.IsSemisimpleRepresentation := by
     rw [Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule]
     infer_instance
   obtain ⟨T', hc⟩ := exists_isCompl T
@@ -901,7 +901,7 @@ theorem map_mem_radical {k k' : Type} [CommRing k] [CommRing k'] (e : k →+* k'
 theorem sum_character_eq_zero_iff {H V : Type} [Group H] [Fintype H] [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (τ : Representation ℂ H V) : ∑ h, τ.character h = 0 ↔ ∀ x : V, (∀ h, τ h x = x) → x = 0 := by
   have hcard : (Nat.card H : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (Nat.card_pos (α := H)).ne'
-  haveI : Invertible (Nat.card H : ℂ) := invertibleOfNonzero hcard
+  have : Invertible (Nat.card H : ℂ) := invertibleOfNonzero hcard
   have h := τ.card_inv_mul_sum_char_eq_finrank
   constructor
   · intro hs x hx
@@ -1000,9 +1000,9 @@ theorem exists_char_of_fixed {K G W : Type} [Field K] [CharZero K] [Group G] [Fi
           simp only [Algebra.algebraMap_self, RingHom.id_apply]
           ring
       _ = 0 := by rw [hs, mul_zero]
-  haveI : ρ.IsIrreducible := hρi
-  haveI : τ.IsIrreducible := hτ
-  haveI := Module.nontrivial_of_finrank_pos (Nat.pos_of_ne_zero hfin)
+  have : ρ.IsIrreducible := hρi
+  have : τ.IsIrreducible := hτ
+  have := Module.nontrivial_of_finrank_pos (Nat.pos_of_ne_zero hfin)
   obtain ⟨f, hf⟩ := exists_ne (0 : ρ.IntertwiningMap τ)
   rcases Representation.IsIrreducible.bijective_or_eq_zero f with hb | h0
   · intro g
@@ -1018,7 +1018,7 @@ theorem sum_typeChar_radical {p : ℕ} [Fact p.Prime] {r : ℕ} (s : GlobalTheor
     [Fintype (unipRadical (ZMod p) (Formalism.L2.DIV.blk2 (n := r) a))] :
     ∑ u : unipRadical (ZMod p) (Formalism.L2.DIV.blk2 (n := r) a), GlobalTheory.IndefiniteRowSideFullHecke.LevelCuspCharacters.typeChar s (u : GL (Fin r) (ZMod p)) = 0 := by
   classical
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   let b₀ : Fin r → ℕ := fun i => (s.1 i : ℕ)
   let w := Tuple.sort b₀
   let e := (cycEquiv s.1).trans w.symm
@@ -1039,7 +1039,7 @@ theorem sum_typeChar_radical {p : ℕ} [Fact p.Prime] {r : ℕ} (s : GlobalTheor
     congr 1
     · congr 2
       exact (Nat.card_congr ((MulAut.conj (permGL (ZMod p) w)).toEquiv.subtypeEquiv fun z => (hm z).symm)).symm
-    · letI := Fintype.ofFinite (GL (Fin r) (ZMod p))
+    · let := Fintype.ofFinite (GL (Fin r) (ZMod p))
       rw [finsum_eq_sum_of_fintype]
       symm
       refine Fintype.sum_equiv (Equiv.mulRight (permGL (ZMod p) w)⁻¹) _ _ fun y => ?_
@@ -1050,7 +1050,7 @@ theorem sum_typeChar_radical {p : ℕ} [Fact p.Prime] {r : ℕ} (s : GlobalTheor
       rw [h1]
       unfold ext0
       by_cases hz : y⁻¹ * x * y ∈ blockTri (κ := ZMod p) (b₀ ∘ w)
-      · rw [dite_eq_left hz, if_pos ((hm _).2 hz), hch]
+      · rw [dite_eq_left hz, ite_eq_left ((hm _).2 hz), hch]
         refine Finset.prod_congr rfl fun c _ => ?_
         unfold cuspOn
         congr 1
@@ -1059,7 +1059,7 @@ theorem sum_typeChar_radical {p : ℕ} [Fact p.Prime] {r : ℕ} (s : GlobalTheor
         simp only [e, Equiv.trans_apply, cycEquiv_apply]
         rw [← conj_permGL_apply w, Equiv.apply_symm_apply, Equiv.apply_symm_apply]
         rfl
-      · rw [dite_eq_right hz, if_neg (mt (hm _).1 hz)]
+      · rw [dite_eq_right hz, ite_eq_right (mt (hm _).1 hz)]
   have hnf : GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.NoFixed (parInd (b₀ ∘ w) σ) (GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.radical (ZMod p) r a) := by
     by_contra hfix
     obtain ⟨J, hJ, hJa⟩ := GlobalTheory.GoodNoFixed.fixedVectorBlocks (ZMod p) r (b₀ ∘ w) _ σ hσ _ (parInd (b₀ ∘ w) σ)
@@ -1109,7 +1109,7 @@ theorem hypH_of_goodProj : GlobalTheory.Published.GreenCuspidal → ∀ {D : D7}
   obtain ⟨θ, hθ, hχθ⟩ := GlobalTheory.GoodTypeGeneric.exists_eq_of_idemOf D.what₂.embLL A.X hR.irr
     (LevelCuspCharacters.goodTypes_finite (H := D.host) om).toFinset (fun θ g => θ (φ g)) (fun θ hθ => by
       obtain ⟨s, hs, rfl⟩ := (Set.Finite.mem_toFinset _).1 hθ
-      letI := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
+      let := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
       refine GlobalTheory.GoodTypeGeneric.isChar_prod (χ := fun v g => LevelCuspCharacters.typeChar (s v) (φ g v)) fun v => ?_
       obtain ⟨n, ρ, hρ⟩ := GlobalTheory.GoodTypeGeneric.isChar_of_isCuspProdChar (hreg s hs v)
       exact ⟨n, ρ.comp ((Pi.evalMonoidHom _ v).comp φ.toMonoidHom), fun g => hρ _⟩) (fun g => by
@@ -1140,9 +1140,9 @@ theorem hypH_of_goodProj : GlobalTheory.Published.GreenCuspidal → ∀ {D : D7}
   obtain ⟨kv, hkv⟩ := (sqEquiv D).surjective ⟨0, w⟩
   rw [← hkv] at hw
   refine ⟨plg kv, ?_⟩
-  letI : Field (kP (plg kv).1) := Ideal.Quotient.field _
-  haveI : Finite (kP (plg kv).1) := CuspidalProductMultiplicity.finite_kP _
-  letI := Fintype.ofFinite (unipRadical (kP (plg kv).1) (blk2 (n := D.R.r) a))
+  let : Field (kP (plg kv).1) := Ideal.Quotient.field _
+  have : Finite (kP (plg kv).1) := CuspidalProductMultiplicity.finite_kP _
+  let := Fintype.ofFinite (unipRadical (kP (plg kv).1) (blk2 (n := D.R.r) a))
   let ι : GL (Fin D.R.r) (kP (plg kv).1) →* G0 R.Pg D.R.r :=
     MonoidHom.mulSingle (fun PP : ↥R.Pg => GL (Fin D.R.r) (kP PP.1)) (plg kv)
   have hset : {g : G0 R.Pg D.R.r | (∀ PP' : R.Pg, PP' ≠ plg kv → g PP' = 1) ∧
@@ -1180,7 +1180,7 @@ theorem hypH_of_goodProj : GlobalTheory.Published.GreenCuspidal → ∀ {D : D7}
       rw [← hg', h2 g' kv', hbc]
       exact congrFun (hφ g') kv'
     rw [← hg', hchar, LevelCuspCharacters.tupleChar]
-    letI := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
+    let := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
     rw [← Fintype.prod_equiv (plg.symm.trans (sqEquiv D))
       (fun PP => LevelCuspCharacters.typeChar (s (sqEquiv D (plg.symm PP))) (φ g' (sqEquiv D (plg.symm PP)))) _ (fun _ => rfl),
       ← Finset.mul_prod_erase _ _ (Finset.mem_univ (plg kv))]
@@ -1193,8 +1193,8 @@ theorem hypH_of_goodProj : GlobalTheory.Published.GreenCuspidal → ∀ {D : D7}
   simp only [hval]
   rw [← Finset.sum_mul]
   refine mul_eq_zero_of_left ?_ _
-  haveI : NeZero (D.host.g kv.1) := ⟨(Fact.out : (D.host.g kv.1).Prime).ne_zero⟩
-  letI := Fintype.ofFinite (unipRadical (ZMod (D.host.g kv.1)) (blk2 (n := D.R.r) a))
+  have : NeZero (D.host.g kv.1) := ⟨(Fact.out : (D.host.g kv.1).Prime).ne_zero⟩
+  let := Fintype.ofFinite (unipRadical (ZMod (D.host.g kv.1)) (blk2 (n := D.R.r) a))
   let E : unipRadical (ZMod (D.host.g kv.1)) (blk2 (n := D.R.r) a) ≃ unipRadical (kP (plg kv).1) (blk2 (n := D.R.r) a) :=
     { toFun := fun u => ⟨Formalism.UG.bc ((iso kv : ZMod (D.host.g kv.1) →+* kP (plg kv).1)) u,
         GlobalTheory.GoodNoFixed.mem_radical_iff.1 (GlobalTheory.GoodNoFixed.map_mem_radical _ (GlobalTheory.GoodNoFixed.mem_radical_iff.2 u.2))⟩
@@ -1351,7 +1351,7 @@ theorem hasTypeVec_of_goodRep : GlobalTheory.Published.GreenCuspidal → ∀ {D 
   obtain ⟨v, hv0, hvK, κ, hκ, hve⟩ := hgood
   have hvmem : v ∈ GlobalTheory.PRep.fixed σ ((levG (Yc D 0) (R.βY 0) (flag1L (R.dat0 R.triv))).subgroupOf (GfC (Yc D 0))) :=
     mem_fixed_iff.2 fun k => hvK _ (Subgroup.mem_subgroupOf.1 k.2)
-  haveI : Finite (G0 R.Pg D.R.r) := Finite.of_equiv G R.eG.toEquiv
+  have : Finite (G0 R.Pg D.R.r) := Finite.of_equiv G R.eG.toEquiv
   have hfix : ∑ g, RealDat.eC (A := A) D.what₂.embLL g • ρ (R.eG g) ⟨v, hvmem⟩ = ⟨v, hvmem⟩ := by
     apply Subtype.ext
     rw [AddSubmonoidClass.coe_finsetSum]
@@ -1359,7 +1359,7 @@ theorem hasTypeVec_of_goodRep : GlobalTheory.Published.GreenCuspidal → ∀ {D 
     rw [SetLike.val_smul, hρ (R.eG g) (κ g) (hκ g)]
   obtain ⟨U, hUfd, hUirr, y, hy0, hye⟩ := _root_.GlobalTheory.FixedVec.exists_irreducible_subrep_fixed _ _ _ ρ (fun g => R.eG g) _ ⟨v, hvmem⟩
     (fun h => hv0 (congrArg Subtype.val h)) hfix
-  haveI := hUfd
+  have := hUfd
   have hH := GlobalTheory.T.irreducible_not_killed_by_good_projector_satisfies_H hGC R F hF U.toSubmodule U.toRepresentation hUirr ⟨y, hy0, hye⟩
   choose n τ hτ hrest using _root_.GlobalTheory.PiIsotypic.isotypic_factor_of_isIrreducible_pi (↥R.Pg) (fun PP => GL (Fin D.R.r) (kP PP.1)) U.toSubmodule U.toRepresentation hUirr
   obtain ⟨a, S, pl, s, ρv, hoff, hon⟩ : ∃ (a : GfC (Yc D 0)) (S : Finset (HeightOneSpectrum (𝓞 D.host.F))) (pl : S ≃ R.Pg)

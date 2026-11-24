@@ -53,7 +53,7 @@ theorem continuous_singleV (F : Type) [Field F] [NumberField F] (v : HeightOneSp
   let f : HeckeCharacterZeroLocus.SiegelWeilU.Fv F v → RestrictedProduct (fun u : HeightOneSpectrum (𝓞 F) => u.adicCompletion F)
       (fun u => (u.adicCompletionIntegers F : Set (u.adicCompletion F))) (Filter.principal {v}ᶜ) :=
     fun a => ⟨Pi.single v a, fun u hu => by
-      rw [Set.mem_setOf_eq, Pi.single_eq_of_ne hu]; exact zero_mem _⟩
+      rw [Set.mem_ofPred_eq, Pi.single_eq_of_ne hu]; exact zero_mem _⟩
   have hf : Continuous f := RestrictedProduct.continuous_rng_of_principal.2 (continuous_single v)
   exact (RestrictedProduct.continuous_inclusion hS).comp hf
 

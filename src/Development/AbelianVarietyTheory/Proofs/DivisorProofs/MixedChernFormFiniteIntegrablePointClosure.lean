@@ -62,11 +62,11 @@ namespace GlobalTheory.CycFin
 theorem cycle_facts : GlobalTheory.Published.Principalisation → ∀ (F : Type) [Field F] (X : Scheme.{0}) (p : X ⟶ Sp F) (σ : F →+* ℂ), IsProjOver p → ∀ (e : ℕ) (L : Fin e → MLine p σ) (z : X), topologicalKrullDim (closure ({z} : Set X)) = e → (∀ ε : ℤˣ, IsFiniteMeasure (part (fun i => (L i).pull (closι z) rfl) ε)) ∧ (∀ f : CxPts p σ → ℝ, Continuous f → CycIntg L f z) ∧ (∀ (U : X.Opens), z ∈ U → ∀ ε : ℤˣ, part (fun i => (L i).pull (closι z) rfl) ε (ptMap (closι z) rfl σ ⁻¹' ptsIn p σ U)ᶜ = 0) ∧ ∀ (M : MLine p σ) (s : M.B.Sec), z ∈ nonzeroLocus s → CycIntg L (M.logSec s) z := by
   intro hP F _ X p σ hp e L z hdim
   obtain ⟨hint, hgen, hdimeq, -⟩ := _root_.GlobalTheory.ClosFacts.clos_facts X z
-  haveI := hint
+  have := hint
   have hp' : IsProjOver (closι z ≫ p) := by
     obtain ⟨N, φ, hφ, rfl⟩ := hp
     exact ⟨N, closι z ≫ φ, inferInstance, Category.assoc _ _ _⟩
-  haveI : IsLocallyNoetherian (clos z) := by
+  have : IsLocallyNoetherian (clos z) := by
     obtain ⟨N, ι, _, -⟩ := hp'
     exact LocallyOfFiniteType.isLocallyNoetherian (ι ≫ PSpace.str F N)
   have hd : topologicalKrullDim (clos z) = ((e : ℕ) : WithBot ℕ∞) := hdimeq.trans hdim

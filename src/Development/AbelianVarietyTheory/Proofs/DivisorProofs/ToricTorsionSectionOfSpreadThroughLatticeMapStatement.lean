@@ -81,7 +81,7 @@ namespace GlobalTheory.Poinc.Sep.Spz
 
 theorem torAt_of_closedPoint : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A G) (ξ : Sp V ⟶ B) (β : G.left ⟶ H.left), IsGrpPullback G H ξ β → ∀ (σ : Sp V ⟶ H.left), σ ≫ H.hom = ξ → ∀ (k : ℕ) (w : V), 1 ≤ k → IsUnit (k : V) → w ^ k = 1 → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] (c : D.toPre.X →+ ℤ) (x : TFK (R := V) F ⟶ A.A), x ^ k = 1 → x.left ≫ genMap U ≫ β = spMap (algebraMap (FractionRing V) F) ≫ jK V ≫ σ → ∀ (κ : Type) [Field κ] (b : V →+* κ) (hb : ∀ y ∈ maximalIdeal V ^ (0 + 1), b y = 0) (Gκ : Over (Sp κ)) [GrpObj Gκ] (m : Gκ.left ⟶ G.left) (hm : IsGrpPullback Gκ G (spMap b) m) (τ : Multiplicative D.toPre.X →* κˣ), (∀ χ, (τ (Multiplicative.ofAdd χ) : κ) = b w ^ c χ) → ∀ (z : Over.mk (spMap (RingHom.id κ)) ⟶ splitTorus (Sp κ) D.toPre.X), (∀ χ, GlobalTheory.UU.chV z χ = unitOn (τ (Multiplicative.ofAdd χ))) → spMap b ≫ σ = (z ≫ GlobalTheory.TorusPart.gtTorus (U.gt 0) hb hm).left ≫ m ≫ β → TorAt U F k (algebraMap (FractionRing V) F (algebraMap V (FractionRing V) w)) c x := by
   intro B H _ V _ _ _ hV G _ _ hG D A U ξ β hβ σ hσ k w hk hkV hw F _ _ _ c x hx hxσ κ _ b hb Gκ _ m hm τ hτ z hz hbσ
-  haveI : CharZero V := hV.2
+  have : CharZero V := hV.2
   have hid : spMap (RingHom.id V) = 𝟙 (Sp V) := Spec.map_id _
   let σ₀ : Sp V ⟶ G.left := hβ.1.lift σ (𝟙 _) (hσ.trans (Category.id_comp _).symm)
   have hσ₀ : σ₀ ≫ β = σ := hβ.1.lift_fst _ _ _
@@ -103,8 +103,8 @@ theorem torAt_of_closedPoint : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] (V :
   have ha : spMap a = spMap (algebraMap (FractionRing V) F) ≫ jK V := GlobalTheory.ToricTorsionSec.spMap_comp _ _
   have hainj : Function.Injective a :=
     (algebraMap (FractionRing V) F).injective.comp (IsFractionRing.injective V (FractionRing V))
-  haveI := U.gen_hom
-  haveI : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
+  have := U.gen_hom
+  have : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
   have hp₁ : IsGrpPullback A.A ((Over.pullback (jK V)).obj G) (𝟙 _) U.gen.inv.left :=
     isGrpPullback_of_iso U.gen.symm
   have hp₂ := isGrpPullback_pullback G (jK V)
@@ -117,14 +117,14 @@ theorem torAt_of_closedPoint : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] (V :
     rw [he]
     show (x.left ≫ genMap U) ≫ β = (spMap a ≫ σ₀) ≫ β
     rw [Category.assoc, Category.assoc, hσ₀, ha, hxσ, Category.assoc]
-  haveI : IsSeparated G.hom := hG.separated
-  haveI : IsDominant (spMap a) :=
+  have : IsSeparated G.hom := hG.separated
+  have : IsDominant (spMap a) :=
     ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical a).2
       (by rw [(RingHom.injective_iff_ker_eq_bot _).1 hainj]; exact bot_le)⟩
   have hσ₁ : σ₁ ^ k = 1 := by
     have h1 : ρ ≫ σ₁ ^ k = ρ ≫ 1 := by
       rw [MonObj.comp_pow, ← hex, ← map_pow, hx, map_one, MonObj.comp_one]
-    haveI : AlgebraicGeometry.IsReduced (Over.mk (spMap (RingHom.id V))).left :=
+    have : AlgebraicGeometry.IsReduced (Over.mk (spMap (RingHom.id V))).left :=
       inferInstanceAs (AlgebraicGeometry.IsReduced (Sp V))
     refine Over.OverMorphism.ext (ext_of_isDominant_of_isSeparated G.hom
       ((Over.w _).trans (Over.w _).symm) (spMap a) ?_)
@@ -248,9 +248,9 @@ theorem GlobalTheory.ToricTorsionClosedPt.main : ∀ (B : Scheme.{0}) (H : Over 
     rfl
   have haI : Function.Injective a :=
     (algebraMap (FractionRing V) F).injective.comp (IsFractionRing.injective V (FractionRing V))
-  haveI : IsDominant (spMap a) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical a).2
+  have : IsDominant (spMap a) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical a).2
     (by rw [(RingHom.injective_iff_ker_eq_bot _).1 haI]; exact bot_le)⟩
-  haveI : IsSeparated G.hom := hG.separated
+  have : IsSeparated G.hom := hG.separated
   obtain ⟨τF, q, hτF, hq, hqt, hqx⟩ := hx
   have hτFk : τF ^ k = 1 := powk τF _ (by rw [← map_pow, ← map_pow, hw, map_one, map_one]) hτF
   have e4 := s4 F a τF hτFk q x rfl hq hqt hqx
@@ -391,7 +391,7 @@ theorem trait_section : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonO
     Wo h ξ₁' ξ₂' hh hξ₁ hξ₂ c hyp
   obtain ⟨W, _, _, _, ψ, GW, _, _, φW, j, Ω, _, α, b₁, hb₁, GΩ, _, n, hn, n₁, hn₁, κ, _, c', b₂, hb₂, Gκ, _, m, hm,
     m₂, hm₂, hψ, _, hα, hc', hαψ, hc'ψ, hnφ, hmφ, hjn, hjm⟩ := hS
-  haveI := hc'
+  have := hc'
 
   have hrange : Set.range ψ ⊆ Set.range Wo.ι :=
     range_sub ψ Wo c' (spMap b₂ ≫ ξ₂') (by rw [hc'ψ, Category.assoc, hξ₂])
@@ -423,8 +423,8 @@ theorem trait_section : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonO
   have hyp₁ := hyp Ω b₁ hb₁ GΩ n₁ hn₁ τΩ hτΩ zΩ hzΩ
   have hbcΩ := bc_point α hn j τW τΩ (fun χ => powChar_map oW α u c χ) zW hzW zΩ hzΩ
 
-  haveI : IsSeparated H.hom := hH.separated
-  haveI : IsDominant (spMap α) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical α).2
+  have : IsSeparated H.hom := hH.separated
+  have : IsDominant (spMap α) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical α).2
     (by rw [(RingHom.injective_iff_ker_eq_bot _).1 hα]; exact bot_le)⟩
   have hd : ψ' ≫ h = (zW ≫ j).left ≫ φW := by
     refine ext_of_isDominant_of_isSeparated H.hom ?_ (spMap α) ?_

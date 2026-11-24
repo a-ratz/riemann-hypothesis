@@ -96,8 +96,8 @@ theorem lift_lev_pt (hl : R.toLevCh.Is A.μ0) (hθ : IsInfFam R.θ) (t : T) (k :
       (pureTensorO R.ψ R.θ (Yc D k) V (cart (R.MY k)) (cart M) (onb (R.MY k)) (onb M) f φ) F g = U g) :
     liftS om ν 𝓕 F (pureTensorO R.ψ R.θ (Yc D k) V (cart (R.MY k)) (cart M) (onb (R.MY k)) (onb M) f' φ) =
       (Nat.card P.H : ℂ) • U := by
-  haveI := finite_H P
-  haveI : Fintype P.H := Fintype.ofFinite _
+  have := finite_H P
+  have : Fintype P.H := Fintype.ofFinite _
   choose κ hκ using fun p : P.H => GlobalTheory.ChainEquiv.lifts_chain R.toLevCh _ hl t k hk p.1
   obtain ⟨⟨a1, a2, a3⟩, b1, b2, b3⟩ := GlobalTheory.StepVecLaw.levRes_chrStep hl t ⟨k, hk⟩
   have s1 := sd (hl.βY k hk)
@@ -208,15 +208,15 @@ theorem ioX_levChi_gen {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} 
   have hfd : (R.νX t).IsHaarMeasure ∧ IsFundamentalDomain (GQ D.sp.X') (R.fdX t) (R.νX t) :=
     ⟨(hm.νX t).1.1, (hm.νX t).2⟩
   have hi := GlobalTheory.TwistAdelicTop.locallyCompact_secondCountable_borel_countable D.sp.X'
-  haveI i1 := hi.1
-  haveI i2 := hi.2.1
-  haveI i3 := hi.2.2.1
-  haveI i4 := hi.2.2.2
+  have i1 := hi.1
+  have i2 := hi.2.1
+  have i3 := hi.2.2.1
+  have i4 := hi.2.2.2
   have htg : IsTopologicalGroup (GA D D.sp.X') := by
     have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
     exact inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig D.sp.X'.gram))
-  haveI := hfd.1
-  haveI hR : (R.νX t).IsMulRightInvariant :=
+  have := hfd.1
+  have hR : (R.νX t).IsMulRightInvariant :=
     GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ _ hfd.1
   have hmap : Measure.map (fun h => h * κ') (R.νX t) = R.νX t := map_mul_right_eq_self _ κ'
   have hFv := (GlobalTheory.StepLevelP.IoLevPf.multT_val R.θ R.MX _ _ F.1 hF x).1

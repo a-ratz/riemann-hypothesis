@@ -158,10 +158,10 @@ theorem quadB_of (hNI : NormInv) (hGS : GrowthS) (hGG : GrowthG) (hDD : DecDD) (
     have bl' : ‖l (σ (Matrix.of zz') w0)‖ₑ ≤ K1 * Iint (Aext e1) (D.μW.prod D.μN) zz' := by
       rw [hK1]; exact l_le_I (c := Formalism.QuantumDeterminants.cStd) hds hT hπ hW hN hbe hv hlv hw0DD hee1 hzz'
     have hc : ‖l (σ (Matrix.of zz) w0)‖ₑ * ‖l (σ (Matrix.of zz') w0)‖ₑ ≠ ⊤ :=
-      ENNReal.mul_ne_top enorm_ne_top enorm_ne_top
+      ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top
     have hqi := quad_inner1 hds w0 he0 hee0 hf1.2 hzz hzz'
     rw [← hLL] at hqi
-    simp only [← enorm_eq_nnnorm]
+    simp only [← eNorm_eq_nnNorm]
     calc ∫⁻ s, ‖⟪σ (Matrix.of zz) w0, σ (Matrix.of s) (σ (Matrix.of zz') w0)⟫_ℂ‖ₑ *
           ‖l (σ (Matrix.of zz) w0)‖ₑ * ‖l (σ (Matrix.of zz') w0)‖ₑ ∂(muSof D.μW D.μN)
         = ∫⁻ s, ‖⟪σ (Matrix.of zz) w0, σ (Matrix.of s) (σ (Matrix.of zz') w0)⟫_ℂ‖ₑ *
@@ -192,7 +192,7 @@ theorem quadB_of (hNI : NormInv) (hGS : GrowthS) (hGG : GrowthG) (hDD : DecDD) (
   obtain ⟨Fx, hFx⟩ : ∃ Fx : Formalism.QuantumDeterminants.Mt k r → ℝ≥0∞, Fx = fun x => ‖B.gN (Matrix.of x) ^ (-(aOf r h - ee))‖ₑ :=
     ⟨_, rfl⟩
   have hFxm : Measurable Fx := by
-    rw [hFx]; exact (((gN_cont.comp mt_cont).measurable).pow_const _).enorm
+    rw [hFx]; exact (((gN_cont.comp mt_cont).measurable).pow_const _).eNorm
   have hKg' : ∫⁻ x, Fx x ∂D.μG < ⊤ := by rw [hFx]; exact hKg
   obtain ⟨c, hcdef⟩ : ∃ c : ℝ≥0∞, c = ENNReal.ofReal |C1| * ENNReal.ofReal |C1| * (ENNReal.ofReal |C0| * Ls) :=
     ⟨_, rfl⟩
@@ -204,7 +204,7 @@ theorem quadB_of (hNI : NormInv) (hGS : GrowthS) (hGG : GrowthG) (hDD : DecDD) (
     fun x hx => lt_of_lt_of_le one_pos ((hNI k r).2 x hx).2
   have hpt : ∀ᵐ x ∂D.μG, Aext e1 x * ∫⁻ y, Aext e1 y * LL x y ∂D.μG ≤ ∫⁻ y, c * (Fx x * Fx y) ∂D.μG := by
     filter_upwards [hGc] with x hx
-    rw [← lintegral_const_mul' (Aext e1 x) _ (by unfold Aext; exact enorm_ne_top)]
+    rw [← lintegral_const_mul' (Aext e1 x) _ (by unfold Aext; exact eNorm_ne_top)]
     apply lintegral_mono_ae
     filter_upwards [hGc] with y hy
     have hL := lambda_integral_bound hNI hb0e hee0' heea hpUH hx hy

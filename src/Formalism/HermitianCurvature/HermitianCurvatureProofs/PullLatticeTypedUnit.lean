@@ -67,7 +67,7 @@ theorem mem_idl_shift (E : Type) [Field E] [NumberField E] [IsCMField E] (g : �
     unfold S6.idl
     rw [zpow_add₀ hg0, ← FractionalIdeal.spanSingleton_mul_spanSingleton, zpow_two, sq]
     ring
-  simp only [S6.zsub, Submodule.restrictScalars_mem, FractionalIdeal.mem_coe, key,
+  simp only [S6.zsub, Submodule.restrictScalars_mem, FractionalIdeal.mem_coeToSubmodule, key,
     FractionalIdeal.mem_singleton_mul]
   constructor
   · intro hy
@@ -125,7 +125,7 @@ theorem pull_lift_typed : Formalism.FourierDecayAlt.J.PullLiftTyped := by
     hR hu ((g : E) ^ 2 * x)
   have hloc : (g : E) ^ 2 * x ∈ S6.locAt E P (S6.perLat E g (-ν) s) ↔
       x ∈ S6.locAt E P (S6.liftLat E g ν s) := by
-    simp only [S6.locAt, Set.mem_setOf_eq]
+    simp only [S6.locAt, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨a, ha, h⟩
       refine ⟨a, ha, (Formalism.FourierDecayAlt.P.Jx12.lift_per E g hg ν s _).2 ?_⟩

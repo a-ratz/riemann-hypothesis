@@ -296,8 +296,8 @@ theorem isWeilDatumO_pull {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D 
     show F ((eqv d T).symm 0) = F 0
     rw [map_zero]
   · exact (H.om_cont _ (hT F hF) (eqv d T w)).comp ((d.continuous_embed.comp continuous_fst).prodMk continuous_snd)
-  · haveI : BorelSpace (WO S T) := ⟨rfl⟩
-    haveI : BorelSpace (WO S₀ T) := ⟨rfl⟩
+  · have : BorelSpace (WO S T) := ⟨rfl⟩
+    have : BorelSpace (WO S₀ T) := ⟨rfl⟩
     obtain ⟨ν, hν, h𝓖, hu⟩ := haar_pull (eqv d T).symm (continuous_eqv_symm d T) (continuous_eqv d T) (ratL T S)
       (ratL T S₀) (rat_iff d) μ 𝓕 hμ h𝓕
     have e1 := hu fun w => ‖pull d om p F w‖ₑ ^ 2

@@ -145,8 +145,8 @@ theorem exists_image (e : E' ≃+* E) (he : ∀ y, e (star y) = star (e y)) (J :
       (∀ x, x ∈ Λ ↔ ∀ y ∈ Λ, star y ⬝ᵥ (J *ᵥ x) ∈ (algebraMap (𝓞 E) E).range) ∧
       ∀ y : Fin n → E', y ∈ L ↔ (A : Matrix (Fin n) (Fin n) E) *ᵥ (fun i => e (y i)) ∈ Λ := by
   let σ : 𝓞 E' →+* 𝓞 E := (RingOfIntegers.mapRingEquiv e : 𝓞 E' ≃+* 𝓞 E)
-  haveI : RingHomSurjective σ := ⟨(RingOfIntegers.mapRingEquiv e).surjective⟩
-  haveI : RingHomSurjective (e : E' →+* E) := ⟨e.surjective⟩
+  have : RingHomSurjective σ := ⟨(RingOfIntegers.mapRingEquiv e).surjective⟩
+  have : RingHomSurjective (e : E' →+* E) := ⟨e.surjective⟩
   let g : (Fin n → E') →ₛₗ[(e : E' →+* E)] (Fin n → E) :=
     { toFun := fun y => (A : Matrix (Fin n) (Fin n) E) *ᵥ (fun i => e (y i))
       map_add' := fun x y => by
@@ -304,8 +304,8 @@ theorem eulerFac_comap (e : K ≃+* L) (he : ∀ x, e (star x) = star (e x)) (M 
   unfold Formalism.HermitianLatticesTheory.eulerFac
   rw [hN]
   by_cases h : Formalism.HermitianLatticesTheory.conjIdeal (K := L) P = P
-  · rw [if_pos h, if_pos (hc.2 h)]
-  · rw [if_neg h, if_neg (fun h' => h (hc.1 h'))]
+  · rw [ite_eq_left h, ite_eq_left (hc.2 h)]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h (hc.1 h'))]
 
 theorem lValEta_congr (e : K ≃+* L) (he : ∀ x, e (star x) = star (e x)) (M : ℕ) :
     Formalism.HermitianLatticesTheory.lValEta K M = Formalism.HermitianLatticesTheory.lValEta L M := by
@@ -313,10 +313,10 @@ theorem lValEta_congr (e : K ≃+* L) (he : ∀ x, e (star x) = star (e x)) (M :
   let g := RingOfIntegers.mapRingEquiv e
   let φ : {P : Ideal (𝓞 L) // P.IsMaximal} ≃ {P : Ideal (𝓞 K) // P.IsMaximal} :=
     { toFun := fun P => ⟨P.1.comap g, by
-        haveI := P.2
+        have := P.2
         exact Ideal.comap_isMaximal_of_surjective g g.surjective⟩
       invFun := fun P => ⟨P.1.comap g.symm, by
-        haveI := P.2
+        have := P.2
         exact Ideal.comap_isMaximal_of_surjective g.symm g.symm.surjective⟩
       left_inv := fun P => by
         ext x

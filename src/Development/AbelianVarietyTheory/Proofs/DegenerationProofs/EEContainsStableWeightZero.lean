@@ -277,7 +277,7 @@ theorem exists_opens_regular (hne : (U₀ : Set M.Z).Nonempty) {J : Type} [Finit
   let W : M.Z.Opens := ⟨⋂ j, {z | v j ∈ M.O z}, isOpen_iInter_of_finite fun j => M.isOpen_setOf_mem_O _⟩
   refine ⟨U₀ ⊓ W, inf_le_left, M.nonempty_inf hne ⟨genericPoint M.Z, Set.mem_iInter.2 fun j => ?_⟩,
     fun j => RatModel.mem_ringOn.2 fun z hz => Set.mem_iInter.1 hz.2 j⟩
-  rw [Set.mem_setOf_eq, M.O_genericPoint]
+  rw [Set.mem_ofPred_eq, M.O_genericPoint]
   exact Algebra.mem_top
 
 theorem over_mono (hO : S.Over₀ M U₀) {U₁ : M.Z.Opens} (hle : U₁ ≤ U₀) (hne : (U₁ : Set M.Z).Nonempty) :

@@ -245,8 +245,8 @@ theorem isUnivChart_baseChange [IsLocalRing R] {d : ℕ} {x : Fam G (Fin d)} (hx
       rfl
     rw [this, ← spMap_comp, Category.assoc, hx.2.1, MonObj.comp_one]
   intro A _ _ aug m hJ y hy
-  letI : Algebra R A := ((algebraMap R' A).comp (algebraMap R R')).toAlgebra
-  haveI : IsScalarTower R R' A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R A := ((algebraMap R' A).comp (algebraMap R R')).toAlgebra
+  have : IsScalarTower R R' A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨C⟩ := exists_chart G
   let q : A →ₐ[R] R' := aug.restrictScalars R
   have hq : Function.Surjective q := fun r => ⟨algebraMap R' A r, aug.commutes r⟩
@@ -414,7 +414,7 @@ end Test
 
 theorem chartBaseChange : JetAlgSt → SerSt → ChartBCSt := by
   intro hJ _ R R' _ _ _ β G _ G' _ π hπ d x hx
-  letI : Algebra R R' := β.toAlgebra
+  let : Algebra R R' := β.toAlgebra
   have hπ' : IsGrpPullback G' G (Spec.map (CommRingCat.ofHom (algebraMap R R'))) π := hπ
   choose x' hx' using fun m => push_surjective hπ' (spMap (jetCoeff R R' (Fin d) m) ≫ x m)
   refine ⟨x', isUnivChart_baseChange hπ' hx hx', ?_, ?_, ?_, ?_, ?_⟩

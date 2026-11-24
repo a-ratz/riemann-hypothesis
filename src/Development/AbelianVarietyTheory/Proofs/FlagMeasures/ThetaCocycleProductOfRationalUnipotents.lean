@@ -127,7 +127,7 @@ theorem xa_eq_x_of_le {T : E} (F : Formalism.MainNotions.S.FlagG S r T) {j : ℕ
   unfold Formalism.MainNotions.S.FlagG.Xa Formalism.MainNotions.S.FlagG.X
   congr 1
   ext v
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
   constructor
   · rintro ⟨i, _, rfl⟩; exact ⟨i, rfl⟩
   · rintro ⟨i, rfl⟩; exact ⟨i, lt_of_lt_of_le i.2 hj, rfl⟩

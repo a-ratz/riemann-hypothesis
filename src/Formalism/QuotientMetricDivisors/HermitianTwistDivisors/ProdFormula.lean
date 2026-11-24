@@ -64,7 +64,7 @@ theorem log_abs_norm_eq_two_sum (K : Type) [Field K] [NumberField K] [_root_.Num
       2 * ∑ v : InfinitePlace K, Real.log ‖v.embedding a‖ := by
   have h := NumberField.InfinitePlace.prod_eq_abs_norm a
   have hm : ∀ w : InfinitePlace K, w.mult = 2 := fun w => by
-    rw [InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.mpr
+    rw [InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.mpr
       (IsTotallyComplex.isComplex w))]
   have hpos : ∀ w : InfinitePlace K, w a ≠ 0 := fun w => by
     rw [← InfinitePlace.norm_embedding_eq]
@@ -87,7 +87,7 @@ theorem prod_formula' : ProdFormula := by
   have hsupp : (Function.support fun w : HeightOneSpectrum (𝓞 K) => lw w * (vw w a : ℝ)) ⊆
       (hfin.toFinset : Set (HeightOneSpectrum (𝓞 K))) := by
     intro w hw
-    simp only [Function.mem_support, Set.Finite.coe_toFinset, Set.mem_setOf_eq] at hw ⊢
+    simp only [Function.mem_support, Set.Finite.coe_toFinset, Set.mem_ofPred_eq] at hw ⊢
     intro h0
     apply hw
     simp [hvw, h0]
@@ -104,7 +104,7 @@ theorem prod_formula' : ProdFormula := by
     · refine Finset.prod_congr rfl fun w _ => ?_
       rw [map_zpow₀, FractionalIdeal.coeIdeal_absNorm]
     · intro w hw
-      simp only [Function.mem_mulSupport, Set.Finite.coe_toFinset, Set.mem_setOf_eq] at hw ⊢
+      simp only [Function.mem_mulSupport, Set.Finite.coe_toFinset, Set.mem_ofPred_eq] at hw ⊢
       intro h0
       apply hw
       rw [h0, zpow_zero]

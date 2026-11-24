@@ -167,7 +167,7 @@ theorem expand_std {d : ℕ} (f : Fin d → Fin d → K) :
 theorem det_of_ne_zero {d : ℕ} {f : Fin d → Fin d → K} (hf : LinearIndependent K f) :
     (Matrix.of f)ᵀ.det ≠ 0 := by
   rw [Matrix.det_transpose]
-  have h1 : IsUnit (Matrix.of f) := Matrix.linearIndependent_rows_iff_isUnit.mp hf
+  have h1 : IsUnit (Matrix.of f) := Matrix.linearIndependent_row_iff_isUnit.mp hf
   exact ((Matrix.isUnit_iff_isUnit_det _).mp h1).ne_zero
 
 theorem gramR_eq_std {d : ℕ} (H : Matrix (Fin d) (Fin d) K) (f : Fin d → Fin d → K) :
@@ -228,12 +228,12 @@ theorem jwGram_of (hIC : IdxChange) : JwGram := by
 
     rw [map_sum, map_zero] at this
     simp only [map_smul, hpair, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true] at this
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true] at this
     exact this
   have hspK : Submodule.span K (Set.range f) = ⊤ :=
     hf.1.span_eq_top_of_card_eq_finrank' (by simp)
   have hspan_f : Submodule.IsFullLattice K (Submodule.span (𝓞 K) (Set.range f)) := by
-    letI : Submodule.IsLattice K (Submodule.span (𝓞 K) (Set.range f)) :=
+    let : Submodule.IsLattice K (Submodule.span (𝓞 K) (Set.range f)) :=
       Submodule.IsLattice.of_fg K (Submodule.fg_span (Set.finite_range f))
     exact { span_eq_top := by rwa [Submodule.span_span_of_tower] }
   have hfullT : Submodule.IsFullLattice K T := by

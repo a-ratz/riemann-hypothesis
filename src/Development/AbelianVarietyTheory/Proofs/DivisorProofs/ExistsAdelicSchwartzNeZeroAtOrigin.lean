@@ -88,7 +88,7 @@ theorem isCompact_intPts (F : Type) [Field F] [NumberField F] (κ : Type) [Finty
   isCompact_univ_pi fun _ => GlobalTheory.AdeleCocompact.isCompact_integral F
 
 theorem isClosed_intPts (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] : IsClosed (intPts F κ) := by
-  haveI : T2Space (FiniteAdeleRing (𝓞 F) F) :=
+  have : T2Space (FiniteAdeleRing (𝓞 F) F) :=
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite))
   exact (isCompact_intPts F κ).isClosed

@@ -67,7 +67,7 @@ theorem inertia_trivial (p : ℕ) [Fact p.Prime] (hnd : ¬ p ∣ H.condN)
 
 theorem ramificationIdx_eq_one (p : ℕ) [Fact p.Prime] (hnd : ¬ p ∣ H.condN)
     (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(p : ℤ)})] : P.ramificationIdx ℤ = 1 := by
-  haveI : IsGalois ℚ H.E := H.hostE_isGalois
+  have : IsGalois ℚ H.E := H.hostE_isGalois
   have hbot : P.inertia (H.E ≃ₐ[ℚ] H.E) = ⊥ := by
     ext σ
     rw [Subgroup.mem_bot]

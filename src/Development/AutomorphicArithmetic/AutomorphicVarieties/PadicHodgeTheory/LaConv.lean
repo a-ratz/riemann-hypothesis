@@ -223,7 +223,7 @@ private theorem wt_matFix (K : FinExt l) {d : ℕ} (M M' : Matrix (Fin d) (Fin d
     (hM' : ∀ i j, M' i j ∈ wtS l) (hA : IsUnit A.det)
     (h : M.map (PP l).φB = M * A.map (algebraMap ↥(K0 K) (Bcr l))) :
     ∀ g ∈ Iq l, M.map ((PP l).actQ g) = M := by
-  haveI := ((PP l).PD K).finK₀
+  have := ((PP l).PD K).finK₀
   let s : ↥(K0 K) ≃ₐ[ℚ_[l]] ↥(K0 K) := AlgEquiv.ofBijective ((PP l).PD K).σ ((PP l).PD K).σ_bij
   have hf : 0 < orderOf s := orderOf_pos s
   have hσ : ∀ x : ↥(K0 K), (((PP l).PD K).σ)^[orderOf s] x = x := fun x => by
@@ -283,7 +283,7 @@ private theorem wt_matFix (K : FinExt l) {d : ℕ} (M M' : Matrix (Fin d) (Fin d
   rw [Polynomial.map_map, hPF, Matrix.map_zero _ (map_zero _), Matrix.mul_zero] at h4
   intro g hg
   ext i j
-  refine UpperTheory.inertia_fixes_of_frobenius_annihilated_mem_fil_zero (expand ℤ_[l] f P) (hP.expand hf) (by rwa [coeff_expand hf, if_pos (dvd_zero _), Nat.zero_div])
+  refine UpperTheory.inertia_fixes_of_frobenius_annihilated_mem_fil_zero (expand ℤ_[l] f P) (hP.expand hf) (by rwa [coeff_expand hf, ite_eq_left (dvd_zero _), Nat.zero_div])
     (M i j) ?_ (fun k => hS M (F k) k hM (hMF k) i j) g hg
   have e : ((PP l).φB.toLinearMap : Module.End ℚ_[l] (Bcr l)) ^ f = ((PP l).φB ^ f).toLinearMap := by
     ext x
@@ -596,7 +596,7 @@ private theorem drMat (hF : IsField BdR) (ρ : Representation Qp G V)
     {d : ℕ} (v : Basis (Fin d) Qp V) (h : IsDR PD ρ) :
     ∃ N N' : Matrix (Fin d) (Fin d) BdR, N * N' = 1 ∧
       ∀ g, (LinearMap.toMatrix v v (ρ g)).map (algebraMap Qp BdR) * N.map (PD.actdR g) = N := by
-  haveI : IsDomain BdR := hF.isDomain
+  have : IsDomain BdR := hF.isDomain
   obtain ⟨_, hr⟩ := GlobalTheory.Per.DeRhamSpan.finrank_DdRK PD ρ h
   rw [finrank_eq_card_basis v, Fintype.card_fin] at hr
   let e := Module.finBasisOfFinrankEq K _ hr
@@ -624,7 +624,7 @@ private theorem drMat (hF : IsField BdR) (ρ : Representation Qp G V)
     rw [h2 g, LinearEquiv.apply_symm_apply] at h1
     exact h1
   have hi : LinearIndependent BdR fun k => (e k : BdR ⊗[Qp] V) := by
-    letI := hF.toField
+    let := hF.toField
     exact GlobalTheory.Per.linearIndependent_of_invariant _ _ _ _ (fun g => (a g : BdR →+* BdR))
       (fun g => (TensorProduct.map (a g).toLinearMap (ρ g)).toAddMonoidHom) hσ _ hw
       (fun c hcg hsum k => by
@@ -848,7 +848,7 @@ private theorem st_inertia (K : FinExt l) {d : ℕ} (R : ↥(GK K) → Matrix (F
     (h2 : ∀ i j k, (PP l).ιB ((M' i j).coeff k) ∈ fil0 (PP l) K)
     (g : ↥(GK K)) (hg : (g : GQ l) ∈ Iq l) : R g = 1 := by
   obtain ⟨hdom, hreg, -⟩ := stRegular l (PP l) (AIP l) (tiedP l)
-  haveI := nontrivial_B (PP l)
+  have := nontrivial_B (PP l)
   have hM' : M' * M = 1 := mul_eq_one_comm.1 hM
   have hinv : ∀ g : ↥(GK K), (M' * M.map (phiSt (PP l))).map (actSt (PP l) (g : GQ l)) =
       M' * M.map (phiSt (PP l)) := by
@@ -996,7 +996,7 @@ theorem UpperTheory.V.Loc.drWt0 :
       rw [e1, hNg])
     (fun i j => (GlobalTheory.DRFil.fil_iff K _ _ _).1 (n1 i j)) (fun i j => (GlobalTheory.DRFil.fil_iff K _ _ _).1 (n2 i j))
     M M' hM hMg
-  haveI := K'.2
+  have := K'.2
   refine ⟨(GK K').comap φ, (IntermediateField.fixingSubgroup_isOpen K'.1).preimage hφ.continuous,
     fun g hg hI => ?_⟩
   have h4 := st_inertia K' _ M M' hM hMg c1 c2 ⟨φ g, hg⟩ hI
@@ -1048,8 +1048,8 @@ private theorem norm_le (j : Emb l w) {π : w.adicCompletion F} (h0 : π ≠ 0) 
 private theorem exists_char (wt : Emb l w → ℤ) : ∃ ξ : (w.adicCompletion F)ˣ →* (Qbar l)ˣ, Continuous ξ ∧
     (∀ x, ‖(ξ x : Qbar l)‖ = 1) ∧ ∀ x : (w.adicCompletion F)ˣ, Valued.v (x : w.adicCompletion F) = 1 →
       (ξ x : Qbar l) = ∏ᶠ τ : Emb l w, τ.1 (x : w.adicCompletion F) ^ wt τ := by
-  haveI := finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (Emb l w)
+  have := finite_contEmb (l := l) w
+  have := Fintype.ofFinite (Emb l w)
   obtain ⟨p, hp⟩ := w.valuation_exists_uniformizer F
   have hv : Valued.v (algebraMap F (w.adicCompletion F) p) = WithZero.exp (-1 : ℤ) :=
     (HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w p).trans hp
@@ -1114,7 +1114,7 @@ private theorem exists_wt (H : GlobalArtinReciprocity) (h : IsPlaceOver A w)
   obtain rfl : a' = a := MonoidHom.ext fun σ => hinj ((ha'.glob art hart _).trans (ha.glob art hart _).symm)
   have h2 := ha.ord_eq (ineIncl h σ)
   rw [deg_ineIncl, neg_zero] at h2
-  haveI : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have h3 := (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion F))
     (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ)))).eq_one_iff_eq_one.1
@@ -1124,7 +1124,7 @@ private theorem exists_wt (H : GlobalArtinReciprocity) (h : IsPlaceOver A w)
 
 private theorem mem_Iq {j : Ω →+* Om l} (hj : ∀ x, x ∈ A ↔ ‖j x‖ ≤ 1) (g : G F Ω) (σ : GQ l)
     (hi : ∀ y, σ (j y) = j (g y)) (h : g ∈ Ine (F := F) A) : σ ∈ Iq l := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have hadd : ∀ a b : Om l, ‖a + b‖ ≤ max ‖a‖ ‖b‖ := IsUltrametricDist.norm_add_le_max
   rw [(iqBasic l).2.2.1]
   intro x hx
@@ -1150,9 +1150,9 @@ private theorem rep_zero (H : DeRhamPotSemistable) {K L : FinExt l}
     (hfin : FiniteDimensional ↥L.1 ↥(DdR ((PP l).PD K) ρ))
     (hm : ∀ (τ : ↥K.1 →ₐ[ℚ_[l]] ↥L.1) (c : ℤ), c ≠ 0 → multV ((PP l).PD K) ρ τ c = 0) :
     ∃ U : Subgroup ↥(GK K), IsOpen (U : Set ↥(GK K)) ∧ ∀ g ∈ U, (g : GQ l) ∈ Iq l → ρ g = 1 := by
-  haveI := K.2
-  haveI := L.2
-  haveI : IsModuleTopology ℚ_[l] (Fin n → ↥L.1) := isModuleTopologyOfFiniteDimensional
+  have := K.2
+  have := L.2
+  have : IsModuleTopology ℚ_[l] (Fin n → ↥L.1) := isModuleTopologyOfFiniteDimensional
   have hφ : IsOpenEmbedding (GK K).subtype :=
     (IntermediateField.fixingSubgroup_isOpen K.1).isOpenEmbedding_subtypeVal
   obtain ⟨k1, k2⟩ := UpperTheory.ddR_le_fil_and_inf_fil_eq_bot_of_hodgeTate_mult (PP l) hs ρ hfin
@@ -1205,7 +1205,7 @@ private theorem char_zero (H : DeRhamPotSemistable) (h : IsPlaceOver A w) (η : 
       rw [Multiset.count_eq_zero.2 (by simpa using hc)] at h1
       exact h1.symm
   let i : ↥(Ine (F := F) A) →* ↥(Dec (F := F) A) := Subgroup.inclusion (Ine_le_Dec A)
-  have hi : Continuous i := continuous_subtype_val.subtype_mk _
+  have hi : Continuous i := continuous_subtypeVal.subtype_mk _
   refine Subgroup.isOpen_mono (H₁ := U.comap (Bw.e.toMonoidHom.comp i)) (fun σ hσ => ?_)
     (hU.preimage (Bw.e_cont.comp hi))
   have h1 := hU' _ hσ (mem_Iq hj (σ : G F Ω) _ (Bw.e_comm (i σ)) σ.2)

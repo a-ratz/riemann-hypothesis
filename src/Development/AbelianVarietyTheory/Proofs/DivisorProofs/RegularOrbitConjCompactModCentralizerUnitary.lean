@@ -72,15 +72,15 @@ theorem locCpt (E : Type) [Field E] [NumberField E] (w : Pl E) : LocallyCompactS
     (ho.mem_nhds (zero_mem _))
 
 theorem glTop (E : Type) [Field E] [NumberField E] [IsCMField E] (w : Pl E) (n : ℕ) : LocallyCompactSpace (GLw n w) ∧ SigmaCompactSpace (GLw n w) := by
-  haveI := locCpt E w
-  haveI hM : LocallyCompactSpace (Matrix (Fin n) (Fin n) (w.adicCompletion E)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → w.adicCompletion E))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (w.adicCompletion E))ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  letI : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
-  haveI : ProperSpace (w.adicCompletion E) := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace _
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion E)) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → w.adicCompletion E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion E))ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : LocallyCompactSpace (GLw n w) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (GLw n w) := Units.isClosedEmbedding_embedProduct.isEmbedding.secondCountableTopology
+  have := locCpt E w
+  have hM : LocallyCompactSpace (Matrix (Fin n) (Fin n) (w.adicCompletion E)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → w.adicCompletion E))
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (w.adicCompletion E))ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
+  let : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
+  have : ProperSpace (w.adicCompletion E) := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace _
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion E)) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → w.adicCompletion E))
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion E))ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace (GLw n w) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology (GLw n w) := Units.isClosedEmbedding_embedProduct.isEmbedding.secondCountableTopology
   exact ⟨inferInstance, sigmaCompactSpace_of_locallyCompact_secondCountable⟩
 
 def starU {K : Type} [Field K] {n : ℕ} (σ : K →+* K) (g : GL (Fin n) K) : GL (Fin n) K where
@@ -91,20 +91,20 @@ def starU {K : Type} [Field K] {n : ℕ} (σ : K →+* K) (g : GL (Fin n) K) : G
 
 theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (n : ℕ) (w : Pl E) (y : UL n w), y.1.val.charpoly.Separable → ∀ C : Set (UL n w), IsCompact C → ∃ Ω : Set (UL n w), IsCompact Ω ∧ ∀ g : UL n w, g⁻¹ * y * g ∈ C → ∃ t ∈ twCent (MonoidHom.id (UL n w)) y, ∃ ω ∈ Ω, g = t * ω := by
   intro E _ _ _ hE n w y hy C hC
-  have hCG : IsCompact (Subtype.val '' C : Set (GLw n w)) := hC.image continuous_subtype_val
+  have hCG : IsCompact (Subtype.val '' C : Set (GLw n w)) := hC.image continuous_subtypeVal
   obtain ⟨D, hD, hDg⟩ := GlobalTheory.OrbitCptW.orbit_cpt_w E hE n w y.1 hy _ hCG
   have hcl := (GlobalTheory.LocFinU.isClosed_UL n w).isClosedEmbedding_subtypeVal
   have hgC : ∀ g : UL n w, g⁻¹ * y * g ∈ C → g.1⁻¹ * y.1 * g.1 ∈ (Subtype.val '' C : Set (GLw n w)) :=
     fun g hg => ⟨_, hg, rfl⟩
   by_cases hs : IsSplitAt w
-  · have hUL : ∀ g : GLw n w, g ∈ UL n w := fun g => by unfold UL; rw [if_pos hs]; trivial
+  · have hUL : ∀ g : GLw n w, g ∈ UL n w := fun g => by unfold UL; rw [ite_eq_left hs]; trivial
     refine ⟨Subtype.val ⁻¹' D, hcl.isCompact_preimage hD, fun g hg => ?_⟩
     obtain ⟨z, hz, d, hd, hgd⟩ := hDg g.1 (hgC g hg)
     exact ⟨⟨z, hUL z⟩, Subtype.ext hz, ⟨d, hUL d⟩, hd, Subtype.ext hgd⟩
   obtain ⟨hσc, hσi, -⟩ := GlobalTheory.ConjAtPlace.main E hE w
   set σ := cj w with hσ
   have hmemU : ∀ g : GLw n w, g ∈ UL n w ↔ cT σ g.val * g.val = 1 := by
-    intro g; unfold UL; rw [if_neg hs]; show cT σ _ * 1 * _ = 1 ↔ _; rw [Matrix.mul_one]
+    intro g; unfold UL; rw [ite_eq_right hs]; show cT σ _ * 1 * _ = 1 ↔ _; rw [Matrix.mul_one]
   have hcTc : Continuous fun M : Matrix (Fin n) (Fin n) (w.adicCompletion E) => cT σ M :=
     (continuous_id.matrix_map hσc).matrix_transpose
   have hcc : ∀ M : Matrix (Fin n) (Fin n) (w.adicCompletion E), cT σ (cT σ M) = M := by
@@ -124,8 +124,8 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
       ext z; exact Subgroup.mem_centralizer_singleton_iff
     rw [this]
     exact isClosed_eq (continuous_id.mul continuous_const) (continuous_const.mul continuous_id)
-  haveI : LocallyCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SigmaCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.sigmaCompactSpace
+  have : LocallyCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SigmaCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.sigmaCompactSpace
   have hcomm : ∀ a b : Z, a * b = b * a := fun a b => Subtype.ext (Units.ext
     (GlobalTheory.commute_of_commute_separable_charpoly _ n y.1.val a.1.val b.1.val hy ((hZ _).1 a.2) ((hZ _).1 b.2)))
   have hyU : cT σ y.1.val * y.1.val = 1 := (hmemU _).1 y.2
@@ -148,15 +148,15 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
           Subtype.ext (Units.ext (by show cT σ (a.1.val * b.1.val) = cT σ b.1.val * cT σ a.1.val; exact cT_mul σ _ _))
         rw [this, hcomm] }
   have hτ : ∀ z : Z, ((τ z : Z) : GLw n w) = starU σ z.1 := fun z => rfl
-  have hτc : Continuous τ := continuous_induced_rng.2 (hstarc.comp continuous_subtype_val)
+  have hτc : Continuous τ := continuous_induced_rng.2 (hstarc.comp continuous_subtypeVal)
   have hτi : ∀ z, τ (τ z) = z := fun z => Subtype.ext (Units.ext (hcc _))
   have hsq : ∃ W ∈ nhds (1 : Z), ∀ s ∈ W, τ s = s → ∃ r : Z, τ r = r ∧ r * r = s := by
     obtain ⟨W, hW, hWs⟩ : ∃ W ∈ nhds (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)), ∀ s ∈ W, ∃ r : Matrix (Fin n) (Fin n) (w.adicCompletion E), r * r = s ∧ (∀ a : Matrix (Fin n) (Fin n) (w.adicCompletion E), a * s = s * a → a * r = r * a) ∧ ((s.map σ)ᵀ = s → (r.map σ)ᵀ = r) := by
-      haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
-      letI : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
+      have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
+      let : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
       exact _root_.GlobalTheory.matrix_sqrt_near_one_ultrametric (w.adicCompletion E) n σ hσc
     refine ⟨(fun z : Z => (z.1 : Matrix (Fin n) (Fin n) _)) ⁻¹' W,
-      (Units.continuous_val.comp continuous_subtype_val).continuousAt.preimage_mem_nhds (by simpa using hW), ?_⟩
+      (Units.continuous_val.comp continuous_subtypeVal).continuousAt.preimage_mem_nhds (by simpa using hW), ?_⟩
     intro s hs hτs
     obtain ⟨r, hrr, hrc, hrs⟩ := hWs _ hs
     have hsv : cT σ s.1.val = s.1.val := by
@@ -171,7 +171,7 @@ theorem orbit_cpt_U : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
     (hD.image ((hstarc.comp continuous_inv).mul continuous_inv))
   obtain ⟨B, hB, hBz⟩ := _root_.GlobalTheory.InvolutionNorm.exists_compact_mod_kernel Z hcomm τ hτc hτi hsq DZ hDZ
   refine ⟨Subtype.val ⁻¹' ((Subtype.val '' B : Set (GLw n w)) * D),
-    hcl.isCompact_preimage ((hB.image continuous_subtype_val).mul hD), fun g hg => ?_⟩
+    hcl.isCompact_preimage ((hB.image continuous_subtypeVal).mul hD), fun g hg => ?_⟩
   obtain ⟨z, hz, d, hd, hgd⟩ := hDg g.1 (hgC g hg)
   have hzZ : z ∈ Z := (hZ z).2 (by simpa using congrArg Units.val hz)
   have hgU : cT σ g.1.val * g.1.val = 1 := (hmemU _).1 g.2

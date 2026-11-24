@@ -81,11 +81,11 @@ theorem UpperTheory.globalOrbitalComparison_of_split :
       ⟨hUF, Topology.IsClosedEmbedding.id, hUF⟩ hl eF eF (MonoidHom.id _) (fun _ => rfl)).1.1
   intro γ γ₁ hγ hreg ν hν
   obtain ⟨⟨eT, heT⟩, j, hj, hjv⟩ := hG γ γ₁ hγ
-  haveI : LocallyCompactSpace (Subgroup.centralizer {γ₁} : Subgroup (G1 F n)) := cenLC γ₁
-  haveI : SecondCountableTopology (Subgroup.centralizer {γ₁} : Subgroup (G1 F n)) :=
+  have : LocallyCompactSpace (Subgroup.centralizer {γ₁} : Subgroup (G1 F n)) := cenLC γ₁
+  have : SecondCountableTopology (Subgroup.centralizer {γ₁} : Subgroup (G1 F n)) :=
     TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : LocallyCompactSpace (TA γ) := cenLC _
-  haveI : SecondCountableTopology (TA γ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (TA γ) := cenLC _
+  have : SecondCountableTopology (TA γ) := TopologicalSpace.Subtype.secondCountableTopology _
   have hUν : Uni ν := (hU _ ν hν).2 ((hT F n γ hreg).2.2.2 γ₁ hγ)
   have hPF : Pair μF (Subgroup.centralizer {γ₁} : Subgroup (G1 F n)).subtype ν :=
     ⟨hUF, (cenClosed γ₁).isClosedEmbedding_subtypeVal, hUν⟩
@@ -152,7 +152,7 @@ theorem UpperTheory.globalOrbitalComparison_of_split :
     rw [hx]
     have hmeas : Measurable fun x : G1 E n => FE σ δ Φ (eE (x, 1)) := by
       simp only [h1]
-      exact hΦ.comp measurable_subtype_coe
+      exact hΦ.comp measurable_subtypeVal
     have hinv : ∀ (t : Subgroup.centralizer {γ₁}) (g : G1 E n),
         FE σ δ Φ (eE (j t * g, 1)) = FE σ δ Φ (eE (g, 1)) := by
       intro t g

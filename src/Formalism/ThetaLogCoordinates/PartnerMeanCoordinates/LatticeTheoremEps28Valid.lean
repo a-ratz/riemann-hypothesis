@@ -139,7 +139,7 @@ theorem projAt2_of (hX : HighestVectorProjectionPos) (p : ℕ) [Fact p.Prime] (K
       rw [hn]
       exact coeff_pow_mul_ne _ _ y (xH_le_free _ J _ ρ _ y hy) m hme
     · right
-      rw [coeff_monomial, if_neg (Ne.symm hn)]
+      rw [coeff_monomial, ite_eq_right (Ne.symm hn)]
 
 theorem graded_bound_pos_of_proj (hX : HighestVectorProjectionPos) : GradedBoundOfSaturationPos := by
   intro p _ K r _ LLw q J M ρ e1 c0 κ hK hr hρ hv hPE hS hκ w e k g hli hspan
@@ -430,7 +430,7 @@ theorem termF_IVPE (LL : Letters (N + 1)) (ρ : Fin r) (hr : 1 ≤ r) (B : ℕ)
   · apply (IVP.zero (p := p) _).congr
     intro m
     unfold termF
-    rw [fock_Dop_term _ _ hxy, if_neg hb]
+    rw [fock_Dop_term _ _ hxy, ite_eq_right hb]
     simp
   subst hb
   set o := LL.deg (Fin.last N) with ho
@@ -484,16 +484,16 @@ theorem termF_IVPE (LL : Letters (N + 1)) (ρ : Fin r) (hr : 1 ≤ r) (B : ℕ)
     rw [hNum, hDen]
     refine term_valE LL hr B hB j a a' hj ha ha' δh ?_ ?_ ?_ d1 d2 ?_ nd1 ?_ nd2
     · intro k
-      rw [hδv, Pi.add_apply, Pi.single_apply, if_neg (hne _).symm, add_zero, hk k]
-    · rw [hδv, Pi.add_apply, Pi.single_apply, if_neg (Fin.castSucc_ne_last _), add_zero]; omega
-    · rw [hδv, Pi.add_apply, Pi.single_apply, if_pos rfl]; omega
+      rw [hδv, Pi.add_apply, Pi.single_apply, ite_eq_right (hne _).symm, add_zero, hk k]
+    · rw [hδv, Pi.add_apply, Pi.single_apply, ite_eq_right (Fin.castSucc_ne_last _), add_zero]; omega
+    · rw [hδv, Pi.add_apply, Pi.single_apply, ite_eq_left rfl]; omega
     · rw [hd1]; exact vdesc_ge _ _ (by omega)
     · rw [hd2]; exact vdesc_ge _ _ (by omega)
   have I1 := ((IVP.choose_add (p := p) c1 (o - j)).mul (IVP.choose_add e e)).mul (IVP.choose_add e' a')
   refine ((I1.smul K hKn).mono (by omega)).congr ?_
   intro m
   unfold termF
-  rw [fock_Dop_term _ _ hxy, if_pos rfl, Nat.add_sub_cancel]
+  rw [fock_Dop_term _ _ hxy, ite_eq_left rfl, Nat.add_sub_cancel]
   have hjM : j ≤ o + (m + S) + r + z - 1 := by omega
   have hMj : o + (m + S) + r + z - 1 - j = m + c1 := by omega
   have hMo : (((o + (m + S) + r + z - 1).choose o : ℕ) : ℚ_[p]) =
@@ -802,7 +802,7 @@ theorem tieOpsX_main : TieOpsX := by
     rw [this]
     by_cases hbb : b = b'
     · subst hbb; simp
-    · rw [if_neg hbb, if_neg]
+    · rw [ite_eq_right hbb, ite_eq_right]
       intro h
       apply hbb
       simpa using h
@@ -979,8 +979,8 @@ theorem partnerMX_of_parts (hT : TieOpsX) (hY : YPartnerC) : PartnerMX := by
       _ ≤ (p : ℝ)⁻¹ ^ (∑ i, (Kf i + e)) * ‖fockN p LL' u z''‖ :=
         mul_le_mul_of_nonneg_left hnorm (by positivity)
   ·
-    haveI := pol_finiteDimensional (p := p) (r := r) LL'
-    haveI : FiniteDimensional ℚ_[p] Ysp := Submodule.finiteDimensional_of_le hYpol
+    have := pol_finiteDimensional (p := p) (r := r) LL'
+    have : FiniteDimensional ℚ_[p] Ysp := Submodule.finiteDimensional_of_le hYpol
     have q1 : Module.finrank ℤ_[p] (YZ p (r := r) LL' T.J T.thr) = Module.finrank ℚ_[p] Ysp :=
       finrank_lattice LL' Ysp hYpol
     have q2 : Module.finrank ℤ_[p] (W.restrictScalars ℤ_[p] ⊓ PolZ p r LL' : Submodule ℤ_[p] _) =
@@ -996,9 +996,9 @@ theorem pointMX_of_partner (hBad : BadCrit) (hP : PartnerMX) : PointMX := by
   obtain ⟨L₁, hL₁, hsat, hprim, hrank⟩ :=
     hP p N r LL T Xb E κ lgv e1 n ρ hp2 hr hρ hT hE hS hdeg hlg hκ hκ' hPP hW nb f U V dg fw hf hUV hfw
   have hfin : Module.Finite ℤ_[p] (YZ p (r := r) (LL.setTies T n) T.J T.thr) := by
-    haveI : IsNoetherian ℤ_[p] (PolZ p r (LL.setTies T n)) :=
+    have : IsNoetherian ℤ_[p] (PolZ p r (LL.setTies T n)) :=
       isNoetherian_of_fg_of_noetherian _ (polZ_fg (LL.setTies T n))
-    haveI : IsNoetherian ℤ_[p] (YZ p (r := r) (LL.setTies T n) T.J T.thr) :=
+    have : IsNoetherian ℤ_[p] (YZ p (r := r) (LL.setTies T n) T.J T.thr) :=
       isNoetherian_of_le (fun x hx => by unfold YZ at hx; exact hx.2)
     infer_instance
   have hb : bad p (fun F G => fockN p (LL.setTies T n) (T.phis p (LL.setTies T n) F) G)

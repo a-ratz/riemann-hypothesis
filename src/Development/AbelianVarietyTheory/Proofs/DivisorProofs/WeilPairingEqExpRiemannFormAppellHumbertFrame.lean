@@ -208,7 +208,7 @@ theorem thetaGrp_in_frame {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} (hL : L
       have ee := ThetaGroupFrame.exp_herm_eq hH l a N hN
       have eb : cexp (Real.pi * (b ⬝ᵥ Hm.mulVec (star l))) ^ k =
           cexp (Real.pi * ((a : Fin n → ℂ) ⬝ᵥ Hm.mulVec (star l))) := by
-        rw [← Complex.exp_nat_mul, hb, smul_dotProduct, smul_eq_mul]
+        rw [← exp_natCast_mul, hb, smul_dotProduct, smul_eq_mul]
         congr 1
         field_simp
       simp only [G]

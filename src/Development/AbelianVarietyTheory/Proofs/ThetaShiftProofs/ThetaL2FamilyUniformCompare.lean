@@ -64,8 +64,8 @@ variable {g : ℕ} {ι L : Type} [AddCommGroup L]
 theorem const_of_norm_periodic (Λ : AddSubgroup (Fin g → ℂ)) (dP : DiscreteTopology Λ)
     (sP : Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤) (f : (Fin g → ℂ) → ℂ) (hf : Differentiable ℂ f)
     (hp : ∀ z, ∀ a ∈ Λ, ‖f (z + a)‖ = ‖f z‖) (z w : Fin g → ℂ) : f z = f w := by
-  haveI : DiscreteTopology Λ.toIntSubmodule := dP
-  haveI : IsZLattice ℝ Λ.toIntSubmodule := ⟨sP⟩
+  have : DiscreteTopology Λ.toIntSubmodule := dP
+  have : IsZLattice ℝ Λ.toIntSubmodule := ⟨sP⟩
   obtain ⟨x₀, hx₀⟩ := exists_forall_le_of_periodic Λ.toIntSubmodule hf.continuous.norm (fun a ha x => hp x a ha)
   refine hf.apply_eq_apply_of_bounded (isBounded_iff_forall_norm_le.2 ⟨‖f x₀‖, ?_⟩) z w
   rintro _ ⟨x, rfl⟩
@@ -151,7 +151,7 @@ theorem density (P : L →+ (Fin g → ℂ)) {Hm : Matrix (Fin g) (Fin g) ℂ} (
     have h1 := congrArg norm (Sp a j z)
     rw [hθ j z hj, hθ j _ (Up j z a hj), norm_mul, norm_mul, p a j z hj, ← mul_assoc] at h1
     have h2 := mul_right_cancel₀ (norm_ne_zero_iff.2 (n _ _ (Up j z a hj))) h1
-    rw [h2, re_hermForm_add hH, mul_pow, mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add]
+    rw [h2, re_hermForm_add hH, mul_pow, mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add]
     congr 2
     push_cast
     ring
@@ -173,10 +173,10 @@ theorem mean_pos_and_scale (Λ Λ' : AddSubgroup (Fin g → ℂ)) (dP : Discrete
     (hf : ∀ a ∈ Λ, ∀ x, f (x + a) = f x) (hff : ∀ x, f' (h x) = t * f x) :
     0 < (∫ z in Fd, f z) / (volume Fd).toReal ∧
       (∫ z in Fd', f' z) / (volume Fd').toReal = t * ((∫ z in Fd, f z) / (volume Fd).toReal) := by
-  haveI : DiscreteTopology Λ.toIntSubmodule := dP
-  haveI : DiscreteTopology Λ'.toIntSubmodule := dP'
-  haveI : IsZLattice ℝ Λ.toIntSubmodule := ⟨sP⟩
-  haveI : IsZLattice ℝ Λ'.toIntSubmodule := ⟨sP'⟩
+  have : DiscreteTopology Λ.toIntSubmodule := dP
+  have : DiscreteTopology Λ'.toIntSubmodule := dP'
+  have : IsZLattice ℝ Λ.toIntSubmodule := ⟨sP⟩
+  have : IsZLattice ℝ Λ'.toIntSubmodule := ⟨sP'⟩
   have hf' : ∀ a ∈ Λ', ∀ x, f' (x + a) = f' x := fun a ha x => by
     obtain ⟨a, rfl⟩ := h.surjective a
     obtain ⟨x, rfl⟩ := h.surjective x

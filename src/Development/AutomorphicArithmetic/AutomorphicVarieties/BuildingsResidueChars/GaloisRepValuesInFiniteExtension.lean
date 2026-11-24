@@ -49,7 +49,7 @@ theorem UpperTheory.galois_rep_values_in_finite_extension :
     refine (Multiset.toFinset (Polynomial.nthRoots M (1 : Ω))).finite_toSet.subset ?_
     intro ζ hζ
     simpa [Polynomial.mem_nthRoots hpos] using hζ
-  haveI : Finite {ζ : Ω | ζ ^ M = 1} := hR.to_subtype
+  have : Finite {ζ : Ω | ζ ^ M = 1} := hR.to_subtype
   let π : (Ω ≃ₐ[F] Ω) → ({ζ : Ω | ζ ^ M = 1} → {ζ : Ω | ζ ^ M = 1}) := fun s ζ =>
     ⟨s ζ, by
       show (s ζ) ^ M = 1

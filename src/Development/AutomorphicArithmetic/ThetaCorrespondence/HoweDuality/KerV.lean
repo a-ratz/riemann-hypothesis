@@ -142,7 +142,7 @@ theorem UpperTheory.Lit.HoweDuality.kerV :
         rw [hKe]; exact Submodule.mem_top
       exact hm
     rw [hM.fin.onto v] at hbot
-    haveI := hM.fin.nontriv v
+    have := hM.fin.nontriv v
     exact top_ne_bot hbot
   · intro N hKN hst hne
     have key : ∀ x : SB (Fin a × Fin (a + a') → Fv F v),

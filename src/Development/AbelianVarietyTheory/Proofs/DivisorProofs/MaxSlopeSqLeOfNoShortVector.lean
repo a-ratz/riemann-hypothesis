@@ -77,7 +77,7 @@ theorem slopeMax_sq_le_of_no_short : ∀ (K V : Type) [Field K] [NumberField K] 
     slopeMax_sq N L ≤ 2 * La + Real.log (Module.finrank K V : ℝ) +
       Real.log |(discr K : ℝ)| / (Module.finrank ℚ K : ℝ) := by
   intro K V _ _ _ _ _ _ _ N L La hG hconj hfg h0 hshort
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨n, ⟨b, X⟩, hX⟩ := hG.some
   rw [(slopeMax_slopeMin_eq hX hfg h0).1]
   have hXu : ∀ v, IsUnit (X v).det := fun v => (hX v).1
@@ -98,7 +98,7 @@ theorem slopeMax_sq_le_of_no_short : ∀ (K V : Type) [Field K] [NumberField K] 
         (1 / (Formalism.HN.nPl K : ℝ)) * ∑ v, Real.log (Formalism.HermitianLatticesTheory.normAt b X v x) := by
       field_simp
     linarith)
-  haveI : Module.Finite K V := Module.Finite.of_basis b
+  have : Module.Finite K V := Module.Finite.of_basis b
   have hj : 0 < Formalism.HN.rkK L := by
     have h : Submodule.span K (L : Set V) ≠ ⊥ := by
       intro h

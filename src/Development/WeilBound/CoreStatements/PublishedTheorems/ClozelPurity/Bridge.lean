@@ -63,8 +63,8 @@ namespace GlobalTheory.CompanionTheory.ClozelPurity
 theorem purity : GlobalTheory.Published.CuspFormsBoundedGL → ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ), 1 ≤ a → ∀ π : CuspSub E a, (∀ τ : E →+* ℂ, ∃ m, π.HasInfChar τ m) → (∀ τ, ∀ z ∈ (CG.mk π).infChar τ, ∃ n : ℤ, z = (n : ℂ) + ((a : ℂ) - 1) / 2) → ∃ w₀ : ℤ, ∀ τ : E →+* ℂ, (CG.mk π).infChar ((starRingEnd ℂ).comp τ) = ((CG.mk π).infChar τ).map fun z => (w₀ : ℂ) - z := by
   intro hB E _ _ _ a ha π hinf hint
   obtain ⟨μ, h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.AdelicHaar.exists_haar_rightInvariant E a
-  haveI := h1
-  haveI := h2
+  have := h1
+  have := h2
   obtain ⟨s, hs⟩ := _root_.GlobalTheory.CompanionTheory.Clozel.exists_twist_isNormalised E a ha π hinf
   obtain ⟨B, hH⟩ := _root_.GlobalTheory.CompanionTheory.ClozelHerm.exists_isHerm hB E a μ (π.twist (GlobalTheory.CuspRep.Model.absC E s)) hs
   have hm : ∀ τ, π.HasInfChar τ ((CG.mk π).infChar τ) := fun τ => by

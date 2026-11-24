@@ -73,7 +73,7 @@ theorem continuous_of_rightInvariant {φ : AdelicGLn.AdelicGL K n → ℂ} (hs :
     Continuous φ := by
   set U' : Set (AdelicGLn.FiniteAdelicGL K n) :=
     Subtype.val '' (U : Set (AdelicGLn.integralFiniteGL K n))
-  have hU' : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtype_val _ hU
+  have hU' : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtypeVal _ hU
   have h1U' : (1 : AdelicGLn.FiniteAdelicGL K n) ∈ U' := ⟨1, U.one_mem, rfl⟩
   refine continuous_iff_continuousAt.2 fun g₀ => ?_
   let e : AdelicGLn.AdelicGL K n → AdelicGLn.InfiniteAdelicGL K n × AdelicGLn.FiniteAdelicGL K n :=
@@ -87,7 +87,7 @@ theorem continuous_of_rightInvariant {φ : AdelicGLn.AdelicGL K n → ℂ} (hs :
     simp only [F, e, Function.comp_apply, mul_assoc]
     rw [infEmb_mul_finEmb, mul_inv_cancel_left]
   have hslice : Continuous (archSlice φ g₀) := by
-    letI := (isExpLieAlgebra K n).chartedSpace
+    let := (isExpLieAlgebra K n).chartedSpace
     exact (hs g₀).continuous
   have hF : ContinuousAt F (e g₀) := by
     have hFeq : F =ᶠ[𝓝 (e g₀)] fun p => archSlice φ g₀ (archEquiv K n p.1) := by
@@ -229,8 +229,8 @@ theorem smooth_automorphic_open_invariant : ∀ (K : Type) [Field K] [NumberFiel
   have hφc : Continuous φ := continuous_of_rightInvariant hs hU hinv
   obtain ⟨N, hN⟩ := hbox ω hω
   refine ⟨N, fun k => ?_⟩
-  letI : MeasurableSpace (archGroup K n) := borel _
-  haveI : BorelSpace (archGroup K n) := ⟨rfl⟩
+  let : MeasurableSpace (archGroup K n) := borel _
+  have : BorelSpace (archGroup K n) := ⟨rfl⟩
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure (archGroup K n), μ.IsHaarMeasure :=
     ⟨Measure.haar, inferInstance⟩
   obtain ⟨M, hM, hMconj⟩ := exists_natCast_conj_unipGL_mem U hU hω r

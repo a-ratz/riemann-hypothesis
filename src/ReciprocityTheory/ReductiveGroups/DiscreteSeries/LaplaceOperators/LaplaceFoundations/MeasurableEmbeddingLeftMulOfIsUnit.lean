@@ -139,7 +139,7 @@ theorem schur_orthogonality_unitary_rep (G : Set (Matrix (Fin (2 * r + k + 1)) (
       rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.adjoint_comp]
       simp only [ContinuousLinearMap.comp_apply]
       have := congrArg (fun T : V →L[ℂ] V => T z) (hadj g hg)
-      simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at this
+      simp only [ContinuousLinearMap.comp_apply, one_apply_eq_self] at this
       rw [this]
     rw [integral_congr_ae key]
     conv_rhs => rw [← hinv g hg]

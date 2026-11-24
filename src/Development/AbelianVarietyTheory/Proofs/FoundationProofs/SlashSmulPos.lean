@@ -316,7 +316,7 @@ def chiSpace (N : ℕ) (k : ℤ) (χ : DirichletCharacter ℂ N) : Submodule ℂ
 
 theorem finiteDimensional_chiSpace (N : ℕ) [NeZero N] (k : ℕ) (χ : DirichletCharacter ℂ N) :
     FiniteDimensional ℂ (chiSpace N k χ) := by
-  haveI := (UpperTheory.V.Sd.finDim N k).1
+  have := (UpperTheory.V.Sd.finDim N k).1
   have hle : chiSpace N k χ ≤ LinearMap.range (coeL N k) := by
     rintro _ ⟨f, rfl, _⟩
     exact ⟨f, rfl⟩
@@ -439,7 +439,7 @@ theorem ul_oldSpace : ∀ (N l k : ℕ), 5 ≤ N → l.Prime → ¬ l ∣ N → 
     ∀ n : ℕ, (fun F => UlF (k : ℤ) l F - α • F)^[n] (⇑f₁ + ⇑f₂ ∣[(k : ℤ)] toGL (dg l 1)) = 0 →
       UlF (k : ℤ) l (⇑f₁ + ⇑f₂ ∣[(k : ℤ)] toGL (dg l 1)) = α • (⇑f₁ + ⇑f₂ ∣[(k : ℤ)] toGL (dg l 1)) := by
   intro N l k hN hl hlN hk χ α hαc f₁ f₂ hf₁ hf₂
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   have hl0 : 0 < l := hl.pos
   obtain ⟨s, hs⟩ := exists_diam N l ((Nat.Prime.coprime_iff_not_dvd hl).2 hlN)
   have stab := hecke_stab N l k s hN hl hlN hk hs χ
@@ -461,7 +461,7 @@ theorem ul_oldSpace : ∀ (N l k : ℕ), 5 ≤ N → l.Prime → ¬ l ∣ N → 
     intro x
     rw [← hT'eq _ x.2]
     rfl
-  haveI : FiniteDimensional ℂ W := finiteDimensional_chiSpace N k χ
+  have : FiniteDimensional ℂ W := finiteDimensional_chiSpace N k χ
   have hiter : ∀ (μ : ℂ) (n : ℕ) (x : W),
       ((((T0 - μ • 1) ^ n) x : W) : ℍ → ℂ) = (fun F => TqF (k : ℤ) l s F - μ • F)^[n] (x : ℍ → ℂ) := by
     intro μ n
@@ -575,7 +575,7 @@ theorem cuspForm_of_chiInv : ∀ (N : ℕ) (k : ℤ) (χ : DirichletCharacter �
             holo' := hC.1
             zero_at_cusps' := fun {c} hc => hC.2 c (hc.mono ?_) }, rfl⟩
   · obtain ⟨A, hA, rfl⟩ := hA
-    have hA0 : A ∈ Gamma0 N := Gamma1_in_Gamma0 N hA
+    have hA0 : A ∈ Gamma0 N := Gamma1_le_Gamma0 N hA
     have h11 : ((mat A 1 1 : ℤ) : ZMod N) = 1 := ((Gamma1_mem N A).1 hA).2.1
     have := hχ A hA0
     rw [h11, map_one, one_smul, ModularForm.SL_slash] at this
@@ -1044,9 +1044,9 @@ theorem GlobalTheory.HeckeFamilyMatrices.ulSq_old : ∀ (N l k : ℕ), 5 ≤ N �
   obtain ⟨u, v, huv⟩ : IsCoprime (l : ℤ) (N : ℤ) :=
     Nat.isCoprime_iff_coprime.mpr ((Nat.Prime.coprime_iff_not_dvd hl).2 hlN)
   have h : (l : ℤ) * u - N * (-v) = 1 := by linear_combination huv
-  haveI : NeZero N := ⟨hN0.ne'⟩
-  haveI : NeZero l := ⟨hl0.ne'⟩
-  haveI : (Lev N l).FiniteIndex := by unfold Lev; infer_instance
+  have : NeZero N := ⟨hN0.ne'⟩
+  have : NeZero l := ⟨hl0.ne'⟩
+  have : (Lev N l).FiniteIndex := by unfold Lev; infer_instance
   set W := wOld N l (-v) u with hW
   set D := dg (l : ℤ) 1 with hD
   have hWdet : 0 < W.det := by
@@ -1152,7 +1152,7 @@ theorem slash_smul_pos (k : ℤ) (g : Matrix (Fin 2) (Fin 2) ℤ) (hg : 0 < g.de
   rw [ModularForm.smul_slash]
   congr 1
   simp only [UpperHalfPlane.σ]
-  rw [if_pos (by rw [Matrix.GeneralLinearGroup.val_det_apply, toGL_det g hg.ne']; exact_mod_cast hg)]
+  rw [ite_eq_left (by rw [Matrix.GeneralLinearGroup.val_det_apply, toGL_det g hg.ne']; exact_mod_cast hg)]
   rfl
 
 def ulLin (k : ℤ) (l : ℕ) (hl : 0 < l) : Module.End ℂ (ℍ → ℂ) where

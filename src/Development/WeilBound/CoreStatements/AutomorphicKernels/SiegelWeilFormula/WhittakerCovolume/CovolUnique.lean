@@ -60,7 +60,7 @@ theorem covol_unique {G : Type*} [AddCommGroup G] [TopologicalSpace G] [IsTopolo
   have hm : μ 𝓕' = μ 𝓕 := h''.measure_eq h
   have hc : (Measure.addHaarScalarFactor μ' μ : ENNReal) = 1 := by
     have := h1'
-    rw [e, Measure.smul_apply, hm, h1, ENNReal.smul_def, smul_eq_mul, mul_one] at this
+    rw [e, smul_apply, hm, h1, ENNReal.smul_def, smul_eq_mul, mul_one] at this
     exact this
   have hc' : Measure.addHaarScalarFactor μ' μ = 1 := by exact_mod_cast hc
   rw [e, hc', one_smul]

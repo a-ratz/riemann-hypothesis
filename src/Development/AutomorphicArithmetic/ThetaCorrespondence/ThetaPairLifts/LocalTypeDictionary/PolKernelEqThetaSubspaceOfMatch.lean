@@ -111,12 +111,12 @@ theorem RelV.exists_decomp_of_mem_algD {n d : ℕ} {Y : Spc F E n} {W : Spc F E 
     rw [Finset.smul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     funext x
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_apply, smul_eq_mul, mul_assoc]
 
 theorem RelV.pure_neg {κ : Type} [Fintype κ] (f : SInf F κ) (φ : ∀ v : Pl F, (κ → Fv F v) → ℂ) :
     pure (-f) φ = -pure f φ := by
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.neg_apply, Pi.neg_apply, neg_mul]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, neg_apply, Pi.neg_apply, neg_mul]
 
 theorem polZero_relV : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
@@ -228,13 +228,13 @@ theorem exists_not_polZero : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     (Rf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.FinMaps F a a'), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsMatched Bs G Xc om om' R Rf → ∃ Φ ∈ GlobalTheory.SquareAgree.algD G.M Bs.ψ Bs.emb, ¬ GlobalTheory.PolKer.PolZero Bs G Xc R Rf (Φ) := by
   intro F E _ _ _ _ _ σ Bs a a' G Xc om om' R Rf hM
   classical
-  haveI := hM.real.nontriv
+  have := hM.real.nontriv
   obtain ⟨y, hy⟩ := exists_ne (0 : R.Pi)
   obtain ⟨f, hfP, hfy⟩ : ∃ f ∈ G.M.Pol Bs.ψ Bs.emb, R.p f = y := by
     have : y ∈ (G.M.Pol Bs.ψ Bs.emb).map R.p := hM.real.quot.onto ▸ Submodule.mem_top
     exact Submodule.mem_map.1 this
   have hloc : ∀ v, ∃ φ ∈ GlobalTheory.WeilM.SB (Fin a × Fin (a + a') → Fv F v), Rf.p v φ ≠ 0 := fun v => by
-    haveI := hM.fin.nontriv v
+    have := hM.fin.nontriv v
     obtain ⟨z, hz⟩ := exists_ne (0 : Rf.Pi v)
     have : z ∈ (GlobalTheory.WeilM.SB _).map (Rf.p v) := (hM.fin.onto v) ▸ Submodule.mem_top
     obtain ⟨φ, hφ, rfl⟩ := Submodule.mem_map.1 this
@@ -244,13 +244,13 @@ theorem exists_not_polZero : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   let φ : ∀ v : Pl F, (Fin a × Fin (a + a') → Fv F v) → ℂ := fun v => if v ∈ Xc.T then ψ0 v else G.M.vac v
   have hφSB : ∀ v, φ v ∈ GlobalTheory.WeilM.SB _ := fun v => by
     by_cases h : v ∈ Xc.T
-    · simp only [φ, h, if_true]; exact hψ0 v
-    · simp only [φ, h, if_false]; exact (hvac v).1
+    · simp only [φ, h, ite_true]; exact hψ0 v
+    · simp only [φ, h, ite_false]; exact (hvac v).1
   have hφout : ∀ v ∉ Xc.T, φ v = G.M.vac v := fun v h => by simp [φ, h]
   have hφne : ∀ v, Rf.p v (φ v) ≠ 0 := fun v => by
     by_cases h : v ∈ Xc.T
-    · simp only [φ, h, if_true]; exact hψ0ne v
-    · simp only [φ, h, if_false]; exact (hM.fin.sph v h).2
+    · simp only [φ, h, ite_true]; exact hψ0ne v
+    · simp only [φ, h, ite_false]; exact (hM.fin.sph v h).2
   refine ⟨GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ, ?_, ?_⟩
   · have := sum_pure_mem_algD G.M Bs.ψ Bs.emb Xc.T (m := 1) (fun _ => f) (fun _ => φ) (fun _ => ⟨hfP, hφSB, hφout⟩)
     simpa using this
@@ -561,7 +561,7 @@ theorem polynomialKernel_constTerm_lieDeriv_dualSpace : _root_.GlobalTheory.FunP
       rw [Finset.smul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       funext x
-      simp only [Pi.smul_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
+      simp only [Pi.smul_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, smul_apply, smul_eq_mul, mul_assoc]
   obtain ⟨T, m, f, φ, hfφ, rfl⟩ := exists_decomp G.M Bs.ψ Bs.emb hΦ
   obtain ⟨D, hDmem, hD⟩ := (_root_.GlobalTheory.T.dualPair_preserves_polarization hP F E σ Bs _ _ G.V G.W G.M _ _ om _ _ _ _
     (GlobalTheory.ThK.RealUniq.isPair_V hM.triple)).1 γ hγ

@@ -74,7 +74,7 @@ theorem UpperTheory.V.Ws.phiCpMap :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c} {T : Tower D} {c' : Coef l} {h : c.O ≤ c'.O} (K : Link T c' h) (X : Space (T.fr ∅) (inc h)) (n : ℕ), ∀ g, (X.cp (resLe T.F_le g)).Monic ∧ (X.cp (resLe T.F_le g)).natDegree = 4 ∧ (K.cpT X n g).Monic ∧ (K.cpT X n g).map (algebraMap X.B X.A) = (K.rho X n g).charpoly := by
   intro Ω _ _ _ l _ c D T c' h K X n g
   have hinj : Function.Injective (algebraMap X.B X.A) := X.inj
-  haveI : Nontrivial X.A := hinj.nontrivial
+  have : Nontrivial X.A := hinj.nontrivial
   have hmap := X.cp_map (resLe T.F_le g)
   have hmon : (X.cp (resLe T.F_le g)).Monic :=
     monic_of_injective hinj (by rw [hmap]; exact Matrix.charpoly_monic _)

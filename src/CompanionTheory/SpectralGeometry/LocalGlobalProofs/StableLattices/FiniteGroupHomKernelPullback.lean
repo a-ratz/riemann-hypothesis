@@ -115,7 +115,7 @@ def grpObjOfIsKernel (hp : IsPullback i (toUnit H) q η[A']) : GrpObj H :=
 theorem isMonHom_of_isKernel (hp : IsPullback i (toUnit H) q η[A']) :
     letI := grpObjOfIsKernel hp
     IsMonHom i := by
-  letI := grpObjOfIsKernel hp
+  let := grpObjOfIsKernel hp
   refine { one_hom := kerLift_comp hp _ _, mul_hom := ?_ }
   refine (kerLift_comp hp _ _).trans ?_
   rw [Hom.mul_def]
@@ -125,7 +125,7 @@ theorem isCommMonObj_of_isKernel [BraidedCategory C] [IsCommMonObj A]
     (hp : IsPullback i (toUnit H) q η[A']) :
     letI := grpObjOfIsKernel hp
     IsCommMonObj H := by
-  letI := grpObjOfIsKernel hp
+  let := grpObjOfIsKernel hp
   have := mono_of_isKernel hp
   have := isMonHom_of_isKernel hp
   refine (isCommMonObj_iff_isMulCommutative _).mpr fun T => ⟨⟨fun x y => ?_⟩⟩

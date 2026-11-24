@@ -96,7 +96,7 @@ private theorem lin_lemma' {g₁ g₂ : V n → ℂ} {y : V n} (h₁ : Different
       h₁.hasFDerivAt.add (h₂.hasFDerivAt.const_mul c)
     exact H.fderiv
   constructor <;>
-    simp only [wd, wdb, hF, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+    simp only [wd, wdb, hF, add_apply, smul_apply,
       smul_eq_mul] <;> ring
 
 theorem cHess_add_smul {Ω : Set (V n)} (hΩ : IsOpen Ω) {p q : V n → ℝ}

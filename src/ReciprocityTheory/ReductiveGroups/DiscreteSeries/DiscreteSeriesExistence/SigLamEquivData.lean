@@ -217,7 +217,7 @@ theorem puniq_psi_eq (hgap : StdGap ε lam) {Ψ' : Matrix (Fin n) (Fin n) ℂ �
   have hW : inner ℂ T.w T.w ≠ 0 := inner_self_ne_zero.mpr hw0
   have e1 := key 1 h1 T.w T.w
   rw [hP.2.1, hP'.2.1] at e1
-  simp only [hc', map_smul, ContinuousLinearMap.one_apply, inner_smul_left, inner_smul_right] at e1
+  simp only [hc', map_smul, one_apply_eq_self, inner_smul_left, inner_smul_right] at e1
   have hrr : ((‖uniformisationL2 ε Ψ v₀ T.w‖ ^ 2 : ℝ) : ℂ) =
       ((‖uniformisationL2 ε Ψ' v₀ T.w‖ ^ 2 : ℝ) : ℂ) * ((starRingEnd ℂ) c * c) := by
     apply mul_right_cancel₀ hW

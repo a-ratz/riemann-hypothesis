@@ -202,8 +202,8 @@ noncomputable def insepDeg (φ : Isogeny E E') : ℕ :=
 
 theorem degree_eq_insepDeg_mul (φ : Isogeny E E') :
     φ.degree = φ.insepDeg * Nat.card φ.pointHom.ker := by
-  haveI : Module.Free φ.comap.fieldRange φ.fixedKer := Module.Free.of_divisionRing _ _
-  haveI : Module.Free φ.fixedKer E.toAffine.FunctionField := Module.Free.of_divisionRing _ _
+  have : Module.Free φ.comap.fieldRange φ.fixedKer := Module.Free.of_divisionRing _ _
+  have : Module.Free φ.fixedKer E.toAffine.FunctionField := Module.Free.of_divisionRing _ _
   rw [degree, insepDeg, ← finrank_fixedKer, Module.finrank_mul_finrank]
 
 theorem insepDeg_pos (φ : Isogeny E E') : 0 < φ.insepDeg := by

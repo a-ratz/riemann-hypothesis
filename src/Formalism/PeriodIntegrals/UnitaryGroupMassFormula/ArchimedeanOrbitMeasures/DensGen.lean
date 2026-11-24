@@ -247,8 +247,8 @@ theorem dens_generic (μ : Measure V) (χ : V → V → ℂ) (hμ : SelfDual μ 
     μ.map e = ENNReal.ofReal (Real.sqrt |(Matrix.of fun i j => β (b i) (b j)).det|) • volume := by
   obtain ⟨A, hA, hdet⟩ := exists_linearMap_inner_eq_and_det_eq_gram_det β hL hR hcL hcR b
   have hP := fun Φ hc hs hi z => integral_fourier_map_eq_neg_of_integrable μ χ hμ e he β hχ Φ hc hs hi z
-  haveI : μ.IsAddHaarMeasure := hμ.1
-  haveI : (μ.map e).IsAddHaarMeasure :=
+  have : μ.IsAddHaarMeasure := hμ.1
+  have : (μ.map e).IsAddHaarMeasure :=
     Measure.isAddHaarMeasure_map μ (AddMonoidHom.mk' e he) e.continuous e.surjective
       e.isClosedEmbedding.tendsto_cocompact
   by_cases hd : (Matrix.of fun i j => β (b i) (b j)).det = 0

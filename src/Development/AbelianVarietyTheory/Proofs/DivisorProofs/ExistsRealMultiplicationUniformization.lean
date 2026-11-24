@@ -128,8 +128,8 @@ theorem compactSpace_points (A : Over (Sp ℂ)) (L : LB A.left) (hL : Out.RelAmp
     · obtain ⟨p, rfl⟩ := hs f
       obtain ⟨q, rfl⟩ := MvPolynomial.map_surjective c₀ hc₀ p
       exact ⟨q, (MvPolynomial.eval₂_map c₀ r _ q).symm⟩
-  letI := PointsCompact.pointTopology Y
-  letI := PointsCompact.pointTopology A
+  let := PointsCompact.pointTopology Y
+  let := PointsCompact.pointTopology A
   have hsurj : Function.Surjective fun x : 𝟙_ (Over (Sp ℂ)) ⟶ Y => x ≫ φ := by
     intro x
     have hrange : Set.range x.left ⊆ Set.range (A.hom ⁻¹ᵁ ⊤).ι := by
@@ -158,7 +158,7 @@ theorem exists_holUnif_of_compact (A : Over (Sp ℂ)) [GrpObj A] [IsCommMonObj A
   have hvalaff := @existsUnique_point_of_ringHom
   have hprod := @holFamily_lift hval
   have hchart := HolChart.exists_holomorphic_chart hval hvalaff exists_holomorphic_section_of_etale
-  letI := pointTopology A
+  let := pointTopology A
   have := isTopologicalGroup_complexPoints hval A
   have : CompactSpace (𝟙_ (Over (Sp ℂ)) ⟶ A) := hcpt
   have hpost := fun X x => (hval X x).2.2.2.1

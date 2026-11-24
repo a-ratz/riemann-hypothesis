@@ -191,8 +191,8 @@ theorem exists_theta_open (ht : Γ.IsTorsionAlong G x N i) (hj : Γ.IsEmb (Γ.bt
     ∃ θ : P →ₗ[R] omega (Γ.btOrder ⊤), Function.Surjective θ ∧ N • θ = 0 ∧
       ∀ (V : Type) [AddCommGroup V] [Module R V] [Module Rᵐᵒᵖ V] [IsCentralScalar R V] (φ : P →ₗ[R] V), N • φ = 0 →
         ∃ ψ : omega (Γ.btOrder ⊤) →ₗ[R] V, ψ ∘ₗ θ = φ ∧ TanRel Γ i j ψ (hom x φ ≫ u) := by
-  letI : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤)) := opMod R _
-  haveI : IsCentralScalar R (omega (Γ.btOrder ⊤)) := opCentral R _
+  let : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤)) := opMod R _
+  have : IsCentralScalar R (omega (Γ.btOrder ⊤)) := opCentral R _
   obtain ⟨v₀, hv₀, hvN, hrel⟩ := rel_exists_open Γ U ht hj hU (LinearMap.id : omega (Γ.btOrder ⊤) →ₗ[R] omega (Γ.btOrder ⊤))
   obtain ⟨θ, hθ, -⟩ := huniv _ v₀ hv₀
   have nat : ∀ (V : Type) [AddCommGroup V] [Module R V] [Module Rᵐᵒᵖ V] [IsCentralScalar R V]
@@ -214,8 +214,8 @@ theorem exists_theta_open (ht : Γ.IsTorsionAlong G x N i) (hj : Γ.IsEmb (Γ.bt
     have hz : zsec x ≫ (1 : ob x (omega (Γ.btOrder ⊤)) ⟶ G) = 1 := MonObj.comp_one _
     exact (huniv _ 1 hz).unique h1 h2
   refine ⟨θ, ?_, hN, ?_⟩
-  · letI : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opMod R _
-    haveI : IsCentralScalar R (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opCentral R _
+  · let : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opMod R _
+    have : IsCentralScalar R (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opCentral R _
     have := zero _ (LinearMap.range θ).mkQ (by
       ext w
       simp)
@@ -529,7 +529,7 @@ theorem finite_levGrp' {La : Type} [AddCommGroup La] [Module.Finite ℤ La] {p :
 
 theorem valuationRing_of_integers {C : Type} [Field C] (v : Valuation C NNReal) {O : Type} [CommRing O] [IsDomain O]
     [Algebra O C] (hv : v.Integers O) : ValuationRing O := by
-  haveI : PreValuationRing O := by
+  have : PreValuationRing O := by
     refine ⟨fun a b => ?_⟩
     rcases le_total (v (algebraMap O C a)) (v (algebraMap O C b)) with h | h
     · obtain ⟨c, hc⟩ := hv.dvd_of_le h
@@ -540,12 +540,12 @@ theorem valuationRing_of_integers {C : Type} [Field C] (v : Valuation C NNReal) 
 
 theorem der_main : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [IsDomain O] [Algebra O C] (hv : v.Integers O) (hp : v (p : C) < 1) (hO : IsAdicComplete (Ideal.span {(p : O)}) O) (S : Scheme.{0}) [IsLocallyNoetherian S] (G : Over S) [GrpObj G] [IsCommMonObj G] (hG : IsSemiAbelian G) (y : Spec (CommRingCat.of O) ⟶ S) (La : Type) [AddCommGroup La] [Module.Free ℤ La] [Module.Finite ℤ La] (X : TorsTower p G y La) (L : Type) [AddCommGroup L] [Module O L] (M : LieModel G y L) (n : ℕ), (∀ f ∈ (X.Γ n).btOrder ⊤, ∃ w, X.IsDer M n f w) ∧ (∀ f w w', X.IsDer M n f w → (X.IsDer M n f w' ↔ ∃ u : Module.Dual O L, w' = w + (p ^ n) • u)) ∧ (∀ w, ∃ f ∈ (X.Γ n).btOrder ⊤, X.IsDer M n f w) ∧ (∀ f g w w', X.IsDer M n f w → X.IsDer M n g w' → X.IsDer M n (f + g) (w + w') ∧ X.IsDer M n (f * g) (f 1 • w' + g 1 • w)) ∧ (∀ r : O, X.IsDer M n (fun _ => r) 0) ∧ ∀ f : augIdeal ((X.Γ n).btOrder ⊤), X.IsDer M n f.1.1 0 → (f : (X.Γ n).btOrder ⊤) ∈ augIdeal ((X.Γ n).btOrder ⊤) ^ 2 := by
   intro p _ C _ _ _ v O _ _ _ hv hp hO S _ G _ _ hG y La _ _ _ X L _ _ M n
-  haveI : ValuationRing O := valuationRing_of_integers v hv
-  haveI : IsLocalRing O := inferInstance
-  haveI : IsIntegrallyClosed O := inferInstance
-  haveI : Smooth G.hom := hG.smooth
-  haveI : Finite (LevGrp La p n) := finite_levGrp' (Fact.out) n
-  haveI : Module.Projective O L := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G O y L M).2.1
+  have : ValuationRing O := valuationRing_of_integers v hv
+  have : IsLocalRing O := inferInstance
+  have : IsIntegrallyClosed O := inferInstance
+  have : Smooth G.hom := hG.smooth
+  have : Finite (LevGrp La p n) := finite_levGrp' (Fact.out) n
+  have : Module.Projective O L := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G O y L M).2.1
   obtain ⟨U, H, hfin, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.tw_hopf_main p C v O hv hp hO S G hG y La X
   have hex : ∃ j : (X.Γ n).G.left ⟶ Spec (CommRingCat.of ((X.Γ n).btOrder ⊤)),
       (X.Γ n).IsEmb ((X.Γ n).btOrder ⊤) j := by
@@ -593,7 +593,7 @@ theorem der_main : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
     show _ = Spec.map (CommRingCat.ofHom (algebraMap O (FractionRing O)))
     congr 2
   obtain ⟨j, hj⟩ := hex
-  haveI := (GlobalTheory.CompanionTheory.Ar.BT.EmbSub.openImmersion_translatesCover O _ (X.Γ n) (U n) (hfin n) j hj).1
+  have := (GlobalTheory.CompanionTheory.Ar.BT.EmbSub.openImmersion_translatesCover O _ (X.Γ n) (U n) (hfin n) j hj).1
   exact der_all (X.Γ n) (X.tors n) M hj (U n) (hfin n).one
 
 end GlobalTheory.CompanionTheory.Ar.HT.TwDer

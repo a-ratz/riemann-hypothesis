@@ -97,7 +97,7 @@ theorem continuous_iteratedFDeriv_param {P : Type*} [NormedAddCommGroup P] [Norm
     rw [e, L.iteratedFDeriv_comp_right hΦZ Y (by exact_mod_cast le_top),
       iteratedFDeriv_comp_add_right]
     simp [H, L]
-  letI := h.chartedSpace
+  let := h.chartedSpace
   have hg₀ : g₀ ∈ (h.chart g₀).source := mem_chart_source 𝔤 g₀
   have hsrc : (h.chart g₀).source ∈ 𝓝 g₀ := (h.chart g₀).open_source.mem_nhds hg₀
   have hev : (fun p : P × G => iteratedFDeriv ℝ k (fun Y => ψ Y p.2) p.1) =ᶠ[𝓝 (Y₀, g₀)]
@@ -116,7 +116,7 @@ def IsTestFunction (f : G → ℂ) : Prop :=
   (letI := h.chartedSpace; ContMDiff 𝓘(ℝ, 𝔤) 𝓘(ℝ, ℂ) ∞ f) ∧ HasCompactSupport f
 
 theorem IsTestFunction.continuous {f : G → ℂ} (hf : h.IsTestFunction f) : Continuous f := by
-  letI := h.chartedSpace
+  let := h.chartedSpace
   exact hf.1.continuous
 
 theorem contDiff_comp_expG_mul_expG {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
@@ -124,8 +124,8 @@ theorem contDiff_comp_expG_mul_expG {F : Type*} [NormedAddCommGroup F] [NormedSp
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] {φ₁ φ₂ : V → 𝔤}
     (h₁ : ContDiff ℝ ∞ φ₁) (a : G) (h₂ : ContDiff ℝ ∞ φ₂) :
     ContDiff ℝ ∞ (fun p => f (h.expG (φ₁ p) * a * h.expG (φ₂ p))) := by
-  letI := h.chartedSpace
-  haveI := h.lieGroup ∞
+  let := h.chartedSpace
+  have := h.lieGroup ∞
   have hm : ContMDiff 𝓘(ℝ, V) 𝓘(ℝ, 𝔤) ∞ (fun p => h.expG (φ₁ p) * a * h.expG (φ₂ p)) :=
     ((h.contMDiff_expG_comp h₁).mul contMDiff_const).mul (h.contMDiff_expG_comp h₂)
   exact (ContMDiff.comp (I' := 𝓘(ℝ, 𝔤)) hf hm).contDiff
@@ -137,13 +137,13 @@ variable [MeasurableSpace G] [BorelSpace G] (μ : Measure G) [μ.IsMulLeftInvari
 
 theorem integrable_smul_orbit {f : G → ℂ} (hf : h.IsTestFunction f) (v : E) :
     Integrable (fun g => f g • π g v) μ := by
-  haveI := secondCountableTopology_subgroup_units G
+  have := secondCountableTopology_subgroup_units G
   refine ((hf.continuous h).smul (π.continuous_orbit v)).integrable_of_hasCompactSupport ?_
   exact hf.2.smul_right
 
 theorem isSmoothVector_integrated {f : G → ℂ} (hf : h.IsTestFunction f) (v : E) :
     h.IsSmoothVector π (π.integrated μ f v) := by
-  haveI := secondCountableTopology_subgroup_units G
+  have := secondCountableTopology_subgroup_units G
   rw [isSmoothVector_iff]
 
   set F : 𝔤 → G → E := fun Y g => f (h.expG (-Y) * g) • π g v with hFdef

@@ -132,9 +132,9 @@ private theorem cc_alg (τ : K →+* ℂ) (w : InfinitePlace K) (h : mk τ = w) 
     rw [Completion.algebraMap_apply]
     exact Completion.extensionEmbedding_coe _ _
   by_cases h1 : (mk τ).embedding = τ
-  · rw [cc, if_pos h1, e, h1]
+  · rw [cc, ite_eq_left h1, e, h1]
   · have h := (embedding_mk_eq τ).resolve_left h1
-    rw [cc, if_neg h1, RingHom.comp_apply, e, h]
+    rw [cc, ite_eq_right h1, RingHom.comp_apply, e, h]
     simp [ComplexEmbedding.conjugate_coe_eq]
 
 private theorem co_psi (τ : K →+* ℂ) (y : InfiniteAdeleRing K) :
@@ -374,7 +374,7 @@ end main
 theorem _root_.UpperTheory.ConvolutionTheory.L1.positionOf :
     UpperTheory.ConvolutionTheory.L1.PositionOf := by
   intro F E _ _ _ _ _ _ σ m D
-  haveI : IsTotallyComplex E := totC F E
+  have : IsTotallyComplex E := totC F E
   have entry : ∀ (n : ℕ) (g : archGroup E n) (i : Fin (m + 1)) (τ : E →+* ℂ),
       D.e (P τ 1) = Pi.single i (P (τ.comp (algebraMap F E)) 1) →
       (mat (((compA D n i g : archGroup F n) : (ArchMatrix F n)ˣ) : ArchMatrix F n)).map (co (τ.comp (algebraMap F E))) =

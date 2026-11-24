@@ -62,7 +62,7 @@ theorem wild_mem_Ine {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra
 
 theorem finite_roots (K : Type) [Field K] (m : ℕ) (hm : m ≠ 0) :
     {u : Kˣ | u ^ m = 1}.Finite := by
-  haveI : NeZero m := ⟨hm⟩
+  have : NeZero m := ⟨hm⟩
   have : Finite (rootsOfUnity m K) := inferInstance
   have h := Set.toFinite ((rootsOfUnity m K : Subgroup Kˣ) : Set Kˣ)
   exact h.subset fun u hu => (mem_rootsOfUnity m u).2 hu
@@ -80,7 +80,7 @@ theorem eq_one_of_wild_prime (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
     simpa using h
   have hvl1 : A.valuation (l : Ω) = 1 :=
     le_antisymm ((A.valuation_le_one_iff _).mpr (natCast_mem A l)) (not_lt.mp hvl)
-  have hfin : ({u : Kˣ | u ^ l = 1} \ {1}).Finite := (finite_roots K l hl.ne_zero).diff
+  have hfin : ({u : Kˣ | u ^ l = 1} \ {1}).Finite := (finite_roots K l hl.ne_zero).sdiff
   have hop : IsOpen (r ⁻¹' ({u : Kˣ | u ^ l = 1} \ {1})ᶜ) :=
     hfin.isClosed.isOpen_compl.preimage hr
   obtain ⟨L, hL, hsub⟩ := (krullTopology_mem_nhds_one_iff E Ω _).mp

@@ -77,7 +77,7 @@ theorem UpperTheory.V.Kum.xdualBase :
       invFun := fun u => ⟨toGal E hU u, u.2⟩
       left_inv := fun u => rfl
       right_inv := fun u => rfl }
-  have hec : Continuous e := (hE.continuous.comp continuous_subtype_val).subtype_mk _
+  have hec : Continuous e := (hE.continuous.comp continuous_subtypeVal).subtype_mk _
   have hes : Continuous e.symm := hc.subtype_mk _
   have hm : ∀ a b, e (a * b) = e a * e b := fun a b => rfl
   have hms : ∀ a b, e.symm (a * b) = e.symm a * e.symm b := fun a b => rfl
@@ -116,7 +116,7 @@ open scoped Classical
 
 private theorem cyc_open (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ)
     [hl : Fact l.Prime] : IsOpen ((cycMod F Ω l 1).ker : Set (G F Ω)) := by
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have e1 : ((cycMod F Ω l 1).ker : Set (G F Ω)) =
       (fun g => ((cycZ F Ω l g : ℤ_[l]ˣ) : ℤ_[l]) - 1) ⁻¹' Metric.closedBall 0 ((l : ℝ) ^ (-(1 : ℕ) : ℤ)) := by
     ext g
@@ -129,7 +129,7 @@ private theorem cyc_open (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alg
 
 private theorem not_dvd_ker {H : Type} [Group H] (l : ℕ) [hl : Fact l.Prime] (φ : H →* (ZMod (l ^ 1))ˣ) :
     ¬ l ∣ φ.ker.index := by
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   intro h
   rw [Subgroup.index_ker] at h
   have h1 : l ∣ Nat.card (ZMod (l ^ 1))ˣ := h.trans (Subgroup.card_subgroup_dvd_card _)

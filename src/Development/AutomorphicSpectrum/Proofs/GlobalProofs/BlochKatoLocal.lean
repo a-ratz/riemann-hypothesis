@@ -656,15 +656,15 @@ theorem finite_periods {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l
     [FiniteDimensional LL V] (ρ : Representation LL ↥(GK K) V) :
     FiniteDimensional LL ↥(Dcris (P.PD K) ρ) ∧ FiniteDimensional LL ↥(DdR (P.PD K) ρ) := by
   let L : FinExt l := ⟨⊥, inferInstance⟩
-  letI : Algebra ↥L.1 LL :=
+  let : Algebra ↥L.1 LL :=
     ((algebraMap ℚ_[l] LL).comp (IntermediateField.botEquiv ℚ_[l] (Om l)).toRingEquiv.toRingHom).toAlgebra
-  haveI : IsScalarTower ℚ_[l] ↥L.1 LL := IsScalarTower.of_algebraMap_eq fun x =>
+  have : IsScalarTower ℚ_[l] ↥L.1 LL := IsScalarTower.of_algebraMap_eq fun x =>
     (congrArg (algebraMap ℚ_[l] LL) ((IntermediateField.botEquiv ℚ_[l] (Om l)).commutes x)).symm
-  haveI : FiniteDimensional ↥L.1 LL := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
-  letI : Module ↥L.1 V := Module.compHom V (algebraMap ↥L.1 LL)
-  haveI : IsScalarTower ↥L.1 LL V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower ℚ_[l] ↥L.1 V := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V
-  haveI : FiniteDimensional ↥L.1 V := Module.Finite.trans LL V
+  have : FiniteDimensional ↥L.1 LL := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
+  let : Module ↥L.1 V := Module.compHom V (algebraMap ↥L.1 LL)
+  have : IsScalarTower ↥L.1 LL V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower ℚ_[l] ↥L.1 V := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V
+  have : FiniteDimensional ↥L.1 V := Module.Finite.trans LL V
   have h1 := (GlobalTheory.T.fontaine_inequality_dcris_finite_concrete_rings l P AI T K L).2 V (GlobalTheory.BKRightExact.res ↥L.1 ρ)
   have h2 := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K L V (GlobalTheory.BKRightExact.res ↥L.1 ρ)).1
   rw [GlobalTheory.BKRightExact.Dcris_res] at h1
@@ -677,7 +677,7 @@ theorem finite_periods {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l
 theorem bkADim_of_tied : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P),
     LocTied l P AI → ∀ K : FinExt l, LocalSituation.bkADim (P.PD K) := by
   intro l _ P AI T K LL _ _ _ O _ _ hO A hdr
-  haveI := hO.2.1
+  have := hO.2.1
   obtain ⟨hD, hR⟩ := finite_periods T K LL A.ρ
   exact finrank_eq (P.PD K) A.ρ hD hR
     (_root_.GlobalTheory.FundSeq.tensor_fundamental_sequence l P AI T K LL A.V).2
@@ -1765,7 +1765,7 @@ theorem bkAL (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (AI : LocAinf l Lp) (T :
     (hdim : LocalSituation.bkADim (Lp.PD K)) : bkACore (Lp.PD K) := by
   intro LL _ _ _ O _ _ hO A A' m hdR hm
   have ho := PositivityTheory.LocalTateOrthogonality.Orth.orthL_tied l Lp AI T K LL O hO A A' m hm hdR
-  haveI := hO.2.1
+  have := hO.2.1
   have hdR' := (GlobalTheory.TateDualFil.tateDual l Lp AI T K LL A.ρ A'.ρ m hdR hm).1
   have e1 := hdim LL O hO A hdR
   have e2 := hdim LL O hO A' hdR'
@@ -1823,8 +1823,8 @@ theorem blochKatoLocal : GlobalTheory.Published.BlochKatoLocal := by
   refine ⟨?_, GlobalTheory.Published.BlochKato.rationalDuality_of_allCoefficients hA,
     GlobalTheory.Published.BlochKato.integralDuality_of_allCoefficients hB⟩
   intro V _ _ _ _ _ _ _ ρ hc hdR
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   exact _root_.GlobalTheory.SeqDim.h1f_finrank l Lp AI T K ℚ_[l] ℤ_[l] GlobalTheory.Published.BlochKato.goodO_padicInt
     { V := V, ρ := ρ, cont := hc } hdR
 

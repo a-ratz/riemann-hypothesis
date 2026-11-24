@@ -191,7 +191,7 @@ theorem UpperTheory.V.FW.homCyc :
     apply Commute.eq
     exact Commute.mul_left (c12.mul_right (hU _ u2 hu2))
       (((hU _ u1 hu1).symm).mul_right (hU _ u2 hu2))
-  letI : CommGroup (Γ ⧸ N) := { (inferInstance : Group (Γ ⧸ N)) with mul_comm := hcomm' }
+  let : CommGroup (Γ ⧸ N) := { (inferInstance : Group (Γ ⧸ N)) with mul_comm := hcomm' }
   let f : U →* Γ ⧸ N := (QuotientGroup.mk' N).comp U.subtype
   have h1 := card_hom_surj l f.rangeRestrict f.rangeRestrict_surjective (fun u : U => u.1 ∈ N) (by
     intro u
@@ -266,7 +266,7 @@ private theorem aH_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
 theorem UpperTheory.V.FW.ambHom :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (K : Type) [Field K] [NumberField K] [Algebra F K] [Algebra K Ω] [IsScalarTower F K Ω] [IsAlgClosure K Ω] [IsGalois F K] (l : ℕ) [Fact l.Prime] (ζ : F), IsPrimitiveRoot ζ l → IsCyclic Gal(K/F) → (∀ A : ValuationSubring Ω, ¬ A.valuation (l : Ω) < 1 → Ine (F := F) A ≤ galOf F K Ω) → Finite (EqHom 1 (galOf F K Ω) (Formalism.GaloisCohomology.scalRep (ZMod l) (1 : G F Ω →* (ZMod l)ˣ))) → Nat.card (EqHom 1 (galOf F K Ω) (Formalism.GaloisCohomology.scalRep (ZMod l) (1 : G F Ω →* (ZMod l)ˣ))) ≤ Set.ncard {φ : G F Ω → ZMod l | IsLocallyConstant φ ∧ (∀ a b, φ (a * b) = φ a + φ b) ∧ ∀ A : ValuationSubring Ω, ¬ A.valuation (l : Ω) < 1 → ∀ g ∈ Ine (F := F) A, φ g = 0} := by
   intro F Ω _ _ _ _ _ K _ _ _ _ _ _ _ l hl ζ hζ hc hI hfin
-  haveI : IsGalois F Ω := {}
+  have : IsGalois F Ω := {}
   have hUo : IsOpen (galOf F K Ω : Set (G F Ω)) := (galEmbTop F K Ω).2.1
   have hcyc : IsCyclic (G F Ω ⧸ galOf F K Ω) := by
     obtain ⟨q1, q2, -⟩ := galQuot F K Ω
@@ -292,7 +292,7 @@ theorem UpperTheory.V.FW.ambHom :
         rw [ha', neg_zero] at this
         exact this }
   have hN : ∀ g, g ∈ N ↔ ∃ h : g ∈ U, ∀ φ : E, φ.1 ⟨g, h⟩ = 0 := fun _ => Iff.rfl
-  haveI : N.Normal := ⟨fun u ⟨hu, hu'⟩ g => ⟨hn.conj_mem u hu g, fun φ =>
+  have : N.Normal := ⟨fun u ⟨hu, hu'⟩ g => ⟨hn.conj_mem u hu g, fun φ =>
     (((hm _).1 φ.2).2.2.2 g ⟨u, hu⟩).trans (hu' φ)⟩⟩
   have hNo : IsOpen (N : Set (G F Ω)) := by
     have : (N : Set (G F Ω)) = Subtype.val '' (⋂ φ : E, φ.1 ⁻¹' {0}) := by
@@ -300,9 +300,9 @@ theorem UpperTheory.V.FW.ambHom :
       simp only [SetLike.mem_coe, hN, Set.mem_image, Set.mem_iInter, Set.mem_preimage, Set.mem_singleton_iff]
       exact ⟨fun ⟨h, h'⟩ => ⟨⟨g, h⟩, h', rfl⟩, fun ⟨u, h, e⟩ => e ▸ ⟨u.2, h⟩⟩
     rw [this]
-    exact hUo.isOpenMap_subtype_val _ (isOpen_iInter_of_finite fun φ => ((hm _).1 φ.2).1 _)
-  haveI : Finite (G F Ω ⧸ N) := N.quotient_finite_of_isOpen hNo
-  haveI : N.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    exact hUo.isOpenMap_subtypeVal _ (isOpen_iInter_of_finite fun φ => ((hm _).1 φ.2).1 _)
+  have : Finite (G F Ω ⧸ N) := N.quotient_finite_of_isOpen hNo
+  have : N.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hcomm : ∀ g, ∀ u ∈ U, g * u * g⁻¹ * u⁻¹ ∈ N := fun g u hu => by
     refine ⟨U.mul_mem (hn.conj_mem u hu g) (U.inv_mem hu), fun φ => ?_⟩
     obtain ⟨-, h2, -, h4⟩ := (hm _).1 φ.2
@@ -315,7 +315,7 @@ theorem UpperTheory.V.FW.ambHom :
   have e1 : Nat.card E = Nat.card {φ : U → ZMod l // (∀ a b, φ (a * b) = φ a + φ b) ∧ ∀ u : U, u.1 ∈ N → φ u = 0} := by
     refine Nat.card_congr (Equiv.subtypeEquivRight fun φ => ⟨fun h => ⟨((hm _).1 h).2.1, fun u hu => hu.2 ⟨φ, h⟩⟩, ?_⟩)
     rintro ⟨h2, h0⟩
-    refine (hm _).2 ⟨aH_lc φ h2 (Subtype.val ⁻¹' N) (hNo.preimage continuous_subtype_val) N.one_mem h0, h2,
+    refine (hm _).2 ⟨aH_lc φ h2 (Subtype.val ⁻¹' N) (hNo.preimage continuous_subtypeVal) N.one_mem h0, h2,
       fun A u hu => h0 u (hIN A u hu), fun g u => ?_⟩
     have := h2 ⟨g * u * g⁻¹, hn.conj_mem u u.2 g⟩ u⁻¹
     rw [aH_inv φ h2, h0 _ (hcomm g u u.2)] at this
@@ -324,7 +324,7 @@ theorem UpperTheory.V.FW.ambHom :
   rw [e1]
   refine key.trans ?_
   rw [← Nat.card_coe_set_eq]
-  haveI := hf.to_subtype
+  have := hf.to_subtype
   refine Nat.card_le_card_of_injective (fun φ => ⟨φ.1, aH_lc φ.1 φ.2.1 N hNo N.one_mem φ.2.2, φ.2.1,
     fun A hA g hg => φ.2.2 g (hIN A ⟨g, hI A hA hg⟩ hg)⟩) fun a b h => Subtype.ext (Subtype.mk.inj h)
 end -- clump:auto
@@ -415,27 +415,27 @@ theorem UpperTheory.V.FW.amb :
   intro F _ _ l _ ζ hζ
   obtain ⟨Ω, _, _, hΩ⟩ : ∃ (Ω : Type) (_ : Field Ω) (_ : Algebra F Ω), IsAlgClosure F Ω :=
     ⟨AlgebraicClosure F, inferInstance, inferInstance, inferInstance⟩
-  haveI : IsAlgClosed Ω := hΩ.isAlgClosed
-  haveI : Algebra.IsAlgebraic F Ω := hΩ.isAlgebraic
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : IsAlgClosed Ω := hΩ.isAlgClosed
+  have : Algebra.IsAlgebraic F Ω := hΩ.isAlgebraic
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   refine ⟨{φ : G F Ω → ZMod l | IsLocallyConstant φ ∧ (∀ a b : G F Ω, φ (a * b) = φ a + φ b) ∧
       ∀ A : ValuationSubring Ω, ¬ A.valuation (l : Ω) < 1 → ∀ g ∈ Ine A, φ g = 0}.ncard,
     fun n K _ _ _ _ τ hK hτ => ?_⟩
-  haveI hgal : IsGalois F K := IsCyclotomicExtension.isGalois (S := {l ^ n}) (K := F) (L := K)
+  have hgal : IsGalois F K := IsCyclotomicExtension.isGalois (S := {l ^ n}) (K := F) (L := K)
   let e : K →ₐ[F] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra K Ω := e.toRingHom.toAlgebra
-  haveI : IsScalarTower F K Ω := IsScalarTower.of_algebraMap_eq (fun x => (e.commutes x).symm)
-  haveI : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := F) K
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
+  let : Algebra K Ω := e.toRingHom.toAlgebra
+  have : IsScalarTower F K Ω := IsScalarTower.of_algebraMap_eq (fun x => (e.commutes x).symm)
+  have : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := F) K
+  have : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
   let ρ : Representation (ZMod l) (G F Ω) (ZMod l) := scalRep (ZMod l) 1
   have hcyc : IsCyclic Gal(K/F) := ⟨⟨τ, hτ⟩⟩
   have hpe := (pullEq F Ω K (galOf F K Ω) le_rfl 1 (ZMod l) (ZMod l) ρ one_ne_zero le_rfl (Or.inl hK)).1
   have hinj := (pullMem F Ω K (galOf F K Ω) le_rfl 1 (ZMod l) (ZMod l) one_ne_zero).2 le_rfl
-  haveI hCfin : Finite (ClEq K 1 ρ) := Subtype.finite
+  have hCfin : Finite (ClEq K 1 ρ) := Subtype.finite
   have hcardEq : Nat.card (EqHom 1 (galOf F K Ω) ρ) = Nat.card (ClEq K 1 ρ) := by
     rw [← hpe]
     exact Nat.card_congr (Submodule.equivMapOfInjective _ hinj _).toEquiv.symm
@@ -570,10 +570,10 @@ theorem UpperTheory.V.FW.relCyc :
   intro l f e n _ h F _ _ _ L _ _ _ hfl
   have hM : 0 < f * l ^ n := NeZero.pos _
   have hM0 : 0 < f * l ^ e := Nat.pos_of_dvd_of_pos h hM
-  haveI : NeZero (f * l ^ e) := ⟨hM0.ne'⟩
+  have : NeZero (f * l ^ e) := ⟨hM0.ne'⟩
   have hf : 0 < f := Nat.pos_of_mul_pos_right hM
   have hln : 0 < l ^ n := Nat.pos_of_mul_pos_left hM
-  haveI : NeZero (l ^ n) := ⟨hln.ne'⟩
+  have : NeZero (l ^ n) := ⟨hln.ne'⟩
   have hζ := IsCyclotomicExtension.zeta_spec (f * l ^ n) ℚ L
   set ζ := IsCyclotomicExtension.zeta (f * l ^ n) ℚ L
   have hz := IsCyclotomicExtension.zeta_spec (f * l ^ e) ℚ F
@@ -589,7 +589,7 @@ theorem UpperTheory.V.FW.relCyc :
         Polynomial.cyclotomic_eq_minpoly_rat hξ hM0]
       exact minpoly.aeval ℚ _
     · exact (congrArg _ (IsPrimitiveRoot.powerBasis_gen ℚ hz).symm).trans ((hz.powerBasis ℚ).lift_gen (ζ ^ k) _)
-  letI : Algebra F L := i.toRingHom.toAlgebra
+  let : Algebra F L := i.toRingHom.toAlgebra
   have hal : ∀ x, algebraMap F L x = i x := fun _ => rfl
   refine ⟨this, ?_, ?_, ?_⟩
   · have hη : IsPrimitiveRoot (ζ ^ f) (l ^ n) := hζ.pow hM rfl
@@ -649,12 +649,12 @@ theorem UpperTheory.V.FW.ambCyc :
   have hfpos : 0 < f := Nat.pos_of_ne_zero hf0
   have he1 : 1 ≤ ee l := by unfold ee; split_ifs <;> omega
   have he2 : ee l ≤ 2 := by unfold ee; split_ifs <;> omega
-  haveI : NeZero (f * l ^ ee l) := ⟨by positivity⟩
-  haveI : NeZero ((f * l ^ ee l : ℕ) : ℚ) := ⟨by exact_mod_cast (show f * l ^ ee l ≠ 0 by positivity)⟩
-  haveI : IsCyclotomicExtension {f * l ^ ee l} ℚ (CyclotomicField (f * l ^ ee l) ℚ) := by
+  have : NeZero (f * l ^ ee l) := ⟨by positivity⟩
+  have : NeZero ((f * l ^ ee l : ℕ) : ℚ) := ⟨by exact_mod_cast (show f * l ^ ee l ≠ 0 by positivity)⟩
+  have : IsCyclotomicExtension {f * l ^ ee l} ℚ (CyclotomicField (f * l ^ ee l) ℚ) := by
     convert CyclotomicField.isCyclotomicExtension (f * l ^ ee l) ℚ
     · rfl
-  haveI : NumberField (CyclotomicField (f * l ^ ee l) ℚ) :=
+  have : NumberField (CyclotomicField (f * l ^ ee l) ℚ) :=
     IsCyclotomicExtension.numberField {f * l ^ ee l} ℚ _
   obtain ⟨z, hz⟩ : ∃ z : CyclotomicField (f * l ^ ee l) ℚ, IsPrimitiveRoot z (f * l ^ ee l) :=
     ⟨_, IsCyclotomicExtension.zeta_spec _ ℚ _⟩
@@ -670,8 +670,8 @@ theorem UpperTheory.V.FW.ambCyc :
   have h : f * l ^ ee l ∣ f * l ^ n := mul_dvd_mul_left f (pow_dvd_pow l hen)
   obtain ⟨alg, hcycL, hall, hex⟩ := relCyc l f (ee l) n h (CyclotomicField (f * l ^ ee l) ℚ) L hf
   obtain ⟨hker, -⟩ := gamGen l f n h γ hf hen hγ
-  letI := alg
-  haveI := hcycL
+  let := alg
+  have := hcycL
   have hγinv : γ⁻¹ ∈ (ZMod.unitsMap h).ker := by
     rw [hker]
     exact Subgroup.inv_mem _ (Subgroup.mem_zpowers γ)
@@ -718,7 +718,7 @@ theorem UpperTheory.V.FW.homLe :
     ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (U : Subgroup Γ) [U.FiniteIndex], Finite {φ : Γ → ZMod l // (∀ a b, φ (a * b) = φ a + φ b) ∧ ∀ u ∈ U, φ u = 0} ∧ Nat.card {φ : Γ → ZMod l // (∀ a b, φ (a * b) = φ a + φ b) ∧ ∀ u ∈ U, φ u = 0} ≤ U.index := by
   intro l _ Γ _ U _
   classical
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have h1 : ∀ φ : Γ → ZMod l, (∀ a b, φ (a * b) = φ a + φ b) → φ 1 = 0 := by
     intro φ hφ
     have := hφ 1 1
@@ -756,10 +756,10 @@ theorem UpperTheory.V.FW.homLe :
     simp only at e
     rw [← hc _ φ.2.1 φ.2.2 _ _ hg, ← hc _ ψ.2.1 ψ.2.2 _ _ hg]
     exact e
-  haveI : Finite S := Finite.of_injective _ hinj
+  have : Finite S := Finite.of_injective _ hinj
   change Finite S ∧ Nat.card S ≤ U.index
   refine ⟨inferInstance, ?_⟩
-  haveI : FiniteDimensional (ZMod l) S := Module.Finite.of_finite
+  have : FiniteDimensional (ZMod l) S := Module.Finite.of_finite
   let ev : Γ → Module.Dual (ZMod l) S := fun g =>
     { toFun := fun φ => (φ : Γ → ZMod l) g
       map_add' := fun _ _ => rfl
@@ -824,9 +824,9 @@ theorem UpperTheory.V.FW.desc :
   intro l _ K _ _ L _ _ _ hL
   classical
   let Ω := AlgebraicClosure L
-  haveI : IsAlgClosure K Ω := IsAlgClosure.ofAlgebraic K L Ω
+  have : IsAlgClosure K Ω := IsAlgClosure.ofAlgebraic K L Ω
   obtain ⟨-, -, hidx⟩ := galEmbTop K L Ω
-  haveI : (galOf K L Ω).FiniteIndex := ⟨by rw [hidx]; exact Module.finrank_pos.ne'⟩
+  have : (galOf K L Ω).FiniteIndex := ⟨by rw [hidx]; exact Module.finrank_pos.ne'⟩
   have hK := (cardTors (ClassGroup (𝓞 K))).2 l
   have hL' := (cardTors (ClassGroup (𝓞 L))).2 l
   change _ ≤ _ * (powR (ClassGroup (𝓞 L)) l).index
@@ -842,7 +842,7 @@ theorem UpperTheory.V.FW.desc :
     intro φ
     simp only [XDual]
     refine ⟨?_, ?_, ?_, ?_⟩
-    · exact ((artSurj K Ω).2.comp_continuous continuous_subtype_val).comp _
+    · exact ((artSurj K Ω).2.comp_continuous continuous_subtypeVal).comp _
     · intro a b
       simp [Ψ, map_mul]
     · intro A a hi
@@ -879,8 +879,8 @@ theorem UpperTheory.V.FW.desc :
     have := hθ x
     simp only [ClDual] at this
     exact this.1
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI : Finite (ClassGroup (𝓞 L) →* Multiplicative (ZMod l)) :=
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : Finite (ClassGroup (𝓞 L) →* Multiplicative (ZMod l)) :=
     Finite.of_injective (fun f : ClassGroup (𝓞 L) →* Multiplicative (ZMod l) => (f : ClassGroup (𝓞 L) → Multiplicative (ZMod l))) DFunLike.coe_injective
   have hrange : Nat.card Ψ.range ≤ Nat.card (ClassGroup (𝓞 L) →* Multiplicative (ZMod l)) := by
     refine Nat.card_le_card_of_injective
@@ -1034,7 +1034,7 @@ theorem UpperTheory.V.FW.embCyc :
   have hN0 : N ≠ 0 := by
     rintro rfl
     exact hM0 (zero_dvd_iff.mp hNM)
-  haveI : NeZero N := ⟨hN0⟩
+  have : NeZero N := ⟨hN0⟩
   obtain ⟨ζ, hζ⟩ := IsCyclotomicExtension.exists_isPrimitiveRoot K' L (Set.mem_singleton M) hM0
   let F : Subalgebra ℚ L := Algebra.adjoin ℚ {ζ}
   have hroot : ∀ x : L, ∀ k : ℕ, k ∣ M → x ^ k = 1 → x ∈ F := by
@@ -1053,7 +1053,7 @@ theorem UpperTheory.V.FW.embCyc :
     simpa using Polynomial.X_pow_sub_one_splits hpN
   have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
     CyclotomicField.isCyclotomicExtension N ℚ
-  haveI := IsCyclotomicExtension.isSplittingField_X_pow_sub_one N ℚ (CyclotomicField N ℚ)
+  have := IsCyclotomicExtension.isSplittingField_X_pow_sub_one N ℚ (CyclotomicField N ℚ)
   let ψ : CyclotomicField N ℚ →ₐ[ℚ] L :=
     Polynomial.IsSplittingField.lift (CyclotomicField N ℚ) (Polynomial.X ^ N - 1) hsp
   have h1 : ∀ y, ψ y ∈ F := by
@@ -1072,7 +1072,7 @@ theorem UpperTheory.V.FW.embCyc :
     let e1 : K →ₐ[ℚ] L := ((algebraMap K' L).comp (algebraMap K K')).toRatAlgHom
     let e2 : K →ₐ[ℚ] L := ψ.comp φ
     let g := e2.equivFieldRange
-    haveI := Normal.of_algEquiv g
+    have := Normal.of_algEquiv g
     have hr := AlgHom.fieldRange_of_normal (e1.comp g.symm.toAlgHom)
     have hk : e1 k ∈ e2.fieldRange := by
       rw [← hr]
@@ -1156,10 +1156,10 @@ theorem UpperTheory.V.FW.embed :
   have hMpos : 0 < M := by
     have := hp.pos
     positivity
-  haveI : NeZero M := ⟨hMpos.ne'⟩
+  have : NeZero M := ⟨hMpos.ne'⟩
   let L := CyclotomicField M K'
-  haveI : Module.Finite K' L := IsCyclotomicExtension.finite {M} K' L
-  haveI : NumberField L := NumberField.of_module_finite K' L
+  have : Module.Finite K' L := IsCyclotomicExtension.finite {M} K' L
+  have : NumberField L := NumberField.of_module_finite K' L
   have hdvdN : l ^ e * f₀ ∣ M := by
     refine ⟨(l + 1) * l ^ (n + n₀), ?_⟩
     rw [hM, hm]
@@ -1372,14 +1372,14 @@ theorem UpperTheory.V.FW.stickH :
   have key : ∀ y : Cl L, ∑ s : (ZMod M)ˣ, gc M c ↑s • (cycRep M L s) (Additive.ofMul y) = 0 := by
     intro y
     simp only [cycRep_apply, ← ofMul_zpow, ← ofMul_prod, clA, ofMul_eq_zero]
-    haveI : Fact (1 < M) := ⟨by omega⟩
+    have : Fact (1 < M) := ⟨by omega⟩
     set u : (ZMod M)ˣ := ZMod.unitOfCoprime c hc with hu_def
     set k : ℤ := (((c - 1) / 2 : ℕ) : ℤ) with hk
     refine (Stick.coef M L y).2
       (fun s => (c : ℤ) * (if s = u⁻¹ then 1 else 0) - (k + 1) * (if s = 1 then 1 else 0)
         - k * (if s = -1 then 1 else 0)) (fun t => gc M c ↑t) ?_
     intro t
-    haveI : NeZero (t : ZMod M) := ⟨t.ne_zero⟩
+    have : NeZero (t : ZMod M) := ⟨t.ne_zero⟩
     have hlt := ZMod.val_lt (t : ZMod M)
     have hneg : ((-(t : ZMod M)).val : ℤ) = M - (t : ZMod M).val := by
       rw [ZMod.val_neg_of_ne_zero (t : ZMod M), Nat.cast_sub hlt.le]
@@ -1392,7 +1392,7 @@ theorem UpperTheory.V.FW.stickH :
     have hdiv := Nat.div_add_mod (c * ((c : ZMod M)⁻¹ * t).val) M
     rw [hmod] at hdiv
     simp only [sub_mul, Finset.sum_sub_distrib, mul_assoc, ← Finset.mul_sum, ite_mul, one_mul,
-      zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true, Units.val_one, Units.val_neg,
+      zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Units.val_one, Units.val_neg,
       neg_one_mul, hu, hneg, gc]
     generalize c * ((c : ZMod M)⁻¹ * t).val / M = q at hdiv ⊢
     have hz : (M : ℤ) * q + ((t : ZMod M).val : ℤ) = c * (((c : ZMod M)⁻¹ * t).val : ℤ) := by
@@ -1428,13 +1428,13 @@ theorem UpperTheory.V.FW.cyc (l : ℕ) [hl : Fact l.Prime] (f : ℕ) (hf : f.Cop
   · subst hl2
     refine ⟨((2 ^ (f * 2 ^ ee 2).totient) ^ N * B ^ N) ^ 2, n₀, ?_⟩
     intro n hn L _ _ _
-    haveI : NeZero (f * 2 ^ n) := ⟨(Nat.mul_pos hf0 (pow_pos hl0 n)).ne'⟩
+    have : NeZero (f * 2 ^ n) := ⟨(Nat.mul_pos hf0 (pow_pos hl0 n)).ne'⟩
     have hM2 : 2 < f * 2 ^ n := by
       have : 4 ≤ 2 ^ n := by
         calc 4 = 2 ^ 2 := by norm_num
           _ ≤ 2 ^ n := Nat.pow_le_pow_right (by norm_num) (by omega)
       nlinarith
-    haveI : IsCMField L := IsCyclotomicExtension.Rat.isCMField L ⟨f * 2 ^ n, Set.mem_singleton _, hM2⟩
+    have : IsCMField L := IsCyclotomicExtension.Rat.isCMField L ⟨f * 2 ^ n, Set.mem_singleton _, hM2⟩
     refine ⟨inferInstance, ?_⟩
     obtain ⟨γ, hγ1, hγidx, hγmem⟩ := hmem n hn
     have hcM : (2 * (f * 2) + 1).Coprime (f * 2 ^ n) := by
@@ -1460,7 +1460,7 @@ theorem UpperTheory.V.FW.cyc (l : ℕ) [hl : Fact l.Prime] (f : ℕ) (hf : f.Cop
     exact hp.trans (Nat.pow_le_pow_left (Nat.mul_le_mul hsgn hbound) 2)
   · refine ⟨l * (B ^ N) ^ 2, n₀, ?_⟩
     intro n hn L _ _ _
-    haveI : NeZero (f * l ^ n) := ⟨(Nat.mul_pos hf0 (pow_pos hl0 n)).ne'⟩
+    have : NeZero (f * l ^ n) := ⟨(Nat.mul_pos hf0 (pow_pos hl0 n)).ne'⟩
     have hl3 : 3 ≤ l := by
       have := hl.out.two_le
       omega
@@ -1470,7 +1470,7 @@ theorem UpperTheory.V.FW.cyc (l : ℕ) [hl : Fact l.Prime] (f : ℕ) (hf : f.Cop
           _ = l ^ 1 := (pow_one l).symm
           _ ≤ l ^ n := Nat.pow_le_pow_right hl0 (by omega)
       nlinarith
-    haveI : IsCMField L := IsCyclotomicExtension.Rat.isCMField L ⟨f * l ^ n, Set.mem_singleton _, hM2⟩
+    have : IsCMField L := IsCyclotomicExtension.Rat.isCMField L ⟨f * l ^ n, Set.mem_singleton _, hM2⟩
     refine ⟨inferInstance, ?_⟩
     obtain ⟨γ, hγ1, _, hγmem⟩ := hmem n hn
     have hcM : (2 * (f * l) + 1).Coprime (f * l ^ n) := by

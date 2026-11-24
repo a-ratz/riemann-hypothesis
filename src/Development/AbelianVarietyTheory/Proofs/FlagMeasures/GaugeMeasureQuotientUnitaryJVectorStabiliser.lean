@@ -155,14 +155,14 @@ theorem ballVol_succ_sq (P Q : ℕ) (r : ℝ) (hr : 0 < r) :
     simp
   have hne : ((2 : ℝ≥0∞) ^ (P + Q)) ≠ 0 := by simp
   have hnt : ((2 : ℝ≥0∞) ^ (P + Q)) ≠ ⊤ := by simp
-  haveI : SFinite (((2 : ℝ≥0∞) ^ (P + Q))⁻¹ • (volume : Measure (Sp P Q))) := inferInstance
+  have : SFinite (((2 : ℝ≥0∞) ^ (P + Q))⁻¹ • (volume : Measure (Sp P Q))) := inferInstance
   have h1 := ((MeasurePreserving.id (volume : Measure ℝ)).prod h0).prod (MeasurePreserving.id
       (volume : Measure (EuclideanSpace ℝ (Fin ((P + Q) ^ 2)))))
   have hm : MeasurableSet {p : (ℝ × Sp P Q) × EuclideanSpace ℝ (Fin ((P + Q) ^ 2)) |
       p.1.1 ^ 2 + ∑ i, ‖p.1.2 i‖ ^ 2 + ‖p.2‖ ^ 2 < r ^ 2} :=
     (isOpen_lt (by fun_prop) continuous_const).measurableSet
   have h2 := h1.measure_preimage hm.nullMeasurableSet
-  rw [Measure.prod_smul_right, Measure.prod_smul_left, Measure.smul_apply,
+  rw [Measure.prod_smul_right, Measure.prod_smul_left, smul_apply,
     ← Measure.volume_eq_prod, prod_region_eq_ballVol P Q r hr, smul_eq_mul] at h2
   have h3 : {p : (ℝ × Sp P Q) × EuclideanSpace ℝ (Fin ((P + Q) ^ 2)) |
       tanSq p.1 + ‖p.2‖ ^ 2 < r ^ 2} =
@@ -192,8 +192,8 @@ theorem herm_comp {n P Q : ℕ} {ε : Fin n → Bool} {f : Fin P ⊕ Fin Q ≃ F
     (x y : Fin n → ℂ) : herm (x ∘ f) (y ∘ f) = star y ⬝ᵥ (Formalism.REAL.Jm ε *ᵥ x) := by
   obtain ⟨h1, h2⟩ := hf
   rw [dotProduct, ← Equiv.sum_comp f, Fintype.sum_sum_type, herm]
-  simp only [Function.comp_apply, Pi.star_apply, Formalism.REAL.Jm, mulVec_diagonal, h1, h2, if_true,
-    Bool.false_eq_true, if_false, one_mul, neg_one_mul, mul_neg, Finset.sum_neg_distrib, ← sub_eq_add_neg]
+  simp only [Function.comp_apply, Pi.star_apply, Formalism.REAL.Jm, mulVec_diagonal, h1, h2, ite_true,
+    Bool.false_eq_true, ite_false, one_mul, neg_one_mul, mul_neg, Finset.sum_neg_distrib, ← sub_eq_add_neg]
   congr 1 <;> exact Finset.sum_congr rfl fun i _ => mul_comm _ _
 
 theorem form_self {n : ℕ} (ε : Fin n → Bool) (x : Fin n → ℂ) :
@@ -578,7 +578,7 @@ theorem isDxDq_scale {fib : ℝ → Measure (Sp P Q)} (h : IsDxDq fib) {t : ℝ}
       ext x
       simp only [Set.mem_preimage, Set.mem_singleton_iff, id, qf_real_smul, Real.sq_sqrt ht.le]
       exact (eq_inv_mul_iff_mul_eq₀ ht.ne').symm
-    rw [Measure.smul_apply, h0, smul_zero]
+    rw [smul_apply, h0, smul_zero]
   · simp only [lintegral_smul_measure, lintegral_map hφ hm, smul_eq_mul]
     rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
       lintegral_inv_mul ht fun b => ∫⁻ y, φ (Real.sqrt t • y) ∂(fib b),
@@ -1072,7 +1072,7 @@ theorem gauge_transport : ∀ (n : ℕ) (ε : Fin n → Bool) (c : ℝ) (P Q : �
     intro r
     rw [Measure.map_apply (show Measurable (hf.equiv.symm : Formalism.REAL.UJ ε → UpqT P Q) from
         hf.equiv.symm.continuous.measurable)
-      (measurableSet_lt continuous_hsDist.measurable measurable_const), Measure.smul_apply, smul_eq_mul]
+      (measurableSet_lt continuous_hsDist.measurable measurable_const), smul_apply, smul_eq_mul]
     congr 2
     ext k
     simp [hsDist_equiv_symm hf k]
@@ -1498,7 +1498,7 @@ theorem qf_comp {n : ℕ} {ε : Fin n → Bool} {f : Fin P ⊕ Fin Q ≃ Fin n} 
     (y : Fin n → ℂ) : qf (fun i => y (f i)) = qEps ε y := by
   unfold qf qEps
   rw [← f.sum_comp, Fintype.sum_sum_type]
-  simp only [hf.1, hf.2, if_true, Bool.false_eq_true, if_false, one_mul, neg_one_mul,
+  simp only [hf.1, hf.2, ite_true, Bool.false_eq_true, ite_false, one_mul, neg_one_mul,
     Finset.sum_neg_distrib, Complex.normSq_eq_norm_sq]
   ring
 
@@ -1521,7 +1521,7 @@ theorem integral_sublevel {n : ℕ} {ε : Fin n → Bool} {f : Fin P ⊕ Fin Q �
     rw [MeasurableEquiv.coe_piCongrLeft, Equiv.piCongrLeft_apply_apply]
   have hpre : E ⁻¹' {y : Sp P Q | qf y ≤ t} = {y | qEps ε y ≤ t} := by
     ext y
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, hEy, qf_comp hf]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, hEy, qf_comp hf]
   have h := hE.setIntegral_preimage_emb E.measurableEmbedding gaussSp {y : Sp P Q | qf y ≤ t}
   rw [← h, hpre]
   refine integral_congr_ae (Filter.Eventually.of_forall fun y => ?_)
@@ -1576,7 +1576,7 @@ theorem gauge_quotient : ∀ (n : ℕ) (ε : Fin (n + 1) → Bool) (ε' : Fin n 
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
   have := i5
   have hcu : Continuous (fun k : Formalism.REAL.UJ ε => uMat k) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hcg : Continuous (fun k : Formalism.REAL.UJ ε => gauss (uMat k *ᵥ x₀)) := by
     unfold gauss
     refine Real.continuous_exp.comp (continuous_finsetSum _ fun i _ => ?_).neg

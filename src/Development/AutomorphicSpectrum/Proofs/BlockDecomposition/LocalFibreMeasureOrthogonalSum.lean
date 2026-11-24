@@ -83,12 +83,12 @@ theorem isSFiniteKernel_of_compact_open {α β : Type} [MeasurableSpace α] [Top
 theorem gramFibFree_basic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (N n : ℕ) (J₂ : Matrix (Fin N) (Fin N) E), IsHermND σ J₂ → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R), lam.IsAddHaarMeasure → ∀ m : HermR R σ n → Measure (Fin n → Fin N → R ⊗[F] E), IsGramFibFree R σ J₂ n (coordW R b lam n N) (coordHerm R σ b lam n) m → (∀ S, SFinite (m S)) ∧ (∃ κ : ProbabilityTheory.Kernel (HermR R σ n) (Fin n → Fin N → R ⊗[F] E), ProbabilityTheory.IsSFiniteKernel κ ∧ ∀ S, κ S = m S) ∧ (∀ (C : Set (Fin n → Fin N → R ⊗[F] E)) (D : Set (HermR R σ n)), IsCompact C → C ⊆ {X | LinearIndependent (R ⊗[F] E) X} → IsCompact D → ∃ c : ℝ≥0, ∀ S ∈ D, m S C ≤ c) ∧ ∀ S : HermR R σ n, ∀ᵐ X ∂(m S), gramR R σ J₂ X = (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) ∧ LinearIndependent (R ⊗[F] E) X := by
   intro F E _ _ _ _ _ σ hCM N n J₂ hJ R _ _ _ _ _ hR d b lam hlam m hm
   obtain ⟨iTR, iLC, iSC, iT2, -⟩ := id hR
-  haveI := iTR; haveI := iLC; haveI := iSC; haveI := iT2
+  have := iTR; have := iLC; have := iSC; have := iT2
   obtain ⟨kTR, kLC, kSC, kT2, -, -, -, kB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := kTR; haveI := kLC; haveI := kSC; haveI := kT2
-  haveI := kB n N
+  have := kTR; have := kLC; have := kSC; have := kT2
+  have := kB n N
   obtain ⟨hLC, hSC, hT2, hB, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM R n
-  haveI := hLC; haveI := hSC; haveI := hT2; haveI := hB
+  have := hLC; have := hSC; have := hT2; have := hB
   have hU : IsOpen {X : Fin n → Fin N → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} :=
     _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ hCM R hR n N
   obtain ⟨h1, -, h3⟩ := hm
@@ -102,7 +102,7 @@ theorem gramFibFree_basic : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   let κ : ProbabilityTheory.Kernel (HermR R σ n) (Fin n → Fin N → R ⊗[F] E) :=
     ⟨m, Measure.measurable_of_measurable_coe _ hmeas⟩
   obtain ⟨K, W, hK, -, -, hKU, -, -, hKun, -⟩ := GlobalTheory.CompanionTheory.SW.FibreFam.exists_exhaustion hU
-  haveI hκ : ProbabilityTheory.IsSFiniteKernel κ :=
+  have hκ : ProbabilityTheory.IsSFiniteKernel κ :=
     isSFiniteKernel_of_compact_open κ hK hKun hUc
       (fun S k => hbf.lt_top hU (hK k) (hKU k) S)
   refine ⟨fun S => (inferInstance : SFinite (κ S)), ⟨κ, hκ, fun _ => rfl⟩, ?_, fun S => ?_⟩

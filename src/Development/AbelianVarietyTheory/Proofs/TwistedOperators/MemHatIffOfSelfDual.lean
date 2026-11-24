@@ -119,7 +119,7 @@ theorem resS_eq_zero_iff_cpt (w : Pl D.host.E) (s : OA D) :
       exact Valuation.map_add_lt _ ha hb
     · intro c a _ ha
       rw [smul_eq_mul, Subring.coe_mul, RingHom.map_mul, Valuation.map_mul]
-      exact mul_lt_one_of_nonneg_of_lt_one_right ((mem_OA _).1 c.2 w) zero_le' ha
+      exact mul_lt_one_of_nonneg_of_lt_one_right ((mem_OA _).1 c.2 w) zero_le ha
   refine ⟨h1 s, fun h => ?_⟩
   obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (resS D.host.F w s)
   have h2 := h1 (s - oToS D.host.F D.host.E x) (by rw [RingHom.map_sub, resS_oToS, hx, sub_self])
@@ -143,7 +143,7 @@ theorem isPlIdem_iff (w : Pl D.host.E) (e : EAf D) :
     have he : e ∈ OA D := (mem_OA e).2 fun Q => by
       by_cases hQ : Q = w
       · rw [hQ, h1, Valuation.map_one]
-      · rw [h2 Q hQ, Valuation.map_zero]; exact zero_le'
+      · rw [h2 Q hQ, Valuation.map_zero]; exact zero_le
     refine ⟨he, cpt_ext fun Q => ?_, ?_, fun Q hQ => (resS_eq_zero_iff_cpt Q _).2 (by simp [h2 Q hQ])⟩
     · rw [RingHom.map_mul]
       by_cases hQ : Q = w
@@ -191,7 +191,7 @@ theorem idem_mul_mem_iff (w : Pl D.host.E) (a : EAf D) : idem w * a ∈ OA D ↔
   · rw [RingHom.map_mul]
     by_cases hQ : Q = w
     · rwa [hQ, cpt_idem_self, one_mul]
-    · rw [cpt_idem_ne hQ, zero_mul, Valuation.map_zero]; exact zero_le'
+    · rw [cpt_idem_ne hQ, zero_mul, Valuation.map_zero]; exact zero_le
 
 theorem mem_OA_iff_idem (a : EAf D) : a ∈ OA D ↔ ∀ w : Pl D.host.E, idem w * a ∈ OA D := by
   simp only [idem_mul_mem_iff]
@@ -375,7 +375,7 @@ theorem dualL_eq {V : HSp D} {Λ : Lat V} (h : IsSelfDualC V Λ) : Formalism.L2.
 
 theorem exists_orth {V : HSp D} {Λ : Lat V} (h : IsSelfDualC V Λ) :
     ∃ β : GL (Fin V.rank) (EAf D), Λ = lat β ∧ gramOf V β = 1 := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   obtain ⟨β, hβ⟩ := exists_eq_lat (selfDual_isFullLattice h)
   obtain ⟨u, hu⟩ := GlobalTheory.AdelicOrthFrame.exists_orth (E := D.host.E) D.sp.cm (G := V.gram)
     (fun a b => V.herm.eq (V.frame a) (V.frame b)) (GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.gram_det_isUnit V).ne_zero

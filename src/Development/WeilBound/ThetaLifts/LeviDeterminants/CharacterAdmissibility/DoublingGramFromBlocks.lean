@@ -142,9 +142,9 @@ theorem Fr.embeddingAtLocalFactor (h : Fr c J J₁ H ι Z π ρ) (p : UG c J₁ 
 theorem Fr.continuous_emb [TopologicalSpace E] [IsTopologicalRing E] (h : Fr c J J₁ H ι Z π ρ) :
     Continuous fun g : UG c J₁ => h.emb (g, 1) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact ((continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul
+  · exact ((continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul
       continuous_const).add (continuous_const (y := Z * (1 : Matrix μ μ E) * ρ))
-  · exact ((continuous_const.matrix_mul (Units.continuous_coe_inv.comp continuous_subtype_val)).matrix_mul
+  · exact ((continuous_const.matrix_mul (Units.continuous_coe_inv.comp continuous_subtypeVal)).matrix_mul
       continuous_const).add (continuous_const (y := Z * (1 : Matrix μ μ E) * ρ))
 
 abbrev hyp (ν : Type) [DecidableEq ν] (η : ℤˣ) : Matrix (ν ⊕ ν) (ν ⊕ ν) E := fromBlocks 0 1 (((η : ℤ) : E) • 1) 0

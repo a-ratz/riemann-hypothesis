@@ -69,7 +69,7 @@ namespace GlobalTheory.CompanionTheory.GunrVol
 theorem selfDualVol : PositivityTheory.SiegelWeilFormula.Gunr.SelfDualVol := by
   intro V _ _ _ _ _ μ χ hsd L hLo hLc hadd _ hann
   obtain ⟨hH, hinv⟩ := hsd
-  haveI := hH
+  have := hH
   have hLcl : IsClosed (L : Set V) := AddSubgroup.isClosed_of_isOpen L hLo
   have hLm : MeasurableSet (L : Set V) := hLo.measurableSet
   have hfin : μ (L : Set V) ≠ ⊤ := hLc.measure_lt_top.ne
@@ -177,7 +177,7 @@ theorem isTopRingA (v : HeightOneSpectrum (𝓞 F)) : IsTopologicalRing (Fv F v 
 attribute [local instance] isTopRingA
 
 theorem fv_sc (v : HeightOneSpectrum (𝓞 F)) : SecondCountableTopology (Fv F v) := by
-  have : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ) (M := F)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ) (M := F)
   have : TopologicalSpace.SeparableSpace (Fv F v) :=
     TopologicalSpace.SeparableSpace.of_denseRange _ (HeightOneSpectrum.denseRange_algebraMap F v)
   exact UniformSpace.secondCountable_of_separable (Fv F v)
@@ -196,7 +196,7 @@ theorem eq_sum_crd (y : Fv F v ⊗[F] E) :
 
 include bs in
 theorem scA : SecondCountableTopology (Fv F v ⊗[F] E) := by
-  haveI := fv_sc v
+  have := fv_sc v
   let e := (Algebra.TensorProduct.basis (Fv F v) bs).equivFun
   let h : (Fv F v ⊗[F] E) ≃ₜ (Fin d → Fv F v) :=
     { e.toEquiv with
@@ -396,10 +396,10 @@ attribute [local instance] finFE isModTopA isTopRingA
 
 theorem volLat : VolLat := by
   intro F E _ _ _ _ _ σ M n d J T bs v ψv S σS ϖ ε hG μv hμ
-  haveI : SecondCountableTopology (Fv F v ⊗[F] E) := scA bs v
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (Fin M → Fv F v ⊗[F] E) := Pi.borelSpace
-  haveI : BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := Pi.borelSpace
+  have : SecondCountableTopology (Fv F v ⊗[F] E) := scA bs v
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fin M → Fv F v ⊗[F] E) := Pi.borelSpace
+  have : BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := Pi.borelSpace
   let L : AddSubgroup (Fin n → Fin M → Fv F v ⊗[F] E) :=
     { carrier := latV (M := M) (n := n) bs v
       zero_mem' := (mem_lat_iff hG _).2 fun a i => S.zero_mem
@@ -561,7 +561,7 @@ theorem mem_S_iff (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) (z : Fv F v ⊗[F] 
 
 theorem isOpen_scaled (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) (c : Fv F v) :
     IsOpen {z : Fv F v ⊗[F] E | c • z ∈ S} := by
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   have hO : IsOpen (v.adicCompletionIntegers F : Set (Fv F v)) := Valued.isOpen_valuationSubring _
   have e : {z : Fv F v ⊗[F] E | c • z ∈ S} =
       ⋂ j, (fun z => c * (Algebra.TensorProduct.basis (Fv F v) bs).coord j z) ⁻¹' (v.adicCompletionIntegers F : Set (Fv F v)) := by
@@ -616,7 +616,7 @@ theorem measurable_image_ker (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) (k : ℕ
     ext Y
     simp
   rw [e]
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   refine MeasurableSet.iInter fun a => MeasurableSet.iInter fun i => ?_
   exact ((measurable_pi_apply i).comp (measurable_pi_apply a)) (isOpen_scaled hG _).measurableSet
 
@@ -677,13 +677,13 @@ theorem jtLev : JtLev := by
     rw [_root_.GlobalTheory.CompanionTheory.UnrDens.card_quot_lev S σS hG.pS _ ε hR k]
     have := hR.one_lt
     exact pow_ne_zero _ (by omega))
-  letI : ∀ k, Fintype (S ⧸ lev hG.pS k) := fun k => Fintype.ofFinite _
+  let : ∀ k, Fintype (S ⧸ lev hG.pS k) := fun k => Fintype.ofFinite _
   have hε : (ε : ℂ) ^ 2 = 1 := by
     rcases hR.eps with ⟨rfl, -⟩ | ⟨rfl, -⟩ <;> simp
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-  haveI : μv.IsAddHaarMeasure := hμ.1
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : μv.IsAddHaarMeasure := hμ.1
   have hB : red hG.pS k X ∈ hermMod σS hG.pS n k := ⟨X, hX, rfl⟩
   have hS : IsUnimod σS (matS S J hG.J_int) := hG.J_unimod
   have hgauss := GlobalTheory.CompanionTheory.SiegLoc.gauss_full hR hlev hε k (matS S J hG.J_int) hS (red hG.pS k X) hB

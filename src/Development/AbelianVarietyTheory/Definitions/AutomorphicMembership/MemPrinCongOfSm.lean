@@ -193,7 +193,7 @@ theorem mem_prinCong_of_sm {c : ℕ} (k : GLint E n P) (h : Sm Valued.v (dep P c
   have h1 := h.mulVec (mem_stdAt_val.1 hx) i
   rw [Matrix.sub_mulVec, Matrix.one_mulVec, ratM_mulVec, mul_one, Pi.sub_apply, ← map_sub, valued_algebraMap] at h1
   rw [valued_algebraMap, Pi.smul_apply, smul_eq_mul, map_mul, map_inv₀]
-  exact (inv_mul_le_one₀ (zero_lt_iff.2 (dep_ne_zero c))).2 h1
+  exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 (dep_ne_zero c))).2 h1
 
 theorem exists_frame (x : GL (Fin n) (AfE F E)) (P : HeightOneSpectrum (𝓞 E)) (c : ℕ) :
     ∃ f : Sp E n ≃ₗ[E] Sp E n, CharValCompare.IsFr P (Formalism.UG.CS.globLat x (stdLat E n)) f ∧
@@ -274,7 +274,7 @@ theorem exists_frame (x : GL (Fin n) (AfE F E)) (P : HeightOneSpectrum (𝓞 E))
     have hq := qOf_ne_zero (P := P)
     rw [valued_algebraMap, Pi.smul_apply, smul_eq_mul, show ((qOf P : E) * w i)⁻¹ * w i = (qOf P : E)⁻¹ by
       replace hi : w i ≠ 0 := hi
-      field_simp, map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hq))] at h4
+      field_simp, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hq))] at h4
     exact absurd val_qOf_lt (not_lt.2 h4)
   let g : Sp E n ≃ₗ[E] Sp E n := LinearEquiv.ofBijective _ ⟨hinj, LinearMap.injective_iff_surjective.1 hinj⟩
   have hg : ratM P g = M := by
@@ -452,7 +452,7 @@ theorem near_of_isPtOf {g : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (h : I
       refine HasRes.unique ?_ (h.f P _ h1 (lastIdx n) (by have := NeZero.pos n; simp [lastIdx]; omega))
       rw [← hN] at h1
       simp only [decoRaw]
-      rw [if_pos (le_locP _ _ h1)]
+      rw [ite_eq_left (le_locP _ _ h1)]
       exact PtExist.hasRes_redA _ ((mem_globLat g _).1 h1 _)
     · rw [p.deco.2.f_off P w hw, ok.f_off P w (by rw [Deco.at, hN']; exact hw)]
   · by_cases hw : w ∈ p.deco.1.at P.1
@@ -464,7 +464,7 @@ theorem near_of_isPtOf {g : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (h : I
       refine HasRes.unique ?_ (h.be P _ h1 i)
       rw [← hN] at h1
       simp only [decoRaw]
-      rw [if_pos (le_locP _ _ h1)]
+      rw [ite_eq_left (le_locP _ _ h1)]
       exact PtExist.hasRes_redA _ ((mem_globLat g _).1 h1 _)
     · rw [p.deco.2.be_off P w hw, ok.be_off P w (by rw [Deco.at, hN']; exact hw)]
   · have e : ratM P.1 (p.fr P) = locM P.1 g := Matrix.ext fun i j => (h.fr P i j).symm

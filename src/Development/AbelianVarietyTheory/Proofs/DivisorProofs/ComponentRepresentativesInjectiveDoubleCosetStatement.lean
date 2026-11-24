@@ -127,8 +127,8 @@ theorem rat_unitary (c : E ≃ₐ[F] E) (J γ : Matrix (Fin n) (Fin n) E) (h : I
   · intro h0
     have hu := h.1
     rw [hr, ← RingHom.mapMatrix_apply, ← RingHom.map_det, h0, map_zero] at hu
-    haveI := af_nontrivial (F := F)
-    haveI : Nontrivial (RA F E) := (incl_inj (F := F) (E := E)).nontrivial
+    have := af_nontrivial (F := F)
+    have : Nontrivial (RA F E) := (incl_inj (F := F) (E := E)).nontrivial
     exact not_isUnit_zero hu
   · have hu := unitary_of_isUA c J _ h
     apply Matrix.map_injective (incl_inj (F := F) (E := E))

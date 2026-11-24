@@ -205,7 +205,7 @@ theorem wd_gen (l : List (Fin n × Fin n)) :
   induction l with
   | nil => simp [wd]
   | cons z l ih =>
-    rw [wd_cons, ih, gen, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul, ← Multiset.cons_coe,
+    rw [wd_cons, ih, gen, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul, ← Multiset.cons_coe,
       ← Multiset.singleton_add, map_add, Multiset.toFinsupp_singleton]
 
 def order (E : Fin n → Fin n → A) : MvPolynomial (Fin n × Fin n) ℂ →ₗ[ℂ] A :=
@@ -259,7 +259,7 @@ theorem wordMap_permMat {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n
   refine Finset.sum_congr rfl fun K _ => ?_
   rw [Finset.sum_eq_single (K ∘ π)]
   · simp
-  · intro I _ hI; rw [if_neg hI, zero_smul]
+  · intro I _ hI; rw [ite_eq_right hI, zero_smul]
   · simp
 
 theorem exists_symb {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n → Fin n → A) (d : ℕ)

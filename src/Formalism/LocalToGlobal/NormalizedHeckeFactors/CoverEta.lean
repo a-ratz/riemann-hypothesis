@@ -199,7 +199,7 @@ theorem map_psiO_rs (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : D.what
     (hpq : ∀ y, y ∈ p ↔ T.Psi j w i h y ∈ q) (hq : ∀ z ∈ q, ∃ y, T.Psi j w i h y = z) :
     haveI := RingHomInvPair.of_ringEquiv (T.phO j w i h)
     (p.restrictScalars (D.nd.O i)).map (psiO T h) = q.restrictScalars (T.B.Oc j w) := by
-  haveI := RingHomInvPair.of_ringEquiv (T.phO j w i h)
+  have := RingHomInvPair.of_ringEquiv (T.phO j w i h)
   ext z
   simp only [Submodule.mem_map, Submodule.restrictScalars_mem, psiO_apply]
   constructor
@@ -238,12 +238,12 @@ theorem map_psiO_MtIn (T : NormalizedLocalCompatibility D M) (hstd : HeckeStdTw 
     (h : i ∈ D.nd.locs j w) :
     haveI := RingHomInvPair.of_ringEquiv (T.phO j w i h)
     (D.nd.MtIn i).map (psiO T h) = NCov.latPart (heckeAlg T.B j w) (latC T.B j w) (T.mx j w i) := by
-  haveI := RingHomInvPair.of_ringEquiv (T.phO j w i h)
+  have := RingHomInvPair.of_ringEquiv (T.phO j w i h)
   obtain ⟨e1, -⟩ := (D.nd.locs_mem j w i).1 h
   have h1 : 1 ≤ j := e1 ▸ (D.nd.j_range i).1
   have h2 : j ≤ D.R.m := e1 ▸ (D.nd.j_range i).2
   obtain ⟨hfd, -⟩ := finrank_V T.B j w
-  haveI := hfd
+  have := hfd
   obtain ⟨hS, -, -⟩ := gens_hypsTw T.B hstd h1 h2 (locPl_of_mem D h)
   have hinj := IsFractionRing.injective (T.B.Oc j w) (FractionRing (T.B.Oc j w))
   have hdisj := NCov.disjoint_part_off hinj hS (T.mx j w i)

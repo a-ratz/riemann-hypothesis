@@ -64,7 +64,7 @@ private theorem exists_alg {M : Type} [AddCommGroup M] [Module ℂ M] (V : Submo
   have hs : ∀ a ∈ s', ∀ b ∈ s', a * b = b * a := by
     rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
     exact LinearMap.ext fun v => Subtype.ext (hc x hx y hy v v.2)
-  letI : CommRing (Algebra.adjoin ℂ s') :=
+  let : CommRing (Algebra.adjoin ℂ s') :=
     { (inferInstance : Ring (Algebra.adjoin ℂ s')) with
       mul_comm := (Algebra.isMulCommutative_adjoin ℂ (fun a ha b hb _ => hs a ha b hb)).is_comm.comm }
   refine ⟨Algebra.adjoin ℂ s', inferInstance, Subalgebra.algebra _, inferInstance, ⟨fun _ _ _ => rfl⟩, fun x hx => ?_,
@@ -82,7 +82,7 @@ private theorem coef_zero (n : ℕ) (a : ℕ → ℂ) (h : ∀ u : ℂ, ∑ k �
   rw [Finset.sum_eq_single k] at this
   · simpa using this
   · intro b hb hne
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     have := Finset.mem_range.1 hb
     omega
   · intro h'

@@ -65,7 +65,7 @@ theorem one_le_schurDir (q : ℕ) {n : ℕ} (a : Fin n → ℂ) (x : ℝ) : 1 �
 
 theorem hasProd_of_one_le {I : Type} (f : I → ℝ≥0∞) (hf : ∀ i, 1 ≤ f i) :
     HasProd f (⨆ s : Finset I, ∏ i ∈ s, f i) :=
-  tendsto_atTop_iSup fun _ _ hst => Finset.prod_le_prod_of_subset_of_one_le' hst fun i _ _ => hf i
+  tendsto_atTop_iSup fun _ _ hst => Finset.prod_le_prod_of_subset_of_one_le hst fun i _ _ => hf i
 
 theorem finset_prod_le_tprod {I : Type} (f : I → ℝ≥0∞) (hf : ∀ i, 1 ≤ f i) (s : Finset I) :
     ∏ i ∈ s, f i ≤ ∏' i, f i := by

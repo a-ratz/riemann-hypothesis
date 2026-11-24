@@ -626,7 +626,7 @@ theorem stabOf_of (hN : NearNbhd) (hP : PrimeProj) (hD : Dict) : StabOf := by
   choose e he using hO
   have hJ : IsOpen (V.J : Set (GLw n w₀)) := V.Kw0 ▸ V.shape.opn w₀ V.shape.mem
   obtain ⟨e₀, he₀⟩ := hN E n w₀ ((fun g : GLw n w₀ => iT ((F.a w₀)⁻¹ * g * F.a w₀)) ⁻¹' (Subtype.val '' {k : V.J | V.χ k = 1}))
-    ((hJ.isOpenMap_subtype_val _ V.ker_open).preimage (iT_cont.comp (hc w₀))) ⟨1, map_one _, by simp [iT_one]⟩
+    ((hJ.isOpenMap_subtypeVal _ V.ker_open).preimage (iT_cont.comp (hc w₀))) ⟨1, map_one _, by simp [iT_one]⟩
   have hT : ∀ u ∈ V.S ∪ hcof.toFinset, (p : 𝓞 E) ∉ u.asIdeal ∧ (u ∈ V.S ∨ F.a u ∉ KGL u (n := n)) := fun u hu => by
     rw [Finset.mem_union, Set.Finite.mem_toFinset] at hu
     exact ⟨hu.elim (hoff' u) fun h h' => h (F.a_int u p hp.out S.good h'), hu⟩
@@ -649,7 +649,7 @@ theorem stabOf_of (hN : NearNbhd) (hP : PrimeProj) (hD : Dict) : StabOf := by
     rw [h2 w hw]
     by_cases hu : w ∈ V.S ∪ hcof.toFinset
     · exact (h3 w hu).1
-    · rw [Finset.mem_union, Set.Finite.mem_toFinset, not_or, Set.mem_setOf_eq, not_not] at hu
+    · rw [Finset.mem_union, Set.Finite.mem_toFinset, not_or, Set.mem_ofPred_eq, not_not] at hu
       exact Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.inv_mem _ hu.2) (hK w hw)) hu.2
   have hw₀ : w₀ ∈ V.S ∪ hcof.toFinset := Finset.mem_union_left _ V.shape.mem
   obtain ⟨y, hy, hy'⟩ := he₀ _ (Nat.le_add_left _ _) _ (hK w₀ (hT w₀ hw₀).1) (hn w₀ hw₀)
@@ -680,8 +680,8 @@ theorem UpperTheory.Reformulated.B.Qe49.exists_prime_mem :
     ∀ {E : Type} [inst : Field E] [NumberField E] (w : UpperTheory.Reformulated.B.Qe49.Plc E),
       ∃ (q : ℕ), Nat.Prime q ∧ (↑q : NumberField.RingOfIntegers E) ∈ w.asIdeal := by
   intro E _ _ w
-  haveI : w.asIdeal.IsPrime := w.isPrime
-  haveI : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
+  have : w.asIdeal.IsPrime := w.isPrime
+  have : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
     Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
   refine ⟨ringChar (NumberField.RingOfIntegers E ⧸ w.asIdeal),
     CharP.prime_ringChar _, ?_⟩
@@ -874,7 +874,7 @@ theorem master (h : All) {E : Type} [Field E] [NumberField E] [IsCMField E] {l :
             κ := V.κ, m := mOf x V.W V.jz, alg := V.kap.alg, lam := V.lam, anti := hanti, f := f, fn := hf,
             spec := by simpa only [θ, RingEquiv.apply_symm_apply] using hsp, cong := ?_ }, fun v hv => ?_, fun w hw B hB => ?_⟩
   · refine ⟨(finite_pr (E := E) ((N.1 * e * p).primeFactors ∪ V.S.image pr)).toFinset, fun w hw hus _ B hB => ?_⟩
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Finset.mem_union, not_or] at hw
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Finset.mem_union, not_or] at hw
     have hN0 : N.1 ≠ 0 := by have := N.2.1; omega
     have hnd : ¬ pr w ∣ N.1 * e * p := fun hd' =>
       hw.1 (Nat.mem_primeFactors.2 ⟨pr_prime w, hd', mul_ne_zero (mul_ne_zero hN0 he0.ne') hp.out.ne_zero⟩)
@@ -965,8 +965,8 @@ open scoped TensorProduct Classical
 namespace UpperTheory.Gal.Int.Geo.Pl
 
 private theorem prime_under {E : Type} [Field E] [NumberField E] (u : Plc E) : ∃ l : ℕ, l.Prime ∧ (l : 𝓞 E) ∈ u.asIdeal := by
-  haveI := u.isPrime
-  haveI : Finite (𝓞 E ⧸ u.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ u.ne_bot
+  have := u.isPrime
+  have : Finite (𝓞 E ⧸ u.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ u.ne_bot
   refine ⟨ringChar (𝓞 E ⧸ u.asIdeal), CharP.char_is_prime (𝓞 E ⧸ u.asIdeal) _, Ideal.Quotient.eq_zero_iff_mem.1 ?_⟩
   rw [map_natCast]
   exact (ringChar.spec _ _).2 dvd_rfl
@@ -980,7 +980,7 @@ private theorem span_le_pow {R : Type} [CommRing R] {I : Ideal R} {l m e : ℕ} 
 private theorem pow_le_prod {R ι : Type} [CommRing R] (T : Finset ι) (f : ι → Ideal R) (I : Ideal R) (e : ℕ) (h : ∀ u ∈ T, I ≤ f u) :
     I ^ (e * T.card) ≤ ∏ u ∈ T, f u ^ e := by
   rw [pow_mul, ← Finset.prod_const]
-  exact Finset.prod_le_prod' fun u hu => Ideal.pow_right_mono (h u hu) e
+  exact Finset.prod_le_prod fun u hu => Ideal.pow_right_mono (h u hu) e
 
 private theorem prod_le_one {R ι : Type} [CommRing R] (T : Finset ι) (f : ι → Ideal R) (u : ι) (hu : u ∈ T) : ∏ u ∈ T, f u ≤ f u :=
   Ideal.le_of_dvd (Finset.dvd_prod_of_mem f hu)

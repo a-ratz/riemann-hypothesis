@@ -56,7 +56,7 @@ namespace GlobalTheory.Mem.Col2.StepOk
 theorem finite_orbits_of_finite_fibres {G A B : Type} [Group G] [MulAction G A] [MulAction G B] (π : A → B)
     (hπ : ∀ (g : G) a, π (g • a) = g • π a) (hf : ∀ b, {a | π a = b}.Finite)
     [Finite (MulAction.orbitRel.Quotient G B)] : Finite (MulAction.orbitRel.Quotient G A) := by
-  haveI : ∀ b, Finite {a | π a = b} := fun b => (hf b).to_subtype
+  have : ∀ b, Finite {a | π a = b} := fun b => (hf b).to_subtype
   refine Finite.of_surjective (fun x : Σ q : MulAction.orbitRel.Quotient G B, {a | π a = q.out} =>
     (Quotient.mk _ x.2.1 : MulAction.orbitRel.Quotient G A)) ?_
   intro c
@@ -114,8 +114,8 @@ theorem stepY_ok : ∀ {X : Fields} {n : ℕ} {SG Q : Finset (HeightOneSpectrum 
   have hG := fun b => FramedForms.main hX (ST := ST) (fun _ => ⟨fun _ => 0, fun _ _ _ => le_rfl⟩) (Λ b) (Θ b) (hfi b)
     (levQ_root (Θ b) (hroot b))
   refine ⟨fun b => ?_, fun b p => ?_, fun b g => ?_, fun b g => ?_, fun b g p x => ?_, fun b p => ?_, fun b g p hg h1 => ?_⟩
-  · letI := ptYAct (ST := ST) y (Λ b) (Θ b)
-    haveI : Finite (MulAction.orbitRel.Quotient (FrmG (Λ b) (Θ b)) (DecoF X.E n ST SG Q)) := (hG b).fin_orb
+  · let := ptYAct (ST := ST) y (Λ b) (Θ b)
+    have : Finite (MulAction.orbitRel.Quotient (FrmG (Λ b) (Θ b)) (DecoF X.E n ST SG Q)) := (hG b).fin_orb
     refine finite_orbits_of_finite_fibres (G := FrmG (Λ b) (Θ b)) (A := PtY ST SG Q y) (B := DecoF X.E n ST SG Q)
       (fun p => p.1.1) (fun _ _ => rfl) fun d => ?_
     refine Set.Finite.of_finite_image (f := fun p : PtY ST SG Q y => p.1.2) ?_ ?_
@@ -126,8 +126,8 @@ theorem stepY_ok : ∀ {X : Fields} {n : ℕ} {SG Q : Finset (HeightOneSpectrum 
       exact p.2
     · intro p hp q hq h
       exact Subtype.ext (Prod.ext (hp.trans hq.symm) h)
-  · letI := ptYAct (ST := ST) y (Λ b) (Θ b)
-    haveI : Finite (MulAction.stabilizer (FrmG (Λ b) (Θ b)) p.1.1) := (hG b).fin_stab p.1.1
+  · let := ptYAct (ST := ST) y (Λ b) (Θ b)
+    have : Finite (MulAction.stabilizer (FrmG (Λ b) (Θ b)) p.1.1) := (hG b).fin_stab p.1.1
     refine Finite.of_injective (fun a : MulAction.stabilizer (FrmG (Λ b) (Θ b)) (show PtY ST SG Q y from p) =>
       (⟨a.1, congrArg (fun q : PtY ST SG Q y => q.1.1) a.2⟩ : MulAction.stabilizer (FrmG (Λ b) (Θ b)) p.1.1)) ?_
     intro a c h

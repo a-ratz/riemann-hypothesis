@@ -225,7 +225,7 @@ theorem chiEpsBar_open (N : NData R H what₂) (i : N.Loc) (e : ℤ) :
   have hmZ : IsOpen (IsLocalRing.maximalIdeal ℤ_[N.l i] : Set ℤ_[N.l i]) := by
     have : (IsLocalRing.maximalIdeal ℤ_[N.l i] : Set ℤ_[N.l i]) = {x | ‖x‖ < 1} := by
       ext x
-      simp only [SetLike.mem_coe, IsLocalRing.mem_maximalIdeal, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, IsLocalRing.mem_maximalIdeal, Set.mem_ofPred_eq]
       exact PadicInt.mem_nonunits
     rw [this]; exact isOpen_lt continuous_norm continuous_const
   let U1 : Set (G H.E N.Om) :=
@@ -308,14 +308,14 @@ theorem twist_sub_bijective {k : Type} [Field k] {n : ℕ} (A : Matrix (Fin n) (
 theorem hOneTwo_holds : LocalFiniteness → LocalTateDuality → LocalEulerChar → ∀ D : D7, HOneTwo D := by
   intro hF hT hE D i rb w hwS hrb hnr e
   have hw : w ∉ placesOver D.host.E (D.nd.l i) := D.nd.SQ_l i w (Or.inl hwS)
-  haveI := resFin D.nd i
-  haveI := resChar D.nd i
-  letI : TopologicalSpace (IsLocalRing.ResidueField (D.nd.O i)) := ⊥
-  haveI : DiscreteTopology (IsLocalRing.ResidueField (D.nd.O i)) := ⟨rfl⟩
-  haveI : CharP (IsLocalRing.ResidueField (D.nd.O i)) (D.nd.l i ^ 1) := by rw [pow_one]; infer_instance
-  letI : Module (ZMod (D.nd.l i ^ 1)) (Fin D.R.r → IsLocalRing.ResidueField (D.nd.O i)) :=
+  have := resFin D.nd i
+  have := resChar D.nd i
+  let : TopologicalSpace (IsLocalRing.ResidueField (D.nd.O i)) := ⊥
+  have : DiscreteTopology (IsLocalRing.ResidueField (D.nd.O i)) := ⟨rfl⟩
+  have : CharP (IsLocalRing.ResidueField (D.nd.O i)) (D.nd.l i ^ 1) := by rw [pow_one]; infer_instance
+  let : Module (ZMod (D.nd.l i ^ 1)) (Fin D.R.r → IsLocalRing.ResidueField (D.nd.O i)) :=
     Module.compHom _ (ZMod.castHom (dvd_refl _) (IsLocalRing.ResidueField (D.nd.O i)))
-  haveI : ContinuousConstSMul (ZMod (D.nd.l i ^ 1)) (Fin D.R.r → IsLocalRing.ResidueField (D.nd.O i)) :=
+  have : ContinuousConstSMul (ZMod (D.nd.l i ^ 1)) (Fin D.R.r → IsLocalRing.ResidueField (D.nd.O i)) :=
     ⟨fun _ => continuous_of_discreteTopology⟩
   let rho := (Formalism.MainNotions.N.twistRep (Formalism.MainNotions.N.glRep rb) (Formalism.MainNotions.SumRepresentations.At.chiEpsBar D.nd i e)).comp
     (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype
@@ -334,7 +334,7 @@ theorem hOneTwo_holds : LocalFiniteness → LocalTateDuality → LocalEulerChar 
   have hU : IsOpen (((rb.ker ⊓ (Formalism.MainNotions.SumRepresentations.At.chiEpsBar D.nd i e).ker).comap
       (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype : Subgroup _) :
         Set ↥(Dec (F := D.host.E) (D.nd.plOm.1 w))) :=
-    (hrb.1.inter (chiEpsBar_open D.nd i e)).preimage continuous_subtype_val
+    (hrb.1.inter (chiEpsBar_open D.nd i e)).preimage continuous_subtypeVal
   have h1U : ∀ u ∈ ((rb.ker ⊓ (Formalism.MainNotions.SumRepresentations.At.chiEpsBar D.nd i e).ker).comap
       (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype), rhoZ u = 1 := by
     intro u hu
@@ -430,9 +430,9 @@ theorem eigPd_holds_alt : _root_.GlobalTheory.TameEig.eigPd_holds_tyz := by
       (D.nd.l i = D.host.pde ∧ w ∈ placesOver D.host.E D.host.pde'))) := by
     refine Or.inr ⟨hDel, ?_⟩
     by_cases hlp : D.nd.l i = D.host.pde
-    · rw [if_pos hlp] at hw
+    · rw [ite_eq_left hlp] at hw
       exact Or.inr ⟨hlp, hw⟩
-    · rw [if_neg hlp] at hw
+    · rw [ite_eq_right hlp] at hw
       exact Or.inl hw
   have x : D.nd.X i := Classical.choice (D.nd.neX i)
   have hQ : ∀ x, ∃ ρ, Formalism.MainNotions.SumRepresentations.At.IsHeckeGaloisQ D.nd D.naut i x ρ := fun x => by
@@ -610,7 +610,7 @@ theorem twist_dual_mult : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
     (IntermediateField.inclusion h).toRingHom.comp (D.nbr i w hw).toLL with hf
   have hfc : Continuous f := by
     refine Continuous.subtype_mk ?_ _
-    exact continuous_subtype_val.comp (continuous_subtype_val.comp (D.nbr i w hw).eO_cont)
+    exact continuous_subtypeVal.comp (continuous_subtypeVal.comp (D.nbr i w hw).eO_cont)
   have hmap : ∀ (m : ℕ) (ρ : GE D.nd →* GL (Fin m) (D.nd.O i)),
       mapRep (algebraMap ↥LL'.1 (Qbar (D.nd.l i))) (mapRep f ρ) = mapRep (iotaOQ D.nd D.naut i) ρ := by
     intro m ρ
@@ -633,7 +633,7 @@ theorem twist_dual_mult : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
   have jχ := (tχ.2.2.2 τ τ' hτ).2 dχ'
   have hs : Nat.card (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥LL'.1) =
       Module.finrank ℚ_[D.nd.l i] ↥(D.nbr i w hw).Kw.1 := by
-    haveI : FiniteDimensional ℚ_[D.nd.l i] ↥(D.nbr i w hw).Kw.1 := (D.nbr i w hw).Kw.2
+    have : FiniteDimensional ℚ_[D.nd.l i] ↥(D.nbr i w hw).Kw.1 := (D.nbr i w hw).Kw.2
     have := (GlobalTheory.splits_of_conjugates_mem _ (D.nbr i w hw).Kw LL'
       (fun σ y => h ((D.nbr i w hw).LL_split σ y)) inferInstance).2
     rw [Nat.card_eq_fintype_card]

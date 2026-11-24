@@ -106,7 +106,7 @@ end Helpers
 theorem kfin_diag_mem_Kset (ε : Fin n → Bool) (θ : Fin n → ℝ) :
     Matrix.diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) ∈ Kset ε := by
   unfold Kset
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨?_, ?_⟩
   · rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, Matrix.diagonal_conjTranspose,
       Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
@@ -140,7 +140,7 @@ theorem kfin_wt_orth (hσ : IsURepOn (UJset ε) σ) {μ ν : Fin n → ℝ} {v w
   let θ : Fin n → ℝ := fun b => if b = a then c else 0
   have hs : ∀ f : Fin n → ℝ, ∑ b, f b * θ b = f a * c := by
     intro f
-    simp only [θ, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [θ, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   obtain ⟨h1, h2⟩ := kfin_diag_mem_Kset (n := n) ε θ
   have hK : Matrix.diagonal (fun b => Complex.exp ((θ b : ℂ) * Complex.I)) ∈ Formalism.REAL.Kset ε :=
     kfin_diag_mem_Kset ε θ
@@ -198,13 +198,13 @@ theorem kfin_key (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
   have hE := hD.glRep
   have hU : IsInfUnitary ε E := isInfUnitary_of_isDerivedOn hσ hD
   have hUK : IsKUnitary ε E := isKUnitary_of_isInfUnitary hU
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   set Lm : Submodule ℂ D := layer ε E V m with hLm
   have hLmf : FiniteDimensional ℂ Lm := finiteDimensional_layer hVf m
-  haveI : CompleteSpace Lm := FiniteDimensional.complete ℂ Lm
+  have : CompleteSpace Lm := FiniteDimensional.completeSpace ℂ Lm
   set Fm : Submodule ℂ H := Lm.map D.subtype with hFm
   have hFmf : FiniteDimensional ℂ Fm := Module.Finite.map Lm D.subtype
-  haveI : CompleteSpace Fm := FiniteDimensional.complete ℂ Fm
+  have : CompleteSpace Fm := FiniteDimensional.completeSpace ℂ Fm
   intro x hx
   by_contra hxF
   obtain ⟨y, hy⟩ : ∃ y, y = x - Fm.starProjection x := ⟨_, rfl⟩
@@ -282,7 +282,7 @@ theorem kfin_key (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
     rw [hG0]
     exact ⟨hv, hvS⟩
   have hG0f : FiniteDimensional ℂ G0 := Submodule.finiteDimensional_of_le hG0GD
-  haveI : CompleteSpace G0 := FiniteDimensional.complete ℂ G0
+  have : CompleteSpace G0 := FiniteDimensional.completeSpace ℂ G0
   have hG0K : ∀ k ∈ Kset ε, ∀ v ∈ G0, ∃ w ∈ G0, (w : H) = σ k v := by
     intro k hk v hv
     obtain ⟨w, hw, hwv⟩ := hGDK k hk v (hG0GD hv)
@@ -354,7 +354,7 @@ theorem data_kfin_le (hgap : StdGap ε lam) (hσ : IsURepOn (UJset ε) σ) (hD :
   classical
   have hE := hD.glRep
   have hU : IsInfUnitary ε E := isInfUnitary_of_isDerivedOn hσ hD
-  haveI := hSf
+  have := hSf
   have hWf := kfin_wts_finite (ε := ε) hσ S
   choose kf hkf using fun μ => khw_mem_layer hE hU hV hc hgap μ
   refine (kfin_key hσ hD hV.1 hV.2.1 S hS hSK (hWf.toFinset.sup kf) ?_).trans

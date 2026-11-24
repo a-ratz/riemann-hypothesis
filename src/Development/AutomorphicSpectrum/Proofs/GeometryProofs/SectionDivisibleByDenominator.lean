@@ -244,7 +244,7 @@ theorem semiAb_props : ∀ (L : Type) [Field L] [NumberField L] (G : Over (Sp (�
         (Scheme.ΓSpecIso (CommRingCat.of (𝓞 L))).inv).2
     exact h1.comp h2
   · intro p hp a b hab
-    letI : Field (𝓞 L ⧸ p) := Ideal.Quotient.field p
+    let : Field (𝓞 L ⧸ p) := Ideal.Quotient.field p
     let j : Spec (CommRingCat.of (𝓞 L ⧸ p)) ⟶ Sp (𝓞 L) := Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk p))
     have hY : IsIntegral (pullback G.hom j) :=
       GeometricallyIntegral.geometrically_isIntegral _ _ _ (IsPullback.of_hasPullback G.hom j)
@@ -384,9 +384,9 @@ theorem exists_uniformizer {R : Type} [CommRing R] [IsDedekindDomain R] (p : Ide
     (hp : p.IsMaximal) (hne : p ≠ ⊥) (d : R) (hd : d ≠ 0) :
     ∃ π : R, π ≠ 0 ∧ π ∈ p ∧ (∀ x ∈ p, ∃ s, s ∉ p ∧ ∃ z, s * x = π * z) ∧
       ∃ (a : ℕ) (t t' : R), t ∉ p ∧ t' ∉ p ∧ t * d = t' * π ^ a := by
-  haveI := hp.isPrime
+  have := hp.isPrime
   let A := Localization.AtPrime p
-  haveI : IsDiscreteValuationRing A :=
+  have : IsDiscreteValuationRing A :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R hne A
   have hinj : Function.Injective (algebraMap R A) :=
     IsLocalization.injective A p.primeCompl_le_nonZeroDivisors
@@ -431,8 +431,8 @@ theorem exists_maximal_not_mem {R B : Type} [CommRing R] [CommRing B] (u : R →
     (hprime : ∀ a b : B, a * b ∈ p.map u → a ∈ p.map u ∨ b ∈ p.map u)
     (g : B) (hg : g ∉ p.map u) : ∃ m : Ideal B, m.IsMaximal ∧ p.map u ≤ m ∧ g ∉ m := by
   have hPne : p.map u ≠ ⊤ := fun h => hg (h ▸ Submodule.mem_top)
-  haveI hP : (p.map u).IsPrime := ⟨hPne, fun {a b} h => hprime a b h⟩
-  letI : Field (R ⧸ p) := Ideal.Quotient.field p
+  have hP : (p.map u).IsPrime := ⟨hPne, fun {a b} h => hprime a b h⟩
+  let : Field (R ⧸ p) := Ideal.Quotient.field p
   let q : R ⧸ p →+* B ⧸ p.map u := Ideal.quotientMap (p.map u) u Ideal.le_comap_map
   have hq : q.FiniteType := by
     apply RingHom.FiniteType.of_comp_finiteType (f := Ideal.Quotient.mk p)
@@ -440,7 +440,7 @@ theorem exists_maximal_not_mem {R B : Type} [CommRing R] [CommRing B] (u : R →
       Ideal.quotientMap_comp_mk _
     rw [this]
     exact (RingHom.FiniteType.of_surjective _ Ideal.Quotient.mk_surjective).comp hft
-  haveI : IsJacobsonRing (B ⧸ p.map u) := hq.isJacobsonRing
+  have : IsJacobsonRing (B ⧸ p.map u) := hq.isJacobsonRing
   have hj : (⊥ : Ideal (B ⧸ p.map u)).jacobson = ⊥ :=
     IsJacobsonRing.out inferInstance Ideal.isPrime_bot.isRadical
   by_contra h
@@ -448,7 +448,7 @@ theorem exists_maximal_not_mem {R B : Type} [CommRing R] [CommRing B] (u : R →
   have hmem : Ideal.Quotient.mk (p.map u) g ∈ (⊥ : Ideal (B ⧸ p.map u)).jacobson := by
     refine (Ideal.mem_sInf).2 ?_
     rintro J ⟨-, hJ⟩
-    haveI := hJ
+    have := hJ
     have hc : (J.comap (Ideal.Quotient.mk (p.map u))).IsMaximal :=
       Ideal.comap_isMaximal_of_surjective _ Ideal.Quotient.mk_surjective
     refine h _ hc ?_
@@ -841,11 +841,11 @@ theorem exists_lift_atPrime {R O : Type} [CommRing R] [CommRing O] [IsLocalRing 
 theorem exists_factor_of_finite {R k K : Type} [CommRing R] [Field k] [Finite k] [Field K] [IsAlgClosed K]
     (a : R →+* k) (b : R →+* K) [(RingHom.ker a).IsMaximal] (h : RingHom.ker a ≤ RingHom.ker b) :
     ∃ φ : k →+* K, φ.comp a = b := by
-  letI : Field (R ⧸ RingHom.ker a) := Ideal.Quotient.field _
+  let : Field (R ⧸ RingHom.ker a) := Ideal.Quotient.field _
   let a' : (R ⧸ RingHom.ker a) →+* k := Ideal.Quotient.lift _ a fun x hx => hx
   let b' : (R ⧸ RingHom.ker a) →+* K := Ideal.Quotient.lift _ b fun x hx => h hx
-  letI := a'.toAlgebra
-  letI := b'.toAlgebra
+  let := a'.toAlgebra
+  let := b'.toAlgebra
   have : Module.Finite (R ⧸ RingHom.ker a) k := Module.Finite.of_finite
   have : Algebra.IsAlgebraic (R ⧸ RingHom.ker a) k := Algebra.IsAlgebraic.of_finite _ _
   let φ : k →ₐ[R ⧸ RingHom.ker a] K := (by
@@ -985,8 +985,8 @@ theorem point_bound (D : PPData H L) (n : ℕ) (s : Out.H0 D.t.PP.L n) (d : 𝓞
   have htop : ⊤ ≤ yO ⁻¹ᵁ W := top_le_of_closedPoint _ (by change yO _ ∈ W; rw [hyw']; exact hwW)
   have hi : ⊤ ≤ yO ⁻¹ᵁ (LB.LinComb D.t.PP.L (K := Fin 1) (fun _ => 𝟙 _) (fun _ => (n : ℤ))).U (fun _ => i) :=
     fun x hx => hWU (htop hx)
-  haveI : Algebra.IsAlgebraic ℚ C := Algebra.IsAlgebraic.trans ℚ L C
-  haveI : FaithfulSMul O C := (faithfulSMul_iff_algebraMap_injective O C).2 Subtype.val_injective
+  have : Algebra.IsAlgebraic ℚ C := Algebra.IsAlgebraic.trans ℚ L C
+  have : FaithfulSMul O C := (faithfulSMul_iff_algebraMap_injective O C).2 Subtype.val_injective
   obtain ⟨K, _, _, e, x', hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Reg.Descend.exists_numberField_point C D.t.G.left (D.t.G.hom ≫ spMap (algebraMap ℤ (𝓞 L)))
     (spMap (algebraMap O C) ≫ yO)
   obtain ⟨c', hc⟩ := Spec.map_surjective (x' ≫ D.t.G.hom)
@@ -1074,7 +1074,7 @@ theorem section_dvd_of_torsVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ H L _ _ D n s d hd Hy
   have hS := D.t.semi
   obtain ⟨hInt, hring⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Reg.semiAb_props L D.t.G hS
-  haveI := hInt
+  have := hInt
   have hδ : sc D.t.G.hom ⊤ d ≠ 0 := by
     intro h0
     let e : Sp (𝓞 L) ⟶ D.t.G.left := η[D.t.G].left
@@ -1089,7 +1089,7 @@ theorem section_dvd_of_torsVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     obtain ⟨i₀, rfl⟩ : ∃ i₀, j = fun _ => i₀ := ⟨j 0, funext fun k => congrArg j (Subsingleton.elim _ _)⟩
     by_cases hne : (W : Set D.t.G.left).Nonempty
     · obtain ⟨hNo, hft, hp⟩ := hring W hW
-      haveI : Nonempty W := hne.to_subtype
+      have : Nonempty W := hne.to_subtype
       exact _root_.GlobalTheory.CompanionTheory.Ggeo.RegularDvd.dvd_of_local (𝓞 L) Γ(D.t.G.left, W) (sc D.t.G.hom W) hft hp _ d hd fun m hm =>
         point_bound D n s d hd Hy i₀ W hW hWU m hm
     · have hW0 : W = ⊥ := by
@@ -1097,7 +1097,7 @@ theorem section_dvd_of_torsVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
         simp only [TopologicalSpace.Opens.coe_bot, Set.mem_empty_iff_false, iff_false]
         exact fun hx => hne ⟨x, hx⟩
       subst hW0
-      haveI : Subsingleton Γ(D.t.G.left, ⊥) := inferInstance
+      have : Subsingleton Γ(D.t.G.left, ⊥) := inferInstance
       exact ⟨0, Subsingleton.elim _ _⟩)
   exact ⟨s', hs'⟩
 

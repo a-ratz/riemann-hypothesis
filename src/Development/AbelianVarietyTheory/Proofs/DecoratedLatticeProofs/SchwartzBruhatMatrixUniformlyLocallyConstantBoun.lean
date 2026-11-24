@@ -81,7 +81,7 @@ theorem uniform : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
   obtain ⟨b, -, hb⟩ := F.exists_max_image (fun x => valuation k x) ⟨_, Finset.mem_insert_self _ _⟩
   have hab : valuation k (a : k) ≤ valuation k b := hb _ (Finset.mem_insert_self _ _)
   have ha0 : valuation k (a : k) ≠ 0 := by simp
-  have hb0 : valuation k b ≠ 0 := fun h => ha0 (le_antisymm (h ▸ hab) zero_le')
+  have hb0 : valuation k b ≠ 0 := fun h => ha0 (le_antisymm (h ▸ hab) zero_le)
   have hsupp : ∀ X, Ψ X ≠ 0 → ∀ i j, valuation k (X i j) ≤ valuation k b := by
     intro X hX i j
     obtain ⟨r, hr, hXr⟩ := hR X hX

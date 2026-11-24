@@ -145,7 +145,7 @@ theorem exists_swap {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (S T S' T' : HSp D
     rw [inv_inv, map_inv, MulEquiv.apply_symm_apply] at this
     rw [this, Matrix.transpose_transpose]
   · have k9 := congrFun (hω' (φ.symm h) (φ'.symm g) (fun x => f (L.symm x))) (L.symm x)
-    simp only [LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply, MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe,
+    simp only [LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply, MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass,
       MulEquiv.apply_symm_apply] at k9
     simp only [← hLs]
     exact k9
@@ -275,11 +275,11 @@ theorem exists_model {D : D7} (B : Base D.host.F D.host.E) (hB : B.IsGood D.sp.c
   refine ⟨⟨co, vac, _, _⟩, { rat := hrat, vac := fun v => ?_, std := ?_, haar := hH', dom := hfd' }⟩
   · show Model.IsVac (Model.mk (σ := D.sp.cm.sig) (X := Y) (W := Z) co (fun _ => 0) 0 ∅) B.ψ v (vac v)
     by_cases h : Model.IsVac (Model.mk (σ := D.sp.cm.sig) (X := Y) (W := Z) co (fun _ => 0) 0 ∅) B.ψ v (ind v)
-    · simp only [vac, if_pos h]; exact h
-    · simp only [vac, if_neg h]; exact (hany v).choose_spec
+    · simp only [vac, ite_eq_left h]; exact h
+    · simp only [vac, ite_eq_right h]; exact (hany v).choose_spec
   · filter_upwards [hind] with v hv
     show vac v = ind v
-    exact if_pos hv
+    exact ite_eq_left hv
 
 theorem hasSignature_map_conj {n p q : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h : Formalism.UG.HasSignature M p q) :
     Formalism.UG.HasSignature (M.map (starRingEnd ℂ)) p q := by
@@ -296,7 +296,7 @@ theorem exists_bas {D : D7} (B : Base D.host.F D.host.E) {n : ℕ} (Λ : Submodu
     (hΛ : Λ.IsFullLattice D.host.E) : ∃ bas : ∀ v : HeightOneSpectrum (𝓞 D.host.F), GL (Fin n) (Fv D.host.F v),
       ∀ v : B.P, GlobalTheory.AdelicU.IsSplitBasis (B.τ v) Λ (bas v) := by
   classical
-  letI := hΛ
+  let := hΛ
   have hex : ∀ v : B.P, ∃ β, GlobalTheory.AdelicU.IsSplitBasis (B.τ v) Λ β := fun v =>
     GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) Λ (GlobalTheory.AdelicU.isCMExt_host D)
   refine ⟨fun v => if h : v ∈ B.P then (hex ⟨v, h⟩).choose else 1, fun v => ?_⟩
@@ -310,7 +310,7 @@ theorem exists_isHerm {D : D7} (B : Base D.host.F D.host.E) (τf : InfinitePlace
     ∃ Λ bas, Spc.IsHerm D.sp.cm.sig B (Spc.mk ((-1 : D.host.E) • S.gram) Λ (fun w => -s (τf w)) bas) q p := by
   have hsd := GlobalTheory.LineSelfDual.isSelfDualC_selfDualLatticeCoordsInFrame D S
   have hfull := GlobalTheory.ProjXCols.selfDual_isFullLattice S _ hsd
-  haveI := Formalism.L2.Col.brp_starLat_lattice _ _ hsd.1
+  have := Formalism.L2.Col.brp_starLat_lattice _ _ hsd.1
   have hlat : Submodule.IsFullLattice D.host.E
       (Formalism.L2.Col.starLat D.host.E (GlobalTheory.LineSelfDual.selfDualLatticeCoordsInHermitianFrame D S)) := by
     refine ⟨?_⟩

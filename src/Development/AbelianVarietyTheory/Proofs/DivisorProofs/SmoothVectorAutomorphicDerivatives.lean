@@ -318,7 +318,7 @@ theorem _root_.GlobalTheory.exists_average_fixed_approx_of_fixed :
     (Set.disjoint_singleton_left.2 fun h => h h1W)
   have hf1' : f 1 = 1 := by simpa using hf1 (Set.mem_singleton (1 : G))
   have hfpos : 0 < ∫ y, f y ∂μ :=
-    f.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hfc (fun x => (hfI x).1)
+    f.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hfc (fun x => (hfI x).1)
       (x := 1) (by rw [hf1']; norm_num)
   set c := ∫ y, f y ∂μ with hc
   set η : G → ℂ := fun y => ((c⁻¹ * f y : ℝ) : ℂ) with hηdef

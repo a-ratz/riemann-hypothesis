@@ -120,7 +120,7 @@ private lemma tsum_transversal_eq_tsum_orbits_lemma {T X G R : Type*} [Group G] 
           term (Quotient.out o) ∧ Q (Quotient.out o)}, f (Quotient.out o.1) := by
     refine Eq.trans ?_ (tsum_subtype _ (fun o => f (Quotient.out o))).symm
     refine tsum_congr fun o => ?_
-    simp only [Set.indicator_apply, Set.mem_setOf_eq]
+    simp only [Set.indicator_apply, Set.mem_ofPred_eq]
   rw [hR, ← e.tsum_eq]
   refine tsum_congr fun t => ?_
   show val t.1 = f (Quotient.out (Quotient.mk _ (ℓ t.1)))
@@ -143,8 +143,8 @@ theorem _root_.GlobalTheory.HL.CoordAmp.sums_eq (hM : M.OK) (c : _root_.GlobalTh
     _root_.Formalism.MainNotions.S.LocNG.amp R d p = S.amp (c.dat d) Q ∧
       (∑' t : {t // t ∈ R.RT d ∧ p t}, ENNReal.ofReal (_root_.Formalism.MainNotions.S.LocNG.mu P t.1))
         = S.mass (c.dat d) Q := by
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   obtain ⟨-, -, hbij, hlatg, -, hmu⟩ := _root_.GlobalTheory.HL.CoordMass.transport M hM H r k P S c
   obtain ⟨-, -, -, hSt, -⟩ := _root_.GlobalTheory.HL.CoordUnip.transport M hM H r k P S c
   obtain ⟨hcorr, hex, -⟩ := _root_.GlobalTheory.HL.CoordTermWt.terms_correspond M hM H r k P S c
@@ -209,8 +209,8 @@ theorem _root_.GlobalTheory.HL.CoordAmp.amp_mass_eq : ∀ {F : Type} [Field F] [
       (∑' t : R.RT d, ENNReal.ofReal (_root_.Formalism.MainNotions.S.LocNG.mu P t.1))
         = S.mass (c.dat d) (fun _ => True) := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P S c R d
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   obtain ⟨hcorr, -, -⟩ := _root_.GlobalTheory.HL.CoordTermWt.terms_correspond M hM H r k P S c
   have hBB : ∀ Λ, S.IsTerm (c.dat d) Λ →
       ∀ h ∈ S.St,

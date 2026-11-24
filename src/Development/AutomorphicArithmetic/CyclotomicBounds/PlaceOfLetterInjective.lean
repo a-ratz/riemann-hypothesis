@@ -76,8 +76,8 @@ theorem placeOf_cc_mul (g : φ.GG) : Frame.placeOf (φ.cc * g) = Frame.placeOf g
     simp [c0]
   unfold Frame.placeOf
   rcases Int.units_eq_one_or g.1.2 with h | h
-  · rw [if_neg (by rw [hc, h]; decide), if_pos h, ← mul_assoc, cc_mul_cc, one_mul]
-  · rw [if_pos (by rw [hc, h]; decide), if_neg (by rw [h]; decide)]
+  · rw [ite_eq_right (by rw [hc, h]; decide), ite_eq_left h, ← mul_assoc, cc_mul_cc, one_mul]
+  · rw [ite_eq_left (by rw [hc, h]; decide), ite_eq_right (by rw [h]; decide)]
 
 theorem placeOf_snd (g : φ.GG) : (Frame.placeOf g).2 = g.2 := by
   unfold Frame.placeOf
@@ -106,7 +106,7 @@ theorem placeOf_letter_eq_iff (τ g : φ.GG) (a b : ℕ) :
 
 theorem pow_val_add (g : φ.GG) (i : ZMod (orderOf g)) (k : ℕ) :
     g ^ (i + (k : ZMod (orderOf g))).val = g ^ (i.val + k) := by
-  haveI : NeZero (orderOf g) := ⟨(orderOf_pos g).ne'⟩
+  have : NeZero (orderOf g) := ⟨(orderOf_pos g).ne'⟩
   rw [ZMod.val_add, ZMod.val_natCast, Nat.add_mod_mod, pow_mod_orderOf]
 
 theorem placeOf_letter_succ_ne (τ g : φ.GG) (h1 : g ≠ 1) (hc : g ≠ φ.cc) (i : ZMod (orderOf g)) :

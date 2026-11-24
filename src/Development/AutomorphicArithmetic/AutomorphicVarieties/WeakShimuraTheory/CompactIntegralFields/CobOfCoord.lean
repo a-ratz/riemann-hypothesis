@@ -234,9 +234,9 @@ private theorem locVan {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
     (γ : G ℚ Ω →* c.Oˣ) (hγ : γ ∈ [D.al, D.be, D.th, D.al⁻¹, D.be⁻¹, D.th⁻¹]) (p : ℕ) (hp : p ∈ D.Sb) (z : D.Gp p → k)
     (hz : IsLocallyConstant z) (hco : ∀ g h : D.Gp p, z (g * h) = z g + red (γ g : c.O) * z h) :
     ∃ m, ∀ g : D.Gp p, z g = red (γ g : c.O) * m - m := by
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
   let f : ResidueField c.O →+* k := Ideal.Quotient.lift (maximalIdeal c.O) red hred
-  letI : Algebra (ResidueField c.O) k := f.toAlgebra
+  let : Algebra (ResidueField c.O) k := f.toAlgebra
   have hf : ∀ a : c.O, algebraMap (ResidueField c.O) k (residue c.O a) = red a := fun a => rfl
   have hs : ∀ (a : c.O) (x : k), red a * x = residue c.O a • x := fun a x => by
     rw [Algebra.smul_def, hf]
@@ -256,7 +256,7 @@ private theorem core {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] 
   obtain ⟨a, hE⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 hE
   obtain ⟨A, _, _, _, f, P, hf, hP, hPr⟩ := hr.small
   have hfr : ∀ g i j, f (P.r g i j) = r g i j := fun g i j => congrArg (fun Q : PD Unit _ _ => Q.r g i j) hPr
-  haveI := hf.loc
+  have := hf.loc
   obtain ⟨g1, cc, hb, hc, hcl⟩ := gen f (fun g => P.r g s u) (hP s u) (by
     obtain ⟨g, hg⟩ := hge
     exact ⟨g, fun h => hg (by rw [← hfr, h, map_zero])⟩)
@@ -267,7 +267,7 @@ private theorem core {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] 
     simp only [map_mul, smul_mul_assoc]) g1 cc hb hc
   generalize r g1 s u = b at hb hc
   let red : c.O →+* 𝔞.k := 𝔞.red c
-  haveI := 𝔞.loc c
+  have := 𝔞.loc c
   have hred : ∀ x : c.O, red x = 0 ↔ residue c.O x = 0 := fun x => by
     show residue 𝔞.V (𝔞.a c x) = 0 ↔ _
     rw [residue_eq_zero_iff, residue_eq_zero_iff, mem_maximalIdeal, mem_maximalIdeal, mem_nonunits_iff, mem_nonunits_iff,
@@ -332,7 +332,7 @@ private theorem core {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] 
         field_simp
         linear_combination e
       · obtain ⟨m, hm⟩ := locVan D hD hL _ red hred0 _ (root_mem D s u hsu) p hp (fun g => z g)
-          (hzl.comp_continuous continuous_subtype_val) (fun g h => hcoc g h)
+          (hzl.comp_continuous continuous_subtypeVal) (fun g h => hcoc g h)
         exact ⟨m, fun g hg => hm ⟨g, hg⟩⟩)
   refine hns m fun g => ?_
   have := hm g

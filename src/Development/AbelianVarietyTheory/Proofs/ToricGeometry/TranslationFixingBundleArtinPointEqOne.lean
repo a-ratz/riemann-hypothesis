@@ -414,7 +414,7 @@ theorem exists_linear_of_log_deriv (hL : L.IsLB) (a : u.Λ → ℂ) (B : u.Λ �
     have hdi : d i z = Gv z * d i' z + u.fr i' z * fderiv ℂ Gv z w := by
       show fderiv ℂ (u.fr i) z w = _
       rw [hev.fderiv_eq, fderiv_fun_mul hGvd hfrd]
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+      simp only [add_apply, smul_apply, smul_eq_mul]
       rfl
     have hfri : u.fr i z = Gv z * u.fr i' z := u.fr_compat i i' z hzii
     have n1 : u.fr i' z ≠ 0 := u.fr_ne i' z hz'
@@ -456,7 +456,7 @@ theorem exists_linear_of_log_deriv (hL : L.IsLB) (a : u.Λ → ℂ) (B : u.Λ �
     have hdz : d i z = a l * cexp (B l z) * d i (z + l) + u.fr i (z + l) * (a l * cexp (B l z) * B l w) := by
       show fderiv ℂ (u.fr i) z w = _
       rw [hev.fderiv_eq, h3.fderiv]
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+      simp only [add_apply, smul_apply, smul_eq_mul,
         LinearMap.coe_toContinuousLinearMap']
       rfl
     have n1 : u.fr i (z + l) ≠ 0 := u.fr_ne i _ hzl
@@ -554,7 +554,7 @@ theorem first_order_transl (ρ : R →ₐ[ℂ] ℂ) (x : spO R ⟶ A) (κ : R �
       rw [valAt'_eq_evalPt _ _ hm, valAt'_eq_evalPt _ _ hm']
       exact evalPt_appLE _ T _ hy W _ le_rfl hm hm' f
     · have hm' : ¬ ⊤ ≤ (u.ex (y + z)).left ⁻¹ᵁ W := by rw [← hy]; exact hm
-      simp only [valAt', dif_neg hm, dif_neg hm']
+      simp only [valAt', dite_eq_right hm, dite_eq_right hm']
   have hsh := fderiv_comp_add_right (𝕜 := ℂ) (f := fun v => valAt' (u.ex v).left W f) (x := 0) z
   simp only [zero_add] at hsh
   obtain ⟨h1, h2⟩ := hκ (T ⁻¹ᵁ W) h' f'

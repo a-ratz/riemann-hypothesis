@@ -133,7 +133,7 @@ theorem metaplectic_oneParam_schwartz : GlobalTheory.Published.RealMetaplecticRe
   obtain ⟨γ, -, h0, hadd, hpr, hd⟩ := h6 X hX
   refine ⟨fun t => (omS (γ t)).toLinearMap, ?_, ?_, ?_, ?_, ?_⟩
   · intro s t f
-    simp only [ContinuousLinearMap.coe_coe, hadd, map_mul, ContinuousLinearMap.mul_apply]
+    simp only [ContinuousLinearMap.coe_coe, hadd, map_mul, mul_apply_eq_comp]
   · intro f
     simp [h0]
   · intro t w f f₁ h
@@ -344,7 +344,7 @@ theorem exists_eq_smul_of_commute_rhoFun : ∀ (l : Type) [Fintype l] (S : Sch l
     rw [ofReal_integral_eq_lintegral_ofReal ((g.memLp (2 : ℕ) volume).integrable_norm_pow (by norm_num))
       (.of_forall fun x => by positivity)]
     refine lintegral_congr fun x => ?_
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   have hbound : ∀ f, ∫⁻ x, ‖S f x‖ₑ ^ 2 ≤ 1 * ∫⁻ x, ‖f x‖ₑ ^ 2 := by
     intro f
     rw [one_mul, hl, hl, hiso]
@@ -353,7 +353,7 @@ theorem exists_eq_smul_of_commute_rhoFun : ∀ (l : Type) [Fintype l] (S : Sch l
   have hN : ∀ (j : l) (h : Sch l) x, (dRho (Pi.single (Sum.inl j) 1) h - I • dRho (Pi.single (Sum.inr j) 1) h) x =
       fderiv ℝ (⇑h) x (EuclideanSpace.single j 1) + 2 * Real.pi * (x j : ℂ) * h x := by
     intro j h x
-    rw [SchwartzMap.sub_apply, SchwartzMap.smul_apply, dRho_single_inl, dRho_single_inr,
+    rw [sub_apply, smul_apply, dRho_single_inl, dRho_single_inr,
       SchwartzMap.lineDerivOp_apply_eq_fderiv, smul_eq_mul]
     ring_nf
     rw [I_sq]
@@ -373,12 +373,12 @@ theorem exists_eq_smul_of_commute_rhoFun : ∀ (l : Type) [Fintype l] (S : Sch l
   set c : ℂ := S G 0 with hc
   have hSGc : S G = c • G := by
     ext x
-    rw [_root_.GlobalTheory.schwartz_eq_gaussian_of_fderiv_add_eq_zero l (S G) hSG x, SchwartzMap.smul_apply, smul_eq_mul, hG, GroundTheory.Global.gaussianSchwartz_apply]
+    rw [_root_.GlobalTheory.schwartz_eq_gaussian_of_fderiv_add_eq_zero l (S G) hSG x, smul_apply, smul_eq_mul, hG, GroundTheory.Global.gaussianSchwartz_apply]
   have hrho : ∀ w, S (rhoSch w G) = c • rhoSch w G := by
     intro w
     ext x
-    rw [hcomm w G (rhoSch w G) (coe_rhoSch w G), hSGc, SchwartzMap.smul_apply, coe_rhoSch]
-    simp only [rhoFun, SchwartzMap.smul_apply, smul_eq_mul]
+    rw [hcomm w G (rhoSch w G) (coe_rhoSch w G), hSGc, smul_apply, coe_rhoSch]
+    simp only [rhoFun, smul_apply, smul_eq_mul]
     ring
   have key : ∀ f : Sch l, (starRingEnd ℂ c) • S f = f := by
     intro f
@@ -454,7 +454,7 @@ theorem famChar_hasDerivAt : ∀ (l : Type) [Fintype l] (B : ℝ → (l ⊕ l �
     have h := hlam 0 f₀
     rw [hT0, hU0] at h
     have h2 := congrArg (fun g : Sch l => g 0) h
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at h2
+    simp only [smul_apply, smul_eq_mul] at h2
     have : (lam 0 - 1) * f₀ 0 = 0 := by linear_combination -h2
     exact sub_eq_zero.1 ((mul_eq_zero.1 this).resolve_right hf₀)
   have hlmul : ∀ s t, lam (s + t) = lam s * lam t := by
@@ -462,7 +462,7 @@ theorem famChar_hasDerivAt : ∀ (l : Type) [Fintype l] (B : ℝ → (l ⊕ l �
     have h1 := hlam (s + t) (U (-(s + t)) f₀)
     rw [hUinv', hT, hlam t, map_smul, hlam s, ← hU, hUinv', smul_smul] at h1
     have h2 := congrArg (fun g : Sch l => g 0) h1
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at h2
+    simp only [smul_apply, smul_eq_mul] at h2
     have : (lam s * lam t - lam (s + t)) * f₀ 0 = 0 := by linear_combination h2
     exact (sub_eq_zero.1 ((mul_eq_zero.1 this).resolve_right hf₀)).symm
 
@@ -473,12 +473,12 @@ theorem famChar_hasDerivAt : ∀ (l : Type) [Fintype l] (B : ℝ → (l ⊕ l �
       ((hTc f₀ 0).continuousAt).div hd hd0
     refine hq.congr ?_
     filter_upwards [hd.eventually_ne hd0] with t ht
-    rw [hlam t f₀, SchwartzMap.smul_apply, smul_eq_mul, mul_div_assoc, div_self ht, mul_one]
+    rw [hlam t f₀, smul_apply, smul_eq_mul, mul_div_assoc, div_self ht, mul_one]
 
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.multiplicative_hasDerivAt_zero lam hl0 hlmul hlc
   refine ⟨c, fun f y => ?_⟩
   have hfun : (fun t => T t f y) = fun t => lam t * U t f y := by
-    funext t; rw [hlam t f, SchwartzMap.smul_apply, smul_eq_mul]
+    funext t; rw [hlam t f, smul_apply, smul_eq_mul]
   rw [hfun]
   have h := hc.mul (hUd f y)
   rw [hl0, hU0, one_mul, add_comm] at h
@@ -592,7 +592,7 @@ theorem oscillator_deriv_along_line_quadratic : _root_.GlobalTheory.FunPr.ThetaL
   intro hP F E _ _ _ _ _ σ n d X W M ψ χX χW om hCM hψ hW γ hγ
   obtain ⟨T, hT, hadd, h0⟩ := _root_.GlobalTheory.T.archimedean_theta_family_exists_smooth hP M ψ χX χW om hCM hψ hW γ hγ
   obtain ⟨A, hAc, hA⟩ := _root_.GlobalTheory.ArchFam.schr_equiv M ψ χX χW om hψ hW γ hγ T hT
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   let μ : Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Measure.addHaar
   have hiso : ∀ t f, ∫ x, ‖T t f x‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ := fun t f =>
     _root_.GlobalTheory.ArchIsom.acts_norm_sq_eq M ψ χX χW om hW μ inferInstance (γ (Multiplicative.ofAdd t)) f (T t f) (hT t f)
@@ -722,11 +722,11 @@ theorem polarization_pair_derivation (hP : _root_.GlobalTheory.FunPr.ThetaLocalI
     refine (hd.mul_const (r x)).congr_deriv ?_
     show _ = ((∑ i, c i • (Du i ∘ₗ Dv i) + c₀ • LinearMap.id : SInf F (Fin n × Fin d) →ₗ[ℂ] SInf F (Fin n × Fin d)) f) (fun i => evI F (x i)) * r x
     simp only [LinearMap.add_apply, LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.comp_apply, LinearMap.id_apply,
-      SchwartzMap.add_apply, SchwartzMap.smul_apply, smul_eq_mul]
+      add_apply, smul_apply, smul_eq_mul]
     congr 2
     induction (Finset.univ : Finset (Fin m)) using Finset.induction_on with
     | empty => simp
-    | insert j s hj ih => rw [Finset.sum_insert hj, Finset.sum_insert hj, SchwartzMap.add_apply, ih]; simp
+    | insert j s hj ih => rw [Finset.sum_insert hj, Finset.sum_insert hj, add_apply, ih]; simp
 theorem exists_lie_derivative_model : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
     {a a' : ℕ} (B : Base F E) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W),
     IsTriple B G X om om' → ∀ γ ∈ Lines σ G.W,

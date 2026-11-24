@@ -139,8 +139,8 @@ theorem exists_decomp {U : AddSubgroup A} (hU : IsOpen (U : Set A)) {G : X₀ ×
       conv_lhs => rw [← QuotientAddGroup.out_eq' q]
       exact QuotientAddGroup.eq_iff_sub_mem
     by_cases h : z.2 - q.out ∈ U
-    · rw [Set.indicator_of_mem (show z.2 - q.out ∈ (U : Set A) from h), if_pos (this.mpr h)]
-    · rw [Set.indicator_of_notMem (show z.2 - q.out ∉ (U : Set A) from h), if_neg (fun h' => h (this.mp h'))]
+    · rw [Set.indicator_of_mem (show z.2 - q.out ∈ (U : Set A) from h), ite_eq_left (this.mpr h)]
+    · rw [Set.indicator_of_notMem (show z.2 - q.out ∉ (U : Set A) from h), ite_eq_right (fun h' => h (this.mp h'))]
   simp only [hind, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq']
   split_ifs with h
   · have h2 : -z.2 + (z.2 : A ⧸ U).out ∈ U := QuotientAddGroup.eq.mp (QuotientAddGroup.out_eq' _).symm
@@ -276,11 +276,11 @@ end Concrete
 
 theorem translation_invariant_factors : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k), ν.IsAddHaarMeasure → ∀ (X₀ : Type) [TopologicalSpace X₀] [T2Space X₀] [LocallyCompactSpace X₀] [TotallyDisconnectedSpace X₀] (m₁ m₂ : Type) [Fintype m₁] [Fintype m₂] (M : Type) [AddCommGroup M] [Module ℂ M] (L : SB (X₀ × ((m₁ → k) × (m₂ → k))) →ₗ[ℂ] M), (∀ (a : (m₁ → k) × (m₂ → k)) (G G' : SB (X₀ × ((m₁ → k) × (m₂ → k)))), (∀ z, G'.1 z = G.1 (z.1, z.2 + a)) → L G' = L G) → ∃ l₀ : SB X₀ →ₗ[ℂ] M, ∀ G, ∃ Ψ : SB X₀, (∀ x, Ψ.1 x = ∫ a₁, ∫ a₂, G.1 (x, (a₁, a₂)) ∂(Measure.pi fun _ => ν) ∂(Measure.pi fun _ => ν)) ∧ L G = l₀ Ψ := by
   intro k _ _ _ _ _ _ ν hν X₀ _ _ _ _ m₁ m₂ _ _ M _ _ L hL
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI := hν
-  haveI : LocallyCompactSpace k := inferInstance
-  haveI : SigmaFinite ν := inferInstance
+  have := secondCountable k
+  have := t2Space k
+  have := hν
+  have : LocallyCompactSpace k := inferInstance
+  have : SigmaFinite ν := inferInstance
   haveI : (Measure.pi fun _ : m₁ => ν).IsAddHaarMeasure := inferInstance
   haveI : (Measure.pi fun _ : m₂ => ν).IsAddHaarMeasure := inferInstance
   obtain ⟨l₀, hl₀⟩ := exists_factor ((Measure.pi fun _ : m₁ => ν).prod (Measure.pi fun _ : m₂ => ν))

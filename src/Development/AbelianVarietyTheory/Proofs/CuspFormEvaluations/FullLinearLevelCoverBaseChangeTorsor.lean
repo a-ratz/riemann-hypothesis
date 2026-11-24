@@ -158,7 +158,7 @@ theorem exists_geometric (hL : Laws) {k : ℕ} (hk : 0 < k) (K : Type) [Field K]
 theorem onto_of_local (hL : Laws) {k : ℕ} (hk : 0 < k) {T : Type} [CommRing T] [IsLocalRing T] {x0 : Sp T ⟶ Xo.X}
     {ev : LatMod Dw k → (ptO Xo x0 ⟶ Xo.univ.t.G)} (hev : IsFullLev Xo k x0 ev) (p : ptO Xo x0 ⟶ Xo.univ.t.G)
     (hp : p ^ k = 1) : ∃ q, ev q = p := by
-  haveI := finite_latMod (Dw := Dw) k hk
+  have := finite_latMod (Dw := Dw) k hk
   let K := AlgebraicClosure (IsLocalRing.ResidueField T)
   let χ : T →+* K := (algebraMap (IsLocalRing.ResidueField T) K).comp (IsLocalRing.residue T)
   have hχ : ∀ e, χ e = 1 → IsUnit e := fun e he => by
@@ -184,7 +184,7 @@ theorem injective_of_local {k : ℕ} {T : Type} [CommRing T] [IsLocalRing T] {x0
 theorem exists_levGrp (hL : Laws) {k : ℕ} (hk : 0 < k) {T : Type} [CommRing T] [IsLocalRing T] {x0 : Sp T ⟶ Xo.X}
     {ev ev' : LatMod Dw k → (ptO Xo x0 ⟶ Xo.univ.t.G)} (hev : IsFullLev Xo k x0 ev) (hev' : IsFullLev Xo k x0 ev') :
     ∃ g : LevGrp Dw k, ∀ q, ev' q = ev (g q) := by
-  haveI := finite_latMod (Dw := Dw) k hk
+  have := finite_latMod (Dw := Dw) k hk
   choose f hf using fun q => onto_of_local Xo hL hk hev (ev' q) (pow_eq_one Xo hev' q)
   have hi := injective_of_local Xo hev
   let g : LatMod Dw k →ₗ[𝓞 E] LatMod Dw k :=

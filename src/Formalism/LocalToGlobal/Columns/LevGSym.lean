@@ -87,11 +87,11 @@ def symPerm (n k rS : ℕ) : Equiv.Perm (Fin n) :=
   else Equiv.refl _
 
 theorem symPerm_val {n k rS : ℕ} (h : k + rS ≤ n) (i : Fin n) : (symPerm n k rS i).val = symIdx k rS i.val := by
-  rw [symPerm, dif_pos h]
+  rw [symPerm, dite_eq_left h]
   rfl
 
 theorem symPerm_symm_val {n k rS : ℕ} (h : k + rS ≤ n) (i : Fin n) : ((symPerm n k rS).symm i).val = symIdxInv k rS i.val := by
-  rw [symPerm, dif_pos h]
+  rw [symPerm, dite_eq_left h]
   rfl
 
 variable (κ : Type) [CommRing κ]
@@ -153,7 +153,7 @@ variable {κ : Type} [CommRing κ]
 
 theorem fine_self_lt {n i : ℕ} (h : i < n) : fine n [] i = i := by
   unfold fine
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem mem_HPsymF_iff {n k rS : ℕ} (h : k + rS ≤ n) {M : GL (Fin n) κ} :
     M ∈ HPsymF κ n k rS ↔
@@ -270,15 +270,15 @@ theorem HPsymF_not_le_HU [Nontrivial κ] {n k rS : ℕ} (hn : n = k + 2 * rS + 1
     refine ⟨fun i j hij => ?_, fun i => ?_, fun i j hi hj => ?_⟩
     · rw [elemGL_apply]
       have hij' : i ≠ j := fun e => by rw [e] at hij; exact lt_irrefl _ hij
-      rw [Matrix.one_apply_ne hij', zero_add, if_neg]
+      rw [Matrix.one_apply_ne hij', zero_add, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       simp only [symIdx, Fin.val_mk] at hij
       split_ifs at hij <;> omega
-    · rw [elemGL_apply, Matrix.one_apply_eq, if_neg, add_zero]
+    · rw [elemGL_apply, Matrix.one_apply_eq, ite_eq_right, add_zero]
       rintro ⟨h1, h2⟩
       have := congrArg Fin.val (h1.symm.trans h2)
       simp at this; omega
-    · rw [elemGL_apply, Matrix.one_apply_ne, zero_add, if_neg]
+    · rw [elemGL_apply, Matrix.one_apply_ne, zero_add, ite_eq_right]
       · rintro ⟨h1, -⟩; have := congrArg Fin.val h1; simp at this; omega
       · intro e; have := congrArg Fin.val e; omega
   have hU := hle hmem
@@ -287,7 +287,7 @@ theorem HPsymF_not_le_HU [Nontrivial κ] {n k rS : ℕ} (hn : n = k + 2 * rS + 1
     apply hU.1
     show fine n [] 0 < fine n [] k
     rw [fine_self_lt h0n, fine_self_lt hkn]; omega
-  rw [elemGL_apply, Matrix.one_apply_ne hne, zero_add, if_pos ⟨rfl, rfl⟩] at h1
+  rw [elemGL_apply, Matrix.one_apply_ne hne, zero_add, ite_eq_left ⟨rfl, rfl⟩] at h1
   exact one_ne_zero h1
 
 end SymNonVac

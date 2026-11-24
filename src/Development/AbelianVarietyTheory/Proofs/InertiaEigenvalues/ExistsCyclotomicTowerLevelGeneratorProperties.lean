@@ -134,7 +134,7 @@ theorem norm_pow_pow_sub_one (j : ℕ) (hj : Lev l j) (u : ℚ_[l])
     ‖u ^ (l ^ b) - 1‖ = (l : ℝ) ^ (-((j + b : ℕ) : ℤ)) := by
   have hl : l.Prime := Fact.out
   have h := _root_.GlobalTheory.Cyc.LiftExp.norm_zpow_sub_one l j hj u hu ((l ^ b : ℕ) : ℤ) (by exact_mod_cast pow_ne_zero _ hl.ne_zero)
-  rw [zpow_natCast, padicValInt.of_nat, padicValNat.prime_pow] at h
+  rw [zpow_natCast, padicValInt.of_nat, Nat.multiplicity_prime_pow] at h
   rw [h]; push_cast; rfl
 
 theorem exists_norm_sub_pow_le (j : ℕ) (hj : Lev l j) (u s : ℚ_[l]) (hu1 : ‖u‖ = 1)

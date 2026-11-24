@@ -72,16 +72,16 @@ theorem finrank_le_finrank_DpstUr_of_isSst {l : ℕ} [Fact l.Prime] (P : LocPrim
     {V : Type} [AddCommGroup V] [Module ℚ_[l] V] [FiniteDimensional ℚ_[l] V]
     (ρ : Representation ℚ_[l] ↥(GK K) V) [FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ)] (hS : IsSst P ρ) :
     finrank ℚ_[l] V ≤ finrank ↥(MaximalUnramifiedExtension l) (DpstUr P ρ) := by
-  haveI := K.2
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have := K.2
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     FiniteDimensional.of_injective (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective inf_le_left)
   let val : DpstUr P ρ →+ V ⊗[ℚ_[l]] Bst P :=
     (Dpst P ρ).subtype.toAddMonoidHom.comp (toUr P ρ).symm.toAddMonoidHom
   have hSD : Dst P ρ ≤ Dpst P ρ := fun s hs => (mem_Dpst P ρ).mpr ⟨K, fun g _ => (mem_Dst P ρ).mp hs g⟩
   obtain ⟨b, hbS, hsp, hli⟩ := exists_linearIndependent ↥(MaximalUnramifiedExtension l) {y : DpstUr P ρ | val y ∈ Dst P ρ}
-  haveI : Finite ↥b := hli.finite
-  letI : Fintype ↥b := Fintype.ofFinite _
+  have : Finite ↥b := hli.finite
+  let : Fintype ↥b := Fintype.ofFinite _
   have hspan : ∀ y : DpstUr P ρ, y ∈ Submodule.span ↥(MaximalUnramifiedExtension l) b → ∃ c : ↥b → ↥(MaximalUnramifiedExtension l),
       ∑ i, c i • (i : DpstUr P ρ) = y := fun y hy => by
     rw [← Submodule.mem_span_range_iff_exists_fun, Subtype.range_coe]; exact hy
@@ -120,7 +120,7 @@ theorem isPst_of_isSst_resTo : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI
   intro l _ P AI T K K' hK V _ _ _ ρ hS
   obtain ⟨hdom, hreg, -⟩ := GlobalTheory.Pst.stRegular l P AI ⟨T⟩
   have hup := GlobalTheory.PstRank.rank_DpstUr_le P hdom hreg (resTo ρ hK)
-  haveI : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P (resTo ρ hK)) :=
+  have : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P (resTo ρ hK)) :=
     Module.rank_lt_aleph0_iff.mp (hup.trans_lt Cardinal.natCast_lt_aleph0)
   rw [← isPst_resTo_iff_padic P hK ρ, GlobalTheory.Pst.isPst_iff]
   refine ⟨inferInstance, le_antisymm ?_ (finrank_le_finrank_DpstUr_of_isSst P _ hS)⟩

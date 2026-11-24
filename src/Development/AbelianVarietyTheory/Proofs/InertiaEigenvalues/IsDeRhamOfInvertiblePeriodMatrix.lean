@@ -60,8 +60,8 @@ namespace GlobalTheory.PMon
 
 theorem isDR_of_periodMatrix : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (n : Type) [Fintype n] [DecidableEq n] (K : FinExt l) (V : Type) [AddCommGroup V] [Module ℚ_[l] V] (b : Basis n ℚ_[l] V) (ρ : Representation ℚ_[l] ↥(GK K) V) (Q : GL n P.R.BdR), (∀ g : ↥(GK K), (LinearMap.toMatrix b b (ρ g)).map (algebraMap ℚ_[l] P.R.BdR) * (Q : Matrix n n P.R.BdR).map (P.actQdR (g : GQ l)) = Q) → IsDR (P.PD K) ρ := by
   intro l _ P n _ _ K V _ _ b ρ Q hQ
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := (P.PD K).finK
-  haveI : Nontrivial P.R.BdR := by
+  have : FiniteDimensional ℚ_[l] ↥K.1 := (P.PD K).finK
+  have : Nontrivial P.R.BdR := by
     refine ⟨⟨(P.PD K).ι (P.PD K).t, 0, fun h => (P.PD K).not_mem_filtration_two ?_⟩⟩
     rw [h]
     exact Submodule.zero_mem _

@@ -82,7 +82,7 @@ theorem restND_of_adm (D : Formalism.BasicNotions.D7) (CLa Ck Crk Cdeg : ℝ) (h
   have hn : Even n' := hSet.1.even
   have hTT := hF.1
   subst hTT
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   intro FsB hFsB Θ hΘ
   obtain ⟨-, hdeg⟩ := hg2 C c1 p W Qq O Kf ι σ j w n' m r F.TT L₁ L₂ de h x lam0 aT bT a Y cpp c0 Dp cStar hSet H K hk F hF
     E' (fun t ht => (hE' t ht).1)
@@ -206,7 +206,7 @@ def RestXiP (D : Formalism.BasicNotions.D7) (CLa Ck Crk Cdeg CH CE C6 C18 : ℝ)
 theorem xiStepN_of_P (C CD CLa : ℝ) (hP : XiStepP C CD CLa) : XiStepN C CD CLa := by
   intro p W Qq O Kf _ _ _ _ _ _ _ _ _ _ ι σ j w n' m r _ _ TT L₁ L₂ de h x lam0 aT bT a Y cpp c0 Dp cStar hSet H φ hφ K
     _ _ hk hrk F hF E' hE' nb B hB hli hc e he htgt hm g hhm hg hbasis
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   intro FsB hFsB Θ hΘ
   have hkr : orbitWindowCount r de h x + 2 * r ≤ (m + 1) - r := H.2.2.2.2.2.2.2.1
   have hr2 : 2 ≤ r := H.2.1

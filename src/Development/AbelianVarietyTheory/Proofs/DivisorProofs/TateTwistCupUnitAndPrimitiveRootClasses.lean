@@ -116,12 +116,12 @@ theorem _root_.GlobalTheory.EtC.SuppRes.supp_res : ∀ (q : ℕ) [NeZero q] (i :
       _root_.GlobalTheory.EtC.IsTwRes q i D e ∧
       ∀ U ζ, _root_.GlobalTheory.EtC.Sec.map (ι.f 0) (e U ζ) = _root_.GlobalTheory.EtC.resGen i ζ := by
   intro q _ i D ι hinj himg
-  haveI hmono : ∀ n, Mono (ι.f n) := fun n =>
+  have hmono : ∀ n, Mono (ι.f n) := fun n =>
     (_root_.GlobalTheory.EtC.mono_epi_sections (ZMod q) (ι.f n)).1.2 (fun U => hinj n U)
   obtain ⟨-, -, hIge, -, hterm, hAmono, hAd, -⟩ :=
     _root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (_root_.GlobalTheory.EtC.tw q i)
-  haveI := hIge
-  haveI := hAmono
+  have := hIge
+  have := hAmono
   have hA : _root_.GlobalTheory.EtC.resι (ZMod q) (_root_.GlobalTheory.EtC.tw q i) ≫
       cokernel.π (ι.f 0) = 0 := by
     apply shv_hom_ext_of_sec_map_eq
@@ -461,7 +461,7 @@ theorem aw_zero_left {R : Type} [CommRing R] {I J K : Cx R} (μ : Pair I J K) {E
     rfl
   · intro p _ hp
     have hp' : 0 < (p : ℕ) := Fin.pos_iff_ne_zero.2 hp
-    haveI := hI (-((p : ℕ) : ℤ) + 0) U (by omega)
+    have := hI (-((p : ℕ) : ℤ) + 0) U (by omega)
     rw [Subsingleton.elim (ev α p _ rfl U _) 0, map_zero, LinearMap.zero_apply, smul_zero]
   · intro h0; exact absurd (Finset.mem_univ _) h0
 

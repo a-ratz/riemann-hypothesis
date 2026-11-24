@@ -152,7 +152,7 @@ theorem exists_gen {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (
     ⟨algebraMap E _ a / algebraMap E _ a₀, ?_, by field_simp⟩⟩
   change Valued.v (algebraMap E (w.adicCompletion E) a / algebraMap E (w.adicCompletion E) a₀) ≤ 1
   rw [map_div₀]
-  exact div_le_one_of_le₀ (hle a ha) zero_le'
+  exact div_le_one_of_le₀ (hle a ha) zero_le
 
 theorem mul_mem_gen {S : HSp D} {𝔞 : Set D.host.E} {L : Lat S} {P : FinPl D → Prop} {z : AE D}
     (hz : finPart D z ∈ intAE D) {β : Af D.host.F} (hβi : β ∈ Formalism.MainNotions.StandardLattice.intAf D.host.F)
@@ -356,7 +356,7 @@ variable {D : D7} {q : GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLi
 
 private lemma selfDual_isFullLattice (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hΛ : IsSelfDualC V Λ) : Submodule.IsFullLattice D.host.E Λ := by
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr
@@ -856,7 +856,7 @@ theorem idemAt_eq_iota_one : ∀ (D : D7) (P : Formalism.L2.DIV.Pl D.host.E) (e 
         HeightOneSpectrum.valuedAdicCompletion_eq_valuation' P _
       rw [h, one_mul, HeightOneSpectrum.mem_adicCompletionIntegers, hv] at hm
       have hv0 : HeightOneSpectrum.valuation D.host.E P (x : D.host.E) ≠ 0 := by simpa using hx0
-      rw [map_inv₀, inv_le_one₀ (zero_lt_iff.mpr hv0), ← not_lt,
+      rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.mpr hv0), ← not_lt,
         HeightOneSpectrum.valuation_lt_one_iff_mem] at hm
       exact hm hxP
   have he0 : algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 (GlobalTheory.AdelicU.singleFin (P.under (𝓞 D.host.F)) 1)) =

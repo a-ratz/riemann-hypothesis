@@ -69,7 +69,7 @@ theorem dual_lattice_measure :
   intro K _ _ _ _ D hD X hX R hR
   have hFG : R.FG := hR.toIsLattice.fg
   have hsp : Submodule.span K (R : Set (Fin D → K)) = ⊤ := by
-    letI : Submodule.IsFullLattice K R := hR
+    let : Submodule.IsFullLattice K R := hR
     exact Submodule.IsFullLattice.span_eq_top
   obtain ⟨hdFG, hdsp, -, hsize, -⟩ :=
     Formalism.HN.dual_polygon_identity K (Fin D → K) (Fin D) (Pi.basisFun K (Fin D)) X hX R hFG hsp

@@ -230,7 +230,7 @@ theorem exists_monic {V : Type} [CommRing V] (N : ℕ) [Finite (V ⧸ Ideal.span
     rw [this]
     have := Submodule.mem_map_of_mem (f := (Ideal.Quotient.mkₐ ℤ J).toLinearMap) hy
     rwa [Submodule.map_span] at this
-  haveI : Module.Finite ℤ (V ⧸ J) := ⟨htop ▸ Submodule.fg_span (hs.image _)⟩
+  have : Module.Finite ℤ (V ⧸ J) := ⟨htop ▸ Submodule.fg_span (hs.image _)⟩
   obtain ⟨p, hp, hdeg, h0⟩ := LinearMap.exists_monic_and_natDegree_eq_and_aeval_eq_zero ℤ
     (Algebra.lmul ℤ (V ⧸ J) (Ideal.Quotient.mk J α))
   have hle : p.natDegree ≤ s.ncard := by
@@ -262,7 +262,7 @@ namespace ModelDimension.Alg
 
 theorem isAlgebraic_std {A B : Type} [CommRing A] [IsDomain A] [CommRing B] [IsDomain B] [Algebra A B]
     (P : StandardEtalePresentation A B) (g : B) : IsAlgebraic A g := by
-  haveI : Algebra.IsStandardEtale A B := ⟨⟨P⟩⟩
+  have : Algebra.IsStandardEtale A B := ⟨⟨P⟩⟩
   have hx : IsIntegral A P.x := ⟨P.f, P.monic_f, P.hasMap.1⟩
   have hp : ∀ p : A[X], IsAlgebraic A (aeval P.x p) := fun p =>
     (IsIntegral.of_mem_of_fg _ hx.fg_adjoin_singleton _ (aeval_mem_adjoin_singleton _ _)).isAlgebraic
@@ -278,7 +278,7 @@ theorem approx_std {F K : Type} [Field F] [NormedField K] [Algebra F K] (hH : He
     [Algebra.IsStandardEtale (MvPolynomial (Fin n) F) B] (ψ : B →ₐ[F] K) (S : Finset B) (ε : ℝ) (hε : 0 < ε) (g : B)
     (hg : g ≠ 0) : ∃ ψ' : B →ₐ[F] K, (∀ x, IsAlgebraic F (ψ' x)) ∧ (∀ s ∈ S, ‖ψ' s - ψ s‖ < ε) ∧ ψ' g ≠ 0 := by
   obtain ⟨P⟩ := Algebra.IsStandardEtale.nonempty_standardEtalePresentation (R := MvPolynomial (Fin n) F) (S := B)
-  obtain ⟨c, hc0, hc⟩ := (isAlgebraic_std P g).exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero hg)
+  obtain ⟨c, hc0, hc⟩ := (isAlgebraic_std P g).exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero hg)
   let ev : (Fin n → K) → (MvPolynomial (Fin n) F →+* K) := fun b => (MvPolynomial.aeval b : _ →ₐ[F] K)
   have hev : ∀ r, Continuous fun b => ev b r := by
     intro r
@@ -348,8 +348,8 @@ theorem approx_std {F K : Type} [Field F] [NormedField K] [Algebra F K] (hH : He
   have hxL : x ∈ L := by
     have : IsIntegral L x := ⟨P.f.map (φ : _ →+* L), P.monic_f.map _, by rw [eval₂_map, hφ, hfx]⟩
     exact mem_algebraicClosure_iff.2 (this.isAlgebraic.restrictScalars F)
-  letI : Algebra (MvPolynomial (Fin n) F) L := (φ : _ →+* L).toAlgebra
-  haveI : IsScalarTower F (MvPolynomial (Fin n) F) L := IsScalarTower.of_algebraMap_eq fun r => (φ.commutes r).symm
+  let : Algebra (MvPolynomial (Fin n) F) L := (φ : _ →+* L).toAlgebra
+  have : IsScalarTower F (MvPolynomial (Fin n) F) L := IsScalarTower.of_algebraMap_eq fun r => (φ.commutes r).symm
   have hval : ∀ q : (MvPolynomial (Fin n) F)[X], algebraMap L K (aeval (⟨x, hxL⟩ : L) q) = q.eval₂ (ev b) x := by
     intro q
     rw [aeval_def, hom_eval₂, ← hφ]
@@ -382,15 +382,15 @@ theorem approx_smooth {F K : Type} [Field F] [NormedField K] [Algebra F K] (hH :
     [Algebra.Smooth F R] (ψ : R →ₐ[F] K) (S : Finset R) (ε : ℝ) (hε : 0 < ε) (g : R)
     (hg : g ≠ 0) : ∃ ψ' : R →ₐ[F] K, (∀ x, IsAlgebraic F (ψ' x)) ∧ (∀ s ∈ S, ‖ψ' s - ψ s‖ < ε) ∧ ψ' g ≠ 0 := by
   classical
-  haveI : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime _
-  haveI : Algebra.IsSmoothAt F (RingHom.ker ψ) := by
+  have : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime _
+  have : Algebra.IsSmoothAt F (RingHom.ker ψ) := by
     unfold Algebra.IsSmoothAt
     infer_instance
   obtain ⟨f, hf, n, _, _, _⟩ := Algebra.IsSmoothAt.exists_isStandardEtale_mvPolynomial (R := F) (p := RingHom.ker ψ)
   have hψf : ψ f ≠ 0 := hf
   have hf0 : f ≠ 0 := fun h => hψf (by rw [h, map_zero])
   have hle : Submonoid.powers f ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors hf0
-  haveI : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
+  have : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
   have hinj : Function.Injective (algebraMap R (Localization.Away f)) := IsLocalization.injective _ hle
   let ψ₁ : Localization.Away f →ₐ[F] K := IsLocalization.Away.liftAlgHom f (f := ψ) hψf.isUnit
   have hψ₁ : ∀ s, ψ₁ (algebraMap R _ s) = ψ s := fun s => by simp [ψ₁]
@@ -423,10 +423,10 @@ theorem ModelDimension.Alg.approx_dvr (F : Type) [Field F] [NumberField F] (R : 
   classical
   set P := IsDiscreteValuationRing.maximalIdeal V with hP
   have hb : (1 : NNReal) < 2 := one_lt_two
-  letI nK : NormedField K := (P.adicAbv (K := K) hb).toNormedField
+  let nK : NormedField K := (P.adicAbv (K := K) hb).toNormedField
   have hnorm : ∀ x : K, ‖x‖ = (WithZeroMulInt.toNNReal (ne_zero_of_lt hb) (valV V x) : ℝ) :=
     fun x => rfl
-  haveI : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective V K)
+  have : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective V K)
   have hint : ∀ a : V, ‖algebraMap V K a‖ ≤ 1 := by
     intro a
     rw [hnorm]
@@ -490,7 +490,7 @@ theorem ModelDimension.Alg.approx_dvr (F : Type) [Field F] [NumberField F] (R : 
         _ = _ := mul_one _
   obtain ⟨N, hN0, hNm, hNf⟩ : ∃ N : ℕ, N ≠ 0 ∧ (N : V) ∈ IsLocalRing.maximalIdeal V ∧
       Finite (V ⧸ Ideal.span {(N : V)}) := by
-    haveI : CharP (IsLocalRing.ResidueField V) (ringChar (IsLocalRing.ResidueField V)) :=
+    have : CharP (IsLocalRing.ResidueField V) (ringChar (IsLocalRing.ResidueField V)) :=
       ringChar.charP _
     refine ⟨ringChar (IsLocalRing.ResidueField V),
       CharP.char_ne_zero_of_finite (IsLocalRing.ResidueField V) _, ?_, ?_⟩
@@ -501,7 +501,7 @@ theorem ModelDimension.Alg.approx_dvr (F : Type) [Field F] [NumberField F] (R : 
         exact Nat.cast_ne_zero.mpr (CharP.char_ne_zero_of_finite (IsLocalRing.ResidueField V) _)
       obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
       obtain ⟨k, hk⟩ := IsDiscreteValuationRing.ideal_eq_span_pow_irreducible hne hϖ
-      haveI : Finite (V ⧸ IsLocalRing.maximalIdeal V) := hT
+      have : Finite (V ⧸ IsLocalRing.maximalIdeal V) := hT
       have hfin := Ideal.finite_quotient_pow (IsNoetherian.noetherian (IsLocalRing.maximalIdeal V)) k
       rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow, ← hk] at hfin
       exact hfin
@@ -512,7 +512,7 @@ theorem ModelDimension.Alg.approx_dvr (F : Type) [Field F] [NumberField F] (R : 
   have hdense : Dense {x : K | IsAlgebraic ℤ x} := by
     refine ModelDimension.Alg.dense_algebraic hH (fun z => ?_) N hN0 hNK (fun α hα => ?_)
     · simpa using hint (z : V)
-    · haveI := hNf
+    · have := hNf
       obtain ⟨m, hm⟩ := ModelDimension.Alg.exists_monic (V := V) N
       refine ⟨m, fun δ hδ => ?_⟩
       obtain ⟨a, rfl⟩ := hmem α hα
@@ -524,7 +524,7 @@ theorem ModelDimension.Alg.approx_dvr (F : Type) [Field F] [NumberField F] (R : 
             gcongr
             exact hint c
         _ < δ := by rw [mul_one]; exact hk
-  letI : Algebra F K := io.toAlgebra
+  let : Algebra F K := io.toAlgebra
   have hdF : Dense {x : K | IsAlgebraic F x} :=
     hdense.mono (fun x hx => IsAlgebraic.extendScalars (algebraMap ℤ F).injective_int hx)
   let ψa : R →ₐ[F] K := { ψ with commutes' := fun r => by exact RingHom.congr_fun hψ r }
@@ -555,7 +555,7 @@ theorem ModelDimension.Alg.approx_dvr (F : Type) [Field F] [NumberField F] (R : 
 
 theorem ModelDimension.algebraic_approximation_valued : ∀ (F : Type) [Field F] [NumberField F] (R : Type) [CommRing R] [IsDomain R] [Algebra F R] [Algebra.Smooth F R] (T : CDVR), T.FinRes → ∀ (io : F →+* T.Fr) (ψ : R →+* T.Fr), ψ.comp (algebraMap F R) = io → ∀ (S : Finset R) (n : ℕ) (g : R), g ≠ 0 → ∃ ψ' : R →+* T.Fr, ψ'.comp (algebraMap F R) = io ∧ (∀ x, IsAlgebraic ℤ (ψ' x)) ∧ (∀ s ∈ S, ψ' s = ψ s ∨ (n : ℤ) ≤ vV T.V (ψ' s - ψ s)) ∧ ψ' g ≠ 0 := by
   intro F _ _ R _ _ _ _ T hT io ψ hψ S n g hg
-  letI := T.cr; letI := T.dom; letI := T.dvr; letI := T.cpl; letI := T.ch0
+  let := T.cr; let := T.dom; let := T.dvr; let := T.cpl; let := T.ch0
   obtain ⟨ψ', h1, h2, h3, h4⟩ :=
     ModelDimension.Alg.approx_dvr F R T.V (FractionRing T.V) hT io ψ hψ S n g hg
   refine ⟨ψ', h1, fun x => ?_, h3, h4⟩
@@ -605,7 +605,7 @@ theorem ModelDimension.regular_chart_nonzero_denominator : ∀ (E : Type) [Field
   let bb : Fin q.n ⊕ Ix Dw → C.R := fun k => ⟨b (x k), hb (x k)⟩
   have hbb : ∀ k, bb k ≠ 0 := fun k h0 => hb0 (x k) (congrArg Subtype.val h0)
   refine ⟨∏ k, bb k, Finset.prod_ne_zero_iff.2 fun k _ => hbb k, fun A hA hg L _ io ev => ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro ψ hψ z y t hz hb'
   have hx : ∀ k, x k ∈ A := fun k => by
     have e1 : ((∏ k, bb k : C.R) : Om C.Z) = b (x k) * ((∏ j ∈ Finset.univ.erase k, bb j : C.R) : Om C.Z) := by
@@ -727,7 +727,7 @@ theorem exists_spread {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U) {S K 
 
 theorem fin_gen {O A : Type} [CommRing O] [CommRing A] {α : O →+* A} (h : α.FiniteType) :
     ∃ s : Finset A, ∀ Q : Subring A, (∀ o, α o ∈ Q) → (∀ a ∈ s, a ∈ Q) → ∀ a, a ∈ Q := by
-  letI := α.toAlgebra
+  let := α.toAlgebra
   obtain ⟨s, hs⟩ := Algebra.FiniteType.out (R := O) (A := A) (self := h)
   refine ⟨s, fun Q h1 h2 a => ?_⟩
   have ha : a ∈ Algebra.adjoin O (s : Set A) := hs ▸ Algebra.mem_top
@@ -844,7 +844,7 @@ theorem IsChart.integral (hExt : GlobalTheory.Published.SemiAbelianHomExtension)
     ∃ u : Matrix (Fin n) (Fin (Dw.mult τ)) T.V, Prim u ∧
       ∀ i, Crd Y hU v₀ ((algebraMap T.V T.Fr).comp f₀) (fun j => algebraMap T.V T.Fr (u j i))
         (Small.tanY Y y.1 τ i) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨G, t', m1, m2, ⟨ub, htan, heig, hbasis, hlift⟩, -⟩ := y.2.2
   have wa : m1.φ ≫ Xo.univ.t.G.hom = (t'.G.hom ≫ Small.ptF y.1) ≫ pullback.fst _ _ := by
     rw [m1.cart.1.w, Category.assoc, Small.ptF_fst]
@@ -910,7 +910,7 @@ open AlgebraicGeometry CategoryTheory ModelDimension.Near
 
 theorem ModelDimension.integral_frame_over_cdvr : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), IntAll Xo c → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e₀ : ℕ), OverLa la T.V io e₀ → T.FinRes → ∀ y : IntFr Xo c T io, letI := io.toAlgebra; ∀ (S : Type) [CommRing S] [Algebra c.F S] (w : FrPt Xo c S) (ψ : S →ₐ[c.F] T.Fr) (z₀ : FrPt Xo c T.Fr) (t₀ : Ix Dw → T.Frˣ), FrMap ψ w z₀ → FrBor t₀ z₀ y.1 → ∃ (F : Finset S) (n : ℕ), ∀ ψ' : S →ₐ[c.F] T.Fr, (∀ s ∈ F, ψ' s = ψ s ∨ (n : ℤ) ≤ vV T.V (ψ' s - ψ s)) → ∀ z' : FrPt Xo c T.Fr, FrMap ψ' w z' → ∃ (T' : CDVR) (io' : c.F →+* T'.Fr) (e' : ℕ) (y' : IntFr Xo c T' io'), OverLa la T'.V io' e' ∧ y'.IsAlg ∧ letI := io'.toAlgebra; ∃ (φ : T.Fr →ₐ[c.F] T'.Fr) (z'' : FrPt Xo c T'.Fr) (t' : Ix Dw → T'.Frˣ), FrMap φ z' z'' ∧ FrBor t' z'' y'.1 ∧ (∀ x : T.Fr, x ≠ 0 → vV T'.V (φ x) * (e₀ : ℤ) = (e' : ℤ) * vV T.V x) ∧ ∀ (τ : E →+* ℂ) (i : Fin (Dw.mult τ)), vV T'.V ((t' (some ⟨τ, i⟩) : T'.Frˣ) : T'.Fr) * (e₀ : ℤ) = (e' : ℤ) * vV T.V ((t₀ (some ⟨τ, i⟩) : T.Frˣ) : T.Fr) := by
   intro hG E _ _ _ H Dw l Xo c hI Y la T io e₀ ho hfin y
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro S _ _ w ψ z₀ t₀ hz₀ hb₀
   classical
   have hExt : GlobalTheory.Published.SemiAbelianHomExtension := hG.2.2.1
@@ -988,7 +988,7 @@ theorem ModelDimension.integral_frame_over_cdvr : Top.Given → ∀ (E : Type) [
   choose W hW1 hW2 using q3
   obtain ⟨T', io', e', y', ho', halg, hrest⟩ := hI la T io e₀ ho hfin z'
   refine ⟨T', io', e', y', ho', halg, ?_⟩
-  letI := io'.toAlgebra
+  let := io'.toAlgebra
   obtain ⟨φ, z'', t', hφ, hz'', hb''⟩ := hrest
   obtain ⟨r, -, her, hr, -⟩ := GlobalTheory.IntegralFrameCheck.nval_map_of_overLa ho ho' φ.toRingHom (fun a => φ.commutes a) hφ
   have hval : ∀ x : T.Fr, vV T'.V (φ x) * (e₀ : ℤ) = (e' : ℤ) * vV T.V x := fun x => by
@@ -1227,7 +1227,7 @@ end Help
 attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
 theorem approx_main : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (Z : Comp Xo c) (u : GlobalTheory.AllWt.Weight Dw) (f : Rul Xo c), f ∈ GlobalTheory.AllWt.secZ Xo c (GlobalTheory.AllWt.exOf Dw u 0) → ∀ (B' : Finset (Om Z)) (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e₀ : ℕ), OverLa la T.V io e₀ → ∀ y : IntFr Xo c T io, y.IsAlg → (letI := io.toAlgebra; GlobalTheory.AllWt.LiesOn Z y.1) → evI y f ≠ 0 → ∃ (T' : CDVR) (io' : c.F →+* T'.Fr) (e' : ℕ) (y' : IntFr Xo c T' io') (A : Subring (Om Z)) (ev : A →+* T'.Fr), OverLa la T'.V io' e' ∧ y'.IsAlg ∧ nval T'.V e' (evI y' f) = nval T.V e₀ (evI y f) ∧ (↑B' : Set (Om Z)) ⊆ A ∧ (∀ b ∈ B', b ≠ 0 → b⁻¹ ∈ A) ∧ (∀ x, IsAlgebraic ℤ (ev x)) ∧ FinTr.RegAt h Z io' A ev y'.1 := by
   intro hG E _ _ _ H Dw l Xo c r U h e hCL Y Z u f hf B' la T io e₀ ho y hy hLies hne
-  letI := io.toAlgebra
+  let := io.toAlgebra
   classical
   obtain ⟨hL, -, -, hAt⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   obtain ⟨C, ψ, z₀, t₀, hm, hb⟩ := hAt h T.Fr y.1
@@ -1235,7 +1235,7 @@ theorem approx_main : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [Is
     have s₀ : Sp T.Fr := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum T.Fr)
     exact comp_eq_of_mem (hLies s₀) (liesOn_chart C hm hb s₀)
   subst hZ
-  haveI := C.sm
+  have := C.sm
   obtain ⟨g₀, hg₀, hReg⟩ := GlobalTheory.T.frame_chart_nonzero_denominator E H Dw l Xo c hL h C
   obtain ⟨F, n, hNear⟩ := GlobalTheory.T.integral_frame_subalgebra_relay hG E H Dw l Xo c hCL.intAll Y la T io e₀ ho hy y C.R C.y ψ z₀ t₀ hm hb
   let fS : C.R := evR Xo c f C.y
@@ -1270,7 +1270,7 @@ theorem approx_main : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [Is
     · exact Or.inl h1
     · refine Or.inr (le_trans ?_ h1)
       exact_mod_cast le_max_left _ _) z' hz'
-  letI := io'.toAlgebra
+  let := io'.toAlgebra
   obtain ⟨φ, z'', t', hφ, hb', hvφ, hvt⟩ := hrest
   let χ : C.R →+* T'.Fr := φ.toRingHom.comp ψ₁
   have hχg : χ g ≠ 0 := (map_ne_zero φ.toRingHom).2 hψ₁g

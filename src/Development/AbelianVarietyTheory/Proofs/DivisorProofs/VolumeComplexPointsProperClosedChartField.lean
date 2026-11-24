@@ -62,7 +62,7 @@ theorem chart_null_field : ∀ (k : Type) [Field k] (X : Scheme.{0}) [IsIntegral
   rcases c.e.source.eq_empty_or_nonempty with hs | ⟨y0, hy0⟩
   · simp [hs]
   have hne : (c.U : Set X).Nonempty := ⟨_, mem_ptsIn.1 (c.source_subset hy0)⟩
-  haveI : Nonempty c.U := ⟨⟨_, mem_ptsIn.1 (c.source_subset hy0)⟩⟩
+  have : Nonempty c.U := ⟨⟨_, mem_ptsIn.1 (c.source_subset hy0)⟩⟩
   obtain ⟨g, hg0, hgZ⟩ := exists_sec_vanish c.affine hne hZ hgen
   obtain ⟨Q, hQ, r, hQr⟩ := exists_poly_dvd _ c.etale g hg0
   have hP : MvPolynomial.map σ Q ≠ 0 := fun e =>

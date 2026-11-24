@@ -184,8 +184,8 @@ private theorem unram_bound (K M : Type) [Field K] [NumberField K] [Field M] [Nu
   have hqw : ((Nat.minFac (Ideal.absNorm (w.under (𝓞 K)).asIdeal) : ℕ) : 𝓞 M) ∈ w.asIdeal := by
     have : algebraMap (𝓞 K) (𝓞 M) ((Nat.minFac (Ideal.absNorm (w.under (𝓞 K)).asIdeal) : ℕ) : 𝓞 K) ∈ w.asIdeal := hqv
     rwa [map_natCast] at this
-  haveI := w.isPrime
-  haveI := hN _ hq hqN w.asIdeal hqw
+  have := w.isPrime
+  have := hN _ hq hqN w.asIdeal hqw
   have hsq := ReciprocityTheory.Cheb.natCast_notMem_sq_of_isUnramifiedAt hq w.asIdeal
   apply Ideal.ramificationIdx'_spec
   · rw [pow_one, Ideal.map_le_iff_le_comap]
@@ -339,7 +339,7 @@ end Cnt
 
 private theorem unrAt_iff {F : Type} [Field F] [NumberField F] (χ : HChar F) (w : HeightOneSpectrum (𝓞 F)) :
     χ.UnrAt w ↔ IsUnram (χ.loc w) := by
-  haveI : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   refine forall_congr' fun x => imp_congr_left ?_
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion F)) Valued.v).eq_one_iff_eq_one.symm
@@ -473,11 +473,11 @@ private theorem norm_units (h2 : Module.finrank K M = 2) :
       IsSmoothChar θ → IsUnram (θ.comp (nm w)) → IsUnram θ) ∧
     ∀ (u : HeightOneSpectrum (𝓞 K)) (w : PlacesOver M u) (θ : (u.adicCompletion K)ˣ →* ℂˣ), IsUnram θ →
       IsUnram (θ.comp (nm w)) := by
-  haveI : Algebra.IsQuadraticExtension K M := { finrank_eq_two' := h2 }
+  have : Algebra.IsQuadraticExtension K M := { finrank_eq_two' := h2 }
   obtain ⟨η, h1, h3⟩ := normCnt K M (h2 ▸ Nat.prime_two)
   refine ⟨⟨(Filter.eventually_cofinite.1 h1).toFinset, fun u hu w θ hθ hn => ?_⟩,
     fun u w θ hθ => ((h3 u w).2.2 θ (isSmoothChar_of_isUnram hθ)).2.1 hθ⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hu
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hu
   have hc := ((h3 u w).2.2 θ hθ).2.2 hn
   have hpos : 0 < ∑ w' : PlacesOver M u, fdeg w' := by
     have hw := (hu.2 w).2

@@ -72,9 +72,9 @@ theorem psi_cont (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) :
     (Complex.continuous_re.comp (continuous_const.mul ?_))))
   refine continuous_finsetSum _ fun a _ => ?_
   by_cases h : a.val + 1 < r
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     fun_prop
-  · simp only [dif_neg h, Matrix.mulVec, dotProduct]
+  · simp only [dite_eq_right h, Matrix.mulVec, dotProduct]
     fun_prop
 
 theorem isClosed_UH : IsClosed (Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) : Set (Mx k r)) := by
@@ -87,7 +87,7 @@ theorem isClosed_UW (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (Formalism.Quan
   have h2 : IsClosed {g : Mx k r | ∀ a : Fin r, g *ᵥ Formalism.QuantumDeterminants.bvec (Formalism.QuantumDeterminants.eI k r a) =
       Formalism.QuantumDeterminants.bvec (Formalism.QuantumDeterminants.eI k r a) ∧ g *ᵥ Formalism.QuantumDeterminants.bvec (Formalism.QuantumDeterminants.esI k r a) =
       Formalism.QuantumDeterminants.bvec (Formalism.QuantumDeterminants.esI k r a)} := by
-    simp only [Set.setOf_forall, Set.setOf_and]
+    simp only [Set.ofPred_forall, Set.ofPred_and]
     exact isClosed_iInter fun a =>
       (isClosed_eq (continuous_id.matrix_mulVec continuous_const) continuous_const).inter
         (isClosed_eq (continuous_id.matrix_mulVec continuous_const) continuous_const)

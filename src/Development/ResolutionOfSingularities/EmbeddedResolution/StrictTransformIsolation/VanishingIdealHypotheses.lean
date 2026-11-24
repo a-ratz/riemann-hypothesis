@@ -163,7 +163,7 @@ theorem maximalIdeal_stalk_ne_bot_of_specializes
     apply hne
     have hpe : hU.primeIdealOf ⟨y, hyU⟩ = hU.primeIdealOf ⟨x, hxU⟩ := PrimeSpectrum.ext heq
     exact e2.symm.trans (by rw [hpe]; exact e1)
-  obtain ⟨a, hap, haq⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hqp hne')
+  obtain ⟨a, hap, haq⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hqp hne')
   let _ : Algebra Γ(X, U.1) ↑(X.presheaf.stalk x) := (X.presheaf.germ U.1 x hxU).hom.toAlgebra
   have hloc : IsLocalization (hU.primeIdealOf ⟨x, hxU⟩).asIdeal.primeCompl
       ↑(X.presheaf.stalk x) := hU.isLocalization_stalk ⟨x, hxU⟩

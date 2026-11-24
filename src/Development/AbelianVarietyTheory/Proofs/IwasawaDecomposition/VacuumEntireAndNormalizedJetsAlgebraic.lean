@@ -162,7 +162,7 @@ theorem step4 (f : Fin 4 → (n → ℂ) → ℂ) (hf : ∀ a, Differentiable �
     (hf b _).hasFDerivAt.comp y (sl b).hasFDerivAt
   rw [(HasFDerivAt.finsetProd hd).fderiv, _root_.sum_apply, Finset.sum_eq_single a]
   · rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ a), Function.update_self, _root_.smul_apply,
-      ContinuousLinearMap.comp_apply, hw, if_pos rfl, smul_eq_mul, mul_comm]
+      ContinuousLinearMap.comp_apply, hw, ite_eq_left rfl, smul_eq_mul, mul_comm]
     congr 1
     exact Finset.prod_congr rfl fun b hb => by rw [Function.update_of_ne (Finset.ne_of_mem_erase hb)]
   · intro b _ hb
@@ -357,8 +357,8 @@ theorem TA.iop (hC : Crv D cc δ) {G : VC D N N' → ℂ} (h : TA cc δ G) (A₁
       funext z; simp [Iop, hi]
     rw [e]
     exact TA.comb _ _ _ (fun _ => zero_mem _) fun _ => h
-  · haveI : Finite (A₂ ⧸ A₁.addSubgroupOf A₂) := Nat.finite_of_card_ne_zero hi
-    haveI := Fintype.ofFinite (A₂ ⧸ A₁.addSubgroupOf A₂)
+  · have : Finite (A₂ ⧸ A₁.addSubgroupOf A₂) := Nat.finite_of_card_ne_zero hi
+    have := Fintype.ofFinite (A₂ ⧸ A₁.addSubgroupOf A₂)
     unfold Iop
     simp only [finsum_eq_sum_of_fintype, Finset.mul_sum, ← mul_assoc]
     exact TA.comb _ _ _ (fun q => mul_mem (inv_mem (sqrt_nat_mem _)) (zpow_mem (neg_mem (one_mem _)) _))

@@ -154,7 +154,7 @@ theorem integral_deriv_zero {X Ξ : Type*} [MeasurableSpace X] [Countable Ξ] [M
     ∫ x, ∑' ξ, F' x 0 ξ ∂m = 0 := by
   classical
   set μ : Measure ℝ := volume.restrict (Set.Ioc (0 : ℝ) 1) with hμ
-  have hae : ∀ ξ, AEMeasurable (fun p : X × ℝ => ‖F' p.1 p.2 ξ‖ₑ) (m.prod μ) := fun ξ => (hmeas ξ).enorm
+  have hae : ∀ ξ, AEMeasurable (fun p : X × ℝ => ‖F' p.1 p.2 ξ‖ₑ) (m.prod μ) := fun ξ => (hmeas ξ).eNorm
   have hle : ∀ ξ, ∫⁻ p, ‖F' p.1 p.2 ξ‖ₑ ∂(m.prod μ) ≤ ∫⁻ p, ∑' ξ, ‖F' p.1 p.2 ξ‖ₑ ∂(m.prod μ) :=
     fun ξ => lintegral_mono fun p => ENNReal.le_tsum (f := fun ξ => ‖F' p.1 p.2 ξ‖ₑ) ξ
   have hI : ∀ ξ, Integrable (fun p : X × ℝ => F' p.1 p.2 ξ) (m.prod μ) := fun ξ =>
@@ -173,12 +173,12 @@ theorem integral_deriv_zero {X Ξ : Type*} [MeasurableSpace X] [Countable Ξ] [M
   have hbx : ∑' ξ, ∫⁻ x, ‖∫ t, F' x t ξ ∂μ‖ₑ ∂m ≠ ⊤ := by
     refine ne_top_of_le_ne_top htsum (ENNReal.tsum_le_tsum fun ξ => ?_)
     calc ∫⁻ x, ‖∫ t, F' x t ξ ∂μ‖ₑ ∂m ≤ ∫⁻ x, ∫⁻ t, ‖F' x t ξ‖ₑ ∂μ ∂m :=
-          lintegral_mono fun x => enorm_integral_le_lintegral_enorm _
+          lintegral_mono fun x => eNorm_integral_le_lintegral_eNorm _
       _ = ∫⁻ p, ‖F' p.1 p.2 ξ‖ₑ ∂(m.prod μ) := (lintegral_prod _ (hae ξ)).symm
   have hbt : ∑' ξ, ∫⁻ t, ‖∫ x, F' x t ξ ∂m‖ₑ ∂μ ≠ ⊤ := by
     refine ne_top_of_le_ne_top htsum (ENNReal.tsum_le_tsum fun ξ => ?_)
     calc ∫⁻ t, ‖∫ x, F' x t ξ ∂m‖ₑ ∂μ ≤ ∫⁻ t, ∫⁻ x, ‖F' x t ξ‖ₑ ∂m ∂μ :=
-          lintegral_mono fun t => enorm_integral_le_lintegral_enorm _
+          lintegral_mono fun t => eNorm_integral_le_lintegral_eNorm _
       _ = ∫⁻ p, ‖F' p.1 p.2 ξ‖ₑ ∂(m.prod μ) := (lintegral_prod_symm _ (hae ξ)).symm
   have S1 : ∫ x, ∑' ξ, ∫ t, F' x t ξ ∂μ ∂m = ∑' ξ, ∫ x, ∫ t, F' x t ξ ∂μ ∂m :=
     integral_tsum (fun ξ => (hI ξ).integral_prod_left.aestronglyMeasurable) hbx
@@ -282,33 +282,33 @@ theorem absThetaInt_eq (φ : Mx D V.rank n → ℂ) :
 
 theorem int_q (f : GA D V → ℂ) (hf : LeftInv (GQ V) f) :
     ∫ q, descend (GQ V) f q ∂autMeasure V ν = ∫ x in stdDom (GQ V), f x ∂ν := by
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
   rw [autMeasure, integral_quotMeasure (isFundamentalDomain_stdDom (GQ V) ν)]
   exact integral_congr_ae (.of_forall fun x => hf.descend_mk x)
 
 theorem lint_q (f : GA D V → ℝ≥0∞) (hf : LeftInv (GQ V) f) :
     ∫⁻ q, descend (GQ V) f q ∂autMeasure V ν = ∫⁻ x in stdDom (GQ V), f x ∂ν := by
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
   rw [autMeasure, lintegral_quotMeasure (isFundamentalDomain_stdDom (GQ V) ν)]
   exact lintegral_congr fun x => hf.descend_mk x
 
 theorem intg_q (f : GA D V → ℂ) (hf : LeftInv (GQ V) f) (hi : Integrable (descend (GQ V) f) (autMeasure V ν)) :
     Integrable f (ν.restrict (stdDom (GQ V))) := by
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
   rw [← memLp_one_iff_integrable] at hi ⊢
   have := (memLp_quotMeasure_iff (isFundamentalDomain_stdDom (GQ V) ν)).1 hi
   rwa [hf.lift_descend] at this
 
 theorem desc_r {X' : Type} (f : GA D V → X') (hf : LeftInv (GQ V) f) (k : GA D V) (q : GlobalTheory.AutomorphicL2Unitary.Quot (GQ V)) :
     descend (GQ V) (fun x => f (x * k)) q = descend (GQ V) f (GlobalTheory.ThetaInv.rmulEquiv (GQ V) k q) := by
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
   induction q using Quotient.inductionOn with
   | h x => exact ((hf.mul_right k).descend_mk x).trans (hf.descend_mk (x * k)).symm
 
 theorem mp_r (k : GA D V) :
     MeasurePreserving (GlobalTheory.ThetaInv.rmulEquiv (GQ V) k) (autMeasure V ν) (autMeasure V ν) := by
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : ν.IsMulRightInvariant := GlobalTheory.RegSch.Ibp.isMulRightInvariant ν
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : ν.IsMulRightInvariant := GlobalTheory.RegSch.Ibp.isMulRightInvariant ν
   exact measurePreserving_rmul k
 
 theorem int_r (f : GA D V → ℂ) (hf : LeftInv (GQ V) f) (k : GA D V) :
@@ -377,15 +377,15 @@ open DerOneBH
 theorem derivOne_of (hW : GlobalTheory.Published.WeilThetaConvergence) (hC : DerOneH.CurveSt) : DerivOne := by
   intro D n V ψ χ θ μ ω H l s ν τ ε fr ι hx X hX Θ Θ' hΘ'
   obtain ⟨h0, -, hΦ⟩ := hC D n V θ τ s ε fr X hx.hθ hx.hs hx.hfr hX
-  haveI : ν.IsHaarMeasure := hx.hν
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (autMeasure V ν) := GlobalTheory.RegSch.Ibp.isFiniteMeasure_autMeasure ν
-  haveI : Countable D.host.E := Finsupp.Countable.of_moduleFinite (R := ℚ)
-  haveI : Countable (Matrix (Fin V.rank) (Fin n) D.host.E) :=
+  have : ν.IsHaarMeasure := hx.hν
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : IsFiniteMeasure (autMeasure V ν) := GlobalTheory.RegSch.Ibp.isFiniteMeasure_autMeasure ν
+  have : Countable D.host.E := Countable.of_moduleFinite (R := ℚ)
+  have : Countable (Matrix (Fin V.rank) (Fin n) D.host.E) :=
     inferInstanceAs (Countable (Fin V.rank → Fin n → D.host.E))
-  letI : MeasurableSpace (Matrix (Fin V.rank) (Fin n) D.host.E) := ⊤
-  haveI : MeasurableSingletonClass (Matrix (Fin V.rank) (Fin n) D.host.E) := ⟨fun _ => trivial⟩
-  haveI : IsFiniteMeasure (ν.restrict (stdDom (GQ V))) :=
+  let : MeasurableSpace (Matrix (Fin V.rank) (Fin n) D.host.E) := ⊤
+  have : MeasurableSingletonClass (Matrix (Fin V.rank) (Fin n) D.host.E) := ⟨fun _ => trivial⟩
+  have : IsFiniteMeasure (ν.restrict (stdDom (GQ V))) :=
     ⟨by rw [Measure.restrict_apply_univ, ← quotMeasure_univ (isFundamentalDomain_stdDom (GQ V) ν)]
         exact measure_lt_top _ _⟩
   have hT : ∀ Φ : schwartzA θ V.rank n, theta ω Φ 1 = tK V Φ.1 := fun Φ => by
@@ -403,7 +403,7 @@ theorem derivOne_of (hW : GlobalTheory.Published.WeilThetaConvergence) (hC : Der
   have hmeasA : ∀ (Φ : schwartzA θ V.rank n) (t : ℝ), Measurable fun x : GA D V =>
       ∑' ξ, ‖FF V Φ.1 (DerOneH.hhT θ V τ fr X) x t ξ‖ₑ :=
     fun Φ t => Measurable.tsum fun ξ =>
-      (((hΦ Φ).1 (rat ξ : Mx D V.rank n)).comp (Continuous.prodMk continuous_id continuous_const)).enorm.measurable
+      (((hΦ Φ).1 (rat ξ : Mx D V.rank n)).comp (Continuous.prodMk continuous_id continuous_const)).eNorm.measurable
   have key := DerOneAbsH.integral_deriv_zero (ν.restrict (stdDom (GQ V)))
     (FF V Θ.1 (DerOneH.hhT θ V τ fr X)) (FF V Θ'.1 (DerOneH.hhT θ V τ fr X))
     (fun x ξ t _ => by
@@ -417,7 +417,7 @@ theorem derivOne_of (hW : GlobalTheory.Published.WeilThetaConvergence) (hC : Der
     (fun ξ => ((hΦ Θ').1 (rat ξ : Mx D V.rank n)).aestronglyMeasurable)
     (by
       have hm : Measurable fun p : GA D V × ℝ => ∑' ξ, ‖FF V Θ'.1 (DerOneH.hhT θ V τ fr X) p.1 p.2 ξ‖ₑ :=
-        Measurable.tsum fun ξ => ((hΦ Θ').1 (rat ξ : Mx D V.rank n)).enorm.measurable
+        Measurable.tsum fun ξ => ((hΦ Θ').1 (rat ξ : Mx D V.rank n)).eNorm.measurable
       rw [lintegral_prod_symm _ hm.aemeasurable]
       simp only [tsum_nFF, hfinA']
       rw [lintegral_const, Measure.restrict_apply_univ, Real.volume_Ioc]
@@ -612,9 +612,9 @@ theorem key (hθ : IsInfFam θ) {Y : Matrix (Fin V.rank) (Fin V.rank) ℂ} (hY :
     refine Differentiable.mul_const (f.differentiable.comp ?_) _
     refine differentiable_pi.2 fun τ' => differentiable_pi.2 fun i => differentiable_pi.2 fun j => ?_
     by_cases h : τ' = τ
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       exact diff_entry Y (compAt θ τ z) i j
-    · simp only [h, if_false, Matrix.one_mul]
+    · simp only [h, ite_false, Matrix.one_mul]
       exact differentiable_const _
   · exact ⟨continuous_const, fun z => by simpa using differentiable_const (0 : ℂ)⟩
   · rintro x y - - ⟨h1, h2⟩ ⟨h3, h4⟩
@@ -710,16 +710,16 @@ theorem matL_one (y : Fin m → Fin n → ℂ) : matL (1 : Matrix (Fin m) (Fin m
 
 theorem contDiff_A (X : Matrix (Fin m) (Fin m) ℂ) :
     ContDiff ℝ ∞ (fun t : ℝ => matL (n := n) (NormedSpace.exp ((t : ℂ) • X))) := by
-  letI : NormedAddCommGroup (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedSpace
-  letI : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAddCommGroup (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAddCommGroup
+  let : NormedSpace ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedSpace
+  let : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
   let Lm : Matrix (Fin m) (Fin m) ℂ →ₗ[ℝ] ((Fin m → Fin n → ℂ) →L[ℝ] (Fin m → Fin n → ℂ)) :=
     { toFun := matL
       map_add' := fun M N => by ext y a i; simp [matL_apply, add_mul, Finset.sum_add_distrib]
       map_smul' := fun r M => by
         ext y a i
-        simp only [matL_apply, Matrix.smul_apply, RingHom.id_apply, ContinuousLinearMap.smul_apply, Pi.smul_apply,
+        simp only [matL_apply, Matrix.smul_apply, RingHom.id_apply, smul_apply, Pi.smul_apply,
           Finset.smul_sum]
         refine Finset.sum_congr rfl fun c _ => ?_
         rw [Complex.real_smul, Complex.real_smul]; ring }
@@ -733,10 +733,10 @@ theorem contDiff_A (X : Matrix (Fin m) (Fin m) ℂ) :
 
 theorem hasDerivAt_entry (X : Matrix (Fin m) (Fin m) ℂ) (a c : Fin m) :
     HasDerivAt (fun t : ℝ => (NormedSpace.exp ((t : ℂ) • X)) a c) (X a c) 0 := by
-  letI : NormedAddCommGroup (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedSpace
-  letI : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAddCommGroup (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAddCommGroup
+  let : NormedSpace ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedSpace
+  let : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
   let ent : Matrix (Fin m) (Fin m) ℂ →ₗ[ℝ] ℂ :=
     { toFun := fun M => M a c, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
   have h := (hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ))
@@ -1122,7 +1122,7 @@ theorem schDeriv : SchDeriv := by
       have h2 := (hder x).unique h1
       have e : ((v, 0) : ℝ × (Fin m → Fin n → ℂ)) = v • ((1 : ℝ), (0 : Fin m → Fin n → ℂ)) := by
         ext <;> simp
-      rw [SchwartzMap.smul_apply, e, map_smul]
+      rw [smul_apply, e, map_smul]
       change v • φ1 x = v • (fderiv ℝ F ((0 : ℝ), x)) ((1 : ℝ), (0 : Fin m → Fin n → ℂ))
       rw [h2]
     have hb : ∀ k N : ℕ, ∃ C, ∀ p : ℝ, ‖p - 0‖ ≤ 1 → ∀ x : Fin m → Fin n → ℂ,

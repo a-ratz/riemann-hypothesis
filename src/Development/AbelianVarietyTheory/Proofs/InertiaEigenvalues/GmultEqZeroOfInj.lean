@@ -123,7 +123,7 @@ variable {k : Type} [Field k] {V : Type} [AddCommGroup V] [Module k⸨X⸩ V] [M
 theorem graded_inj {l : ℕ} (R : RingPG k l) {g : V →ₗ[k] V} (hg : Semi R.γ g) {N : Submodule k⟦X⟧ V}
     (hN : N.FG) (hC : CondC g N) (b : ℤ) (y : k) (h : sen g N (y + b) = 0) :
     ∀ x ∈ sh b N, nab g x - y • x ∈ sh (b + 1) N → x ∈ sh (b + 1) N := by
-  haveI := Window.finite_quot hN
+  have := Window.finite_quot hN
   obtain ⟨h1, -⟩ := Window.bij_of_gmult_zero (nab g) (N.restrictScalars k) ((sh 1 N).restrictScalars k)
     (fun p hp => Window.nab_mem hC hp) (fun p hp => Window.nab_mem_sh R hg hC 1 hp) (y + b) h
   have hv : vv k ≠ 0 := vv_ne_zero k
@@ -165,7 +165,7 @@ theorem sen_compare : ∀ {k : Type} [Field k] {l : ℕ} [Fact l.Prime] [CharP k
       have hsen := hcon b (by rw [abs_le]; omega)
       have hf := Window.finite_quot (h₁.shift b).1
       rw [sh_sh_eq, add_comm] at hf
-      haveI : FiniteDimensional k (((N₂ ⊓ sh b N₁).restrictScalars k).map
+      have : FiniteDimensional k (((N₂ ⊓ sh b N₁).restrictScalars k).map
           ((sh (b + 1) N₁).restrictScalars k).mkQ) :=
         Submodule.finiteDimensional_of_le (S₂ := ((sh b N₁).restrictScalars k).map
           ((sh (b + 1) N₁).restrictScalars k).mkQ) (Submodule.map_mono fun z hz => hz.2)
@@ -177,7 +177,7 @@ theorem sen_compare : ∀ {k : Type} [Field k] {l : ℕ} [Fact l.Prime] [CharP k
       refine ⟨p + q, N₂.add_mem hp hq.1, ?_⟩
       rw [map_add (f := _), ← sub_sub, Nat.cast_succ, ← add_assoc]
       exact hq'
-  haveI := Window.finite_quot h₂.1
+  have := Window.finite_quot h₂.1
   refine gmult_eq_zero_of_inj (nab g) _ _ y st2 (st N₂ c₂ 1) ?_
   refine (inj_iff_surj S (N₂.restrictScalars k) ((sh 1 N₂).restrictScalars k) st2 (st N₂ c₂ 1)).mpr ?_
   intro x hx

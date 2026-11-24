@@ -104,7 +104,7 @@ lemma inj : Function.Injective (algebraMap V (AdjoinRoot f)) := by
   exact_mod_cast (natDeg_pos f hf hg).ne'
 
 lemma quot_isField : IsField (AdjoinRoot f ⧸ (maximalIdeal V).map (AdjoinRoot.of f)) := by
-  haveI : Fact (Irreducible (f.map (residue V))) := ⟨hg⟩
+  have : Fact (Irreducible (f.map (residue V))) := ⟨hg⟩
   have e := (AdjoinRoot.quotEquivQuotMap f (maximalIdeal V)).toRingEquiv
   first
   | exact MulEquiv.isField (Field.toIsField (AdjoinRoot (f.map (residue V)))) e.toMulEquiv
@@ -115,9 +115,9 @@ lemma J_max : ((maximalIdeal V).map (algebraMap V (AdjoinRoot f))).IsMaximal := 
   exact Ideal.Quotient.maximal_of_isField _ (quot_isField f hf hg)
 
 lemma isLocal : IsLocalRing (AdjoinRoot f) := by
-  haveI := finite f hf
+  have := finite f hf
   refine IsLocalRing.of_unique_max_ideal ⟨_, J_max f hf hg, fun P hP => ?_⟩
-  haveI := hP
+  have := hP
   have hc : P.comap (algebraMap V (AdjoinRoot f)) = maximalIdeal V :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := V) P)
   have hle : (maximalIdeal V).map (algebraMap V (AdjoinRoot f)) ≤ P := by
@@ -140,8 +140,8 @@ lemma locHom [IsLocalRing (AdjoinRoot f)] : IsLocalHom (algebraMap V (AdjoinRoot
 
 lemma dvr [IsDomain (AdjoinRoot f)] [IsLocalRing (AdjoinRoot f)] :
     IsDiscreteValuationRing (AdjoinRoot f) := by
-  haveI := finite f hf
-  haveI : IsNoetherianRing (AdjoinRoot f) := isNoetherian_of_tower V inferInstance
+  have := finite f hf
+  have : IsNoetherianRing (AdjoinRoot f) := isNoetherian_of_tower V inferInstance
   obtain ⟨w, hw⟩ := IsDiscreteValuationRing.exists_irreducible V
   have hmV : maximalIdeal V = Ideal.span {w} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer w).mp hw
@@ -235,16 +235,16 @@ theorem nbMain (n : ℕ) : ∀ (V' : Type) [CommRing V'] [IsDomain V'] [IsDiscre
     have hg : Irreducible (f.map (residue V')) := by
       rw [hfg]
       exact minpoly.irreducible hint
-    haveI := isLocal f hf hg
-    haveI := isDomain f hf hg
-    haveI := locHom f hf hg
-    haveI := dvr f hf hg
-    haveI := complete f hf hg
-    haveI := finite f hf
+    have := isLocal f hf hg
+    have := isDomain f hf hg
+    have := locHom f hf hg
+    have := dvr f hf hg
+    have := complete f hf hg
+    have := finite f hf
     have hroot : (f.map (residue V')).eval₂ (algebraMap (ResidueField V') k'') a = 0 := by
       rw [hfg, ← aeval_def]
       exact minpoly.aeval _ a
-    letI : Algebra (ResidueField (AdjoinRoot f)) k'' := RingHom.toAlgebra
+    let : Algebra (ResidueField (AdjoinRoot f)) k'' := RingHom.toAlgebra
       ((AdjoinRoot.lift (f := f.map (residue V')) (algebraMap (ResidueField V') k'') a hroot).comp
         (resEquiv f hf hg).toRingHom)
     have htow_eq : algebraMap (ResidueField V') k'' =
@@ -256,9 +256,9 @@ theorem nbMain (n : ℕ) : ∀ (V' : Type) [CommRing V'] [IsDomain V'] [IsDiscre
       change _ = AdjoinRoot.lift (f := f.map (residue V')) (algebraMap (ResidueField V') k'') a hroot
         ((resEquiv f hf hg) (ResidueField.map (algebraMap V' (AdjoinRoot f)) x))
       rw [hc, AdjoinRoot.lift_of]
-    haveI : IsScalarTower (ResidueField V') (ResidueField (AdjoinRoot f)) k'' :=
+    have : IsScalarTower (ResidueField V') (ResidueField (AdjoinRoot f)) k'' :=
       IsScalarTower.of_algebraMap_eq' htow_eq
-    haveI : FiniteDimensional (ResidueField (AdjoinRoot f)) k'' :=
+    have : FiniteDimensional (ResidueField (AdjoinRoot f)) k'' :=
       Module.Finite.of_restrictScalars_finite (ResidueField V') (ResidueField (AdjoinRoot f)) k''
     have hdim : 2 ≤ Module.finrank (ResidueField V') (ResidueField (AdjoinRoot f)) := by
       let E : ResidueField (AdjoinRoot f) ≃ₐ[ResidueField V'] AdjoinRoot (f.map (residue V')) :=
@@ -275,10 +275,10 @@ theorem nbMain (n : ℕ) : ∀ (V' : Type) [CommRing V'] [IsDomain V'] [IsDiscre
       rw [hn] at h1
       nlinarith
     obtain ⟨V2, i1, i2, i3, i4, i5, hfin, hinj, hloc, e, he⟩ := ih _ hlt (AdjoinRoot f) k'' rfl
-    letI : Algebra V' V2 :=
+    let : Algebra V' V2 :=
       ((algebraMap (AdjoinRoot f) V2).comp (algebraMap V' (AdjoinRoot f))).toAlgebra
-    haveI : IsScalarTower V' (AdjoinRoot f) V2 := IsScalarTower.of_algebraMap_eq' rfl
-    haveI hl2 : IsLocalHom (algebraMap V' V2) := by
+    have : IsScalarTower V' (AdjoinRoot f) V2 := IsScalarTower.of_algebraMap_eq' rfl
+    have hl2 : IsLocalHom (algebraMap V' V2) := by
       show IsLocalHom ((algebraMap (AdjoinRoot f) V2).comp (algebraMap V' (AdjoinRoot f)))
       infer_instance
     refine ⟨V2, i1, i2, i3, i4, inferInstance, Module.Finite.trans (AdjoinRoot f) V2,

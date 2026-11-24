@@ -58,9 +58,9 @@ theorem mvPolynomialInt_dimFormula {σ : Type*} [Finite σ] (P Q : Ideal (MvPoly
     ringKrullDim (MvPolynomial σ ℤ ⧸ Q) + ((Q.map (Ideal.Quotient.mk P)).height : WithBot ℕ∞) =
       ringKrullDim (MvPolynomial σ ℤ ⧸ P) := by
 
-  haveI : IsJacobsonRing ℤ := int_isJacobsonRing
-  haveI := DimF.finiteRingKrullDim_mvPolynomialInt_quot P
-  haveI : (Q.map (Ideal.Quotient.mk P)).IsPrime := DimF.isPrime_map_mk h
+  have : IsJacobsonRing ℤ := int_isJacobsonRing
+  have := DimF.finiteRingKrullDim_mvPolynomialInt_quot P
+  have : (Q.map (Ideal.Quotient.mk P)).IsPrime := DimF.isPrime_map_mk h
   have key := DimF.dim_quot_add_height (A := MvPolynomial σ ℤ ⧸ P)
     (DimF.height_eq_of_isMaximal_int P) (Q.map (Ideal.Quotient.mk P))
 

@@ -120,8 +120,8 @@ theorem invLevCore_of (W : LocWach PD LL O v n) (hπ : W.π₀ ∈ W.AΔ) (hL : 
   obtain ⟨u, hu, hfu⟩ := hf
   obtain ⟨κ, v, hv, hfv⟩ := hγ
   let L := hL a s
-  letI : Field L.F := L.fF
-  letI : Algebra O L.F := L.algOF
+  let : Field L.F := L.fF
+  let : Algebra O L.F := L.algOF
   set D : LetA O n := ∏ t ∈ T, ps W t ^ e t with hDdef
   set U : LetA O n := letE a * 1 * u with hUdef
   have hDΔ : D ∈ W.AΔ := Subalgebra.prod_mem _ fun t _ => Subalgebra.pow_mem _ (RatW.ps_mem W hπ t) _

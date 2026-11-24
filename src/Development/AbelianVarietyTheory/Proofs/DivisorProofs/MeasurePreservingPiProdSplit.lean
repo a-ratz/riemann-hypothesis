@@ -178,12 +178,12 @@ theorem ch_add_keptPt (z : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) (w : Kep
 
 theorem stepPt_col (x₀ : Matrix n n' k) (e : StepVar n c n' → k) (r : n) {i : Fin (c + 1)} (hi : i.val = c / 2) :
     stepPt x₀ e (.inl r) (.inr i) = keptPt (keptPart e) (.inl r) (.inr i) := by
-  rw [stepPt_eq, Matrix.add_apply, affPt, Matrix.add_apply, of_apply, dif_neg (by simp [Free, hi])]
+  rw [stepPt_eq, Matrix.add_apply, affPt, Matrix.add_apply, of_apply, dite_eq_right (by simp [Free, hi])]
   simp [basePt]; rfl
 
 theorem stepPt_row (x₀ : Matrix n n' k) (e : StepVar n c n' → k) (s : n') {l : Fin c} (hl : l.val = c / 2) :
     stepPt x₀ e (.inr l) (.inl s) = keptPt (keptPart e) (.inr l) (.inl s) := by
-  rw [stepPt_eq, Matrix.add_apply, affPt, Matrix.add_apply, of_apply, dif_neg (by simp [Free, hl])]
+  rw [stepPt_eq, Matrix.add_apply, affPt, Matrix.add_apply, of_apply, dite_eq_right (by simp [Free, hl])]
   simp [basePt]; rfl
 
 variable [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -197,7 +197,7 @@ theorem isClosedEmbedding_stepPt (x₀ : Matrix n n' k) :
     (continuous_const.add (continuous_matrix fun r s => ?_))
   · funext rs
     simp only [stepPt, Matrix.add_apply, of_apply, add_sub_cancel_left]
-    exact dif_pos rs.2
+    exact dite_eq_left rs.2
   · simp only [of_apply]
     split_ifs
     · exact continuous_apply _
@@ -221,7 +221,7 @@ theorem integrable_step {ψ : AddChar k Circle} (hψ : Continuous ψ) (ν : Meas
   obtain ⟨_, _⟩ := SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
   have h := isClosedEmbedding_stepPt (c := c) x₀
   refine Continuous.integrable_of_hasCompactSupport ((hΦ.1.continuous.comp h.continuous).mul
-    (continuous_subtype_val.comp (hψ.comp (continuous_finsetSum _ fun i _ => h.continuous.matrix_elem _ _).neg))) ?_
+    (continuous_subtypeVal.comp (hψ.comp (continuous_finsetSum _ fun i _ => h.continuous.matrix_elem _ _).neg))) ?_
   exact (hΦ.2.comp_isClosedEmbedding h).mul_right
 
 end Step
@@ -245,14 +245,14 @@ def pairPhase (x : ColArgs G) (w : KeptVars G) : k :=
   ∑ j : Fin (G.m - 1), if Even (G.m - 2 - j) then ∑ r, keptRow x w (j + 1) r * keptCol w j r else 0
 
 theorem keptCol_eq (w : KeptVars G) (j : Fin (G.m - 1)) (hj : Even (G.m - 2 - j)) (r : Fin (topRank G (j + 1))) :
-    keptCol w j r = w j ⟨(.inl r, .inr ⟨(G.m - 2 - j) / 2, by omega⟩), hj, rfl⟩ := dif_pos _
+    keptCol w j r = w j ⟨(.inl r, .inr ⟨(G.m - 2 - j) / 2, by omega⟩), hj, rfl⟩ := dite_eq_left _
 
 theorem keptRow_eq (x : ColArgs G) (w : KeptVars G) (j : Fin (G.m - 1)) (hj : Odd (G.m - 2 - j))
     (s : Fin (topRank G j)) : keptRow x w j s =
       w j ⟨(.inr ⟨(G.m - 2 - j) / 2, by have := hj.pos; omega⟩, .inl s), hj, rfl⟩ := by
-  rw [keptRow, dif_pos j.2, Finset.sum_eq_single ⟨(G.m - 2 - j) / 2, by have := hj.pos; omega⟩, if_pos rfl]
-  · exact dif_pos _
-  · exact fun l _ hl => if_neg fun h => hl (Fin.ext h)
+  rw [keptRow, dite_eq_left j.2, Finset.sum_eq_single ⟨(G.m - 2 - j) / 2, by have := hj.pos; omega⟩, ite_eq_left rfl]
+  · exact dite_eq_left _
+  · exact fun l _ hl => ite_eq_right fun h => hl (Fin.ext h)
   · simp
 
 theorem phase_eq (x : ColArgs G) (e : Vars G) :
@@ -282,7 +282,7 @@ def lastMap (hm : 0 < G.m) (x : ColArgs G) : Matrix (Fin (G.rank (G.m, G.m - 1 +
     (Fin.cast (by have := topRank_add hs (G.m - 1); omega))
 
 theorem downMap_last (hm : 0 < G.m) (x : ColArgs G) (e : Vars G) : downMap hs x e (G.m - 1) = lastMap hs hm x := by
-  rw [downMap, dif_neg (lt_irrefl _), dif_pos (by omega)]; rfl
+  rw [downMap, dite_eq_right (lt_irrefl _), dite_eq_left (by omega)]; rfl
 
 theorem pureTensor_fill (hm : 0 < G.m) (φ : ∀ b : Edge, Matrix (Fin (G.rank b.tgt)) (Fin (G.rank b.src)) k → ℂ)
     (x : ColArgs G) (y : RowArgs G) (e : Vars G) :
@@ -299,7 +299,7 @@ theorem pureTensor_fill (hm : 0 < G.m) (φ : ∀ b : Edge, Matrix (Fin (G.rank b
     simp only [Function.comp_apply, fill_theta, downMap_last hs hm]
     congr 1
     refine Finset.prod_congr rfl fun j _ => ?_
-    rw [downMap, dif_pos j.2]; rfl
+    rw [downMap, dite_eq_left j.2]; rfl
 
 variable [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -363,7 +363,7 @@ theorem flatTensor_pureTensor [ν.IsAddHaarMeasure] (hm : 0 < G.m) (hψ : Contin
     (fun j => keptPart_joinVars)
     (fun j => by convert integrable_step hψ ν (stepDatum_mem_SB hs j (hφ j j.2)) (x j))
     (H := fun w => (ψ (-pairPhase x w) : ℂ))
-    (continuous_subtype_val.comp (hψ.comp (continuous_pairPhase x).neg)).measurable (fun w => (Circle.norm_coe _).le)
+    (continuous_subtypeVal.comp (hψ.comp (continuous_pairPhase x).neg)).measurable (fun w => (Circle.norm_coe _).le)
   have e1 : flatIntegrand hs ψ (G.lines₂ (oppositePath G.m) φ) x y = fun e =>
       ((∏ i ∈ Finset.range G.m, φ (.ex i G.m) (y i)ᵀ) * φ (.theta G.m (G.m - 1)) (lastMap hs hm x)ᵀ) *
       ((∏ j : Fin (G.m - 1), stepDatum hs φ j (stepPt (x j) (e j)) * (ψ (-ch (stepPt (x j) (e j))) : ℂ)) *

@@ -152,11 +152,11 @@ theorem exists_step {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] (N 
     [Finite (M ⧸ N)] (hN : N ≠ ⊤) :
     ∃ (P : Ideal R) (x : M), P.IsMaximal ∧ x ∉ N ∧ (∀ p ∈ P, p • x ∈ N) ∧
       (Module.length R (M ⧸ (N ⊔ Submodule.span R {x}))).toNat + 1 = (Module.length R (M ⧸ N)).toNat := by
-  haveI : Nontrivial (M ⧸ N) := Submodule.Quotient.nontrivial_iff.2 hN
-  haveI : IsArtinian R (M ⧸ N) := isArtinian_of_finite
-  haveI : IsNoetherian R (M ⧸ N) := isNoetherian_of_finite R _
+  have : Nontrivial (M ⧸ N) := Submodule.Quotient.nontrivial_iff.2 hN
+  have : IsArtinian R (M ⧸ N) := isArtinian_of_finite
+  have : IsNoetherian R (M ⧸ N) := isNoetherian_of_finite R _
   obtain ⟨S, hS⟩ := IsAtomic.exists_atom (Submodule R (M ⧸ N))
-  haveI hs : IsSimpleModule R S := isSimpleModule_iff_isAtom.2 hS
+  have hs : IsSimpleModule R S := isSimpleModule_iff_isAtom.2 hS
   obtain ⟨P, hP, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.1 hs
   obtain ⟨x, hx⟩ := N.mkQ_surjective (e.symm 1 : S)
   have h0 : N.mkQ x ≠ 0 := by
@@ -187,8 +187,8 @@ theorem exists_step {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] (N 
 theorem exists_prime_mem {K : Type*} [Field K] [NumberField K] (P : Ideal (𝓞 K)) (hP : P.IsMaximal) :
     ∃ q : ℕ, q.Prime ∧ (q : 𝓞 K) ∈ P := by
   have hb : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField K)
-  haveI : Finite (𝓞 K ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hb
-  letI := Ideal.Quotient.field P
+  have : Finite (𝓞 K ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hb
+  let := Ideal.Quotient.field P
   refine ⟨ringChar (𝓞 K ⧸ P), CharP.prime_ringChar _, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   exact ringChar.Nat.cast_ringChar
@@ -212,10 +212,10 @@ theorem exists_nearer : ∀ (D : D7) (n : ℕ) (L₀ L : Lat D n), SD D L₀ →
     intro ht
     have hle : L₀ ≤ L := Submodule.comap_subtype_eq_top.1 ht
     exact hne (le_antisymm hle fun y hy => (d₀ y).2 fun x hx => (d y).1 hy x (hle hx))
-  haveI : Module.Finite (𝓞 D.host.E) L₀ := Module.Finite.iff_fg.2 fg₀
-  haveI : Module.Finite ℤ (L₀ ⧸ Submodule.comap L₀.subtype L) :=
+  have : Module.Finite (𝓞 D.host.E) L₀ := Module.Finite.iff_fg.2 fg₀
+  have : Module.Finite ℤ (L₀ ⧸ Submodule.comap L₀.subtype L) :=
     Module.Finite.trans (𝓞 D.host.E) _
-  haveI : Finite (L₀ ⧸ Submodule.comap L₀.subtype L) := Module.finite_of_fg_torsion _ fun z => by
+  have : Finite (L₀ ⧸ Submodule.comap L₀.subtype L) := Module.finite_of_fg_torsion _ fun z => by
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ z
     obtain ⟨m, hm, hy⟩ := exists_int_smul_mem L sp y.1
     refine ⟨⟨m, mem_nonZeroDivisors_of_ne_zero hm⟩, ?_⟩
@@ -449,11 +449,11 @@ theorem exists_linear_projection {O E V : Type*} [CommRing O] [IsDedekindDomain 
     (hB : Submodule.span E ((L₁ ⊔ L₃ : Submodule O V) : Set V) = ⊤) :
     ∃ π : V →ₗ[E] V, ∀ v ∈ L₁ ⊔ L₃, π v ∈ L₁ ∧ v - π v ∈ L₃ := by
   set B := L₁ ⊔ L₃ with hBdef
-  haveI : Module.Finite O B := Module.Finite.iff_fg.2 (h₁.sup h₃)
-  haveI : Module.IsTorsionFree O V := Module.IsTorsionFree.trans_faithfulSMul O E V
-  haveI : Module.FinitePresentation O B := Module.finitePresentation_of_finite O B
-  haveI : Module.Flat O B := inferInstance
-  haveI : Module.Projective O B := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite O B := Module.Finite.iff_fg.2 (h₁.sup h₃)
+  have : Module.IsTorsionFree O V := Module.IsTorsionFree.trans_faithfulSMul O E V
+  have : Module.FinitePresentation O B := Module.finitePresentation_of_finite O B
+  have : Module.Flat O B := inferInstance
+  have : Module.Projective O B := Module.Flat.projective_of_finitePresentation
   let p : (L₁ × L₃) →ₗ[O] B := LinearMap.coprod (Submodule.inclusion le_sup_left) (Submodule.inclusion le_sup_right)
   have hp : Function.Surjective p := by
     rintro ⟨v, hv⟩
@@ -461,7 +461,7 @@ theorem exists_linear_projection {O E V : Type*} [CommRing O] [IsDedekindDomain 
     exact ⟨(⟨a, ha⟩, ⟨b, hb⟩), rfl⟩
   obtain ⟨s, hs⟩ := Module.projective_lifting_property p LinearMap.id hp
   let f : B →ₗ[O] V := L₁.subtype ∘ₗ LinearMap.fst O L₁ L₃ ∘ₗ s
-  haveI := isLocalizedModule_subtype (E := E) B hB
+  have := isLocalizedModule_subtype (E := E) B hB
   have hu := (isLocalizedModule_id (nonZeroDivisors O) V E).map_units
   let g : V →ₗ[O] V := IsLocalizedModule.lift (nonZeroDivisors O) B.subtype f hu
   refine ⟨g.extendScalarsOfIsLocalization (nonZeroDivisors O) E, fun v hv => ?_⟩
@@ -769,11 +769,11 @@ theorem mu_eq_sign : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : Add
   let χ : Fin r → 𝓞 D.host.E → ℂ := fun i s => ch D (φ i s)
   have χadd : ∀ i a b, χ i (a + b) = χ i a * χ i b := fun i a b => by simp only [χ, map_add (f := _), ch_add]
   have hYX : ∀ i a a', bc D T (Y i a') (X i a) = χ i (a' * sgO D a) := fun i a a' => by
-    rw [bc_eq, hH, if_pos rfl]
+    rw [bc_eq, hH, ite_eq_left rfl]
   have hYX' : ∀ i j a a', i ≠ j → bc D T (Y i a') (X j a) = 1 := fun i j a a' h => by
-    rw [bc_eq, hH, if_neg h, ch_zero]
+    rw [bc_eq, hH, ite_eq_right h, ch_zero]
   have hXY' : ∀ i j a a', i ≠ j → bc D T (X j a) (Y i a') = 1 := fun i j a a' h => by
-    rw [bc_eq, ← Hf_conj, hH, if_neg h, map_zero, ch_zero]
+    rw [bc_eq, ← Hf_conj, hH, ite_eq_right h, map_zero, ch_zero]
   have χP : ∀ i, ∀ a ∈ P, χ i a = 1 := fun i a ha => by
     have := hYX i 1 a
     rw [map_one (sgO D), mul_one] at this
@@ -856,7 +856,7 @@ theorem mu_eq_sign : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : Add
       refine forall_congr' fun i => ?_
       rw [← u, ← v, eq_comm, Ideal.Quotient.eq, Pi.sub_apply]
     by_cases h : e₃ q₃ = e₂ q₂
-    · rw [if_pos (hiff.2 h), if_pos h]
+    · rw [ite_eq_left (hiff.2 h), ite_eq_left h]
       have wx : x = sumHom X (a₂ q₂) + (x - sumHom X (a₂ q₂)) := by abel
       have wy : y = sumHom Y (a₃ q₃) + (y - sumHom Y (a₃ q₃)) := by abel
       rw [wy, bc_add_left, n₂.2.1 _ v2 _ x2, mul_one, wx, bc_add_right, n₃.2.1 _ (mY _) _ u3, mul_one,
@@ -869,10 +869,10 @@ theorem mu_eq_sign : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : Add
       have w : a₃ q₃ i * sgO D (a₂ q₂ i) = t * sgO D t +
           ((a₃ q₃ i - t) * sgO D (a₂ q₂ i) + t * sgO D (a₂ q₂ i - t)) := by rw [map_sub]; ring
       rw [w, χadd, χP i _ (P.add_mem (P.mul_mem_right _ t3) (P.mul_mem_left _ (hσ _ t2))), mul_one]
-    · rw [if_neg (mt hiff.1 h), if_neg h]
+    · rw [ite_eq_right (mt hiff.1 h), ite_eq_right h]
   rw [finsum_congr key, finsum_comp_equiv (Equiv.prodCongr e₃ e₂) (f := F), finsum_eq_sum_of_fintype,
     Fintype.sum_prod_type_right] at hμ
-  simp only [F, Finset.sum_ite_eq', Finset.mem_univ, if_true] at hμ
+  simp only [F, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at hμ
   simp only [finsum_eq_sum_of_fintype] at hmG
   rw [← Fintype.piFinset_univ, ← Finset.prod_univ_sum (fun _ => Finset.univ)
     (fun i (t : 𝓞 D.host.E ⧸ P) => χ i (Quotient.out t * sgO D (Quotient.out t)))] at hμ
@@ -1519,8 +1519,8 @@ theorem cT_tv (D : D7) {n : ℕ} (μ : D.host.E) (w : Fin n → D.host.E) :
   simp only [cT, tv, Matrix.transpose_apply, Matrix.map_apply, Matrix.add_apply, Matrix.smul_apply,
     Matrix.vecMulVec_apply, smul_eq_mul, map_add, map_mul, conj_conj, Matrix.one_apply]
   by_cases h : i = j
-  · subst h; simp only [if_true, map_one]; ring
-  · rw [if_neg h, if_neg (Ne.symm h), map_zero]; ring
+  · subst h; simp only [ite_true, map_one]; ring
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), map_zero]; ring
 
 theorem tv_unitary (D : D7) {n : ℕ} (μ : D.host.E) (w : Fin n → D.host.E)
     (h : μ + D.host.conj μ + μ * D.host.conj μ * hE D w w = 0) : tv D μ w * cT D (tv D μ w) = 1 := by

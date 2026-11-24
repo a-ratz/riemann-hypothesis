@@ -46,8 +46,8 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.
 theorem UpperTheory.frame_criterion_lambda_characters :
     UpperTheory.V.Pr.CrLam := by
   intro Ω _ _ _ l _ O _ _ η Ψ σ g₁ B M L _ _ _ _ _ Φ k v A hA hM
-  haveI := Φ.cv v
-  haveI := Φ.t2v v
+  have := Φ.cv v
+  have := Φ.t2v v
   obtain ⟨hemb, -, -⟩ := galEmbTop ℚ L Ω
   let e1 : Dec (F := L) A →* G ℚ Ω := (galEmb ℚ L Ω).comp (Dec (F := L) A).subtype
   let e2 : Φ.Gv v →* G ℚ Ω := (upl Ω L).subtype.comp (k.j v)
@@ -97,7 +97,7 @@ theorem UpperTheory.frame_criterion_lambda_characters :
       rw [Function.comp_apply, ← hm, MulEquiv.apply_symm_apply]
     have he1emb : Topology.IsEmbedding e1 := hemb.comp Topology.IsEmbedding.subtypeVal
     rw [he1emb.continuous_iff, hcomp]
-    exact continuous_subtype_val.comp (k.j_cont v)
+    exact continuous_subtypeVal.comp (k.j_cont v)
   have hfwd : Continuous m := by
     have := hinv.continuous_symm_of_equiv_compact_to_t2 (f := m.symm.toEquiv)
     simpa using this

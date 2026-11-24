@@ -99,7 +99,7 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.
 
 private lemma dim_succ_le {A : Type} [CommRing A] {P Q : Ideal A} [P.IsPrime] (h : P < Q) :
     ringKrullDim (A ⧸ Q) + 1 ≤ ringKrullDim (A ⧸ P) := by
-  obtain ⟨r, hrQ, hrP⟩ := SetLike.exists_of_lt h
+  obtain ⟨r, hrQ, hrP⟩ := IsConcreteLE.exists_of_lt h
   have hne : Ideal.Quotient.mk P r ≠ 0 := fun h0 => hrP (Ideal.Quotient.eq_zero_iff_mem.mp h0)
   have hnzd : Ideal.Quotient.mk P r ∈ nonZeroDivisors (A ⧸ P) := mem_nonZeroDivisors_of_ne_zero hne
   have h1 := ringKrullDim_quotient_succ_le_of_nonZeroDivisor hnzd
@@ -128,7 +128,7 @@ private lemma exists_sep {A : Type} [CommRing A] [IsNoetherianRing A] {J Z₀ : 
     have hW' := Finset.mem_erase.mp hW
     have hWm : W ∈ J.minimalPrimes := hfin.mem_toFinset.mp hW'.2
     exact hW'.1 (le_antisymm hWle (h₀.2 hWm.1 hWle) |>.symm ▸ rfl)
-  obtain ⟨e, he, heZ⟩ := SetLike.not_le_iff_exists.mp hnot
+  obtain ⟨e, he, heZ⟩ := IsConcreteLE.not_le_iff_exists.mp hnot
   refine ⟨e, heZ, fun Z₁ h₁ hne => ?_⟩
   have : Z₁ ∈ s := Finset.mem_erase.mpr ⟨hne, hfin.mem_toFinset.mpr h₁⟩
   exact (Finset.inf_le (f := id) this) he
@@ -142,9 +142,9 @@ theorem UpperTheory.V.J.denseOf :
           (ringKrullDim (B ⧸ Z) = (D : WithBot ℕ∞) → ∀ b ∉ Z, ∃ y : B →ₐ[c.O] Qbar l, Z ≤ RingHom.ker y ∧ Gd (y.comp φ) ∧ y b ≠ 0) := by
   intro l _ c B₀ B _ _ _ _ _ φ J D Gd hφ hdim hdense Z hZ hJZ
   have hJZ' : J ≤ Z.comap φ := Ideal.map_le_iff_le_comap.mp hJZ
-  haveI hZ' : (Z.comap φ).IsPrime := Ideal.comap_isPrime φ Z
+  have hZ' : (Z.comap φ).IsPrime := Ideal.comap_isPrime φ Z
   obtain ⟨Z₀, hZ₀, hZ₀le⟩ := Ideal.exists_minimalPrimes_le hJZ'
-  haveI hp₀ : Z₀.IsPrime := hZ₀.1.1
+  have hp₀ : Z₀.IsPrime := hZ₀.1.1
   have hψ : Function.Surjective ((Ideal.Quotient.mk Z).comp (φ : B₀ →+* B)) :=
     Ideal.Quotient.mk_surjective.comp hφ
   have hker : RingHom.ker ((Ideal.Quotient.mk Z).comp (φ : B₀ →+* B)) = Z.comap φ := by
@@ -180,7 +180,7 @@ theorem UpperTheory.V.J.denseOf :
   obtain ⟨x, hJx, hGx, hxbe⟩ := hx
   have hxb : x b' ≠ 0 := fun h0 => hxbe (by rw [map_mul, h0, zero_mul])
   have hxe : x e ≠ 0 := fun h0 => hxbe (by rw [map_mul, h0, mul_zero])
-  haveI hkp : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
+  have hkp : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
   obtain ⟨Z₁, hZ₁, hZ₁le⟩ := Ideal.exists_minimalPrimes_le hJx
   have hZ₁eq : Z₁ = Z₀ := by
     by_contra hne
@@ -247,7 +247,7 @@ private theorem artinian_quot (j : ℕ) : IsArtinianRing (B ⧸ maximalIdeal B ^
 
 private theorem stab (I : ℕ → Ideal B) (hI : Antitone I) (j : ℕ) :
     ∃ e, ∀ N, e ≤ N → ∀ a ∈ I e, ∃ b ∈ I N, a - b ∈ maximalIdeal B ^ j := by
-  haveI := artinian_quot (B := B) j
+  have := artinian_quot (B := B) j
   let f : ℕ →o (Ideal (B ⧸ maximalIdeal B ^ j))ᵒᵈ :=
     ⟨fun N => OrderDual.toDual ((I N).map (Ideal.Quotient.mk _)), fun a b h => Ideal.map_mono (hI h)⟩
   obtain ⟨e, he⟩ := IsArtinian.monotone_stabilizes f
@@ -278,7 +278,7 @@ private theorem cofinal [IsAdicComplete (maximalIdeal B) B] (I : ℕ → Ideal B
     refine ⟨y, ⟨hy, fun h => h2 ?_⟩, hd⟩
     have := add_mem (Ideal.pow_le_pow_right (Nat.le_add_right k j) hd) h
     rwa [sub_add_cancel] at this
-  obtain ⟨x₀, h1, h2⟩ := SetLike.not_le_iff_exists.1 (hcon (E 0))
+  obtain ⟨x₀, h1, h2⟩ := IsConcreteLE.not_le_iff_exists.1 (hcon (E 0))
   let a : ∀ j, {x // P j x} := fun j => Nat.rec ⟨x₀, h1, h2⟩
     (fun j x => ⟨(step j x.1 x.2).choose, (step j x.1 x.2).choose_spec.1⟩) j
   have ha : ∀ j, (a j).1 - (a (j + 1)).1 ∈ maximalIdeal B ^ (k + j) := fun j =>
@@ -396,7 +396,7 @@ theorem UpperTheory.V.J.derExt :
         ∀ (S : Fr.Space c.O F n), ∀ ξ : S.A →ₐ[c.O] Qbar l, ∀ D ∈ PtDer ξ (Qbar l), (∀ g i j, D (S.u.r g i j) = 0) → (∀ v i g, D (S.u.ψ v i g : S.A) = 0) → D = 0 := by
   intro l _ c _ F C₀ n hF hn S ξ D hD hr hψ
   obtain ⟨hco, hm⟩ := Fr.co_B hF hn S
-  haveI := hco
+  have := hco
   have hD' : ∀ f g, D (f * g) = ξ f * D g + ξ g * D f := hD
 
   have hs : ∀ x ∈ ({x | ∃ g i j, x = S.ρ.r g i j} ∪ {x | ∃ v i g, x = (S.ρ.ψ v i g : S.R)} : Set S.R),
@@ -510,11 +510,11 @@ private theorem J_entry {R : Type} [CommRing R] {n : ℕ} (M : Matrix (Fin n) (F
   have hJ : ∀ a b : Fin n, Jmat R n a b = if b = a.rev then 1 else 0 := fun _ _ => rfl
   have h1 : ∀ b, (Jmat R n * Mᵀ) i b = M b i.rev := by
     intro b
-    rw [Matrix.mul_apply, Finset.sum_eq_single i.rev (fun c _ hc => by rw [hJ, if_neg hc, zero_mul])
-      (fun h => absurd (Finset.mem_univ _) h), hJ, if_pos rfl, one_mul, Matrix.transpose_apply]
+    rw [Matrix.mul_apply, Finset.sum_eq_single i.rev (fun c _ hc => by rw [hJ, ite_eq_right hc, zero_mul])
+      (fun h => absurd (Finset.mem_univ _) h), hJ, ite_eq_left rfl, one_mul, Matrix.transpose_apply]
   rw [Matrix.mul_apply, Finset.sum_eq_single j.rev (fun c _ hc => by
-      rw [hJ, if_neg (fun h => hc (by rw [h, Fin.rev_rev])), mul_zero])
-      (fun h => absurd (Finset.mem_univ _) h), hJ, if_pos (Fin.rev_rev j).symm, mul_one, h1]
+      rw [hJ, ite_eq_right (fun h => hc (by rw [h, Fin.rev_rev])), mul_zero])
+      (fun h => absurd (Finset.mem_univ _) h), hJ, ite_eq_left (Fin.rev_rev j).symm, mul_one, h1]
 
 private theorem free_etale_sheaf_zmod_exists_hom_sending_generator [CharZero K] {n : ℕ} (hn : n = 2 ∨ n = 3) (x : Fin n → K)
     (h : ∀ i j, x i + x i.rev = x j + x j.rev) :
@@ -1041,7 +1041,7 @@ theorem UpperTheory.V.J.fixLe :
   have ht1 : t1 ≠ 0 := by
     rintro rfl
     exact hne (derExt l c F C₀ n hF hn S ξ D1 hD1.1 (fun g i j => by simp [h1r]) h1ψ)
-  haveI : Module.Free (Qbar l) (FixTan S ξ) := Module.Free.of_divisionRing _ _
+  have : Module.Free (Qbar l) (FixTan S ξ) := Module.Free.of_divisionRing _ _
   refine (rank_submodule_le_one_iff _).2 ⟨D1, hD1, fun D hD => ?_⟩
   obtain ⟨t, hr, hψ⟩ := key D hD
   have hE : t1 • D - t • D1 = 0 :=
@@ -1541,7 +1541,7 @@ theorem niceAt2_alt :
   have hcont : Continuous ρ0 := by
     have h1 : Continuous (R.K.tw ρQ) := by
       refine continuous_matrix fun a b => ?_
-      have h2 := continuous_subtype_val.comp (((X.So.adicCont l c₁).2 _ _).1 R.K.κ_cont)
+      have h2 := continuous_subtypeVal.comp (((X.So.adicCont l c₁).2 _ _).1 R.K.κ_cont)
       have h3 := ((derRep l c₁ _ R.C₀ 3 R.ok hn R.S ξ hV.1 0 (Submodule.zero_mem _)).1 a b).comp R.K.π_cont
       exact h2.mul h3
     exact Units.continuous_iff.2 ⟨h1, h1.comp continuous_inv⟩

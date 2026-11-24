@@ -96,7 +96,7 @@ theorem adjoin_eq_top_of_closure {R R' : Subring ℂ} (h : R ≤ R') (x : R') (G
     (hG : R' = Subring.closure G) (hx : ∀ g ∈ G, g ∈ R ∨ g = x) :
     letI := (Subring.inclusion h).toAlgebra
     Algebra.adjoin R {x} = ⊤ := by
-  letI := (Subring.inclusion h).toAlgebra
+  let := (Subring.inclusion h).toAlgebra
   have key : R' ≤ (Algebra.adjoin R {x}).toSubring.map R'.subtype := by
     conv_lhs => rw [hG]
     rw [Subring.closure_le]
@@ -115,7 +115,7 @@ theorem away_of_closure {R R' : Subring ℂ} (h : R ≤ R') (s : R) (hs : (s : �
     (hG : R' = Subring.closure G) (hx : ∀ g ∈ G, g ∈ R ∨ g = (s : ℂ)⁻¹) :
     letI := (Subring.inclusion h).toAlgebra
     IsLocalization.Away s R' := by
-  letI := (Subring.inclusion h).toAlgebra
+  let := (Subring.inclusion h).toAlgebra
   have key : ∀ z ∈ Subring.closure G, ∃ n : ℕ, z * (s : ℂ) ^ n ∈ R := by
     intro z hz
     induction hz using Subring.closure_induction with
@@ -295,7 +295,7 @@ theorem zeta_eq_pow {A A' : ℕ} (hA' : 0 < A') (h : A ∣ A') : ∃ k : ℕ, ze
   have hk : (k : ℂ) ≠ 0 := by exact_mod_cast (Nat.pos_of_mul_pos_left hA').ne'
   refine ⟨k, ?_⟩
   unfold zeta
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp
@@ -328,7 +328,7 @@ theorem isIntegrallyClosed_RZ_one {S : ℕ} (hS : 0 < S) : IsIntegrallyClosed (R
   have hle : Subring.closure {(1 + H.rt0) / 2} ≤ RZ H S 1 :=
     Subring.closure_le.mpr (by rintro g rfl; exact w_mem H _ _)
   have hS0 : (S : ℂ) ≠ 0 := by exact_mod_cast hS.ne'
-  letI := (Subring.inclusion hle).toAlgebra
+  let := (Subring.inclusion hle).toAlgebra
   have hloc := away_of_closure hle (S : Subring.closure {(1 + H.rt0) / 2}) (by simpa using hS.ne')
     (by simpa using inv_mem H S 1) _ rfl (by
       rintro g (rfl | rfl | rfl)
@@ -347,7 +347,7 @@ theorem etale_RZ {S A A' e : ℕ} (hS : 0 < S) (hA' : 0 < A') (hA : A ∣ A') (h
     [IsIntegrallyClosed (RZ H S A)] :
     letI := (Subring.inclusion (RZ_le H hS hA' dvd_rfl hA)).toAlgebra
     Algebra.Etale (RZ H S A) (RZ H S A') ∧ Module.Finite (RZ H S A) (RZ H S A') := by
-  letI := (Subring.inclusion (RZ_le H hS hA' dvd_rfl hA)).toAlgebra
+  let := (Subring.inclusion (RZ_le H hS hA' dvd_rfl hA)).toAlgebra
   have hS0 : (S : ℂ) ≠ 0 := by exact_mod_cast hS.ne'
   refine etale_of_adjoin_root_of_unity (Subring.inclusion_injective _) ⟨zeta A', zeta_mem H S A'⟩
     (adjoin_eq_top_of_closure _ _ _ rfl ?_) A' hA' (Subtype.ext (zeta_pow A' hA')) ?_
@@ -362,7 +362,7 @@ theorem etale_RZ {S A A' e : ℕ} (hS : 0 < S) (hA' : 0 < A') (hA : A ∣ A') (h
 theorem isIntegrallyClosed_RZ {S A e : ℕ} (hS : 0 < S) (hA : 0 < A) (he : A ∣ S ^ e) :
     IsIntegrallyClosed (RZ H S A) := by
   have := isIntegrallyClosed_RZ_one H hS
-  letI := (Subring.inclusion (RZ_le H hS hA dvd_rfl (one_dvd A))).toAlgebra
+  let := (Subring.inclusion (RZ_le H hS hA dvd_rfl (one_dvd A))).toAlgebra
   have := (etale_RZ H hS hA (one_dvd A) he).1
   exact GlobalTheory.isIntegrallyClosed_of_smooth (RZ H S 1) (RZ H S A)
 
@@ -378,7 +378,7 @@ theorem spMap_finite_etale {R B : Type} [CommRing R] [CommRing B] (b : R →+* B
 theorem spMap_away {R B : Type} [CommRing R] [CommRing B] (b : R →+* B) (s : R)
     (h : letI := b.toAlgebra; IsLocalization.Away s B) :
     IsOpenImmersion (spMap b) ∧ ∀ x : Sp R, x ∈ Set.range (spMap b) ↔ s ∉ x.asIdeal := by
-  letI := b.toAlgebra
+  let := b.toAlgebra
   refine ⟨IsOpenImmersion.of_isLocalization s, fun x => ?_⟩
   have := PrimeSpectrum.localization_away_comap_range B s
   exact Set.ext_iff.mp this x

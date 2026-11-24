@@ -91,7 +91,7 @@ theorem entire_eq_mul_of_sq_eq_mul_sq :
   have key : ∀ z, (f z * Complex.exp (-q z) - c * h z) * (f z * Complex.exp (-q z) + c * h z) = 0 := by
     intro z
     have e1 : Complex.exp (-q z) ^ 2 * Complex.exp (2 * q z) = 1 := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [← Complex.exp_natCast_mul, ← Complex.exp_add]
       convert Complex.exp_zero using 2
       push_cast
       ring

@@ -353,7 +353,7 @@ theorem stepBasis_std : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} 
           exact this ▸ hz
       rw [hmap, ← e1]
       refine (e2 _).trans ?_
-      simp only [TC.baseL, Set.mem_setOf_eq, reV, LinearEquiv.funCongrLeft_apply, LinearMap.funLeft_apply]
+      simp only [TC.baseL, Set.mem_ofPred_eq, reV, LinearEquiv.funCongrLeft_apply, LinearMap.funLeft_apply]
       constructor
       · intro H a
         obtain ⟨r, hr1, hr2⟩ := H (finCongr hr a)
@@ -748,7 +748,7 @@ theorem cmpJ_data_ne : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} (
         (∀ j hj, Formalism.MainNotions.G.KAat.ChX (I.at' j hj).st) ∧
         (∀ j, (w.D Z).R.m ≤ j → IsEmpty (Lv.compS j)) := by
   intro K B f T w hO hF hP Z t Wt nch n Y hmu hQ O hO' hU E hE Fl hfl hw u v hg
-  haveI : Fact ((w.D Z).what₂.places.resChar v).Prime := ⟨(w.D Z).what₂.places.resChar_prime v⟩
+  have : Fact ((w.D Z).what₂.places.resChar v).Prime := ⟨(w.D Z).what₂.places.resChar_prime v⟩
   intro hμ
   obtain ⟨tt, htt⟩ := GlobalTheory.T.trueColumnChoice_exists_standardChainData w.I w.ok w.pins w.l Z w.l0 nch n.tp t.C n.xi t.std t.stdLv
   have hpl := GlobalTheory.T.served_place_no_chain_place_or_type_prime_over w hO hF hP Z t Wt nch n Y hmu hQ O hO' hU E hE Fl hfl hw u v hg hμ tt htt
@@ -901,7 +901,7 @@ theorem stepTiesD_mid : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} 
   have hψ : GlobalTheory.Port.PsiEx (GlobalTheory.Port.formsInMem F dt i hi) (t.cmp.embW u v hg) :=
     GlobalTheory.Port.psiEx_of _ (t.cmp.embW u v hg) (((w.D Z).gat u v hg).P.setting (plc t.Gt u v hg)).frac_O hrat
       (GlobalTheory.Port.finMem_of F dt i hi)
-  haveI : ∀ j, Finite (t.C.herm.base.Ch u j) := fun j => t.C.herm.base.ChFin u j
+  have : ∀ j, Finite (t.C.herm.base.Ch u j) := fun j => t.C.herm.base.ChFin u j
   let S : StepD t.g.herm u v hg (GlobalTheory.Port.formsInMem F dt i hi) :=
     ⟨hB.choose, hB.choose_spec.2, fun β => (hψ β).choose, fun β => GlobalTheory.Port.fin_of _ β _⟩
   refine ⟨GlobalTheory.Port.formsInMem F dt i hi, GlobalTheory.Port.formsInMem_fin F dt i hi, S, ?_⟩
@@ -1031,7 +1031,7 @@ theorem stepTies_top : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} (
   have hL : GlobalTheory.Port.ChartBaseLatticeEqSelfDualAtP u Fo ((w.D Z).what₂.places.resChar v) := hL0
   obtain ⟨Cm, h1, h2, -⟩ := (F.val (i+1) hi (Or.inr h)).de
   obtain ⟨B0, hstd, hB⟩ := GlobalTheory.Port.baseEx_of t.g.herm u v hg Fo Cm h1 h2 hL
-  haveI : IsFractionRing ((w.D Z).gat u v hg).O ((w.D Z).gat u v hg).Kf :=
+  have : IsFractionRing ((w.D Z).gat u v hg).O ((w.D Z).gat u v hg).Kf :=
     (((w.D Z).gat u v hg).P.setting (plc t.Gt u v hg)).frac_O
   have hfin := GlobalTheory.Port.chi_fin_top F (i + 1) hi h
   have hrat : Formalism.L2.G.Cmp.ChiRatAll (F.cls (i+1) hi (Or.inr h)).lev (w.D Z).what₂.embLL := by
@@ -1169,7 +1169,7 @@ theorem exists_comparisonData_steps_at_baseCharacter : ∀ {K : Ctx} {B : Base} 
         (∀ j hj, Formalism.MainNotions.G.KAat.ChX (I.at' j hj).st) ∧
         (∀ j, (w.D Z).R.m ≤ j → IsEmpty (Lv.compS j)) := by
   intro K B f T w hO hF hP Z t Wt nch hn Y hMu hQ O hStd hUnf E hE Fl hFl hW u v hg _ hμ
-  haveI : Fact ((w.D Z).what₂.places.resChar v).Prime := ⟨(w.D Z).what₂.places.resChar_prime v⟩
+  have : Fact ((w.D Z).what₂.places.resChar v).Prime := ⟨(w.D Z).what₂.places.resChar_prime v⟩
   have ht : (Fl u v hg).t = (w.D Z).R.t := (hFl u v hg).1
   have hFt : FillTie t.Gt u v hg (Fl u v hg) := fillTie_of t.Gt u v hg (Fl u v hg) (hW u v hg)
   obtain ⟨S, hS⟩ := site_of t.g.herm u v hg t.Gt t.cmp (fun i hi => by
@@ -1252,7 +1252,7 @@ theorem levels_cls_cmp_at_served : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T 
           (up.cmpS j '' ((((w.tw Z).fm u ((w.D Z).what₂.muAt v)).lat (j + 1)).L :
             Set (((w.tw Z).fm u ((w.D Z).what₂.muAt v)).lat (j + 1)).V)) = Lv.Int (j + 1)) := by
   intro K B f T w hO hF hP Z t Wt nch n Y hmu hQ O hO' hU E hE Fl hfl hw u v hg
-  haveI : Fact ((w.D Z).what₂.places.resChar v).Prime := ⟨(w.D Z).what₂.places.resChar_prime v⟩
+  have : Fact ((w.D Z).what₂.places.resChar v).Prime := ⟨(w.D Z).what₂.places.resChar_prime v⟩
   obtain ⟨Lv, I, H, hC, hX, hE0⟩ : ∃ (Lv : G.Levels (Fl u v hg)) (I : Formalism.MainNotions.G.CmpJ.CmpJIn (w.tw Z) u ((w.D Z).what₂.muAt v) v hg Lv),
         Formalism.MainNotions.G.CmpJ.CmpJHyp t.cmp I ∧
         (∀ j hj, (I.at' j hj).C = (w.D Z).chTw u ((w.D Z).what₂.muAt v)) ∧
@@ -1269,7 +1269,7 @@ theorem levels_cls_cmp_at_served : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T 
     else (hE0 j (by omega)).elim a
   have hcls : ∀ j (hj : j + 1 ≤ (w.D Z).R.m) a L, clsS j a L =
       Formalism.MainNotions.G.KAat.castCls (hC j hj) (j + 1) (Formalism.MainNotions.G.KAat.clsOf (S := (I.at' j hj).st) (H.core j hj) a L) :=
-    fun j hj a L => dif_pos hj
+    fun j hj a L => dite_eq_left hj
   refine ⟨Lv, clsS, Formalism.L2.G.Cmp.CmpUp.ofRat S.cmpS S.injS S.ratS, ?_, ?_, ?_⟩
   · intro j hj a a' L L' hL hL'
     rw [hcls j hj, hcls j hj, (Formalism.MainNotions.G.KAat.castCls_inj _ _).eq_iff]

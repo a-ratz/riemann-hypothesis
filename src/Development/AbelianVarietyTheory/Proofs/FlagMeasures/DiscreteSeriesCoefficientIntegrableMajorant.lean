@@ -78,7 +78,7 @@ theorem phMaj : PhMaj := by
     have hon := (hds v).2.1.2.2.1.2.2 (B.w v)
     refine hon.comp_continuous ?_ ?_
     · unfold uMat
-      exact (Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply v)
+      exact (Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply v)
     · intro g
       exact (g v).2
   refine ⟨?_, ?_, ?_⟩

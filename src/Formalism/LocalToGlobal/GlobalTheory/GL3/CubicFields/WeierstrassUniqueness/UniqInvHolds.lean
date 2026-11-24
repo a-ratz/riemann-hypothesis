@@ -148,7 +148,7 @@ theorem weierstrassP_eventuallyEq (L L' : PeriodPair) (h2 : L.g₂ = L'.g₂) (h
     filter_upwards [nhdsWithin_le_nhds hw0] with z hz
     rw [WeierstrassODE.wp_eq, WeierstrassODE.wp_eq]; linear_combination hz
   by_contra hne
-  obtain ⟨n, g, hg, hg0, hwg⟩ := hw.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hne
+  obtain ⟨n, g, hg, hg0, hwg⟩ := hw.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hne
   simp only [sub_zero, smul_eq_mul] at hwg
 
   have hder : ∀ᶠ z in 𝓝 (0:ℂ), z * (f' z - F' z) = z ^ n * (n * g z + z * deriv g z) := by

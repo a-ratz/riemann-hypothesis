@@ -160,8 +160,8 @@ theorem exists_hasSupports : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [M
       · exact ⟨1, le_rfl, fun h3 => (hk ⟨‹_›, ‹_›, h3⟩).elim⟩)
   refine ⟨d, hd, fun X _ _ _ _ hX r γ hγ => ?_⟩
   obtain ⟨k, ⟨e⟩⟩ := hY X hX
-  haveI := Module.Finite.equiv e
-  haveI := Module.Projective.of_equiv e
+  have := Module.Finite.equiv e
+  have := Module.Projective.of_equiv e
   obtain ⟨m, a, ha⟩ := hP k (e.finrank_eq ▸ hX) r _ (hγ.pull_equiv e.symm)
   exact ⟨m, _, ha.of_pull e.symm⟩
 

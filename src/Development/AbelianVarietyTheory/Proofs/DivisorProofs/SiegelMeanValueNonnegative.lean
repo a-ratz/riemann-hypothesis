@@ -68,8 +68,8 @@ theorem exists_cyclic_of_finite_maximal {R : Type} [CommRing R]
     (hfin : Set.Finite {I : Ideal R | I.IsMaximal}) {r : ℕ} (g : Matrix (Fin r) (Fin r) R)
     (hs : g.charpoly.Separable) : ∃ v, IsUnit (krylov g v).det := by
   classical
-  haveI : Finite (MaximalSpectrum R) := by
-    haveI := hfin.to_subtype
+  have : Finite (MaximalSpectrum R) := by
+    have := hfin.to_subtype
     exact Finite.of_injective (fun m : MaximalSpectrum R =>
       (⟨m.asIdeal, m.isMaximal⟩ : {I : Ideal R | I.IsMaximal}))
       (fun a b h => MaximalSpectrum.ext (congrArg Subtype.val h))
@@ -77,7 +77,7 @@ theorem exists_cyclic_of_finite_maximal {R : Type} [CommRing R]
       (krylov (g.map (Ideal.Quotient.mk m.asIdeal)) v).det ≠ 0 := by
     intro m
     have := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
+    let := Ideal.Quotient.field m.asIdeal
     exact exists_cyclic_field _ (by rw [Matrix.charpoly_map]; exact hs.map)
   choose w hw using hloc
   have hsurj : ∀ i : Fin r, ∃ a : R, ∀ m : MaximalSpectrum R,

@@ -132,9 +132,9 @@ theorem IntM.inv {V : HSp D} (hV : V.gram = 1) {k : GA D V} (h : IntM V k) : Int
   exact (int_iff _).1 (finPart_cA_mem ((int_iff _).2 (h j i)))
 
 theorem isOpen_intM (V : HSp D) : IsOpen {k : GA D V | IntM V k} := by
-  letI tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  let tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E)
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  let ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
   obtain ⟨e, he, hec, -⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
       (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=
@@ -151,10 +151,10 @@ theorem isOpen_intM (V : HSp D) : IsOpen {k : GA D V | IntM V k} := by
     simp
   have e1 : {k : GA D V | IntM V k} = ⋂ i, ⋂ j, (fun k : GA D V => finPart D (mt V k i j)) ⁻¹' {z | z ∈ intAE D} := by
     ext k
-    simp only [Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq, int_iff, IntM]
+    simp only [Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq, int_iff, IntM]
   rw [e1]
   refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => h1.preimage (hfc.comp ?_)
-  exact (Units.continuous_val.comp continuous_subtype_val).matrix_elem i j
+  exact (Units.continuous_val.comp continuous_subtypeVal).matrix_elem i j
 
 theorem intM_of_finHom {V : HSp D} {k k' : GA D V} (e : finHom V k = finHom V k') (h : IntM V k') : IntM V k := by
   intro i j

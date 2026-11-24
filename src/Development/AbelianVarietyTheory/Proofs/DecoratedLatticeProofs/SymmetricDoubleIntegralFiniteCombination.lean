@@ -28,22 +28,22 @@ theorem isQuotIntFJ_linear {n : Type} [Fintype n] [DecidableEq n] {c ρ : ℕ} (
       IsQuotIntFJ ν μX μG ρ (fun h => a * f h + f' h) (a * z + z') := by
   classical
   rintro ⟨F, hF, h1, h2⟩ ⟨F', hF', h1', h2'⟩
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   obtain ⟨bX, lX, sX, -⟩ := GlobalTheory.SplitWeil.volGL_haar k n ν
   obtain ⟨bG, lG, sG, -⟩ := GlobalTheory.SplitWeil.volGL_haar k (n ⊕ Fin c) ν
-  haveI := QuotLinear.finiteOnCompacts_volN (n := n) (c := c) (p := ρ + 1) ν
-  haveI : LocallyCompactSpace (N k n c (ρ + 1)) :=
+  have := QuotLinear.finiteOnCompacts_volN (n := n) (c := c) (p := ρ + 1) ν
+  have : LocallyCompactSpace (N k n c (ρ + 1)) :=
     (QuotLinear.isClosed_N (k := k) (n := n) (c := c) (p := ρ + 1)).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (N k n c (ρ + 1)) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : IsLocallyFiniteMeasure (volN ν n c (ρ + 1)) := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : SigmaFinite (volN ν n c (ρ + 1)) := sigmaFinite_of_locallyFinite
+  have : SecondCountableTopology (N k n c (ρ + 1)) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : IsLocallyFiniteMeasure (volN ν n c (ρ + 1)) := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : SigmaFinite (volN ν n c (ρ + 1)) := sigmaFinite_of_locallyFinite
   let m : Measure (n → k) := Measure.pi fun _ => ν
   let ι : GL n k × N k n c (ρ + 1) × (n → k) → GL (n ⊕ Fin c) k := fun z =>
     embX c z.1 * (z.2.1 : GL (n ⊕ Fin c) k) * colE c (ρ + 1) z.2.2
   let M : Measure (GL n k × N k n c (ρ + 1) × (n → k)) := μX.prod ((volN ν n c (ρ + 1)).prod m)
   have hm : Continuous ι :=
-    ((QuotLinear.continuous_embX.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd.fst)).mul
+    ((QuotLinear.continuous_embX.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd.fst)).mul
       (ExchangeSupport.continuous_colE.comp continuous_snd.snd)
   have hint : ∀ φ ∈ SB (GL (n ⊕ Fin c) k), ∀ h, Integrable (fun z => φ (ι z * h)) M := by
     intro φ hφ h
@@ -88,9 +88,9 @@ theorem tensorVal_unique {n₀ n₁ n₂ : Type} [Fintype n₀] [DecidableEq n�
     (Φ : SB (Matrix (n₂ ⊕ Fin c) (n₁ ⊕ Fin (c + 1)) k)) (Θ : Matrix n₁ n₀ k → (n₁ → k) → ℂ) {z z' : ℂ}
     (hz : HasTensorVal (fun Ψ Φ₀ => app (T Ψ) (opEFJ ψ ν ρ Φ₀.1 Φ.1) F) Θ z)
     (hz' : HasTensorVal (fun Ψ Φ₀ => app (T Ψ) (opEFJ ψ ν ρ Φ₀.1 Φ.1) F) Θ z') : z = z' := by
-  haveI := hν.1
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := hν.1
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hk : IsOpen (((1 : kˣ →* ℂˣ).ker : Subgroup kˣ) : Set kˣ) := by simp
   obtain ⟨⟨r, hr⟩, hsm⟩ := GlobalTheory.PosOne.isSrc_exists_isSmoothRep k (n₁ ⊕ Fin (c + 1)) (n₂ ⊕ Fin c) 1 hk
   have hav := (GlobalTheory.PosOne.avg_self_and_props k n₂ n₁ c ρ h1 h2 ψ hψ hψ1 ν hν 1 hk Φ).2
@@ -169,7 +169,7 @@ theorem symmetricDoubleIntegral_combination_of_pointValues : ∀ (k : Type) [Fie
   intro k _ _ _ _ _ _ n₀ n₁ n₂ _ _ _ _ _ _ c ρ hc ψ hψ hψ1 ν hν μ₁ μ₂ m₁ G₁ m₂ G₂ i₁ j₁ i₂ j₂ A _ _ τ _ T _ F P₁ P₂
     e z v hz hv
   classical
-  haveI := hν.1
+  have := hν.1
   have h1 : 1 ≤ ρ := by omega
   have h2 : ρ ≤ c := by omega
   have q0 : IsQuotInt ν m₂ G₂ ρ (fun _ => 0) 0 := ⟨0, zero_mem _, fun _ => by simp, by simp⟩

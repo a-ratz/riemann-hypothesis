@@ -266,7 +266,7 @@ private theorem unit_unique {N l : ℕ} (hN : N ≠ 0) (hl : l.Prime) {u v : (ZM
     Nat.Coprime.pow_left _ (Nat.coprime_ordCompl hl hN)
   have h := (Nat.modEq_and_modEq_iff_modEq_mul hcop).mp ⟨h2, h1⟩
   rw [Nat.ordProj_mul_ordCompl_eq_self] at h
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   apply Units.ext
   apply ZMod.val_injective
   have hu := ZMod.val_lt (u : ZMod N)
@@ -281,7 +281,7 @@ private theorem val_iff {N f : ℕ} [NeZero N] (hf : f ∣ N) (u : (ZMod N)ˣ) (
 theorem UpperTheory.HF.artL_spec :
     ∀ {φ : Frame} (H : HostRaw φ) {l : ℕ}, l.Prime → (∃ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ l [MOD ordCompl[l] H.condN] ∧ (u : ZMod H.condN).val ≡ 1 [MOD ordProj[l] H.condN] ∧ H.artL l = H.art u) ∧ (∀ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ l [MOD ordCompl[l] H.condN] → (u : ZMod H.condN).val ≡ 1 [MOD ordProj[l] H.condN] → H.art u = H.artL l) ∧ ∀ g : φ.GG, g ∈ H.decG l ↔ ∃ (u : (ZMod H.condN)ˣ) (k : ℕ), (u : ZMod H.condN).val ≡ l ^ k [MOD ordCompl[l] H.condN] ∧ g = H.art u := by
   intro φ H l hl
-  haveI : NeZero H.condN := ⟨H.condN_ne_zero⟩
+  have : NeZero H.condN := ⟨H.condN_ne_zero⟩
   have hN : H.condN ≠ 0 := H.condN_ne_zero
   have hex := exists_unit hN hl
   have hart : H.artL l = H.art hex.choose := by
@@ -294,7 +294,7 @@ theorem UpperTheory.HF.artL_spec :
     rw [hart, unit_unique hN hl (hu1.trans hc1.symm) (hu2.trans hc2.symm)]
   refine ⟨⟨hex.choose, hc1, hc2, hart⟩, part2, ?_⟩
   have hA : ordCompl[l] H.condN ∣ H.condN := Nat.ordCompl_dvd _ _
-  haveI : NeZero (ordCompl[l] H.condN) :=
+  have : NeZero (ordCompl[l] H.condN) :=
     ⟨fun h => hN (Nat.eq_zero_of_zero_dvd (h ▸ hA))⟩
   obtain ⟨lA, hlA⟩ : ∃ w : (ZMod (ordCompl[l] H.condN))ˣ, (w : ZMod (ordCompl[l] H.condN)) = (l : ZMod _) :=
     ⟨ZMod.unitOfCoprime l (Nat.coprime_ordCompl hl hN), ZMod.coe_unitOfCoprime _ _⟩
@@ -364,9 +364,9 @@ private theorem card_eq_of_iff {G G' : Type*} [Group G] [Group G'] (e : G ≃* G
 theorem UpperTheory.HF.grp_bridge :
     ∀ {φ : Frame} (H : HostAx φ) {l : ℕ}, l.Prime → ∀ (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(l : ℤ)})], (∀ σ : H.E ≃ₐ[ℚ] H.E, (∀ x : 𝓞 H.E, σ • x - x ∈ P) ↔ H.gal σ ∈ H.inertG l) ∧ (∀ σ : H.E ≃ₐ[ℚ] H.E, σ ∈ MulAction.stabilizer _ P ↔ H.gal σ ∈ H.decG l) ∧ P.ramificationIdx ℤ = H.el l ∧ P.inertiaDeg ℤ = H.nw l ∧ Nat.card (H.decG l) = H.el l * H.nw l ∧ (primesOver (span {(l : ℤ)}) (𝓞 H.E)).ncard * (H.el l * H.nw l) = 4 * φ.ord := by
   intro φ H l hl P _ _
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI := H.galois
-  haveI hmax : (span {(l : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime l
+  have : Fact l.Prime := ⟨hl⟩
+  have := H.galois
+  have hmax : (span {(l : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime l
   have hI : ∀ σ : H.E ≃ₐ[ℚ] H.E, (∀ x : 𝓞 H.E, σ • x - x ∈ P) ↔ H.gal σ ∈ H.inertG l := fun σ =>
     (H.der.inertia l P σ).trans (H.mem_inertG l _).symm
   have hD : ∀ σ : H.E ≃ₐ[ℚ] H.E, σ ∈ MulAction.stabilizer _ P ↔ H.gal σ ∈ H.decG l := fun σ =>
@@ -408,7 +408,7 @@ open scoped Pointwise
 theorem UpperTheory.HF.diff_mult :
     ∀ {φ : Frame} (H : HostAx φ) {l : ℕ}, l.Prime → ∀ (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(l : ℤ)})], (multiplicity P (differentIdeal ℤ (𝓞 H.E)) : ℝ) = H.el l * H.vdH l ∧ multiplicity P (span {(l : 𝓞 H.E)}) = H.el l ∧ (¬ l ∣ H.el l → multiplicity P (differentIdeal ℤ (𝓞 H.E)) = H.el l - 1) ∧ (l ∣ H.el l → H.el l ≤ multiplicity P (differentIdeal ℤ (𝓞 H.E))) := by
   intro φ H l hl P _ _
-  haveI := H.galois
+  have := H.galois
   obtain ⟨-, -, hram, -⟩ := grp_bridge H hl P
   have hmap : (span {(l : ℤ)}).map (algebraMap ℤ (𝓞 H.E)) = span {(l : 𝓞 H.E)} := by
     simp [Ideal.map_span]
@@ -663,7 +663,7 @@ theorem prime_dvd_absNorm_half_iff {p : ℕ} (hp : p.Prime) : p ∣ absNorm H.�
   constructor
   · intro h
     obtain ⟨P, hP, hu, hd⟩ := Ideal.exists_isMaximal_dvd_of_dvd_absNorm' hp _ h
-    haveI := hP.isPrime
+    have := hP.isPrime
     obtain ⟨l, hl, ho⟩ := (hs P).1.1 (Or.inl hd)
     have hlp : l.Prime := Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_erase hl)
     have e : span {(l : ℤ)} = span {(p : ℤ)} := ho.over.trans hu
@@ -677,7 +677,7 @@ theorem prime_dvd_absNorm_half_iff {p : ℕ} (hp : p.Prime) : p ∣ absNorm H.�
       rw [Ideal.absNorm_span_natCast]
       exact dvd_pow_self _ Module.finrank_pos.ne'
     obtain ⟨P, hP, -, hd⟩ := Ideal.exists_isMaximal_dvd_of_dvd_absNorm' hp _ h1
-    haveI := hP.isPrime
+    have := hP.isPrime
     have hm : (p : 𝓞 H.E) ∈ P := Ideal.le_of_dvd hd (Ideal.mem_span_singleton_self _)
     rcases (hs P).1.2 ⟨p, (H.mem_ramI_iff hp).2 h, liesOver_of_mem hp P hm⟩ with h2 | h2
     · exact dvd_absNorm_of hp P _ hm h2

@@ -55,13 +55,13 @@ theorem finiteDimensional_functionField : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) 
     letI := GlobalTheory.NormSheafDescent.fieldK π hK; letI := GlobalTheory.NormSheafDescent.algKL π
     FiniteDimensional (Z.presheaf.stalk (GlobalTheory.NormSheafDescent.genPt π)) Y.functionField := by
   intro Y Z π _ _ hK
-  letI := fieldK π hK
-  letI := algKL π
+  let := fieldK π hK
+  let := algKL π
   obtain ⟨U, hU, hζU, -⟩ :=
     exists_isAffineOpen_mem_and_subset (X := Z) (U := ⊤) (x := genPt π) trivial
   have hηU : genericPoint Y ∈ π ⁻¹ᵁ U := hζU
   have hV : IsAffineOpen (π ⁻¹ᵁ U) := hU.preimage π
-  haveI : Nonempty (π ⁻¹ᵁ U) := ⟨⟨_, hηU⟩⟩
+  have : Nonempty (π ⁻¹ᵁ U) := ⟨⟨_, hηU⟩⟩
   let f : Γ(Z, U) →+* Z.presheaf.stalk (genPt π) := (Z.presheaf.germ U (genPt π) hζU).hom
   let φ : Γ(Y, π ⁻¹ᵁ U) →+* Y.functionField :=
     (Y.presheaf.germ (π ⁻¹ᵁ U) (genericPoint Y) hηU).hom
@@ -69,10 +69,10 @@ theorem finiteDimensional_functionField : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) 
   have hsq : ∀ a, algebraMap (Z.presheaf.stalk (genPt π)) Y.functionField (f a) = φ (g a) :=
     fun a => Scheme.Hom.germ_stalkMap_apply π U _ hζU a
   have hfin : g.Finite := IsFinite.finite_app π U hU
-  letI : Algebra Γ(Z, U) Γ(Y, π ⁻¹ᵁ U) := g.toAlgebra
-  haveI : Module.Finite Γ(Z, U) Γ(Y, π ⁻¹ᵁ U) := hfin
-  letI : Algebra Γ(Y, π ⁻¹ᵁ U) Y.functionField := φ.toAlgebra
-  haveI : IsFractionRing Γ(Y, π ⁻¹ᵁ U) Y.functionField :=
+  let : Algebra Γ(Z, U) Γ(Y, π ⁻¹ᵁ U) := g.toAlgebra
+  have : Module.Finite Γ(Z, U) Γ(Y, π ⁻¹ᵁ U) := hfin
+  let : Algebra Γ(Y, π ⁻¹ᵁ U) Y.functionField := φ.toAlgebra
+  have : IsFractionRing Γ(Y, π ⁻¹ᵁ U) Y.functionField :=
     functionField_isFractionRing_of_isAffineOpen Y _ hV
   have hint : ∀ b, IsIntegral (Z.presheaf.stalk (genPt π)) (φ b) := by
     intro b
@@ -83,7 +83,7 @@ theorem finiteDimensional_functionField : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) 
     have hpb' : p.eval₂ g b = 0 := hpb
     rw [Polynomial.eval₂_map, e, ← Polynomial.hom_eval₂, hpb', map_zero]
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := Γ(Z, U)) (M := Γ(Y, π ⁻¹ᵁ U))
-  haveI : Finite (φ '' (s : Set Γ(Y, π ⁻¹ᵁ U))) := (s.finite_toSet.image φ).to_subtype
+  have : Finite (φ '' (s : Set Γ(Y, π ⁻¹ᵁ U))) := (s.finite_toSet.image φ).to_subtype
   have hF : FiniteDimensional (Z.presheaf.stalk (genPt π))
       (IntermediateField.adjoin (Z.presheaf.stalk (genPt π)) (φ '' (s : Set Γ(Y, π ⁻¹ᵁ U)))) :=
     IntermediateField.finiteDimensional_adjoin (by

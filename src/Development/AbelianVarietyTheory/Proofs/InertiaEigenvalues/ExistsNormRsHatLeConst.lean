@@ -171,7 +171,7 @@ theorem partB_entire (hπ : π.IsUnitary) (hπ' : π'.IsUnitary) (hφ : φ ∈ r
       rsHat ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* (g⁻¹).valᵀ)) *
         ((ideleModule E (GeneralLinearGroup.det g) : ℝ) : ℂ) ^ (s - 1)) (𝓕 ∩ lowSet E a) μ) ∧
     Differentiable ℂ (partB ℓ φ.1 φ'.1 Φ J η μ 𝓕) := by
-  haveI : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
   have hm : ∀ ξ : {ξ : Fin a → E // ξ ≠ 0}, AEStronglyMeasurable (fun g : GA E a =>
       rsHat ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* (g⁻¹).valᵀ)) (μ.restrict (𝓕 ∩ lowSet E a)) :=
     fun ξ => (stronglyMeasurable_rsHat J η hc hc' hΦ

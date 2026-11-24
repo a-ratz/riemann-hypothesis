@@ -102,7 +102,7 @@ theorem act_injective : Out.Laws → ∀ (E : Type) [Field E] [NumberField E] (K
   let k := AlgebraicClosure K
   let t : Spec (CommRingCat.of k) ⟶ Sp (𝓞 K) :=
     Spec.map (CommRingCat.ofHom ((algebraMap K k).comp (algebraMap (𝓞 K) K)))
-  haveI : CharZero k := charZero_of_injective_algebraMap (algebraMap K k).injective
+  have : CharZero k := charZero_of_injective_algebraMap (algebraMap K k).injective
   have key : ∀ m : ℕ, 1 ≤ m → Nat.card (Over.mk t ⟶ P.A) = (n * m) ^ (2 * P.g) := by
     intro m hm
     have hnm : n * m ≠ 0 := Nat.mul_ne_zero hn0 (by omega)

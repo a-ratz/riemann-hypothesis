@@ -504,7 +504,7 @@ private theorem cocl_comb {q : ℕ} (s : ℂ) {ω η : Geo.Co Ξ q} (hω : Coclo
     refine AlternatingMap.ext fun X => ?_
     have h1 := DFunLike.congr_fun (show del _ e ω = 0 from hω) X
     have h2 := DFunLike.congr_fun (show del _ e η = 0 from hη) X
-    rw [del_apply, AlternatingMap.zero_apply] at h1 h2 ⊢
+    rw [del_apply, zero_apply] at h1 h2 ⊢
     simp only [ap, map_add (f := _), map_smul, Finset.sum_add_distrib, h2, add_zero, ← Finset.smul_sum, h1, smul_zero]
 
 private theorem cocl_zero {q : ℕ} : Coclosed (smAdj Ξ r) e (0 : Geo.Co Ξ q) := by
@@ -520,7 +520,7 @@ private theorem cocl_trans {q : ℕ} (x : GL (Fin a) (Af E)) {ω : Geo.Co Ξ q} 
   | succ q =>
     refine AlternatingMap.ext fun X => ?_
     have h1 := DFunLike.congr_fun (show del _ e ω = 0 from hω) X
-    rw [del_apply, AlternatingMap.zero_apply] at h1 ⊢
+    rw [del_apply, zero_apply] at h1 ⊢
 
     simp only [ap, ← rT_adj, ← map_sum, h1, map_zero]
 
@@ -568,19 +568,19 @@ private theorem irrAbs_module {R M S W κ ι : Type} [Ring R] [AddCommGroup M] [
     [AddCommGroup W] [Module R W] [IsSimpleModule R S] [Finite ι] (Φ : (κ →₀ S) →ₗ[R] M) (hs : Function.Surjective Φ)
     (p : ι → W →ₗ[R] M) (hp : ∀ w, (∀ i, p i w = 0) → w = 0) (x : W) (hx : x ≠ 0) :
     ∃ f : S →ₗ[R] W, Function.Injective f := by
-  haveI := IsSemisimpleModule.range Φ
-  haveI : IsSemisimpleModule R M :=
+  have := IsSemisimpleModule.range Φ
+  have : IsSemisimpleModule R M :=
     IsSemisimpleModule.congr (LinearEquiv.ofTop _ (LinearMap.range_eq_top.2 hs)).symm
   let e : W →ₗ[R] (ι → M) := LinearMap.pi p
   have he : Function.Injective e := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro w hw
     exact hp w fun i => congrFun hw i
-  haveI : IsSemisimpleModule R W := IsSemisimpleModule.of_injective e he
-  haveI : Nontrivial W := ⟨⟨x, 0, hx⟩⟩
+  have : IsSemisimpleModule R W := IsSemisimpleModule.of_injective e he
+  have : Nontrivial W := ⟨⟨x, 0, hx⟩⟩
   obtain ⟨N, hN⟩ := IsSemisimpleModule.exists_simple_submodule R W
-  haveI := hN
-  haveI := IsSimpleModule.nontrivial R N
+  have := hN
+  have := IsSimpleModule.nontrivial R N
   obtain ⟨y, hy⟩ := exists_ne (0 : N)
   have hex : ∃ i, p i (y : W) ≠ 0 := by
     by_contra h
@@ -640,7 +640,7 @@ theorem UpperTheory.V.Cj.irrAbs :
       ((p i).intertwiningMap_of_isIntertwiningMap ρW ρV (hp i))
   have hP : ∀ w : ρW.asModule, (∀ i, P i w = 0) → w = 0 := fun w h => hsep w h
   obtain ⟨x, hx⟩ := exists_ne (0 : W)
-  haveI : IsSimpleModule (MonoidAlgebra ℂ G) ρS.asModule :=
+  have : IsSimpleModule (MonoidAlgebra ℂ G) ρS.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule ρS).1 hirr
   obtain ⟨f, hf⟩ := irrAbs_module Φ hΦ P hP (show ρW.asModule from x) hx
   let f' := (Representation.IntertwiningMap.equivLinearMapAsModule ρS ρW).symm f
@@ -661,8 +661,8 @@ open scoped TensorProduct
 theorem UpperTheory.V.Cj.irrCo :
     UpperTheory.V.Cj.IrrCo := by
   intro E _ _ _ a π τ hτ Ξ q P hP hst hV
-  haveI : Nontrivial P := Submodule.nontrivial_iff_ne_bot.2 hP
-  haveI : Module.Finite ℝ (Herm E a) := inferInstance
+  have : Nontrivial P := Submodule.nontrivial_iff_ne_bot.2 hP
+  have : Module.Finite ℝ (Herm E a) := inferInstance
   let b := Module.finBasis ℝ (Herm E a)
   let ρW : Representation ℂ (GL (Fin a) (Af E)) P :=
     { toFun := fun x => (transRep Ξ q x).restrict (fun ω hω => hst x ω hω)
@@ -673,10 +673,10 @@ theorem UpperTheory.V.Cj.irrCo :
     { toFun := fun w => ⟨Bor.cmp j.2 (w.1 fun k => b (j.1 k)), mem_tens.1 (hV w.1 w.2 _) j.2⟩
       map_add' := fun x y => Subtype.ext (by
         change Bor.cmp j.2 ((x.1 + y.1) _) = Bor.cmp j.2 _ + Bor.cmp j.2 _
-        rw [AlternatingMap.add_apply, map_add (f := _)])
+        rw [add_apply, map_add (f := _)])
       map_smul' := fun c x => Subtype.ext (by
         change Bor.cmp j.2 ((c • x.1) _) = c • Bor.cmp j.2 _
-        rw [AlternatingMap.smul_apply, map_smul]) }
+        rw [smul_apply, map_smul]) }
   obtain ⟨Φ, h1, h2⟩ := irrAbs _ τ.V π.V P _ τ.ρ π.finPart ρW τ.irred hτ.iSup_range p
     (fun j g w => Subtype.ext (cmp_trans g w.1 _ j.2))
     (fun w hw => Subtype.ext (by
@@ -864,7 +864,7 @@ private theorem ex_tens {E : Type} [Field E] [NumberField E] [_root_.NumberField
     funext i j
     change r (eOf (fun y => piK fun t => F t y) τ i j) = _
     rw [eOf_piK hreg (fun t => map_one _), Finset.sum_eq_single τ (fun t _ ht => by
-      rw [hder, eOf_fac, if_neg ht, map_zero, map_zero]) (by simp), hder, eOf_fac, if_pos rfl]
+      rw [hder, eOf_fac, ite_eq_right ht, map_zero, map_zero]) (by simp), hder, eOf_fac, ite_eq_left rfl]
     rfl
   rw [h1, ← map_qdet, qdet_shift, hν, map_smul, map_one]
   simp only [sub_eq_add_neg]
@@ -926,13 +926,13 @@ private theorem eF_const (c : ℂ) (τ : E →+* ℂ) (i j : Fin a) : eF (fun _ 
 private theorem eF_add {f g : GL (Fin a) (Cinf E) → ℂ} (hf : f ∈ regFun E a) (hg : g ∈ regFun E a) (τ : E →+* ℂ) (i j : Fin a) :
     eF (f + g) τ i j = eF f τ i j + eF g τ i j := by
   rw [eF, dF_eq (fun y => by simp [extGL_val]) ((has_dF hf).add (has_dF hg))]
-  simp only [eF, ContinuousLinearMap.add_apply]
+  simp only [eF, add_apply]
   ring
 
 private theorem eF_mul {f g : GL (Fin a) (Cinf E) → ℂ} (hf : f ∈ regFun E a) (hg : g ∈ regFun E a) (τ : E →+* ℂ) (i j : Fin a) :
     eF (f * g) τ i j = f 1 * eF g τ i j + g 1 * eF f τ i j := by
   rw [eF, dF_eq (fun y => by simp [extGL_val]) ((has_dF hf).mul (has_dF hg))]
-  simp only [eF, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, extGL_one]
+  simp only [eF, add_apply, smul_apply, smul_eq_mul, extGL_one]
   ring
 
 variable [_root_.NumberField.IsTotallyComplex E]
@@ -950,7 +950,7 @@ private theorem eF_coord (t τ : E →+* ℂ) (k l i j : Fin a) :
     rw [Matrix.single_apply, apply_ite (coord t), map_zero]
   rw [eF, h2, h2]
   by_cases h3 : i = k ∧ j = l
-  · simp only [h3, and_self, and_true, if_true]
+  · simp only [h3, and_self, and_true, ite_true]
     exact coord_hol τ t
   · simp [h3]
 
@@ -971,7 +971,7 @@ private theorem eF_det (t τ : E →+* ℂ) (i j : Fin a) :
   rw [eF, h2, h2]
   by_cases h3 : i = j
   · have h4 := coord_hol τ t
-    simp only [h3, and_true, if_true]
+    simp only [h3, and_true, ite_true]
     split_ifs at h4 ⊢ <;> linear_combination -h4
   · simp [h3]
 
@@ -1077,7 +1077,7 @@ private theorem map_infChar (σ : ℂ ≃+* ℂ) (Ξ : AlgRep E a) {τ : E →+*
   obtain ⟨m', e1, -, e3⟩ := GlobalTheory.AlgInfChar.exists_dualInfChar E a Ξ τ
   have e2 := (AlgRepEndIrreducible.dualIff E a Ξ τ m').2 e1
   have e : m = m'.map Neg.neg := AlgRepEndIrreducible.msetSep _ _ fun u => by
-    haveI : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
+    have : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
     exact smul_left_injective ℂ one_ne_zero ((h.2 u).symm.trans (e2.2 u))
   intro z hz
   rw [e] at hz
@@ -1355,7 +1355,7 @@ theorem acyclic : Acyclic := by
   intro Γ Ω _ _ _ ρ hP n
   obtain ⟨P, hconst, hequi⟩ := hP
   let S : Subgroup Γ := ⊥
-  haveI : Subsingleton S := ⟨fun a b => Subtype.ext ((Subgroup.mem_bot.1 a.2).trans (Subgroup.mem_bot.1 b.2).symm)⟩
+  have : Subsingleton S := ⟨fun a b => Subtype.ext ((Subgroup.mem_bot.1 a.2).trans (Subgroup.mem_bot.1 b.2).symm)⟩
   let A : Rep ℂ S := Rep.of (Representation.trivial ℂ S Ω)
   let C : Rep ℂ Γ := Rep.coind S.subtype A
   have hC : Subsingleton (groupCohomology C (n + 1)) := by
@@ -1403,7 +1403,7 @@ theorem acyclic : Acyclic := by
       rw [← ModuleCat.comp_apply, ← F.map_comp, hri, F.map_id]
       rfl
     rw [← key a, ← key b, hab]
-  haveI : Subsingleton (F.obj C) := hC
+  have : Subsingleton (F.obj C) := hC
   exact hinj.subsingleton
 
 end UpperTheory.V.Lit.Dr
@@ -1514,7 +1514,7 @@ theorem shiftUp : ShiftUp := by
       mono_f := (Rep.mono_iff_injective _).2 hinj
       epi_g := (Rep.epi_iff_surjective _).2 hsurj }
   have hz : Limits.IsZero (groupCohomology X.X₂ (n + 1)) := by
-    haveI := hΩ n
+    have := hΩ n
     exact ModuleCat.isZero_of_subsingleton _
   have hmono := groupCohomology.mono_δ_of_isZero hX (n + 1) hz
   have hinjδ := (ModuleCat.mono_iff_injective _).1 hmono
@@ -1668,7 +1668,7 @@ private theorem rapid_sum {q s : ℕ} (ω : Fin s → Co Ξ q) (c : Fin s → �
     obtain ⟨C, hC⟩ := hα X N
     obtain ⟨D, hD⟩ := hβ X N
     refine ⟨C + D, fun g => ?_⟩
-    rw [AlternatingMap.add_apply, ev_add']
+    rw [add_apply, ev_add']
     refine (mul_le_mul_of_nonneg_right (norm_add_le _ _) (pow_nonneg (hq _) N)).trans ?_
     rw [add_mul]
     exact add_le_add (hC g) (hD g)
@@ -1681,7 +1681,7 @@ private theorem rapid_sum {q s : ℕ} (ω : Fin s → Co Ξ q) (c : Fin s → �
   · intro i _ X N
     obtain ⟨C, hC⟩ := h i X N
     refine ⟨‖c i‖ * C, fun g => ?_⟩
-    rw [AlternatingMap.smul_apply, ev_smul', norm_smul, mul_assoc]
+    rw [smul_apply, ev_smul', norm_smul, mul_assoc]
     exact mul_le_mul_of_nonneg_left (hC g) (norm_nonneg _)
 
 private theorem noExact' (ha : 1 ≤ a) {n : ℕ} {e : Fin n → Herm E a} (he : IsFrame e) {U : Subgroup (GL (Fin a) (Af E))}
@@ -1746,7 +1746,7 @@ theorem UpperTheory.V.Z.Coh.clozelCohC :
   have hreg : (CG.mk π).IsRegAlg := (GlobalTheory.CuspRep.CG.isRegAlg_iff _).2 fun τ => by
     obtain ⟨m', e1, e2, e3⟩ := GlobalTheory.AlgInfChar.exists_dualInfChar E a Ξ τ
     have e : m τ = m' := msetSep _ _ fun u => by
-      haveI : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
+      have : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
       exact smul_left_injective ℂ one_ne_zero (((hd τ).2 u).symm.trans (e1.2 u))
     have h3 : (CG.mk π).HasInfChar τ (m τ) := h1 τ
     rw [h3.infChar_eq, e]

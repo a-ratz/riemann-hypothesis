@@ -173,20 +173,20 @@ theorem eq_of_expandsAt_of_chartExpOn : ∀ (R : Type) [CommRing R] [IsDomain R]
       intro α h hn
       have h0 : ((U.gt e).pG.left.app (LB.wchart D.toPre.P.L (D.toPre.famφB α) (jf α))).hom
           ((f α).f (jf α)) = 0 := h1v α hn (jf α)
-      simp only [F, dif_pos h, tV]
+      simp only [F, dite_eq_left h, tV]
       rw [h0, map_zero, zero_mul]
     have hz2 : ∀ α ∈ S₁ ∪ S₂, α ∉ S₂ → F α = 0 := by
       intro α h hn
       have h0 : ((U.gt e).pG.left.app (LB.wchart D.toPre.P.L (D.toPre.famφB α) (jf α))).hom
           ((f α).f (jf α)) = 0 := h2v α hn (jf α)
-      simp only [F, dif_pos h, tV]
+      simp only [F, dite_eq_left h, tV]
       rw [h0, map_zero, zero_mul]
     rw [sum_attach_eq_sum_of_subset Finset.subset_union_left F _ (fun x => ?_) hz1] at E1V
     rw [sum_attach_eq_sum_of_subset Finset.subset_union_right F _ (fun x => ?_) hz2] at E2V
     rotate_left
-    · simp only [F, dif_pos (Finset.mem_union_right S₁ x.2), tV]
+    · simp only [F, dite_eq_left (Finset.mem_union_right S₁ x.2), tV]
       congr 1 <;> first | rfl | exact map_res_homOfLE _ _ _ | exact map_map_homOfLE _ _ _
-    · simp only [F, dif_pos (Finset.mem_union_left S₂ x.2), tV]
+    · simp only [F, dite_eq_left (Finset.mem_union_left S₂ x.2), tV]
       congr 1 <;> first | rfl | exact map_res_homOfLE _ _ _ | exact map_map_homOfLE _ _ _
     refine ⟨U.expW e p i' (S₁ ∪ S₂) jf jt ⊓ W, inf_le_right, ⟨hmem _, hy⟩, ?_⟩
     rw [map_map_homOfLE]
@@ -254,7 +254,7 @@ theorem GlobalTheory.MumMult.exists_pt_chart_of_leadPt : ∀ (R : Type) [CommRin
 
   have hne : maximalIdeal R ^ (0 + 1) ≠ ⊤ := by
     rw [zero_add, pow_one]; exact (maximalIdeal.isMaximal R).ne_top
-  haveI : Nontrivial (R ⧸ maximalIdeal R ^ (0 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : Nontrivial (R ⧸ maximalIdeal R ^ (0 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
   obtain ⟨p⟩ := (inferInstance : Nonempty (PrimeSpectrum (R ⧸ maximalIdeal R ^ (0 + 1))))
   have hp : (thick R (maximalIdeal R) 0) p = (IsLocalRing.closedPoint R : PrimeSpectrum R) := by
     apply PrimeSpectrum.ext
@@ -918,10 +918,10 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R 
     · obtain ⟨c, hc, -⟩ := (hP k hk).choose_spec
       have e1 := hc e s₁ i i'
       have e2 := hc e s₂ i i'
-      have hS : S k = (hP k hk).choose := dif_pos hk
+      have hS : S k = (hP k hk).choose := dite_eq_left hk
       rw [hS, e1, e2]
       ring
-    · have hS : S k = fun _ => zeroSec _ := dif_neg hk
+    · have hS : S k = fun _ => zeroSec _ := dite_eq_right hk
       rw [hS]
       dsimp only [zeroSec]
       erw [map_zero, map_zero]
@@ -938,7 +938,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R 
     have hyW : y ∈ ((b 0).left ≫ (fstG (maximalIdeal R) 0 G).left) ⁻¹ᵁ secChart U.LG.L i ⊓
         (fstG (maximalIdeal R) 0 G).left ⁻¹ᵁ secChart U.LG.L i' :=
       ⟨Scheme.basicOpen_le _ _ hu, hi'⟩
-    have hS : S k = (hP k hk).choose := dif_pos hk
+    have hS : S k = (hP k hk).choose := dite_eq_left hk
     refine ⟨s₀, y, i, i', hu, ?_⟩
     rw [hS]
     have key := hc 0 s₀ i i'
@@ -1071,7 +1071,7 @@ namespace GlobalTheory.Mum
 theorem thick_apply_eq_closedPoint {R : Type} [CommRing R] [IsLocalRing R] (e : ℕ)
     (p : Spec (CommRingCat.of (R ⧸ maximalIdeal R ^ (e + 1)))) :
     thick R (maximalIdeal R) e p = closedPoint R := by
-  haveI : p.asIdeal.IsPrime := p.isPrime
+  have : p.asIdeal.IsPrime := p.isPrime
   apply PrimeSpectrum.ext
   show Ideal.comap (Ideal.Quotient.mk (maximalIdeal R ^ (e + 1))) p.asIdeal = maximalIdeal R
   have hle : maximalIdeal R ^ (e + 1) ≤ Ideal.comap (Ideal.Quotient.mk (maximalIdeal R ^ (e + 1))) p.asIdeal := by
@@ -1087,8 +1087,8 @@ theorem exists_thick_zero {R : Type} [CommRing R] [IsLocalRing R] (e : ℕ) (G :
       (fstG (maximalIdeal R) 0 G).left y₀ = (fstG (maximalIdeal R) e G).left y := by
   have hne : maximalIdeal R ^ (0 + 1) ≠ ⊤ := by
     rw [zero_add, pow_one]; exact (maximalIdeal.isMaximal R).ne_top
-  haveI : Nontrivial (R ⧸ maximalIdeal R ^ (0 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsLocalRing (R ⧸ maximalIdeal R ^ (0 + 1)) :=
+  have : Nontrivial (R ⧸ maximalIdeal R ^ (0 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsLocalRing (R ⧸ maximalIdeal R ^ (0 + 1)) :=
     IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
   have h1 : G.hom (pullback.fst G.hom (thick R (maximalIdeal R) e) y) = closedPoint R := by
     rw [← Scheme.Hom.comp_apply, pullback.condition, Scheme.Hom.comp_apply, thick_apply_eq_closedPoint]

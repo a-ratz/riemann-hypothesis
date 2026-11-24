@@ -70,10 +70,10 @@ theorem differentIdeal_eq_top_of_unramified (E : Type) [Field E] [NumberField E]
   by_contra hne
   obtain ⟨P, hP, hle⟩ := Ideal.exists_le_maximal _ hne
   have hdvd : P ∣ differentIdeal (𝓞 (maximalRealSubfield E)) (𝓞 E) := Ideal.dvd_iff_le.mpr hle
-  haveI : P.IsPrime := hP.isPrime
+  have : P.IsPrime := hP.isPrime
   have hU : Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield E)) P := by
     unfold Algebra.IsUnramifiedAt
-    haveI : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := inferInstance
+    have : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := inferInstance
     exact Algebra.FormallyUnramified.comp (𝓞 (maximalRealSubfield E)) (𝓞 E) (Localization.AtPrime P)
   exact (not_dvd_differentIdeal_iff.mpr hU) hdvd
 

@@ -52,7 +52,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.X.So.dualEmb :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] (a : O), a ≠ 0 → ∀ (r : ℕ) (M : Type) [AddCommGroup M] [Module O M] [Module (ZMod (l ^ r)) M], Nonempty (M ≃ₗ[O] (O ⧸ Ideal.span {a})) → ∃ ι : ReciprocityTheory.Gal.TDual (ZMod (l ^ r)) M →+ QO l O, Function.Injective ι ∧ (∀ w, a • w = 0 ↔ w ∈ Set.range ι) ∧ ∀ (y : ℤ_[l]) (x : O) (φ φ' : ReciprocityTheory.Gal.TDual (ZMod (l ^ r)) M), (∀ m, φ' m = PadicInt.toZModPow r y * φ (x • m)) → ι φ' = (algebraMap ℤ_[l] O y * x) • ι φ := by
   intro l _ O _ _ _ _ _ a ha r M _ _ _ hM
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨φ₀, hker, hsurj⟩ := UpperTheory.V.X.So.dualGen l O a ha r M hM
   obtain ⟨w, hw⟩ := (UpperTheory.V.ML.qoCyc l O).2.1 a ha
   choose c hc using hsurj

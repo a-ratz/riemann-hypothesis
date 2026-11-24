@@ -68,8 +68,8 @@ theorem integral_mul_right : ∀ (D : D7) (t n : ℕ) (μ₁ : Measure (Mx D t n
     ∀ (a : GL (Fin n) (AE D)) (f : Mx D t n → ℂ),
       ∫ x, f (x ⬝ a.1) ∂μ₁ = npow (absA D (Matrix.GeneralLinearGroup.det a)) (-(t : ℂ)) * ∫ x, f x ∂μ₁ := by
   intro D t n μ₁ 𝓕₁ hμ a f
-  haveI : μ₁.IsAddHaarMeasure := hμ.1
-  haveI : BorelSpace (Mx D t n) := ⟨rfl⟩
+  have : μ₁.IsAddHaarMeasure := hμ.1
+  have : BorelSpace (Mx D t n) := ⟨rfl⟩
   have hkey := GlobalTheory.ModuLR.modu_lrMul D t n μ₁ hμ.1 1 a
   simp only [map_one, one_pow, one_mul, Matrix.GeneralLinearGroup.coe_one, Matrix.one_mul, ENNReal.coe_one] at hkey
   set c : ℝ≥0 := absA D (Matrix.GeneralLinearGroup.det a) with hc

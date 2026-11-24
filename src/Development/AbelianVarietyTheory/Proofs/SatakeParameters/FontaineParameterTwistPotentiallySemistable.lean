@@ -488,9 +488,9 @@ namespace GlobalTheory.TwistParamAbove
 
 theorem wdPst_twist_one_field : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), Nonempty (LocTied l P AI) → ∀ (ι : Om l ≃+* ℂ) {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l E Ω (Dec (F := E) A) O) (h : IsPlaceOver A w) (hj : Induces Bw) {L : FinExt l} {a : ℕ} (s : ↥(Dec (F := E) A) →* GL (Fin a) ↥L.1) (m : ↥(Dec (F := E) A) →* GL (Fin 1) ↥L.1), IsPst P (Bw.repE L s) → IsPst P (Bw.repE L m) → IsPst P (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) → wdPst P ι Bw h hj (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) = (wdPst P ι Bw h hj (Bw.repE L s)).lpChar (wdPst P ι Bw h hj (Bw.repE L m)) := by
   intro l _ P AI hT ι E Ω _ _ _ _ _ A w O _ _ _ Bw h hj L a s m hs hm ht
-  haveI := hs.finite
-  haveI := hm.finite
-  haveI := ht.finite
+  have := hs.finite
+  have := hm.finite
+  have := ht.finite
   obtain ⟨e, he1, he2⟩ := GlobalTheory.T.dpstLetter_twist_tensor_equiv P AI hT ι Bw h hj s m hs hm ht
   have f1 := isFrobSS_wdRep P ι Bw h hj (Bw.repE L s)
   have f2 := isFrobSS_wdRep P ι Bw h hj (Bw.repE L m)

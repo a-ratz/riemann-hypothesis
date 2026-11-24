@@ -66,7 +66,7 @@ theorem injective_of_jacquet_surjective {k : Type} [Field k] [ValuativeRel k] [T
   refine ⟨φ, (injective_iff_map_eq_zero _).2 fun v hv => ?_⟩
   have hK : φ.ker ≠ ⊤ := by
     intro hK
-    haveI := Model.nontrivial_of_isIrreducible hirr
+    have := Model.nontrivial_of_isIrreducible hirr
     obtain ⟨y, hy⟩ := exists_ne (0 : Y)
     obtain ⟨x, rfl⟩ := hq y
     obtain ⟨w, rfl⟩ := Submodule.Quotient.mk_surjective _ x
@@ -77,7 +77,7 @@ theorem injective_of_jacquet_surjective {k : Type} [Field k] [ValuativeRel k] [T
     rw [h1, hw]
     rfl
   have hv' : v ∈ φ.ker := hv
-  haveI := π.irr
+  have := π.irr
   rw [(eq_bot_or_eq_top φ.ker).resolve_right hK] at hv'
   exact hv'
 
@@ -86,7 +86,7 @@ theorem exists_embedding_parInd_of_jacquet_nontrivial : GlobalTheory.Published.B
   have hfl : HasFiniteLength (jac e π.π) :=
     (hBZ k).2.1 (Fin s) (Fin n) (fun a => Fin (d a)) e π.V π.π π.smooth
       (hasFiniteLength_of_isIrreducible π.irr)
-  haveI : WellFoundedGT (Subrepresentation (jac e π.π)) :=
+  have : WellFoundedGT (Subrepresentation (jac e π.π)) :=
     ((hasFiniteLength_iff_wellFounded _).1 hfl).1
   have hne : (⊥ : Subrepresentation (jac e π.π)) ≠ ⊤ := by
     intro h

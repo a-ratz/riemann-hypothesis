@@ -91,8 +91,8 @@ theorem hasFDerivAt_sqSum (z : J → ℂ) : HasFDerivAt sqSum ((2 : ℝ) • reI
     funext x; simp [sqSum, Finset.sum_apply]] at h
   refine h.congr_fderiv ?_
   refine ContinuousLinearMap.ext fun v => ?_
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
-    Pi.smul_apply, ContinuousLinearMap.coe_comp', Function.comp_apply, innerSL_apply_apply,
+  simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
+    Pi.smul_apply, ContinuousLinearMap.coe_comp, Function.comp_apply, innerSL_apply_apply,
     ContinuousLinearMap.proj_apply, smul_eq_mul, reInner_apply, Complex.inner, Finset.mul_sum]
   refine Finset.sum_congr rfl fun p _ => ?_
   simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im]
@@ -105,7 +105,7 @@ theorem hasFDerivAt_phi {z : J → ℂ} (hz : sqSum z ≠ 0) :
   have h := ((hasFDerivAt_sqSum z).log hz).mul_const (1 / 2 : ℝ)
   refine h.congr_fderiv ?_
   refine ContinuousLinearMap.ext fun v => ?_
-  simp only [ContinuousLinearMap.coe_smul', Pi.smul_apply, smul_eq_mul]
+  simp only [FunLike.coe_smul, Pi.smul_apply, smul_eq_mul]
   ring
 
 theorem contDiffAt_phi {z : J → ℂ} (hz : sqSum z ≠ 0) {n : WithTop ℕ∞} :
@@ -128,7 +128,7 @@ theorem fderiv_fderiv_phi {z : J → ℂ} (hz : sqSum z ≠ 0) (u : J → ℂ) :
       fun z' => reInner u z' * ((fun x : ℝ => x⁻¹) ∘ sqSum) z' := by
     filter_upwards [hopen.mem_nhds hz] with z' hz'
     rw [(hasFDerivAt_phi hz').fderiv]
-    simp only [ContinuousLinearMap.coe_smul', Pi.smul_apply, smul_eq_mul, Function.comp_apply,
+    simp only [FunLike.coe_smul, Pi.smul_apply, smul_eq_mul, Function.comp_apply,
       reInner_comm z' u]
     ring
   have hinv := (hasFDerivAt_inv hz).comp z (hasFDerivAt_sqSum z)
@@ -136,8 +136,8 @@ theorem fderiv_fderiv_phi {z : J → ℂ} (hz : sqSum z ≠ 0) (u : J → ℂ) :
   rw [h1, heq.fderiv_eq]
   rw [show (fun z' => reInner u z' * ((fun x : ℝ => x⁻¹) ∘ sqSum) z') =
     (⇑(reInner u) * ((fun x : ℝ => x⁻¹) ∘ sqSum)) from rfl, hG.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
-    smul_eq_mul, ContinuousLinearMap.coe_comp', Function.comp_apply,
+  simp only [add_apply, FunLike.coe_smul, Pi.smul_apply,
+    smul_eq_mul, ContinuousLinearMap.coe_comp, Function.comp_apply,
     ContinuousLinearMap.toSpanSingleton_apply, reInner_self, reInner_comm u z]
   field_simp
   ring

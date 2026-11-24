@@ -600,7 +600,7 @@ theorem exists_units_subgroup_padic (hK : FiniteDimensional ℚ_[p] K) (E : Inte
     show 1 < ‖algebraMap ℚ_[p] (PadicAlgCl p) x‖
     rwa [norm_algebraMap']
   let _ : NontriviallyNormedField K := { (inferInstance : NormedField K) with non_trivial := hnt }
-  have : CompleteSpace K := FiniteDimensional.complete ℚ_[p] K
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[p] K
   let _ : NormedAlgebra K E :=
     { (inferInstance : Algebra K E) with
       norm_smul_le := fun a x => le_of_eq (by

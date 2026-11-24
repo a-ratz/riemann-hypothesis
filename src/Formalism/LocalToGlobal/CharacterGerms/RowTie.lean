@@ -92,7 +92,7 @@ theorem pairK_onto (hk : V.v (X.k : C) = 0) (g : Fin 2) :
     · exact VF.Ge.zero 0
   · intro q q'
     have hk0 := X.k_ne_zero hk
-    simp only [pairK, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [pairK, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     split_ifs
     · field_simp
     · simp

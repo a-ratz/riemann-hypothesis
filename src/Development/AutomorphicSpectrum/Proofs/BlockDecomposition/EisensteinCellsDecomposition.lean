@@ -84,7 +84,7 @@ theorem exists_isCompl {n r : ℕ} (c : Matrix (Fin r) (Fin n) K) (hc : LinearIn
   let e : Fin n ≃ Fin r ⊕ Fin m := (finCongr hn).trans finSumFinEquiv.symm
   refine ⟨fun i => Sum.elim c d (e i), ?_, ?_⟩
   · have hli : LinearIndependent K (fun i => Sum.elim c d (e i)) := hv.comp e e.injective
-    exact (Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_rows_iff_isUnit.mp hli)
+    exact (Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_row_iff_isUnit.mp hli)
   · intro i hi
     have he : e i = Sum.inl ⟨i, hi⟩ := by
       have : finCongr hn i = Fin.castAdd m ⟨i, hi⟩ := Fin.ext rfl

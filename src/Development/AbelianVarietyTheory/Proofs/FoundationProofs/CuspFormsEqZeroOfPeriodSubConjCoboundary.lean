@@ -214,7 +214,7 @@ theorem green_periodic_rectangle : ∀ (G D : ℂ → ℂ) (T a b : ℝ), 0 < T 
     intro p hp
     have h := (hder (φL p) (by rw [him]; exact hp)).2
     rw [← h]
-    simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.coe_smul',
+    simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, FunLike.coe_smul,
       Pi.smul_apply, hφ, smul_eq_mul]
     simp
     ring
@@ -275,7 +275,7 @@ lemma exp_eq_conj_qParam (T : ℝ) (n : ℕ) (x y : ℝ) :
     Complex.exp (2 * Real.pi * Complex.I * n * ((x : ℂ) + (y : ℂ) * Complex.I) / T) =
       (starRingEnd ℂ) (1 / Function.Periodic.qParam T ((x : ℂ) + (y : ℂ) * Complex.I) ^ n) *
         (Real.exp (-(4 * Real.pi * n / T) * y) : ℂ) := by
-  rw [Function.Periodic.qParam, ← Complex.exp_nat_mul, one_div, ← Complex.exp_neg, ← Complex.exp_conj,
+  rw [Function.Periodic.qParam, ← Complex.exp_natCast_mul, one_div, ← Complex.exp_neg, ← Complex.exp_conj,
     Complex.ofReal_exp, ← Complex.exp_add]
   congr 1
   simp only [map_neg, map_mul, map_div₀, map_add (f := _), Complex.conj_ofReal, Complex.conj_I, map_natCast, map_ofNat]
@@ -329,7 +329,7 @@ lemma wirtinger_sub {s : ℂ} {G H : ℂ → ℂ} {d e : ℂ} (hG : P s G d) (hH
   obtain ⟨L, hL, hd⟩ := hG
   obtain ⟨M, hM, he⟩ := hH
   refine ⟨L - M, hL.sub hM, ?_⟩
-  simp only [ContinuousLinearMap.sub_apply]
+  simp only [sub_apply]
   rw [← hd, ← he]; ring
 
 lemma wirtinger_sum {s : ℂ} {ι : Type} (S : Finset ι) (G : ι → ℂ → ℂ) (d : ι → ℂ)
@@ -343,7 +343,7 @@ lemma wirtinger_sum {s : ℂ} {ι : Type} (S : Finset ι) (G : ι → ℂ → �
     refine ⟨L + M, ?_, ?_⟩
     · refine (hL.add hM).congr_of_eventuallyEq (Filter.Eventually.of_forall fun z => ?_)
       simp [Finset.sum_insert ha]
-    · rw [Finset.sum_insert ha, ← hd, ← he]; simp only [ContinuousLinearMap.add_apply]; ring
+    · rw [Finset.sum_insert ha, ← hd, ← he]; simp only [add_apply]; ring
 
 lemma wirtinger_conj_mul_pow {s : ℂ} {b : ℂ → ℂ} {b' : ℂ} (hb : HasDerivAt b b' s) (j : ℕ) :
     P s (fun z => starRingEnd ℂ (b z) * z ^ j) (-2 * Complex.I * s ^ j * starRingEnd ℂ b') := by
@@ -443,7 +443,7 @@ theorem fourier_sub_eq : ∀ (U : ℂ → ℂ) (h : ℍ → ℂ) (w : ℕ) (T : 
         (2 * Real.pi * Complex.I * n / T) s := by
       simpa using ((hasDerivAt_id s).const_mul (2 * Real.pi * Complex.I * n : ℂ)).div_const (T : ℂ)
     refine ⟨_, hL.mul (h1.cexp.hasFDerivAt.restrictScalars ℝ), ?_⟩
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+    simp only [add_apply, smul_apply,
       ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.toSpanSingleton_apply, smul_eq_mul]
     linear_combination (Complex.exp (2 * Real.pi * Complex.I * n * s / T)) * e
   · have hc : ContinuousOn (h ∘ ofComplex) {s : ℂ | 0 < s.im} :=
@@ -974,13 +974,13 @@ theorem eichler_tail : ∀ (w : ℕ) (F : ℍ → ℂ) (C c : ℝ), MDifferentia
       (F ∘ UpperHalfPlane.ofComplex) (Complex.I + t * ((τ : ℂ) - Complex.I)) *
         (-(Complex.I + t * ((τ : ℂ) - Complex.I))) ^ (w - j) * ((τ : ℂ) - Complex.I) := by
     rw [eichler, Polynomial.finsetSum_coeff, Finset.sum_eq_single j]
-    · rw [Polynomial.coeff_C_mul_X_pow, if_pos rfl]
-    · intro b _ hb; rw [Polynomial.coeff_C_mul_X_pow, if_neg (Ne.symm hb)]
+    · rw [Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl]
+    · intro b _ hb; rw [Polynomial.coeff_C_mul_X_pow, ite_eq_right (Ne.symm hb)]
     · intro h; exact absurd hj' h
   have hc2 : Lp.coeff j = (w.choose j : ℂ) * (Complex.I * ∫ s in Ioi (0:ℝ), g j (Complex.I + s * Complex.I)) := by
     rw [hLp, Polynomial.finsetSum_coeff, Finset.sum_eq_single j]
-    · rw [Polynomial.coeff_C_mul_X_pow, if_pos rfl]
-    · intro b _ hb; rw [Polynomial.coeff_C_mul_X_pow, if_neg (Ne.symm hb)]
+    · rw [Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl]
+    · intro b _ hb; rw [Polynomial.coeff_C_mul_X_pow, ite_eq_right (Ne.symm hb)]
     · intro h; exact absurd hj' h
   have hint : (∫ t in (0 : ℝ)..1,
       (F ∘ UpperHalfPlane.ofComplex) (Complex.I + t * ((τ : ℂ) - Complex.I)) *
@@ -1558,7 +1558,7 @@ theorem decay_at_cusp : ∀ (Γ : Subgroup SL(2, ℤ)) (k : ℕ), Γ.FiniteIndex
     nlinarith
   have := hA τ' (him ▸ hτ) hr1 hr2
   rw [hg, him] at this
-  simp only [Set.mem_setOf_eq, Real.dist_eq, sub_zero]
+  simp only [Set.mem_ofPred_eq, Real.dist_eq, sub_zero]
   rw [abs_of_nonneg (by positivity)]
   exact this
 

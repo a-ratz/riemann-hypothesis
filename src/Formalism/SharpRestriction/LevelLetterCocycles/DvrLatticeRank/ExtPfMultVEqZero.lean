@@ -85,11 +85,11 @@ theorem extPf_not_jump (τ : K →ₐ[Qp] LL) (hfin : Module.Finite LL ↥(DdRE 
   intro hj
   unfold IsJumpV at hj
   apply hj
-  haveI : FiniteDimensional LL ↥(DdRE PD ρ τ) := hfin
+  have : FiniteDimensional LL ↥(DdRE PD ρ τ) := hfin
   have hsub : FildR PD ρ τ a ≤ DdRE PD ρ τ := by
     unfold FildR
     exact inf_le_left
-  haveI : FiniteDimensional LL ↥(FildR PD ρ τ a) := Submodule.finiteDimensional_of_le hsub
+  have : FiniteDimensional LL ↥(FildR PD ρ τ a) := Submodule.finiteDimensional_of_le hsub
   apply Submodule.eq_of_le_of_finrank_eq (extPf_fildR_succ_le PD ρ τ a)
   unfold multV at h
   omega

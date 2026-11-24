@@ -61,8 +61,8 @@ theorem exists_ringHom_kb (F : Type) [Field F] [Finite F] :
   have : CharP (kb p) p := (CharP.charP_iff_prime_eq_zero hpp.out).mpr
     (GlobalTheory.natCast_self_residueField_padicAlgCl_eq_zero p)
   have := (kb_isAlgClosed_and_conj p).1
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
-  letI : Algebra (ZMod p) (kb p) := ZMod.algebra _ p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) (kb p) := ZMod.algebra _ p
   have : Module.Finite (ZMod p) F := Module.Finite.of_finite
   exact ⟨p, hpp, ⟨(IsAlgClosed.lift (R := ZMod p) (S := F) (M := kb p)).toRingHom⟩⟩
 
@@ -73,7 +73,7 @@ theorem isNoetherianRing_of_lft (R : Type) [CommRing R] (π : Sp R ⟶ Sp ℤ) [
 
 theorem exists_dense_splitOn : ∀ (C : Core) (L : C.Law), C.HasTests → C.HasCharts → letI := L.grp; letI := L.comm; ∀ z : C.Z, ∃ (R : Type) (_ : CommRing R) (_ : IsDomain R) (_ : IsNoetherianRing R) (t : Sp R ⟶ C.Z) (_ : IsImmersion t), t (⊥ : PrimeSpectrum R) = z ∧ ∃ (Ch : Charts ((Over.pullback t).obj C.GG).left) (d : ℕ) (c : Fin d → Ch.Cl) (Sg : Set (Sp R)), Dense Sg ∧ Ch.SplitOn c Sg ∧ ∀ x ∈ Sg, IsClosed ({t x} : Set C.Z) := by
   intro C L hT hC z
-  letI := L.grp; letI := L.comm
+  let := L.grp; let := L.comm
   obtain ⟨R, _, _, t, _, htz, Ch, hCh⟩ := hC z
   have := C.lft
   have := C.flat

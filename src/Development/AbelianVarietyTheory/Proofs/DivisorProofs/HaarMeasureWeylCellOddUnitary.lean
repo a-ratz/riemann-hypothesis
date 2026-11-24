@@ -386,7 +386,7 @@ theorem measure_shellU : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplic
     · rw [← SetLike.mem_coe, hSe] at hu ⊢
       exact shellU_mono k y (by omega) hu
     · rw [hS0]
-      exact (GlobalTheory.LFun.IntPtsUnitary.isOpen_isCompact_KU L ϖ σ q n h).1.preimage continuous_subtype_val
+      exact (GlobalTheory.LFun.IntPtsUnitary.isOpen_isCompact_KU L ϖ σ q n h).1.preimage continuous_subtypeVal
   have hq : q ≠ 0 := by have := h.2.2.2.2.2.1; omega
   induction j with
   | zero => rw [← hSe, hS0, hμ]; simp
@@ -394,7 +394,7 @@ theorem measure_shellU : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplic
     have e : (S j).relIndex (S (j + 1)) = _ :=
       (Subgroup.relIndex_map_map_of_injective _ _ hφ).trans
         (relIndex_unipLat h (isWeight_wt (j + 1)) (isWeight_wt j) (isIdealWeight_wt j))
-    haveI : ((S j).subgroupOf (S (j + 1))).FiniteIndex := ⟨ne_of_eq_of_ne e (pow_ne_zero _ hq)⟩
+    have : ((S j).subgroupOf (S (j + 1))).FiniteIndex := ⟨ne_of_eq_of_ne e (pow_ne_zero _ hq)⟩
     have := Formalism.DoubleCosetMeasures.P.GLRed.relIndex_mul_measure (S j) (S (j + 1))
       (Subgroup.map_mono fun _ hu => upLat_mono (isIdealWeight_wt j).1 hu)
       (hS j).measurableSet μ

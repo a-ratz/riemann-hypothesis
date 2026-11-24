@@ -140,7 +140,7 @@ private theorem leviV_add {n : ℕ} (g1 g2 : V n → ℂ) (y : V n)
     unfold wdb
     first
       | rw [fderiv_fun_add d1 d2]
-    simp only [ContinuousLinearMap.add_apply]
+    simp only [add_apply]
     ring
   have hdiff : ∀ g : V n → ℂ, ContDiffAt ℝ ∞ g y → ∀ k, DifferentiableAt ℝ (wdb n k g) y := by
     intro g hg k
@@ -169,7 +169,7 @@ private theorem leviV_add {n : ℕ} (g1 g2 : V n → ℂ) (y : V n)
     rw [(hev k).fderiv_eq]
     first
       | rw [fderiv_fun_add (hdiff g1 h1.self_of_nhds k) (hdiff g2 h2.self_of_nhds k)]
-    simp only [ContinuousLinearMap.add_apply]
+    simp only [add_apply]
     ring
   rw [e1]
   ring
@@ -486,12 +486,12 @@ private lemma continuous_cpt' (x0 : Frame X.Ψ r) : Continuous (cpt X x0) := by
   refine hr.comp ?_
   refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun b => ?_
   by_cases h : b < a
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     first
     | fun_prop
     | exact (continuous_apply _).comp (PiLp.continuous_ofLp 2 _)
     | continuity
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact continuous_const
 
 theorem densF_meas (x0 : Frame X.Ψ r) : Measurable (densF X x0) := by

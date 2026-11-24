@@ -105,7 +105,7 @@ lemma isCompact_inter_unit_box (hG : IsClosed G) : IsCompact (G ∩ box1 m) := b
   have hbox : box1 m = Set.pi Set.univ (fun i => Set.pi Set.univ
       (fun j => Metric.closedBall ((1 : Matrix (Fin m) (Fin m) ℂ) i j) 1)) := by
     ext x
-    simp only [box1, Set.mem_setOf_eq, Matrix.sub_apply]
+    simp only [box1, Set.mem_ofPred_eq, Matrix.sub_apply]
     constructor
     · intro h
       show ∀ i ∈ Set.univ, ∀ j ∈ Set.univ, x i j ∈ Metric.closedBall ((1 : Matrix (Fin m) (Fin m) ℂ) i j) 1

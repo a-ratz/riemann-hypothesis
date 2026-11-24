@@ -54,7 +54,7 @@ theorem artinTransferDecomposition_holds : ArtinTransferDecompositionCharacter :
     intro i
     have hc : Continuous fun σ : ReciprocityTheory.Gal.Ine A =>
         Subgroup.inclusion (GlobalTheory.WeilDeligne.Weil_le_Dec h) (GlobalTheory.WeilDeligne.ineIncl h σ) :=
-      continuous_subtype_val.subtype_mk _
+      continuous_subtypeVal.subtype_mk _
     exact (hχ i).preimage hc
   choose μ hμ hμe using fun i => ha.factor _ (hs i)
   exact ⟨μ, hμ, fun i σ => DFunLike.congr_fun (hμe i) σ⟩

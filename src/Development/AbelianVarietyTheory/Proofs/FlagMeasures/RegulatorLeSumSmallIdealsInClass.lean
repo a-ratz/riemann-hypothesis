@@ -87,16 +87,16 @@ theorem covolume_le_sum_volume_of_cover (ι : Type) [Fintype ι] (L : Submodule 
   let b := Module.Free.chooseBasis ℤ L
   have hF := ZLattice.isAddFundamentalDomain b (volume : Measure (ι → ℝ))
   set F := ZSpan.fundamentalDomain (b.ofZLatticeBasis ℝ L) with hFdef
-  haveI : Countable L := b.repr.toEquiv.countable_iff.2 inferInstance
+  have : Countable L := b.repr.toEquiv.countable_iff.2 inferInstance
   rw [ZLattice.covolume_eq_measure_fundamentalDomain L volume hF]
   refine le_trans ENNReal.ofReal_toReal_le ?_
   refine le_trans ?_ (measure_biUnion_finset_le T A)
   set U := ⋃ k ∈ T, A k with hU
-  haveI : MeasurableConstVAdd L (ι → ℝ) :=
+  have : MeasurableConstVAdd L (ι → ℝ) :=
     ⟨fun c => by
       change Measurable fun x : ι → ℝ => (c : ι → ℝ) + x
       exact measurable_const_add _⟩
-  haveI : VAddInvariantMeasure L (ι → ℝ) volume :=
+  have : VAddInvariantMeasure L (ι → ℝ) volume :=
     ⟨fun c s _ => measure_preimage_add volume (c : ι → ℝ) s⟩
   rw [hF.measure_eq_tsum U]
   refine le_trans (measure_mono ?_) (measure_iUnion_le _)
@@ -149,7 +149,7 @@ theorem volume_pos_simplex_le (ι : Type) [Fintype ι] [Nonempty ι] (L : ℝ) (
   have hf : ∀ e i, MeasurePreserving (f e i) volume volume := by
     intro e i
     by_cases h : e i
-    · simp only [f, h, if_true]
+    · simp only [f, h, ite_true]
       exact MeasurePreserving.id (volume : Measure ℝ)
     · simpa [f, h] using Measure.measurePreserving_neg (volume : Measure ℝ)
   let R : (ι → Bool) → (ι → ℝ) → (ι → ℝ) := fun e x i => f e i (x i)
@@ -246,7 +246,7 @@ theorem exists_mem_box (K : Type) [Field K] [NumberField K] [_root_.NumberField.
       ENNReal.toReal_inv, ENNReal.coe_toReal, ENNReal.toReal_ofNat, mixedEmbedding.finrank]
     rw [ENNReal.toReal_ofReal (Rat.cast_nonneg.mpr (FractionalIdeal.absNorm_nonneg _))]
     simp only [J, Units.val_mk0, FractionalIdeal.coeIdeal_absNorm, Rat.cast_natCast, Real.coe_sqrt,
-      coe_nnnorm, Int.norm_eq_abs]
+      coe_nnNorm, Int.norm_eq_abs]
     ring
   have hV : volume (convexBodyLT K f) ≠ ⊤ := by
     rw [convexBodyLT_volume]; exact ENNReal.mul_ne_top ENNReal.coe_ne_top ENNReal.coe_ne_top
@@ -255,7 +255,7 @@ theorem exists_mem_box (K : Type) [Field K] [NumberField K] [_root_.NumberField.
     congr 1
     rw [NNReal.coe_prod]
     have e : ∀ x : InfinitePlace K, ((f x ^ x.mult : NNReal) : ℝ) = Real.exp (x.mult * c x) :=
-      fun x => by rw [NNReal.coe_pow, Real.exp_nat_mul]; rfl
+      fun x => by rw [NNReal.coe_pow, Real.exp_natCast_mul]; rfl
     rw [Finset.prod_congr rfl fun x _ => e x, ← Real.exp_sum, hc, Real.exp_log hX]
   have hfin : n = 2 * nrComplexPlaces K := IsTotallyComplex.finrank K
   have hr : nrRealPlaces K = 0 := IsTotallyComplex.nrRealPlaces_eq_zero K
@@ -318,7 +318,7 @@ theorem regulator_le_sum_class : ∀ (K : Type) [Field K] [NumberField K], IsTot
     intro I
     refine IsClosed.measurableSet ?_
     have h1 : IsClosed {t : logSpace K | ∀ i, a I i ≤ t i} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isClosed_iInter fun i => isClosed_le continuous_const (continuous_apply i)
     exact h1.inter (isClosed_le (f := fun t : logSpace K => ∑ i, (t i - a I i))
       (by fun_prop) continuous_const)
@@ -326,7 +326,7 @@ theorem regulator_le_sum_class : ∀ (K : Type) [Field K] [NumberField K], IsTot
     intro t
     let b : InfinitePlace K → ℝ := fun w =>
       if h : w = w₀ then Real.log ((Ideal.absNorm J : ℝ) * Y) - ∑ i, t i else t ⟨w, h⟩
-    have hb : ∀ i : {w : InfinitePlace K // w ≠ w₀}, b i.1 = t i := fun i => dif_neg i.2
+    have hb : ∀ i : {w : InfinitePlace K // w ≠ w₀}, b i.1 = t i := fun i => dite_eq_right i.2
     have hbsum : ∑ w, b w = Real.log ((Ideal.absNorm J : ℝ) * Y) := by
       rw [Fintype.sum_eq_add_sum_subtype_ne _ w₀]
       simp only [hb]

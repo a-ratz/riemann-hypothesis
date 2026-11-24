@@ -120,7 +120,7 @@ theorem jm_allPos' (k : ℕ) : Formalism.REAL.Jm (allPos k) = 1 := by
   simp
 
 theorem memU_iff {k : ℕ} (g : Matrix (Fin k) (Fin k) ℂ) : g ∈ UJset (allPos k) ↔ gᴴ * g = 1 := by
-  simp only [UJset, Set.mem_setOf_eq, Formalism.REAL.inUJ, jm_allPos', Matrix.mul_one]
+  simp only [UJset, Set.mem_ofPred_eq, Formalism.REAL.inUJ, jm_allPos', Matrix.mul_one]
 
 theorem memU_mul {k : ℕ} {a b : Matrix (Fin k) (Fin k) ℂ} (ha : a ∈ UJset (allPos k)) (hb : b ∈ UJset (allPos k)) :
     a * b ∈ UJset (allPos k) := by
@@ -145,7 +145,7 @@ private theorem inner_apply_eq_inner_conjTranspose_apply_of_isHCTypeU {k : ℕ} 
   have hs : hᴴ ∈ UJset (allPos k) := memU_star hh
   have e : hᴴ * h = 1 := (memU_iff h).mp hh
   have hinv : σ hᴴ (σ h w) = w := by
-    rw [← ContinuousLinearMap.comp_apply, ← hmul _ hs _ hh, e, h1, ContinuousLinearMap.one_apply]
+    rw [← ContinuousLinearMap.comp_apply, ← hmul _ hs _ hh, e, h1, one_apply_eq_self]
   let L : H →ₗᵢ[ℂ] H := ⟨(σ hᴴ : H →ₗ[ℂ] H), fun x => hnorm _ hs x⟩
   have key := L.inner_map_map v (σ h w)
   change ⟪σ hᴴ v, σ hᴴ (σ h w)⟫_ℂ = _ at key

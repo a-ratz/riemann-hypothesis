@@ -258,7 +258,7 @@ private theorem descend {G : Type} [Group G] [TopologicalSpace G] (π : G →* �
 private theorem ker_closed (hη : IsLocallyConstant η) (r : GLift O η Ψ R) : IsClosed (r.hom.ker : Set Γ) := by
   have : (r.hom.ker : Set Γ) = ⋂ n : ℕ, {g | GG.map (Ideal.Quotient.mk (maximalIdeal R ^ n)) (r.hom g) = 1} := by
     ext g
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
     refine ⟨fun h n => by rw [h, map_one], fun h => ?_⟩
     refine SemidirectProduct.ext (Units.ext ?_) (congrArg SemidirectProduct.right (h 0) :)
     ext a b
@@ -293,8 +293,8 @@ theorem boxPres_abs (hP : LemmaP) (l : ℕ) [Fact l.Prime] [IsNoetherianRing O] 
   have hηH : IsLocallyConstant ((η.comp π).comp ι) := hηG.comp_continuous hι
   obtain ⟨hBK, f₀, hf₀, hI⟩ : BoxCond Kill ι hι U I B.R B.r := (B.rep B.R).1 (AlgHom.id O _)
   have hne : I ≠ ⊤ := fun h => RingHom.ker_ne_top f₀ (top_le_iff.1 (h ▸ hI))
-  haveI : Nontrivial (U.R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsCO O (U.R ⧸ I) :=
+  have : Nontrivial (U.R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsCO O (U.R ⧸ I) :=
     co_quot O U.R (U.R ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
   let F := unitFrame π hπ ι hι D N
   let u := U.r.map (Ideal.Quotient.mkₐ O I)
@@ -445,14 +445,14 @@ theorem UpperTheory.exists_finite_place_set_factoring_through_GS :
   intro Ω _ _ _ K _ _ _ l _ c N _ e ψ D
   classical
   have hlp : l.Prime := Fact.out
-  haveI : IsScalarTower ℚ K Ω := inferInstance
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsScalarTower ℚ K Ω := inferInstance
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   have hηopen : IsOpen (D.η.ker : Set (G ℚ Ω)) := by
     rw [D.η_ker]
     let b := Module.finBasis ℚ K
     have heq : (galOf ℚ K Ω : Set (G ℚ Ω)) = ⋂ i, {σ : G ℚ Ω | σ (algebraMap K Ω (b i)) = algebraMap K Ω (b i)} := by
       ext σ
-      simp only [Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe, mem_galOf]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe, mem_galOf]
       refine ⟨fun h i => h _, fun h x => ?_⟩
       have h' := b.ext (f₁ := σ.toLinearMap ∘ₗ (IsScalarTower.toAlgHom ℚ K Ω).toLinearMap)
         (f₂ := (IsScalarTower.toAlgHom ℚ K Ω).toLinearMap) h
@@ -468,7 +468,7 @@ theorem UpperTheory.exists_finite_place_set_factoring_through_GS :
   have hmemS : ∀ v : HeightOneSpectrum (𝓞 ℚ), ((l * N : ℕ) : 𝓞 ℚ) ∈ v.asIdeal → v ∈ S := by
     intro v hv
     apply Finset.mem_union_right
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     exact hv
   have hcast : ∀ n : ℕ, algebraMap ℚ Ω (((n : 𝓞 ℚ)) : ℚ) = (n : Ω) := fun n => by simp
   have hlv : ∀ v : HeightOneSpectrum (𝓞 ℚ), ((l : ℕ) : 𝓞 ℚ) ∈ v.asIdeal → ((l * N : ℕ) : 𝓞 ℚ) ∈ v.asIdeal := by
@@ -532,12 +532,12 @@ theorem UpperTheory.exists_finite_place_set_factoring_through_GS :
     exact hmemS v (hlv v hv)
   · intro v
     by_cases h : v.1 = v₀
-    · simp only [A, if_pos h]
+    · simp only [A, ite_eq_left h]
       rw [h]
       exact hv₀
-    · simp only [A, if_neg h]
+    · simp only [A, ite_eq_right h]
       exact Classical.choose_spec (exists_isPlaceOver Ω v.1)
-  · simp only [A, v₀', if_pos rfl]
+  · simp only [A, v₀', ite_eq_left rfl]
     exact hA₀dec
   · intro v
     constructor
@@ -565,10 +565,10 @@ private theorem cycMod_cc {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ
     (h : IsConjOm σ.toRingEquiv) : cycMod ℚ Ω l 1 σ = -1 := by
   obtain ⟨j, hj⟩ := h
   have hlp : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hlp.ne_zero⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hlp.ne_zero⟩
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   have hζl : ζ ^ l = 1 := hζ.pow_eq_one
   have hσζ : σ.toRingEquiv ζ = ζ⁻¹ := by
     apply j.injective
@@ -581,7 +581,7 @@ private theorem cycMod_cc {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ
   have hval : ((cycMod ℚ Ω l 1 σ : (ZMod (l ^ 1))ˣ) : ZMod (l ^ 1)) =
       PadicInt.toZModPow 1 (cyclotomicCharacter Ω l σ.toRingEquiv).val := rfl
   set a : ZMod (l ^ 1) := PadicInt.toZModPow 1 (cyclotomicCharacter Ω l σ.toRingEquiv).val with ha
-  haveI : NeZero (l ^ 1) := ⟨by simp [hlp.ne_zero]⟩
+  have : NeZero (l ^ 1) := ⟨by simp [hlp.ne_zero]⟩
   have hlt : a.val < l := by simpa using ZMod.val_lt a
   have hinv : ζ⁻¹ = ζ ^ (l - 1) := by
     rw [eq_comm, inv_eq_of_mul_eq_one_right]
@@ -608,7 +608,7 @@ theorem UpperTheory.exists_galois_cyclotomic_neg_one_trivial_on_eta_psi :
     exact ⟨φ, hφ⟩
   have hgd := D.gd.eta
   rw [← D.η_ker] at hgd
-  obtain ⟨h, hmem, hnot⟩ := SetLike.not_le_iff_exists.mp hgd
+  obtain ⟨h, hmem, hnot⟩ := IsConcreteLE.not_le_iff_exists.mp hgd
   obtain ⟨hh1, hh2⟩ := Subgroup.mem_inf.mp hmem
   rw [MonoidHom.mem_ker] at hh1 hh2 hnot
   have hηh : D.η h = -1 := (Int.units_eq_one_or _).resolve_left hnot
@@ -655,7 +655,7 @@ private def bm (x y z : k) : Matrix (Fin 3 ⊕ Fin 3) (Fin 3 ⊕ Fin 3) k :=
 
 private theorem emb_c {Γ : Type} [Group Γ] (η : Γ →* ℤˣ) (Ψ : Γ →* kˣ) (c : Γ) (h1 : η c = -1) (h2 : Ψ c = 1) :
     emb (r0 η Ψ c) = sw k := by
-  rw [emb_apply, GG.mat, unitaryThreeReflection_left, theta_tor, unitaryThreeReflection_right, h1, h2, map_one, if_neg (by decide)]
+  rw [emb_apply, GG.mat, unitaryThreeReflection_left, theta_tor, unitaryThreeReflection_right, h1, h2, map_one, ite_eq_right (by decide)]
   rfl
 
 private theorem J3 : Jmat k 3 = !![0, 0, 1; 0, 1, 0; 1, 0, 0] := by
@@ -776,7 +776,7 @@ theorem UpperTheory.finrank_ker_adRep_complexConj_sub_one_eq_boxDef :
     · simpa [bm, am] using congrFun (congrFun h (.inl 1)) (.inl 0)
     · simp [hx (by decide)]
     · simp [hy (by decide)]
-  rw [boxDef, if_neg (by rw [abs_le]; omega), Submodule.finrank_eq_zero, eq_bot_iff]
+  rw [boxDef, ite_eq_right (by rw [abs_le]; omega), Submodule.finrank_eq_zero, eq_bot_iff]
   intro Y hY
   obtain ⟨x, y, z, e, hx, hy, hz⟩ := eq_bm O h2 j Y.1 Y.2 ((hk Y).1 hY)
   rw [Submodule.mem_bot]
@@ -798,7 +798,7 @@ open UpperTheory.V UpperTheory.V.Base UpperTheory.V.HV UpperTheory.V.Alg UpperTh
 private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G] (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
     TotallyDisconnectedSpace (G ⧸ N) := by
-  haveI : TotallySeparatedSpace (G ⧸ N) := by
+  have : TotallySeparatedSpace (G ⧸ N) := by
     rw [totallySeparatedSpace_iff_exists_isClopen]
     intro a b hab
     obtain ⟨x, rfl⟩ := QuotientGroup.mk_surjective a
@@ -858,7 +858,7 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
       (ρ : Representation (ZMod n) Γ M), ContAction ρ → Finite (H1 ρ)) : PhiCond Γ n := by
   classical
   intro H hH
-  haveI : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  have : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
   have getN : ∀ W : Set Γ, IsClopen W → (1 : Γ) ∈ W →
       ∃ N : Subgroup Γ, N.Normal ∧ IsOpen (N : Set Γ) ∧ (N : Set Γ) ⊆ W := by
     intro W hW h1
@@ -888,8 +888,8 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     · show g⁻¹ * g ∈ (N : Set Γ)
       simp [N.one_mem]
   let M := Γ ⧸ H → ZMod n
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
   let ρ := permR (ZMod n) H
   obtain ⟨N0, hN0n, hN0o, hN0H⟩ := getN (H : Set Γ) ⟨Subgroup.isClosed_of_isOpen H hH, hH⟩ H.one_mem
   have ρmul : ∀ g, ∀ k ∈ N0, ρ (g * k) = ρ g := by
@@ -935,7 +935,7 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     have hKo : IsOpen (K : Set Γ) := by
       simp only [K]
       rw [Subgroup.coe_map, Subgroup.coe_subtype]
-      exact hH.isOpenMap_subtype_val _ hφ
+      exact hH.isOpenMap_subtypeVal _ hφ
     have hKH : (K : Set Γ) ⊆ H := by
       intro k hk
       obtain ⟨y, _, rfl⟩ := Subgroup.mem_map.1 hk
@@ -1000,9 +1000,9 @@ theorem UpperTheory.galois_group_phi_condition :
     GlobalFiniteness → ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (S : Finset (HeightOneSpectrum (𝓞 ℚ))), ContainsAbove S l →
           PhiCond (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) l ∧ CompactSpace (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) ∧ T2Space (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) ∧ TotallyDisconnectedSpace (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) := by
   intro hGF Ω _ _ _ l _ S hS
-  haveI : IsClosed ((NS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) : Set (G ℚ Ω))) := isClosed_NS Ω _
+  have : IsClosed ((NS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) : Set (G ℚ Ω))) := isClosed_NS Ω _
   refine ⟨?_, inferInstance, inferInstance, totDisc_quot _ (isClosed_NS Ω _)⟩
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero 1 (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero 1 (Fact.out : l.Prime).ne_zero⟩
   have key := phi_condition_of_finite_cohomology (Γ := GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) (l ^ 1)
     (fun M _ _ _ _ _ ρ hc => (hGF ℚ Ω l 1 M S ρ one_pos hS hc).2.1)
   rwa [pow_one] at key
@@ -1105,7 +1105,7 @@ theorem UpperTheory.not_prime_dvd_relIndex_ker_inducedUnitaryRep :
     ∀ (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [Finite k] [CharP k l], l ≠ 2 → ∀ {Γ : Type} [Group Γ] (η : Γ →* ℤˣ) (Ψ : Γ →* kˣ) (I : Subgroup Γ),
           ¬ l ∣ (I ⊓ (r0 η Ψ).ker).relIndex I := by
   intro l _ k _ _ _ hl2 Γ _ η Ψ I
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   have hp : l.Prime := Fact.out
   obtain ⟨n, -, hcard⟩ := FiniteField.card k l
   let φ : Γ →* kˣ × ℤˣ := Ψ.prod η
@@ -1116,7 +1116,7 @@ theorem UpperTheory.not_prime_dvd_relIndex_ker_inducedUnitaryRep :
     show ψ (φ.domRestrict I g) = 1
     rw [hg, map_one]
   have h1 : (I ⊓ (r0 η Ψ).ker).relIndex I ∣ (φ.domRestrict I).ker.index := by
-    rw [inf_comm, Subgroup.inf_relIndex_right, Subgroup.relIndex, ← MonoidHom.ker_restrict]
+    rw [inf_comm, Subgroup.inf_relIndex_right, Subgroup.relIndex, ← MonoidHom.ker_domRestrict]
     exact Subgroup.index_dvd_of_le hle
   have h2 : (φ.domRestrict I).ker.index ∣ (Nat.card k - 1) * 2 := by
     rw [Subgroup.index_ker]
@@ -1207,7 +1207,7 @@ private theorem aux (hI : CohInp) (hP : LemmaP) {Ω : Type} [Field Ω] [CharZero
     ∀ (U : Univ (GCond.noCondition O (η.comp ι) (Ψ.comp ι))) (I : Ideal U.R) (B : Univ (BoxCond Kill ι hι U I))
       (WB : WPres O ℤ (U.R ⧸ I)), IsLocPres U I WB → BoxPres B WB := by
   classical
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨hΦ, _, _, _⟩ := UpperTheory.galois_group_phi_condition hI.gf Ω l S hS
   have hq : Topology.IsQuotientMap (toGS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) := QuotientGroup.isQuotientMap_mk _
   have hπ := hq.continuous
@@ -1237,7 +1237,7 @@ private theorem aux (hI : CohInp) (hP : LemmaP) {Ω : Type} [Field Ω] [CharZero
     rw [e] at h'
     exact h'.1 h
   have hNn : ∀ q, ((Nq q).subgroupOf (Dec (F := ℚ) (A q.1))).Normal := fun q => by
-    haveI := (UpperTheory.exists_decompositionField_frobenius_data Ω (A q.1) q.1.1 (hA q.1)).2.1
+    have := (UpperTheory.exists_decompositionField_frobenius_data Ω (A q.1) q.1.1 (hA q.1)).2.1
     exact inferInstanceAs ((Ine (F := ℚ) (A q.1)).subgroupOf (Dec (F := ℚ) (A q.1)) ⊓ H.subgroupOf _).Normal
   have hNc : ∀ q, IsClosed (Nq q : Set (G ℚ Ω)) := fun q =>
     (UpperTheory.exists_decompositionField_frobenius_data Ω (A q.1) q.1.1 (hA q.1)).2.2.1.inter hHc
@@ -1249,13 +1249,13 @@ private theorem aux (hI : CohInp) (hP : LemmaP) {Ω : Type} [Field Ω] [CharZero
     hN0
     (fun q => by
       obtain ⟨d1, d2, d3, d4, d5⟩ := UpperTheory.exists_decompositionField_frobenius_data Ω (A q.1) q.1.1 (hA q.1)
-      haveI := hNn q
+      have := hNn q
       have hφ : Continuous ((toGS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))).comp (Dec (F := ℚ) (A q.1)).subtype) :=
-        hπ.comp continuous_subtype_val
+        hπ.comp continuous_subtypeVal
       refine locCond (η'.comp ((toGS Ω _).comp (Dec (F := ℚ) (A q.1)).subtype))
         (Ψ'.comp ((toGS Ω _).comp (Dec (F := ℚ) (A q.1)).subtype)) l h2 (hη'.comp_continuous hφ)
-        (hΨ'.comp_continuous hφ) (fun j n => (hΨ'' j n).comp_continuous hφ) _ _ (d3.preimage continuous_subtype_val)
-        ((hNc q).preimage continuous_subtype_val) (fun x hx => hx.1) (fun n hn => hN0 q n hn) ?_ d4
+        (hΨ'.comp_continuous hφ) (fun j n => (hΨ'' j n).comp_continuous hφ) _ _ (d3.preimage continuous_subtypeVal)
+        ((hNc q).preimage continuous_subtypeVal) (fun x hx => hx.1) (fun n hn => hN0 q n hn) ?_ d4
         fun n => d5 _ (pow_pos hl.out.pos n)
       rw [Subgroup.relIndex_subgroupOf (Ine_le_Dec _)]
       exact hNi q)
@@ -1282,11 +1282,11 @@ theorem UpperTheory.V.U3.boxPres :
       IsLocPres U (D.loc.It U) WB → BoxPres B WB := by
   intro hI hP Ω _ _ _ K _ _ _ l hl c N hN e ψ D U B WB hW
   obtain ⟨hc, hf, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI := hc
-  haveI : Finite (ResidueField c.O) := hf
-  haveI : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
+  have := hc
+  have : Finite (ResidueField c.O) := hf
+  have : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]; exact hlm)
-  haveI : IsNoetherianRing c.O := @PrincipalIdealRing.isNoetherianRing c.O _ c.dvr.toIsPrincipalIdealRing
+  have : IsNoetherianRing c.O := @PrincipalIdealRing.isNoetherianRing c.O _ c.dvr.toIsPrincipalIdealRing
   obtain ⟨-, hηc, hΨc, hη, hΨ, hK, h2, -⟩ := dat_facts D
   obtain ⟨-, -, -, -, hinj, -⟩ := dat_loc D
   obtain ⟨S, A, v₀, η', Ψ', hS, hA, hr, hv, e1, e2⟩ := UpperTheory.exists_finite_place_set_factoring_through_GS D

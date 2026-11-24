@@ -172,7 +172,7 @@ theorem cdimSet_pull {X X₁ : Type} [AddCommGroup X] [Module O X] [Module.Finit
 
 theorem zero_mem_cdimSet {X : Type} [AddCommGroup X] [Module O X] [Module.Finite O X] [Subsingleton X] (N : Submodule O X)
     (β : LinearMap.BilinForm ℤ X) : 0 ∈ cdimSet bar ψ X N β := by
-  haveI : Subsingleton (X ⧸ N) := ⟨fun a b => by
+  have : Subsingleton (X ⧸ N) := ⟨fun a b => by
     induction a using Submodule.Quotient.induction_on
     induction b using Submodule.Quotient.induction_on
     rename_i a b

@@ -157,7 +157,7 @@ theorem smoothVec_of_isSmC {w : H} (hw : CompanionTheory.D.Upq.Sm.IsSm (Formalis
             (Formalism.REAL.Jm ε) (t 0 • Ys 0) hl
           have hp := CCRuleCW.UH_mul
             (Formalism.REAL.Jm ε) _ _ he hi
-          simpa only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq, List.ofFn_succ, List.prod_cons] using hp
+          simpa only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq, List.ofFn_succ, List.prod_cons] using hp
       exact hm m Xs (fun i => hX i) t
   rw [contDiff_iff_contDiffAt]
   intro t0

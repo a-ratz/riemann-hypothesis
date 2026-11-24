@@ -113,7 +113,7 @@ theorem exists_finitePresentation_lift (T R O : Type) [CommRing T] [CommRing R] 
     ∃ (Z : Type) (_ : CommRing Z) (_ : Algebra R Z) (_ : Algebra T Z) (_ : IsScalarTower T R Z)
       (_ : Algebra.FinitePresentation R Z) (g : Z →ₐ[R] O) (w : U →+* GenFib T Z),
       (genFibMap (g.restrictScalars T)).comp w = u := by
-  haveI : Algebra.FinitePresentation ℤ U := Algebra.FinitePresentation.of_finiteType.mp inferInstance
+  have : Algebra.FinitePresentation ℤ U := Algebra.FinitePresentation.of_finiteType.mp inferInstance
   obtain ⟨n, f, hf, s, hs⟩ := Algebra.FinitePresentation.out (R := ℤ) (A := U)
 
   choose a t ht using fun i : Fin n => exists_mk' (T := T) (u (f (MvPolynomial.X i)))
@@ -152,9 +152,9 @@ theorem exists_finitePresentation_lift (T R O : Type) [CommRing T] [CommRing R] 
     intro x hx
     have hle : I ≤ RingHom.ker e := Ideal.span_le.2 (by rintro _ ⟨r, rfl⟩; exact he r)
     exact hle hx
-  haveI : Algebra.FinitePresentation R (MvPolynomial (Fin n) R) :=
+  have : Algebra.FinitePresentation R (MvPolynomial (Fin n) R) :=
     Algebra.FinitePresentation.mvPolynomial R R (Fin n)
-  haveI : Algebra.FinitePresentation R (MvPolynomial (Fin n) R ⧸ I) :=
+  have : Algebra.FinitePresentation R (MvPolynomial (Fin n) R ⧸ I) :=
     Algebra.FinitePresentation.quotient (Submodule.fg_span (Set.finite_range _))
   let g : (MvPolynomial (Fin n) R ⧸ I) →ₐ[R] O := Ideal.Quotient.liftₐ I e hIe
   let q : MvPolynomial (Fin n) R →ₐ[R] (MvPolynomial (Fin n) R ⧸ I) := Ideal.Quotient.mkₐ R I
@@ -203,8 +203,8 @@ theorem exists_etale_genFib_lift : ∀ (T R O : Type) [CommRing T] [CommRing R] 
   intro T R O _ _ _ _ _ _ _ H U _ _ u
   obtain ⟨Z, _, _, _, _, _, g, w, hw⟩ := exists_finitePresentation_lift T R O U u
   obtain ⟨W, _, _, _, u0, v, hv⟩ := H Z g
-  letI : Algebra T W := ((algebraMap R W).comp (algebraMap T R)).toAlgebra
-  haveI hTRW : IsScalarTower T R W := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra T W := ((algebraMap R W).comp (algebraMap T R)).toAlgebra
+  have hTRW : IsScalarTower T R W := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   refine ⟨W, inferInstance, inferInstance, inferInstance, hTRW, inferInstance, v,
     (genFibMap (u0.restrictScalars T)).comp w, ?_⟩
   rw [← RingHom.comp_assoc, ← genFibMap_comp]
@@ -255,7 +255,7 @@ theorem isZModTorsor_tensorBase (U B : Type) [CommRing U] [CommRing B] [Algebra 
     (D : Type) [CommRing D] [Algebra U D] (act : Multiplicative (ZMod q) →* (D ≃ₐ[U] D))
     (hq : 0 < q) (hD : IsZModTorsor U D q act) :
     IsZModTorsor B (B ⊗[U] D) q (zmodTensorAct U B q D act) := by
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   obtain ⟨h1, h2, h3, h4⟩ := hD
   refine ⟨inferInstance, inferInstance, inferInstance, ?_⟩
   set Φ := Algebra.TensorProduct.productMap
@@ -337,12 +337,12 @@ theorem spread_torsor_to_etale : ∀ (T O : Type) [CommRing T] [CommRing O] [Alg
     (CommRingCat.of (GenFib T O))) q hq D act hD
   let U := (GlobalTheory.FiniteTypeColimit.diagram (CommRingCat.of (GenFib T O))).obj j
   let u : U →+* GenFib T O := ((GlobalTheory.FiniteTypeColimit.inclusions (CommRingCat.of (GenFib T O))).app j).hom
-  haveI : Algebra.FiniteType ℤ U := GlobalTheory.FiniteTypeColimit.finiteType _ j
+  have : Algebra.FiniteType ℤ U := GlobalTheory.FiniteTypeColimit.finiteType _ j
 
   have hfact := _root_.GlobalTheory.IndEtFactorLoc.exists_etale_factor_of_indEt_atPrime (Polynomial T) O P φ hφ hind
   have hl := _root_.GlobalTheory.GenFibLift.exists_etale_genFib_lift T (Polynomial T) O hfact U u
   obtain ⟨W, _, _, _, _, _, ψ, uW, hcomp⟩ := hl
-  letI : Algebra U (GenFib T W) := uW.toAlgebra
+  let : Algebra U (GenFib T W) := uW.toAlgebra
   obtain ⟨actE, hE⟩ := _root_.GlobalTheory.LocAcyc.exists_isZModTorsor_tensorBase U (GenFib T W) q Dj actj hq hDj
   refine ⟨W, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, ψ,
     TensorProduct U (GenFib T W) Dj, inferInstance, inferInstance, actE, hE, ?_⟩
@@ -352,7 +352,7 @@ theorem spread_torsor_to_etale : ∀ (T O : Type) [CommRing T] [CommRing O] [Alg
     refine genFib_ringHom_ext (fun w => ?_)
     rw [RingHom.comp_apply, hs, genFibMap_algebraMap]
     rfl
-  letI : Algebra U (GenFib T O) := u.toAlgebra
+  let : Algebra U (GenFib T O) := u.toAlgebra
   let σ : Dj →ₐ[U] GenFib T O :=
     { s.comp (Algebra.TensorProduct.includeRight (R := U) (A := GenFib T W) (B := Dj)).toRingHom with
       commutes' := fun x => by

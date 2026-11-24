@@ -173,7 +173,7 @@ theorem eq_of_hcVal_eq_charZero (k : Type) [Field k] [CharZero k] (N : ℕ) (ν 
     rw [← h1, ← h2]
     exact hv j
   obtain ⟨p, hp1, hp⟩ := Nat.exists_infinite_primes (∑ i, ν i + N)
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   apply eq_of_hcVal_eq p hp (ZMod p) N ν μ hν hμ
   · intro h
     refine ⟨(hc h).1, (hc h).2, ?_⟩
@@ -313,7 +313,7 @@ theorem nablaSq_simple_charZero : ∀ (k : Type) [Field k] [CharZero k] (N : ℕ
     M ≤ nablaSq k N lam → (∀ g : GL (Fin N) k, ∀ f ∈ M, sqAct k N lam g f ∈ M) →
       M = ⊥ ∨ M = nablaSq k N lam := by
   intro k _ _ N lam M hM hG
-  haveI : Infinite k := Infinite.of_injective _ Nat.cast_injective
+  have : Infinite k := Infinite.of_injective _ Nat.cast_injective
   have hN := factNatW N lam
   by_contra hc
   push_neg at hc

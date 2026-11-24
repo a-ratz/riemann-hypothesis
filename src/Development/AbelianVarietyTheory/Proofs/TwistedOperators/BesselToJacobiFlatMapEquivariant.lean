@@ -151,10 +151,10 @@ theorem flBF_om : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B : 
   intro D ψ ρ B J s om' hom' Ψ hΨ h₀ n hn h'
   have hstd : IsStdChar D ψ (-1) := s.weil.std
   obtain ⟨hloc, hsc, -⟩ := GlobalTheory.UnitU.topology D ρ
-  haveI := hloc
-  haveI := hsc
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : SFinite s.vU.ν := @sFinite_of_haar (UX D ρ) _ _ _ hloc hsc s.vU.ν s.vU.unit.1
+  have := hloc
+  have := hsc
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : SFinite s.vU.ν := @sFinite_of_haar (UX D ρ) _ _ _ hloc hsc s.vU.ν s.vU.unit.1
   obtain ⟨hbase, -, hx0, -⟩ := GlobalTheory.Unf.base_point D J.W J.W₀ ρ J.d
   have hlin : LinearIndependent D.host.E J.d.e.transpose := hbase.1
   have hev := And.intro (evalAt_rad D ψ ρ B J s om' hom' Ψ hΨ) (evalAt_levi D ψ ρ B J s om' hom' Ψ hΨ)
@@ -198,7 +198,7 @@ theorem flBF_om : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B : 
     fun p hp u w => hM p hp _ w u
   have hmc := GlobalTheory.MixCont.mixed_coords_continuous D ψ B.V B.V₀ J.W J.W₀ ρ ρ B.d J.d s.vS s.vT s.χV s.χW s.om s.weil Ψ hΨ
   have hxu : Continuous fun u : UX D ρ => xZero J.d ⬝ u.1.1 :=
-    continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)
+    continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)
   have cont : ∀ p, Continuous fun q : UX D ρ × WO B.V₀ J.W₀ => star (psiUni ψ q.1.1) *
       evalAt ψ B.d J.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (s.om p Ψ) (xZero J.d ⬝ q.1.1.1) (yZero B.V₀ ρ (vecB B.o B.ζ)) q.2 := by
     intro p

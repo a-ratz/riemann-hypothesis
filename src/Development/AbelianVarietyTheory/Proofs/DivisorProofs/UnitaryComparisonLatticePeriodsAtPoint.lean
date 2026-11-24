@@ -317,9 +317,9 @@ theorem exists_trait_lattice_map : ∀ (E : Type) [Field E] [NumberField E] [IsC
   intro E _ _ _ H Dw l Xo c C X₁ M U₀ EE out hAdm f hf hT x hx R _ _ _ j hR hj G _ _ gm hgm D A U hLB hPsi m hm T ξ hξ hsp
   obtain ⟨hft, hcpl⟩ := GlobalTheory.T.closedPoint_completion_positive_residueChar X₁.o₁ X₁.Ω₁ M x hx
   obtain ⟨-, p, hp, hpR⟩ := hcpl R j hj
-  haveI := hft
-  haveI : IsDiscreteValuationRing T.V := T.cdvr.1
-  haveI : CharZero T.V := T.cdvr.2.2
+  have := hft
+  have : IsDiscreteValuationRing T.V := T.cdvr.1
+  have : CharZero T.V := T.cdvr.2.2
   let f₀ : M.Z.presheaf.stalk x →+* T.V := (M.Z.presheaf.stalkSpecializes hsp ≫ Scheme.stalkClosedPointTo ξ).hom
   have hf₀ : spMap f₀ ≫ M.Z.fromSpecStalk x = ξ := by
     have e : spMap f₀ = Spec.map (Scheme.stalkClosedPointTo ξ) ≫ Spec.map (M.Z.presheaf.stalkSpecializes hsp) := by
@@ -331,7 +331,7 @@ theorem exists_trait_lattice_map : ∀ (E : Type) [Field E] [NumberField E] [IsC
     have e : spMap g' ≫ spMap j = spMap h ≫ spMap f₀ := by
       simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp, hgj]
     rw [← hf₀, ← Category.assoc, e, Category.assoc]
-  haveI hch : CharZero V' := charZero_of_injective_ringHom hinj
+  have hch : CharZero V' := charZero_of_injective_ringHom hinj
   have hV' : GlobalTheory.Mum.Base V' := ⟨GlobalTheory.ArcPointDescent.admissibleBase_maximalIdeal_completeDVR ⟨inferInstance, hcomp, hch⟩, hch⟩
   obtain ⟨tW, mW, PW, e, he⟩ := GlobalTheory.T.exists_linear_uniformisation_pulled_back_trait E H Dw l Xo c T V' hV' inferInstance h hinj hloc
   obtain ⟨βT, hβT, hLT, hactT⟩ := hT T ξ hξ
@@ -538,14 +538,14 @@ namespace GlobalTheory.UPoinc
 
 theorem isReduced_of_flat_isPreimmersion {X Y : Scheme.{0}} (f : X ⟶ Y) [Flat f] [IsPreimmersion f] [IsReduced Y] :
     IsReduced X := by
-  haveI : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := fun x => by
+  have : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := fun x => by
     have hfl := Flat.stalkMap f x
     have hs := f.stalkMap_surjective x
-    letI := (f.stalkMap x).hom.toAlgebra
-    haveI : Module.Flat (Y.presheaf.stalk (f x)) (X.presheaf.stalk x) := hfl
-    haveI : IsLocalHom (algebraMap (Y.presheaf.stalk (f x)) (X.presheaf.stalk x)) :=
+    let := (f.stalkMap x).hom.toAlgebra
+    have : Module.Flat (Y.presheaf.stalk (f x)) (X.presheaf.stalk x) := hfl
+    have : IsLocalHom (algebraMap (Y.presheaf.stalk (f x)) (X.presheaf.stalk x)) :=
       inferInstanceAs (IsLocalHom (f.stalkMap x).hom)
-    haveI := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := Y.presheaf.stalk (f x)) (B := X.presheaf.stalk x)
+    have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := Y.presheaf.stalk (f x)) (B := X.presheaf.stalk x)
     have hi : Function.Injective (f.stalkMap x).hom :=
       FaithfulSMul.algebraMap_injective (Y.presheaf.stalk (f x)) (X.presheaf.stalk x)
     exact isReduced_of_injective (RingEquiv.ofBijective _ ⟨hi, hs⟩).symm (RingEquiv.injective _)
@@ -553,12 +553,12 @@ theorem isReduced_of_flat_isPreimmersion {X Y : Scheme.{0}} (f : X ⟶ Y) [Flat 
 
 theorem isIntegral_pullback_toRat : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [CharZero Ω] (M : RatModel o Ω) (U₀ : M.Z.Opens) (R : Subalgebra o Ω) (u₀ : U₀.toScheme ⟶ Sp R), (U₀ : Set M.Z).Nonempty → (∀ x : Sp Ω ⟶ U₀.toScheme, x ≫ U₀.ι = M.pt → x ≫ u₀ = spMap R.val.toRingHom) → IsIntegral (pullback u₀ (spMap (toRat R))) ∧ ∃ pt : Sp Ω ⟶ pullback u₀ (spMap (toRat R)), pt ≫ pullback.fst _ _ ≫ U₀.ι = M.pt ∧ Dense (Set.range pt) := by
   intro o Ω _ _ _ _ M U₀ R u₀ hne hgen
-  haveI := M.integral
-  letI := (toRat R).toAlgebra
-  haveI := isLocalization_ratHull R
-  haveI : IsPreimmersion (spMap (toRat R)) :=
+  have := M.integral
+  let := (toRat R).toAlgebra
+  have := isLocalization_ratHull R
+  have : IsPreimmersion (spMap (toRat R)) :=
     IsPreimmersion.of_isLocalization (Algebra.algebraMapSubmonoid R (nonZeroDivisors ℤ))
-  haveI : Flat (spMap (toRat R)) := (HasRingHomProperty.Spec_iff (P := @Flat)).2
+  have : Flat (spMap (toRat R)) := (HasRingHomProperty.Spec_iff (P := @Flat)).2
     (IsLocalization.flat (ratHull R) (Algebra.algebraMapSubmonoid R (nonZeroDivisors ℤ)))
   have hr : Set.range M.pt ⊆ Set.range U₀.ι := by
     rintro _ ⟨w, rfl⟩
@@ -570,9 +570,9 @@ theorem isIntegral_pullback_toRat : ∀ (o Ω : Type) [CommRing o] [Field Ω] [A
   let pt := pullback.lift _ _ w
   let j : pullback u₀ (spMap (toRat R)) ⟶ M.Z := pullback.fst _ _ ≫ U₀.ι
   have hpt : pt ≫ j = M.pt := by rw [← Category.assoc, pullback.lift_fst, hx]
-  haveI : IsPreimmersion j := inferInstance
-  haveI : Flat j := inferInstance
-  haveI := isReduced_of_flat_isPreimmersion j
+  have : IsPreimmersion j := inferInstance
+  have : Flat j := inferInstance
+  have := isReduced_of_flat_isPreimmersion j
   have hj : ∀ y, j (pt y) = genericPoint M.Z := fun y => by
     rw [← Scheme.Hom.comp_apply, hpt]
     exact M.gen.le ⟨y, rfl⟩
@@ -580,7 +580,7 @@ theorem isIntegral_pullback_toRat : ∀ (o Ω : Type) [CommRing o] [Field Ω] [A
     refine isGenericPoint_iff_specializes.2 fun z => ⟨fun _ => trivial, fun _ => ?_⟩
     rw [← j.isEmbedding.isInducing.specializes_iff, hj]
     exact genericPoint_specializes _
-  haveI : IrreducibleSpace (pullback u₀ (spMap (toRat R)) :) :=
+  have : IrreducibleSpace (pullback u₀ (spMap (toRat R)) :) :=
     (irreducibleSpace_def _).2 hg.isIrreducible
   refine ⟨isIntegral_of_irreducibleSpace_of_isReduced _, pt, hpt, ?_⟩
   exact Dense.mono (Set.singleton_subset_iff.2 ⟨default, rfl⟩) (dense_iff_closure_eq.2 hg)
@@ -645,9 +645,9 @@ theorem GlobalTheory.UPoinc.exists_endo_of_generic {Z W : Scheme.{0}} [IsIntegra
 
 theorem GlobalTheory.UPoinc.act_extends_ratModel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (X₁ : USetup C) (M : RatModel X₁.o₁ X₁.Ω₁) (U₀ : M.Z.Opens) (EE : M.Lat X₁.S.J) (out : ZHOut X₁.ρ M U₀ EE), X₁.S.admitted M U₀ → ∃ f : 𝓞 E → (out.G ⟶ out.G), (∀ a, IsMonHom (f a)) ∧ ∀ (K : Type) [Field K] (ξ₀ : Sp K ⟶ U₀.toScheme) (y : Sp K ⟶ Xo.XF c), X₁.Lies (ξ₀ ≫ out.u₀) y → ∀ (tK : SAB H (Sp K)), Nonempty (SABMap tK Xo.univ.t (y ≫ pullback.fst _ _)) → ∃ γ : tK.G.left ⟶ out.G.left, IsGrpPullback tK.G out.G (ξ₀ ≫ U₀.ι) γ ∧ LBIso tK.PP.L (out.L.L.pull γ) ∧ ∀ a, (tK.act.act a).left ≫ γ = γ ≫ (f a).left := by
   intro E _ _ _ H Dw l Xo c C X₁ M U₀ EE out hAdm
-  haveI := X₁.ar.char
+  have := X₁.ar.char
   obtain ⟨hW, pt, hpt, hd⟩ := _root_.GlobalTheory.UPoinc.isIntegral_pullback_toRat X₁.o₁ X₁.Ω₁ M U₀ X₁.S.R out.u₀ hAdm.1.ne out.u₀_gen
-  haveI := hW
+  have := hW
   obtain ⟨G₁, _, α, β, hα, hβ, hL⟩ := X₁.pulled
   let s : pullback out.u₀ (spMap (toRat X₁.S.R)) ⟶ Sp (ratHull X₁.S.R) := pullback.snd _ _
   let G₀ : Over (pullback out.u₀ (spMap (toRat X₁.S.R))) := (Over.pullback s).obj G₁
@@ -805,14 +805,14 @@ theorem comap_maximalIdeal_of_irreducible {V V' : Type} [CommRing V] [IsDomain V
     have : ϖ ∈ Ideal.comap h (maximalIdeal V') := hϖ.not_isUnit
     rw [h0, Ideal.mem_bot] at this
     exact hϖ.ne_zero (by rw [this, map_zero])
-  haveI : (Ideal.comap h (maximalIdeal V')).IsPrime := Ideal.comap_isPrime _ _
+  have : (Ideal.comap h (maximalIdeal V')).IsPrime := Ideal.comap_isPrime _ _
   exact IsLocalRing.eq_maximalIdeal (Ideal.IsPrime.isMaximal inferInstance hne)
 
 theorem maximalIdeal_le_map {O R : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [CommRing R]
     [IsLocalRing R] (j : O →+* R) (hj : IsCpl j) : maximalIdeal R ≤ Ideal.map j (maximalIdeal O) := by
   obtain ⟨e, he⟩ := hj
   have fg : (maximalIdeal O).FG := IsNoetherian.noetherian _
-  haveI hloc : IsLocalRing (AdicCompletion (maximalIdeal O) O) := AdicCompletion.isLocalRing_of_fg fg
+  have hloc : IsLocalRing (AdicCompletion (maximalIdeal O) O) := AdicCompletion.isLocalRing_of_fg fg
   have hm := AdicCompletion.maximalIdeal_eq_map_of_fg fg
   intro r hr
   have h1 : e.symm r ∈ maximalIdeal (AdicCompletion (maximalIdeal O) O) := by
@@ -832,8 +832,8 @@ end GlobalTheory.Poinc.TraitLocal
 
 theorem GlobalTheory.Poinc.TraitLocal.isLocalHom_of_square : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [ArithBase o' Ω] (M : RatModel o' Ω) (x : M.Z) (R : Type) [CommRing R] [IsLocalRing R] (j : M.Z.presheaf.stalk x →+* R), IsCpl j → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (ϖ : V) (V' : Type) [CommRing V'] [IsDomain V'] [IsDiscreteValuationRing V'] (h : V →+* V') (g' : R →+* V') (ξ : Sp V ⟶ M.Z), Irreducible (h ϖ) → ξ (IsLocalRing.closedPoint V) = x → spMap g' ≫ (spMap j ≫ M.Z.fromSpecStalk x) = spMap h ≫ ξ → IsLocalHom g' := by
   intro o' Ω _ _ _ hA M x R _ _ j hj V _ _ _ ϖ V' _ _ _ h g' ξ hϖ hξ hsq
-  haveI : Algebra.EssFiniteType ℤ (M.Z.presheaf.stalk x) := GlobalTheory.Poinc.CompletedStalk.essFiniteType_int_stalk M x
-  haveI : IsNoetherianRing (M.Z.presheaf.stalk x) := Algebra.EssFiniteType.isNoetherianRing ℤ _
+  have : Algebra.EssFiniteType ℤ (M.Z.presheaf.stalk x) := GlobalTheory.Poinc.CompletedStalk.essFiniteType_int_stalk M x
+  have : IsNoetherianRing (M.Z.presheaf.stalk x) := Algebra.EssFiniteType.isNoetherianRing ℤ _
   have h1 : spMap h (closedPoint V') = closedPoint V :=
     PrimeSpectrum.ext (GlobalTheory.Poinc.TraitLocal.comap_maximalIdeal_of_irreducible h ϖ hϖ)
   have h2 : (spMap h ≫ ξ) (closedPoint V') = x :=
@@ -895,7 +895,7 @@ namespace GlobalTheory.UPoinc
 
 theorem uOrdEq_stalkHom_of_associated : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] (M : RatModel o' Ω) (x : M.Z) (T : UTrait Xo c) (ξ : Sp T.V ⟶ M.Z), ξ (IsLocalRing.closedPoint T.V) ⤳ x → ∀ (R : Type) [CommRing R] (j : M.Z.presheaf.stalk x →+* R) (V' : Type) [CommRing V'] [IsDomain V'] [IsDiscreteValuationRing V'] (h : T.V →+* V') (g' : R →+* V'), Function.Injective h → Irreducible (h T.ϖ) → spMap g' ≫ (spMap j ≫ M.Z.fromSpecStalk x) = spMap h ≫ ξ → ∀ (a : M.Z.presheaf.stalk x) (k : ℕ), Associated (g' (j a)) (h T.ϖ ^ k) → UOrdEq M T ξ (M.stalkHom x a) k := by
   intro E _ _ _ H Dw l Xo c o' Ω _ _ _ M x T ξ hx R _ j V' _ _ _ h g' hinj hirr hcomm a k ha
-  haveI : IsDiscreteValuationRing T.V := T.cdvr.1
+  have : IsDiscreteValuationRing T.V := T.cdvr.1
   let v : M.Z.presheaf.stalk x ⟶ CommRingCat.of T.V :=
     M.Z.presheaf.stalkSpecializes hx ≫ Scheme.stalkClosedPointTo (R := CommRingCat.of T.V) ξ
   have hv : Spec.map v ≫ M.Z.fromSpecStalk x = ξ := by
@@ -970,11 +970,11 @@ theorem cpl_isIntegrallyClosed : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Al
   intro o' Ω _ _ _ hA M x hic R _ _ _ j hC
   obtain ⟨e, -⟩ := hC
   have hinjΩ := M.stalkHom_injective x
-  haveI : IsDomain (M.Z.presheaf.stalk x) := hinjΩ.isDomain
-  haveI : CharZero Ω := hA.char
-  haveI : CharZero (M.Z.presheaf.stalk x) := (RingHom.charZero_iff hinjΩ).2 inferInstance
-  haveI := hic
-  haveI : Algebra.EssFiniteType ℤ (M.Z.presheaf.stalk x) := GlobalTheory.Poinc.CompletedStalk.essFiniteType_int_stalk M x
+  have : IsDomain (M.Z.presheaf.stalk x) := hinjΩ.isDomain
+  have : CharZero Ω := hA.char
+  have : CharZero (M.Z.presheaf.stalk x) := (RingHom.charZero_iff hinjΩ).2 inferInstance
+  have := hic
+  have : Algebra.EssFiniteType ℤ (M.Z.presheaf.stalk x) := GlobalTheory.Poinc.CompletedStalk.essFiniteType_int_stalk M x
   obtain ⟨hRd, hRi⟩ := GlobalTheory.AnalyticNormality.completion_isDomain_and_isIntegrallyClosed (M.Z.presheaf.stalk x)
   exact IsIntegrallyClosed.of_equiv e
 
@@ -1010,14 +1010,14 @@ theorem exists_lattice_data : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     (fun a => ⟨fR a, hfR a⟩)
   obtain ⟨V₀, _, _, _, h₀, g₀, ρ₀, -, hirr₀, hsq₀, hsurj₀, hco₀, hlin₀⟩ :=
     tr T₀ ξ₀ hT₀ (by rw [hξ₀])
-  haveI : CharZero R := hB.2
-  haveI : IsIntegrallyClosed R := cpl_isIntegrallyClosed X₁.o₁ X₁.Ω₁ M x (hAdm.1.normal x).2 R j hC
+  have : CharZero R := hB.2
+  have : IsIntegrallyClosed R := cpl_isIntegrallyClosed X₁.o₁ X₁.Ω₁ M x (hAdm.1.normal x).2 R j hC
   have hco : ∀ y, ∃ r, PsiCoord D.toPre y r ∧ (y ≠ 0 → r ∈ maximalIdeal R) := fun y => by
     obtain ⟨r, h1, -, h3, -⟩ := (GlobalTheory.PsiCoordLocal.main R D inferInstance y).1
     exact ⟨r, h1, h3⟩
   obtain ⟨hdvr₀, -, -⟩ := T₀.cdvr
-  haveI := hdvr₀
-  haveI : IsLocalHom g₀ := GlobalTheory.T.isLocalHom_completedStalk_to_dvr_over_trait X₁.o₁ X₁.Ω₁ M x R j hC T₀.V T₀.ϖ V₀ h₀ g₀ ξ₀ hirr₀ hξ₀ hsq₀
+  have := hdvr₀
+  have : IsLocalHom g₀ := GlobalTheory.T.isLocalHom_completedStalk_to_dvr_over_trait X₁.o₁ X₁.Ω₁ M x R j hC T₀.V T₀.ϖ V₀ h₀ g₀ ξ₀ hirr₀ hξ₀ hsq₀
   have hinj : Function.Injective ρ₀ := by
     refine (injective_iff_map_eq_zero ρ₀).2 fun y h0 => by_contra fun hy => ?_
     obtain ⟨r, hr, hrm⟩ := hco y
@@ -1130,8 +1130,8 @@ theorem unitaryStepA_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   intro E _ _ _ H Dw _ l Xo c C X₁
   refine ⟨2 * X₁.S.N, 1, by have := X₁.S.N_ge; omega, le_rfl, ?_⟩
   intro M U₀ EE out hA hE x
-  haveI := M.qc
-  haveI : CompactSpace M.Z := QuasiCompact.compactSpace_of_compactSpace M.s
+  have := M.qc
+  have : CompactSpace M.Z := QuasiCompact.compactSpace_of_compactSpace M.s
   obtain ⟨x', hx', hcl⟩ := (isClosed_closure (s := ({x} : Set M.Z))).exists_closed_singleton ⟨x, subset_closure rfl⟩
   have hxx' : x ⤳ x' := specializes_iff_mem_closure.2 hx'
   obtain ⟨X, i1, i2, i3, i4, n, eb, b₀, μ, e, h1, h2, h3, h4, h5, h6, h7⟩ :=

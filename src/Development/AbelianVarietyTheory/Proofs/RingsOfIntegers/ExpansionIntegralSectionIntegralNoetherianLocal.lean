@@ -83,11 +83,11 @@ theorem isUnit_cst_of_ne_zero {R : Type} [CommRing R] [IsDomain R] {Z : Scheme.{
 
 private theorem injective_app_pullback_fst_of_flat {R : Type} [CommRing R] [IsDomain R] (G : Over (Spec (CommRingCat.of R))) [Flat G.hom]
     (W : G.left.Opens) : Function.Injective ((pullback.fst G.hom (jK R)).app W).hom := by
-  haveI : QuasiCompact (pullback.fst G.hom (jK R)) := inferInstance
-  haveI : IsSchemeTheoreticallyDominant (jK R) := by
+  have : QuasiCompact (pullback.fst G.hom (jK R)) := inferInstance
+  have : IsSchemeTheoreticallyDominant (jK R) := by
     unfold jK
     exact SchemeDominantSpecMap.isSchemeTheoreticallyDominant_specMap _ (IsFractionRing.injective R (FractionRing R))
-  haveI : IsSchemeTheoreticallyDominant (pullback.fst G.hom (jK R)) := inferInstance
+  have : IsSchemeTheoreticallyDominant (pullback.fst G.hom (jK R)) := inferInstance
   exact Scheme.Hom.app_injective _ W
 
 private theorem isUnit_gs_scal_of_ne_zero {R : Type} [CommRing R] [IsDomain R] (D : DegPre R) (y : (D.BF (FractionRing R)).left)
@@ -107,7 +107,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoeth
   obtain ⟨r, hr, σ', f, hσ', hf, hexp⟩ := hE
   have hLG : U.LG.L.IsLB := U.LG.isLB
   have hP : D.toPre.P.L.IsLB := D.toPre.P.isLB
-  haveI : Smooth G.hom := U.smooth
+  have : Smooth G.hom := U.smooth
   have hinj : ∀ W : G.left.Opens, Function.Injective ((pullback.fst G.hom (jK R)).app W).hom :=
     fun W => injective_app_pullback_fst_of_flat G W
   have hσ'' : GeneratorPullback.SecScal U.LG.L (fun _ : Fin 1 => pullback.fst G.hom (jK R)) (fun _ => (k : ℤ)) s
@@ -117,8 +117,8 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoeth
     exact hσ'
   have h2 : SecIsMul G.hom r σ' σ := GlobalTheory.IntegralExpansion.secIsMul_of_secScal hLG G.hom hinj hs hσ''
   have h3 := fun e => GlobalTheory.expandsAt_dvd_of_secIsMul R I D A G U e k r σ' σ f h2 (hexp e)
-  haveI : Smooth D.toPre.P.A.hom := D.toPre.P.isAb.smooth
-  haveI : GeometricallyConnected D.toPre.P.A.hom := D.toPre.P.isAb.geomConnected
+  have : Smooth D.toPre.P.A.hom := D.toPre.P.isAb.smooth
+  have : GeometricallyConnected D.toPre.P.A.hom := D.toPre.P.isAb.geomConnected
   have h4 : ∀ α, ∃ g : D.toPre.SecB k α, SecIsMul D.toPre.P.A.hom r (f α) g := by
     intro α
     refine GlobalTheory.GermDiv.main R I (hI.trans (IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top).ge)

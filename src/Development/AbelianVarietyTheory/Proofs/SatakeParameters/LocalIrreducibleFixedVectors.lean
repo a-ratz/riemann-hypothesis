@@ -96,13 +96,13 @@ theorem exists_eigenvector {G V W ι : Type} [Group G] [TopologicalSpace G] [IsT
           simp }
   have hHo : IsOpen (H : Set K) := by
     have ho : IsOpen ((fun k : K => (k : G)) ⁻¹' (U ∩ ⋂ i, {g : G | ρ g (y i) = y i})) :=
-      (hU.inter (isOpen_iInter_of_finite fun i => hρ (y i))).preimage continuous_subtype_val
+      (hU.inter (isOpen_iInter_of_finite fun i => hρ (y i))).preimage continuous_subtypeVal
     refine H.isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset (ho.mem_nhds ⟨h1, by simp⟩) ?_)
     rintro k ⟨hk, hk'⟩
     exact ⟨hθ _ hk k.2, fun i => Set.mem_iInter.1 hk' i⟩
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : Finite (K ⧸ H) := H.quotient_finite_of_isOpen hHo
-  haveI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : Finite (K ⧸ H) := H.quotient_finite_of_isOpen hHo
+  have : Fintype (K ⧸ H) := Fintype.ofFinite _
   let f : K → ι → V := fun k i => (θ k)⁻¹ • ρ k (y i)
   have hf : ∀ a b : K, QuotientGroup.leftRel H a b → f a = f b := by
     intro a b hab

@@ -186,12 +186,12 @@ namespace GlobalTheory
 
 theorem hom_diff_unit_specialises : ∀ (S : Scheme.{0}) (A B : Over S) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B] (u v : A ⟶ B), IsAbelianScheme A → IsAbelianScheme B → IsMonHom u → IsMonHom v → ∀ t s : S, s ∈ closure {t} → (∀ x : A.left, A.hom x = t → (u * v⁻¹).left x = (η[B]).left t) → ∀ x : A.left, A.hom x = s → (u * v⁻¹).left x = (η[B]).left s := by
   intro S A B _ _ _ _ u v hA hB hu hv t s hst H x hx
-  haveI := hA.smooth
-  haveI := hB.proper
+  have := hA.smooth
+  have := hB.proper
   have hη : (η[B]).left ≫ B.hom = 𝟙 S := by simpa using Over.w (η[B])
   have hid : IsClosedImmersion (𝟙 S) := inferInstance
-  haveI : IsClosedImmersion ((η[B]).left ≫ B.hom) := by rw [hη]; exact hid
-  haveI : IsClosedImmersion (η[B]).left := IsClosedImmersion.of_comp _ B.hom
+  have : IsClosedImmersion ((η[B]).left ≫ B.hom) := by rw [hη]; exact hid
+  have : IsClosedImmersion (η[B]).left := IsClosedImmersion.of_comp _ B.hom
   have hF : IsClosed ((u * v⁻¹).left ⁻¹' Set.range (η[B]).left) :=
     (η[B]).left.isClosedEmbedding.isClosed_range.preimage (u * v⁻¹).left.continuous
   have hcl : x ∈ closure (A.hom ⁻¹' {t}) := by
@@ -234,12 +234,12 @@ theorem isClosed_of_isOpen_of_stable {S : Scheme.{0}} [IsLocallyNoetherian S] {L
   intro s hsc
   obtain ⟨_, ⟨U, hU, rfl⟩, hsU, -⟩ := S.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ s) isOpen_univ
   have hUa : IsAffineOpen U := hU
-  haveI : IsNoetherianRing Γ(S, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  haveI : TopologicalSpace.NoetherianSpace (U : Set S) := noetherianSpace_of_isAffineOpen U hUa
-  haveI : QuasiSober (U : Set S) := U.isOpen.isOpenEmbedding_subtypeVal.quasiSober
+  have : IsNoetherianRing Γ(S, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : TopologicalSpace.NoetherianSpace (U : Set S) := noetherianSpace_of_isAffineOpen U hUa
+  have : QuasiSober (U : Set S) := U.isOpen.isOpenEmbedding_subtypeVal.quasiSober
   let s' : (U : Set S) := ⟨s, hsU⟩
   let L' : Set (U : Set S) := Subtype.val ⁻¹' L
-  have hL'o : IsOpen L' := ho.preimage continuous_subtype_val
+  have hL'o : IsOpen L' := ho.preimage continuous_subtypeVal
   have hs' : s' ∈ closure L' := by
     rw [mem_closure_iff]
     intro O hO hsO
@@ -262,12 +262,12 @@ theorem isClosed_of_isOpen_of_stable {S : Scheme.{0}} [IsLocallyNoetherian S] {L
   have hgL : hZi.genericPoint ∈ L' := (hg.mem_open_set_iff hL'o).mpr hZL
   have hsp : hZi.genericPoint ⤳ s' := by
     rw [specializes_iff_mem_closure, hg.def]; exact hsZ
-  exact hs _ hgL s (specializes_iff_mem_closure.mp (hsp.map continuous_subtype_val))
+  exact hs _ hgL s (specializes_iff_mem_closure.mp (hsp.map continuous_subtypeVal))
 
 theorem eqLocus_isClosedImmersion : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A B : Over S) [GrpObj A] [GrpObj B] (u v : A ⟶ B), IsAbelianScheme A → IsAbelianScheme B → IsMonHom u → IsMonHom v → ∃ (Z : Scheme.{0}) (i : Z ⟶ S), IsClosedImmersion i ∧ ∀ (T : Scheme.{0}) (t : T ⟶ S) (A' : Over T) [GrpObj A'] (φ' : A'.left ⟶ A.left), IsGrpPullback A' A t φ' → (φ' ≫ u.left = φ' ≫ v.left ↔ ∃ z : T ⟶ Z, z ≫ i = t) := by
   intro S _ A B _ _ u v hA hB hu hv
-  haveI := hA.comm
-  haveI := hB.comm
+  have := hA.comm
+  have := hB.comm
   let P : S → Prop := fun t => ∀ x : A.left, A.hom x = t → (u * v⁻¹).left x = (η[B]).left t
   have hloc : ∀ t, P t → ∃ V : S.Opens, t ∈ V ∧ (A.hom ⁻¹ᵁ V).ι ≫ u.left = (A.hom ⁻¹ᵁ V).ι ≫ v.left :=
     fun t ht => eq_near_fibre_of_quot_contracts S A B u v hA hB hu hv t ht
@@ -459,8 +459,8 @@ theorem closedSubscheme_iInter_exists :
     refine ⟨H, 𝟙 H, inferInstance, fun T h => ⟨fun _ k => k.elim, fun _ => ⟨h, Category.comp_id h⟩⟩⟩
   · intro α _ ih Z i hi
     obtain ⟨Z₀, i₀, h₀, hp⟩ := ih (fun a => Z (some a)) (fun a => i (some a)) (fun a => hi (some a))
-    haveI := h₀
-    haveI := hi none
+    have := h₀
+    have := hi none
     refine ⟨Limits.pullback i₀ (i none), Limits.pullback.fst i₀ (i none) ≫ i₀, inferInstance, ?_⟩
     intro T h
     rw [Option.forall, ← hp T h]
@@ -1016,7 +1016,7 @@ theorem prodPow_comp {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonObj A] {
     (hf : ∀ k, IsMonHom (f k)) (cm : Fin r → Fin r → Fin r → ℤ) (hm : ∀ i j, f i ≫ f j = prodPow f (cm i j))
     (c d : Fin r → ℤ) :
     prodPow f c ≫ prodPow f d = prodPow f (∑ k, ∑ l, (c k * d l) • cm k l) := by
-  haveI : IsMonHom (prodPow f d) := isMonHom_prodPow f hf d
+  have : IsMonHom (prodPow f d) := isMonHom_prodPow f hf d
   have h1 : prodPow f c ≫ prodPow f d = ∏ k, (f k ≫ prodPow f d) ^ c k := by
     have := map_prod (postcompHom (prodPow f d)) (fun k => f k ^ c k) Finset.univ
     refine this.trans (Finset.prod_congr rfl fun k _ => ?_)
@@ -1142,13 +1142,13 @@ theorem isMonHom_of_components : ∀ (T : Scheme.{0}) (A' B' C : Over T) [GrpObj
   · obtain ⟨x, -, hx⟩ := huniv (𝟙_ (Over T)) (fun u => η[C] ≫ Φ ≫ pr' u)
     have h1 : η[C] ≫ Φ = x := hx _ (fun u => by simp)
     have h2 : (η[B'] : 𝟙_ (Over T) ⟶ B') = x := hx _ (fun u => by
-      haveI := hcomp u; haveI := hΦu u
+      have := hcomp u; have := hΦu u
       rw [IsMonHom.one_hom, IsMonHom.one_hom (Φ ≫ pr' u)])
     rw [h1, h2]
   · obtain ⟨x, -, hx⟩ := huniv (C ⊗ C) (fun u => μ[C] ≫ Φ ≫ pr' u)
     have h1 : μ[C] ≫ Φ = x := hx _ (fun u => by simp)
     have h2 : (Φ ⊗ₘ Φ) ≫ μ[B'] = x := hx _ (fun u => by
-      haveI := hcomp u; haveI := hΦu u
+      have := hcomp u; have := hΦu u
       rw [Category.assoc, IsMonHom.mul_hom (Φ ≫ pr' u), IsMonHom.mul_hom (pr' u),
         ← Category.assoc, tensorHom_comp_tensorHom])
     rw [h1, h2]
@@ -1314,7 +1314,7 @@ theorem adj_of_span : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj
   obtain ⟨hA, hL, h₁, h₂, -, hamp⟩ := hQ
   have hbi := GlobalTheory.Biadditive.biadditive_of_triv_axes GlobalTheory.globalFns_holds S A _ hA (pull_isLB hL _) hamp Q hL h₁ h₂
 
-  letI : Add (Pic (A ⊗ A).left) := (inferInstance : AddCommGroup (Pic (A ⊗ A).left)).toAdd
+  let : Add (Pic (A ⊗ A).left) := (inferInstance : AddCommGroup (Pic (A ⊗ A).left)).toAdd
   let B : ((A ⊗ A) ⟶ A) → ((A ⊗ A) ⟶ A) → Pic (A ⊗ A).left := fun u v => pull (lift u v).left (cls Q hL)
   have addL : ∀ u u' v, B (u * u') v = B u v + B u' v := fun u u' v => by
     have z := (cls_eq_zero_iff (LB.isLB_linComb hL _ _)).2 (hbi (A ⊗ A) u u' v).1
@@ -1462,16 +1462,16 @@ theorem exists_actRep_finite : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A :
   obtain ⟨hLLB, hLrig, hLamp⟩ := diagPow_props S A Q hQQ d hd
   obtain ⟨R, hfin, -⟩ := GlobalTheory.T.exists_finite_unramified_representing_polarizedHoms S A (Out.powObj A r) (diagPow A Q d) (formLB A Q (Out.powPr A (n := r)) W)
     hab hGab hLLB hMLB hLrig hMrig hLamp hMamp
-  haveI : IsFinite R.π := hfin
-  haveI : IsLocallyNoetherian R.H := LocallyOfFiniteType.isLocallyNoetherian R.π
-  haveI : IsCommMonObj R.AH := GlobalTheory.isCommMonObj_of_grpPullback _ _ A R.AH R.π R.φA R.pbA
+  have : IsFinite R.π := hfin
+  have : IsLocallyNoetherian R.H := LocallyOfFiniteType.isLocallyNoetherian R.π
+  have : IsCommMonObj R.AH := GlobalTheory.isCommMonObj_of_grpPullback _ _ A R.AH R.π R.φA R.pbA
   let φ₂H := sqMap R.π R.φA R.pbA.1.w
   have hsqH : IsSquare R.φA φ₂H := isSquare_sqMap _ _ _
   obtain ⟨habH, hQHLB, hr1H, hr2H, hsymH, hampH⟩ := qHyp_pull S R.H R.π A R.AH R.φA φ₂H Q R.pbA hsqH hQQ
   obtain ⟨prH, hprHhom, hprH, -⟩ := exists_pow_baseChange S R.H R.π A R.AH R.φA R.BH r R.φB R.pbA R.pbB
   let f : Fin r → (R.AH ⟶ R.AH) := fun k => R.Φ ≫ prH k
   have hfhom : ∀ k, IsMonHom (f k) := fun k => by
-    haveI := R.hom; haveI := hprHhom k; exact inferInstanceAs (IsMonHom (R.Φ ≫ prH k))
+    have := R.hom; have := hprHhom k; exact inferInstanceAs (IsMonHom (R.Φ ≫ prH k))
   obtain ⟨m, N, c1, cm, halg⟩ := exists_act_iff_rels O r e hspan
   have hcb : ∀ i, ∃ c : Fin r → ℤ, ∑ k, c k • e k = bar (e i) := fun i =>
     (Submodule.mem_span_range_iff_exists_fun ℤ).1 (hspan ▸ Submodule.mem_top)
@@ -1482,7 +1482,7 @@ theorem exists_actRep_finite : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A :
   obtain ⟨Z1, i1, hi1, hZ1⟩ := GlobalTheory.T.abelianScheme_homAgreeLocus_closedSubscheme R.H R.AH R.AH (∏ k, f k ^ c1 k) (𝟙 _) habH habH
     (isMonHom_prodPow f hfhom _) inferInstance
   have hM := fun ij : Fin r × Fin r => GlobalTheory.T.abelianScheme_homAgreeLocus_closedSubscheme R.H R.AH R.AH (f ij.1 ≫ f ij.2) (∏ k, f k ^ cm ij.1 ij.2 k) habH habH
-    (by haveI := hfhom ij.1; haveI := hfhom ij.2; exact inferInstance) (isMonHom_prodPow f hfhom _)
+    (by have := hfhom ij.1; have := hfhom ij.2; exact inferInstance) (isMonHom_prodPow f hfhom _)
   choose ZM iM hiM hZM using hM
   have hA := fun i : Fin r => _root_.GlobalTheory.EndLoc.exists_closed_adj R.H R.AH (Q.pull φ₂H) habH hQHLB hr1H hr2H hsymH hampH (f i)
     (∏ k, f k ^ cb i k) (hfhom i) (isMonHom_prodPow f hfhom _)
@@ -1528,11 +1528,11 @@ theorem exists_actRep_finite : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A :
     · rintro ⟨⟨hN', h1', hM'⟩, hA'⟩
       exact ⟨⟨⟨fun j => (eN j).2 (hN' j), e1.2 h1'⟩, fun ij => (eM ij).2 (hM' ij.1 ij.2)⟩, fun i => (eA i).2 (hA' i)⟩
 
-  haveI : IsClosedImmersion iZ := hiZ
+  have : IsClosedImmersion iZ := hiZ
   let AZ : Over Z := (Over.pullback iZ).obj R.AH
   let ψZ : AZ.left ⟶ R.AH.left := pullback.fst R.AH.hom iZ
   have pbZ : IsGrpPullback AZ R.AH iZ ψZ := isGrpPullback_pullback R.AH iZ
-  haveI : IsCommMonObj AZ := GlobalTheory.isCommMonObj_of_grpPullback _ _ R.AH AZ iZ ψZ pbZ
+  have : IsCommMonObj AZ := GlobalTheory.isCommMonObj_of_grpPullback _ _ R.AH AZ iZ ψZ pbZ
   let ψ₂Z := sqMap iZ ψZ pbZ.1.w
   have hsqZ : IsSquare ψZ ψ₂Z := isSquare_sqMap _ _ _
   have hgZ := fun k => exists_hom_baseChange R.H Z iZ R.AH R.AH AZ AZ ψZ ψZ (f k) pbZ pbZ (hfhom k)
@@ -1562,7 +1562,7 @@ theorem exists_actRep_finite : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A :
       adj := hadjZ'
       rep := ?_ }, ?_⟩
   · intro T t A' _ φ' φ₂' act' hpb hsq hact hadj
-    haveI : IsCommMonObj A' := GlobalTheory.isCommMonObj_of_grpPullback _ _ A A' t φ' hpb
+    have : IsCommMonObj A' := GlobalTheory.isCommMonObj_of_grpPullback _ _ A A' t φ' hpb
     let B' := (Over.pullback t).obj (Out.powObj A r)
     let φB : B'.left ⟶ (Out.powObj A r).left := pullback.fst _ t
     have hB : IsGrpPullback B' (Out.powObj A r) t φB := isGrpPullback_pullback _ t

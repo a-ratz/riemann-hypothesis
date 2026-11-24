@@ -76,7 +76,7 @@ theorem gm_genVal (ξ : Spec (CommRingCat.of (FractionRing R))) {M : LB (TK R).l
     (h : ⊤ ≤ M.U j) :
     (gm (𝟙 _) ξ (M.U j) (t.s j)).val = kst ξ (genVal t j h).val := by
   rw [gm_val _ ξ _ (h trivial)]
-  simp only [kst, genVal, RingHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, res, RingHom.toMonoidHom_eq_coe]
+  simp only [kst, genVal, RingHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, res, RingHom.toMonoidHom_eq_coe]
   rw [Iso.hom_inv_id_apply]
   exact (TopCat.Presheaf.germ_res_apply (Spec (CommRingCat.of (FractionRing R))).presheaf (homOfLE h) ξ trivial _).symm
 
@@ -190,7 +190,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : Deg
     ∃ u : Rˣ, algebraMap R (FractionRing R) r = algebraMap R (FractionRing R) (u : R) * (x : FractionRing R) := by
   intro R _ _ _ D O _ _ _ oa w0 hW y r x hr hx
   obtain ⟨u, -, -, hrel⟩ := hW
-  haveI : IsProper D.P.A.hom := D.P.isAb.proper
+  have : IsProper D.P.A.hom := D.P.isAb.proper
   obtain ⟨ξ⟩ : Nonempty (Spec (CommRingCat.of (FractionRing R))) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨J, hJ, hJc⟩ := exists_good_integral ξ D.P.isLB D.P.A.hom
   let cU : Rˣ →* ((Spec (CommRingCat.of (FractionRing R))).presheaf.stalk ξ)ˣ := Units.map (cst ξ).toMonoidHom

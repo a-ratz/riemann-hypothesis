@@ -129,11 +129,11 @@ theorem sup_le_euclidean (ι : Type) [Fintype ι] (A : AddSubgroup (EuclideanSpa
           ⨍ w in Fd, ‖G w‖ ^ 2 * Real.exp (-Real.pi * ‖w‖ ^ 2) := by
   set L : Submodule ℤ (EuclideanSpace ℂ ι) := AddSubgroup.toIntSubmodule A with hL
   have hv0 : 0 < v := by linarith
-  haveI hdA : DiscreteTopology A := by
+  have hdA : DiscreteTopology A := by
     refine discreteTopology_of_isOpen_singleton_zero ?_
     have : ({0} : Set A) = Subtype.val ⁻¹' {x : EuclideanSpace ℂ ι | ‖x‖ ^ 2 < 1 / v} := by
       ext x
-      simp only [Set.mem_singleton_iff, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Set.mem_singleton_iff, Set.mem_preimage, Set.mem_ofPred_eq]
       constructor
       · rintro rfl
         simpa using hv0
@@ -141,9 +141,9 @@ theorem sup_le_euclidean (ι : Type) [Fintype ι] (A : AddSubgroup (EuclideanSpa
         by_contra h0
         exact absurd (hmin x x.2 (fun h => h0 (Subtype.ext h))) (not_le.2 hx)
     rw [this]
-    exact (isOpen_lt (by fun_prop) continuous_const).preimage continuous_subtype_val
-  haveI : DiscreteTopology L := hdA
-  haveI : IsZLattice ℝ L := ⟨hspan⟩
+    exact (isOpen_lt (by fun_prop) continuous_const).preimage continuous_subtypeVal
+  have : DiscreteTopology L := hdA
+  have : IsZLattice ℝ L := ⟨hspan⟩
   have hcov : ZLattice.covolume L = 1 := by
     refine covolume_eq_one L (mulI ι) fun y => ?_
     rw [GlobalTheory.mem_dualLattice]
@@ -155,7 +155,7 @@ theorem sup_le_euclidean (ι : Type) [Fintype ι] (A : AddSubgroup (EuclideanSpa
   have hF0 : IsAddFundamentalDomain A (ZSpan.fundamentalDomain (b.ofZLatticeBasis ℝ L)) volume :=
     ZLattice.isAddFundamentalDomain b volume
   refine ⟨⟨_, hF0⟩, fun Fd hFd z => ?_⟩
-  haveI : Countable A := by
+  have : Countable A := by
     have : Countable L := Countable.of_equiv _ b.repr.toEquiv.symm
     exact this
   have hvol : volume Fd = 1 := by
@@ -227,7 +227,7 @@ theorem sup_le_coord {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [Norm
       simpa using this)
   let e : EuclideanSpace ℂ ι ≃ᵐ W := φ.symm.toHomeomorph.toMeasurableEquiv
   let ν : Measure W := Measure.map e volume
-  haveI : ν.IsAddHaarMeasure :=
+  have : ν.IsAddHaarMeasure :=
     (φ.symm.toContinuousAddEquiv).isAddHaarMeasure_map volume
   have hν : ν = Measure.addHaarScalarFactor ν μ • μ := Measure.isAddLeftInvariant_eq_smul ν μ
   have hc : Measure.addHaarScalarFactor ν μ ≠ 0 :=
@@ -373,10 +373,10 @@ theorem sup_translate_le : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.hos
     refine ⟨by linarith, ?_⟩
     rw [← Real.log_le_log_iff hd (by positivity), Real.log_pow]
     exact_mod_cast hlog
-  haveI i1 : (volume : Measure (Fin N → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI i2 : (volume : Measure (Fin N' → Fin N → ℂ)).IsAddHaarMeasure :=
+  have i1 : (volume : Measure (Fin N → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i2 : (volume : Measure (Fin N' → Fin N → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure _
-  haveI i3 : (volume : Measure (VC D N N')).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i3 : (volume : Measure (VC D N N')).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   obtain ⟨hex, hB⟩ := sup_le_coord (volume : Measure (VC D N N')) _ φ (La D T L L') D.host.rdE hrd
     (by
       intro x hx h0
@@ -436,7 +436,7 @@ theorem mean_transport {V : Type} [NormedAddCommGroup V] [SecondCountableTopolog
     (hf : ∀ x ∈ A, ∀ z, f (P (x + z)) = f (P z)) :
     ⨍ z in Classical.epsilon (fun Fd => IsAddFundamentalDomain A' Fd μ), f z ∂μ =
       ⨍ z in Classical.epsilon (fun Fd => IsAddFundamentalDomain A Fd μ), f (P z) ∂μ := by
-  haveI := GlobalTheory.countable_of_discrete_addSubgroup A
+  have := GlobalTheory.countable_of_discrete_addSubgroup A
   obtain ⟨F0, -, -, hF0⟩ := GlobalTheory.exists_isAddFundamentalDomain_addSubgroup A
   let φ : A ≃ A' :=
     { toFun := fun a => ⟨P a, (hA _).2 a.2⟩
@@ -496,7 +496,7 @@ theorem weight_periodic (D : D7) (T : Tor D) {N N' : ℕ} (A : AddSubgroup (VC D
   rw [← hG.2 x hx z, add_comm x z, Hf_add_re]
   simp only [al, U, norm_mul, norm_zpow, norm_neg, norm_one, one_zpow, one_mul, Complex.norm_exp,
     mul_pow]
-  rw [mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 2
   simp
   ring
@@ -559,11 +559,11 @@ theorem normSq_perm (hL : T'.abelian₂ = T.abelian₂) (hE : ∀ τ x, T'.emb �
     [DiscreteTopology (La D T L L' : AddSubgroup (VC D N N'))]
     (G : VC D N N' → ℂ) (hG : G ∈ Th D T' L L') :
     normSq D T' (La D T' L L') G = normSq D T (La D T L L') (fun w => G (perm D N N' π w)) := by
-  haveI h1 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N → ℂ)).IsAddLeftInvariant :=
+  have h1 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N → ℂ)).IsAddLeftInvariant :=
     MeasureTheory.Measure.pi.isAddLeftInvariant _
-  haveI h2 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N' → Fin N → ℂ)).IsAddLeftInvariant :=
+  have h2 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N' → Fin N → ℂ)).IsAddLeftInvariant :=
     MeasureTheory.Measure.pi.isAddLeftInvariant _
-  haveI h3 : (MeasureTheory.volume : MeasureTheory.Measure (VC D N N')).IsAddLeftInvariant :=
+  have h3 : (MeasureTheory.volume : MeasureTheory.Measure (VC D N N')).IsAddLeftInvariant :=
     MeasureTheory.Measure.pi.isAddLeftInvariant _
   have h := mean_transport (V := VC D N N') MeasureTheory.volume (perm D N N' π)
     (MeasurableEquiv.piCongrLeft (fun _ : D.what₂.Tau => Fin N' → Fin N → ℂ) π).symm
@@ -618,7 +618,7 @@ theorem discrete_of_int (D : D7) (T : Tor D) {N N' : ℕ} (A : AddSubgroup (VC D
       have h3 := (Finset.sum_eq_zero_iff_of_nonneg (fun _ _ => by positivity)).1 h2 j (Finset.mem_univ _)
       simpa using h3
   rw [this]
-  exact (isOpen_Iio.preimage hc).preimage continuous_subtype_val
+  exact (isOpen_Iio.preimage hc).preimage continuous_subtypeVal
 
 theorem area_pos (D : D7) (hg : admG1 D) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hc : Crv D cc δ) :
     0 < area (lamOf D cc δ) := by
@@ -694,7 +694,7 @@ theorem sup_perm (D : D7) (hg : admG1 D) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ)
       normSq D T (La D T L L') G * Real.exp (Real.pi * (Hf D T z z).re) := by
   have hL' : T.abelian₂ = (tor0 D cc δ).abelian₂ := hL
   have hE' : ∀ τ x, T.emb τ x = (tor0 D cc δ).emb (π τ) x := hE
-  haveI : DiscreteTopology (La D (tor0 D cc δ) L L' : AddSubgroup (VC D N N')) :=
+  have : DiscreteTopology (La D (tor0 D cc δ) L L' : AddSubgroup (VC D N N')) :=
     discrete_of_int D (tor0 D cc δ) _ (area_pos D hg cc δ hc) D.host.hyp.2.1.pos
       (GlobalTheory.ThetaLine.theta_line D hg cc δ hc N N' _ (Or.inr ⟨L, L', h1, h2, rfl⟩)).2.2.2.2.2.2
   obtain ⟨y, rfl⟩ := (perm D N N' π).surjective y

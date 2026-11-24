@@ -70,7 +70,7 @@ theorem exists_evalAt_span (ι : Type) [Fintype ι] (a : ℕ) (lam : ι → DomW
       (∀ j, IsInv (y j)) ∧ ∀ F ∈ Vn lam n, T F = ∑ j, evalAt (y j) F • P j := by
   classical
   set V := Vn lam n with hV
-  haveI : FiniteDimensional ℂ V := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem ι a lam n).1
+  have : FiniteDimensional ℂ V := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem ι a lam n).1
   have hsep : ∀ F : PY ι a, (∀ y, IsInv y → evalAt y F = 0) → F = 0 :=
     (_root_.GlobalTheory.KJInf.substIdentities ι a a le_rfl).2.2.2.2.2.2.1
   let S : Set (Module.Dual ℂ V) :=
@@ -103,7 +103,7 @@ theorem exists_evalAt_span (ι : Type) [Fintype ι] (a : ℕ) (lam : ι → DomW
   have hΦ : Φ ⟨F, hF⟩ = ∑ j, evalAt (y j) F • (Pi.single j 1 : Fin _ → ℂ) := by
     ext i
     simp only [Φ, LinearMap.pi_apply, Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul,
-      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [hfy i]
     rfl
   have key : (⟨F, hF⟩ : V) = L (Φ ⟨F, hF⟩) := by

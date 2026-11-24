@@ -203,7 +203,7 @@ theorem ioX_mem (hCR : GlobalTheory.Published.CuspRapidDecay) (hl : R.toLevCh.Is
 
 include R in
 theorem finite_H : Finite P.H := by
-  haveI : Finite (G0 R.Pg D.R.r) := Finite.of_equiv G R.eG.toEquiv
+  have : Finite (G0 R.Pg D.R.r) := Finite.of_equiv G R.eG.toEquiv
   infer_instance
 
 theorem rankY {j : ℕ} (hj : j ≤ D.R.m) : (Yc D j).rank = D.R.r + j * D.R.t := GlobalTheory.Chain.StepVac.rank_Yc hj

@@ -209,7 +209,7 @@ private theorem descend (hMF : MultiFac) {κ : Type} [Fintype κ] [FiniteDimensi
         ∀ W ≤ S i, (∀ a ∈ B i, (∀ x ∈ F, a x ∈ F) → ∀ x ∈ W, a x ∈ W) → W = ⊥ ∨ W = S i) ∧
       ∀ a : κ → Module.End ℂ U, (∀ i, a i ∈ B i) → (∀ i, ∀ x ∈ F, a i x ∈ F) →
         trOn F (((Finset.univ : Finset κ).toList.map a).prod * Θ) = s * ∏ i, trOn (S i) (a i * Θ) := by
-  haveI : Nontrivial F := Submodule.nontrivial_iff_ne_bot.2 hF
+  have : Nontrivial F := Submodule.nontrivial_iff_ne_bot.2 hF
   have hinj := Submodule.map_injective_of_injective F.injective_subtype
   obtain ⟨Fi, s, hs1, hFi, htr⟩ := hMF κ F (fun i => resAlg F (B i)) (Θ.restrict hΘF)
     (by

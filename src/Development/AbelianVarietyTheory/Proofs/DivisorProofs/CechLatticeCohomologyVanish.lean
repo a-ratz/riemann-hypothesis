@@ -153,7 +153,7 @@ theorem cechZero_latSec_iff_subsingleton_coh : ∀ (X : Scheme.{0}) [IsIntegral 
     (∀ i, IsAffineOpen (U i)) → (∀ i, genericPoint X ∈ U i) → ⨆ i, U i = ⊤ → ∀ b : ℕ, 0 < b →
     (DI.CechZero (fun s => latSec M (inter U s)) b ↔ Subsingleton (coh F b)) := by
   intro X _ hsepX V _ _ M F _ ι _ _ U hL hA hg hc b hb
-  letI : X.IsSeparated := hsepX
+  let : X.IsSeparated := hsepX
   have hsep : ∀ s : Finset ι, s.Nonempty → IsAffineOpen (⨅ i ∈ s, U i) :=
     isAffineOpen_finset_biInf hA
   let e := fun (F : X.Modules) [F.IsQuasicoherent] (n : ℕ) => cechHEquivCoh ℤ hc hsep F n

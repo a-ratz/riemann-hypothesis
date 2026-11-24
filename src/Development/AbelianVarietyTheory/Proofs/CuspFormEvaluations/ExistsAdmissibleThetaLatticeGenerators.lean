@@ -248,7 +248,7 @@ theorem theta_family_block : Formalism.MainNotions.ModuliIntegralCharts.H1.Chart
       have hs : (recB h.toLawsCore).supN j w σ (v q) = T.Ns j w σ (f q) := by
         change cutN T.C T.Ns j w σ (v q) = _
         dsimp only [cutN]
-        rw [if_pos hj]
+        rw [ite_eq_left hj]
       rw [hs]
       have h2 : ((Formalism.MainNotions.WeightAlgebra.DF w : ℕ) : ℝ) = Formalism.MainNotions.WeightAlgebra.absA w := by
         dsimp only [Formalism.MainNotions.WeightAlgebra.DF, Formalism.MainNotions.WeightAlgebra.degP, Formalism.MainNotions.WeightAlgebra.absA]
@@ -435,7 +435,7 @@ theorem lieFac_sq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
   have hp : 0 < 2 * Real.pi * x := by positivity
   have hd' : (∑ τ : E →+* ℂ, ∑ i : Fin (Dw.mult τ), (a (τ, i) : ℝ)) = d := by rw [hd]; push_cast; rfl
   unfold lieFac
-  rw [hd', ← Real.exp_nat_mul, ← Real.exp_log (inv_pos.2 hp), ← Real.exp_nat_mul, Real.log_inv]
+  rw [hd', ← Real.exp_natCast_mul, ← Real.exp_log (inv_pos.2 hp), ← Real.exp_natCast_mul, Real.log_inv]
   congr 1
   push_cast
   ring
@@ -460,8 +460,8 @@ theorem i2iAt_of_containsTh : ChartIndepSt2 → ∀ (E : Type) [Field E] [Number
     exact_mod_cast this
   obtain ⟨jb, hjb, hf⟩ := hct
   choose f hf1 hf2 using hf
-  haveI : Finite (LevQ Dw l) := (GlobalTheory.card_levQ E H Dw l).1
-  haveI : Fintype (Fin n → LevQ Dw l) := Fintype.ofFinite _
+  have : Finite (LevQ Dw l) := (GlobalTheory.card_levQ E H Dw l).1
+  have : Fintype (Fin n → LevQ Dw l) := Fintype.ofFinite _
   have hb := hbound f hf1
   rw [finsum_eq_sum_of_fintype] at hb
   have hrec : ∀ j, recNrm (U σ) xR a n (wR j) k x =
@@ -477,7 +477,7 @@ theorem i2iAt_of_containsTh : ChartIndepSt2 → ∀ (E : Type) [Field E] [Number
     rw [e, map_smulₛₗ]
     show σ s * rdU (U σ) (f q) k (FD.rmul x b) = _
     congr 1
-    exact dif_pos hbd
+    exact dite_eq_left hbd
   have hkey : (Real.pi⁻¹) ^ P₁.totalDegree * Pr.Jbound n ≤ ∑ j, recNrm (U σ) xR a n (wR j) k x ^ 2 := by
     have hl := lieFac_sq Dw xR hxR a _ hdeg
     have hL : (0 : ℝ) ≤ ((2 * Real.pi * xR)⁻¹) ^ P₁.totalDegree := by positivity

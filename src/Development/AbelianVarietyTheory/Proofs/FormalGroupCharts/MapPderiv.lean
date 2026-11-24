@@ -171,11 +171,11 @@ theorem algHom_dualNumber_ext : ∀ (C : Type) [Field C] [IsAlgClosed C] [CharZe
   let K : Ideal (MvPowerSeries σ O) :=
     { carrier := {g | v (φ₀ g) < 1}
       add_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at hx hy ⊢
         exact v.map_add_lt hx hy
       zero_mem' := by simp
       smul_mem' := fun s x hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul] at hx ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul] at hx ⊢
         exact mul_lt_one_of_nonneg_of_lt_one_right (hle s) zero_le hx }
   have hK : ∀ g, g ∈ K ↔ v (φ₀ g) < 1 := fun g => Iff.rfl
   have hJK : J ≤ K.comap (MvPowerSeries.C : O →+* MvPowerSeries σ O) := by
@@ -412,8 +412,8 @@ theorem isReduced_genericFibre_of_isReduced :
     ∀ (O C Q : Type) [CommRing O] [IsDomain O] [Field C] [Algebra O C] [IsFractionRing O C]
       [CommRing Q] [Algebra O Q], IsReduced Q → IsReduced (C ⊗[O] Q) := by
   intro O C Q _ _ _ _ _ _ _ h
-  letI : Algebra Q (C ⊗[O] Q) := Algebra.TensorProduct.rightAlgebra
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid Q (nonZeroDivisors O)) (C ⊗[O] Q) :=
+  let : Algebra Q (C ⊗[O] Q) := Algebra.TensorProduct.rightAlgebra
+  have : IsLocalization (Algebra.algebraMapSubmonoid Q (nonZeroDivisors O)) (C ⊗[O] Q) :=
     IsLocalization.tensorRight C (nonZeroDivisors O)
   exact isReduced_localizationPreserves (Algebra.algebraMapSubmonoid Q (nonZeroDivisors O))
     (C ⊗[O] Q) h
@@ -452,9 +452,9 @@ open MvPowerSeries in
 theorem _root_.GlobalTheory.QuotientBaseChange.nonempty_tensor_quotient_equiv : ∀ (T O : Type) [CommRing T] [CommRing O] [Algebra T O] (I : Ideal T), I.FG → IsAdicComplete (I.map (algebraMap T O)) O → ∀ (σ ι : Type) [Finite σ] [Finite ι] (f : ι → MvPowerSeries σ T) (M : ℕ), Ideal.span (Set.range (MvPowerSeries.X : σ → MvPowerSeries σ T)) ^ M ≤ Ideal.span (Set.range f) ⊔ Ideal.map (MvPowerSeries.C : T →+* MvPowerSeries σ T) I → Module.Free T (MvPowerSeries σ T ⧸ Ideal.span (Set.range f)) → Module.Finite T (MvPowerSeries σ T ⧸ Ideal.span (Set.range f)) → Nonempty ((O ⊗[T] (MvPowerSeries σ T ⧸ Ideal.span (Set.range f))) ≃ₐ[O] (MvPowerSeries σ O ⧸ Ideal.span (Set.range fun j => MvPowerSeries.map (algebraMap T O) (f j)))) := by
   intro T O _ _ _ I hI hO σ ι hσ hι f M hM hfree hfin
   classical
-  haveI := hfree
-  haveI := hfin
-  haveI := hO
+  have := hfree
+  have := hfin
+  have := hO
   let J : Ideal O := I.map (algebraMap T O)
   let A := MvPowerSeries σ T ⧸ Ideal.span (Set.range f)
   let f' : ι → MvPowerSeries σ O := fun j => MvPowerSeries.map (algebraMap T O) (f j)
@@ -472,9 +472,9 @@ theorem _root_.GlobalTheory.QuotientBaseChange.nonempty_tensor_quotient_equiv : 
     rw [Algebra.TensorProduct.lift_tmul, map_one, one_mul]
     rfl
   let b := Algebra.TensorProduct.basis O (Module.Free.chooseBasis T A)
-  haveI h1 : IsAdicComplete J S := _root_.GlobalTheory.FlatComplete.isAdicComplete_of_finite_basis b J
+  have h1 : IsAdicComplete J S := _root_.GlobalTheory.FlatComplete.isAdicComplete_of_finite_basis b J
   let K : Ideal S := J.map (algebraMap O S)
-  haveI h2 : IsAdicComplete K S := (IsAdicComplete.map_algebraMap_iff J S).mpr h1
+  have h2 : IsAdicComplete K S := (IsAdicComplete.map_algebraMap_iff J S).mpr h1
   let h : MvPowerSeries σ T →ₐ[T] S :=
     (Algebra.TensorProduct.includeRight).comp (Ideal.Quotient.mkₐ T (Ideal.span (Set.range f)))
   let hR : MvPowerSeries σ T →+* S := h
@@ -502,7 +502,7 @@ theorem _root_.GlobalTheory.QuotientBaseChange.nonempty_tensor_quotient_equiv : 
       rw [e, h.commutes, IsScalarTower.algebraMap_apply T O S]
       exact Ideal.mem_map_of_mem _ (Ideal.mem_map_of_mem _ ha)
   let J' : Ideal S := K ⊔ L
-  haveI : IsAdicComplete J' S :=
+  have : IsAdicComplete J' S :=
     _root_.GlobalTheory.isAdicComplete_of_pow_le_of_pow_le S K J' 1 (1 + M) (by rw [pow_one]; exact le_sup_left)
       (Ideal.sup_pow_add_le_pow_sup_pow.trans (sup_le (pow_one K).le hLK)) h2
   let x : σ → S := fun i => h (MvPowerSeries.X i)
@@ -547,7 +547,7 @@ theorem _root_.GlobalTheory.QuotientBaseChange.nonempty_tensor_quotient_equiv : 
   have hsurj : Function.Surjective φ := by
     intro q
     obtain ⟨g0, rfl⟩ := Ideal.Quotient.mk_surjective q
-    letI := Fintype.ofFinite ι
+    let := Fintype.ofFinite ι
     obtain ⟨p, hp⟩ := _root_.GlobalTheory.CompleteBaseChange.exists_polynomial_sub_mem (hI.map (algebraMap T O)) f' M hmono g0
     refine ⟨MvPolynomial.aeval x p, ?_⟩
     rw [← AlgHom.comp_apply, MvPolynomial.comp_aeval]

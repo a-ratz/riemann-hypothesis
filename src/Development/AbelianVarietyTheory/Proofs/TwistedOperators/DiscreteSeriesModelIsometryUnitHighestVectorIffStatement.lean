@@ -207,7 +207,7 @@ theorem wt_iff (h : Comparison₂ R M τ br cj e m U) {c : ℚ} (hm : (m : ℚ) 
       cjc cj (Complex.exp (((∑ j, μ j * (sb br * θ (e.symm j)) : ℝ) : ℂ) * Complex.I)) =
       Complex.exp (((∑ a, ν a * θ a : ℝ) : ℂ) * Complex.I) := by
     intro θ
-    rw [cjc_exp, ← Complex.exp_int_mul, ← Complex.exp_add, ← e.sum_comp]
+    rw [cjc_exp, ← Complex.exp_intCast_mul, ← Complex.exp_add, ← e.sum_comp]
     congr 1
     have : sb cj * ∑ a, μ (e a) * (sb br * θ (e.symm (e a))) = ∑ a, ν a * θ a + c * ∑ a, θ a := by
       rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
@@ -282,11 +282,11 @@ theorem mem_hwSub {lam : Ix p q → ℚ} {c : ℚ} (hp : IsParam lam) (ho : IsOr
     have ha := ho.2.1 a
     have hb := ho.2.1 b
     by_cases hs : br = cj
-    · have s1 : sg br cj = 1 := if_pos hs
+    · have s1 : sg br cj = 1 := ite_eq_left hs
       rw [s1] at ha hb ⊢
       rw [one_smul]
       exact GlobalTheory.HolDict.BorelK.not_cdom _ (hanti.lt_iff_gt.1 (by linarith))
-    · have s1 : sg br cj = -1 := if_neg hs
+    · have s1 : sg br cj = -1 := ite_eq_right hs
       rw [s1] at ha hb ⊢
       rw [show (-1 : ℝ) • Formalism.REAL.root (e a) (e b) = Formalism.REAL.root (e b) (e a) by simp [Formalism.REAL.root]]
       exact GlobalTheory.HolDict.BorelK.not_cdom _ (hanti.lt_iff_gt.1 (by linarith))
@@ -320,7 +320,7 @@ theorem highestUnit_iff : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) 
       have : u = 0 := congrArg Subtype.val h0
       apply hw0
       rw [← norm_eq_zero, ← h.norm, ← hu, this, map_zero, norm_zero]
-    obtain ⟨z, hz⟩ := (finrank_eq_one_iff_of_nonzero' _ hu0).1 h1 ⟨v, a⟩
+    obtain ⟨z, hz⟩ := (finrank_eq_one_iff_of_ne_zero' _ hu0).1 h1 ⟨v, a⟩
     have hz' : z • u = v := congrArg Subtype.val hz
     have hx : x = cjc cj z • w := h.bij.1 (by rw [hv, h.smul, cjc_cjc, ← hu, ← map_smul, hz'])
     refine ⟨hn.symm.trans b, hx ▸ Submodule.smul_mem _ _ hwl, fun θ hθ => ?_⟩

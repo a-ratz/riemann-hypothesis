@@ -207,10 +207,10 @@ theorem isLoc_one {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
 theorem gsupp1 : ∀ (D : D7), OmLoc D → FlatBF D → GlobalTheory.LocFlat.SymCollapse → GSupp1 D := by
   intro D hOm hFl hSym k _ _ _ _ p s κ S t _ _ ψ hψ j c H σ B J B' F s₁ hμ T₁ hT₁ Φ₁ hΦ₁ h hh hne
   obtain ⟨hloc, hjac, -⟩ := _root_.GlobalTheory.LocGrp.local_groups D k p
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   obtain ⟨ν, hν⟩ := exists_isUnitVol k
-  haveI := hν.1
+  have := hν.1
   obtain ⟨hk, hhk⟩ := (hloc J.W _ F.G₁).2.1 h hh
   have hc : c = 2 * σ := by have := F.bes.1; omega
 

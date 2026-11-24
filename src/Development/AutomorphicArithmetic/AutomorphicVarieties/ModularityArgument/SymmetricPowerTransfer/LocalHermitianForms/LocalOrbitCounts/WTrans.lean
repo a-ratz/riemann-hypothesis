@@ -72,7 +72,7 @@ private theorem wcount_sub {T Y : Type} [Group T] [MulAction T Y] (C : Subgroup 
     fun o => ((MulAction.stabilizer T o.out).relIndex C : ℂ) * k o.out with hg
   have hs : Function.support g ⊆ {o : MulAction.orbitRel.Quotient T Y | k o.out ≠ 0} := by
     intro o ho
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     intro h0
     exact (Function.mem_support.mp ho) (by simp [hg, h0])
   have h1 := finsum_set_coe_eq_finsum_mem (f := g) {o : MulAction.orbitRel.Quotient T Y | k o.out ≠ 0}

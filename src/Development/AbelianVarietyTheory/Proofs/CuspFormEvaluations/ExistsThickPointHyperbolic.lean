@@ -86,7 +86,7 @@ theorem _root_.GlobalTheory.ThickPoint.exists_euclidean_real {M : ℕ} [FiniteDi
     (B : LinearMap.BilinForm ℝ W) (hs : B.IsSymm) (hp : ∀ x, 0 ≤ B x x) :
     ∃ φ : W →ₗ[ℝ] EuclideanSpace ℝ (Fin M), ∀ x y, inner ℝ (φ x) (φ y) = B x y := by
   subst hM
-  haveI : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
   obtain ⟨v, hv⟩ :=
     LinearMap.BilinForm.exists_orthogonal_basis (LinearMap.BilinForm.isSymm_iff.mp hs)
   let L : W →ₗ[ℝ] (Fin (finrank ℝ W) → ℝ) :=
@@ -121,7 +121,7 @@ theorem _root_.GlobalTheory.ThickPoint.transference_pair {M : ℕ} (b : Basis (F
   classical
   rcases Nat.eq_zero_or_pos M with rfl | hM
   · exact ⟨Fin.elim0, fun i => i.elim0, linearIndependent_empty_type, fun i => i.elim0⟩
-  haveI : Nonempty (Fin M) := ⟨⟨0, hM⟩⟩
+  have : Nonempty (Fin M) := ⟨⟨0, hM⟩⟩
   set d := B.dualBasis hn b with hd
   have hpair : ∀ i j, inner ℝ (φ (b i)) (ψ (d j)) = if i = j then 1 else 0 := by
     intro i j

@@ -63,7 +63,7 @@ theorem isCyc_map_cycZ (l : ℕ) [Fact l.Prime] :
     IsCyc ((Units.map (PadicInt.Coe.ringHom (p := l)).toMonoidHom).comp
       (cycZ (F := ℚ_[l]) (Ω := Om l) l)) := by
   intro g m ζ hζ
-  haveI : ∀ i : ℕ, NeZero ((l ^ i : ℕ) : Om l) := fun i =>
+  have : ∀ i : ℕ, NeZero ((l ^ i : ℕ) : Om l) := fun i =>
     ⟨by exact_mod_cast pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   refine ⟨_, ?_, cyclotomicCharacter.spec l (n := m)
     (MulSemiringAction.toRingAut (GQ l) (Om l) g) ζ hζ⟩
@@ -71,7 +71,7 @@ theorem isCyc_map_cycZ (l : ℕ) [Fact l.Prime] :
   change ‖(z : ℚ_[l]) - (((PadicInt.toZModPow m z).val : ℕ) : ℚ_[l])‖ ≤ _
   have h : z - (((PadicInt.toZModPow m z).val : ℕ) : ℤ_[l]) ∈
       Ideal.span {(l : ℤ_[l]) ^ m} := by
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     rw [← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val,
       sub_self]
   have := (PadicInt.norm_le_pow_iff_mem_span_pow _ m).2 h
@@ -88,12 +88,12 @@ theorem exists_inertia_cycZ_eq : ∀ (l : ℕ) [Fact l.Prime] (u : ℤ_[l]ˣ), �
   have key := hs.isCompact.inter_iInter_nonempty
     (fun x : MaximalUnramifiedExtension l => ((IntermediateField.adjoin ℚ_[l] {(x : Om l)}).fixingSubgroup : Set (GQ l)))
     (fun x => by
-      haveI := IntermediateField.adjoin.finiteDimensional
+      have := IntermediateField.adjoin.finiteDimensional
         (Algebra.IsIntegral.isIntegral (R := ℚ_[l]) (x : Om l))
       exact IntermediateField.fixingSubgroup_isClosed _)
     (fun t => by
       let S : Set (Om l) := (fun x : MaximalUnramifiedExtension l => (x : Om l)) '' (t : Set (MaximalUnramifiedExtension l))
-      haveI : Finite S := (t.finite_toSet.image _).to_subtype
+      have : Finite S := (t.finite_toSet.image _).to_subtype
       let K : FinExt l := ⟨IntermediateField.adjoin ℚ_[l] S,
         IntermediateField.finiteDimensional_adjoin
           (fun x _ => Algebra.IsIntegral.isIntegral x)⟩

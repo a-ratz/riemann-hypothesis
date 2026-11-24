@@ -56,10 +56,10 @@ open MeasureTheory AddCircle in
 theorem circle_hom_eq_zpow :
     ∀ f : Circle →* Circle, Continuous f → ∃ n : ℤ, ∀ z, f z = z ^ n := by
   intro f hf
-  haveI : Fact ((0 : ℝ) < 1) := ⟨one_pos⟩
+  have : Fact ((0 : ℝ) < 1) := ⟨one_pos⟩
   let g : C(AddCircle (1 : ℝ), ℂ) :=
     ⟨fun x => (f (toCircle x) : ℂ),
-      continuous_subtype_val.comp (hf.comp continuous_toCircle)⟩
+      continuous_subtypeVal.comp (hf.comp continuous_toCircle)⟩
   have hg : ∀ x, g x = (f (toCircle x) : ℂ) := fun _ => rfl
   have hex : ∃ n : ℤ, fourierCoeff g n ≠ 0 := by
     by_contra hcon

@@ -68,7 +68,7 @@ private theorem nonempty_iso_shortComplex_map_of_squares {A B : Type*} [Category
     (hf : T.map f ≫ iZ.hom = iX.hom ≫ f') (hg : T.map g ≫ iZ.hom = iY.hom ≫ g')
     (w : biprod.lift a (-b) ≫ biprod.desc f g = 0) (w' : biprod.lift a' (-b') ≫ biprod.desc f' g' = 0) :
     Nonempty ((ShortComplex.mk _ _ w).map T ≅ ShortComplex.mk _ _ w') := by
-  haveI : PreservesBinaryBiproducts T := preservesBinaryBiproducts_of_preservesBiproducts T
+  have : PreservesBinaryBiproducts T := preservesBinaryBiproducts_of_preservesBiproducts T
   have h₁ : iW.hom ≫ biprod.lift a' (-b') =
       T.map (biprod.lift a (-b)) ≫ (T.mapBiprod X Y ≪≫ biprod.mapIso iX iY).hom := by
     simp only [Iso.trans_hom, biprod.mapIso_hom, Functor.mapBiprod_hom]
@@ -143,7 +143,7 @@ private theorem exists_mapDomain_eq_of_pullback_square {S : Type*} [Ring S] {W A
       exact hma h1
     obtain ⟨c, hc⟩ : r a ∈ Set.range b := by
       by_contra hc
-      exact hn (Finsupp.mapDomain_notin_range _ _ hc)
+      exact hn (Finsupp.mapDomain_of_notMem_range _ _ hc)
     obtain ⟨w, hw, -⟩ := hex a c hc.symm
     exact ⟨w, hw⟩
   refine ⟨Finsupp.comapDomain t m ht.injOn, Finsupp.mapDomain_comapDomain t ht m hsupp, ?_⟩
@@ -227,8 +227,8 @@ private theorem freePresheaf_pullback_exact (R : Type) [CommRing R]
     have hsqU : IsPullback (uliftFunctor.{1, 0}.map (t.app U)) (uliftFunctor.{1, 0}.map (l.app U))
         (uliftFunctor.{1, 0}.map (r.app U)) (uliftFunctor.{1, 0}.map (b.app U)) :=
       Functor.map_isPullback uliftFunctor.{1, 0} (Functor.map_isPullback ((evaluation _ _).obj U) hsq)
-    haveI : Mono (r.app U) := (NatTrans.mono_iff_mono_app r).1 inferInstance U
-    haveI : Mono (b.app U) := (NatTrans.mono_iff_mono_app b).1 inferInstance U
+    have : Mono (r.app U) := (NatTrans.mono_iff_mono_app r).1 inferInstance U
+    have : Mono (b.app U) := (NatTrans.mono_iff_mono_app b).1 inferInstance U
     obtain ⟨hm, hex⟩ := moduleCat_free_pullback_exact (S := ULift.{1} R) _ _ _ _ hsqU
       (by rw [biprod.lift_desc, Preadditive.neg_comp,
         ← (ModuleCat.free (ULift.{1} R)).map_comp, ← (ModuleCat.free (ULift.{1} R)).map_comp, hsqU.w,
@@ -245,7 +245,7 @@ private theorem freePresheaf_pullback_exact (R : Type) [CommRing R]
     refine ⟨?_, ShortComplex.exact_of_iso e.symm hex⟩
     have : Mono (((ShortComplex.mk _ _ w).map ((evaluation _ _).obj U)).f ≫ e.hom.τ₂) := by
       rw [← e.hom.comm₁₂]
-      haveI := hm
+      have := hm
       exact mono_comp _ _
     exact mono_of_mono _ e.hom.τ₂
   refine ⟨(NatTrans.mono_iff_mono_app _).2 fun U => (hU U).1, ?_⟩
@@ -278,7 +278,7 @@ private theorem freeSheaf_pullback_shortExact (R : Type) [CommRing R]
   refine ShortComplex.ShortExact.mk' (ShortComplex.exact_of_iso e (hex.map _)) ?_ hepi
   have : Mono ((ShortComplex.mk _ _ w).f ≫ e.inv.τ₂) := by
     rw [← e.inv.comm₁₂]
-    haveI := hm
+    have := hm
     have := Functor.map_mono (presheafToSheaf Scheme.etaleTopology (ModuleCat (ULift.{1} R)))
       (biprod.lift ((_root_.GlobalTheory.EtC.freeP R).map t)
         (-(_root_.GlobalTheory.EtC.freeP R).map l))
@@ -310,8 +310,8 @@ theorem _root_.GlobalTheory.EtC.mv_shortExact : ∀ (R : Type) [CommRing R] {U V
     refine ShortComplex.ShortExact.mk' (ShortComplex.exact_of_isZero_X₂ _ h₂)
       ⟨fun _ _ _ => h₁.eq_of_tgt _ _⟩ ⟨fun _ _ _ => h₃.eq_of_src _ _⟩
   · obtain ⟨p, rfl⟩ : ∃ p : ℕ, i = -(p : ℤ) := ⟨(-i).toNat, by omega⟩
-    haveI : Mono (f.app (op (SimplexCategory.mk p))) := (NatTrans.mono_iff_mono_app f).1 hf _
-    haveI : Mono (g.app (op (SimplexCategory.mk p))) := (NatTrans.mono_iff_mono_app g).1 hg _
+    have : Mono (f.app (op (SimplexCategory.mk p))) := (NatTrans.mono_iff_mono_app f).1 hf _
+    have : Mono (g.app (op (SimplexCategory.mk p))) := (NatTrans.mono_iff_mono_app g).1 hg _
     have hsq : IsPullback ((pullback.fst f g).app (op (SimplexCategory.mk p)))
         ((pullback.snd f g).app (op (SimplexCategory.mk p))) (f.app (op (SimplexCategory.mk p)))
         (g.app (op (SimplexCategory.mk p))) :=

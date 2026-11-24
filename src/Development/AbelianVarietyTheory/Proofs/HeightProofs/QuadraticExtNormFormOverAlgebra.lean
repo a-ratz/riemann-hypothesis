@@ -76,7 +76,7 @@ theorem exists_basis (F E : Type) [Field F] [CharZero F] [Field E] [Algebra F E]
     (hr : Module.finrank F E = 2) (hσ : ∀ x, σ (σ x) = x) (hne : ∃ x, σ x ≠ x) :
     ∃ (δ : F) (b : Module.Basis (Fin 2) F E), ¬ IsSquare δ ∧ b 0 = 1 ∧ σ (b 1) = - b 1 ∧
       b 1 * b 1 = algebraMap F E δ := by
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
   obtain ⟨x0, hx0⟩ := hne
   have hsm : ∀ (c : F) (e : E), σ (c • e) = c • σ e := fun c e => by
     rw [Algebra.smul_def, Algebra.smul_def, map_mul, AlgHom.commutes]

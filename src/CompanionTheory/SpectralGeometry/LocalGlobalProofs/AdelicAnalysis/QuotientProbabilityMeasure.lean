@@ -67,7 +67,7 @@ theorem isProbabilityMeasure_prH : ∀ (F E : Type) [Field F] [NumberField F] [F
     (@GlobalTheory.CompanionTheory.SW.LatticeUnimod.unimodular_of_isFundamentalDomain (HA (AF F) σ J) _ _ htg ht2H hlcH hscH _ hbor
       (HFinIn (AF F) σ J) hcount μ hμ 𝓕 h𝓕 hfin).1
   refine ⟨?_⟩
-  simp only [prH, Measure.smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
+  simp only [prH, smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
   exact ENNReal.inv_mul_cancel hne hfin.ne
 
 end GlobalTheory.CompanionTheory.SW.BB

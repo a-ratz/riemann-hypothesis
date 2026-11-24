@@ -156,7 +156,7 @@ theorem linearIndependent_secPull (S : LinSys F) (hS : S.IsVariety) {n : ℕ} (b
     LinearIndependent E (pullSecs S E b) := by
   classical
   have := isProper_str hS
-  haveI : CompactSpace S.Y := QuasiCompact.compactSpace_of_compactSpace S.str
+  have : CompactSpace S.Y := QuasiCompact.compactSpace_of_compactSpace S.str
   obtain ⟨m, D, hD, hc⟩ := GlobalTheory.exists_fin_affine_cover (X := S.Y) (V := ⊤) isCompact_univ
   have H := S.isPullback_baseChange E
   let R : (Fin n → F) →ₗ[F] (∀ i, SecOnR S.str S.L (D i)) :=
@@ -188,7 +188,7 @@ theorem linearIndependent_secPull (S : LinSys F) (hS : S.IsVariety) {n : ℕ} (b
       R.baseChange E ∘ₗ (TensorProduct.piScalarRight F E E (Fin n)).symm.toLinearMap
   have hΦ : Function.Injective Φ := by
     have h1 : Function.Injective (R.baseChange E) := by
-      rw [LinearMap.baseChange_eq_ltensor]
+      rw [LinearMap.baseChange_eq_lTensor]
       exact Module.Flat.lTensor_preserves_injective_linearMap R hR
     have h2 : Function.Injective (LinearMap.pi (fun i => Bc i ∘ₗ LinearMap.proj i) :
         (∀ i, E ⊗[F] SecOnR S.str S.L (D i)) →ₗ[E] _) :=
@@ -227,8 +227,8 @@ theorem exists_pullSecs_spanning : ∀ (F E : Type) [Field F] [Field E] [Algebra
     S.IsVariety → ∃ (n : ℕ) (b : Fin n → S.L.Sec), ∀ t : (S.baseChange E).L.Sec, ∃ u : Fin n → E,
       (({ S with N := n, b := b } : LinSys F).baseChange E).comb u = t := by
   intro F E _ _ _ S hS
-  haveI := finite_sec hS
-  haveI : Module.Finite E (S.baseChange E).L.Sec := finite_sec (hS.baseChange E)
+  have := finite_sec hS
+  have : Module.Finite E (S.baseChange E).L.Sec := finite_sec (hS.baseChange E)
   let B := Module.finBasis F S.L.Sec
   refine ⟨_, B, fun t => ?_⟩
   have hli := linearIndependent_secPull (E := E) S hS B B.linearIndependent

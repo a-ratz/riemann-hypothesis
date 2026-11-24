@@ -89,10 +89,10 @@ end Blocks
 variable {D : D7} {n : ℕ}
 
 private theorem incA_injective' (D : D7) : Function.Injective (incA D) := by
-  haveI : Nontrivial (AF D.host.F) :=
+  have : Nontrivial (AF D.host.F) :=
     inferInstanceAs (Nontrivial (NumberField.InfiniteAdeleRing D.host.F ×
       IsDedekindDomain.FiniteAdeleRing (NumberField.RingOfIntegers D.host.F) D.host.F))
-  haveI : Nontrivial (AF D.host.F ⊗[D.host.F] D.host.E) :=
+  have : Nontrivial (AF D.host.F ⊗[D.host.F] D.host.E) :=
     Function.Injective.nontrivial
       (Algebra.TensorProduct.includeRight_injective (algebraMap D.host.F (AF D.host.F)).injective)
   exact (incA D).injective

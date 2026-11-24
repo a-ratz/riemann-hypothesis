@@ -63,7 +63,7 @@ private theorem mem_of_pow_mem {Ω : Type} [Field Ω] (A : ValuationSubring Ω) 
 private theorem coord_eq {l : ℕ} [Fact l.Prime] {c : Coef l} (β : Bas c) {n : ℕ} {z : Qbar l}
     (k k' : Fin β.d → ZMod (l ^ n)) (h : Cg n z (∑ i, β.val i * ((k i).val : Qbar l)))
     (h' : Cg n z (∑ i, β.val i * ((k' i).val : Qbar l))) (i : Fin β.d) : k i = k' i := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hB := ((pBasEx l c).2 β).2.1 n (fun i => ((k i).val : ℤ_[l]) - ((k' i).val : ℤ_[l])) ?_ i
   · obtain ⟨d, hd⟩ := hB
     have h2 := congrArg (PadicInt.toZModPow n) hd
@@ -106,7 +106,7 @@ theorem UpperTheory.Kd.C7.pPresDl :
     unfold Hm at hs'
     obtain ⟨hsI, hsc⟩ := Subgroup.mem_inf.mp hs'
     rw [MonoidHom.mem_ker] at hsc
-    haveI : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => ⟨⟨ζ i, (hζ i).1⟩, inferInstance⟩
+    have : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => ⟨⟨ζ i, (hζ i).1⟩, inferInstance⟩
     have hfix : s (ζ n) = ζ n := fix_of_cycMod hnm hsc (hζ n).1.pow_eq_one
     obtain ⟨k, hk, hkZ⟩ := hPk s hsI hsc hfix
     obtain ⟨k', hk', hk'Z⟩ := hP'k s hsI hsc hfix

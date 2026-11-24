@@ -126,7 +126,7 @@ theorem eq_of_le_of_ringKrullDim_eq {R : Type*} [CommRing R] {W W' : Ideal R} [W
     (hle : W ≤ W') {d : ℕ} (hW : ringKrullDim (R ⧸ W) = d) (hW' : ringKrullDim (R ⧸ W') = d) :
     W = W' := by
   by_contra hne
-  obtain ⟨f, hfW', hfW⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+  obtain ⟨f, hfW', hfW⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
   have hr : Ideal.Quotient.mk W f ∈ nonZeroDivisors (R ⧸ W) :=
     mem_nonZeroDivisors_of_ne_zero (by rwa [ne_eq, Ideal.Quotient.eq_zero_iff_mem])
   have h1 := ringKrullDim_quotient_succ_le_of_nonZeroDivisor hr

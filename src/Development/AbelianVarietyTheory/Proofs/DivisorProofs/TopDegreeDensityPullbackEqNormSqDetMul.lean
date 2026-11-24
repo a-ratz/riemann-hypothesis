@@ -80,10 +80,10 @@ theorem exterior_repr_univ_map {N : ℕ} (b : Basis (Fin N) K M) (f : M →ₗ[K
       rw [ExteriorAlgebra.basis_apply_ofCard _ (by simp : (Finset.univ : Finset (Fin N)).card = N)]
       dsimp only [ExteriorAlgebra.ιMulti_family]
       rw [ExteriorAlgebra.map_apply_ιMulti, ← hb, ← hb, he,
-        AlternatingMap.smul_apply, AlternatingMap.smul_apply, Basis.det_comp, smul_eq_mul, smul_eq_mul]
+        smul_apply, smul_apply, Basis.det_comp, smul_eq_mul, smul_eq_mul]
       ring
     · have hc : s.card ≠ N := fun h => hs (Finset.eq_univ_of_card s (by simpa using h))
-      rw [Basis.repr_self, Finsupp.single_apply, if_neg hs, mul_zero,
+      rw [Basis.repr_self, Finsupp.single_apply, ite_eq_right hs, mul_zero,
         ExteriorAlgebra.basis_apply]
       dsimp only [ExteriorAlgebra.ιMulti_family]
       rw [ExteriorAlgebra.map_apply_ιMulti]

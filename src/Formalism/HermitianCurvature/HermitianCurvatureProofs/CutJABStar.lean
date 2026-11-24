@@ -194,7 +194,7 @@ theorem smq_cont (f : SmQ P.r P.TT) : Continuous (f : Qp P.r P.TT → ℂ) := by
     funext fun q => (ext_of_mem _ q.2).symm
   rw [e, continuous_iff_continuousAt]
   intro q
-  exact (h.continuousAt ((Qset_open _ _).mem_nhds q.2)).comp continuous_subtype_val.continuousAt
+  exact (h.continuousAt ((Qset_open _ _).mem_nhds q.2)).comp continuous_subtypeVal.continuousAt
 
 theorem evD_cont (γ : (DQ P).R) : Continuous fun q => evD P q γ := smq_cont P γ
 

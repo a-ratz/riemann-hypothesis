@@ -61,7 +61,7 @@ theorem strHom_eq_and_isProjOver : ∀ (K : Type) [Field K] (A : AbVar K),
     (letI := A.algΓ; GlobalTheory.strHom K A.X.left = A.X.hom) ∧ IsProjOver A.X.hom := by
   intro K _ A
   refine ⟨?_, ?_⟩
-  · letI := A.algΓ
+  · let := A.algΓ
     exact GlobalTheory.strHom_eq fun _ => rfl
   · exact (GlobalTheory.ProjSpace.isProjBy_iff_isProjOver A.X.hom).1
       (GlobalTheory.ProjField.isProjBy_of_isAbelianScheme K A.X A.ab)

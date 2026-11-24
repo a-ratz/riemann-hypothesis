@@ -561,7 +561,7 @@ theorem graph_cross (hGy : ∀ c j, aeval y (G c j) = v j * aeval y (chartMon c 
     have hH' : HasFDerivAt (fun z' : (Σ k, addIdx ι N k) → ℂ =>
         z' ⟨none, j⟩ * ev (G c₀ j') (oldL ι N z') - z' ⟨none, j'⟩ * ev (G c₀ j) (oldL ι N z')) _ z := hH
     rw [hfun, hH'.fderiv] at h0
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+    simp only [sub_apply, add_apply, smul_apply,
       ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply, smul_eq_mul, oldL_apply] at h0
     linear_combination h0
 

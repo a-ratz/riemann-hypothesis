@@ -392,9 +392,9 @@ theorem inv_upperUnitriangular (k : Type) [Field k] (n : ℕ) (A : Matrix (Fin n
       ∀ x y : Fin n, x.1 + 1 = y.1 → A⁻¹ x y = - A x y := by
   have hA : A.BlockTriangular id := fun i j h => hlow i j h
   have hdet : A.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hA]
+    rw [det_of_isUpperTriangular hA]
     simp [hdiag]
-  haveI : Invertible A := Matrix.invertibleOfIsUnitDet A (by rw [hdet]; exact isUnit_one)
+  have : Invertible A := Matrix.invertibleOfIsUnitDet A (by rw [hdet]; exact isUnit_one)
   have hB : (A⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hA
   have hlowB : ∀ x y : Fin n, y < x → A⁻¹ x y = 0 := fun x y h => hB h
   have hmul : A * A⁻¹ = 1 := Matrix.mul_nonsing_inv A (by rw [hdet]; exact isUnit_one)
@@ -487,10 +487,10 @@ theorem reversed_unitriangular : ∀ (k : Type) [Field k] (n : ℕ) (A M : Matri
       by_cases hxy : (x : ℕ) + 1 = y
       · have hc : ((Fin.rev y : Fin n) : ℕ) + 1 = (Fin.rev x : Fin n) := by
           simp only [Fin.val_rev]; omega
-        simp only [if_pos hxy, if_pos hc, i3 x y hxy, Ad]
+        simp only [ite_eq_left hxy, ite_eq_left hc, i3 x y hxy, Ad]
       · have hc : ¬ ((Fin.rev y : Fin n) : ℕ) + 1 = (Fin.rev x : Fin n) := by
           simp only [Fin.val_rev]; omega
-        simp only [if_neg hxy, if_neg hc, neg_zero]
+        simp only [ite_eq_right hxy, ite_eq_right hc, neg_zero]
     simp only [e1, Finset.sum_neg_distrib]
     congr 1
     have key : ∀ f : Fin n → Fin n → k, ∑ x : Fin n, ∑ y : Fin n, f (Fin.rev y) (Fin.rev x) = ∑ x : Fin n, ∑ y : Fin n, f x y := by
@@ -540,8 +540,8 @@ theorem reversed_relation_mod : ∀ (F : Type) [Field F] [NumberField F] (v : He
     intro i j
     simp only [Ro, map_add (f := _), map_mul, hg0, zero_mul, add_zero]
     split_ifs <;> simp
-  have hρA : ∀ a c, ρ (Ao a c) = redM F v A a c := fun a c => (show redM F v A a c = ρ (Ao a c) from dif_pos (hA a c)).symm
-  have hρM : ∀ a c, ρ (Mo a c) = redM F v M a c := fun a c => (show redM F v M a c = ρ (Mo a c) from dif_pos (hM a c)).symm
+  have hρA : ∀ a c, ρ (Ao a c) = redM F v A a c := fun a c => (show redM F v A a c = ρ (Ao a c) from dite_eq_left (hA a c)).symm
+  have hρM : ∀ a c, ρ (Mo a c) = redM F v M a c := fun a c => (show redM F v M a c = ρ (Mo a c) from dite_eq_left (hM a c)).symm
   have h := congrArg ρ hE
 
   simp only [map_sum, map_mul, hρR, hρA, hρM] at h
@@ -673,17 +673,17 @@ theorem sum_super_eq {A : Type} [AddCommMonoid A] {n : ℕ} (f : Fin n → Fin n
       ∑ x : Fin n, ∑ y : Fin n, (if (x : ℕ) + 1 = y then f x y else 0) := by
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : i.1 + 1 < n
-  · rw [dif_pos hi, Finset.sum_eq_single ⟨i.1 + 1, hi⟩]
+  · rw [dite_eq_left hi, Finset.sum_eq_single ⟨i.1 + 1, hi⟩]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hb (Fin.ext h.symm)
     · simp
   · rw [dite_eq_right hi]
     symm
     refine Finset.sum_eq_zero fun y _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     have := y.2
     omega
 
@@ -878,7 +878,7 @@ theorem local_frame_second_factor : ∀ (F E : Type) [Field F] [NumberField F] [
       have := hsR2 l (Fin.rev i)
       rw [Fin.rev_rev] at this
       rw [← this]; ring
-    simp only [hRl, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hRl, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     congr 1
     exact Finset.sum_congr rfl fun l _ => by ring
   have hss : sp (supSum (hR cm.sig J (v.adicCompletion F)) b bd y.1) =
@@ -910,15 +910,15 @@ theorem local_frame_second_factor : ∀ (F E : Type) [Field F] [NumberField F] [
       · rfl
       · simp
   rw [hψ sO rO _ hss]
-  have hredA : ∀ x q, redM F v A x q = IsLocalRing.residue (v.adicCompletionIntegers F) (Ao x q) := fun x q => dif_pos (hAint x q)
+  have hredA : ∀ x q, redM F v A x q = IsLocalRing.residue (v.adicCompletionIntegers F) (Ao x q) := fun x q => dite_eq_left (hAint x q)
   have hlam : lamJ ψ (fun _ => 1) n t 0 n (redM F v M) = ψ (∑ x : Fin n, ∑ q : Fin n, (if (x : ℕ) + 1 = q then redM F v M x q else 0)) := by
     simp only [lamJ, Finset.range_zero, Finset.prod_empty, mul_one]
     congr 1
     refine Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun q _ => ?_
     have hq := q.2
     by_cases h : (x : ℕ) + 1 = q
-    · rw [if_pos h, if_pos ⟨h, hq, by omega⟩]
-    · rw [if_neg h, if_neg (fun h' => h h'.1)]
+    · rw [ite_eq_left h, ite_eq_left ⟨h, hq, by omega⟩]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h h'.1)]
   rw [hlam, hsupM, map_neg]
   congr 2
 
@@ -1081,7 +1081,7 @@ namespace GlobalTheory.St.G.Torus
 theorem exists_mulShift {k : Type} [Field k] [Finite k] (ψ ψ' : AddChar k ℂ) (h : ψ ≠ 1) (h' : ψ' ≠ 1) :
     ∃ a : k, a ≠ 0 ∧ ψ' = ψ.mulShift a := by
   classical
-  haveI : Fintype k := Fintype.ofFinite k
+  have : Fintype k := Fintype.ofFinite k
   have hinj : Function.Injective ψ.mulShift :=
     AddChar.to_mulShift_inj_of_isPrimitive (AddChar.IsPrimitive.of_ne_one h)
   have hbij : Function.Bijective ψ.mulShift :=
@@ -1387,7 +1387,7 @@ theorem gmatch_local : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hLat : IsLat S.Lb := ⟨S.Lb_fin, S.Lb_span⟩
   obtain ⟨fr', ψ', hψ', hfr', hK⟩ := _root_.GlobalTheory.St.G.frame_local_basis_unitriangular F E cm n J hJ hdet k t gp G S.Lb Fr hk hgp hne hspl hLat i v hv hSD
   have hcard := ((_root_.GlobalTheory.St.G.SplitPrime.split_place F E cm (gp i) (hgp i) (hspl i)).2 v hv).1
-  haveI : Finite (kv F v) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact (hgp i).ne_zero)
+  have : Finite (kv F v) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact (hgp i).ne_zero)
   obtain ⟨d, hd⟩ := _root_.GlobalTheory.St.G.Torus.torus_transitive (kv F v) n t (G.psi0 i v hv) ψ' (G.chiB i v hv) (fun _ => 1) (G.psi_zero_nontrivial_character i v hv) hψ'
   obtain ⟨D, hDint, hDred⟩ := GlobalTheory.St.G.Match.diag_lift F v n d
   obtain ⟨κ, hκ, -⟩ := (_root_.GlobalTheory.St.G.split_components F E cm n J hJ hdet v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv)).2.1

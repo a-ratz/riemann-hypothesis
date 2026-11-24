@@ -59,9 +59,9 @@ theorem delta_avg {K K' : Subgroup (GL (Fin m) k)} (hK : Good ψ K) (hK' : Good 
     (h₂ : ∀ κ ∈ K, ∀ x, L₂ (rhoW ψ κ x) = L₂ x) :
     L₁ (delta ψ K') * L₂ (delta ψ K) = L₁ (delta ψ K) * L₂ (delta ψ K') := by
   have hKc : CompactSpace K := isCompact_iff_compactSpace.1 hK.2.1
-  have hopen : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := hK'.1.preimage continuous_subtype_val
+  have hopen : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := hK'.1.preimage continuous_subtypeVal
   have : Finite (K ⧸ K'.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
-  letI : Fintype (K ⧸ K'.subgroupOf K) := Fintype.ofFinite _
+  let : Fintype (K ⧸ K'.subgroupOf K) := Fintype.ofFinite _
   set P : WT (m := m) ψ := ∑ q : K ⧸ K'.subgroupOf K,
     rhoW ψ ((Quotient.out q : K) : GL (Fin m) k) (delta ψ K') with hP
   have hrep : ∀ a b : K, b⁻¹ * a ∈ K'.subgroupOf K →

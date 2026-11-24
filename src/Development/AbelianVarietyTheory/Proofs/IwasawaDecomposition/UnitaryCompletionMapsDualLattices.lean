@@ -156,9 +156,9 @@ theorem mem_latS_dualL (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) (hJ :
       ∀ u ∈ latS (F := F) (v.adicCompletion F) (intV E v) M,
         hform (sigR σ (v.adicCompletion F)) (J.map (inclE (F := F) (v.adicCompletion F))) u w ∈ intV E v := by
   classical
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨p, -, -, hv, hp, -⟩ := Ideal.exists_prime_and_absNorm_eq_pow v.asIdeal
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨B, hB⟩ := LocB.exists_isLocBasis p E M hM.fg hM.span_eq_top
   have hu : IsUnit (cT (σ : E →+* E) B.1 * J).det := by
     rw [Matrix.det_mul, cT, Matrix.det_transpose]

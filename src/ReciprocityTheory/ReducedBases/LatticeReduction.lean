@@ -104,7 +104,7 @@ private lemma nu_eq_add_sum_mu (b : Fin d → E) (hb : LinearIndependent ℝ b) 
   · intro l hl hlj
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, not_le] at hl
     have h1 : l.val ≠ j.val := fun h => hlj (Fin.ext h)
-    have hlt : l < j := Fin.lt_iff_val_lt_val.mpr (by omega)
+    have hlt : l < j := Fin.lt_def.mpr (by omega)
     have h0 : ⟪gs b j, b l⟫_ℝ = 0 := by
       first
       | exact gramSchmidt_inv_triangular ℝ b hlt
@@ -120,7 +120,7 @@ lemma nu_top (b : Fin d → E) (hb : LinearIndependent ℝ b) (c : Fin d → ℝ
   rw [nu_eq_add_sum_mu b hb c j, Finset.sum_eq_zero, add_zero]
   intro l hl
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hl
-  rw [h l (Fin.lt_iff_val_lt_val.mpr (by omega)), zero_mul]
+  rw [h l (Fin.lt_def.mpr (by omega)), zero_mul]
 
 lemma nu_split (b : Fin d → E) (hb : LinearIndependent ℝ b) (c : Fin d → ℝ) (j : Fin d) :
     nu b c j = c j + ∑ l ∈ univ.filter (fun l : Fin d => j.val + 1 ≤ l.val), c l * mu b l j := by
@@ -157,7 +157,7 @@ lemma babai (b : Fin d → E) (hb : LinearIndependent ℝ b) (c : Fin d → ℝ)
           rw [hnu, nu_sub, nu_eq_zero_of b (fun l => ((w l : ℤ) : ℝ)) ⟨t, htd⟩
             (fun l hl => by simp [hw0 l hl]), mul_zero, sub_zero, nu_sub,
             nu_top b hb (fun l => if l = ⟨t, htd⟩ then (k : ℝ) else 0) ⟨t, htd⟩
-              (fun l hl => if_neg (ne_of_gt hl))]
+              (fun l hl => ite_eq_right (ne_of_gt hl))]
           simp
         have hN0 : N ≠ 0 := hN.ne'
         have hr := abs_sub_round (nu b c ⟨t, htd⟩ / N)
@@ -223,7 +223,7 @@ lemma coeff_bound (b : Fin d → E) (hb : LinearIndependent ℝ b)
       refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun l hl => ?_)
       simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hl
       rw [abs_mul, mul_comm]
-      exact mul_le_mul_of_nonneg_right (hs l j (Fin.lt_iff_val_lt_val.mpr (by omega))) (abs_nonneg _)
+      exact mul_le_mul_of_nonneg_right (hs l j (Fin.lt_def.mpr (by omega))) (abs_nonneg _)
     have h2 := abs_le.mp (hM j)
     have h1' := abs_le.mp h1
     rw [abs_le]

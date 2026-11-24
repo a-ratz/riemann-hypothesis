@@ -282,8 +282,8 @@ theorem contDiff_of_class_tendstoLocallyUniformly : ∀ {E : Type} [NormedAddCom
     ext x
     conv_lhs => rw [← hc x]
 
-    simp only [map_sum, map_smul, (h y).2, ContinuousLinearMap.sum_apply,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply]
+    simp only [map_sum, map_smul, (h y).2, sum_apply,
+    smul_apply, ContinuousLinearMap.smulRight_apply]
     refine Finset.sum_congr rfl fun a _ => ?_
     simp only [Complex.real_smul, smul_eq_mul]
     ring
@@ -671,15 +671,15 @@ theorem exists_bound_of_complete {E : Type} [AddCommGroup E] [Module ℂ E] (p :
     (q : Seminorm ℂ E) (hq : ∀ (u : ℕ → E) (x : E), (∀ d, Tendsto (fun j => p d (u j - x)) atTop (𝓝 0)) →
       ∀ y : ℝ, (∀ j, q (u j) ≤ y) → q x ≤ y) :
     ∃ (d : ℕ) (C : ℝ≥0), ∀ x, q x ≤ C * p d x := by
-  letI t : TopologicalSpace E := (SeminormFamily.moduleFilterBasis (𝕜 := ℂ) p).topology
+  let t : TopologicalSpace E := (SeminormFamily.moduleFilterBasis (𝕜 := ℂ) p).topology
   have hp : WithSeminorms p := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup E := hp.topologicalAddGroup
-  letI : UniformSpace E := IsTopologicalAddGroup.rightUniformSpace E
-  haveI : IsUniformAddGroup E := isUniformAddGroup_of_addCommGroup
-  haveI : ContinuousSMul ℂ E := hp.continuousSMul
-  haveI : FirstCountableTopology E := hp.firstCountableTopology
-  haveI : (𝓤 E).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
-  haveI : CompleteSpace E := by
+  have : IsTopologicalAddGroup E := hp.isTopologicalAddGroup
+  let : UniformSpace E := IsTopologicalAddGroup.rightUniformSpace E
+  have : IsUniformAddGroup E := isUniformAddGroup_of_addCommGroup
+  have : ContinuousSMul ℂ E := hp.continuousSMul
+  have : FirstCountableTopology E := hp.firstCountableTopology
+  have : (𝓤 E).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : CompleteSpace E := by
     refine UniformSpace.complete_of_cauchySeq_tendsto fun u hu => ?_
     rw [cauchySeq_iff_tendsto, uniformity_eq_comap_nhds_zero, tendsto_comap_iff] at hu
     obtain ⟨x, hx⟩ := hcomp u fun d ε hε => by
@@ -690,7 +690,7 @@ theorem exists_bound_of_complete {E : Type} [AddCommGroup E] [Module ℂ E] (p :
       simpa using this
     refine ⟨x, (hp.tendsto_nhds u x).2 fun d ε hε => ?_⟩
     exact (hx d).eventually (gt_mem_nhds hε)
-  haveI : BarrelledSpace ℂ E := inferInstance
+  have : BarrelledSpace ℂ E := inferInstance
   have hlsc : LowerSemicontinuous q := by
     rw [lowerSemicontinuous_iff_isClosed_preimage]
     intro y
@@ -705,7 +705,7 @@ theorem exists_bound_of_complete {E : Type} [AddCommGroup E] [Module ℂ E] (p :
     | refl => exact le_rfl
     | step _ ih => exact ih.trans (hmono _ x)
   refine ⟨s.sup id, C, fun x => (hle x).trans ?_⟩
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul]
   refine mul_le_mul_of_nonneg_left ?_ C.2
   exact Seminorm.finset_sup_apply_le (apply_nonneg _ _) fun i hi => hmono' _ _ _ (Finset.le_sup (f := id) hi)
 
@@ -728,7 +728,7 @@ theorem le_mul_sobO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D
         (GlobalTheory.Size.sobO_add_le hψ hθ f.2.1 g.2.1 d))
     (fun c f => by
       show (sobO ψ θ μ 𝓕 d (c • (f : WO S T → ℂ))).toReal = _
-      rw [GlobalTheory.Size.sobO_smul, ENNReal.toReal_mul, toReal_enorm])
+      rw [GlobalTheory.Size.sobO_smul, ENNReal.toReal_mul, toReal_eNorm])
   have hp : ∀ d (f : E), p d f = (sobO ψ θ μ 𝓕 d (f : WO S T → ℂ)).toReal := fun _ _ => rfl
   let q : Seminorm ℂ E := Seminorm.of (fun f => (N f).toReal)
     (fun f g => by
@@ -736,7 +736,7 @@ theorem le_mul_sobO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D
       exact ENNReal.toReal_mono (ENNReal.add_ne_top.2 ⟨hfin f f.2, hfin g g.2⟩) (hadd f f.2 g g.2))
     (fun c f => by
       show (N (c • (f : WO S T → ℂ))).toReal = _
-      rw [hsmul c f f.2, ENNReal.toReal_mul, toReal_enorm])
+      rw [hsmul c f f.2, ENNReal.toReal_mul, toReal_eNorm])
   have hq : ∀ f : E, q f = (N f).toReal := fun _ => rfl
   obtain ⟨d, C, hC⟩ := exists_bound_of_complete p
     (fun d f => by

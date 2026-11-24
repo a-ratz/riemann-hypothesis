@@ -82,7 +82,7 @@ theorem finPart_rat {γ : UA E n} (hγ : γ ∈ ratU E n) : finPart γ ∈ ratFi
     have := congrFun₂ hg i j
     rw [Matrix.map_apply, Matrix.one_apply] at this
     rw [Matrix.one_apply]
-    haveI hnt : Nontrivial (Ad E) := show Nontrivial (InfiniteAdeleRing E × FiniteAdeleRing (𝓞 E) E) from inferInstance
+    have hnt : Nontrivial (Ad E) := show Nontrivial (InfiniteAdeleRing E × FiniteAdeleRing (𝓞 E) E) from inferInstance
     apply (algebraMap E (Ad E)).injective
     rw [this]
     split_ifs <;> simp

@@ -225,7 +225,7 @@ theorem linIndep_at_of_gen_at {R M : Type} [CommRing R] [AddCommGroup M] [Module
     (c : Fin r → R) (hc : ∑ i, c i • n i = 0) : ∃ t ∉ q.asIdeal, ∀ i, t * c i = 0 := by
   let Rq := Localization.AtPrime q.asIdeal
   let Mq := LocalizedModule q.asIdeal.primeCompl M
-  haveI : Module.Free Rq Mq := Module.mem_freeLocus.1 (by rw [Module.freeLocus_eq_univ]; trivial)
+  have : Module.Free Rq Mq := Module.mem_freeLocus.1 (by rw [Module.freeLocus_eq_univ]; trivial)
   let n' : Fin r → Mq := fun i => LocalizedModule.mk (n i) 1
   have hspan : Submodule.span Rq (Set.range n') = ⊤ := by
     rw [eq_top_iff]
@@ -277,7 +277,7 @@ theorem exists_gen_near {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     ∃ m : Fin r → M, ∃ f ∉ p.asIdeal, ∀ x : M, f • x ∈ Submodule.span R (Set.range m) := by
   let Rp := Localization.AtPrime p.asIdeal
   let Mp := LocalizedModule p.asIdeal.primeCompl M
-  haveI : Module.Free Rp Mp := Module.mem_freeLocus.1 (by rw [Module.freeLocus_eq_univ]; trivial)
+  have : Module.Free Rp Mp := Module.mem_freeLocus.1 (by rw [Module.freeLocus_eq_univ]; trivial)
   have hrk : Module.finrank Rp Mp = r := hr
   let b := Module.finBasisOfFinrankEq Rp Mp hrk
   have hmk : ∀ y : Mp, ∃ (x : M) (u : p.asIdeal.primeCompl), LocalizedModule.mk x u = y :=
@@ -310,7 +310,7 @@ theorem exists_gen_near {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
       simpa [Submonoid.smul_def, mul_smul] using hc
     rw [e]; exact N.smul_mem _ hy
   have hq : p ∉ Module.support R (M ⧸ N) := (notMem_support_quotient_iff p N).2 hgen
-  rw [Module.mem_support_iff_of_finite, SetLike.not_le_iff_exists] at hq
+  rw [Module.mem_support_iff_of_finite, IsConcreteLE.not_le_iff_exists] at hq
   obtain ⟨f, hf, hfp⟩ := hq
   refine ⟨m, f, hfp, fun x => ?_⟩
   have := Module.mem_annihilator.1 hf (Submodule.Quotient.mk x)
@@ -556,9 +556,9 @@ theorem secs_props {T : Scheme.{0}} (y : (functor A B r).obj (op T)) (U : T.Open
   have hflat : Flat (Spec.map ((proj y).app U)) := MorphismProperty.of_isPullback hpb h2
   have h1' : ((proj y).app U).hom.Finite := (IsFinite.SpecMap_iff _).1 hfin
   have h2' : ((proj y).app U).hom.Flat := Flat.SpecMap_iff.1 hflat
-  letI := ((proj y).app U).hom.toAlgebra
-  haveI : Module.Finite Γ(T, U) Γ(y.2.1.subscheme, proj y ⁻¹ᵁ U) := h1'
-  haveI : Module.Flat Γ(T, U) Γ(y.2.1.subscheme, proj y ⁻¹ᵁ U) := h2'
+  let := ((proj y).app U).hom.toAlgebra
+  have : Module.Finite Γ(T, U) Γ(y.2.1.subscheme, proj y ⁻¹ᵁ U) := h1'
+  have : Module.Flat Γ(T, U) Γ(y.2.1.subscheme, proj y ⁻¹ᵁ U) := h2'
   refine ⟨inferInstance, inferInstance, fun q => ?_⟩
   have e := Scheme.Hom.finrank_of_isPullback _ _ _ _ hpb q
   rw [h3] at e
@@ -568,14 +568,14 @@ theorem secs_props {T : Scheme.{0}} (y : (functor A B r).obj (op T)) (U : T.Open
 theorem isOpen_bad_compl (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) {T : Scheme.{0}}
     (y : (functor A B r).obj (op T)) (U : T.Opens) (hU : IsAffineOpen U) :
     IsOpen (bad e σ y U)ᶜ := by
-  letI := ((proj y).app U).hom.toAlgebra
-  haveI := (secs_props y U hU).1
+  let := ((proj y).app U).hom.toAlgebra
+  have := (secs_props y U hU).1
   exact (Module.isClosed_support (R := Γ(T, U))).isOpen_compl
 
 theorem isCompact_bad_compl (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) {T : Scheme.{0}}
     (y : (functor A B r).obj (op T)) (U : T.Opens) (hU : IsAffineOpen U) :
     IsCompact (bad e σ y U)ᶜ := by
-  letI := ((proj y).app U).hom.toAlgebra
+  let := ((proj y).app U).hom.toAlgebra
   obtain ⟨h1, h2, h3⟩ := secs_props y U hU
   exact GlobalTheory.T.free_module_complement_support_compact _ _ r h3 (gens e σ y U)
 
@@ -583,7 +583,7 @@ theorem basic_iff (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) {T : Sch
     (y : (functor A B r).obj (op T)) :
     Basic A B e σ y ↔ ∀ U : T.affineOpens, bad e σ y U = ∅ := by
   refine forall_congr' fun U => ?_
-  letI := ((proj y).app U).hom.toAlgebra
+  let := ((proj y).app U).hom.toAlgebra
   obtain ⟨h1, h2, h3⟩ := secs_props y U U.2
   have hf : (fun c : Fin r → Γ(T, U) => ∑ k, ((proj y).app U).hom (c k) * gens e σ y U k) =
       Fintype.linearCombination Γ(T, U) (gens e σ y U) := by
@@ -624,7 +624,7 @@ theorem bad_nat (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) {T T' : Sc
     show (pbMap a y ≫ proj y) z ∈ U
     rw [sq.w, Scheme.Hom.comp_apply]
     exact h hz
-  haveI : IsFinite (proj y) := y.2.2.1
+  have : IsFinite (proj y) := y.2.2.1
   have hP := ReciprocityTheory.ChartRestriction.G.Out.GtBCPf.isPushout_appLE sq inferInstance hU hU' h hleG
   have fin : ((proj y).app U).hom.Finite := (secs_props y U hU).1
   have H := GlobalTheory.T.mem_support_quotient_span_iff_of_isPushout' _ _ _ _ _ _ _ _ hP fin (gens e σ y U) (hU'.primeIdealOf ⟨x, hx⟩)

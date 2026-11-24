@@ -64,7 +64,7 @@ theorem exists_algEquiv_extending {F E : Type} [Field F] [Field E] [Algebra F E]
   have he : ∀ a : algebraicClosure F E,
       e (algebraMap _ _ a) = algebraMap _ _ (σ₀ a) := by
     intro a
-    simp only [e, m, RingEquiv.trans_apply, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes]
+    simp only [e, m, RingEquiv.trans_apply, AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes]
     rw [MvPolynomial.algebraMap_eq, MvPolynomial.mapEquiv_apply, MvPolynomial.map_C,
       ← MvPolynomial.algebraMap_eq, AlgEquiv.commutes]
     rfl

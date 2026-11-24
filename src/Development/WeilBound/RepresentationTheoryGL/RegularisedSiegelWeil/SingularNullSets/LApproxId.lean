@@ -107,9 +107,9 @@ theorem kappa_real {F : Type} [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ
     (hA : ∀ s, A s = ∫ h, (τ h : ℂ) * ψ (h.1 * s.1) ∂ν) (hAI : Integrable A ν) (κ : ℂ)
     (hκ : ∀ s : fixE ε, ∫ h, A h * ψ (h.1 * s.1) ∂ν = κ * τ (-s)) :
     κ.im = 0 ∧ 0 ≤ κ.re := by
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (fixE ε) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : OpensMeasurableSpace (fixE ε × fixE ε) := inferInstance
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (fixE ε) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : OpensMeasurableSpace (fixE ε × fixE ε) := inferInstance
   have hψn : ∀ x, ‖ψ x‖ = 1 := hψ.2.1
   have hconj : ∀ x, (starRingEnd ℂ) (ψ x) = ψ (-x) := by
     intro x
@@ -129,7 +129,7 @@ theorem kappa_real {F : Type} [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ
 
   set f : fixE ε → fixE ε → ℂ := fun h h' => A h * ((τ h' : ℂ) * ψ (h.1 * (-h').1)) with hf
   have hcont : Continuous fun z : fixE ε × fixE ε => ψ (z.1.1 * (-z.2).1) :=
-    hψ.1.comp ((continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp
+    hψ.1.comp ((continuous_subtypeVal.comp continuous_fst).mul (continuous_subtypeVal.comp
       (continuous_neg.comp continuous_snd)))
   have hfI : Integrable (Function.uncurry f) (ν.prod ν) := by
     refine Integrable.mono' (hAI.norm.mul_prod hτI) ?_ (Filter.Eventually.of_forall fun z => ?_)
@@ -230,7 +230,7 @@ theorem kdata (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) {S S' : Finset (He
       (∀ s, ∫ h, g h * ψ (h.1 * s) ∂ν = ((Gc * tR ρ S' U (-(ε * s)) : ℝ) : ℂ)) ∧
       ∀ h : fixE ε, g h = fouA ψ db (testT ρ S' U) h.1 / ∫ y, testT ρ S' U y ∂db := by
   classical
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (AF F) := ⟨rfl⟩
   have hεε := idF_mul hε
   have hc0 : (c : ℂ) ≠ 0 := by exact_mod_cast hc.ne'
   set τH : fixE ε → ℂ := fun h => ((tR ρ S' U h.1 : ℝ) : ℂ) with hτH
@@ -290,7 +290,7 @@ theorem kdata (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) {S S' : Finset (He
   have hAc : Continuous A := by
     refine continuous_of_dominated (bound := fun h => ‖τH h‖) (fun s => ?_) (fun s => ?_) hτHI.norm ?_
     · exact hτHI.aestronglyMeasurable.mul
-        (hψ.1.comp (continuous_subtype_val.mul continuous_const)).aestronglyMeasurable
+        (hψ.1.comp (continuous_subtypeVal.mul continuous_const)).aestronglyMeasurable
     · exact Filter.Eventually.of_forall fun h => by rw [norm_mul, hψn, mul_one]
     · exact Filter.Eventually.of_forall fun h => continuous_const.mul (hψ.1.comp (continuous_const.mul continuous_id))
 
@@ -358,7 +358,7 @@ theorem kdata (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) {S S' : Finset (He
       refine (h3.const_mul (‖(c : ℂ)‖ * ∫ y, ‖Bf y.1‖ ∂νY)⁻¹).congr (Filter.Eventually.of_forall fun h => ?_)
       simp only
       rw [← mul_assoc, inv_mul_cancel₀ hcK, one_mul]
-    exact (integrable_norm_iff (hAc.comp continuous_subtype_val).aestronglyMeasurable).1 h5
+    exact (integrable_norm_iff (hAc.comp continuous_subtypeVal).aestronglyMeasurable).1 h5
 
   obtain ⟨M, hM⟩ := hρc.bddAbove_range_of_hasCompactSupport hρs
   have hτM : ∀ h : fixE ε, tR ρ S' U h.1 ≤ M := by
@@ -470,7 +470,7 @@ theorem top1 {F : Type} [Field F] [NumberField F] (S : Finset (HeightOneSpectrum
   · exact h2 v hv (haU v hv)
   · have h3 : sndA F a = sndA F ε * sndA F a := by rw [← map_mul, hεa]
     have h4 : (sndA F a) v = (sndA F ε) v * (sndA F a) v := congrArg (fun z : Af F => z v) h3
-    rw [hε.2 v, if_neg hv, zero_mul] at h4
+    rw [hε.2 v, ite_eq_right hv, zero_mul] at h4
     rw [h4]
     exact mem_of_mem_nhds (hV v)
 
@@ -504,31 +504,31 @@ open GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef (testT boxA fouA intF)
 theorem oneD : OneD := by
   intro F _ _ hF ψ hψ S ε hε ν hν
   classical
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (AF F) := ⟨rfl⟩
   obtain ⟨db, hdb⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.exists_isCovolOne F
   obtain ⟨⟨laminf, hinf⟩, hlamex⟩ := _root_.GlobalTheory.CompanionTheory.SW.StdEx.exists_std F
   choose lam hlam using hlamex
   obtain ⟨S₁, hS₁⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.exists_test_approx F hF ψ hψ db hdb laminf lam hinf hlam
   obtain ⟨ρ, U, hρ, hρt, hU, hUt, hinv, hint, -, hlim⟩ := hS₁ (S ∪ S₁) Finset.subset_union_right
-  haveI : db.IsAddHaarMeasure := hdb.1
+  have : db.IsAddHaarMeasure := hdb.1
   have hεε := idF_mul hε
   have hp : Continuous (AddMonoidHom.mulLeft ε) := continuous_const.mul continuous_id
   have hpp : ∀ x, AddMonoidHom.mulLeft ε (AddMonoidHom.mulLeft ε x) = AddMonoidHom.mulLeft ε x := fun x => by
     simp only [AddMonoidHom.coe_mulLeft, ← mul_assoc, hεε]
   have hcY : IsClosed (((AddMonoidHom.mulLeft ε).ker : Set (AF F))) := isClosed_eq hp continuous_const
-  haveI : LocallyCompactSpace (AddMonoidHom.mulLeft ε).ker := hcY.locallyCompactSpace
-  haveI : LocallyCompactSpace (fixE ε) := (isClosed_eq hp continuous_id).locallyCompactSpace
-  haveI := hν
-  haveI : SecondCountableTopology (fixE ε) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology (AddMonoidHom.mulLeft ε).ker := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaCompactSpace (fixE ε) := inferInstance
-  haveI : SigmaCompactSpace (AddMonoidHom.mulLeft ε).ker := inferInstance
-  haveI : SigmaFinite ν := inferInstance
+  have : LocallyCompactSpace (AddMonoidHom.mulLeft ε).ker := hcY.locallyCompactSpace
+  have : LocallyCompactSpace (fixE ε) := (isClosed_eq hp continuous_id).locallyCompactSpace
+  have := hν
+  have : SecondCountableTopology (fixE ε) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (AddMonoidHom.mulLeft ε).ker := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaCompactSpace (fixE ε) := inferInstance
+  have : SigmaCompactSpace (AddMonoidHom.mulLeft ε).ker := inferInstance
+  have : SigmaFinite ν := inferInstance
   obtain ⟨c, hc, hdec⟩ := decomp (AddMonoidHom.mulLeft ε) hp hpp db ν (Measure.addHaar)
   have hloc := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), IsTopologicalRing (Fv F v) := fun v => (hloc v).1
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
   have hne : ∀ k, ∫ y, testT (ρ k) (S ∪ S₁) (U k) y ∂db ≠ 0 := by
     intro k
     rw [hint k]
@@ -657,9 +657,9 @@ theorem exTheta' (D : D7) (t : ℕ) (e : AE D) (ε : AF D.host.F) (heS : e = alg
               change eA _ i = eA _ i + eA _ i
               exact congrFun (map_add eA ⟨x.1.1, (memHA D t x.1.1).1 x.1.2⟩ ⟨y.1.1, (memHA D t y.1.1).1 y.1.2⟩) i
             continuous_toFun := continuous_pi fun i => Continuous.subtype_mk ((continuous_apply i).comp
-              (eA.continuous.comp ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _))) _
-            continuous_invFun := ((continuous_subtype_val.comp (eA.symm.continuous.comp
-              (continuous_pi fun i => continuous_subtype_val.comp (continuous_apply i)))).subtype_mk _).subtype_mk _ },
+              (eA.continuous.comp ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _))) _
+            continuous_invFun := ((continuous_subtypeVal.comp (eA.symm.continuous.comp
+              (continuous_pi fun i => continuous_subtypeVal.comp (continuous_apply i)))).subtype_mk _).subtype_mk _ },
     fun x i => rfl⟩
 
 theorem e_eq (D : D7) (S : Finset (Pl D)) (e : AE D) (he : IsIdem S e) :
@@ -738,21 +738,21 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
     rw [norm_prod]
     exact Finset.prod_le_one₀ (fun _ _ => norm_nonneg _) (fun i _ => (hg k).2.1 _)
   · beta_reduce
-    rw [if_pos hT]
+    rw [ite_eq_left hT]
     exact mul_nonneg c.2 (Finset.prod_nonneg fun i _ => ((hg k).2.2 _).1)
   · beta_reduce
     have hpt : ∀ x : hermS D t e, pch ψ x.1.1 T = ∏ i, ψ ((Θ x i).1 * sT T i) := by
       intro x
       rw [pch_eq D t ψ x.1.1 T x.1.2 hT, hpair, dotProduct, char_sum]
       refine Finset.prod_congr rfl fun i _ => ?_
-      simp only [sT, dif_pos hT, hΘ, heA]
+      simp only [sT, dite_eq_left hT, hΘ, heA]
     calc ∫ x, (∏ i, g1 k (Θ x i)) * pch ψ x.1.1 T ∂lam
         = ∫ x, ∏ i, (fun i h => g1 k h * ψ (h.1 * sT T i)) i (Θ x i) ∂lam := by
           congr 1; funext x; rw [hpt, ← Finset.prod_mul_distrib]
       _ = (c : ℂ) * ∏ i, ∫ h, g1 k h * ψ (h.1 * sT T i) ∂(Measure.addHaar : Measure (fixE ε)) :=
           (hTr (fun i h => g1 k h * ψ (h.1 * sT T i))).1
       _ = _ := by
-          rw [if_pos hT]
+          rw [ite_eq_left hT]
           push_cast
           congr 1
           exact Finset.prod_congr rfl fun i _ => ((hg k).2.2 _).2
@@ -765,7 +765,7 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
       exact h ▸ (isUnit_iff_ne_zero.mpr hBd).map _
     let R : (Idx t (Module.finrank D.host.F D.host.E) → AF D.host.F) → Mx D t t := fun w => (eA.symm (Bm⁻¹ *ᵥ w)).1
     have hRc : Continuous R :=
-      continuous_subtype_val.comp (eA.symm.continuous.comp (continuous_const.matrix_mulVec continuous_id))
+      continuous_subtypeVal.comp (eA.symm.continuous.comp (continuous_const.matrix_mulVec continuous_id))
     have hU : IsOpen {M : Mx D t t | -M ∉ C} := hC.isOpen_compl.preimage continuous_neg
     have h0 : R 0 ∈ {M : Mx D t t | -M ∉ C} := by
       have : R 0 = 0 := by simp [R, Matrix.mulVec_zero]
@@ -776,12 +776,12 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
     by_contra hlt
     have hpos := lt_trans hε' (not_le.mp hlt)
     beta_reduce at hpos
-    rw [if_pos hTA] at hpos
+    rw [ite_eq_left hTA] at hpos
     have hprod : ∀ i, G1 k (sT T i) ≠ 0 := fun i =>
       Finset.prod_ne_zero_iff.mp (right_ne_zero_of_mul hpos.ne') i (Finset.mem_univ i)
     have hfixT : ∀ i, ε * sT T i = sT T i := by
       intro i
-      simp only [sT, dif_pos hTA, Matrix.mulVec, dotProduct, Finset.mul_sum]
+      simp only [sT, dite_eq_left hTA, Matrix.mulVec, dotProduct, Finset.mul_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [mul_left_comm, coord_fix D t e ε heS b _ heT j]
     have hw : ∀ i, -(sT T i) ∈ Sp k := fun i => by
@@ -790,7 +790,7 @@ theorem approxId_of (h1 : OneD) : ApproxId := by
     have hmem := hk (fun i => -(sT T i)) hw
     have hR : R (fun i => -(sT T i)) = -T := by
       have h2 : (fun i => -(sT T i)) = -(Bm *ᵥ hCo (AF D.host.F) D.sp.cm.sig b ⟨T, (memHA D t T).1 hTA⟩) := by
-        funext i; simp only [sT, dif_pos hTA, Pi.neg_apply]
+        funext i; simp only [sT, dite_eq_left hTA, Pi.neg_apply]
       simp only [R, h2, Matrix.mulVec_neg, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hunit, Matrix.one_mulVec,
         map_neg, ← heA, eA.symm_apply_apply]
       rfl

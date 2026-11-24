@@ -61,7 +61,7 @@ theorem UpperTheory.V.Ws.card_dvd_of_partition_equal_size :
     · intro h
       exact (hf' i q h).symm
     · intro h
-      rw [Set.mem_setOf_eq] at h
+      rw [Set.mem_ofPred_eq] at h
       rw [← h]
       exact hf i
   rcases Nat.eq_zero_or_pos d with rfl | hd
@@ -81,8 +81,8 @@ theorem UpperTheory.V.Ws.card_dvd_of_partition_equal_size :
       calc q = f (g q) := hf' _ _ (hg q)
         _ = f (g q') := by rw [h]
         _ = q' := (hf' _ _ (hg q')).symm
-    haveI : Finite Q := Finite.of_injective g ginj
-    letI : Fintype Q := Fintype.ofFinite Q
+    have : Finite Q := Finite.of_injective g ginj
+    let : Fintype Q := Fintype.ofFinite Q
     have hc : ∀ q, Nat.card {x // f x = q} = d := fun q => by
       rw [← hT q, hfib q, ← Nat.card_coe_set_eq]
       rfl

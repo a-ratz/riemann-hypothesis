@@ -266,8 +266,8 @@ theorem exists_norm (hK : IsCMUnram K) {p : HeightOneSpectrum (𝓞 K)}
   have hle : p.asIdeal ≤ p.asIdeal.comap σ := by
     rw [← locBasic_conj_eq inj hstar, hc]
   have := p.isMaximal
-  letI : Field (𝓞 K ⧸ p.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 K ⧸ p.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ p.ne_bot
+  let : Field (𝓞 K ⧸ p.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 K ⧸ p.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ p.ne_bot
   let τ := Ideal.quotientMap p.asIdeal σ hle
   have hτ : ∀ r, τ (Ideal.Quotient.mk _ r) = Ideal.Quotient.mk _ (σ r) := fun r => rfl
   have σσ : ∀ r, σ (σ r) = r := fun r => inj (by rw [hσ, hσ, star_star])
@@ -338,7 +338,7 @@ theorem exists_ext [FiniteDimensional K V] {h : V →ₗ⋆[K] V →ₗ[K] K} (h
     have r1 : p.valuation K r = 1 := by
       refine le_antisymm rA (not_lt.1 fun lt => y2 ?_)
       have := smul_mem_loc hc M (r * (h x x)⁻¹) (by
-        rw [map_mul, map_inv₀, av, mul_inv_le_iff₀ (zero_lt_iff.2 e0), one_mul]
+        rw [map_mul, map_inv₀, av, mul_inv_le_iff₀ (pos_iff_ne_zero.2 e0), one_mul]
         exact le_of_lt_one lt) x xL
       simpa using Submodule.add_mem _ hr this
     intro m hm
@@ -351,7 +351,7 @@ theorem exists_ext [FiniteDimensional K V] {h : V →ₗ⋆[K] V →ₗ[K] K} (h
     have : (star c * c * h x x + π) / π ^ 2 = (star c * c - -π / h x x) * h x x / (π * π) := by
       field_simp; ring
     rw [this, map_div₀, map_mul, map_mul, av, πv, mul_div_mul_right _ _ e0,
-      div_le_one₀ (zero_lt_iff.2 e0)]
+      div_le_one₀ (pos_iff_ne_zero.2 e0)]
     exact le_of_lt_one cN
   have πA : p.valuation K π ≤ 1 := by
     rw [πv, ← WithZero.exp_zero, WithZero.exp_le_exp]; omega

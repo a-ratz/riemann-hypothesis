@@ -83,8 +83,8 @@ theorem lip_of_ringEquiv {R S : Type} [CommRing R] [CommRing S] (e : R ≃+* S)
 theorem lip_of_artinian_reduced (R : Type) [CommRing R] [IsArtinianRing R] [IsReduced R] :
     PI.VolStabS.TensAllW.LIP R := by
   classical
-  letI : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
-  letI : ∀ m : MaximalSpectrum R, Field (R ⧸ m.asIdeal) := fun m =>
+  let : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
+  let : ∀ m : MaximalSpectrum R, Field (R ⧸ m.asIdeal) := fun m =>
     Ideal.Quotient.field m.asIdeal
   exact lip_of_ringEquiv (IsArtinianRing.equivPi R)
     (PI.VolStabS.TensAllW.lip_pi (fun m : MaximalSpectrum R => R ⧸ m.asIdeal)
@@ -93,10 +93,10 @@ theorem lip_of_artinian_reduced (R : Type) [CommRing R] [IsArtinianRing R] [IsRe
 theorem isOpen_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ (n M : ℕ), IsOpen {X : Fin n → Fin M → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} := by
   intro F E _ _ _ _ _ σ _ R _ _ _ _ _ hR n M
   obtain ⟨hT, -, -, -, hA, hRed, hU, -⟩ := hR
-  haveI := hT
-  haveI := hA
-  haveI := hRed
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := hT
+  have := hA
+  have := hRed
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have hUo : IsOpen {r : R | IsUnit r} := by
     have := hU.isOpen_range
     convert this using 1

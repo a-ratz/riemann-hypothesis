@@ -105,7 +105,7 @@ theorem frameInv_eq_one {θ : InfFam D} {A : HSp D} {cA : CptF A} {a : GL (Fin A
 
 theorem prinInf_props : ∀ (D : D7) (θ : InfFam D) (A : HSp D) (cA : CptF A) (a : GL (Fin A.rank) (AE D)), Defin θ A cA a → ∀ (β : GL (Fin A.rank) (Formalism.IndefR.Lev.EAf D)) (Z : Finset (Formalism.L2.DIV.Pl D.host.E)), Formalism.L2.DIV.IsFrame β (frameLat A) → ∀ m : Measure (GA D A), m.IsHaarMeasure → MeasurableSet (prinInf A β Z) ∧ prinInf A β Z ⊆ openOff A (frameLat A) (under Z) ∧ (∀ g ∈ prinInf A β Z, hgtL A (frameLat A) a g = 1) ∧ ∃ mR : Measure (GinfC A), mR.IsHaarMeasure ∧ ∀ F : GA D A → ℂ, Continuous F → (∀ (b : GinfC A), ∀ κ ∈ prin A β Z, F ((b : GA D A) * κ) = F b) → ∫ g in prinInf A β Z, F g ∂m = ∫ b : GinfC A, F b ∂mR := by
   intro D θ A cA a hD β Z hfr m hm
-  haveI := hm
+  have := hm
   set K := prin A β Z
   let S : Subgroup (GA D A) := (Formalism.L2.DIV.lev D.sp.cm A.gram β (prinDat A Z)).comap (Formalism.IndefR.Lev.finE A)
   have hSset : (S : Set (GA D A)) = prinInf A β Z := rfl
@@ -126,7 +126,7 @@ theorem prinInf_props : ∀ (D : D7) (θ : InfFam D) (A : HSp D) (cA : CptF A) (
       rw [GlobalTheory.ChainOnto.HaarInf.finE_toFin]; exact Subgroup.mem_comap.1 hg)⟩
   have hker : {g : GA D A | g ∈ S ∧ GlobalTheory.AutMult.toInf A g = 1} = (K : Set (GA D A)) := by
     ext g
-    simp only [Set.mem_setOf_eq, GlobalTheory.ChainOnto.HaarInf.toInf_eq_one_iff]
+    simp only [Set.mem_ofPred_eq, GlobalTheory.ChainOnto.HaarInf.toInf_eq_one_iff]
     exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
   have hKc : IsCompact (K : Set (GA D A)) :=
     GlobalTheory.T.isCompact_finite_adelic_subgroup_integral_open D A (frameLat A) (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat A) K inf_le_left
@@ -137,7 +137,7 @@ theorem prinInf_props : ∀ (D : D7) (θ : InfFam D) (A : HSp D) (cA : CptF A) (
     rw [Subgroup.subtype_apply, GlobalTheory.ChainOnto.HaarInf.finE_of_mem_ginfC A b.2]; exact one_mem _
   have hHaar : (Measure.map (GlobalTheory.AutMult.toInf A) (m.restrict (S : Set (GA D A)))).IsHaarMeasure :=
     _root_.GlobalTheory.ChainOnto.map_restrict_isHaar (GA D A) (GinfC A) m S (GinfC A).subtype (GlobalTheory.AutMult.toInf A) hSopen
-      continuous_subtype_val (GlobalTheory.AutMult.continuous_toInf A) hpi hiS (hker ▸ hKc)
+      continuous_subtypeVal (GlobalTheory.AutMult.continuous_toInf A) hpi hiS (hker ▸ hKc)
   refine ⟨hSopen.measurableSet, fun g hg v _ => hstab g hg v, fun g hg => ?_, _, hHaar, fun F hF hinv => ?_⟩
   ·
     have hK : g ∈ Kmax A a := by
@@ -154,7 +154,7 @@ theorem prinInf_props : ∀ (D : D7) (θ : InfFam D) (A : HSp D) (cA : CptF A) (
       exact hinv _ _ (hfinK g hg)
     have hf : AEStronglyMeasurable (fun b : GinfC A => F b)
         (Measure.map (GlobalTheory.AutMult.toInf A) (m.restrict (S : Set (GA D A)))) :=
-      (hF.comp continuous_subtype_val).aestronglyMeasurable
+      (hF.comp continuous_subtypeVal).aestronglyMeasurable
     rw [← hSset, setIntegral_congr_fun hSopen.measurableSet hFA, integral_map hmeas hf]
 
 end GlobalTheory.Core.Rk.PrinMeas
@@ -215,20 +215,20 @@ theorem wcoef_boxT : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B W H : HS
   have hF2t : IsThetaFunO ψ A H (omH (g, 1) Φ') := hH.om_pres _ _ hΦ'
   simp only [wcoef, ip]
   rw [hom]
-  haveI := GlobalTheory.WeilSliceUnit.borel_Mx (D := D) B.rank A.rank
-  haveI := GlobalTheory.WeilSliceUnit.borel_Mx (D := D) W.rank A.rank
-  haveI := GlobalTheory.WeilSliceUnit.borel_Mx (D := D) H.rank A.rank
+  have := GlobalTheory.WeilSliceUnit.borel_Mx (D := D) B.rank A.rank
+  have := GlobalTheory.WeilSliceUnit.borel_Mx (D := D) W.rank A.rank
+  have := GlobalTheory.WeilSliceUnit.borel_Mx (D := D) H.rank A.rank
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D B.rank A.rank
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D W.rank A.rank
   obtain ⟨k1, k2, k3, k4, k5, -⟩ := lattice_Mx D H.rank A.rank
-  haveI := cW.1
-  haveI := cH.1
+  have := cW.1
+  have := cH.1
   let e : WO A B ≃ₜ (WO A W × WO A H) :=
     { (o.resT A).toEquiv with continuous_toFun := o.continuous_resT A, continuous_invFun := o.continuous_resT_symm A }
   let em := e.toMeasurableEquiv
   let μP : Measure (WO A W × WO A H) := νW.prod νH
   let μ' : Measure (WO A B) := μP.map em.symm
-  haveI : μ'.IsAddHaarMeasure :=
+  have : μ'.IsAddHaarMeasure :=
     (o.resT A).symm.isAddHaarMeasure_map μP (o.continuous_resT_symm A) (o.continuous_resT A)
   have hmp : MeasurePreserving em μ' μP := ⟨em.measurable, em.map_map_symm⟩
   have hprod := GlobalTheory.WeilSliceUnit.isAddFundamentalDomain_prod cW.2.1 cH.2.1

@@ -57,16 +57,16 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 
 theorem isPrincipal_dim {K : Type} [Field K] {t : SAB H (Sp K)} (_h : IsPrincipal t) :
     ∃ d, SmoothOfRelativeDimension d t.G.hom := by
-  letI := t.grp
-  haveI hs : IsSemiAbelian t.G := t.semi
-  haveI : Smooth t.G.hom := hs.smooth
-  haveI : GeometricallyConnected t.G.hom := hs.geomConnected
+  let := t.grp
+  have hs : IsSemiAbelian t.G := t.semi
+  have : Smooth t.G.hom := hs.smooth
+  have : GeometricallyConnected t.G.hom := hs.geomConnected
   have hc := t.G.hom.isConnected_preimage_singleton (IsLocalRing.closedPoint K)
   have hu : t.G.hom ⁻¹' {IsLocalRing.closedPoint K} = Set.univ := by
     ext y
     simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_univ, iff_true]
     exact Subsingleton.elim _ _
-  haveI : PreconnectedSpace t.G.left := ⟨by rw [← hu]; exact hc.isPreconnected⟩
+  have : PreconnectedSpace t.G.left := ⟨by rw [← hu]; exact hc.isPreconnected⟩
   exact exists_dim_of_preconnected t.G.hom hc.nonempty.some
 
 def pol {K : Type} [Field K] (t : SAB H (Sp K)) (h : IsPrincipal t) : Out.PolAV (Sp K) where

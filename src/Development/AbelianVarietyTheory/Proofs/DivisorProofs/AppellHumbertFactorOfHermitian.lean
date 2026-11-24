@@ -123,10 +123,10 @@ theorem re_form_pos_of_relAmple :
           Real.pi / 2 * ((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ)))) * u.fr i (z + l)) →
       ∀ z : Fin g → ℂ, z ≠ 0 → 0 < (z ⬝ᵥ Hm.mulVec (star z)).re := by
   intro A _ _ hA L hL ha g u Hm χ hH hχ hfr
-  haveI : Smooth A.hom := hA.smooth
-  haveI := isReduced_of_smooth_complex _ A.hom inferInstance
-  haveI := u.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have : Smooth A.hom := hA.smooth
+  have := isReduced_of_smooth_complex _ A.hom inferInstance
+  have := u.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
   obtain ⟨N, hN, M, s, hcov, hD⟩ := ha ⊤ (isAffineOpen_top _)
   choose hDa r hr hsurj using hD
   have hrg : Set.range (𝟙 A.left : A.left ⟶ A.left) ⊆ Set.range (A.hom ⁻¹ᵁ ⊤).ι := by
@@ -162,7 +162,7 @@ theorem re_form_pos_of_relAmple :
     intro i l z
     have hper : u.ex (z + l) = u.ex z := by rw [u.ex_add, (u.ker l).2 l.2, _root_.mul_one]
     rw [hθper i z (z + l) _ hper fun j hj => hfr l j z hj, form_smul, form_smul, mul_pow,
-      ← Complex.exp_nat_mul]
+      ← exp_natCast_mul]
     congr 3
     push_cast
     ring

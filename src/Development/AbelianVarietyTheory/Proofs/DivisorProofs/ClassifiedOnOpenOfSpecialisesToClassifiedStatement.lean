@@ -484,7 +484,7 @@ theorem divFrom_pull : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H
   · simp only [g', Units.val_inv_eq_inv_val, inv_inv, Units.val_mk0, map_zpow]
     rfl
   · exact (hxr y).trans ((hx1 _).trans ((congrArg hD0.xe (hx2 y)).trans ((hxe _).trans (he' y).symm)))
-  · letI := H.starRing
+  · let := H.starRing
     have c₁ : (oQ'.onB.act x).left ≫ hD.e.hom.left ≫ pullback.fst Q.P.A.hom (specOf θ) =
         hD.e.hom.left ≫ pullback.fst Q.P.A.hom (specOf θ) ≫ (oQ.onB.act x).left := by
       have := congrArg (fun m => m.left ≫ pullback.fst Q.P.A.hom (specOf θ)) (hact x)
@@ -712,7 +712,7 @@ namespace GlobalTheory.UCanon.DivIso
 
 theorem exists_isPullDeg_id : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D' : Datum H} {l : Geo.Tor.Level H} {c : Coeff l} (L : LowBase D' c) {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] (Q : DegPre V) [Module (𝓞 E) Q.X] (oQ : letI := H.starRing; Q.OAct (𝓞 E)) (Q' : DegPre V) [Module (𝓞 E) Q'.X] (oQ' : letI := H.starRing; Q'.OAct (𝓞 E)) (iw : L.W →+* V) {I : Type} [Fintype I] (s : I → V) (ε : I → LinearMap.BilinForm ℤ L.D.X) (e : Q.X ≃ₗ[𝓞 E] L.D.X) (e' : Q'.X ≃ₗ[𝓞 E] L.D.X), (∀ k, s k ≠ 0) → DivFrom L Q oQ iw s ε e → DivFrom L Q' oQ' iw s ε e' → ∃ hD : IsPullDeg (RingHom.id V) Q Q', (∀ y, e (hD.xe y) = e' y) ∧ (letI := H.starRing; ∀ x, oQ'.onB.act x ≫ hD.e.hom = hD.e.hom ≫ (Over.pullback (specOf (RingHom.id V))).map (oQ.onB.act x)) := by
   intro E _ _ _ H D' l c L V _ _ _ Q _ oQ Q' _ oQ' iw I _ s ε e e' hs ⟨g, p, hg, hx, ha⟩ ⟨g', p', hg', hx', ha'⟩
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨q, q₁, q₂⟩ := GlobalTheory.PullDegTop.main.2.2.2 (RingHom.id_comp iw) p p' (fun y => L.gen (l.M' • y))
   have he : ∀ y : Q'.X, e (q.xe y) = e' y := fun y => (hx _).symm.trans ((q₂ y).trans (hx' y))
   obtain ⟨r, r₁, r₂⟩ := GlobalTheory.PullDegResc.main.2.1 g g' q s hs (fun y k => (l.M' : ℤ) * ε k (e y) (H.w0 • e y)) hg
@@ -855,7 +855,7 @@ end GlobalTheory.LinDataTriple
 
 theorem GlobalTheory.triple_iso_of_linear_data_iso : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (t t' : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) t) (P' : PELUnif (maximalIdeal V) t') (hD : IsPullDeg (RingHom.id V) P.D.toPre P'.D.toPre), (∀ (x : 𝓞 E) y, hD.xe (x • y) = x • hD.xe y) → (letI := H.starRing; ∀ x, P'.oD.onB.act x ≫ hD.e.hom = hD.e.hom ≫ (Over.pullback (specOf (RingHom.id V))).map (P.oD.onB.act x)) → Nonempty (SABMap t' t (𝟙 _)) := by
   intro E _ _ _ H V _ _ _ hB t t' P P' hD hx hB'
-  letI := H.starRing
+  let := H.starRing
   have hR : AdmBase V (maximalIdeal V) := hB.1
   have := hR.1
   obtain ⟨ψ, bc, -, hψm, hbcm, hbc', hP, -⟩ := GlobalTheory.unif_determined_by_data_normal V hR P.D P.A t.G t.semi P.U
@@ -1352,10 +1352,10 @@ namespace GlobalTheory.UCanon
 
 theorem torsRat_of_divFrom : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D' : Datum H} {l : Geo.Tor.Level H} {c : Coeff l} (L : LowBase D' c) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t) (iw : L.W →+* R) {I : Type} [Fintype I] (s : I → R) (ε : I → LinearMap.BilinForm ℤ L.D.X) (e : P.D.toPre.X ≃ₗ[𝓞 E] L.D.X), (∀ k, ε k ∈ balForms H.bar L.D.X) → (∀ k, s k ≠ 0) → DivFrom L P.D.toPre P.oD iw s ε e → GlobalTheory.TChart.TorsRat t.G l.M' := by
   intro E _ _ _ H D' l c L R _ _ _ hR t P iw I _ s ε e hε hs hD
-  haveI : CharZero R := hR.2
+  have : CharZero R := hR.2
   have hadm : AdmBase R (maximalIdeal R) := hR.1
   have hn : 1 ≤ l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
-  haveI := P.U.gen_hom
+  have := P.U.gen_hom
   refine GlobalTheory.TorsDescent.torsRat_of_retract_galoisFixed t.G t.G P.A P.U.gen (𝟙 _) (𝟙 _) l.M' P.U.gen_hom
     inferInstance inferInstance (Category.comp_id _) hn ?_
   intro σ x hx
@@ -1453,11 +1453,11 @@ theorem torsRat_away_iff : ∀ (R : Type) [CommRing R] [IsDomain R] (f : R) [IsD
   constructor
   · exact GlobalTheory.TChart.AbLevel.torsRat_of_isGrpPullback _ hinj hπ
   · intro h K _ _ κ x hx
-    letI : Algebra (Localization.Away f) (FractionRing R) :=
+    let : Algebra (Localization.Away f) (FractionRing R) :=
       IsLocalization.localizationAlgebraOfSubmonoidLe (Localization.Away f) (FractionRing R) _ _ hle
-    haveI : IsScalarTower R (Localization.Away f) (FractionRing R) :=
+    have : IsScalarTower R (Localization.Away f) (FractionRing R) :=
       IsLocalization.localization_isScalarTower_of_submonoid_le (Localization.Away f) (FractionRing R) _ _ hle
-    haveI : IsFractionRing (Localization.Away f) (FractionRing R) :=
+    have : IsFractionRing (Localization.Away f) (FractionRing R) :=
       IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers f) (Localization.Away f)
         (FractionRing R)
     let e := FractionRing.algEquiv (Localization.Away f) (FractionRing R)
@@ -1536,10 +1536,10 @@ theorem GlobalTheory.clsOpen : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
     · exact ((hu j).map θ).ne_zero
   let A := Localization.Away f
   have hpow : Submonoid.powers f ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors hf0
-  haveI : IsDomain A := IsLocalization.isDomain_localization hpow
-  haveI : IsNoetherianRing A := IsLocalization.isNoetherianRing (Submonoid.powers f) A hR.1.1
-  haveI : IsIntegrallyClosed R := hR.1.2.2.1
-  haveI : IsIntegrallyClosed A := isIntegrallyClosed_of_isLocalization A (Submonoid.powers f) hpow
+  have : IsDomain A := IsLocalization.isDomain_localization hpow
+  have : IsNoetherianRing A := IsLocalization.isNoetherianRing (Submonoid.powers f) A hR.1.1
+  have : IsIntegrallyClosed R := hR.1.2.2.1
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isLocalization A (Submonoid.powers f) hpow
   have hψ := GlobalTheory.T.psiUnitOn_basicOpen_of_comesFromBase L P₁.D.toPre P₁.oD iw s ε e₁ hD₁ f (by
     rintro (i | j)
     · exact ⟨1, by rw [pow_one, hf_def]; exact Finset.dvd_prod_of_mem _ (Finset.mem_univ i)⟩

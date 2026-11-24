@@ -70,7 +70,7 @@ theorem cubeComplex_grCube_exactAt_of_card_lt (ι : Type) [LinearOrder ι] [Fint
   | succ q ih =>
     intro M _ _ _ _ ℳ _ _ _
     obtain ⟨r, d, f, hf, hs⟩ := exists_graded_surjection (ι := ι) ℳ
-    letI : Decomposition (grSub (grFree ι R d) (LinearMap.ker f)) :=
+    let : Decomposition (grSub (grFree ι R d) (LinearMap.ker f)) :=
       grSubDecomposition _ hf.isHomogeneous_ker
     obtain ⟨a, ha⟩ := ih (LinearMap.ker f) (grSub (grFree ι R d) (LinearMap.ker f)) inferInstance
     obtain ⟨b, hb⟩ := (cubeComplex_grFree_finite_and_exactAt ι R r d).2

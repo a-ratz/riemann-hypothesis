@@ -199,7 +199,7 @@ theorem H1_mk_eq_zero_iff_of_trivial {rho : Representation R Γ N} (hrho : ∀ g
 
 theorem mk_mem_H1ur_of_vanish (rho : Representation R Γ N) (J : Subgroup Γ) (z : Z1 rho)
     (hz : ∀ g ∈ J, z.1 g = 0) : (Submodule.Quotient.mk z : H1 rho) ∈ H1ur rho J := by
-  change (Submodule.Quotient.mk (restrictCocycles1 rho J.subtype continuous_subtype_val z) :
+  change (Submodule.Quotient.mk (restrictCocycles1 rho J.subtype continuous_subtypeVal z) :
     H1 (rho.comp J.subtype)) = 0
   rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, Submodule.coe_subtype]
   exact (mem_coboundaries1 _ _).2 ⟨0, fun g => by rw [map_zero, sub_zero]; exact hz g.1 g.2⟩
@@ -207,7 +207,7 @@ theorem mk_mem_H1ur_of_vanish (rho : Representation R Γ N) (J : Subgroup Γ) (z
 theorem vanish_of_mk_mem_H1ur (rho : Representation R Γ N) (J : Subgroup Γ)
     (hJ : ∀ g ∈ J, ∀ m, rho g m = m) (z : Z1 rho)
     (hz : (Submodule.Quotient.mk z : H1 rho) ∈ H1ur rho J) (g : Γ) (hg : g ∈ J) : z.1 g = 0 := by
-  have h1 : (Submodule.Quotient.mk (restrictCocycles1 rho J.subtype continuous_subtype_val z) :
+  have h1 : (Submodule.Quotient.mk (restrictCocycles1 rho J.subtype continuous_subtypeVal z) :
       H1 (rho.comp J.subtype)) = 0 := hz
   rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, Submodule.coe_subtype] at h1
   obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 h1
@@ -225,7 +225,7 @@ theorem card_LCHomLev_eq_unrK {p : ℕ} [Fact p.Prime] {K : IntermediateField �
     letI := levZ (M := M) p r h
     Nat.card (LCHomLev M c I) =
       Nat.card (Formalism.GaloisCohomology.unrK (levRepZ p r h (ρ.comp i.symm.toMulEquiv.toMonoidHom))) := by
-  letI := levZ (M := M) p r h
+  let := levZ (M := M) p r h
   let ρ' := levRepZ p r h (ρ.comp i.symm.toMulEquiv.toMonoidHom)
   have hρ' : ∀ g x, ρ' g x = x := fun g x => Lev.ext (hρ _ _)
   let F : LCHomLev M c I → Formalism.GaloisCohomology.unrK ρ' := fun f =>
@@ -290,10 +290,10 @@ theorem card_unr_lev_of_triv : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateFie
   intro p _ K hK O _ _ _ _ ϖ hϖ hp G _ _ i M _ _ e ρ hρ I hI n
   have hpn : ((p : O) ^ n) ∈ Ideal.span {ϖ ^ n} :=
     Ideal.mem_span_singleton.2 (pow_dvd_pow_of_dvd (Ideal.mem_span_singleton.1 hp) n)
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
-  letI := levZ (M := M) p n hpn
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  let := levZ (M := M) p n hpn
   obtain ⟨hfin, hcard⟩ := levKO_card hϖ e n
-  haveI := hfin
+  have := hfin
   let ρ' := levRepZ p n hpn (ρ.comp i.symm.toMulEquiv.toMonoidHom)
   have hρ' : ∀ g x, ρ' g x = x := fun g x => Lev.ext (hρ _ _)
   have hcont : ReciprocityTheory.Gal.ContAction ρ' := by
@@ -371,7 +371,7 @@ theorem h2_bounded_of_trivial_action : Formalism.GaloisCohomology.LocalTateDuali
     rw [hk]; exact finite_quot hϖ k
   refine ⟨(p ^ N) ^ ((p ^ N) ^ Nat.card (O ⧸ Ideal.span {(p : O) ^ N})), ?_⟩
   intro n hn h
-  letI := GlobalTheory.ShapeNeg.levZ (M := M) p n h
+  let := GlobalTheory.ShapeNeg.levZ (M := M) p n h
   have htriv : ∀ (g : Formalism.GaloisCohomology.GK p K) (m : Lev M (ϖ ^ n)), levRepZ p n h ρ g m = m := by
     intro g m
     rw [levRepZ_apply]
@@ -646,9 +646,9 @@ theorem _root_.GlobalTheory.ShapeUnrTriv.shapeUnr_of_localDuality (hT : _root_.F
     _root_.ReciprocityTheory.ChartRestriction.T2.ShapeUnr := by
   unfold _root_.ReciprocityTheory.ChartRestriction.T2.ShapeUnr
   intro p _ K O _ _ _ _ _ _ _ G _ _ hK hO hFr i M _ _ u ρ htriv I hI
-  haveI : IsTopologicalRing O := hO.ring
-  haveI : CompactSpace O := hO.compact
-  haveI : Finite (IsLocalRing.ResidueField O) := _root_.GlobalTheory.ShapeNeg.finite_residueField_of_compact_isAdic hO.adic
+  have : IsTopologicalRing O := hO.ring
+  have : CompactSpace O := hO.compact
+  have : Finite (IsLocalRing.ResidueField O) := _root_.GlobalTheory.ShapeNeg.finite_residueField_of_compact_isAdic hO.adic
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hpϖ : (p : O) ∈ Ideal.span {ϖ} := by
     rw [← (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ]
@@ -685,8 +685,8 @@ theorem _root_.GlobalTheory.ShapeUnrTriv.shapeUnr_of_localDuality (hT : _root_.F
       Nat.card ↥((ϖ ^ n • LinearMap.id : A →ₗ[O] A).ker) ≤ q ^ n * C * (q ^ n) ^ d ∧
       (n = 1 → Nat.card ↥((ϖ ^ n • LinearMap.id : A →ₗ[O] A).ker) ≤ q ^ n * q * (q ^ n) ^ d) := by
     intro n hn
-    letI := _root_.GlobalTheory.ShapeNeg.levZ (M := M) p n (hpow n)
-    haveI : Finite (_root_.GlobalTheory.ShapeNeg.Lev M (ϖ ^ n)) :=
+    let := _root_.GlobalTheory.ShapeNeg.levZ (M := M) p n (hpow n)
+    have : Finite (_root_.GlobalTheory.ShapeNeg.Lev M (ϖ ^ n)) :=
       (_root_.GlobalTheory.ShapeNeg.levKO_card hϖ u n).1
     have hcardTL := (_root_.GlobalTheory.ShapeNeg.levKO_card hϖ u n).2
     have hcontn : _root_.ReciprocityTheory.Gal.ContAction (_root_.GlobalTheory.ShapeNeg.levRepZ p n (hpow n) ρ') :=
@@ -697,12 +697,12 @@ theorem _root_.GlobalTheory.ShapeUnrTriv.shapeUnr_of_localDuality (hT : _root_.F
     obtain ⟨hfin1, hfin2⟩ := _root_.GlobalTheory.finite_H1_H2_of_localTateDuality hT p K hK n _
       (_root_.GlobalTheory.ShapeNeg.levRepZ p n (hpow n) ρ') hn hcontn
     have heul := hE p K hK n _ (_root_.GlobalTheory.ShapeNeg.levRepZ p n (hpow n) ρ') hn hcontn
-    haveI hH1fin : Finite (_root_.ReciprocityTheory.Gal.H1 (_root_.GlobalTheory.ShapeNeg.levRep ρ (ϖ ^ n))) :=
+    have hH1fin : Finite (_root_.ReciprocityTheory.Gal.H1 (_root_.GlobalTheory.ShapeNeg.levRep ρ (ϖ ^ n))) :=
       Nat.finite_of_card_ne_zero (by rw [htr.2]; exact Nat.card_pos.ne')
     obtain ⟨hfinA, hA1⟩ := _root_.GlobalTheory.ShapeNeg.SeqCount.card_H1_level_rep_eq ρ ϖ n hdivM hlc hH1fin
     have hinv : Nat.card (↥ρ.invariants ⧸
         (ϖ ^ n • LinearMap.id : ↥ρ.invariants →ₗ[O] ↥ρ.invariants).range) = 1 := by
-      haveI : Subsingleton (↥ρ.invariants ⧸
+      have : Subsingleton (↥ρ.invariants ⧸
           (ϖ ^ n • LinearMap.id : ↥ρ.invariants →ₗ[O] ↥ρ.invariants).range) := by
         rw [Submodule.Quotient.subsingleton_iff, eq_top_iff]
         rintro ⟨x, hx⟩ -
@@ -735,7 +735,7 @@ theorem _root_.GlobalTheory.ShapeUnrTriv.shapeUnr_of_localDuality (hT : _root_.F
       rw [hA2]
       exact Nat.mul_le_mul_right _ (Nat.mul_le_mul_left _
         (_root_.GlobalTheory.ShapeNeg.card_H2_level_rep_le hT hK hϖ u ρ' (hpow 1) hcontn))
-  haveI : CompactSpace G := i.symm.toHomeomorph.compactSpace
+  have : CompactSpace G := i.symm.toHomeomorph.compactSpace
   have hMtors : ∀ m : M, ∃ n : ℕ, ϖ ^ n • m = 0 := fun m => by
     obtain ⟨n, hn⟩ := _root_.GlobalTheory.ShapeNeg.ko_killed_by_pow_uniformizer hϖ (u m)
     exact ⟨n, u.injective (by simp [hn])⟩
@@ -807,7 +807,7 @@ theorem _root_.GlobalTheory.ShapeUnrTriv.shapeUnr_of_localDuality (hT : _root_.F
     have := (hY 1 one_pos).1
     rwa [pow_one] at this
   obtain ⟨a, F, _, _, hF, ⟨e⟩⟩ := _root_.GlobalTheory.CofinGen.exists_equiv_pi_prod_finite hϖ htorsY hY1
-  haveI := hF
+  have := hF
   have hshape := _root_.GlobalTheory.ShapeNeg.Shape.quotShape_of_counts hϖ (⊤ : Submodule O (A ⧸ S)) d a
     (Submodule.topEquiv.trans e) ⟨C, hcountY⟩ hone
   unfold _root_.Formalism.RepresentationBoundsCohomology.JT.QuotShape at hshape ⊢

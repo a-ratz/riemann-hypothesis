@@ -163,7 +163,7 @@ theorem normSq_eq_petersson : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Glob
 
   have hup : ∀ y, up om ν₁ Φ (fun _ => 1) y = X.I W.ψ W.θ t P y := by
     intro y
-    haveI := hν₁
+    have := hν₁
     simp only [up, AutomorphicL2Unitary.autMeasure]
     rw [integral_quotMeasure hfd]
     simp only [(hg y).descend_mk]
@@ -177,7 +177,7 @@ theorem normSq_eq_petersson : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Glob
     congr 1
     funext g
     exact GlobalTheory.ThetaMean.leftInv_theta hW hΦ ((GlobalTheory.Grid.ofSgn true A).symm g) γ hγ y
-  haveI := hν
+  have := hν
   simp only [petersson, pet]
   rw [integral_quotMeasure h𝓕]
   simp only [hinv.descend_mk, hup, Complex.mul_conj, ← Complex.sq_norm]
@@ -272,7 +272,7 @@ theorem exists_haar_fd_volQ_ne_zero : ∀ {D : D7} {T : Type} {L : LevCh D T} {s
   obtain ⟨ν, 𝓕, hν, h𝓕⟩ := GlobalTheory.ConstRatio.exists_meas WW
   have : BorelSpace (GA D WW) := ⟨rfl⟩
   refine ⟨ν, 𝓕, hν, h𝓕, ?_⟩
-  haveI := GlobalTheory.RegSch.Ibp.isFiniteMeasure_autMeasure (V := WW) ν
+  have := GlobalTheory.RegSch.Ibp.isFiniteMeasure_autMeasure (V := WW) ν
   rw [(GlobalTheory.QuotFundDom.volQ_and_integrable_iff D WW ν 𝓕 hν h𝓕).1]
   refine ENNReal.toReal_ne_zero.2 ⟨h𝓕.measure_ne_zero (NeZero.ne ν), ?_⟩
   exact (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol WW ν _ hν h𝓕).ne

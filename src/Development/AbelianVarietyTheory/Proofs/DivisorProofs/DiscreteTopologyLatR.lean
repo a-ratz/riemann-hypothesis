@@ -112,13 +112,13 @@ variable (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 def tens : AE F E ≃ₐ[AF F] AdeleRing (𝓞 E) E := adeleTensorAlgEquivLeft F E
 
 theorem continuous_tens : Continuous (tens F E) := by
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
   exact IsModuleTopology.continuous_of_linearMap (tens F E).toLinearMap
 
 theorem continuous_tens_symm : Continuous (tens F E).symm := by
-  haveI := isModuleTopology_adeleRing (K := F) (L := E)
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have := isModuleTopology_adeleRing (K := F) (L := E)
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   exact IsModuleTopology.continuous_of_linearMap (tens F E).symm.toLinearMap
 
 def idl : (AE F E)ˣ ≃ₜ* IdeleGroup E where
@@ -142,10 +142,10 @@ theorem absE_eq (l : (AE F E)ˣ) :
   simp only [IdeleGroup.infiniteModule, IdeleGroup.finiteModule, hN]
   congr 1
   · refine Finset.prod_congr rfl fun w _ => ?_
-    rw [GlobalTheory.Doubling.absEw_unitInf, NNReal.coe_pow, coe_nnnorm]
+    rw [GlobalTheory.Doubling.absEw_unitInf, NNReal.coe_pow, coe_nnNorm]
     rfl
   · refine finprod_congr fun v => ?_
-    rw [GlobalTheory.Doubling.absEv_unitFin, coe_nnnorm]
+    rw [GlobalTheory.Doubling.absEv_unitFin, coe_nnNorm]
     rfl
 
 theorem crd_eq (x : AE F E) (i : Fin (Module.finrank F E)) :
@@ -250,7 +250,7 @@ theorem bound {s : ℝ} (hs : 1 < s) {U : Set (Fin (Module.finrank F E) → Af F
       simp only [hy, crd_eq]
     have hfz : finiteZetaBound L s (IdeleGroup.toFinite E (idl F E l)) =
         finiteModule (ofFinite (IdeleGroup.toFinite E (idl F E l))) ^ s := by
-      rw [finiteZetaBound, if_pos]
+      rw [finiteZetaBound, ite_eq_left]
       exact hfin
     rw [hfz, absE_eq, ideleModule_rpow_eq]
     set fm := finiteModule (ofFinite (IdeleGroup.toFinite E (idl F E l))) ^ s
@@ -291,15 +291,15 @@ theorem lintegral_bound_lt_top (ν : Measure (AE F E)ˣ) [ν.IsHaarMeasure] {s :
     (hk : 2 * s + 2 < k) (L : (FractionalIdeal (𝓞 E)⁰ E)ˣ) (C : ℝ) :
     ∫⁻ l, ENNReal.ofReal (C * (infiniteZetaBound s k (IdeleGroup.toInfinite E (idl F E l)) *
       finiteZetaBound L s (IdeleGroup.toFinite E (idl F E l)))) ∂ν < ⊤ := by
-  haveI : BorelSpace (AE F E)ˣ := ⟨rfl⟩
+  have : BorelSpace (AE F E)ˣ := ⟨rfl⟩
   set G : IdeleGroup E → ENNReal := fun x => ENNReal.ofReal (C * (infiniteZetaBound s k
     (IdeleGroup.toInfinite E x) * finiteZetaBound L s (IdeleGroup.toFinite E x))) with hG
   have hm : ∫⁻ l, G (idl F E l) ∂ν = ∫⁻ x, G x ∂(ν.map (idl F E)) :=
     (lintegral_map_equiv G (idl F E).toHomeomorph.toMeasurableEquiv (μ := ν)).symm
   rw [hm]
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : (ν.map (idl F E)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map ν (idl F E)
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : (ν.map (idl F E)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map ν (idl F E)
   rw [Measure.isMulLeftInvariant_eq_smul (ν.map (idl F E)) (ideleMeasure E), lintegral_smul_measure]
   exact ENNReal.mul_lt_top ENNReal.coe_lt_top (((integrable_zetaBound hs hk L).const_mul C).lintegral_lt_top)
 

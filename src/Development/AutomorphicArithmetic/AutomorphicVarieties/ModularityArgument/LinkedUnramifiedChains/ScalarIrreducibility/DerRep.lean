@@ -73,8 +73,8 @@ private theorem bdd_of_small {R K : Type} [CommRing R] [NormedField K] (I : Idea
 
 private theorem finite_quot (O R : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueField O)] [CommRing R]
     [Algebra O R] [IsCO O R] (k : ℕ) : Finite (R ⧸ maximalIdeal R ^ k) := by
-  haveI : Finite (ResidueField R) := Finite.of_surjective _ (resMap_bijective O R).2
-  haveI : Finite (R ⧸ maximalIdeal R) := ‹Finite (ResidueField R)›
+  have : Finite (ResidueField R) := Finite.of_surjective _ (resMap_bijective O R).2
+  have : Finite (R ⧸ maximalIdeal R) := ‹Finite (ResidueField R)›
   exact Ideal.finite_quotient_pow (IsNoetherian.noetherian _) k
 
 private theorem small_smul {B A K : Type} [CommRing B] [CommRing A] [Algebra B A] [NormedField K] [IsUltrametricDist K]
@@ -174,7 +174,7 @@ private theorem der_bdd (O : Type) {R A K : Type} [CommRing O] [IsLocalRing O] [
     (D : A →ₗ[O] K) (hs : ∃ k, ∀ b ∈ maximalIdeal R ^ k, ‖D (algebraMap R A b)‖ ≤ 1) :
     ∃ C : ℝ, ∀ b, ‖D (algebraMap R A b)‖ ≤ C := by
   obtain ⟨k, hk⟩ := hs
-  haveI := finite_quot O R k
+  have := finite_quot O R k
   exact bdd_of_small (maximalIdeal R ^ k) (D.toAddMonoidHom.comp (algebraMap R A).toAddMonoidHom) hk
 
 private theorem entry_cont' {O X B A K : Type} [CommRing O] [TopologicalSpace X] [CommRing B] [CommRing A] [Algebra B A]
@@ -207,7 +207,7 @@ theorem UpperTheory.V.J.derRep :
           ∀ v i, (Continuous fun g => ξ (S.u.ψ v i g : S.A)) ∧ Continuous fun g => D (S.u.ψ v i g : S.A) := by
   intro l _ c _ F C₀ n hF hn S ξ hξ D hD
   obtain ⟨hco, -⟩ := Fr.co_B hF hn S
-  haveI := hco
+  have := hco
   have cone := (Fr.cone_u hF hn S).1
   have hD' : ∀ f g, D (f * g) = ξ f * D g + ξ g * D f := hD
   have hs : ∀ ε : ℝ, 0 < ε → ∃ k, ∀ b ∈ maximalIdeal S.B ^ k,

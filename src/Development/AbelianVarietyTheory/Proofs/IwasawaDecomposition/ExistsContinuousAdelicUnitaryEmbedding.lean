@@ -59,7 +59,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarR
 theorem continuous_embA : Continuous (embA hc B A ι h) := by
   have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  refine Continuous.subtype_mk (Continuous.comp (g := Units.map _) ?_ continuous_subtype_val) _
+  refine Continuous.subtype_mk (Continuous.comp (g := Units.map _) ?_ continuous_subtypeVal) _
   exact Continuous.units_map _ (continuous_const.add
     ((continuous_const.matrix_mul (continuous_id.sub continuous_const)).matrix_mul continuous_const))
 

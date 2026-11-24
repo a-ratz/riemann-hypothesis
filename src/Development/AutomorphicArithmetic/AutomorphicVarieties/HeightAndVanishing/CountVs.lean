@@ -133,7 +133,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 private theorem idx_le (O : Type) [CommRing O] [IsDomain O] (N : ℕ) [NeZero N] (ψ : DirichletCharacter O N) :
     ψ.toUnitHom.ker.index ≤ orderOf ψ := by
   have hpos := MulChar.orderOf_pos ψ
-  haveI : NeZero (orderOf ψ) := ⟨hpos.ne'⟩
+  have : NeZero (orderOf ψ) := ⟨hpos.ne'⟩
   rw [Subgroup.index_ker]
   calc Nat.card ψ.toUnitHom.range ≤ Nat.card (rootsOfUnity (orderOf ψ) O) := by
         apply Subgroup.card_le_of_le
@@ -150,8 +150,8 @@ theorem UpperTheory.V.HV.vsField :
         Module.finrank ℚ L ≤ orderOf ψ * l ∧ Nonempty (L →ₐ[ℚ] CyclotomicField (l * N) ℚ) ∧ galOf ℚ L Ω ≤ (Chr.dirG ℚ Ω ψ).ker := by
   intro Ω _ _ _ l hl hl2 O _ _ N _ ψ
   have hlp : l.Prime := hl.out
-  haveI : NeZero l := ⟨hlp.ne_zero⟩
-  haveI hMz : NeZero (l * N) := ⟨mul_ne_zero hlp.ne_zero (NeZero.ne N)⟩
+  have : NeZero l := ⟨hlp.ne_zero⟩
+  have hMz : NeZero (l * N) := ⟨mul_ne_zero hlp.ne_zero (NeZero.ne N)⟩
   let φN : (ZMod (l * N))ˣ →* (ZMod N)ˣ := ZMod.unitsMap (dvd_mul_left N l)
   let φl : (ZMod (l * N))ˣ →* (ZMod l)ˣ := ZMod.unitsMap (dvd_mul_right l N)
   let H : Subgroup (ZMod (l * N))ˣ := (ψ.toUnitHom.comp φN).ker ⊓ φl.ker
@@ -159,17 +159,17 @@ theorem UpperTheory.V.HV.vsField :
   obtain ⟨L, fL, nfL, hab, -⟩ := exists_numberField_isAbField_finrank_eq_deg A
   have hlev : Chr.HasLevel L (l * N) H := Chr.abLevel.1 A L hab
   obtain ⟨hgal, hfin, hΩ⟩ := Chr.levGal L (l * N) H hlev
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   let f : L →ₐ[ℚ] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra L Ω := f.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ L Ω := inferInstance
-  haveI : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) L
-  haveI hcl : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
+  let : Algebra L Ω := f.toRingHom.toAlgebra
+  have : IsScalarTower ℚ L Ω := inferInstance
+  have : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) L
+  have hcl : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
   refine ⟨L, fL, nfL, inferInstance, hcl, hgal, ?_, ?_, ?_, ?_⟩
   · have hmu : A.HasMu l := by
       unfold AbF.HasMu
@@ -179,13 +179,13 @@ theorem UpperTheory.V.HV.vsField :
       obtain ⟨u, hu, hua⟩ := ha
       have h1 : φl u = 1 := MonoidHom.mem_ker.mp hu.2
       have h2 : ((φl u : (ZMod l)ˣ) : ZMod l) = (a : ZMod l) := by
-        simp only [φl, ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, ZMod.castHom_apply]
+        simp only [φl, ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, ZMod.castHom_apply]
         rw [hua, ZMod.cast_natCast (dvd_mul_right l N)]
       rw [h1, Units.val_one] at h2
       exact (ZMod.natCast_eq_natCast_iff a 1 l).mp (by rw [← h2, Nat.cast_one])
     obtain ⟨z, hz⟩ := (abelianField_hasMu_iff_exists_primitiveRoot A l hlp hl2 L hab).mp hmu
     unfold HasMuQ
-    rw [if_neg hl2]
+    rw [ite_eq_right hl2]
     exact ⟨z, hz⟩
   · rw [hfin]
     refine (Subgroup.index_inf_le).trans (Nat.mul_le_mul ?_ ?_)
@@ -198,13 +198,13 @@ theorem UpperTheory.V.HV.vsField :
   · have hab' := hab
     unfold IsAbField at hab'
     obtain ⟨N', hN', j, ζ, hmN, hζ, h3⟩ := hab'
-    haveI : NeZero N' := hN'
-    haveI : NeZero ((N' : ℕ) : ℚ) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne N')⟩
-    haveI : IsCyclotomicExtension {N'} ℚ (CyclotomicField N' ℚ) := CyclotomicField.isCyclotomicExtension N' ℚ
-    haveI : IsGalois ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.isGalois {N'} ℚ _
-    haveI : FiniteDimensional ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.finiteDimensional {N'} ℚ _
-    haveI : NeZero ((l * N : ℕ) : ℚ) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne (l * N))⟩
-    haveI : IsCyclotomicExtension {l * N} ℚ (CyclotomicField (l * N) ℚ) :=
+    have : NeZero N' := hN'
+    have : NeZero ((N' : ℕ) : ℚ) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne N')⟩
+    have : IsCyclotomicExtension {N'} ℚ (CyclotomicField N' ℚ) := CyclotomicField.isCyclotomicExtension N' ℚ
+    have : IsGalois ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.isGalois {N'} ℚ _
+    have : FiniteDimensional ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.finiteDimensional {N'} ℚ _
+    have : NeZero ((l * N : ℕ) : ℚ) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne (l * N))⟩
+    have : IsCyclotomicExtension {l * N} ℚ (CyclotomicField (l * N) ℚ) :=
       CyclotomicField.isCyclotomicExtension (l * N) ℚ
     have hmN' : l * N ∣ N' := hmN
     have hdpos : N' / (l * N) ≠ 0 :=
@@ -214,7 +214,7 @@ theorem UpperTheory.V.HV.vsField :
       have := hζ.pow_of_dvd hdpos (Nat.div_dvd_of_dvd hmN')
       rwa [Nat.div_div_self hmN' (NeZero.ne N')] at this
     let F : IntermediateField ℚ (CyclotomicField N' ℚ) := IntermediateField.adjoin ℚ {ζ ^ (N' / (l * N))}
-    haveI : IsCyclotomicExtension {l * N} ℚ F := hη.intermediateField_adjoin_isCyclotomicExtension ℚ
+    have : IsCyclotomicExtension {l * N} ℚ F := hη.intermediateField_adjoin_isCyclotomicExtension ℚ
     have hmem : ∀ x, j x ∈ F := by
       intro x
       rw [← IsGalois.fixedField_fixingSubgroup F, IntermediateField.mem_fixedField_iff]
@@ -288,13 +288,13 @@ private theorem nrm_le (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Algebra
   rw [← hk] at h
   have hmk : (m : ℕ∞) * (k : ℕ∞) = ((m * k : ℕ) : ℕ∞) := by push_cast; rfl
   rw [hmk] at h
-  have ha : a ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) h
+  have ha : a ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) h
   refine ⟨ha, ?_⟩
   lift a to ℕ using ha
   have h' : a ≤ m * k := by exact_mod_cast h
   unfold Chr.nrm
   rw [← hk]
-  simp only [ENat.toNat_coe]
+  simp only [ENat.toNat_natCast]
   rcases Nat.eq_zero_or_pos k with hk0 | hk0
   · simp [hk0]
   · rw [div_le_iff₀ (by exact_mod_cast hk0)]
@@ -343,8 +343,8 @@ theorem UpperTheory.V.HV.countVs :
   obtain ⟨⟨hlB, he1⟩, hR⟩ := hP
   subst he1
   subst hχ
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   have hlp : l.Prime := Fact.out
   have hl2' : 2 ≤ l := hlp.two_le
   obtain ⟨hIs, -⟩ := (Host.mem_X h).1 hψX
@@ -370,10 +370,10 @@ theorem UpperTheory.V.HV.countVs :
     simp [Chr.dirG, hσ]
   have hsha : shaLen D ((1 : ℕ) : ℤ) ≤ VLen D ((1 : ℕ) : ℤ) := PropA.shaLeV hPT hLF hLT L Ω l (Or.inl hl2) D _
   have hkl := Win.klen _ hK' l L Ω D hMu 1 le_rfl
-  obtain ⟨m1, hm1⟩ : ∃ m1 : ℕ, VLen D ((1 : ℕ) : ℤ) = m1 := ⟨_, (ENat.coe_toNat hkl.1).symm⟩
+  obtain ⟨m1, hm1⟩ : ∃ m1 : ℕ, VLen D ((1 : ℕ) : ℤ) = m1 := ⟨_, (ENat.natCast_toNat hkl.1).symm⟩
   have hup := Chr.upV ℚ Ω L l c.O D 1 (Chr.dirG ℚ Ω ψ) hgal Finset.univ hT
   have hh0 := (Chr.H0_local_card_bounded_of_cls_ker_le_ker Ω l c.O h.N 1 (Chr.dirG ℚ Ω ψ) one_ne_zero hclsker).2
-  have heO : eO l c.O ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) (dvrFacts l c.O).2.2.2.2.2.2.1
+  have heO : eO l c.O ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) (dvrFacts l c.O).2.2.2.2.2.2.1
   have hV : Vlen Ω c 1 ψ ≤ ((m1 + (Finset.univ : Finset (L ≃ₐ[ℚ] L)).card *
       LDataCardLeFinrank.nuBound l h.N 1 : ℕ) : ℕ∞) * eO l c.O := by
     calc Vlen Ω c 1 ψ ≤ Chr.V l 1 (Chr.dirG ℚ Ω ψ) := Chr.V'_le_V (k := ℚ) (Ω := Ω) l h.N 1 (Chr.dirG ℚ Ω ψ)
@@ -402,7 +402,7 @@ theorem UpperTheory.V.HV.countVs :
       linarith
     have hc3 : (m1 : ℝ) ≤ 2 * kBound (⌈CK⌉₊ : ℝ) 1 (Module.finrank ℚ L) (discr L).natAbs := by
       have := hkl.2
-      rw [hm1, ENat.toNat_coe] at this
+      rw [hm1, ENat.toNat_natCast] at this
       exact this
     calc Vn Ω c 1 ψ ≤ ((m1 + (Finset.univ : Finset (L ≃ₐ[ℚ] L)).card *
           LDataCardLeFinrank.nuBound l h.N 1 : ℕ) : ℝ) := hnrm

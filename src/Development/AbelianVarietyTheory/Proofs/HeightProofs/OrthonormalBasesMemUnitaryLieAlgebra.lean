@@ -54,7 +54,7 @@ variable {n : ℕ} {ε : Fin n → Bool}
 
 theorem mem_lieSet_iff_entry {X : Mx n} : X ∈ lieSet ε ↔
     ∀ i j, star (X j i) * (if ε j then 1 else -1) + (if ε i then 1 else -1) * X i j = 0 := by
-  simp only [lieSet, Set.mem_setOf_eq, inG, Jm]
+  simp only [lieSet, Set.mem_ofPred_eq, inG, Jm]
   rw [← Matrix.ext_iff]
   simp [mul_diagonal, diagonal_mul, conjTranspose_apply]
 

@@ -217,7 +217,7 @@ theorem isOpen_zN (ϖ : kˣ) (m : ℕ) : IsOpen ((G.zN ϖ m : Subgroup ↥G.NO) 
   let S : Subgroup ↥G.NO := (KO k (Fin n)).comap f
   have hf : Continuous f := by
     show Continuous fun u : ↥G.NO => (G.zEl ϖ ^ m)⁻¹ * (u : GL (Fin n) k) * (G.zEl ϖ ^ m)⁻¹⁻¹
-    exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+    exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
   have hS : IsOpen (S : Set ↥G.NO) := isOpen_KO.preimage hf
   refine Subgroup.isOpen_mono (H₁ := S) ?_ hS
   intro u hu

@@ -58,8 +58,8 @@ theorem UpperTheory.inf_fixed_le_spanFix_of_dense_spanAll :
     refine Submodule.span_le.2 ?_
     rintro _ ⟨f, hf, x, hx, rfl⟩
     exact ⟨hf.mem x, fun u hu => by rw [← hf.map, hx u hu]⟩
-  haveI : FiniteDimensional ℂ ↥(spanFix τ π D U) := Submodule.finiteDimensional_of_le hQX
-  have hQc : IsClosed (spanFix τ π D U : Set H) := Submodule.closed_of_finiteDimensional _
+  have : FiniteDimensional ℂ ↥(spanFix τ π D U) := Submodule.finiteDimensional_of_le hQX
+  have hQc : IsClosed (spanFix τ π D U : Set H) := Submodule.isClosed_of_finiteDimensional _
   have hc : D.topologicalClosure = D := hD.submodule_topologicalClosure_eq
   have hpm : ∀ v, prj D v ∈ D := fun v => by
     have h : prj D v ∈ D.topologicalClosure := Submodule.starProjection_apply_mem _ v

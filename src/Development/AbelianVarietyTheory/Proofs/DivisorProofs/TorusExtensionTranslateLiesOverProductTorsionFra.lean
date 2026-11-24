@@ -248,7 +248,7 @@ theorem sumF_field : LL → FieldD fun {R} _ _ {I} D F _ _ => ∀ (K : Type) [Fi
   obtain ⟨i₀, hi₀⟩ := exists_mem P (b.left z)
   let t := trF φ ε b.left z (P.ch i₀) (fun k => J (b.left ≫ φ k)) * val τ (𝟙 _) z J
   choose y hy using fun k => CoefBasic.cstH_surj z (gs b.left z _ (P.u k i₀) * (t⁻¹).val)
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   let ev : (Fin P.a → R) →ₗ[R] F := Fintype.linearCombination R y
   have key : ∀ (s : LB.Sec (LB.LinComb D.toPre.P.L φ ε)) (w : Fin P.a → R) (c : F),
       (∀ i, AbLaw.rs _ (P.le i) (s.f (P.ch i)) = loc₀ P w i) →
@@ -422,7 +422,7 @@ theorem exists_sumI_smul {R : Type} [CommRing R] {I : Ideal R} [IsAdicComplete I
       rw [← Finset.sum_sdiff h', add_sub_cancel_right]
       exact Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _
         (h0 n i fun hi' => (Finset.mem_sdiff.1 hi).2 (h hi'))
-  haveI : Module.Finite R N := Module.Finite.iff_fg.2 hN
+  have : Module.Finite R N := Module.Finite.iff_fg.2 hN
   have hP := T0.FiniteAlgebraLocalCompletion.isPrecomplete_finite_module I N
   let T : ℕ → Finset Ix := fun n => (Finset.range (n + 1)).biUnion S
   have hT : ∀ n, S n ⊆ T n := fun n => Finset.subset_biUnion_of_mem S (Finset.self_mem_range_succ n)
@@ -447,7 +447,7 @@ theorem exists_sumF_twist {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} (hI
   have : ∀ i, ∃ b : R, algebraMap R (FractionRing R) b = a i := fun i =>
     IsIntegrallyClosed.isIntegral_iff.1 (IsIntegral.of_pow hn (by rw [ha]; exact isIntegral_one))
   choose b hb using this
-  letI : Module R (FractionRing R) := Module.compHom _ (algebraMap R (FractionRing R))
+  let : Module R (FractionRing R) := Module.compHom _ (algebraMap R (FractionRing R))
   obtain ⟨s', hs'⟩ := exists_sumI_smul h b
   refine ⟨s', ?_⟩
   simp only [← hb]
@@ -578,8 +578,8 @@ theorem value_at_level (hB : AdmBase R I) (hG : IsSemiAbelian G) (U : Unif I D A
     ∃ κ : F, κ ≠ 0 ∧ ∀ (t : SecA A F N) s (c : F), U.ExpandsF F N w₀ t s → ValAt t x₂ e c →
       SumF I F (coef s g₂ w) (κ * c) := by
   have hL := GlobalTheory.firstFiveLaws
-  haveI : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
-  haveI : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
+  have : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
+  have : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
   obtain ⟨hxN, hθ⟩ := hx w₀ hw₀
   obtain ⟨θ, rfl⟩ := GlobalTheory.BoxTheta.exists_theta hL.1.kerPow A hN1 (T := TFK (R := R) F) x hxN
   obtain ⟨w', hw', hΦ⟩ := hθ θ rfl
@@ -764,7 +764,7 @@ theorem over_translate : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix
     g₂ hadd w₂ hww x₂ hx₂
   subst hp
   have hB : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
-  haveI := 𝔪.cn.2.2.2
+  have := 𝔪.cn.2.2.2
   have hn : 1 ≤ X₁.S.r * X₁.S.N := Nat.mul_pos X₁.S.r_pos (lt_of_lt_of_le two_pos X₁.S.N_ge)
   obtain ⟨w, hw, vw⟩ := exists_gen 𝔪.D.toPre.P.isLB (φ' := DegPre.lineφ 𝔪.D.toPre _ g₂.b) (ε' := DegPre.lineε 1)
     (fun U _ h => by rw [(ThetaAverage.val_translate ht hadd).1]) w₁ hw₁

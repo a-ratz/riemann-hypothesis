@@ -229,7 +229,7 @@ theorem mass_good_lt (hE2 : OneVecBinaryMass) (hcm : IsCMExt F E σ) : ∀ (n M 
     intro M J hJ _ T hT _ d b
     refine ⟨0, Filter.Eventually.of_forall ?_⟩
     intro v lam hl m hm
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     have h0 := _root_.GlobalTheory.CompanionTheory.SW.GramEmpty.fibre_gram_zero F E σ hcm M J hJ (Fv F v) (_root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v) d b lam hl.1 m hm
       (hermOf (Fv F v) σ T hT)
     have hU : (latV b v : Set (Fin 0 → Fin M → Fv F v ⊗[F] E)) = Set.univ := by
@@ -278,14 +278,14 @@ theorem mass_summable_lt (hE2 : OneVecBinaryMass) :
   · intro v
     have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
     obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
-    haveI := hTR
-    haveI := hLC
-    haveI := hSC
-    haveI := hT2
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := hTR
+    have := hLC
+    have := hSC
+    have := hT2
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     have hh := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b (lam v) (hlam v).1
-    haveI hW := hh.2.1 n M
-    haveI hH := hh.2.2 n
+    have hW := hh.2.1 n M
+    have hH := hh.2.2 n
     have hlf := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM M J hJ (Fv F v) hloc n _ _ (m v) hW hH (hm v)
       (hermOf (Fv F v) σ T hT)).1
     exact (_root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b n M v).1.measure_lt_top
@@ -301,8 +301,8 @@ theorem mass_summable_lt (hE2 : OneVecBinaryMass) :
 theorem notRep_lt (hE1 : OneVecBinary) (hE2 : OneVecBinaryMass) : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ t : F, t ≠ 0 → (3 ≤ M ∨ IsAnisoH σ J) → ∀ n : ℕ, n + 2 ≤ M → ∀ (T : Matrix (Fin n) (Fin n) E) (hT : ∀ a b, σ (T b a) = T a b), T.det ≠ 0 → ∀ (hT' : ∀ a b, σ (blockOne (algebraMap F E t) T b a) = blockOne (algebraMap F E t) T a b), (∀ x : Fin M → E, hE σ J x x ≠ algebraMap F E t) → SWMeas σ J (blockOne (algebraMap F E t) T) hT' := by
   intro F E _ _ _ _ _ σ hCM M J hJ t ht hA n hn T hT hdet hT' hne
   intro d b laminf lam hinf hv μ 𝓕 hμ h𝓕 minf m hminf hm
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hLinf : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v : HeightOneSpectrum (𝓞 F), IsLocR (Fv F v) := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
   have haarOf : ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R]
@@ -328,12 +328,12 @@ theorem notRep_lt (hE1 : OneVecBinary) (hE2 : OneVecBinaryMass) : ∀ (F E : Typ
   have hEul := hsw d b laminf lam hinf hv μ 𝓕 hμ h𝓕 minf1 m1 hminf1 hm1
   have hS1 : {X : Fin 1 → Fin M → E | gramE σ J X = T1} = ∅ := by
     ext X
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     intro hX
     exact hne (X 0) (congrFun (congrFun hX 0) 0)
   have hS : {X : Fin (n + 1) → Fin M → E | gramE σ J X = blockOne (algebraMap F E t) T} = ∅ := by
     ext X
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     intro hX
     apply hne (X 0)
     simpa [gramE, blockOne] using congrFun (congrFun hX 0) 0
@@ -360,8 +360,8 @@ theorem step_lt (hE1 : OneVecBinary) (hE2 : OneVecBinaryMass) : ∀ (F E : Type)
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   have hta : algebraMap F E t ≠ 0 := by simpa using ht
   obtain ⟨hdetb, hhermb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.BlockAlg.block_alg F E σ hCM M J t
   have hJ' : IsHermND σ (blockOne (algebraMap F E t) J) :=
@@ -536,8 +536,8 @@ theorem siegelDensitiesLowA_of (hE1 : OneVecBinary) (hE2 : OneVecBinaryMass) (hB
   obtain ⟨hei0, he0, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F ei ci e c he1 hc1
   refine ⟨⟨_, (hWi _).2 rfl⟩, fun μinf hμinf => ⟨⟨_, (hHi _).2 rfl⟩, fun νinf hνinf =>
     ⟨⟨_, fun v => (hWv v _).2 rfl⟩, fun μv hμv => ⟨⟨_, fun v => (hHv v _).2 rfl⟩, fun νv hνv => ?_⟩⟩⟩⟩
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hLi : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v : HeightOneSpectrum (𝓞 F), IsLocR (Fv F v) := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have key : ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R],

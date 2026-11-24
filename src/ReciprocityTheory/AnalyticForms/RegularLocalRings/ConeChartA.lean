@@ -78,13 +78,13 @@ theorem ptIdealOf_isMaximal {σ : Type} (z : σ → ℂ) : (ptIdealOf z).IsMaxim
 theorem ringKrullDim_locAt {σ : Type} (J : Ideal (MvPolynomial σ ℂ)) (z : σ → ℂ)
     (hJ : J ≤ ptIdealOf z) :
     ringKrullDim (locAt J z) = ((ptIdealOf z).map (Ideal.Quotient.mk J)).height := by
-  haveI hm : (ptIdealOf z).IsPrime := (ptIdealOf_isMaximal z).isPrime
+  have hm : (ptIdealOf z).IsPrime := (ptIdealOf_isMaximal z).isPrime
   have hmem : ∀ a : MvPolynomial σ ℂ,
       Ideal.Quotient.mk J a ∈ (ptIdealOf z).map (Ideal.Quotient.mk J) ↔ a ∈ ptIdealOf z :=
     fun a => Ideal.mem_quotient_iff_mem hJ
-  haveI hm' : ((ptIdealOf z).map (Ideal.Quotient.mk J)).IsPrime :=
+  have hm' : ((ptIdealOf z).map (Ideal.Quotient.mk J)).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hJ)
-  haveI : IsLocalization.AtPrime (locAt J z) ((ptIdealOf z).map (Ideal.Quotient.mk J)) := by
+  have : IsLocalization.AtPrime (locAt J z) ((ptIdealOf z).map (Ideal.Quotient.mk J)) := by
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨r, hr⟩
       obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective r

@@ -94,7 +94,7 @@ theorem good_mass : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   obtain ⟨hring, -, -, -, -, -, -, hB, -, -⟩ := TopK.topTens_props F E σ hCM (Fv F v)
   have hlat : ∀ n' M' : ℕ, MeasurableSet (latV b v : Set (Fin n' → Fin M' → Fv F v ⊗[F] E)) := by
     intro n' M'
-    haveI := hB n' M'
+    have := hB n' M'
     exact ((MeasProj.proj_props F E σ hCM d b n' M').2.2.2.1 v).2.measurableSet
   obtain ⟨Ψ, -, hΨ, hint⟩ := _root_.GlobalTheory.CompanionTheory.SW.fibre_block_stages F E σ hCM M J hJ t ht n T hT hdetT hT' (Fv F v) hLoc d b lam hlam
     m m₁ m' hm hm₁ hm' c hc ((latV b v).indicator 1) (measurable_one.indicator (hlat _ _))
@@ -109,8 +109,8 @@ theorem good_mass : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     obtain ⟨h, rfl⟩ := _root_.GlobalTheory.CompanionTheory.SW.WittTuples.exists_actW_eq_of_gramR_eq F E σ hCM (M + 1) _ hND (Fv F v) 1 _ y hg
       (by rw [hg]; exact hy2)
     rw [hΨ h]
-    haveI := hB n M
-    haveI := hB (n + 1) (M + 1)
+    have := hB n M
+    have := hB (n + 1) (M + 1)
     have hS : MeasurableSet {X : Fin n → Fin M → Fv F v ⊗[F] E |
         actW (Fv F v) σ _ h (consTup X) ∈ latV b v} :=
       (continuous_act_consTup (Fv F v) hring σ _ h).measurable (hlat _ _)

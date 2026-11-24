@@ -84,7 +84,7 @@ theorem rTup_datWp_val (x : GL (Fin (Wc D i).rank) (EAf D)) (PP : ↥(R.datWp i 
   have hm : redFn (R.βW i) PP.1 x ∈ blockTri (blk2 (R.datWp i R.triv).r) := by
     refine mem_blockTri.2 fun c d hcd => ?_
     have hc : c.val < (R.datWp i R.triv).r := lt_of_lt_of_eq c.2 rW
-    have e : blk2 (R.datWp i R.triv).r c = 0 := if_pos hc
+    have e : blk2 (R.datWp i R.triv).r c = 0 := ite_eq_left hc
     exact absurd (lt_of_lt_of_eq hcd e) (Nat.not_lt_zero _)
   unfold rTup
   rw [upper_block_val_submatrix _ hm]
@@ -138,7 +138,7 @@ theorem traceLevel : GlobalTheory.BaseCmp.TraceLevel := by
   classical
   have hW : IsWeilDatumO B.F.ψ (Vc D i) (Wc D i) _ _ ω := hω
   have hlift := fun g => exists_lift_datWp hB hBo e hent g
-  haveI : Fintype B.G.P.H := Fintype.ofFinite _
+  have : Fintype B.G.P.H := Fintype.ofFinite _
   have hfθ : IsThetaFunO B.F.ψ (Vc D i) (Wc D i) (GlobalTheory.FlatVecSum.princ B).vecBase :=
     GlobalTheory.GalLift.Vec.theta_of_thetaAt hB.frame.vac.1 hB.frame.vac.2.inf
       (Base.isThetaAt_vecAt (GlobalTheory.FlatVecSum.princ_good hB) (Base.admissible_empty_of_good (GlobalTheory.FlatVecSum.princ_good hB)) _)

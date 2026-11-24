@@ -100,7 +100,7 @@ theorem exists_pow_le_of_isMapOf (T : Type) [CommRing T] [IsDomain T] [IsLocalRi
 theorem finHt_of_good : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ B : FB T.V (chD C.ch) (𝓞 E), IsBT C B → FinHt B := by
   intro E _ _ _ H Dw l Xo c inst hstar
   obtain rfl := GlobalTheory.PowGerm.starSt E H inst hstar
-  letI := H.starRing
+  let := H.starRing
   intro T io y C hC B hB N hN
   obtain ⟨-, P, -⟩ := hC
   obtain ⟨h1, h2, h3, h4, h5, h6⟩ := hB

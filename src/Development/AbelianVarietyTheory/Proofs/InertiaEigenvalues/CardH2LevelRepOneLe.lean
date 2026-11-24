@@ -61,8 +61,8 @@ namespace GlobalTheory.ShapeNeg
 
 theorem finite_card_dual {F V : Type} [Field F] [Finite F] [AddCommGroup V] [Module F V] [Finite V] :
     Finite (Module.Dual F V) ∧ Nat.card (Module.Dual F V) = Nat.card V := by
-  haveI : Module.Finite F V := Module.Finite.of_finite
-  haveI : Finite (Module.Dual F V) := DFunLike.finite (Module.Dual F V)
+  have : Module.Finite F V := Module.Finite.of_finite
+  have : Finite (Module.Dual F V) := DFunLike.finite (Module.Dual F V)
   refine ⟨inferInstance, ?_⟩
   rw [Module.natCard_eq_pow_finrank (K := F), Module.natCard_eq_pow_finrank (K := F) (V := V),
     Subspace.dual_finrank_eq]
@@ -77,19 +77,19 @@ theorem card_H2_level_rep_le :
     ReciprocityTheory.Gal.ContAction (GlobalTheory.ShapeNeg.levRepZ p 1 h ρ) →
     Nat.card (ReciprocityTheory.Gal.H2 (GlobalTheory.ShapeNeg.levRepZ p 1 h ρ)) ≤ Nat.card (IsLocalRing.ResidueField O) := by
   intro hT p _ K hK O _ _ _ _ ϖ hϖ M _ _ e ρ h
-  letI := GlobalTheory.ShapeNeg.levZ (M := M) p 1 h
+  let := GlobalTheory.ShapeNeg.levZ (M := M) p 1 h
   intro hc
   obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.ShapeNeg.levKO_card hϖ e 1
-  haveI : Finite (Lev M (ϖ ^ 1)) := hfin
-  haveI : Fact (p ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
+  have : Finite (Lev M (ϖ ^ 1)) := hfin
+  have : Fact (p ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
   obtain ⟨⟨eH⟩, -, -, -, hb⟩ := hT p K hK 1 (Lev M (ϖ ^ 1)) (levRepZ p 1 h ρ) one_pos hc
   set ρ' := levRepZ p 1 h ρ
   set χ := Formalism.GaloisCohomology.cycK p K 1
 
   let W := ↥(H0 ((twDual χ ρ').comp (MonoidHom.id _)))
-  haveI : Finite (TDual (ZMod (p ^ 1)) (Lev M (ϖ ^ 1))) :=
+  have : Finite (TDual (ZMod (p ^ 1)) (Lev M (ϖ ^ 1))) :=
     (finite_card_dual (F := ZMod (p ^ 1)) (V := Lev M (ϖ ^ 1))).1
-  haveI : Finite W := Subtype.finite
+  have : Finite W := Subtype.finite
   have hW : Nat.card W ≤ Nat.card (Lev M (ϖ ^ 1)) :=
     (Nat.card_le_card_of_injective Subtype.val Subtype.val_injective).trans
       (finite_card_dual (F := ZMod (p ^ 1)) (V := Lev M (ϖ ^ 1))).2.le

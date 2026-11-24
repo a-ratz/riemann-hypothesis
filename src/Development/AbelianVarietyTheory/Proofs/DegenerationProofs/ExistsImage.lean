@@ -113,8 +113,8 @@ theorem relDim_le_of_isDominant {k : Type} [Field k] {X Y : Scheme.{0}} [IsInteg
     have h1 := (PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical φ.hom).1 hd.1
     rw [nilradical_eq_zero] at h1
     exact (RingHom.injective_iff_ker_eq_bot _).2 (le_bot_iff.1 h1)
-  letI : Algebra k A' := α.hom.toAlgebra
-  letI : Algebra k A := (α ≫ φ).hom.toAlgebra
+  let : Algebra k A' := α.hom.toAlgebra
+  let : Algebra k A := (α ≫ φ).hom.toAlgebra
   have h1 := trdeg_eq_of_smoothOfRelativeDimension k Y f b hb A' j' hj' hα.symm
   have h2 := trdeg_eq_of_smoothOfRelativeDimension k X (p ≫ f) a ha A j hj (by
     rw [← Category.assoc, ← hl, Category.assoc, ← hα, ← Spec.map_comp]; rfl)

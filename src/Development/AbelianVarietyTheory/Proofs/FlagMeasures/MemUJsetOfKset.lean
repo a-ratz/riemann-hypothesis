@@ -82,7 +82,7 @@ theorem norm_le_one {E : H →L[ℂ] H} {S : Submodule ℂ H} (hE : IsOrthProjOn
 
 theorem exists_proj (S : Submodule ℂ H) [FiniteDimensional ℂ S] :
     ∃ E : H →L[ℂ] H, IsOrthProjOnto E S := by
-  have : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   refine ⟨S.starProjection, ?_, ?_, ?_⟩
   · exact S.isIdempotentElem_starProjection
   · exact S.inner_starProjection_left_eq_right

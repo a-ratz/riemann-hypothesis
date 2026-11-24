@@ -348,7 +348,7 @@ theorem distribHaarChar_finiteSingleUnits (v : HeightOneSpectrum (𝓞 K))
   have hϖ0 : (ϖ : v.adicCompletion K) ≠ 0 := fun h ↦ hϖ.ne_zero (Subtype.ext h)
   have hϖn : ‖(ϖ : v.adicCompletion K)‖₊ = ((Ideal.absNorm v.asIdeal : ℝ≥0))⁻¹ := by
     refine NNReal.eq ?_
-    rw [coe_nnnorm, ← normalizedAbv_apply, normalizedAbv_of_irreducible v hϖ]
+    rw [coe_nnNorm, ← normalizedAbv_apply, normalizedAbv_of_irreducible v hϖ]
     push_cast
     rfl
 
@@ -364,12 +364,12 @@ theorem distribHaarChar_finiteSingleUnits (v : HeightOneSpectrum (𝓞 K))
       simpa [integerUnitsToUnits] using this
     rw [hzu, map_mul, map_mul, map_pow, map_pow,
       distribHaarChar_eq_one_of_forall (isIntegralUnitAt_finiteSingleUnits_integerUnits v u),
-      distribHaarChar_finiteSingleUnits_uniformizer hϖ hϖ0, Units.val_mul, nnnorm_mul,
-      nnnorm_integerUnitsToUnits, Units.val_pow_eq_pow_val, nnnorm_pow, Units.val_mk0, hϖn]
+      distribHaarChar_finiteSingleUnits_uniformizer hϖ hϖ0, Units.val_mul, nnNorm_mul,
+      nnnorm_integerUnitsToUnits, Units.val_pow_eq_pow_val, nnNorm_pow, Units.val_mk0, hϖn]
   rcases (v.adicCompletionIntegers K).mem_or_inv_mem (z : v.adicCompletion K) with hz | hz
   · exact hint z hz
   · have := hint z⁻¹ (by rwa [Units.val_inv_eq_inv_val])
-    rw [map_inv, map_inv, Units.val_inv_eq_inv_val, nnnorm_inv, inv_inj] at this
+    rw [map_inv, map_inv, Units.val_inv_eq_inv_val, nnNorm_inv, inv_inj] at this
     exact this
 
 theorem distribHaarChar_finiteAdeleRing (u : (𝔸ᶠ[K])ˣ) :
@@ -396,11 +396,11 @@ theorem distribHaarChar_finiteAdeleRing (u : (𝔸ᶠ[K])ˣ) :
     rw [IsIntegralUnitAt, hwx', hwx, hPinv, coe_prod_finiteSingleUnits_apply, hP,
       coe_prod_finiteSingleUnits_apply]
     by_cases hx : x ∈ S
-    · rw [if_pos hx, if_pos hx, Units.val_inv_eq_inv_val, he,
+    · rw [ite_eq_left hx, ite_eq_left hx, Units.val_inv_eq_inv_val, he,
         mul_inv_cancel₀ (fun h ↦ by simpa [h] using units_mul_inv_apply u x),
         units_mul_inv_apply]
       exact ⟨one_mem _, one_mem _⟩
-    · rw [if_neg hx, if_neg hx, mul_one, one_mul]
+    · rw [ite_eq_right hx, ite_eq_right hx, mul_one, one_mul]
       exact not_not.1 ((hmemS x).not.1 hx)
   have hu : u = w * P := by rw [hw, inv_mul_cancel_right]
   have hχ : distribHaarChar 𝔸ᶠ[K] u = ∏ v ∈ S, ‖(u : 𝔸ᶠ[K]) v‖₊ := by

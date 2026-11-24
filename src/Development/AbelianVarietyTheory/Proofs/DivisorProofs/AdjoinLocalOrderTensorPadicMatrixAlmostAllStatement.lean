@@ -188,12 +188,12 @@ theorem azumaya_algEquiv_matrix_of_idempotent :
   let P := LinearMap.range (LinearMap.mulRight A e)
   let φ : Λ ≃ₐ[A] Module.End A P := AlgEquiv.ofBijective (leftIdealMulAlgHom A e)
     ⟨leftIdealMulAlgHom_injective e hs, leftIdealMulAlgHom_surjective e he hc⟩
-  haveI : Module.Projective A P :=
+  have : Module.Projective A P :=
     Module.Projective.of_split P.subtype (LinearMap.mulRight A e).rangeRestrict (by
       ext ⟨_, y, rfl⟩
       simp [mul_assoc, he.eq])
-  haveI : Module.Finite A P := Module.Finite.range _
-  haveI : Module.Free A P := Module.free_of_flat_of_isLocalRing
+  have : Module.Finite A P := Module.Finite.range _
+  have : Module.Free A P := Module.free_of_flat_of_isLocalRing
   have hr : Module.finrank A P = n := by
     have h1 := φ.toLinearEquiv.finrank_eq
     rw [hn, Module.finrank_linearMap, ← sq] at h1
@@ -443,11 +443,11 @@ theorem exists_rankOne_idempotent (k B : Type) [Field k] [Finite k] [Ring B] [Al
     ∃ x : B, x * x = x ∧ (∀ y : B, ∃ c : k, x * y * x = c • x) ∧
       ∃ (N : ℕ) (a b : Fin N → B), ∑ i, a i * x * b i = 1 := by
   classical
-  haveI : IsSimpleRing B := isSimpleRing_of_isAzumaya k B
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite k B
+  have : IsSimpleRing B := isSimpleRing_of_isAzumaya k B
+  have : IsArtinianRing B := IsArtinianRing.of_finite k B
   obtain ⟨n, hn, D, _, _, _, ⟨e⟩⟩ :=
     IsSimpleRing.exists_algEquiv_matrix_divisionRing_finite k B
-  haveI : Finite D := Module.finite_of_finite k
+  have : Finite D := Module.finite_of_finite k
   have hcomm : ∀ a b : D, a * b = b * a := (littleWedderburn D).mul_comm
   have hD : ∀ d : D, ∃ c : k, algebraMap k D c = d := by
     intro d
@@ -506,8 +506,8 @@ theorem exists_residue_idempotent : ∀ (A : Type) [CommRing A] [IsLocalRing A] 
   intro A _ _ _ Λ _ _ _ _ _
   classical
   let k := ResidueField A
-  haveI : IsAzumaya k (k ⊗[A] Λ) := GlobalTheory.isAzumaya_baseChange A k Λ
-  haveI : Nontrivial (k ⊗[A] Λ) := by
+  have : IsAzumaya k (k ⊗[A] Λ) := GlobalTheory.isAzumaya_baseChange A k Λ
+  have : Nontrivial (k ⊗[A] Λ) := by
     by_contra hB
     rw [not_nontrivial_iff_subsingleton] at hB
     have : (0 : k) = 1 :=
@@ -579,7 +579,7 @@ theorem GlobalTheory.AzumayaLocal.finite_residueField : ∀ (ℓ : ℕ) [Fact �
   intro ℓ _ A _ _ _ _
   have hmax : (maximalIdeal A).comap (algebraMap ℤ_[ℓ] A) = maximalIdeal ℤ_[ℓ] :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal A))
-  haveI : IsLocalHom (algebraMap ℤ_[ℓ] A) := ⟨fun x hx => by
+  have : IsLocalHom (algebraMap ℤ_[ℓ] A) := ⟨fun x hx => by
     by_contra h
     have : x ∈ (maximalIdeal A).comap (algebraMap ℤ_[ℓ] A) := by rw [hmax]; exact h
     exact (mem_maximalIdeal _).1 this hx⟩
@@ -630,10 +630,10 @@ theorem azumaya_local_matrix : ∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [Comm
     [Module.Finite ℤ_[ℓ] A] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ]
     (n : ℕ), Module.finrank A Λ = n ^ 2 → Nonempty (Λ ≃ₐ[A] Matrix (Fin n) (Fin n) A) := by
   intro ℓ _ A _ _ _ _ Λ _ _ _ _ n hn
-  haveI : IsAdicComplete (maximalIdeal A) A :=
+  have : IsAdicComplete (maximalIdeal A) A :=
     GlobalTheory.CompleteFiniteExtension.isAdicComplete_of_finite_local ℤ_[ℓ] A
-  haveI : Finite (ResidueField A) := GlobalTheory.AzumayaLocal.finite_residueField ℓ A
-  haveI : Nontrivial Λ := by
+  have : Finite (ResidueField A) := GlobalTheory.AzumayaLocal.finite_residueField ℓ A
+  have : Nontrivial Λ := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact zero_ne_one (FaithfulSMul.algebraMap_injective A Λ
@@ -756,7 +756,7 @@ theorem exists_isLocalRing_quotient_pairwise_isCoprime_iInf_eq_bot_padicInt :
   classical
   have : HenselianLocalRing ℤ_[ℓ] := henselianLocalRing_of_henselianRing ℤ_[ℓ]
   have := finite_maximalSpectrum_of_finite_of_isLocalRing ℤ_[ℓ] A
-  letI := Fintype.ofFinite (MaximalSpectrum A)
+  let := Fintype.ofFinite (MaximalSpectrum A)
   obtain ⟨e, he, H⟩ := exists_completeOrthogonalIdempotents_of_henselian ℤ_[ℓ] A
   refine ⟨MaximalSpectrum A, inferInstance, fun q ↦ Ideal.span {1 - e q}, fun q ↦ ?_, ?_, ?_⟩
   · have := q.isMaximal
@@ -812,13 +812,13 @@ theorem of_local : (∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [CommRing A] [Is
   intro hloc ℓ _ A _ _ _ Λ _ _ _ _ n hn
   obtain ⟨ι, _, I, hlocI, hcop, hbot⟩ := GlobalTheory.T.exists_localRing_quotients_coprime_iInf_eq_bot ℓ A
   refine GlobalTheory.T.algEquiv_matrix_glue_crt A Λ ι I hcop hbot n fun i => ?_
-  haveI := hlocI i
-  haveI : IsAzumaya (A ⧸ I i) ((A ⧸ I i) ⊗[A] Λ) := GlobalTheory.T.azumaya_base_change A (A ⧸ I i) Λ
-  haveI : Module.Finite ℤ_[ℓ] (A ⧸ I i) :=
+  have := hlocI i
+  have : IsAzumaya (A ⧸ I i) ((A ⧸ I i) ⊗[A] Λ) := GlobalTheory.T.azumaya_base_change A (A ⧸ I i) Λ
+  have : Module.Finite ℤ_[ℓ] (A ⧸ I i) :=
     Module.Finite.of_surjective ((IsScalarTower.toAlgHom ℤ_[ℓ] A (A ⧸ I i)).toLinearMap)
       Ideal.Quotient.mk_surjective
   refine hloc ℓ (A ⧸ I i) ((A ⧸ I i) ⊗[A] Λ) n ?_
-  haveI : Nontrivial A := (Ideal.Quotient.mk (I i)).domain_nontrivial
+  have : Nontrivial A := (Ideal.Quotient.mk (I i)).domain_nontrivial
   rw [Module.finrank_baseChange, hn]
 
 end GlobalTheory.AzumayaMatrixReduction
@@ -877,14 +877,14 @@ theorem cenOrder_finite : ∀ (F : Type) [Field F] [NumberField F] (ℓ : ℕ) [
         { carrier := {x | f x ∈ A}
           add_mem' := by
             intro x y hx hy
-            simp only [Set.mem_setOf_eq, f, map_add (f := _), TensorProduct.tmul_add] at hx hy ⊢
+            simp only [Set.mem_ofPred_eq, f, map_add (f := _), TensorProduct.tmul_add] at hx hy ⊢
             exact A.add_mem hx hy
           zero_mem' := by
-            simp only [Set.mem_setOf_eq, f, map_zero, TensorProduct.tmul_zero]
+            simp only [Set.mem_ofPred_eq, f, map_zero, TensorProduct.tmul_zero]
             exact A.zero_mem
           smul_mem' := by
             intro c x hx
-            simp only [Set.mem_setOf_eq, f, zsmul_eq_mul, map_mul, map_intCast] at hx ⊢
+            simp only [Set.mem_ofPred_eq, f, zsmul_eq_mul, map_mul, map_intCast] at hx ⊢
             have : (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] ((c : F) * (x : F)) = c • ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] (x : F)) := by
               rw [← zsmul_eq_mul, TensorProduct.tmul_smul]
             rw [this]
@@ -938,12 +938,12 @@ theorem exists_order_integers_mul_finite_index (F B : Type) [Field F] [NumberFie
     { carrier := {a | (N : B) * f a ∈ OB}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_add (f := _), mul_add] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _), mul_add] at *
         exact OB.add_mem ha hb
       zero_mem' := by simp
       smul_mem' := by
         intro n a ha
-        simp only [Set.mem_setOf_eq, map_zsmul, mul_smul_comm] at *
+        simp only [Set.mem_ofPred_eq, map_zsmul, mul_smul_comm] at *
         exact OB.zsmul_mem ha n }
   have hsP : (s : Set (NumberField.RingOfIntegers F)) ⊆ SetLike.coe P := by
     intro a ha
@@ -966,8 +966,8 @@ theorem exists_order_integers_mul_finite_index (F B : Type) [Field F] [NumberFie
     refine ⟨a ⊗ₜ 1, ?_⟩
     show L _ = _
     rw [hL]; simp [f, g]
-  · haveI : Module.Finite ℤ OB := hfin
-    haveI : Module.Finite ℤ (NumberField.RingOfIntegers F ⊗[ℤ] OB) := Module.Finite.tensorProduct _ _ _
+  · have : Module.Finite ℤ OB := hfin
+    have : Module.Finite ℤ (NumberField.RingOfIntegers F ⊗[ℤ] OB) := Module.Finite.tensorProduct _ _ _
     exact Module.Finite.of_surjective (L.toRingHom.rangeRestrict.toIntAlgHom.toLinearMap)
       (RingHom.rangeRestrict_surjective _)
   · rintro x ⟨t, rfl⟩
@@ -1165,7 +1165,7 @@ theorem basisLoc : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Algebra 
   classical
   obtain ⟨D, hD, hDint⟩ := exists_den_coords F B Λ hfin ι e
   refine ⟨D, hD, fun ℓ _ hℓ => ?_⟩
-  letI := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
+  let := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
   have hco : ∀ x ∈ Λ, ∀ k, (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e.repr x k ∈ cenOrder ℓ F :=
     fun x hx k => GlobalTheory.SepModel.tmul_mem_cenOrder ℓ hℓ (hDint x hx k)
   have hv : ∀ i, (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e i ∈ locOrder ℓ Λ := fun i => Algebra.subset_adjoin ⟨_, he i, rfl⟩
@@ -1185,7 +1185,7 @@ theorem basisLoc : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Algebra 
     have h' := congrArg π h
 
     rw [hsum, map_sum, hπ1] at h'
-    simp only [hπ2, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h'
+    simp only [hπ2, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h'
     exact h'
   have hli : LinearIndependent (cenOrder ℓ F) v := by
     rw [Fintype.linearIndependent_iff]
@@ -1256,7 +1256,7 @@ theorem locOrder_isAzumaya : ∀ (F B : Type) [Field F] [NumberField F] [Ring B]
   obtain ⟨m, hm, hmint⟩ := GlobalTheory.SepModel.exists_nat_integral ({((structMat e).det)⁻¹} : Finset F)
   obtain ⟨D, hD, hbasis⟩ := basisLoc F B Λ hΛ hfin _ e he
   refine ⟨D * m, by positivity, fun ℓ _ hℓ => ?_⟩
-  letI := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
+  let := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
   obtain ⟨f, hf1, hf2⟩ := hbasis ℓ (fun h => hℓ (Dvd.dvd.mul_right h _))
   have hinv : (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] ((structMat e).det)⁻¹ ∈ cenOrder ℓ F :=
     GlobalTheory.SepModel.tmul_mem_cenOrder ℓ (fun h => hℓ (Dvd.dvd.mul_left h _))
@@ -1280,15 +1280,15 @@ theorem locOrder_isAzumaya : ∀ (F B : Type) [Field F] [NumberField F] [Ring B]
     refine isUnit_iff_exists_inv.2 ⟨⟨_, hinv⟩, Subtype.ext ?_⟩
     rw [Subalgebra.coe_mul, hdet, Subalgebra.coe_one, Algebra.TensorProduct.tmul_mul_tmul, mul_one,
       mul_inv_cancel₀ hδ.ne_zero, Algebra.TensorProduct.one_def]
-  haveI : Nontrivial B := inferInstance
-  haveI : FaithfulSMul (cenOrder ℓ F) (locOrder ℓ Λ) := by
+  have : Nontrivial B := inferInstance
+  have : FaithfulSMul (cenOrder ℓ F) (locOrder ℓ Λ) := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro a b hab
     have h : cenMap ℓ F B a = cenMap ℓ F B b :=
       congrArg (fun x : locOrder ℓ Λ => (x : ℚ_[ℓ] ⊗[ℚ] B)) hab
     exact Subtype.ext (cenMap_injective ℓ F B h)
-  haveI := Module.Projective.of_basis f
-  haveI := Module.Finite.of_basis f
+  have := Module.Projective.of_basis f
+  have := Module.Finite.of_basis f
   exact ⟨(bijective_iff_isUnit_det f).2 hunit⟩
 
 end GlobalTheory.LocAzumaya
@@ -1490,12 +1490,12 @@ theorem locOrder_matrix : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [A
   have h₂ : ¬ ℓ ∣ N₂ := fun h => hℓ (Dvd.dvd.mul_right (Dvd.dvd.mul_left h _) _)
   have h₃ : ¬ ℓ ∣ N₃ := fun h => hℓ (Dvd.dvd.mul_left h _)
   have heq := locOrder_eq_of_le OB Λ hle N₁ hN₁ hN₁Λ ℓ h₁
-  letI := cenAlgebra ℓ F B Λ hΛ
-  haveI := isScalarTower_cenAlgebra ℓ F B Λ hΛ
-  haveI : Module.Finite ℤ_[ℓ] (cenOrder ℓ F) := GlobalTheory.cenOrder_finite F ℓ
+  let := cenAlgebra ℓ F B Λ hΛ
+  have := isScalarTower_cenAlgebra ℓ F B Λ hΛ
+  have : Module.Finite ℤ_[ℓ] (cenOrder ℓ F) := GlobalTheory.cenOrder_finite F ℓ
   obtain ⟨hF, hrank⟩ := hfree ℓ h₂
-  haveI := hF
-  haveI := hazu ℓ h₃
+  have := hF
+  have := hazu ℓ h₃
   obtain ⟨φ⟩ := GlobalTheory.T.azumaya_matrix_of_finite_padic_algebra_of_local GlobalTheory.T.azumaya_free_rank_sq_equiv_matrix_over_local ℓ (cenOrder ℓ F) (locOrder ℓ Λ) n (hrank.trans hn)
   refine ⟨(Subalgebra.equivOfEq _ _ heq).trans (φ.restrictScalars ℤ_[ℓ]), fun a => ?_⟩
   refine ⟨heq ▸ cenMap_mem ℓ F B Λ hΛ a.2, ?_⟩

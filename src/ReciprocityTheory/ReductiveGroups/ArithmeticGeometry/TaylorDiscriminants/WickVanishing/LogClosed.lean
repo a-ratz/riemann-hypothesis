@@ -296,7 +296,7 @@ private theorem mvPowerSeries_pderiv_comm {σ : Type} (i j : σ) (f : MvPowerSer
   · subst hij
     rfl
   · rw [add_right_comm n (Finsupp.single i 1) (Finsupp.single j 1)]
-    simp only [Finsupp.coe_add, Pi.add_apply, Finsupp.single_apply, if_neg hij, if_neg (Ne.symm hij), add_zero]
+    simp only [Finsupp.coe_add, Pi.add_apply, Finsupp.single_apply, ite_eq_right hij, ite_eq_right (Ne.symm hij), add_zero]
     ring
 
 theorem om_key (i a b : Fin d) :
@@ -329,7 +329,7 @@ theorem om_key (i a b : Fin d) :
   simp only [hsE, hz0, ev_mul hE, ev_add hE, ez_F, ez_dx, ez_dy,
     mvPowerSeries_pderiv_comm ((1 : Fin 2), b) ((0 : Fin 2), a), ← hdJ] at hP2
   rw [Finset.sum_add_distrib] at hP2
-  simp only [ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true] at hP2
+  simp only [ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at hP2
   have hM := congrFun (congrFun (om_mul G) i) b
   rw [Matrix.mul_apply] at hM
   simp only [JM, Matrix.of_apply] at hM

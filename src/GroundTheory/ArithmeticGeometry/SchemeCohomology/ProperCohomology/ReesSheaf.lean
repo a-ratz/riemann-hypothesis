@@ -91,8 +91,8 @@ lemma IsBaseChangeAt.comp {f : W ⟶ T} {g : T ⟶ U} {N : U.Modules} {O : U.Ope
     (hf : IsBaseChangeAt f ((Scheme.Modules.pullback g).obj N) (g ⁻¹ᵁ O)) :
     IsBaseChangeAt (f ≫ g) N O := by
   intro Q _ instQ ψ hψ
-  letI instW : Module Γ(W, f ⁻¹ᵁ (g ⁻¹ᵁ O)) Q := instQ
-  letI : Module Γ(T, g ⁻¹ᵁ O) Q := Module.compHom Q (f.app (g ⁻¹ᵁ O)).hom
+  let instW : Module Γ(W, f ⁻¹ᵁ (g ⁻¹ᵁ O)) Q := instQ
+  let : Module Γ(T, g ⁻¹ᵁ O) Q := Module.compHom Q (f.app (g ⁻¹ᵁ O)).hom
   have hsm : ∀ (t : Γ(T, g ⁻¹ᵁ O)) (q : Q), t • q = f.app (g ⁻¹ᵁ O) t • q := fun _ _ => rfl
   obtain ⟨ψ₁, hψ₁, u₁⟩ := hg Q ψ (fun a n => by
     rw [hψ, hsm]
@@ -180,7 +180,7 @@ lemma IsBaseChangeAt.of_comp_isOpenImmersion {f : W ⟶ T} [IsOpenImmersion f] {
   have : IsIso (f.app (g ⁻¹ᵁ O)) := Scheme.Hom.isIso_app f _ hO
   let ρ := asIso (f.app (g ⁻¹ᵁ O))
   let O' := (f ≫ g) ⁻¹ᵁ O
-  letI instW : Module Γ(W, O') Q := Module.compHom Q ρ.inv.hom
+  let instW : Module Γ(W, O') Q := Module.compHom Q ρ.inv.hom
   have hsm : ∀ (w : Γ(W, O')) (q : Q), w • q = ρ.inv w • q := fun _ _ => rfl
   have hρ : ∀ t : Γ(T, g ⁻¹ᵁ O), ρ.inv (f.app (g ⁻¹ᵁ O) t) = t := fun t => by
     rw [← ConcreteCategory.comp_apply]

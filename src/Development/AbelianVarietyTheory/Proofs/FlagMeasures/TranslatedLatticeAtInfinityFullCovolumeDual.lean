@@ -141,7 +141,7 @@ theorem dualAt_eq (L : Submodule ℤ (VecInf E j)) : dualAt E j L = (form E j).d
   rw [dualAt, ← Submodule.span_eq ((form E j).dualSubmodule L)]
   congr 1
   ext y
-  simp only [Set.mem_setOf_eq, SetLike.mem_coe, LinearMap.BilinForm.mem_dualSubmodule, Submodule.mem_one,
+  simp only [Set.mem_ofPred_eq, SetLike.mem_coe, LinearMap.BilinForm.mem_dualSubmodule, Submodule.mem_one,
     form_apply, eq_intCast]
   refine forall₂_congr fun x _ => exists_congr fun z => ?_
   simp only [dotProduct_comm (y _)]
@@ -235,7 +235,7 @@ open Classical in
 theorem volume_fd_map [_root_.NumberField.IsTotallyComplex E] {ι : Type} [Fintype ι] (b : Basis ι ℝ (mixedEmbedding.mixedSpace E)) :
     volume.real (ZSpan.fundamentalDomain ((Pi.basis fun _ : Fin j => b).map (mix E j))) =
       volume.real (ZSpan.fundamentalDomain b) ^ j := by
-  haveI : (volume : Measure (Fin j → mixedEmbedding.mixedSpace E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin j → mixedEmbedding.mixedSpace E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   haveI : @BorelSpace (Fin j → mixedEmbedding.mixedSpace E) _ MeasureSpace.toMeasurableSpace := Pi.borelSpace
   have hpi : ∀ {κ : Type} [Fintype κ] (c : Basis κ ℝ (mixedEmbedding.mixedSpace E)),
       volume.real (ZSpan.fundamentalDomain (Pi.basis fun _ : Fin j => c)) =
@@ -268,7 +268,7 @@ theorem volume_fd_map [_root_.NumberField.IsTotallyComplex E] {ι : Type} [Finty
       · intro h
         exact ⟨fun w => absurd w.2 (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w.1)),
           fun w => h w.1⟩
-    simp only [this, cube, Set.mem_setOf_eq]
+    simp only [this, cube, Set.mem_ofPred_eq]
     exact forall_comm
   rw [ZSpan.measureReal_fundamentalDomain _ volume ((Pi.basis fun _ : Fin j => s).map (mix E j)), hc,
     ← hpi b, ZSpan.measureReal_fundamentalDomain _ volume (Pi.basis fun _ : Fin j => s), hpi s, hs1,

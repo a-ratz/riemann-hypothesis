@@ -318,8 +318,8 @@ def ofMu (ε : (PDivGroup.mu p O).Tate) : ConstTate ε (PDivGroup.mu p O) where
 
 theorem exists_bijective (C : Type) [Field C] [Algebra O C] [IsIntegrallyClosedIn O C] [IsAlgClosed C] [CharZero C]
     (ε : (PDivGroup.mu p O).Tate) (G : PDivGroup p O) : ∃ c : ConstTate ε G, Function.Bijective c.toTate := by
-  haveI := G.finite_tate C
-  haveI := G.free_tate C
+  have := G.finite_tate C
+  have := G.free_tate C
   let b := Module.finBasisOfFinrankEq ℤ_[p] G.Tate (G.finrank_tate C)
   choose χ hχ using fun j : Fin G.height => (G.pairing_flip_bijective C).2
     (LinearMap.toSpanSingleton ℤ_[p] _ ε ∘ₗ b.coord j)
@@ -441,7 +441,7 @@ theorem exists_constTate (p : ℕ) [Fact p.Prime] : ∃ S : CycPerfd p, IsPrimit
     ∀ G : PDivGroup p S.R, ∃ c : ConstTate (eps S) G, Function.Bijective c.toTate := by
   obtain ⟨e, he⟩ := GlobalTheory.MemLoc.Model.exists_isEps p
   have hv := PadicComplexInt.integers p
-  haveI : IsIntegrallyClosedIn (Formalism.Per.OC p) ℂ_[p] := isIntegrallyClosedIn_iff.2
+  have : IsIntegrallyClosedIn (Formalism.Per.OC p) ℂ_[p] := isIntegrallyClosedIn_iff.2
     ⟨hv.hom_inj, fun hx => hv.exists_of_le_one (hv.isIntegral_iff_v_le_one.1 hx)⟩
   have h := ConstTate.exists_bijective (p := p) (O := Formalism.Per.OC p) ℂ_[p]
   exact ⟨CycPerfd.ofIntegers p (Formalism.Per.OC p) hv e he.isPrimitiveRoot_untilt, he.isPrimitiveRoot_untilt, h _⟩

@@ -61,14 +61,14 @@ def sphW (q : ℕ) {n : ℕ} (α : Fin n → ℂ) (l : Fin n → ℕ) : ℂ :=
   else 0
 
 theorem schur_zero (n : ℕ) : schur n (fun _ => 0) = 1 := by
-  rw [schur, Matrix.det_of_upperTriangular]
+  rw [schur, Matrix.det_of_isUpperTriangular]
   · simp
   · intro i j h
     have h' : (j : ℕ) < i := h
-    rw [Matrix.of_apply, if_pos (by push_cast; omega)]
+    rw [Matrix.of_apply, ite_eq_left (by push_cast; omega)]
 
 theorem sphW_of_not_antitone (q : ℕ) {n : ℕ} (α : Fin n → ℂ) {l : Fin n → ℕ} (h : ¬ Antitone l) : sphW q α l = 0 :=
-  if_neg h
+  ite_eq_right h
 
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ}
 

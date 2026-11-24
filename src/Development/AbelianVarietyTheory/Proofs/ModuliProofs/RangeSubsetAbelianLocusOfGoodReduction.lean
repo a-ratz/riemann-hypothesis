@@ -331,7 +331,7 @@ theorem range_subset_abLocus_of_goodReduction : (∀ (T K : Type) [CommRing T] [
     refine congrArg y₀ ?_
     exact PrimeSpectrum.ext ((Ideal.comap_comap _ _).trans ((Ideal.comap_bot_of_injective _ hinj).trans hp.symm))
   let K := FractionRing R
-  letI : Algebra K C := (IsFractionRing.lift hinj).toAlgebra
+  let : Algebra K C := (IsFractionRing.lift hinj).toAlgebra
   have hc : spMap (algebraMap K C) ≫ spMap (algebraMap R K) = spMap (algebraMap V C) ≫ spMap R.subtype := by
     rw [← Spec.map_comp, ← Spec.map_comp]
     congr 1
@@ -377,12 +377,12 @@ theorem range_subset_abLocus_of_goodReduction : (∀ (T K : Type) [CommRing T] [
       Functor.mapMonCompIso).app (Mon.mk G)
     let e : (Over.pullback (q ≫ (spMap g ≫ y₀))).obj G ≅
         (Over.pullback q).obj ((Over.pullback (spMap g ≫ y₀)).obj G) := (Mon.forget _).mapIso em
-    haveI : IsMonHom e.hom := by
+    have : IsMonHom e.hom := by
       show IsMonHom em.hom.hom
       infer_instance
-    letI := E.grpB
-    haveI := E.q_hom
-    haveI := E.i_hom
+    let := E.grpB
+    have := E.q_hom
+    have := E.i_hom
     have : IsIso e.hom.left := Functor.map_isIso (Over.forget _) e.hom
     exact ⟨{
       X := E.X

@@ -81,8 +81,8 @@ theorem finiteAdele_eq_zero (F : Type) [Field F] [NumberField F] {C : Set (Af F)
 theorem tensor_eq_zero (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {C : Set (Af F ⊗[F] E)} (hC : IsCompact C) {x : Af F ⊗[F] E}
     (h : ∀ M : ℕ, 0 < M → ∃ u ∈ C, x = M • u) : x = 0 := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
   let b := Algebra.TensorProduct.basis (Af F) (Module.finBasis F E)
   refine b.ext_elem fun i => ?_
   have hc : Continuous (b.coord i) := IsModuleTopology.continuous_of_linearMap _

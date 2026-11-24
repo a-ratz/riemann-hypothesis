@@ -320,11 +320,11 @@ private theorem rho_nu (v w : InfinitePlace F) : nuH v (rho w) = if v = w then 2
   change ‖((infiniteUnitsEquiv F).symm (Pi.mulSingle w (Units.mk0 2 (two_ne w))) : (InfiniteAdeleRing F)ˣ).val v‖ = _
   by_cases h : v = w
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     change ‖((Pi.mulSingle v (Units.mk0 (2 : v.Completion) (two_ne v)) : ∀ w : InfinitePlace F, w.Completionˣ) v).val‖ = 2
     rw [Pi.mulSingle_eq_same]
     exact norm_two v
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     change ‖((Pi.mulSingle w (Units.mk0 (2 : w.Completion) (two_ne w)) : ∀ w : InfinitePlace F, w.Completionˣ) v).val‖ = 1
     rw [Pi.mulSingle_eq_of_ne h]
     simp
@@ -343,9 +343,9 @@ private theorem nu_pos (v : InfinitePlace F) (x : IdeleGroup F) : 0 < nuH v x :=
 private theorem tau_nu (v : InfinitePlace F) (k : InfinitePlace F → ℤ) :
     ∏ i, nuH v (rho i) ^ k i = 2 ^ k v := by
   rw [Finset.prod_eq_single v]
-  · rw [rho_nu, if_pos rfl]
+  · rw [rho_nu, ite_eq_left rfl]
   · intro b _ hb
-    rw [rho_nu, if_neg (Ne.symm hb), _root_.one_zpow]
+    rw [rho_nu, ite_eq_right (Ne.symm hb), _root_.one_zpow]
   · simp
 
 private theorem nu_le (a : IdeleGroup F) (v : InfinitePlace F) :
@@ -506,7 +506,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.wtId :
   obtain ⟨A0, hA0⟩ := hC.bddAbove_image (M.continuous_ab.inv₀ fun a => (M.ab_pos a).ne').continuousOn
   have hA : ∀ c ∈ Cset K₁ K₂, (ab c)⁻¹ ≤ |A0| := fun c hc => (hA0 ⟨c, hc, rfl⟩).trans (le_abs_self _)
   refine ⟨(meas_h hK.isClosed _).aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
+  rw [hasFiniteIntegral_iff_eNorm]
   refine lint_cover (ideleMeasure F) rho hC _ (fun z => ENNReal.ofReal (2 ^ n * (1 / 2) ^ z.natAbs)) (half_sum _ (by positivity))
     (ENNReal.ofReal |A0|) ENNReal.ofReal_ne_top ?_ ?_
   · intro a ha
@@ -526,7 +526,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.wtId :
       · exact le_rfl
       · positivity
     have hap := M.ab_pos a
-    rw [Real.enorm_of_nonneg (mul_nonneg (inv_pos.2 hap).le (hw0 _))]
+    rw [Real.eNorm_of_nonneg (mul_nonneg (inv_pos.2 hap).le (hw0 _))]
     rw [← ENNReal.ofReal_prod_of_nonneg (fun i _ => by positivity), ← ENNReal.ofReal_mul (abs_nonneg _)]
     refine ENNReal.ofReal_le_ofReal ?_
     calc (ab a)⁻¹ * wt K _ _ ≤ (ab a)⁻¹ * (Mx ^ (n * Fintype.card (InfinitePlace F)))⁻¹ := by gcongr
@@ -626,7 +626,7 @@ theorem UpperTheory.ConvolutionTheory.R2.conv :
   intro F E _ _ _ _ _ _ _ D W M π f hf φ hφ h
   have hc : Continuous fun g : G1 F => f.1 (gl g * dM (nu F h)) :=
     (decay F π f hf).1.comp (Matrix.SpecialLinearGroup.continuous_toGL.mul continuous_const)
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
   obtain ⟨m1, -, m2, -, -⟩ := thMeas F E D W (W.L h φ)
   obtain ⟨a1, a2, -⟩ := weilLift_one_cuspidal F E D W M π f hf (W.L h φ) (dM (nu F h))
   refine ⟨?_, ?_, a1, a2, ?_⟩

@@ -93,6 +93,6 @@ theorem valuation_eq_one_of_norm_one_of_not_moved :
   have h2 : P.valuation E u ^ 2 = 1 := by
     have := congrArg (P.valuation E) hu
     rwa [map_mul, hcu, map_one, ← sq] at this
-  exact (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 h2
+  exact (pow_eq_one_iff_of_nonneg zero_le two_ne_zero).1 h2
 
 end GlobalTheory.UnRep

@@ -173,7 +173,7 @@ theorem lattice_sub_orthogonal_holds : XLamSub := by
   obtain ⟨-, ⟨ξ, hξl, hξd, hξm⟩, hyc, -⟩ := y.2
   have hxΛ : x ∈ Λ := (Submodule.mem_inf.1 hx).1
   refine mem_of_locP _ x (fun P => ?_)
-  haveI := P.isPrime
+  have := P.isPrime
   by_cases hgP : ((gS D : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal
   swap
   · apply mem_localization_of_smul_mem' P.asIdeal _ x ((gS D : ℕ) : 𝓞 D.host.E) hgP
@@ -550,7 +550,7 @@ theorem charSum {F : Type} [Field F] [Fintype F] (ψ₀ : AddChar F ℂ) (hψ : 
       by_contra h
       push_neg at h
       exact hν (funext h)
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
 
 theorem charOrth : CharOrth := by
   intro F _ _ m ψ₀ hψ r s
@@ -635,7 +635,7 @@ theorem rowExists : RowExists := by
       exact absurd hij' (not_lt.mpr (Fin.le_last j))
     rw [hA, Matrix.updateRow_ne hi, Matrix.one_apply_ne (ne_of_lt hij')]
   have hdetA : A.det = r k := by
-    rw [Matrix.det_of_lowerTriangular A hAtri, Finset.prod_eq_single (Fin.last n)]
+    rw [det_of_isLowerTriangular A hAtri, Finset.prod_eq_single (Fin.last n)]
     · rw [hA, Matrix.updateRow_self]
       simp [hσ]
     · intro i _ hi
@@ -789,7 +789,7 @@ theorem whitFunctDual_main : PI.WhitFunctDual := by
     fun h0 => hne (congrArg Subtype.val h0)
   have hpos : 0 < Module.finrank ℂ (Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.besselSpace (Representation.dual π) ψ₀⁻¹ 0 0) :=
     Module.finrank_pos_iff_exists_ne_zero.mpr ⟨_, hne'⟩
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ hne').mp (le_antisymm hdim hpos) ⟨ℓ₂, m2⟩
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ hne').mp (le_antisymm hdim hpos) ⟨ℓ₂, m2⟩
   exact ⟨c, (congrArg Subtype.val hc).symm⟩
 
 end PI.WhitFunctDualWork
@@ -819,7 +819,7 @@ theorem uniMat_upper (f : Pairs k → F) : (uniMat f).IsUpperTriangular := by
   simp [uniMat, ne_of_gt hji, not_lt.mpr hji.le]
 
 theorem uniMat_det (f : Pairs k → F) : (uniMat f).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (uniMat_upper f)]
+  rw [det_of_isUpperTriangular (uniMat_upper f)]
   simp [uniMat]
 
 noncomputable def uniGL (f : Pairs k → F) : GL (Fin k) F :=
@@ -897,7 +897,7 @@ theorem convScalar_of (h1 : RepGamConj) (h2 : RepGamComm) (h3 : QIdem) (h4 : Gen
   have hu : IsUni k (1 : GL (Fin k) F) :=
     ⟨fun i => by simp, fun i j hij => by simp [Matrix.one_apply_ne (ne_of_gt hij)]⟩
   have hpsi1 : psiNat ψ₀ (1 : GL (Fin k) F) = 1 := by
-    simp only [psiNat, if_pos hu, psiU]
+    simp only [psiNat, ite_eq_left hu, psiU]
     have hs : superdiag k ((1 : GL (Fin k) F) : Matrix (Fin k) (Fin k) F) = 0 := by
       unfold superdiag
       refine Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun j _ => ?_
@@ -915,7 +915,7 @@ theorem convScalar_of (h1 : RepGamConj) (h2 : RepGamComm) (h3 : QIdem) (h4 : Gen
     simp [hpsi1]
   have hG0 : (Fintype.card (GL (Fin k) F) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
   have hU0 : (cardU F k : ℂ) ≠ 0 := by
-    haveI : Nonempty {x : GL (Fin k) F // IsUni k x} := ⟨⟨1, hu⟩⟩
+    have : Nonempty {x : GL (Fin k) F // IsUni k x} := ⟨⟨1, hu⟩⟩
     exact Nat.cast_ne_zero.mpr Nat.card_pos.ne'
   have hdim := h9 F k V π hπ
   have hd0 : (Module.finrank ℂ V : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hdim.ne'
@@ -990,10 +990,10 @@ theorem whit_sgn_projQ (ψ₀ : AddChar F ℂ) (π : Representation ℂ (GL (Fin
     intro x
     rw [pi_sgn_mul]
     by_cases hx : IsUni k x
-    · rw [hℓ _ (isUni_sgn_conj hx), ← mul_assoc, if_pos hx]
+    · rw [hℓ _ (isUni_sgn_conj hx), ← mul_assoc, ite_eq_left hx]
       unfold psiNat
-      rw [if_pos hx, mul_comm (psiU ψ₀ x), psiU_sgn_conj]
-    · unfold psiNat; rw [if_neg hx, if_neg hx, zero_mul, zero_mul]
+      rw [ite_eq_left hx, mul_comm (psiU ψ₀ x), psiU_sgn_conj]
+    · unfold psiNat; rw [ite_eq_right hx, ite_eq_right hx, zero_mul, zero_mul]
   unfold projQ
 
   simp only [LinearMap.smul_apply, LinearMap.sum_apply, map_smul, map_sum, smul_eq_mul]
@@ -1086,12 +1086,12 @@ theorem nontrivial_of_irreducible {G : Type} [Monoid G] {V : Type} [AddCommGroup
 
 theorem representation_dimension_pos : DimPos := by
   intro F _ _ k V _ _ _ π hπ
-  haveI := nontrivial_of_irreducible π hπ
+  have := nontrivial_of_irreducible π hπ
   exact Module.finrank_pos
 
 theorem schur_lemma_complex : SchurC := by
   intro F _ _ k V _ _ _ π hπ f hf
-  haveI := nontrivial_of_irreducible π hπ
+  have := nontrivial_of_irreducible π hπ
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue f
   refine ⟨c, ?_⟩
   have hinv : ∀ (g : GL (Fin k) F) ⦃v : V⦄, v ∈ LinearMap.ker (f - c • LinearMap.id) →
@@ -1399,12 +1399,12 @@ theorem psiNat_inv {F : Type} [Field F] [Fintype F] {k : ℕ} (ψ₀ : AddChar F
     psiNat ψ₀ u⁻¹ = conj (psiNat ψ₀ u) := by
   unfold psiNat
   by_cases hu : IsUni k u
-  · rw [if_pos (isUni_inv hu), if_pos hu]
+  · rw [ite_eq_left (isUni_inv hu), ite_eq_left hu]
     rw [eq_inv_of_mul_eq_one_left (psiU_inv_mul ψ₀ hu)]
     unfold psiU
     exact addChar_inv_eq_conj ψ₀ _
   · have hu' : ¬ IsUni k u⁻¹ := fun h => hu (by simpa using isUni_inv h)
-    rw [if_neg hu', if_neg hu, map_zero]
+    rw [ite_eq_right hu', ite_eq_right hu, map_zero]
 
 end PI.GGMatBoundW
 end -- clump:auto
@@ -1446,19 +1446,19 @@ theorem sum_orbit [Fintype G] (hfree : ∀ (x : Gᵐᵒᵖ) (j : X), x • j = j
     (∑ x : G, if MulOpposite.op x • j = i then f x else 0) =
       if ∃ x : Gᵐᵒᵖ, x • j = i then f (d i j) else 0 := by
   by_cases h : ∃ x : Gᵐᵒᵖ, x • j = i
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     have hdij := hd i j h
     rw [Finset.sum_eq_single (d i j)]
-    · rw [if_pos hdij]
+    · rw [ite_eq_left hdij]
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hbj
       exact hb (MulOpposite.op_injective (eq_of_smul_eq_of_free hfree (hbj.trans hdij.symm)))
     · intro hn
       exact absurd (Finset.mem_univ _) hn
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun x _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hx
     exact h ⟨_, hx⟩
 
@@ -1580,23 +1580,23 @@ theorem beta_insert (ψ : ∀ v, AddChar (Fq v) ℂ) {a : ι} {s : Finset ι} (h
       · intro h w hw
         rw [hz]
         by_cases hwa : w = a
-        · rw [if_pos hwa]
-        · rw [if_neg hwa]
+        · rw [ite_eq_left hwa]
+        · rw [ite_eq_right hwa]
           exact h w (by simp [hwa, hw])
       · intro h w hw
         simp only [Finset.mem_insert, not_or] at hw
         have := h w hw.2
-        rwa [hz, if_neg hw.1] at this
+        rwa [hz, ite_eq_right hw.1] at this
     have hprod : ∏ v ∈ s, gam (ψ v) (((Pi.mulSingle a (z a))⁻¹ * z : ∀ v, GL (Fin k) (Fq v)) v) =
         ∏ v ∈ s, gam (ψ v) (z v) := by
       refine Finset.prod_congr rfl fun v hv => ?_
-      rw [hz, if_neg (fun (h : v = a) => ha (h ▸ hv))]
+      rw [hz, ite_eq_right (fun (h : v = a) => ha (h ▸ hv))]
     by_cases h : ∀ w, w ∉ insert a s → z w = 1
-    · rw [if_pos h, if_pos (hcond.mp h), hprod, Finset.prod_insert ha]
-    · rw [if_neg h, if_neg (fun h' => h (hcond.mpr h')), mul_zero]
+    · rw [ite_eq_left h, ite_eq_left (hcond.mp h), hprod, Finset.prod_insert ha]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h (hcond.mpr h')), mul_zero]
   · intro y _ hy
     unfold beta
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h
     apply hy
     have := h a ha
@@ -1608,7 +1608,7 @@ theorem beta_insert (ψ : ∀ v, AddChar (Fq v) ℂ) {a : ι} {s : Finset ι} (h
 theorem beta_univ (ψ : ∀ v, AddChar (Fq v) ℂ) (x : ∀ v, GL (Fin k) (Fq v)) :
     beta ψ Finset.univ x = gamProd ψ x := by
   unfold beta gamProd
-  rw [if_pos (fun w hw => absurd (Finset.mem_univ w) hw)]
+  rw [ite_eq_left (fun w hw => absurd (Finset.mem_univ w) hw)]
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 
@@ -1627,7 +1627,7 @@ theorem sum_beta_empty (ψ : ∀ v, AddChar (Fq v) ℂ) (π : Representation ℂ
     simp
   · intro b _ hb
     unfold beta
-    rw [if_neg, zero_smul]
+    rw [ite_eq_right, zero_smul]
     intro h
     exact hb (funext fun v => h v (by simp))
   · intro h

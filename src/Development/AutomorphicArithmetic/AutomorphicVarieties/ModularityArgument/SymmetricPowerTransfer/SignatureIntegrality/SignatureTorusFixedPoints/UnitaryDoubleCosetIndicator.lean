@@ -86,10 +86,10 @@ private theorem gl3_spherical_finite_support (V : Lev k) (d : Fin 3 → kˣ) :
     fun y => ((Quotient.out y * (Phi k)⁻¹ : GL (Fin 3) k) : GL (Fin 3) k ⧸ V.J 3)
   refine Set.Finite.of_finite_image (f := F) (horb.subset ?_) ?_
   · rintro _ ⟨y, hy, rfl⟩
-    simp only [Set.mem_setOf_eq, Lev.unitaryDoubleCosetIndicator] at hy
+    simp only [Set.mem_ofPred_eq, Lev.unitaryDoubleCosetIndicator] at hy
     have hy' : Quotient.out y * (Phi k)⁻¹ ∈ V.DC d := by
       by_contra hc
-      rw [if_neg hc] at hy
+      rw [ite_eq_right hc] at hy
       exact hy rfl
     obtain ⟨a, ha, b, hb, hab⟩ := hy'
     refine ⟨⟨a, ha⟩, ?_⟩

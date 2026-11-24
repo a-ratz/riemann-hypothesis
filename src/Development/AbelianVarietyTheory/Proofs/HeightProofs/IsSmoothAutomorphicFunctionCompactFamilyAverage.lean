@@ -111,7 +111,7 @@ variable {𝒟 : Set (GA D V → ℂ)} (hθ : IsInfFam θ) (hκ : Continuous κ)
 include hθ hκ hU h𝒟
 
 theorem famSpan_cont : ∀ F ∈ famSpan θ V τ κ 𝒟, Continuous fun p : K × GA D V => F p.1 p.2 := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   intro F hF
   induction hF using Submodule.span_induction with
   | mem x hx =>
@@ -300,7 +300,7 @@ theorem integrable_avg [CompactSpace K] [MeasurableSpace K] [BorelSpace K] (μ :
     (hθ : IsInfFam θ) (hκ : Continuous κ) (hU : ∀ k, κ k ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)) {e : K → ℂ}
     (he : Continuous e) {ψ : GA D V → ℂ} (hψ : Continuous ψ) (x : GA D V) :
     Integrable (fun k => e k * ψ (x * atTau θ V τ (κ k))) μ := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   exact (he.mul (hψ.comp (continuous_const.mul (continuous_atTau hθ hκ hU)))).integrable_of_hasCompactSupport
     (HasCompactSupport.of_compactSpace _)
 
@@ -343,7 +343,7 @@ theorem isAutFunSm_average : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F
           simp only [Submodule.coe_smul, Pi.smul_apply, smul_eq_mul, RingHom.id_apply, mul_left_comm _ c]
           exact integral_const_mul c _ }
     let Wa : Submodule ℂ (GlobalTheory.Mem.Th.AFs θ V) := W.comap (GlobalTheory.Mem.Th.AFs θ V).subtype
-    haveI : FiniteDimensional ℂ Wa := Module.Finite.of_injective
+    have : FiniteDimensional ℂ Wa := Module.Finite.of_injective
       (((GlobalTheory.Mem.Th.AFs θ V).subtype.comp Wa.subtype).codRestrict W fun x => x.2)
       fun a b hab => by
         have h := congrArg (fun z : W => (z : GA D V → ℂ)) hab

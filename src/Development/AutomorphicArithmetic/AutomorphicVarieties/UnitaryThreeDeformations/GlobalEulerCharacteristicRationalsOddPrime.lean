@@ -97,8 +97,8 @@ theorem UpperTheory.global_euler_characteristic_rationals_odd_prime :
         Module.Finite k (H1 ρ) ∧ Module.Finite k (H2 ρ) ∧
           finrank k (H1 ρ) + finrank k (LinearMap.ker (ρ (toGS Ω _ σ) - LinearMap.id)) = finrank k (H0 ρ) + finrank k (H2 ρ) + finrank k M := by
   intro hF hE Ω _ _ _ l _ hl k M _ _ _ _ _ _ _ _ S ρ hS hρ σ hσ
-  haveI : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
-  letI : Module (ZMod (l ^ 1)) M := Module.compHom _ (ZMod.castHom (dvd_refl _) k)
+  have : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
+  let : Module (ZMod (l ^ 1)) M := Module.compHom _ (ZMod.castHom (dvd_refl _) k)
   let ρ' : Representation (ZMod (l ^ 1)) (Gam Ω S) M :=
     { toFun := fun g =>
         { toFun := ρ g
@@ -116,11 +116,11 @@ theorem UpperTheory.global_euler_characteristic_rationals_odd_prime :
       exact Iff.rfl
   obtain ⟨-, f1, f2, -⟩ := hF ℚ Ω l 1 M S ρ' one_pos hS hρ
   have h := UpperTheory.card_global_euler_characteristic_rationals hE Ω l hl M S ρ' hS hρ σ hσ
-  haveI : Finite (H1 ρ) := Finite.of_equiv _ e1.symm
-  haveI : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
-  haveI : Module.Finite k M := Module.Finite.of_finite
-  haveI : Module.Finite k (H1 ρ) := Module.Finite.of_finite
-  haveI : Module.Finite k (H2 ρ) := Module.Finite.of_finite
+  have : Finite (H1 ρ) := Finite.of_equiv _ e1.symm
+  have : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
+  have : Module.Finite k M := Module.Finite.of_finite
+  have : Module.Finite k (H1 ρ) := Module.Finite.of_finite
+  have : Module.Finite k (H2 ρ) := Module.Finite.of_finite
   have hk : 1 < Nat.card k := Finite.one_lt_card
   refine ⟨inferInstance, inferInstance, ?_⟩
   apply Nat.pow_right_injective hk

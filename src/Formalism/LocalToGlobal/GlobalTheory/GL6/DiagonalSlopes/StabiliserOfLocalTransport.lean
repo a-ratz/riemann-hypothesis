@@ -89,7 +89,7 @@ theorem isLattice_between {W : Type} [AddCommGroup W] [Module E W] [Module (𝓞
     rintro _ ⟨x, hx, rfl⟩
     have h1 := hTB x hx
     simpa only [f, LinearMap.smul_apply, LinearMap.id_apply, Nat.cast_smul_eq_nsmul] using h1
-  haveI : IsNoetherian (𝓞 E) A := isNoetherian_of_fg_of_noetherian A hA.fg
+  have : IsNoetherian (𝓞 E) A := isNoetherian_of_fg_of_noetherian A hA.fg
   have hmfg : (B.map f).FG := by
     have h1 := IsNoetherian.noetherian ((B.map f).comap A.subtype)
     have h2 := h1.map A.subtype

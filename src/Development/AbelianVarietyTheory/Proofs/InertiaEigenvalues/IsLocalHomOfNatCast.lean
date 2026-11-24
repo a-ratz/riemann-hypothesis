@@ -65,14 +65,14 @@ theorem dvr_of_reflects {O A : Type} [CommRing O] [IsDomain O] [CommRing A] [IsD
     [IsDiscreteValuationRing A] (g : O →+* A) (hg : Function.Injective g)
     (hd : ∀ x y, g x ∣ g y → x ∣ y) (t : O) (ht0 : t ≠ 0) (ht : ¬ IsUnit t) :
     IsDiscreteValuationRing O := by
-  haveI : ValuationRing O := ValuationRing.iff_dvd_total.2
+  have : ValuationRing O := ValuationRing.iff_dvd_total.2
     ⟨fun x y => (ValuationRing.dvd_total (g x) (g y)).imp (hd x y) (hd y x)⟩
-  haveI : WfDvdMonoid O := by
+  have : WfDvdMonoid O := by
     refine Subrelation.wf (r := InvImage DvdNotUnit g) ?_ (InvImage.wf g wellFounded_dvdNotUnit)
     rintro x y ⟨hx, c, hc, rfl⟩
     refine ⟨fun h => hx (hg (by simpa using h)), g c, fun h => hc ?_, by simp⟩
     exact isUnit_of_dvd_one (hd c 1 (by simpa using h.dvd))
-  haveI : IsPrincipalIdealRing O := ((IsBezout.tfae (R := O)).out 4 2).1 ‹WfDvdMonoid O›
+  have : IsPrincipalIdealRing O := ((IsBezout.tfae (R := O)).out 4 2).1 ‹WfDvdMonoid O›
   refine { not_a_field' := fun h => ht0 ?_ }
   have : t ∈ IsLocalRing.maximalIdeal O := ht
   rw [h] at this
@@ -139,7 +139,7 @@ theorem common_of_field {O₀ A B K : Type} [CommRing O₀] [IsDomain O₀] [IsD
   have hcB : ∀ c, gB (f c) = fB c := fun c => by rw [← cB]; rfl
   have hnu : ¬ IsUnit (gB (f ϖ)) := fun h => hϖ.not_isUnit (hBl.map_nonunit _ (hcB ϖ ▸ h))
   have ht0 : f ϖ ≠ 0 := fun h => hϖ.ne_zero (hB (by rw [← hcB, h, map_zero, map_zero]))
-  haveI hD : IsDiscreteValuationRing O₁ :=
+  have hD : IsDiscreteValuationRing O₁ :=
     dvr_of_reflects gA gAi hd (f ϖ) ht0 (fun h => hnu (h.map gB))
   refine ⟨O₁, hD, f, gA, gB, hmem, hgA, hgB, gAi, gBi,
     ⟨fun x h => isUnit_of_dvd_one (hd x 1 (by simpa using h.dvd))⟩, ⟨fun x h => ?_⟩, cA, cB⟩
@@ -158,8 +158,8 @@ theorem common : ∀ (Γ O₀ A B : Type) [Group Γ] [CommRing O₀] [IsDomain O
   intro Γ O₀ A B _ _ _ _ _ _ _ _ _ _ fA fB _ hAi hB hBl ψA ψB hS
   have iA := IsFractionRing.injective A (FractionRing A)
   have iB := IsFractionRing.injective B (FractionRing B)
-  letI : Algebra O₀ A := fA.toAlgebra
-  letI : Algebra O₀ B := fB.toAlgebra
+  let : Algebra O₀ A := fA.toAlgebra
+  let : Algebra O₀ B := fB.toAlgebra
   let αA : MonoidAlgebra O₀ Γ →+* A :=
     (MonoidAlgebra.lift O₀ A Γ ((Units.coeHom A).comp ψA)).toRingHom
   let αB : MonoidAlgebra O₀ Γ →+* B :=
@@ -244,7 +244,7 @@ theorem exists_gen_ind (O O' : Type) [CommRing O] [IsDomain O] [IsDiscreteValuat
   let I : Ideal O := Ideal.span {ϖ}
   have hI : I.IsMaximal := by
     rw [show I = IsLocalRing.maximalIdeal O from hϖ.maximalIdeal_eq.symm]; infer_instance
-  letI := Ideal.Quotient.field I
+  let := Ideal.Quotient.field I
   let J : Ideal O' := I.map (algebraMap O O')
   have hJ : ∀ x, x ∈ J ↔ algebraMap O O' ϖ ∣ x := fun x => by
     simp only [J, I, Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton]
@@ -411,8 +411,8 @@ theorem p_inc (hb : Gen O b) (a : ι) (c : O') {d : O} (hd : d ≠ 0) :
 include S in
 theorem length_eq (hb : Gen O b) : Module.length O' A' = Module.length O' (O' ⊗[O] A) := by
   classical
-  letI : Module O A' := Module.compHom A' (algebraMap O O')
-  haveI : IsScalarTower O O' A' := ⟨fun o c x => by
+  let : Module O A' := Module.compHom A' (algebraMap O O')
+  have : IsScalarTower O O' A' := ⟨fun o c x => by
     change (o • c) • x = algebraMap O O' o • c • x
     rw [Algebra.smul_def, mul_smul]⟩
   let f : A →ₗ[O] A' := { S.inc with map_smul' := S.inc_smul }
@@ -527,8 +527,8 @@ theorem mapH_res {Δ : Type} [Group Δ] [TopologicalSpace Δ] (θ : Δ →* Γ) 
   rfl
 
 theorem mapH_ur (J : Subgroup Γ) {x : H1 ρ} (hx : x ∈ H1ur ρ J) : mapH φ hφ x ∈ H1ur ρ' J := by
-  have hx' : resH1 ρ J.subtype continuous_subtype_val x = 0 := hx
-  have := mapH_res φ hφ J.subtype continuous_subtype_val x
+  have hx' : resH1 ρ J.subtype continuous_subtypeVal x = 0 := hx
+  have := mapH_res φ hφ J.subtype continuous_subtypeVal x
   rw [hx', map_zero] at this
   exact this
 
@@ -546,8 +546,8 @@ theorem mapH_selAll {F Ω : Type} [Field F] [NumberField F]
         φ (fun g m => hφ g.1 m) x ∈ L' v) (x : H1 ρ) (hx : x ∈ SelAll ρ P (bkCond ρ P l T L)) :
     mapH φ hφ x ∈ SelAll ρ' P (bkCond ρ' P l T L') := by
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
-  have := (mem_Sel ρ (fun v => (Dec (F := F) (P.1 v)).subtype) (fun _ => continuous_subtype_val) _ x).1 hx v
-  have e := mapH_res φ hφ (Dec (F := F) (P.1 v)).subtype continuous_subtype_val x
+  have := (mem_Sel ρ (fun v => (Dec (F := F) (P.1 v)).subtype) (fun _ => continuous_subtypeVal) _ x).1 hx v
+  have e := mapH_res φ hφ (Dec (F := F) (P.1 v)).subtype continuous_subtypeVal x
   refine e.symm ▸ ?_
   unfold bkCond at this ⊢
   split_ifs at this ⊢ with h1 h2
@@ -631,12 +631,12 @@ theorem nlen_eq {A A' : Type} [AddCommGroup A] [Module O A] [AddCommGroup A'] [M
   unfold nlen lenUnit
   rw [S.length_eq hb, GlobalTheory.length_baseChange_dvr, GlobalTheory.length_quotient_span_singleton_eq_addVal,
     GlobalTheory.length_quotient_span_singleton_eq_addVal, ← map_natCast (algebraMap O O'), GlobalTheory.addVal_algebraMap,
-    ENat.toNat_mul, ENat.toNat_mul, ENat.toNat_coe, Nat.cast_mul, Nat.cast_mul,
+    ENat.toNat_mul, ENat.toNat_mul, ENat.toNat_natCast, Nat.cast_mul, Nat.cast_mul,
     mul_div_mul_right _ _ (by exact_mod_cast he.ne')]
   congr 1
   refine propext ⟨fun h => ?_, fun h => ?_⟩
   · by_contra h'
-    exact WithTop.mul_ne_top h' (ENat.coe_ne_top _) h
+    exact WithTop.mul_ne_top h' (ENat.natCast_ne_top _) h
   · rw [h, ENat.top_mul (by exact_mod_cast he.ne')]
 
 end Len
@@ -810,9 +810,9 @@ theorem sT_map_eq : ∀ (D : D7) (i : D.ntw.Tw) (s : D.ntw.Sig i) (Q : Finset (P
     sT D.loc D.ntwbr i s Q (g.comp f) (hg.comp hf) ((Units.map g.toMonoidHom).comp ψ) =
       sT D.loc D.ntwbr i s Q f hf ψ := by
   intro D i s Q O₁ O₂ _ _ _ _ _ _ f hf g hg hl ψ
-  letI := g.toAlgebra
-  haveI : IsLocalHom (algebraMap O₁ O₂) := hl
-  haveI : FaithfulSMul O₁ O₂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hg
+  let := g.toAlgebra
+  have : IsLocalHom (algebraMap O₁ O₂) := hl
+  have : FaithfulSMul O₁ O₂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hg
   obtain ⟨ι, b, hb, hb'⟩ := exists_gen_ind O₁ O₂
   obtain ⟨S, hS⟩ := exists_comp_kog hg hb hb' D.R.r
   have hi : ∀ γ m, S.inc (WKG (latTpsi D.ntw i s f ψ) γ m) =
@@ -829,7 +829,7 @@ theorem sT_map_eq : ∀ (D : D7) (i : D.ntw.Tw) (s : D.ntw.Sig i) (Q : Finset (P
     · exact extCond_inc f hf hg S hS _ _ _ x hx
     · trivial
   · refine mapH_selAll (S.p a) (S.p_rep hi a) _ _ _ _ _ fun v x hx => ?_
-    haveI : CompactSpace (Dec (F := D.host.E) (D.nd.plOm.1 v)) :=
+    have : CompactSpace (Dec (F := D.host.E) (D.nd.plOm.1 v)) :=
       isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
     unfold condL at hx ⊢
     split_ifs at hx ⊢

@@ -85,7 +85,7 @@ theorem length_frobImage {N : Type} [AddCommGroup N] [Module (WittVector p k) N]
     Module.length (WittVector p k)
         (frobImage F ⊤ ⧸ Submodule.comap (frobImage F ⊤).subtype (frobImage F X)) =
       Module.length (WittVector p k) (N ⧸ X) := by
-  haveI : RingHomSurjective (WittVector.frobenius : WittVector p k →+* WittVector p k) :=
+  have : RingHomSurjective (WittVector.frobenius : WittVector p k →+* WittVector p k) :=
     ⟨fun c => by
       obtain ⟨d, rfl⟩ := (WittVector.frobeniusEquiv p k).surjective c
       exact ⟨d, by rw [WittVector.frobeniusEquiv_apply]⟩⟩
@@ -168,8 +168,8 @@ theorem isog_core (T : GlobalTheory.Dieu.Theory p) {G H : PDivGroup p k} (q : G 
       Module.length (WittVector p k) (T.M K ⧸ frobImage (T.F K) ⊤) = Module.finrank k K.omega := by
     intro K
     obtain ⟨-, hs, hk, hl, -⟩ := hθ K
-    haveI : Module.Finite (WittVector p k) (T.M K) := T.base.finite K trivial
-    haveI := finite_of_frob_surj (θ K) hs hl
+    have : Module.Finite (WittVector p k) (T.M K) := T.base.finite K trivial
+    have := finite_of_frob_surj (θ K) hs hl
     refine (_root_.GlobalTheory.Dieu.length_ge_finrank_of_semilinear_surj p k (T.M K) K.omega (WittVector.frobeniusEquiv p k) (θ K) hs ?_
       (frobImage (T.F K) ⊤)).2 ?_
     · intro a m

@@ -198,7 +198,7 @@ def coneIsLimit (hR : R.FG) : IsLimit (cone R q c0 v0 hPB) where
 lemma lfp {X : Scheme.{0}} (p : X ⟶ Sp k) [IsProper p] : LocallyOfFinitePresentation p := by
   rw [HasRingHomProperty.iff_appLE (P := @LocallyOfFinitePresentation)]
   intro U V e
-  haveI : IsNoetherianRing Γ(Sp k, U) := IsLocallyNoetherian.component_noetherian U
+  have : IsNoetherianRing Γ(Sp k, U) := IsLocallyNoetherian.component_noetherian U
   exact RingHom.FinitePresentation.of_finiteType.mp (HasRingHomProperty.appLE @LocallyOfFiniteType p inferInstance U V e)
 
 end LateralTheory.E.LeafDescendMapPf

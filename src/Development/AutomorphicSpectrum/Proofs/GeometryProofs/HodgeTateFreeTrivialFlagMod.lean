@@ -617,7 +617,7 @@ theorem shape_alt {r : ℕ} (b₀ : Fin r → L) (e : Fin r → Ω) (he : ∀ a,
     exact Finset.prod_ne_zero_iff.2 fun i _ => by
       show (n i).1 (b₀ i) ≠ 0
       rw [(hn i).2]; exact inv_ne_zero (mul_ne_zero (hc i) (he i))
-  letI := U.invertibleOfIsUnitDet (IsUnit.mk0 _ hdet)
+  let := U.invertibleOfIsUnitDet (IsUnit.mk0 _ hdet)
   have hU' : U⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hU
   have hmul : U * U⁻¹ = 1 := Matrix.mul_nonsing_inv U (IsUnit.mk0 _ hdet)
   refine ⟨n.dualBasis, fun a => ⟨fun a' => U⁻¹ a' a / e a', fun a' h => ?_, ?_, fun z => ?_⟩⟩
@@ -725,7 +725,7 @@ theorem exists_point {κ : Type} {x : κ → Ω} (tie : CoordTie ℤ ξ x) (c : 
     have : hU.fromSpec 𝔭 ∈ Set.range hU.fromSpec := ⟨_, rfl⟩
     rwa [hU.range_fromSpec] at this
   obtain ⟨hs, hin⟩ := (hUm _).1 hq
-  letI : Algebra Γ(X, U) (X.presheaf.stalk (hU.fromSpec 𝔭)) :=
+  let : Algebra Γ(X, U) (X.presheaf.stalk (hU.fromSpec 𝔭)) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨hU.fromSpec 𝔭, hq⟩
   have hloc : IsLocalization 𝔭.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec 𝔭)) :=
     hU.isLocalization_stalk' 𝔭 hq
@@ -978,7 +978,7 @@ theorem exists_pt (hp : p.Prime)
     {t : ∀ k, J k} (ht : mseg y t ≠ 0) (m : Ideal (chartRing o (mseg y) t)) [hm : m.IsPrime] :
     ∃ q : Cpt 𝔐.ξ, InChart 𝔐.ξ (mseg y) t q ∧ OverZp 𝔐 p q ∧
       ∀ z ∈ regAt 𝔐.ξ q, ∃ s ∉ m, ∃ a : chartRing o (mseg y) t, (s : Ω) * z = a := by
-  haveI := charZero 𝔐
+  have := charZero 𝔐
   obtain ⟨q, h1, h2, h3⟩ := exists_point (x := mseg y) 𝔐.tie t ht (chartRing o (mseg y) t)
     (fun j => Algebra.subset_adjoin ⟨j, rfl⟩) m
   refine ⟨q, h1, fun r hr hf => ?_, h2⟩
@@ -1032,7 +1032,7 @@ theorem locFrame [Fact p.Prime] (hpS : p ∈ S)
       · intro w hw hreg
         obtain ⟨U', hU', f, hfs, hf'⟩ := hfree.2 s q hf
         have hf' := hf' q hf hU'
-        haveI : FiniteDimensional Ω (𝔐.Vgen s) := by
+        have : FiniteDimensional Ω (𝔐.Vgen s) := by
           rw [← span_flag Fl s]; exact FiniteDimensional.span_of_finite Ω (Set.finite_range _)
         have h1 := mem_span_of_dual (regAt 𝔐.ξ q) f hf'.1 hfs ((𝔐.Vgen s).dualRestrict w) fun e he => by
           have h2 : (e : 𝔐.Li) ∈ 𝔐.M.htDual 𝔐.t.PP.L (p ^ 𝔐.R p) 𝔐.ρ (𝔐.emb s) q := by
@@ -1071,7 +1071,7 @@ theorem locFrame [Fact p.Prime] (hpS : p ∈ S)
             refine ⟨?_, prj_mem hσ e⟩
             simp only [prj, eigProj, LinearMap.sum_apply, LinearMap.smul_apply]
             refine Submodule.sum_mem _ fun k _ => ?_
-            haveI := 𝔐.t.act.hom (H.bar (RingOfIntegers.basis E k))
+            have := 𝔐.t.act.hom (H.bar (RingOfIntegers.basis E k))
             exact Submodule.smul_mem (𝔐.M.lat q) (⟨_, hσR _⟩ : regAt 𝔐.ξ q)
               (lat_stable 𝔐.M _ _ (𝔐.act (H.bar (RingOfIntegers.basis E k))) q e he)
           rw [hb.2] at h2
@@ -1218,7 +1218,7 @@ theorem chartMon_ne_zero {t : ∀ k, J k} (ht : mseg y t ≠ 0) (a : K → ℤ) 
   Finset.prod_ne_zero_iff.2 fun k hk => zpow_ne_zero _ (Finset.prod_ne_zero_iff.1 ht k hk)
 
 theorem rootIdx_left (τ : CMType H) (a : Fin D.p) :
-    HodgeCpt.rootIdx D (τ, Fin.castAdd D.q a) = ⟨.inl τ, a⟩ := dif_pos a.2
+    HodgeCpt.rootIdx D (τ, Fin.castAdd D.q a) = ⟨.inl τ, a⟩ := dite_eq_left a.2
 
 theorem rootIdx_right (τ : CMType H) (a : Fin D.q) :
     HodgeCpt.rootIdx D (τ, Fin.natAdd D.p a.rev) = ⟨.inr τ, a⟩ := by
@@ -1260,7 +1260,7 @@ theorem chart_flag_bases : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       fun x => (off_facts hds (chart_le hp.out ho hq hz) hz hf).2 _⟩)
     (fun q hq (a : Fin D.p) u hu => by
       have h1 := (hroot (τ, Fin.castAdd D.q a)).2 q trivial t.1 hq
-      have h2 : HodgeCpt.rootSgn D (τ, Fin.castAdd D.q a) = 1 := if_pos a.2
+      have h2 : HodgeCpt.rootSgn D (τ, Fin.castAdd D.q a) = 1 := ite_eq_left a.2
       unfold HodgeCpt.Flag.rootLat at h1
       rw [rootIdx_left, h2] at h1
       have h3 := tens_gen _ q 1 (Or.inl rfl) u _ hu h1
@@ -1274,7 +1274,7 @@ theorem chart_flag_bases : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       (off_facts hds (chart_le hp.out ho hq hz) hz hf).2⟩)
     (fun q hq (a : Fin D.q) u hu => by
       have h1 := (hroot (τ, Fin.natAdd D.p a.rev)).2 q trivial t.1 hq
-      have h2 : HodgeCpt.rootSgn D (τ, Fin.natAdd D.p a.rev) = -1 := if_neg (by simp)
+      have h2 : HodgeCpt.rootSgn D (τ, Fin.natAdd D.p a.rev) = -1 := ite_eq_right (by simp)
       unfold HodgeCpt.Flag.rootLat at h1
       rw [rootIdx_right, h2] at h1
       have h3 := tens_gen _ q (-1) (Or.inr rfl) u _ hu h1
@@ -1611,7 +1611,7 @@ theorem trivflag_charts : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Al
   refine ⟨fun s => if h : mseg y s ≠ 0 then
     ((g ⟨s, h⟩).map (fun a => (a : Ω))).submatrix id finSumFinEquiv.symm else 0, fun s hs => ?_,
     fun s t hs ht => ?_⟩
-  · simp only [dif_pos hs]
+  · simp only [dite_eq_left hs]
     refine ⟨fun a a' => (g ⟨s, hs⟩ _ _).2, ?_⟩
     obtain ⟨h, r, e⟩ := (hfe ⟨s, hs⟩).2 _ (hg ⟨s, hs⟩)
     refine ⟨h, h.2, r, r.2, ?_⟩
@@ -1619,8 +1619,8 @@ theorem trivflag_charts : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Al
     rw [map_mul, AlgHom.map_det] at this
     rw [hϖ, Matrix.submatrix_map]
     simpa using this
-  · simp only [dif_pos hs, dif_pos ht, hϖ]
-    haveI := hfr ⟨t, ht⟩
+  · simp only [dite_eq_left hs, dite_eq_left ht, hϖ]
+    have := hfr ⟨t, ht⟩
     have hu := div_mem_chartRing (o := o) (mseg y) t s
     have hu0 : mseg y s / mseg y t ≠ 0 := div_ne_zero hs ht
     have hAL : ∀ a ∈ chartRing o (mseg y) s, a ∈ loc _ _ hu := fun a ha =>
@@ -1684,7 +1684,7 @@ theorem triv_flag_mod_of_hodge_tate_free_of_root_lines (hb : FarguesHodgeTate �
     FarguesHodgeTate → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (p : ℕ) [Fact p.Prime] (hpS : p ∈ S) (hpq : 0 < D.p + D.q) (o : Type) [CommRing o] [Algebra o Ω] (ho : ∀ x : Ω, x ∈ (algebraMap o Ω).range ↔ ∃ (a : ℤ) (b : ℕ), ¬ p ∣ b ∧ x = (a : Ω) / (b : Ω)) (Fl : 𝔐.Flag) (xdeg : CMType H × Fin (D.p + D.q) → K → ℤ) (e : CMType H × Fin (D.p + D.q) → Ω), HTFree 𝔐 p → Fl.RootLines xdeg e → ∀ τ : CMType H, Num.TrivFlagMod o ((p : o) ^ (𝔐.R p - 2)) y (D.p + D.q) (fun i => xdeg (τ, i)) := by
   intro hF E _ _ _ H D l Xo c O _ β Y S Ω _ K _ J _ y 𝔐 p _ hpS hpq o _ _ ho Fl xdeg e hfree hroot τ
   have hgen := Hcptgen.hcpt_generic E H D l Xo c O β Y S Ω K J y 𝔐 p hpS o ho
-  haveI : CharZero Ω := hgen.1
+  have : CharZero Ω := hgen.1
   have hA := hgen.2.2.2.2.2.2
   obtain ⟨Dc, hfam, htest⟩ := hl E H D l Xo c O β Y S Ω K J y 𝔐 p hpS hpq o ho
   obtain ⟨hproj, hdiff, κ, hκ, hκA⟩ := Famproj.family_proj E H D l Xo c O β Y S Ω K J y 𝔐 p hpS hpq o ho Dc hfam hfree

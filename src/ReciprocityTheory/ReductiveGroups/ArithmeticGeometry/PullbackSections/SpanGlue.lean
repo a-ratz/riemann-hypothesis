@@ -93,7 +93,7 @@ theorem span_eq_top_of_indepToC (j : C →ₛₗ[σ] W) (hj : IndepToC j) (S : S
   have hli' : LinearIndependent K (fun y : ↥(insert f b) => (y : C)) :=
     LinearIndepOn.insert (v := id) (s := b) (x := f) hli (by simpa using hfb)
   have hfin : (insert f b).Finite := hbfin.insert f
-  haveI := hfin.fintype
+  have := hfin.fintype
   let e := Fintype.equivFin ↥(insert f b)
   have hC := hj _ (fun i => ((e.symm i : ↥(insert f b)) : C)) (hli'.comp _ e.symm.injective)
   have hC' : LinearIndependent ℂ (fun y : ↥(insert f b) => j (y : C)) := by

@@ -122,7 +122,7 @@ theorem cub_tV (hG : GlobalFnsSt) (hA : IsAbelianScheme H) (i : H ⟶ G) [IsMonH
     (J : (T.left ⟶ G.left) → L.L.ι) (hJ : Good L.L z J) :
     cubV c z J (x ≫ i) (y ≫ i) (u ≫ i) * tV i τ z J (x * y) * tV i τ z J (x * u) * tV i τ z J (y * u) *
         tV i τ z J 1 = tV i τ z J (x * y * u) * tV i τ z J x * tV i τ z J y * tV i τ z J u := by
-  haveI := hA.comm
+  have := hA.comm
   have h3 := surjective_cube hG hA
   let a := x3 H 0
   let b := x3 H 1
@@ -187,7 +187,7 @@ theorem cubWeil_one_of_triv_pull : ∀ (S : Scheme.{0}) (G H : Over S) [GrpObj G
     (i : H ⟶ G), IsAbelianScheme H → IsMonHom i → ∀ (L : RigLB G) (c : CubicalStr G L), Triv (L.L.pull i.left) →
     ∀ (N : ℕ) (T : Over S) (a b : T ⟶ H), a ^ N = 1 → b ^ N = 1 → CubWeil c N (a ≫ i) (b ≫ i) 1 := by
   intro S G H _ _ _ i hA hi L c ⟨τ, hτ⟩ N T a b ha hb
-  haveI := hA.comm
+  have := hA.comm
   have hG : GlobalFnsSt := GlobalTheory.abelianSchemeLaws_all.1.globalFns
   refine ⟨by rw [← MonObj.pow_comp, ha, MonObj.one_comp], by rw [← MonObj.pow_comp, hb, MonObj.one_comp],
     fun z J hJ => ?_⟩

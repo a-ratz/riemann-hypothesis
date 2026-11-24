@@ -335,12 +335,12 @@ theorem exists_holomorphic_extension : ∀ (n : ℕ) (ε : Fin n → Bool) (B : 
   intro n ε B _ _ _ π h1 hmul hcont
   have hemb : Topology.IsEmbedding (fun k : KG ε => toMK k) :=
     (isClosedEmbeddingMatrix n ε).1.isEmbedding.comp Topology.IsEmbedding.subtypeVal
-  haveI : TopologicalSpace.MetrizableSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  have : TopologicalSpace.MetrizableSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (TopologicalSpace.MetrizableSpace (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : TopologicalSpace.MetrizableSpace (KG ε) := hemb.metrizableSpace
-  haveI : SecondCountableTopology (KG ε) := hemb.secondCountableTopology
+  have : TopologicalSpace.MetrizableSpace (KG ε) := hemb.metrizableSpace
+  have : SecondCountableTopology (KG ε) := hemb.secondCountableTopology
   set μ := muK ε
   have hmem : ∀ g : KG ε, toMK g ∈ Kset ε := fun g => g.2
   have hun : ∀ x ∈ Kset ε, xᴴ * x = 1 := fun x hx => Unitary.star_mul_self_of_mem hx.1
@@ -454,13 +454,13 @@ lemma one_add_det {N : Matrix (Fin n) (Fin n) ℂ} (hN : ∀ i j, i ≤ j → N 
     intro i j hij
     have hij' : i < j := OrderDual.toDual_lt_toDual.mp hij
     simp [Matrix.one_apply_ne hij'.ne, hN i j hij'.le]
-  rw [Matrix.det_of_lowerTriangular _ hT]
+  rw [det_of_isLowerTriangular _ hT]
   exact Finset.prod_eq_one fun i _ => by simp [hN i i le_rfl]
 
 lemma one_add_mem {ε : Fin n → Bool} {N : Matrix (Fin n) (Fin n) ℂ} (hN : Nil ε N) (z : ℂ) :
     1 + z • N ∈ KC ε := by
   obtain ⟨hN1, hN2⟩ := id hN
-  simp only [KC, Set.mem_setOf_eq]
+  simp only [KC, Set.mem_ofPred_eq]
   refine ⟨?_, ?_⟩
   · rw [Matrix.isUnit_iff_isUnit_det, one_add_det hN1 z]
     exact isUnit_one
@@ -555,7 +555,7 @@ lemma wt_single {ε : Fin n → Bool} {τ : Matrix (Fin n) (Fin n) ℂ → (W �
     ring
   have hmem : ∀ z : ℂ, 1 + z • E ∈ KC ε := fun z => one_add_mem (nil_single hab he) z
   have htK : t ∈ KC ε := by
-    simp only [KC, Set.mem_setOf_eq]
+    simp only [KC, Set.mem_ofPred_eq]
     refine ⟨?_, hθJ⟩
     rw [Matrix.isUnit_iff_isUnit_det, ht, Matrix.det_diagonal]
     exact isUnit_iff_ne_zero.mpr (Finset.prod_ne_zero_iff.mpr fun i _ => Complex.exp_ne_zero _)
@@ -601,9 +601,9 @@ lemma deriv_nil {ε : Fin n → Bool} {D : Matrix (Fin n) (Fin n) ℂ →ₗ[ℂ
   obtain ⟨hN1, hN2⟩ := id hN
   rw [Matrix.matrix_eq_sum_single N]
 
-  simp only [map_sum, ContinuousLinearMap.sum_apply]
+  simp only [map_sum, sum_apply]
   refine Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun j _ => ?_
-  rw [pi_single_eq_re_smul_add_im_smul, map_smul, ContinuousLinearMap.smul_apply]
+  rw [pi_single_eq_re_smul_add_im_smul, map_smul, smul_apply]
   by_cases h0 : N i j = 0
   · rw [h0, zero_smul]
   · have hji : j < i := not_le.mp fun hle => h0 (hN1 i j hle)
@@ -634,7 +634,7 @@ lemma nil_inv_mul {ε : Fin n → Bool} {N : Matrix (Fin n) (Fin n) ℂ} (hN : N
     intro i j hij
     have hij' : i < j := OrderDual.toDual_lt_toDual.mp hij
     simp [hA, Matrix.one_apply_ne hij'.ne, hN1 i j hij'.le]
-  haveI : Invertible A := Matrix.invertibleOfIsUnitDet A hu
+  have : Invertible A := Matrix.invertibleOfIsUnitDet A hu
   have hTi : A⁻¹.BlockTriangular OrderDual.toDual := Matrix.blockTriangular_inv_of_blockTriangular hT
   unfold Nil
   refine ⟨fun i j hij => ?_, ?_⟩
@@ -697,7 +697,7 @@ theorem lowest_fixed : ∀ (n : ℕ) (ε : Fin n → Bool) (abelian₂ : Fin n �
     is_const_of_deriv_eq_zero (by intro s; exact (hderiv s).differentiableAt)
       (fun s => (hderiv s).deriv) 1 0
   simp only [one_smul, zero_smul, add_zero] at hconst
-  rw [hyN, hconst, hτ1, ContinuousLinearMap.one_apply]
+  rw [hyN, hconst, hτ1, one_apply_eq_self]
 
 end GlobalTheory.Dec.LowFix
 end -- clump:auto
@@ -821,19 +821,19 @@ theorem adj_on_KC {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℂ W]
 theorem tauExists : TauExists := by
   intro n ε abelian₂ H _ _ σ S w ⟨⟨h1, hmul⟩, hiso, hcont⟩ ⟨hfin, hst, hirr, _, hdom⟩ hw hwt
   classical
-  have : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   let π : Matrix (Fin n) (Fin n) ℂ → (S →L[ℂ] S) := fun k =>
     if h : k ∈ Kset ε then ((σ (k.map star)).comp S.subtypeL).codRestrict S
       fun v => hst _ (conj_mem h) _ v.2 else 0
   have hπ : ∀ k ∈ Kset ε, ∀ v : S, (π k v : H) = σ (k.map star) v := fun k hk v => by
-    simp only [π, dif_pos hk]; rfl
+    simp only [π, dite_eq_left hk]; rfl
   have hπ1 : π 1 = 1 := by
     ext v
     rw [hπ 1 one_mem_K, conj_one, h1]; rfl
   have hπm : ∀ a ∈ Kset ε, ∀ b ∈ Kset ε, π (a * b) = π a * π b := by
     intro a ha b hb
     ext v
-    rw [hπ _ (Kset_mul ε ha hb), conj_mul, hmul _ (conj_mem ha) _ (conj_mem hb), ContinuousLinearMap.mul_apply,
+    rw [hπ _ (Kset_mul ε ha hb), conj_mul, hmul _ (conj_mem ha) _ (conj_mem hb), mul_apply_eq_comp,
       hπ a ha, hπ b hb]
     rfl
   have hπc : ContinuousOn π (Kset ε) := by
@@ -872,7 +872,7 @@ theorem tauExists : TauExists := by
       rw [Submodule.coe_norm, hτσ k hk, hiso _ (conj_mem hk), Submodule.coe_norm]
     have e : τ k (τ kᴴ v) = v := by
       have : k * kᴴ = 1 := Unitary.mul_star_self_of_mem hk.1
-      rw [← ContinuousLinearMap.mul_apply, ← hτm k hk _ hk', this, hτ1]; rfl
+      rw [← mul_apply_eq_comp, ← hτm k hk _ hk', this, hτ1]; rfl
     conv_lhs => rw [← e]
     exact LinearIsometry.inner_map_map ⟨(τ k).toLinearMap, hi⟩ u _
   · have hs : IsKStableOn ε σ (S'.map S.subtype) := by

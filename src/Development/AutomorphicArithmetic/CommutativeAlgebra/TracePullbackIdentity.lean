@@ -144,7 +144,7 @@ private theorem eq_of_geom {T Y Z : Scheme.{0}} (π : Y ⟶ Z) [Etale π] (f g :
     have h2 : t pt ∈ Set.range (T.fromSpecResidueField x) :=
       ⟨_, (Scheme.Hom.comp_apply _ _ pt).symm⟩
     rwa [Scheme.range_fromSpecResidueField, Set.mem_singleton_iff] at h2
-  haveI : IsIso (pullback.fst L Δ) :=
+  have : IsIso (pullback.fst L Δ) :=
     (isIso_iff_isOpenImmersion_and_surjective _).mpr ⟨inferInstance, hsurj⟩
   exact (cancel_epi (pullback.fst L Δ)).1 (e1.trans e2.symm)
 
@@ -188,12 +188,12 @@ theorem UpperTheory.trace_pullback_identity : TrBack := by
     · exact h0
   have hd0 := hpos d hd
   have hc0 := hpos c hc
-  haveI : IsMonHom (𝟙 o'.A ^ c) := (isMonHom_epi_id_pow o'.A o'.ab hc0).1
-  haveI : IsMonHom (𝟙 o.A ^ d) := (isMonHom_epi_id_pow o.A o.ab hd0).1
-  haveI : Epi (𝟙 o.A ^ d) := (isMonHom_epi_id_pow o.A o.ab hd0).2
-  haveI : Epi (𝟙 o'.A ^ d) := (isMonHom_epi_id_pow o'.A o'.ab hd0).2
-  haveI := hψ'm
-  haveI := hψ
+  have : IsMonHom (𝟙 o'.A ^ c) := (isMonHom_epi_id_pow o'.A o'.ab hc0).1
+  have : IsMonHom (𝟙 o.A ^ d) := (isMonHom_epi_id_pow o.A o.ab hd0).1
+  have : Epi (𝟙 o.A ^ d) := (isMonHom_epi_id_pow o.A o.ab hd0).2
+  have : Epi (𝟙 o'.A ^ d) := (isMonHom_epi_id_pow o'.A o'.ab hd0).2
+  have := hψ'm
+  have := hψ
   have ker : ∀ (T' : Over X) (y : T' ⟶ o'.A), y ≫ ψ = 1 → y ^ c = 1 := by
     intro T' y hy
     have hyd : y ^ d = 1 := by
@@ -204,7 +204,7 @@ theorem UpperTheory.trace_pullback_identity : TrBack := by
         simpa using this.map (algebraMap ℚ R)
       have h2 := (h1.map (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom).map s.appTop.hom
       simpa using h2
-    haveI het : Etale (Over.Hom.left (mulN o'.A d)) :=
+    have het : Etale (Over.Hom.left (mulN o'.A d)) :=
       ((GlobalTheory.GrpTangent.finiteEtale_mulN_torsion o'.A (hG := o'.ab) hunit).1).2
     apply Over.OverMorphism.ext
     refine UpperTheory.LatticeTracePullback.eq_of_geom (Over.Hom.left (mulN o'.A d)) _ _ ?_ ?_

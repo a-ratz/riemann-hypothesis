@@ -174,7 +174,7 @@ theorem heckeVal_galChar (ψ : DirichletCharacter ℂ m) (𝔭 : HeightOneSpectr
     have := IsCyclotomicExtension.isGalois {m} ℚ F
     have hact : ∀ (τ : F ≃ₐ[ℚ] F) (y : 𝓞 F), galRestrict (𝓞 ℚ) ℚ F (𝓞 F) τ y = τ • y := fun τ y =>
       NumberField.RingOfIntegers.ext (by exact algebraMap_galRestrict_apply (A := 𝓞 ℚ) (K := ℚ) (L := F) (B := 𝓞 F) τ y)
-    letI := IsIntegralClosure.MulSemiringAction (𝓞 ℚ) ℚ F (𝓞 F)
+    let := IsIntegralClosure.MulSemiringAction (𝓞 ℚ) ℚ F (𝓞 F)
     have : SMulCommClass (F ≃ₐ[ℚ] F) (𝓞 ℚ) (𝓞 F) :=
       ⟨fun σ a x => map_smul (galRestrict (𝓞 ℚ) ℚ F (𝓞 F) σ) a x⟩
     have : Algebra.IsInvariant (𝓞 ℚ) (𝓞 F) (F ≃ₐ[ℚ] F) := Algebra.isInvariant_of_isGalois (𝓞 ℚ) ℚ F (𝓞 F)

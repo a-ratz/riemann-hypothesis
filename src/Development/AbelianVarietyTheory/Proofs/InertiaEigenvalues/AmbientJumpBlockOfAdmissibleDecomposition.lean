@@ -93,8 +93,8 @@ theorem blockE_of_isBlockSum (D : D7) (i : D.nd.Loc)
     (hB : GlobalTheory.IndefiniteRowSideFullHecke.BlockJumpCount.IsBlockSum D.nd i r ρ π) : BlockE D i r ρ π := by
   obtain ⟨e, he⟩ := hB
   intro w hw L' hL τ
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
-  haveI : FiniteDimensional ℚ_[D.nd.l i] ↥L'.1 := L'.2
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : FiniteDimensional ℚ_[D.nd.l i] ↥L'.1 := L'.2
   let s : Br.G D.nbr i w hw → Formalism.MainNotions.N.GE D.nd := fun g => decS D.nd w (Br.iota D.nbr i w hw g)
   let j := inc D i w hw L' hL
   let f := j.comp (Br.toLLK (D.nbr i w hw))
@@ -190,7 +190,7 @@ theorem sum_ind_block (t : ℕ) (a : ℤ) :
     rw [Finset.sum_eq_single (n + 1)]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       omega
     · intro hn
       exfalso
@@ -200,7 +200,7 @@ theorem sum_ind_block (t : ℕ) (a : ℤ) :
   · apply Finset.sum_eq_zero
     intro c hc
     rw [Finset.mem_Icc] at hc
-    rw [if_neg]
+    rw [ite_eq_right]
     omega
 
 theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i)))

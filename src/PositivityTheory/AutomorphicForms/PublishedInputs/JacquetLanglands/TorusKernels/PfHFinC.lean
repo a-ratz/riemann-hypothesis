@@ -70,7 +70,7 @@ theorem exists_rep {K ι A : Type} [Group K] [TopologicalSpace K] [IsTopological
       add_mem' := fun hf hg => ⟨hf.1.add hg.1, fun x a => by simp [hf.2, hg.2, mul_add]⟩
       zero_mem' := ⟨continuous_const, fun x a => by simp⟩
       smul_mem' := fun c f hf => ⟨hf.1.const_smul c, fun x a => by simp [hf.2, mul_left_comm]⟩ }
-  haveI : FiniteDimensional ℂ V := by
+  have : FiniteDimensional ℂ V := by
     refine Module.Finite.of_injective ((LinearMap.funLeft ℂ ℂ e).comp V.subtype) ?_
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro f hf
@@ -213,7 +213,7 @@ theorem cont (φ : TR.Sm F 2) (g : GA F 2) : Continuous fun k : TR.Kinf F 2 => (
   have e : (fun k : TR.Kinf F 2 => (TR.cptRep F 2 k φ).1 g) = fun k : TR.Kinf F 2 => TR.chart φ.1 g (TR.toL k.1) :=
     funext fun k => (TR.chart_val φ.1 g (Unitary.toUnits k)).symm
   rw [e]
-  exact (φ.2 g).continuousOn.comp_continuous continuous_subtype_val fun k => TR.val_mem_invSet (Unitary.toUnits k)
+  exact (φ.2 g).continuousOn.comp_continuous continuous_subtypeVal fun k => TR.val_mem_invSet (Unitary.toUnits k)
 
 theorem rot_eig (φ : TR.Sm F 2) (z : InfinitePlace F → ℂ) (h : ∀ v, TR.Eop v 0 1 φ - TR.Eop v 1 0 φ = z v • φ) (g : GA F 2) (θ : TR.Rinf F) :
     φ.1 (g * TR.infGL F 2 (Unitary.toUnits (rot θ))) = Complex.exp (∑ v, z v * (θ v : ℂ)) * φ.1 g := by

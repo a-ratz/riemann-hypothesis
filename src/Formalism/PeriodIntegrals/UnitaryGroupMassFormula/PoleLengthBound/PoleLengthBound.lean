@@ -126,15 +126,15 @@ theorem isUnit_of_ord_ne_top (K : Type*) [Field K] [Algebra K A] [FiniteDimensio
     rcases WithTop.add_eq_top.mp this.symm with h1 | h1
     · exact absurd h1 (hx ζ)
     · exact h1
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
   exact IsArtinianRing.isUnit_of_mem_nonZeroDivisors hnz
 
 theorem exists_param [Finite (Pts O A)] (ζ₀ : Pts O A) [IsDVRAt ζ₀] :
     ∃ t : ↥(As O A), vL ζ₀ t = 1 ∧ ∀ ζ : Pts O A, ζ ≠ ζ₀ → t ∉ ζ.asIdeal := by
   classical
-  haveI := Fintype.ofFinite (Pts O A)
-  haveI : IsDomain (Loc ζ₀) := IsDVRAt.isDomain
-  haveI : IsDiscreteValuationRing (Loc ζ₀) := IsDVRAt.isDVR
+  have := Fintype.ofFinite (Pts O A)
+  have : IsDomain (Loc ζ₀) := IsDVRAt.isDomain
+  have : IsDiscreteValuationRing (Loc ζ₀) := IsDVRAt.isDVR
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible (Loc ζ₀)
   obtain ⟨⟨a, s⟩, has⟩ := IsLocalization.mk'_surjective ζ₀.asIdeal.primeCompl π
   have hva : vL ζ₀ a = 1 := by
@@ -232,7 +232,7 @@ theorem exists_unit_ord (K : Type*) [Field K] [Algebra K A] [FiniteDimensional K
     [Finite (Pts O A)] [∀ ζ : Pts O A, IsDVRAt ζ] (h : IsUnif (A := A) ϖ) (d : Pts O A → ℤ) :
     ∃ u : Aˣ, ∀ ζ : Pts O A, ord ϖ ζ (u : A) = ((d ζ : ℤ) : WithTop ℤ) := by
   classical
-  haveI := Fintype.ofFinite (Pts O A)
+  have := Fintype.ofFinite (Pts O A)
   choose t ht using exists_unit_param K h
   let φ : Pts O A → Aˣ →* Multiplicative ℤ := fun ζ =>
     { toFun := fun v => Multiplicative.ofAdd (ordZ ϖ ζ (v : A))
@@ -250,7 +250,7 @@ theorem exists_unit_ord (K : Type*) [Field K] [Algebra K A] [FiniteDimensional K
         ordZ ϖ ζ ((∏ ζ', t ζ' ^ d ζ' : Aˣ) : A) := rfl
     rw [← e1, map_prod, toAdd_prod]
     simp only [map_zpow, toAdd_zpow, e2, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [← coe_ordZ (ζ := ζ) h (Units.isUnit _).mem_nonZeroDivisors, hz]
 
 theorem ord_sub_one_nonneg_iff (h : IsUnif (A := A) ϖ) (ζ : Pts O A) [IsDVRAt ζ] (x : ↥(As O A)) :
@@ -263,7 +263,7 @@ theorem ord_sub_one_nonneg_iff (h : IsUnif (A := A) ϖ) (ζ : Pts O A) [IsDVRAt 
   induction v using ENat.recTopCoe with
   | top => simp
   | coe n =>
-    simp only [ENat.map_coe, ← WithTop.coe_add, WithTop.coe_nonneg, Nat.cast_eq_zero]
+    simp only [ENat.map_natCast, ← WithTop.coe_add, WithTop.coe_nonneg, Nat.cast_eq_zero]
     constructor <;> intro hh <;> omega
 
 theorem length_quot_add {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
@@ -318,16 +318,16 @@ theorem length_zero_of_le {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 theorem length_residue (hfin : Module.Finite O ↥(As O A)) (ζ : Pts O A) :
     Module.length O (↥(As O A) ⧸ ζ.asIdeal) = (fdeg ζ : ℕ∞) := by
   classical
-  haveI : ζ.asIdeal.IsMaximal := ζ.isMaximal
-  haveI : ζ.asIdeal.LiesOver (IsLocalRing.maximalIdeal O) := ⟨(comap_eq_maximalIdeal ζ).symm⟩
+  have : ζ.asIdeal.IsMaximal := ζ.isMaximal
+  have : ζ.asIdeal.LiesOver (IsLocalRing.maximalIdeal O) := ⟨(comap_eq_maximalIdeal ζ).symm⟩
   have hf : fdeg ζ = Module.finrank (O ⧸ IsLocalRing.maximalIdeal O) (↥(As O A) ⧸ ζ.asIdeal) := by
     rw [fdeg_eq_inertiaDeg, Ideal.inertiaDeg_eq_of_isMaximal (IsLocalRing.maximalIdeal O) ζ.asIdeal]
-  letI : Field (O ⧸ IsLocalRing.maximalIdeal O) := Ideal.Quotient.field _
-  haveI : Module.Finite O (↥(As O A) ⧸ ζ.asIdeal) :=
+  let : Field (O ⧸ IsLocalRing.maximalIdeal O) := Ideal.Quotient.field _
+  have : Module.Finite O (↥(As O A) ⧸ ζ.asIdeal) :=
     Module.Finite.of_surjective ((ζ.asIdeal.restrictScalars O).mkQ) (Submodule.mkQ_surjective _)
-  haveI : Module.Finite (O ⧸ IsLocalRing.maximalIdeal O) (↥(As O A) ⧸ ζ.asIdeal) :=
+  have : Module.Finite (O ⧸ IsLocalRing.maximalIdeal O) (↥(As O A) ⧸ ζ.asIdeal) :=
     Module.Finite.of_restrictScalars_finite O _ _
-  haveI : Module.Free (O ⧸ IsLocalRing.maximalIdeal O) (↥(As O A) ⧸ ζ.asIdeal) :=
+  have : Module.Free (O ⧸ IsLocalRing.maximalIdeal O) (↥(As O A) ⧸ ζ.asIdeal) :=
     Module.Free.of_divisionRing _ _
   let b := Module.finBasis (O ⧸ IsLocalRing.maximalIdeal O) (↥(As O A) ⧸ ζ.asIdeal)
   let eqv := b.equivFun.restrictScalars O
@@ -410,15 +410,15 @@ theorem length_step (K : Type*) [Field K] [Algebra K A] [FiniteDimensional K A]
     constructor
     · intro H
       have := H ζ₀
-      rw [hov, hd ζ₀, if_pos rfl, show c ζ₀ - (c ζ₀ + 1) = (-1 : ℤ) by ring] at this
+      rw [hov, hd ζ₀, ite_eq_left rfl, show c ζ₀ - (c ζ₀ + 1) = (-1 : ℤ) by ring] at this
       exact (ord_sub_one_nonneg_iff h ζ₀ b).mp this
     · intro hb ζ
       rw [hov, hd ζ]
       by_cases hz : ζ = ζ₀
       · subst hz
-        rw [if_pos rfl, show c ζ - (c ζ + 1) = (-1 : ℤ) by ring]
+        rw [ite_eq_left rfl, show c ζ - (c ζ + 1) = (-1 : ℤ) by ring]
         exact (ord_sub_one_nonneg_iff h ζ b).mpr hb
-      · rw [if_neg hz, show c ζ - (c ζ + 0) = (0 : ℤ) by ring, WithTop.coe_zero, add_zero]
+      · rw [ite_eq_right hz, show c ζ - (c ζ + 0) = (0 : ℤ) by ring, WithTop.coe_zero, add_zero]
         exact ord_nonneg (ζ := ζ) h b.2
   rw [← (G.quotKerEquivOfSurjective hsurj).length_eq,
     (Submodule.quotEquivOfEq _ _ hker).length_eq,
@@ -452,10 +452,10 @@ theorem length_ball_quotient_eq_sum_mul_fdeg (K : Type*) [Field K] [Algebra K A]
       by_cases hz : ζ = ζ₀
       · subst hz
         show m ζ = (if ζ = ζ then m ζ - 1 else m ζ) + if ζ = ζ then 1 else 0
-        rw [if_pos rfl, if_pos rfl]
+        rw [ite_eq_left rfl, ite_eq_left rfl]
         omega
       · show m ζ = (if ζ = ζ₀ then m ζ - 1 else m ζ) + if ζ = ζ₀ then 1 else 0
-        rw [if_neg hz, if_neg hz, add_zero]
+        rw [ite_eq_right hz, ite_eq_right hz, add_zero]
     have hsum : ∑ ζ, m ζ = ∑ ζ, m' ζ + 1 := by
       rw [Finset.sum_congr rfl (fun ζ _ => hmm ζ), Finset.sum_add_distrib]
       simp
@@ -484,9 +484,9 @@ end Gen
 theorem ballQuotLen_main : PI.BallQuotLen := by
   intro O _ _ _ K _ _ _ A _ _ _ _ _ _ ϖ hϖ hfin _ V _ _ _ _ _ _ e he c m
   classical
-  haveI : Module.Finite O ↥(As O A) := hfin
-  haveI : Finite (Pts O A) := PI.UnitaryGroupMassFormula.EfRankSum.finite_pts O A
-  letI : Fintype (Pts O A) := Fintype.ofFinite _
+  have : Module.Finite O ↥(As O A) := hfin
+  have : Finite (Pts O A) := PI.UnitaryGroupMassFormula.EfRankSum.finite_pts O A
+  let : Fintype (Pts O A) := Fintype.ofFinite _
   have h : IsUnif (A := A) ϖ := by
     refine ⟨hϖ, ?_, ?_⟩
     · rw [IsScalarTower.algebraMap_apply O K A]
@@ -734,7 +734,7 @@ theorem taylorRead (hE5 : ColDeriv G la) (u : Fin G.N → OsK X la G.w) (hu : uS
     intro col
     rw [rD_add, rD_sum, vanishingOnQuadric G la (k + 1) _ r hr (by rw [colIdx_mon col α']; omega), add_zero]
     simp only [hE5 u hu k _ α' col]
-    rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+    rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _)]
   unfold psiRaw
   simp only [h1, smul_smul]
   rw [← Finset.sum_smul, ha, one_smul]
@@ -865,8 +865,8 @@ theorem colDeriv_of (hTH : PoleLengthBounds.TaylorHasse) (G : GlobalFamilyData X
         (Jid X la G.w ^ (k + 1) • (⊤ : Submodule ↥(Frac0 X la G.w) ↥(HK X la G.w wF))) := by
     have : ∑ β ∈ PoleLengthBounds.mon D j k, PoleLengthBounds.ym G la β • cf' β = yPow X la G.w α.1 • cf := by
       rw [Finset.sum_eq_single α.1]
-      · simp only [cf', if_pos rfl]; rfl
-      · intro b _ hb; simp only [cf', if_neg hb, smul_zero]
+      · simp only [cf', ite_eq_left rfl]; rfl
+      · intro b _ hb; simp only [cf', ite_eq_right hb, smul_zero]
       · intro hn; exact absurd α.2 hn
     rw [this, sub_self]
     exact Submodule.zero_mem _
@@ -878,7 +878,7 @@ theorem colDeriv_of (hTH : PoleLengthBounds.TaylorHasse) (G : GlobalFamilyData X
   · subst hαα
     simp only [cf', ↓reduceIte]
   · have hne : α'.1 ≠ α.1 := fun e => hαα (Subtype.ext e.symm)
-    simp only [cf', if_neg hne, if_neg hαα, map_zero, smul_zero]
+    simp only [cf', ite_eq_right hne, ite_eq_right hαα, map_zero, smul_zero]
 
 end PI.PoleLengthCount
 end -- clump:auto
@@ -1213,9 +1213,9 @@ theorem ball_product_length : PiBallFrom := by
   intro hPi hBQ D B P j X ka wL wF G la Q S CRm T e c hOk k
 
   have hC : Q.InCurve := hOk.2.1
-  haveI : FiniteDimensional (Kp X la G.N) (OsK X la G.w) := hC.1
-  haveI : IsReduced (OsK X la G.w) := hC.2.1
-  haveI : ∀ ζ : PtsG G la, IsDVRAt ζ := isDVRAt_of_curve Q hC
+  have : FiniteDimensional (Kp X la G.N) (OsK X la G.w) := hC.1
+  have : IsReduced (OsK X la G.w) := hC.2.1
+  have : ∀ ζ : PtsG G la, IsDVRAt ζ := isDVRAt_of_curve Q hC
   have hU := isUnif_of_curve Q hC
 
   have hle : ballO (unifO X la G.N) Q.e Q.c ≤

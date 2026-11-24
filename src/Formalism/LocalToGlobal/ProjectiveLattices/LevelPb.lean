@@ -307,7 +307,7 @@ theorem levelPb_exists (D : D7) (pb : Fin 2 → HeightOneSpectrum (𝓞 D.host.K
             A := 1
             A_pos := Nat.one_pos }, ⟨rfl, rfl⟩, ?_⟩
   · refine fromK_of_gen ⟨{((D.host.g 0 : ℕ) : 𝓞 D.host.E), w0E D - (e 0 : 𝓞 D.host.E)} *
-        {((D.host.g 1 : ℕ) : 𝓞 D.host.E), w0E D - (e 1 : 𝓞 D.host.E)}, by rw [QE, QE, Ideal.span_mul_span'], ?_⟩
+        {((D.host.g 1 : ℕ) : 𝓞 D.host.E), w0E D - (e 1 : 𝓞 D.host.E)}, by rw [QE, QE, Ideal.span_mul_span], ?_⟩
     intro x hx
     obtain ⟨a, ha, b, hb, rfl⟩ := Set.mem_mul.1 hx
     have hgen : ∀ (p : ℕ) (f : ℤ) (y : 𝓞 D.host.E),

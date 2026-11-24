@@ -105,7 +105,7 @@ theorem lattices_local_global : ∀ (D : D7) (Z : LocDat D), (∀ Λ₁ Λ₂ : 
   refine ⟨fun Λ₁ Λ₂ h₁ h₂ => ⟨?_, fun h => ?_⟩, fun Λ₀ h₀ Lp hL hfin => ?_⟩
   · refine ((std_finite Z Λ₁ h₁).union (std_finite Z Λ₂ h₂)).subset fun p hp => ?_
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
     exact hp (hc.1.trans hc.2.symm)
   · apply cL_injective
     have hc (Λ : LV D) (h : Submodule.IsFullLattice D.host.E Λ) :
@@ -123,7 +123,7 @@ theorem lattices_local_global : ∀ (D : D7) (Z : LocDat D), (∀ Λ₁ Λ₂ : 
   · obtain ⟨Γ, ⟨hΓ, hΓp⟩, -⟩ := _root_.GlobalTheory.HL.Glue.glue (GlobalTheory.HL.placesOf Z) (nV D) Lp (fun p => hL p)
       (((std_finite Z Λ₀ h₀).union hfin).subset fun p hp => by
         by_contra hc
-        simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+        simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
         exact hp (hc.2.trans hc.1))
     refine ⟨Γ.map (((cE D).symm : (Fin (nV D) → D.host.E) →ₗ[D.host.E] _).restrictScalars (𝓞 D.host.E)),
       isLattice_map _ _ hΓ, fun p => ?_⟩

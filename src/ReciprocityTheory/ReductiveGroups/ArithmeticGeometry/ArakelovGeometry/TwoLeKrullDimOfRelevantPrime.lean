@@ -58,7 +58,7 @@ variable {R : Type*} [CommRing R]
 
 theorem krullDim_quotient_add_one_le {p q : Ideal R} [p.IsPrime] [q.IsPrime]
     (h : q < p) : ringKrullDim (R ⧸ p) + 1 ≤ ringKrullDim (R ⧸ q) := by
-  obtain ⟨r, hrp, hrq⟩ := SetLike.exists_of_lt h
+  obtain ⟨r, hrp, hrq⟩ := IsConcreteLE.exists_of_lt h
   have hr : Ideal.Quotient.mk q r ∈ nonZeroDivisors (R ⧸ q) :=
     mem_nonZeroDivisors_of_ne_zero (by rwa [ne_eq, Ideal.Quotient.eq_zero_iff_mem])
   exact ringKrullDim_succ_le_of_surjective (Ideal.Quotient.factor h.le)

@@ -76,7 +76,7 @@ def lowSet : Set (GA E a) := {g | (ideleModule E (GeneralLinearGroup.det g) : �
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem continuous_absDet : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-  continuous_subtype_val.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
+  continuous_subtypeVal.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem absDet_invT (g : GA E a) : (ideleModule E (GeneralLinearGroup.det (invT a (Ad E) g)) : ℝ) =
@@ -113,17 +113,17 @@ theorem stronglyMeasurable_rsHat {F F' : Sm E a} (h : Continuous F.1) (h' : Cont
     (continuous_snd : Continuous (pFin E)).comp ((continuous_apply i).comp hy)
   have h3 : Continuous ((latt a (traceDualIdeal E J)).indicator (1 : (Fin a → Af E) → ℂ)) :=
     (IsClopen.continuous_indicator ⟨isClosed_latt _, isOpen_latt _⟩ continuous_const)
-  haveI : SFinite (infMeasure E a) := by unfold infMeasure; infer_instance
+  have : SFinite (infMeasure E a) := by unfold infMeasure; infer_instance
   have h4 : Continuous fun p : GA E a × (Fin a → Cinf E) => rsInf ℓ F.1 F'.1 Φ p.1 p.2 *
       (Real.fourierChar (-∑ i, ∑ w, 2 * (p.2 i w * pInf E (y p.1 i) w).re) : ℂ) := by
-    refine (continuous_rsInf h h' hΦ.1.continuous hΦ.2.2).mul (continuous_subtype_val.comp
+    refine (continuous_rsInf h h' hΦ.1.continuous hΦ.2.2).mul (continuous_subtypeVal.comp
       (Real.continuous_fourierChar.comp (Continuous.neg (continuous_finsetSum _ fun i _ =>
         continuous_finsetSum _ fun w _ => continuous_const.mul (Complex.continuous_re.comp (Continuous.mul ?_ ?_))))))
     · fun_prop
     · exact (continuous_apply w).comp ((h1 i).comp continuous_fst)
   refine ((h4.stronglyMeasurable.integral_prod_right'.mul (Continuous.stronglyMeasurable ?_)).mul
     (h3.comp (continuous_pi h2)).stronglyMeasurable).mul stronglyMeasurable_const
-  exact continuous_subtype_val.comp (continuous_finiteAdelicChar.comp
+  exact continuous_subtypeVal.comp (continuous_finiteAdelicChar.comp
     (continuous_finsetSum _ fun i _ => continuous_const.mul (h2 i)))
 
 theorem exists_norm_rsHat_le {ι : Type} {S S' : Submodule ℂ (Sm E a)} {g : ι → GA E a} {w : ι → ℝ}
@@ -251,7 +251,7 @@ theorem partB_entire (hπ : π.IsUnitary) (hπ' : π'.IsUnitary) (hφ : φ ∈ w
       rsHat ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* (g⁻¹).valᵀ)) *
         ((ideleModule E (GeneralLinearGroup.det g) : ℝ) : ℂ) ^ (s - 1)) (𝓕 ∩ lowSet E a) μ) ∧
     Differentiable ℂ (partB ℓ φ.1 φ'.1 Φ J η μ 𝓕) := by
-  haveI : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
   have hm : ∀ ξ : {ξ : Fin a → E // ξ ≠ 0}, AEStronglyMeasurable (fun g : GA E a =>
       rsHat ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* (g⁻¹).valᵀ)) (μ.restrict (𝓕 ∩ lowSet E a)) :=
     fun ξ => (stronglyMeasurable_rsHat J η (continuous_bounded hπ hφ).1 (continuous_bounded hπ' hφ').1 hΦ

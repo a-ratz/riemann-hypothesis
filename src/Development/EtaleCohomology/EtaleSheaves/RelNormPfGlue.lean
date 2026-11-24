@@ -60,13 +60,13 @@ def NormClosed : Prop := ∀ {Z S : Scheme.{0}} (g : Z ⟶ S) [QuasiCompact g] [
 
 theorem RelNorm_of_closed (hN : NormClosed) : LateralTheory.E.SteinPf.RelNorm := by
   intro Z S g _ _ hZ
-  haveI : IsIntegral Z := hZ.1
+  have : IsIntegral Z := hZ.1
   refine ⟨g.normalization, g.toNormalization, g.fromNormalization, inferInstance, inferInstance, inferInstance,
     g.toNormalization_fromNormalization, fun V hV hne => ⟨?_, ?_, hN g hZ.1 V hV⟩⟩
   · obtain ⟨x, hx⟩ := hne
     obtain ⟨z, hz⟩ := g.toNormalization.denseRange.exists_mem_open V.isOpen ⟨x, hx⟩
     exact ⟨z, hz⟩
-  · haveI : IsSchemeTheoreticallyDominant g.toNormalization := .of_isDominant _
+  · have : IsSchemeTheoreticallyDominant g.toNormalization := .of_isDominant _
     exact g.toNormalization.app_injective V
 
 end LateralTheory.E.RelNormPf

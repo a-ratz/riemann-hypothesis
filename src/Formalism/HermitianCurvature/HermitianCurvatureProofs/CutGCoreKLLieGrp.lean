@@ -147,9 +147,9 @@ theorem stab_exp {z e : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 <
     rcases i with i | _ <;> rcases j with j | _
     · simp only [cvec2, cvec2', Sum.elim_inl, Sum.inl.injEq]
       exact gram_CC hz hzz i j
-    · simp only [cvec2, cvec2', Sum.elim_inl, Sum.elim_inr, reduceCtorEq, if_false]
+    · simp only [cvec2, cvec2', Sum.elim_inl, Sum.elim_inr, reduceCtorEq, ite_false]
       exact gram_CV hE 0 i
-    · simp only [cvec2, cvec2', Sum.elim_inl, Sum.elim_inr, reduceCtorEq, if_false]
+    · simp only [cvec2, cvec2', Sum.elim_inl, Sum.elim_inr, reduceCtorEq, ite_false]
       exact gram_VC hE 0 j
     · simp [cvec2, cvec2', hee]
   have hJ : Fintype.card (JJ r ⊕ Unit) ≤ Fintype.card (Fin (2 * r + k + 1)) := by
@@ -208,8 +208,8 @@ theorem exp_intertwine {Wp Wq : Type} [NormedAddCommGroup Wp] [NormedSpace ℂ W
     [NormedAddCommGroup Wq] [NormedSpace ℂ Wq] [FiniteDimensional ℂ Wq] (A : Wq →L[ℂ] Wp) (D' : Wq →L[ℂ] Wq)
     (D : Wp →L[ℂ] Wp) (h : A.comp D' = D.comp A) :
     A.comp (NormedSpace.exp D') = (NormedSpace.exp D).comp A := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
-  have : CompleteSpace Wq := FiniteDimensional.complete ℂ Wq
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
+  have : CompleteSpace Wq := FiniteDimensional.completeSpace ℂ Wq
   have hp : ∀ n : ℕ, A.comp (D' ^ n) = (D ^ n).comp A := by
     intro n
     induction n with
@@ -219,7 +219,7 @@ theorem exp_intertwine {Wp Wq : Type} [NormedAddCommGroup Wp] [NormedSpace ℂ W
       have e1 := congrArg (fun T : Wq →L[ℂ] Wp => T (D' v)) ih
       have e2 := congrArg (fun T : Wq →L[ℂ] Wp => T v) h
       simp only [ContinuousLinearMap.comp_apply] at e1 e2 ⊢
-      rw [pow_succ, pow_succ, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, e1, e2]
+      rw [pow_succ, pow_succ, mul_apply_eq_comp, mul_apply_eq_comp, e1, e2]
   have h1 := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) D'
   have h2 := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) D
   have g1 := h1.map (ContinuousLinearMap.compL ℂ Wq Wq Wp A) (ContinuousLinearMap.continuous _)
@@ -344,7 +344,7 @@ theorem lie_group_realization : KLLieGrp := by
       (∑ p : Fin (k - 1) × Fin (k - 1), B p.1 p.2 • ecOp π (unitB (Hpk k r) (fun a => g *ᵥ Fr a) p.1 p.2)).comp A := by
     ext v
 
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
+    simp only [ContinuousLinearMap.comp_apply, sum_apply, smul_apply,
     map_sum, map_smul]
     refine Finset.sum_congr rfl fun p _ => ?_
     congr 1

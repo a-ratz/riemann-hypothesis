@@ -363,7 +363,7 @@ theorem nlam_coef {T : E} {F : LFlag S r T} {n : S.V ≃ₗ[E] S.V} (hn : n ∈ 
     have e := hsum a
     rw [Finsupp.linearCombination_apply, Finsupp.sum_fintype _ _ (by simp)] at e
     simp only [add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rw [e]
     abel
 
@@ -424,7 +424,7 @@ theorem leadMinor_uni {N : ℕ} (A Z B : Matrix (Fin N) (Fin N) E) (hA0 : ∀ a 
         rw [hB0 _ _ (by rw [Fin.lt_def]; simp; omega), mul_zero]
     rw [hsub, Matrix.det_mul, Matrix.det_mul]
     have hA : (A.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
-      rw [Matrix.det_of_lowerTriangular]
+      rw [Matrix.det_of_isLowerTriangular]
       · simp [hA1]
       · intro i j hij
         exact hA0 _ _ (by
@@ -432,7 +432,7 @@ theorem leadMinor_uni {N : ℕ} (A Z B : Matrix (Fin N) (Fin N) E) (hA0 : ∀ a 
           rw [Fin.lt_def] at this ⊢
           simpa using this)
     have hB : (B.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
-      rw [Matrix.det_of_upperTriangular]
+      rw [Matrix.det_of_isUpperTriangular]
       · simp [hB1]
       · intro i j hij
         exact hB0 _ _ (by

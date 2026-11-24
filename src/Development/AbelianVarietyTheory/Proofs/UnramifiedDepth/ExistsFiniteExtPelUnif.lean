@@ -83,7 +83,7 @@ theorem exists_finite_dvr_algHom_mem_range {B K : Type} [CommRing B] [IsDomain B
       Function.Injective (algebraMap B B') ∧
       ∃ e : B' →ₐ[B] K, IsLocalHom (e : B' →+* K) ∧ θ ∈ Set.range e := by
   let k := ResidueField B
-  letI : Algebra k K := (ResidueField.lift (algebraMap B K)).toAlgebra
+  let : Algebra k K := (ResidueField.lift (algebraMap B K)).toAlgebra
   have : IsScalarTower B k K := .of_algebraMap_eq fun b =>
     (ResidueField.lift_residue_apply (algebraMap B K) b).symm
   have hθ : IsIntegral k θ := (Algebra.IsIntegral.isIntegral (R := B) θ).tower_top
@@ -154,13 +154,13 @@ theorem exists_finite_dvr_algHom_subset_range {B K : Type} [CommRing B] [IsDomai
       inferInstance, fun _ _ h => h, Algebra.ofId B K, ‹IsLocalHom (algebraMap B K)›, by simp⟩
   | insert θ s _ ih =>
     obtain ⟨C, _, _, _, _, _, hfin, hinj, e, hloc, hs⟩ := ih
-    letI : Algebra C K := (e : C →+* K).toAlgebra
+    let : Algebra C K := (e : C →+* K).toAlgebra
     have : IsScalarTower B C K := .of_algebraMap_eq fun b => (e.commutes b).symm
     have : IsLocalHom (algebraMap C K) := hloc
     have : Module.Finite C K := .of_restrictScalars_finite B C K
     obtain ⟨D, _, _, _, _, _, hfin', hinj', e', hloc', hθ⟩ :=
       exists_finite_dvr_algHom_mem_range (B := C) θ
-    letI : Algebra B D := ((algebraMap C D).comp (algebraMap B C)).toAlgebra
+    let : Algebra B D := ((algebraMap C D).comp (algebraMap B C)).toAlgebra
     have : IsScalarTower B C D := .of_algebraMap_eq fun _ => rfl
     refine ⟨D, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
       Module.Finite.trans C D, hinj'.comp hinj, e'.restrictScalars B, hloc', ?_⟩
@@ -172,7 +172,7 @@ theorem exists_finite_dvr_algHom_subset_range {B K : Type} [CommRing B] [IsDomai
 theorem exists_finite_dvr_residueField_ringHom :
     ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [IsAdicComplete (maximalIdeal W) W] (k' : Type) [Field k'] [Algebra (ResidueField W) k'] [FiniteDimensional (ResidueField W) k'], ∃ (W' : Type) (_ : CommRing W') (_ : IsDomain W') (_ : IsDiscreteValuationRing W') (_ : IsAdicComplete (maximalIdeal W') W') (_ : Algebra W W'), Module.Finite W W' ∧ Function.Injective (algebraMap W W') ∧ ∃ e : k' →+* ResidueField W', ∀ v : W, e (algebraMap (ResidueField W) k' (residue W v)) = residue W' (algebraMap W W' v) := by
   intro W _ _ _ _ K _ _ _
-  letI : Algebra W K := ((algebraMap (ResidueField W) K).comp (residue W)).toAlgebra
+  let : Algebra W K := ((algebraMap (ResidueField W) K).comp (residue W)).toAlgebra
   have : IsScalarTower W (ResidueField W) K := .of_algebraMap_eq fun _ => rfl
   have : IsLocalHom (algebraMap W K) := ⟨fun b hb => by
     by_contra hn

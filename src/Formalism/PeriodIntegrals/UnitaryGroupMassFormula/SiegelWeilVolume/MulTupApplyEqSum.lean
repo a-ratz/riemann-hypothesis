@@ -106,7 +106,7 @@ theorem preimage_linIndep (D : (Matrix (Fin n) (Fin n) K)ˣ) :
     mulTup (M := M) (D : Matrix (Fin n) (Fin n) K) ⁻¹' {X | LinearIndependent K X} =
       {X | LinearIndependent K X} := by
   ext X
-  simp only [Set.mem_preimage, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, mem_ofPred_eq]
   constructor
   · intro h
     have h1 := linIndep_mulTup D⁻¹ h

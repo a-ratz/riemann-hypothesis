@@ -74,7 +74,7 @@ theorem setIntegral_mul_right {μ : Measure (GA E a)} [μ.IsHaarMeasure] {𝓕 :
     (h𝓕 : IsFundamentalDomain (latticeGL E a) 𝓕 μ) {f : GA E a → ℂ}
     (hf : ∀ γ ∈ latticeGL E a, ∀ g, f (γ * g) = f g) (h : GA E a) :
     ∫ g in 𝓕, f (g * h) ∂μ = ∫ g in 𝓕, f g ∂μ := by
-  haveI := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   have hmp : MeasurePreserving (fun g => g * h) μ μ := measurePreserving_mul_right μ h
   have e1 := hmp.setIntegral_preimage_emb (measurableEmbedding_mulRight h) f ((fun g => g * h⁻¹) ⁻¹' 𝓕)
   have e2 : (fun g => g * h) ⁻¹' ((fun g => g * h⁻¹) ⁻¹' 𝓕) = 𝓕 := by ext; simp
@@ -83,8 +83,8 @@ theorem setIntegral_mul_right {μ : Measure (GA E a)} [μ.IsHaarMeasure] {𝓕 :
   have h2 : IsFundamentalDomain (latticeGL E a) ((fun g => g * h⁻¹) ⁻¹' 𝓕) μ :=
     h𝓕.preimage_of_equiv (measurePreserving_mul_right μ h⁻¹).quasiMeasurePreserving (e := id)
       Function.bijective_id (fun γ x => by simp [Subgroup.smul_def, mul_assoc])
-  haveI : DiscreteTopology (latticeGL E a) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
-  haveI : SecondCountableTopology (GA E a) := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E a
+  have : DiscreteTopology (latticeGL E a) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
+  have : SecondCountableTopology (GA E a) := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E a
   have hI : GlobalTheory.AutomorphicL2Unitary.LeftInv (latticeGL E a) f := hf
   have A := (GlobalTheory.AutomorphicL2Unitary.integral_quotMeasure h2 (GlobalTheory.AutomorphicL2Unitary.descend (latticeGL E a) f)).trans
     (integral_congr_ae (Eventually.of_forall hI.descend_mk))

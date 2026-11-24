@@ -103,6 +103,6 @@ theorem inert_fixes_root_of_unit_ratio (K Ω : Type) [Field K] [Field Ω] [Algeb
   have : g u = u := by
     rw [hξ, div_eq_one_iff_eq hu0] at hξ1; exact hξ1
   rw [hgu, hu] at this
-  exact (div_left_inj' hc).mp this
+  exact (div_left_inj₀ hc).mp this
 
 end GlobalTheory

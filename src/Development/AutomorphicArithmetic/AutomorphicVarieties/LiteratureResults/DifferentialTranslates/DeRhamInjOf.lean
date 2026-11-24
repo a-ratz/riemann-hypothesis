@@ -80,7 +80,7 @@ theorem corr_sum {n : ℕ} (c : Fin n → ℂ) {α : Fin n → Herm E a [⋀^Fin
   rw [alt_sum, map_sum, Finset.sum_apply, Finset.sum_apply, Finset.sum_apply, ContinuousAlternatingMap.sum_apply,
   Matrix.mulVec_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [AlternatingMap.smul_apply, map_smul, Pi.smul_apply, Pi.smul_apply, Pi.smul_apply, Matrix.mulVec_smul, ← h i g x X]
+  rw [smul_apply, map_smul, Pi.smul_apply, Pi.smul_apply, Pi.smul_apply, Matrix.mulVec_smul, ← h i g x X]
   rfl
 
 end
@@ -109,7 +109,7 @@ theorem deRhamInj_of (h1 : AbsMain) (h2 : DEquiv) (h3 : InclFacts) (h4 : DExact)
       exact corr_sum U Ξ c hw
     have hb : ∀ (X : Fin q → Herm E a) (i : Fin q), (X i).1 = 1 → (∑ i, c i • α i) X = 0 := fun X i hX => by
       rw [alt_sum]
-      exact Finset.sum_eq_zero fun j _ => by rw [AlternatingMap.smul_apply, (hα j).1.basic X i hX, smul_zero]
+      exact Finset.sum_eq_zero fun j _ => by rw [smul_apply, (hα j).1.basic X i hX, smul_zero]
     generalize ∑ i, c i • α i = β at hs hb
     generalize ∑ i, c i • w i = z at hs hc
     cases q with

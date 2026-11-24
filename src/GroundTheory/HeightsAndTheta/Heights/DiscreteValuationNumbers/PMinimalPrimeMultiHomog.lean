@@ -97,7 +97,7 @@ theorem isHomogeneous_lex_of_isMultiHomogIdeal (e : K ≃ Fin (Fintype.card K))
     {I : Ideal (MRing ι R)} (hI : IsMultiHomogIdeal I) :
     letI := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v));
     I.IsHomogeneous (weightedHomogeneousSubmodule R (fun v => lexRelabel e (blockWeight ι v))) := by
-  letI := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v))
+  let := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v))
   intro i r hr
   change ((weightedDecomposition R (fun v => lexRelabel e (blockWeight ι v))).decompose' r i :
     MRing ι R) ∈ I
@@ -111,7 +111,7 @@ theorem isMultiHomogIdeal_of_isHomogeneous_lex (e : K ≃ Fin (Fintype.card K))
     (hI : letI := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v));
       I.IsHomogeneous (weightedHomogeneousSubmodule R (fun v => lexRelabel e (blockWeight ι v)))) :
     IsMultiHomogIdeal I := by
-  letI := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v))
+  let := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v))
   intro f hf b
   rw [← weightedHomogeneousComponent_comp_addMonoidHom _ (lexRelabel_injective e)]
   exact weightedHomogeneousComponent_mem_of_mem R _ hI hf _
@@ -121,8 +121,8 @@ end Lex
 theorem MinimalPrimeMultiHomog.proof : MinimalPrimeMultiHomog.Statement := by
   intro R _ K _ _ ι J W hJ hW
   let e : K ≃ Fin (Fintype.card K) := Fintype.equivFin K
-  letI : DecidableEq (Lex (Fin (Fintype.card K) → ℕ)) := LinearOrder.toDecidableEq
-  letI := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v))
+  let : DecidableEq (Lex (Fin (Fintype.card K) → ℕ)) := LinearOrder.toDecidableEq
+  let := weightedGradedAlgebra R (fun v => lexRelabel e (blockWeight ι v))
   have hJh : J.IsHomogeneous (weightedHomogeneousSubmodule R (fun v => lexRelabel e (blockWeight ι v))) := isHomogeneous_lex_of_isMultiHomogIdeal e hJ
   have hWp : W.IsPrime := hW.1.1
   have hcore : (W.homogeneousCore (weightedHomogeneousSubmodule R (fun v => lexRelabel e (blockWeight ι v)))).toIdeal.IsPrime := hWp.homogeneousCore

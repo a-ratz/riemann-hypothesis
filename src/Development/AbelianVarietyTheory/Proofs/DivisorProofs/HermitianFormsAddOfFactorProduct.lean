@@ -269,7 +269,7 @@ theorem lam_shift [IsCommMonObj A] {L L₁ : LB A.left} (u₁ : HolUnif A L₁ g
   have step : ∀ I, u.fr (j I) (cmap g I z) ^ ε I = ext u.Λ χ (cmap g I l) ^ ε I *
       Complex.exp ((ε I : ℂ) * (Real.pi * B Hm (cmap g I z) (cmap g I l) +
         Real.pi / 2 * B Hm (cmap g I l) (cmap g I l))) * u.fr (j I) (cmap g I (z + l)) ^ ε I := fun I => by
-    rw [hF.2.2 ⟨_, hmem I⟩ (j I) _ (hc I), map_add (f := _), ext_of_mem _ _ (hmem I), mul_zpow, mul_zpow, Complex.exp_int_mul]
+    rw [hF.2.2 ⟨_, hmem I⟩ (j I) _ (hc I), map_add (f := _), ext_of_mem _ _ (hmem I), mul_zpow, mul_zpow, Complex.exp_intCast_mul]
     rfl
   rw [lamUnif_fr, lamUnif_fr, Finset.prod_congr rfl (fun I _ => step I), Finset.prod_mul_distrib,
     Finset.prod_mul_distrib, ← Complex.exp_sum, charProd hM hF l ((hΛ _).2 hl1) ((hΛ _).2 hl2)]
@@ -287,7 +287,7 @@ theorem GlobalTheory.TorusRM.lbIso_lam_of_add : ∀ (g : ℕ) (A : Over (Sp ℂ)
     IsFactorAH u₁ H₁ χ₁ → IsFactorAH u₂ H₂ χ₂ → IsFactorAH u₃ H₃ χ₃ → H₃ = H₁ + H₂ →
     LBIso (abelian₂ A M₂) (LB.div (abelian₂ A M₃) (abelian₂ A M₁)) := by
   intro g A _ hA hP M₁ M₂ M₃ u₁ u₂ u₃ H₁ H₂ H₃ χ₁ χ₂ χ₃ h1 h2 h3 he2 he3 f1 f2 f3 hH
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   have hl1 : (abelian₂ A M₁).IsLB := LB.isLB_linComb h1 _ _
   have hl2 : (abelian₂ A M₂).IsLB := LB.isLB_linComb h2 _ _
   have hl3 : (abelian₂ A M₃).IsLB := LB.isLB_linComb h3 _ _

@@ -69,8 +69,8 @@ theorem measure_subgroup_eq {G : Type*} [Group G] [TopologicalSpace G] [IsTopolo
     (hKH : K ≤ H) (hH : IsOpen (H : Set G)) (hK : IsOpen (K : Set G)) (hfin : K.relIndex H ≠ 0) :
     μ H = K.relIndex H * μ K := by
   classical
-  haveI : (K.subgroupOf H).FiniteIndex := ⟨hfin⟩
-  letI : Fintype (H ⧸ K.subgroupOf H) := Fintype.ofFinite _
+  have : (K.subgroupOf H).FiniteIndex := ⟨hfin⟩
+  let : Fintype (H ⧸ K.subgroupOf H) := Fintype.ofFinite _
   have hcover : (H : Set G) =
       ⋃ q : H ⧸ K.subgroupOf H, (fun y => ((q.out : H) : G)⁻¹ * y) ⁻¹' (K : Set G) := by
     ext x
@@ -170,7 +170,7 @@ theorem coe_lc_subgroupOf {n : ℕ} (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)
 theorem isOpen_lc {n : ℕ} (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (m : ℕ) :
     IsOpen (((Lc Z m).subgroupOf (GzS Z) : Subgroup (GzS Z)) : Set (GzS Z)) := by
   rw [coe_lc_subgroupOf]
-  exact (GLnLocal.isOpen_congruenceSubgroup k n m).preimage continuous_subtype_val
+  exact (GLnLocal.isOpen_congruenceSubgroup k n m).preimage continuous_subtypeVal
 
 theorem isCompact_lc {n : ℕ} (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (m : ℕ) :
     IsCompact (((Lc Z m).subgroupOf (GzS Z) : Subgroup (GzS Z)) : Set (GzS Z)) := by

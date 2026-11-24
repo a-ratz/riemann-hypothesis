@@ -107,8 +107,8 @@ private theorem sm_open {A B C : Scheme.{0}} (i : A ⟶ B) [IsOpenImmersion i] (
 private theorem empty_v (l : ℕ) [Fact l.Prime] (hI : In) (X : Scheme.{0}) (hX : IsEmpty X) (n : ℤ) :
     Subsingleton (V l X n) := by
   have hE := LEmptyPf.LEmpty_of hI.a5 hI.a9
-  haveI h1 : ∀ k, Subsingleton (HtL l k (sch.obj X) n 0) := fun k => hE _ X hX _ n
-  haveI h2 : Subsingleton (Hl l (sch.obj X) n 0) := by
+  have h1 : ∀ k, Subsingleton (HtL l k (sch.obj X) n 0) := fun k => hE _ X hX _ n
+  have h2 : Subsingleton (Hl l (sch.obj X) n 0) := by
     show Subsingleton (HlSub l (sch.obj X) n 0)
     infer_instance
   show Subsingleton (ℚ_[l] ⊗[ℤ_[l]] Hl l (sch.obj X) n 0)
@@ -146,7 +146,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.pnCls_holds :
     intro d
     induction d with
     | zero =>
-      haveI := (hF k 0).2.2.2
+      have := (hF k 0).2.2.2
       refine ⟨⟨inv (PNto k 0), IsIso.inv_hom_id _⟩, inferInstance, ⊥, ?_, ?_⟩
       · show ((⊥ : (PN k 0).Opens) : Set (PN k 0)) = (Set.range (inv (PNto k 0)).base)ᶜ
         rw [Set.range_eq_univ.mpr (ConcreteCategory.bijective_of_isIso (inv (PNto k 0)).base).2]
@@ -160,13 +160,13 @@ theorem UpperTheory.Gal.KunnethLefschetz.pnCls_holds :
           change pb l (inv (PNto k 0)) 0 (oneV l (PN k 0)) = 0
           rw [h0, map_zero]
         · have he : IsEmpty ((⊥ : (PN k 0).Opens) : Scheme) := ⟨fun x => by simpa using x.2⟩
-          haveI := empty_v l hI ((⊥ : (PN k 0).Opens) : Scheme) he (2 * ((0 : ℕ) : ℤ))
+          have := empty_v l hI ((⊥ : (PN k 0).Opens) : Scheme) he (2 * ((0 : ℕ) : ℤ))
           exact Subsingleton.elim _ _
     | succ d ih =>
       obtain ⟨t, htc, U, hU, z, hz, hzU⟩ := ih
       obtain ⟨ι, U0, hιc, hιp, hoff0, ⟨eU0⟩⟩ := hH k d
-      haveI := htc
-      haveI := hιc
+      have := htc
+      have := hιc
       let t' : Pt (PNto k (d + 1)) := Pt.map ι hιp t
       have htc' : IsClosedImmersion t'.1 := by
         show IsClosedImmersion (t.1 ≫ ι)

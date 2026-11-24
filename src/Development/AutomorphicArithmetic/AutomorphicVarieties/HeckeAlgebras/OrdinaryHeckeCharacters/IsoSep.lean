@@ -102,7 +102,7 @@ theorem UpperTheory.irreducible_projection_exists :
     (f.1.codRestrict Y (fun v => f.2.2 ⟨v, rfl⟩)).intertwiningMap_of_isIntertwiningMap σ τ
       (fun g v => Subtype.ext (f.2.1 g v))
   let ψ := fun i => Representation.IntertwiningMap.equivLinearMapAsModule σ τ (φ i)
-  haveI : IsSimpleModule (MonoidAlgebra ℂ H) σ.asModule :=
+  have : IsSimpleModule (MonoidAlgebra ℂ H) σ.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule σ).mp hσ
   have hall : ∀ y ∈ (⨆ (f : { f : V →ₗ[ℂ] M // (∀ (g : H) (v : V), f (σ g v) = ρ g (f v)) ∧ LinearMap.range f ≤ Y }),
       LinearMap.range f.1), ∃ hy : y ∈ Y,

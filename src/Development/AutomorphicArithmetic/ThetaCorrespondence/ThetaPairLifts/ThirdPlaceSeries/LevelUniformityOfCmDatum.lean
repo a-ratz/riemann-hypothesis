@@ -180,7 +180,7 @@ theorem compAt_baseCharacter_mul_unramified_eq_typeCharacter_alt : GlobalTheory.
         (uu : (s.v.adicCompletion (maximalRealSubfield D.host.E))ˣ), (uu : s.v.adicCompletion (maximalRealSubfield D.host.E)) = y →
           ((ξ uu : ℂˣ) : ℂ) = embLL0 D ((τ (j.1 + 1) kv hy.unit : (↥D.LL0)ˣ) : ↥D.LL0) := by
   intro hGAR D cf Rw low Pq S hL eig θ Bs hV τ hτ j kv s hsw χ hχ red
-  haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
+  have : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
   obtain ⟨-, -, -, h4⟩ := GlobalTheory.T.stdMaximalCompact_reduction_properties D 0
   obtain ⟨φ, hφs, hφ0, hφa, -⟩ := h4 s
   have hker : RingHom.ker φ ≤ RingHom.ker red := fun x hx =>
@@ -315,8 +315,8 @@ private theorem red_zero (v : HeightOneSpectrum (𝓞 (maximalRealSubfield L))) 
     (red : v.adicCompletionIntegers (maximalRealSubfield L) →+* ZMod q)
     (y : v.adicCompletionIntegers (maximalRealSubfield L))
     (hy : Valued.v (y : v.adicCompletion (maximalRealSubfield L)) < 1) : red y = 0 := by
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : CharZero (v.adicCompletion (maximalRealSubfield L)) :=
+  have : Fact q.Prime := ⟨hq⟩
+  have : CharZero (v.adicCompletion (maximalRealSubfield L)) :=
     charZero_of_injective_algebraMap (algebraMap (maximalRealSubfield L) _).injective
   have hp : (RingHom.ker red).IsPrime := RingHom.ker_isPrime red
   have hne : RingHom.ker red ≠ ⊥ := by
@@ -352,9 +352,9 @@ private theorem sum_top {R : Type} [CommRing R] {n r : ℕ} (h : r ≤ n) (X : M
   unfold NX.supSum NX.topR
   symm
   refine Finset.sum_of_injOn (Fin.castLE h) (Fin.castLE_injective h).injOn (fun _ _ => Finset.mem_univ _)
-    (fun a _ ha => Finset.sum_eq_zero fun b _ => if_neg fun hh => ha ⟨⟨a.val, by omega⟩, by simp, Fin.ext rfl⟩) fun a _ => ?_
+    (fun a _ ha => Finset.sum_eq_zero fun b _ => ite_eq_right fun hh => ha ⟨⟨a.val, by omega⟩, by simp, Fin.ext rfl⟩) fun a _ => ?_
   refine Finset.sum_of_injOn (Fin.castLE h) (Fin.castLE_injective h).injOn (fun _ _ => Finset.mem_univ _)
-    (fun b _ hb => if_neg fun hh => hb ⟨⟨b.val, hh.2⟩, by simp, Fin.ext rfl⟩) fun b _ => ?_
+    (fun b _ hb => ite_eq_right fun hh => hb ⟨⟨b.val, hh.2⟩, by simp, Fin.ext rfl⟩) fun b _ => ?_
   refine if_congr ?_ rfl rfl
   simp only [Fin.val_castLE, b.2, and_true]
   exact eq_comm
@@ -362,7 +362,7 @@ private theorem sum_top {R : Type} [CommRing R] {n r : ℕ} (h : r ≤ n) (X : M
 private theorem supSum_small {R : Type} [CommRing R] {r : ℕ} (h : ¬ 2 ≤ r) (M : Matrix (Fin r) (Fin r) R) :
     NX.supSum r M = 0 := by
   unfold NX.supSum
-  exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => if_neg (by have := b.2; omega)
+  exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => ite_eq_right (by have := b.2; omega)
 
 private theorem loc_read (s : SplitPlace L) {n r : ℕ} (h : r ≤ n) {q : ℕ} (hq : q.Prime)
     (red : s.v.adicCompletionIntegers (maximalRealSubfield L) →+* ZMod q)
@@ -459,7 +459,7 @@ theorem _root_.GlobalTheory.T.complex_typePlaceCharacter_eq_superdiag_addChar_mu
   generalize hM : NX.redMat s.v red (NX.topR (Nat.le_add_right D.R.r D.R.t : D.R.r ≤ D.R.nV) x.val) = M
   erw [hM] at h1 hry
   have hdet : IsUnit M.det := by
-    rw [Matrix.det_of_upperTriangular h1.1, Finset.prod_eq_one fun a _ => h1.2 a]
+    rw [Matrix.det_of_isUpperTriangular h1.1, Finset.prod_eq_one fun a _ => h1.2 a]
     exact isUnit_one
   have hval := NX.glOf_val M hdet
   generalize hu : (Pi.mulSingle kv0 (NX.glOf M) : G0g D.nd) = u
@@ -477,7 +477,7 @@ theorem _root_.GlobalTheory.T.complex_typePlaceCharacter_eq_superdiag_addChar_mu
   · rw [hψ₀ hr y, hry]
   · have h0 : NG.supDiag s D.R.r x = 0 := by
       unfold NG.supDiag
-      exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun c _ => if_neg (by omega)
+      exact Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun c _ => ite_eq_right (by omega)
     rw [hy, h0, GlobalTheory.XUniRead.supSum_small hr, mul_zero, ofAdd_zero, map_one, Units.val_one, map_one, AddChar.map_zero_eq_one]
 end -- clump:auto
 end -- clump:auto
@@ -1010,7 +1010,7 @@ theorem theta_xiRed_ne_one : ∀ (D : D7) (cf : CharFrame D) (Rw : RowSide D) (l
     2 ≤ D.R.r → D.ntw.Tw → ∀ kv : (Σ k : Fin 2, D.nd.PlG k), θ kv.1 (Multiplicative.ofAdd (NX.xiRed D kv)) ≠ 1 := by
   classical
   intro D cf Rw low Pq S hL eig θ Bs hr i kv h1
-  haveI : NeZero (D.host.g kv.1) := ⟨(D.host.g_prime kv.1).ne_zero⟩
+  have : NeZero (D.host.g kv.1) := ⟨(D.host.g_prime kv.1).ne_zero⟩
   obtain ⟨θ', hθ', hψ⟩ := Bs.exp.psiU_gen i true
   have hu : Formalism.L2.NX.tvAt (p := fun kv : (Σ k : Fin 2, D.nd.PlG k) => D.host.g kv.1) hr kv ∈ D.nexp.U := by
     rw [Bs.exp.U_eq]; exact Formalism.L2.NX.tvAt_mem hr _
@@ -1296,7 +1296,7 @@ theorem level_uniformity_transfer_alt : _root_.GlobalTheory.HeightCounting.Up.Pu
     have h1 := GlobalTheory.T.splitPlaces_same_realPlace_natCast_mem _ _ _ _ heq.symm hg
     rw [(cell (D := Dof x) l.b.Bs.exp b hA j).sp_w P' (Or.inr (Or.inl hP'))] at h1
     exact GlobalTheory.T.generator_not_mem_twist_place _ _ _ kk ((cell (D := Dof x) l.b.Bs.exp b hA j).DP_sub hP') h1
-  haveI : Fact ((Dof x).host.g kv0.1).Prime := ⟨(Dof x).host.g_prime kk⟩
+  have : Fact ((Dof x).host.g kv0.1).Prime := ⟨(Dof x).host.g_prime kk⟩
   let φ : AddChar (ZMod ((Dof x).host.g kv0.1)) ℂ :=
     { toFun := fun y => embLL0 (Dof x) ((l.rat.In.θ kv0.1 (Multiplicative.ofAdd (NX.xiRed (Dof x) kv0 * y)) : (↥(Dof x).LL0)ˣ) : ↥(Dof x).LL0)
       map_zero_eq_one' := by simp

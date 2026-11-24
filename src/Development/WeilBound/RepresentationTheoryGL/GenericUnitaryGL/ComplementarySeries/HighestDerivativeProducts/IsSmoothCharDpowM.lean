@@ -232,9 +232,9 @@ theorem exists_bump : ∀ {G Z : Type} [Group G] [AddCommGroup Z] [Module ℂ Z]
     intro h β hβ
     have hp : P ((h : G) * β) := ⟨h, β, hβ, rfl⟩
     obtain ⟨β', hβ', e⟩ := hp.choose_spec
-    simp only [f, dif_pos hp]
+    simp only [f, dite_eq_left hp]
     exact hwell _ _ _ _ hβ' hβ e.symm
-  have hzero : ∀ p, ¬ P p → f p = 0 := fun p hp => by simp only [f, dif_neg hp]
+  have hzero : ∀ p, ¬ P p → f p = 0 := fun p hp => by simp only [f, dite_eq_right hp]
   have hleft : ∀ (h : H) (g : G), f ((h : G) * g) = ρ h (f g) := by
     intro h g
     by_cases hg : P g
@@ -265,12 +265,12 @@ theorem exists_bump : ∀ {G Z : Type} [Group G] [AddCommGroup Z] [Module ℂ Z]
       { carrier := {g | ind H ρ g F = F}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hb, ha]
         one_mem' := by simp
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul]
           simp }
@@ -307,10 +307,10 @@ theorem exists_open_core {G : Type*} [Group G] [TopologicalSpace G] [IsTopologic
     (hKo : IsOpen (K : Set G)) (hKc : IsCompact (K : Set G)) (hSo : IsOpen (S : Set G)) :
     ∃ K₁ : Subgroup G, K₁ ≤ K ∧ IsOpen (K₁ : Set G) ∧ K₁ ≤ S ∧ K₁.relIndex K ≠ 0 ∧
       ∀ κ ∈ K, ∀ b ∈ K₁, κ * b * κ⁻¹ ∈ K₁ := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
-  have hHo : IsOpen ((S.subgroupOf K : Subgroup K) : Set K) := hSo.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ S.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hHo
-  haveI : (S.subgroupOf K).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have hHo : IsOpen ((S.subgroupOf K : Subgroup K) : Set K) := hSo.preimage continuous_subtypeVal
+  have : Finite (K ⧸ S.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hHo
+  have : (S.subgroupOf K).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hN : IsOpen (((S.subgroupOf K).normalCore : Subgroup K) : Set K) :=
     Subgroup.isOpen_of_isClosed_of_finiteIndex _
       ((S.subgroupOf K).normalCore_isClosed ((S.subgroupOf K).isClosed_of_isOpen hHo))
@@ -318,7 +318,7 @@ theorem exists_open_core {G : Type*} [Group G] [TopologicalSpace G] [IsTopologic
   · rintro _ ⟨x, -, rfl⟩
     exact x.2
   · rw [Subgroup.coe_map]
-    exact hKo.isOpenMap_subtype_val _ hN
+    exact hKo.isOpenMap_subtypeVal _ hN
   · rintro _ ⟨x, hx, rfl⟩
     exact Subgroup.mem_subgroupOf.1 (Subgroup.normalCore_le _ hx)
   · have e : ((S.subgroupOf K).normalCore.map K.subtype).relIndex K = (S.subgroupOf K).normalCore.index := by
@@ -589,7 +589,7 @@ theorem continuous_colv (n : ℕ) : Continuous (GlobalTheory.CompanionTheory.Mir
     ((p : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.castSucc i) (Fin.last n)
   first
   | exact continuous_pi fun i =>
-      (Units.continuous_val.comp continuous_subtype_val).matrix_elem (Fin.castSucc i) (Fin.last n)
+      (Units.continuous_val.comp continuous_subtypeVal).matrix_elem (Fin.castSucc i) (Fin.last n)
   | exact continuous_pi fun i => (continuous_apply (Fin.last n)).comp
       ((continuous_apply (Fin.castSucc i)).comp (Units.continuous_val.comp continuous_subtype_val))
   | fun_prop
@@ -642,7 +642,7 @@ theorem isOpen_isCompact_Bgrp : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
     refine ⟨GlobalTheory.CompanionTheory.BZMirFun.continuous_levi k n, GlobalTheory.CompanionTheory.BZPsiPG.Cont.continuous_uM k n, ?_⟩
     have hval : Continuous fun g : Mir k n =>
         ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hblock : Continuous fun g : Mir k n =>
         ((mirabolicProjection k n g : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
       refine continuous_pi fun i => continuous_pi fun j => ?_
@@ -717,12 +717,12 @@ theorem mem_of_translated_bumps : ∀ {Γ J : Type} [Group Γ] [AddCommGroup J] 
   intro Γ J _ _ _ Q K K₁ π M Gf hle hidx hconj hdec htr hlawM hlaw hinv hb
   classical
   let H : Subgroup K := K₁.subgroupOf K
-  haveI hHn : H.Normal := ⟨fun n hn g => by
+  have hHn : H.Normal := ⟨fun n hn g => by
     have hn' : (n : Γ) ∈ K₁ := Subgroup.mem_subgroupOf.1 hn
     refine Subgroup.mem_subgroupOf.2 ?_
     simpa using hconj g g.2 n hn'⟩
-  haveI : H.FiniteIndex := ⟨hidx⟩
-  haveI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : H.FiniteIndex := ⟨hidx⟩
+  have : Fintype (K ⧸ H) := Fintype.ofFinite _
   let P : Γ → Prop := fun x => ∃ q : Q, ∃ b ∈ K₁, x = (q : Γ) * b
   have hPmul : ∀ x, ∀ b ∈ K₁, P x → P (x * b) := by
     rintro x b hb' ⟨q, c, hc, rfl⟩
@@ -1172,8 +1172,8 @@ theorem twAct_equiv_of_map {G M Z Z' : Type} [Group G] [Group M] [AddCommGroup Z
 
 theorem core (τ : Representation ℂ (Mir k i) V) (σ : Representation ℂ (GL (Fin t) k) W) (hτ : IsSmooth τ) (hσ : IsSmooth σ) :
     Nonempty ((psiMinus k (prodPG τ σ)).Equiv (smInd (Qp k i t) (qRep τ σ))) := by
-  letI : MeasurableSpace (Fin t → k) := borel _
-  haveI : BorelSpace (Fin t → k) := ⟨rfl⟩
+  let : MeasurableSpace (Fin t → k) := borel _
+  have : BorelSpace (Fin t → k) := ⟨rfl⟩
   exact twAct_equiv_of_map (prodPG τ σ) (MirUin k (i + t)) 1 (levi k (i + t)) (levi_normalises (i + t))
     (smInd (Qp k i t) (qRep τ σ)) (phiLin τ σ hτ hσ (MeasureTheory.Measure.addHaar : MeasureTheory.Measure (Fin t → k)))
     (le_antisymm (ker_le_twKer τ σ hτ hσ _) (twKer_le_ker τ σ hτ hσ _))
@@ -1183,7 +1183,7 @@ theorem isSmoothChar_dpow (n : ℕ) (s : ℝ) : IsSmoothChar (dpow (k := k) n s)
   (isSmoothChar_of_isUnram (isUnram_absPow k _)).detChar
 
 theorem isSmoothChar_dpowM (n : ℕ) (s : ℝ) : IsSmoothChar (dpowM (k := k) n s) :=
-  (isSmoothChar_dpow (n + 1) s).comp _ continuous_subtype_val
+  (isSmoothChar_dpow (n + 1) s).comp _ continuous_subtypeVal
 
 theorem psiPG : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], PsiPG k := by
   intro k _ _ _ _ i t τ σ hτ hσ

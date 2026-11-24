@@ -424,7 +424,7 @@ theorem signature : Signature := by
   have : PreconnectedSpace (Set.Ici (0 : ℝ)) := Subtype.preconnectedSpace isPreconnected_Ici
   have hcl : IsClosed P := by
     refine IsSeqClosed.isClosed fun x p hx hp => ?_
-    have hsq : Tendsto (fun n => (x n).1) atTop (𝓝 p.1) := (continuous_subtype_val.tendsto p).comp hp
+    have hsq : Tendsto (fun n => (x n).1) atTop (𝓝 p.1) := (continuous_subtypeVal.tendsto p).comp hp
     choose B₁ hB1 hB2 hB3 using hx
     choose r hr hrn using fun k => normalize (B₁ k) (hpos_ne _ (hB3 k))
     obtain ⟨φ, M, hφ, hM, hlim, hinvM, hhM, hpt⟩ := lim_form ι T hc (fun n => (x n).1) p.1 hsq
@@ -450,7 +450,7 @@ theorem signature : Signature := by
     refine IsSeqClosed.isClosed fun x p hx hp => ?_
     intro hpD
     obtain ⟨B₀, h0h, h0i, h0p⟩ := hpD
-    have hsq : Tendsto (fun n => (x n).1) atTop (𝓝 p.1) := (continuous_subtype_val.tendsto p).comp hp
+    have hsq : Tendsto (fun n => (x n).1) atTop (𝓝 p.1) := (continuous_subtypeVal.tendsto p).comp hp
     choose B₁ hB1 hB2 hB3 using fun k => hex (x k).1 (x k).2
     choose r hr hrn using fun k => normalize (B₁ k) (hB1 k)
     obtain ⟨φ, M, hφ, hM, hlim, hinvM, hhM, hpt⟩ := lim_form ι T hc (fun n => (x n).1) p.1 hsq

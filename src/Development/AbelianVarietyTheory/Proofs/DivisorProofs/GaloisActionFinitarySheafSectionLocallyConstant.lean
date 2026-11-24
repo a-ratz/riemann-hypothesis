@@ -146,7 +146,7 @@ theorem galois_sec_isLocallyConstant : ∀ (R : Type) [CommRing R] (F : Shv R), 
     rfl
   rw [IsLocallyConstant.iff_eventually_eq]
   intro τ₀
-  haveI : FiniteDimensional K (IntermediateField.adjoin K (s : Set Ω)) :=
+  have : FiniteDimensional K (IntermediateField.adjoin K (s : Set Ω)) :=
     IntermediateField.finiteDimensional_adjoin (fun a _ => Algebra.IsIntegral.isIntegral a)
   have hopen : IsOpen {σ : Ω ≃ₐ[K] Ω | τ₀⁻¹ * σ ∈ (IntermediateField.adjoin K (s : Set Ω)).fixingSubgroup} :=
     (IntermediateField.fixingSubgroup_isOpen _).preimage (continuous_const.mul continuous_id)

@@ -118,11 +118,11 @@ theorem cont_pt : Continuous (fun p : ℝ × {y : ℝ // y ≠ 0} => pt p.1 p.2.
 theorem meas_pres : MeasurePreserving (fun p : ℝ × {y : ℝ // y ≠ 0} => pt p.1 p.2.1 p.2.2)
     ((volume : Measure ℝ).prod ((Measure.comap Subtype.val volume).withDensity
       fun y => ENNReal.ofReal (1 / |y.1|))) volume := by
-  have hemb : MeasurableEmbedding (Subtype.val : P → ℂ) := MeasurableEmbedding.subtype_coe hS
+  have hemb : MeasurableEmbedding (Subtype.val : P → ℂ) := MeasurableEmbedding.subtypeVal hS
   have hY : MeasurableSet {y : ℝ | y ≠ 0} := (measurableSet_singleton 0).compl
-  have hembY : MeasurableEmbedding (Subtype.val : {y : ℝ // y ≠ 0} → ℝ) := MeasurableEmbedding.subtype_coe hY
+  have hembY : MeasurableEmbedding (Subtype.val : {y : ℝ // y ≠ 0} → ℝ) := MeasurableEmbedding.subtypeVal hY
   have : SigmaFinite (Measure.comap (Subtype.val : {y : ℝ // y ≠ 0} → ℝ) volume) :=
-    SigmaFinite.of_map _ measurable_subtype_coe.aemeasurable (by rw [hembY.map_comap]; infer_instance)
+    SigmaFinite.of_map _ measurable_subtypeVal.aemeasurable (by rw [hembY.map_comap]; infer_instance)
   refine ⟨cont_pt.measurable, ?_⟩
   ext s hs
   set G : ℂ → ℝ≥0∞ := (Subtype.val '' s).indicator 1 with hGdef
@@ -144,16 +144,16 @@ theorem meas_pres : MeasurePreserving (fun p : ℝ × {y : ℝ // y ≠ 0} => pt
   simp_rw [e1]
   have hGΨ : Measurable (fun p : ℝ × {y : ℝ // y ≠ 0} => G (Ψ p.1 p.2.1)) :=
     hGm.comp (cont_Ψ.comp (Continuous.prodMk continuous_fst
-      (continuous_subtype_val.comp continuous_snd))).measurable
+      (continuous_subtypeVal.comp continuous_snd))).measurable
   rw [lintegral_prod _ hGΨ.aemeasurable]
   have e2 : ∀ x : ℝ, ∫⁻ y, G (Ψ x y.1) ∂((Measure.comap Subtype.val volume).withDensity
       fun y : {y : ℝ // y ≠ 0} => ENNReal.ofReal (1 / |y.1|))
       = ∫⁻ y, ENNReal.ofReal (1 / |y|) * G (Ψ x y) := by
     intro x
     have hd : Measurable (fun y : {y : ℝ // y ≠ 0} => ENNReal.ofReal (1 / |y.1|)) :=
-      (by fun_prop : Measurable (fun y : ℝ => ENNReal.ofReal (1 / |y|))).comp measurable_subtype_coe
+      (by fun_prop : Measurable (fun y : ℝ => ENNReal.ofReal (1 / |y|))).comp measurable_subtypeVal
     have hg : Measurable (fun y : {y : ℝ // y ≠ 0} => G (Ψ x y.1)) :=
-      hGm.comp (cont_Ψ.comp (Continuous.prodMk continuous_const continuous_subtype_val)).measurable
+      hGm.comp (cont_Ψ.comp (Continuous.prodMk continuous_const continuous_subtypeVal)).measurable
     rw [lintegral_withDensity_eq_lintegral_mul _ hd hg]
     have := lintegral_subtype_comap (μ := (volume : Measure ℝ)) hY
       (fun y => ENNReal.ofReal (1 / |y|) * G (Ψ x y))

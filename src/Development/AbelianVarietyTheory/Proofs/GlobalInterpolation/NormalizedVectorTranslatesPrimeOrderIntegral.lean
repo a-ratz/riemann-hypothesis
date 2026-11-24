@@ -402,12 +402,12 @@ theorem latInt_th0_of_split_prime : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (�
       rw [this]; field_simp
     have hapow : Complex.exp ((Real.pi : ℂ) * Complex.I * ((Complex.normSq x : ℝ) : ℂ)) ^ N
         = Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SC.aa B.L D.host.d (δ * N * x) := by
-      rw [Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SC.aa, hq1, ← Complex.exp_nat_mul]
+      rw [Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SC.aa, hq1, ← Complex.exp_natCast_mul]
       congr 1; push_cast; ring
     have e1 : G (z + x) = B.th0 (δ * N * z + δ * N * x) := by
       simp only [hG]; congr 1; ring
     have e2 : G z = B.th0 (δ * N * z) := rfl
-    rw [e1, e2, Base.th0, hl, mul_pow, hapow, ← Complex.exp_nat_mul]
+    rw [e1, e2, Base.th0, hl, mul_pow, hapow, ← Complex.exp_natCast_mul]
     set a := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SC.aa B.L D.host.d (δ * N * x)
     have haa : a * a = 1 := by rcases ha with h | h <;> rw [h] <;> norm_num
     have hE : Complex.exp ((Real.pi : ℂ) * (N * h1 D.host.d z x) + (Real.pi : ℂ) * (N * h1 D.host.d x x) / 2)
@@ -536,7 +536,7 @@ theorem kernelBase_periodLattice_sigmaTwo_algebraic (B : Base D cc δ) (hcc : Ta
 theorem weierstrassP_halfPeriod_algebraic (B : Base D cc δ) (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) :
     B.L.weierstrassP (B.ω₀ / 2) ∈ TaylorLogMetric.Qbar := by
   obtain ⟨h2, h3⟩ := g₂_g₃_mem_Qbar B hcc hδ
-  haveI : Algebra.IsAlgebraic ℚ TaylorLogMetric.Qbar :=
+  have : Algebra.IsAlgebraic ℚ TaylorLogMetric.Qbar :=
     ⟨fun x => IntermediateField.isAlgebraic_iff.2 (mem_algebraicClosure_iff.1 x.2)⟩
   have hN : ((2 : ℕ) : ℂ) * (B.ω₀ / 2) ∈ B.L.lattice := by
     have e : ((2 : ℕ) : ℂ) * (B.ω₀ / 2) = B.ω₀ := by push_cast; ring
@@ -749,7 +749,7 @@ theorem setupOne_ok (hp : d.Prime) (h16 : d % 16 = 7) : (setupOne d L).Ok := by
       subst this
       exact congrArg (fun w : L.lattice => (w : ℂ)) hab
     have hc : Continuous (fun x : (setupOne d L).La => (⟨x.1 0, x.2⟩ : L.lattice)) :=
-      Continuous.subtype_mk ((continuous_apply 0).comp continuous_subtype_val) _
+      Continuous.subtype_mk ((continuous_apply 0).comp continuous_subtypeVal) _
     exact DiscreteTopology.of_continuous_injective hc hi
   · have htop : Submodule.span ℝ (L.lattice : Set ℂ) = ⊤ := IsZLattice.span_top
     let c : ℂ →ₗ[ℝ] (Fin 1 → ℂ) := LinearMap.pi fun _ => LinearMap.id
@@ -927,11 +927,11 @@ theorem mahler_mul_of_disjoint_support :
         funext p
         by_cases hS : p ∈ S
         · have hT : p ∉ T := Finset.disjoint_left.mp hST hS
-          simp only [hS, hT, if_true, if_false, Nat.sub_self]
+          simp only [hS, hT, ite_true, ite_false, Nat.sub_self]
         · by_cases hT : p ∈ T
-          · simp only [hS, hT, if_true, if_false, Nat.sub_zero]
+          · simp only [hS, hT, ite_true, ite_false, Nat.sub_zero]
           · have h0 : N p = 0 := hN p (by simp [hS, hT])
-            simp only [hS, hT, if_false, h0, Nat.sub_zero]
+            simp only [hS, hT, ite_false, h0, Nat.sub_zero]
       exact congrArg (fun g => GlobalTheory.MomN.mahler u F (fun p => if p ∈ S then N p else 0) *
         GlobalTheory.MomN.mahler u H g) hfun
     · intro k hk hne
@@ -947,9 +947,9 @@ theorem mahler_mul_of_disjoint_support :
         have : N p - k p = 0 := by
           by_contra h
           exact h2 (hHT _ ⟨p, hT, h⟩)
-        simp only [hS, if_true]
+        simp only [hS, ite_true]
         omega
-      · simp only [hS, if_false]
+      · simp only [hS, ite_false]
         by_contra h
         exact h1 (hFS _ ⟨p, hS, h⟩)
     · intro h
@@ -1025,7 +1025,7 @@ theorem mahler_embed : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℂ V]
     rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_X_mul'] at hm
     have hpm : p ∈ m.support := by
       by_contra h
-      exact hm (if_neg h)
+      exact hm (ite_eq_right h)
     have hmem : p ∈ m.toMultiset.toList := by
       rw [Multiset.mem_toList]
       simpa using hpm
@@ -1535,7 +1535,7 @@ theorem hf_tPull (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (γ : Matrix (Fin N) (F
     (hγ' : (letI := D.host.cmStar; γ' * star γ') = 1) (z w : VC D N N') :
     Hf D (tor0 D cc δ) (Formalism.L2.KerInert.tPull D (tor0 D cc δ) γ γ' z)
       (Formalism.L2.KerInert.tPull D (tor0 D cc δ) γ γ' w) = Hf D (tor0 D cc δ) z w := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   unfold Hf
   congr 1
   refine Finset.sum_congr rfl fun τ _ => ?_
@@ -1551,7 +1551,7 @@ end GlobalTheory.MomPull
 open GlobalTheory.MomPull in
 theorem GlobalTheory.MomPull.pull_unitary : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (N N' : ℕ), letI := D.host.cmStar; ∀ (γ : Matrix.unitaryGroup (Fin N) D.host.E) (γ' : Matrix.unitaryGroup (Fin N') D.host.E) (M : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (M' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)), ∃ g : VC D N N' →L[ℂ] VC D N N', (∀ x ∈ La D (tor0 D cc δ) (SDLat.smulLat (γ : Matrix (Fin N) (Fin N) D.host.E) M) (SDLat.smulLat (γ' : Matrix (Fin N') (Fin N') D.host.E) M'), g x ∈ La D (tor0 D cc δ) M M') ∧ ∀ (t : VC D N N') (G : VC D N N' → ℂ), U D (tor0 D cc δ) t (pull D (tor0 D cc δ) (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin N') (Fin N') D.host.E) G) = fun z => U D (tor0 D cc δ) (g t) G (g z) := by
   intro D cc δ N N'
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ γ' M M'
   have h1' : star (γ' : Matrix (Fin N') (Fin N') D.host.E) * γ' = 1 := Matrix.mem_unitaryGroup_iff'.mp γ'.2
   have hγ : (γ : Matrix (Fin N) (Fin N) D.host.E) * star (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 :=
@@ -1630,7 +1630,7 @@ theorem contDiff_U {D : D7} {N N' : ℕ} (T : Tor D) (t : VC D N N') {G : VC D N
 
 theorem transPrime_int : (∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D cc δ) (χ : IdE D → ℂ), IsCurveIdeal D cc → IsDiscriminantTwelfthRootOfIdealLattice D cc δ → IsChi D χ → B.EqP χ) → ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D cc δ), IsCurveIdeal D cc → IsDiscriminantTwelfthRootOfIdealLattice D cc δ → ∀ (q : ℕ) [Fact q.Prime], q ≠ 2 → jacobiSym (-(D.host.d : ℤ)) q = 1 → Nat.Coprime (Ideal.absNorm cc) q → ∀ (ι : ℂ ≃+* ℂ_[q]) (δ₀ : ℂ) (θ : ℂ → ℂ) (Ω : ℂ_[q]), Per D.host.d ι δ₀ θ Ω → ∀ χ : IdE D → ℂ, IsChi D χ → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)), admitted D N N' L L' → ∀ t : VC D N N', TorsPrime D q (La D B.tor L L') t → LatInt ι (Ω / ι δ₀) (La D B.tor L L') (U D B.tor t (B.eNat χ N N' L L')) := by
   intro hEq D cc δ B hcc hδ q _ hq2 hsplit hcop ι δ₀ θ Ω hPer χ hχ N N' L L' hA t ht
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨γ, γ', M, M', hAM, hE, hE', rfl, rfl⟩ := _root_.GlobalTheory.MomN.weakApprox_split D q hq2 hsplit N N' L L' hA
   obtain ⟨hN, hN', hSM, hSM'⟩ := id hAM
   have hcov : pull D B.tor (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin N') (Fin N') D.host.E)

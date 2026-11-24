@@ -58,14 +58,14 @@ namespace GlobalTheory
 
 theorem eq_zero_of_forall_algHom_complex {A : Type*} [CommRing A] [Algebra ℂ A] [_root_.IsReduced A]
     [Algebra.FiniteType ℂ A] (a : A) (h : ∀ e : A →ₐ[ℂ] ℂ, e a = 0) : a = 0 := by
-  haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := ℂ)
+  have : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := ℂ)
   have hrad : (⊥ : Ideal A).IsRadical := by
     rw [Ideal.isRadical_bot_iff]; infer_instance
   have hj : (⊥ : Ideal A).jacobson = ⊥ := IsJacobsonRing.out inferInstance hrad
   rw [← Ideal.mem_bot, ← hj, Ideal.jacobson, Ideal.mem_sInf]
   rintro m ⟨-, hm⟩
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite ℂ (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℂ (A ⧸ m)
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite ℂ (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℂ (A ⧸ m)
   have hb : Function.Bijective (algebraMap ℂ (A ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let i : ℂ ≃ₐ[ℂ] (A ⧸ m) := AlgEquiv.ofBijective (Algebra.ofId ℂ (A ⧸ m)) hb
@@ -96,8 +96,8 @@ theorem eq_of_valAt'_eq :
         HasRingHomProperty.appLE @LocallyOfFiniteType X.hom hft ⟨⊤, isAffineOpen_top _⟩ ⟨V, hV⟩ _
       exact h1.comp (RingHom.FiniteType.of_surjective _
         (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv).2)
-    letI : Algebra ℂ Γ(X.left, V) := c.toAlgebra
-    haveI : Algebra.FiniteType ℂ Γ(X.left, V) := hc
+    let : Algebra ℂ Γ(X.left, V) := c.toAlgebra
+    have : Algebra.FiniteType ℂ Γ(X.left, V) := hc
     rw [← sub_eq_zero]
     apply eq_zero_of_forall_algHom_complex
     intro e

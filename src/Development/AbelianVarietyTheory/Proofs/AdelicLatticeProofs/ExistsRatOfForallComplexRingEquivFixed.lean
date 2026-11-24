@@ -114,7 +114,7 @@ theorem exists_ringEquiv_ne_of_transcendental :
   have key : IsAlgClosure.equivOfEquiv ℂ ℂ e z = -z := by
     conv_lhs => rw [← h1]
     rw [IsAlgClosure.equivOfEquiv_algebraMap]
-    simp only [e, RingEquiv.trans_apply, AlgEquiv.coe_ringEquiv,
+    simp only [e, RingEquiv.trans_apply, AlgEquiv.coe_toRingEquiv,
       AlgEquiv.symm_apply_apply]
     rw [AlgebraicIndependent.algebraMap_aevalEquiv]
     simp [neg, f, v, i0]

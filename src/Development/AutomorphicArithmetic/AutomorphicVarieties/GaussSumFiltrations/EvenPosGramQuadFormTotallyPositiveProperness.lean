@@ -124,13 +124,13 @@ theorem posDef_lower {κ : Type} [Fintype κ] (M : Matrix κ κ ℝ) (hM : M.Pos
   have ht0 : 0 < t := Real.sqrt_pos.mpr hs0
   have htt : t ^ 2 = s := Real.sq_sqrt hs0.le
   have hz : t⁻¹ • y ∈ S := by
-    simp only [hS, Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, mul_pow]
+    simp only [hS, Set.mem_ofPred_eq, Pi.smul_apply, smul_eq_mul, mul_pow]
     rw [← Finset.mul_sum, ← hs, inv_pow, htt, inv_mul_cancel₀ hs0.ne']
   have hfz : f (t⁻¹ • y) = (t ^ 2)⁻¹ * f y := by
     simp only [hf, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul, smul_eq_mul]
     ring
   have := hmin hz
-  simp only [Set.mem_setOf_eq] at this
+  simp only [Set.mem_ofPred_eq] at this
   rw [hfz, htt] at this
   have h2 := mul_le_mul_of_nonneg_left this hs0.le
   rw [← mul_assoc, mul_inv_cancel₀ hs0.ne', one_mul] at h2

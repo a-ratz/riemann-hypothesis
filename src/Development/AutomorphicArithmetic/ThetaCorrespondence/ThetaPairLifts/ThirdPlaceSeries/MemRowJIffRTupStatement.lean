@@ -218,7 +218,7 @@ theorem conj_pat_onto : ∀ (K : Type) [CommRing K] [Finite K] (r ρ κ : ℕ), 
     ∀ g : GL (Fin r) K, m * g * m⁻¹ ∈ Formalism.L2.DIV.unipSym K r ρ κ → GlobalTheory.SymRes.IsPat ρ κ g := by
   intro K _ _ r ρ κ hr m hm g hg
   have hr' : κ + ρ ≤ r := by omega
-  haveI : Finite (GL (Fin r) K) := Finite.of_injective (fun u : GL (Fin r) K => (u : Matrix (Fin r) (Fin r) K)) Units.val_injective
+  have : Finite (GL (Fin r) K) := Finite.of_injective (fun u : GL (Fin r) K => (u : Matrix (Fin r) (Fin r) K)) Units.val_injective
   set S : Set (GL (Fin r) K) := {g | GlobalTheory.SymRes.IsPat ρ κ g} with hS
   set U : Set (GL (Fin r) K) := (unipSym K r ρ κ : Set (GL (Fin r) K)) with hU
   have hSU : (reidx (K := K) r ρ κ hr') '' S = U := by
@@ -351,7 +351,7 @@ theorem exists_int_conj {n : ℕ} (γ : GL (Fin n) K)
       ext p i
       have h1 := hmax (p, i) (Finset.mem_univ _)
       simp only [← hc_def, hc, map_zero] at h1
-      exact (Valuation.zero_iff _).1 (le_antisymm h1 zero_le')
+      exact (Valuation.zero_iff _).1 (le_antisymm h1 zero_le)
     have h2 : (1 : Matrix (Fin n) (Fin n) K) = 0 := by rw [← hab, h0, Matrix.zero_mul]
     have := congrFun (congrFun h2 ⟨0, hn⟩) ⟨0, hn⟩
     simp at this
@@ -551,8 +551,8 @@ theorem st_of_kset (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = 
 
 theorem exists_generic (Pg : Finset (Pl D.host.E)) : ∃ ψ : ∀ PP : Pl D.host.E, AddChar (kP PP) ℂ, IsGenericPsi Pg ψ := by
   have h : ∀ PP : Pl D.host.E, ∃ ψ : AddChar (kP PP) ℂ, ψ ≠ 1 := fun PP => by
-    haveI : Finite (kP PP) := Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
-    haveI : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
+    have : Finite (kP PP) := Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
+    have : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
     obtain ⟨ψ, hψ⟩ := (AddChar.exists_apply_ne_zero (α := kP PP) (a := 1)).2 one_ne_zero
     exact ⟨ψ, fun e => hψ (by rw [e]; rfl)⟩
   choose ψ hψ using h
@@ -744,7 +744,7 @@ theorem mem_K_two_iff_of_family_character (W : _root_.GlobalTheory.MiS.RealPackA
   rw [hfe, GlobalTheory.FrameConj.rTup_conj]
   refine ⟨fun hK => ?_, fun hP => hin k₀ (hlev k₀ hk₀ hκS hP)⟩
   refine (hpat _).2 fun PP => (GlobalTheory.MemMatch.isIdentityOffFreePositions_rightBlock_iff _ _ hr' hn _).2 ?_
-  haveI : Finite (kP PP.1) := Ideal.finiteQuotientOfFreeOfNeBot PP.1.asIdeal PP.1.ne_bot
+  have : Finite (kP PP.1) := Ideal.finiteQuotientOfFreeOfNeBot PP.1.asIdeal PP.1.ne_bot
   have hrr : (D.sp.Y 0).rank = D.R.k + (2 * D.R.rS + 1) := by
     have := le_antisymm hn hr'
     have h0' := h0

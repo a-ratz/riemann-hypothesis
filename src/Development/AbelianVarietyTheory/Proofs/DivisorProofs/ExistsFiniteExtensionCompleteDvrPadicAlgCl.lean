@@ -69,7 +69,7 @@ theorem exists_finite_intermediateField (F K Ω : Type) [Field F] [Field K] [Fie
   have hint : ∀ x : Ω, IsIntegral K x := fun x =>
     IsIntegral.map_of_comp_eq u (RingHom.id Ω) hu (Algebra.IsIntegral.isIntegral (R := F) x)
   obtain ⟨s, hs⟩ := Algebra.FiniteType.out (R := ℤ) (A := R)
-  haveI : Finite (y₀ '' (s : Set R)) := (s.finite_toSet.image y₀).to_subtype
+  have : Finite (y₀ '' (s : Set R)) := (s.finite_toSet.image y₀).to_subtype
   refine ⟨IntermediateField.adjoin K (y₀ '' (s : Set R)),
     IntermediateField.finiteDimensional_adjoin (fun x _ => hint x), fun a => ?_⟩
   have ha : a ∈ Algebra.adjoin ℤ (s : Set R) := hs ▸ Algebra.mem_top
@@ -81,11 +81,11 @@ theorem exists_finite_intermediateField (F K Ω : Type) [Field F] [Field K] [Fie
 
 theorem exists_finite_extension : ∀ (p : ℕ) [Fact p.Prime] (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ (κ : FractionRing V →+* PadicAlgCl p), (∀ x, ‖κ x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap V (FractionRing V))) → (∀ q : ℚ_[p], algebraMap ℚ_[p] (PadicAlgCl p) q ∈ κ.range) → ∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] (y₀ : R →+* PadicAlgCl p), ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsDiscreteValuationRing W) (_ : IsAdicComplete (maximalIdeal W) W) (_ : CharZero W) (fV : V →+* W) (fK : FractionRing V →+* FractionRing W) (κ' : FractionRing W →+* PadicAlgCl p), Function.Injective fV ∧ IsLocalHom fV ∧ fV.Finite ∧ (∀ a, fK (algebraMap V _ a) = algebraMap W _ (fV a)) ∧ κ'.comp fK = κ ∧ (∀ x, ‖κ' x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap W (FractionRing W))) ∧ ∀ a, y₀ a ∈ κ'.range := by
   intro p _ V _ _ _ _ hc κ hκ hQ R _ _ y₀
-  letI : Algebra (FractionRing V) (PadicAlgCl p) := κ.toAlgebra
+  let : Algebra (FractionRing V) (PadicAlgCl p) := κ.toAlgebra
   obtain ⟨L, hL, hy⟩ := exists_finite_intermediateField ℚ_[p] (FractionRing V) (PadicAlgCl p) hQ R y₀
   obtain ⟨W, _, _, _, hcW, _, _, _, hcomp, hfin, hinj, hloc, -, -⟩ :=
     GlobalTheory.SS.exists_complete_dvr_finite_extension V (FractionRing V) L
-  haveI : CharZero W := charZero_of_injective_ringHom hinj
+  have : CharZero W := charZero_of_injective_ringHom hinj
   let e := FractionRing.algEquiv W L
   let κ' : FractionRing W →+* PadicAlgCl p := L.val.toRingHom.comp e.toRingEquiv.toRingHom
   let fK : FractionRing V →+* FractionRing W :=
@@ -101,7 +101,7 @@ theorem exists_finite_extension : ∀ (p : ℕ) [Fact p.Prime] (V : Type) [CommR
     show ((e (e.symm (algebraMap (FractionRing V) L x)) : L) : PadicAlgCl p) = κ x
     rw [e.apply_symm_apply]
     rfl
-  haveI : Algebra.IsIntegral V W := Algebra.IsIntegral.of_finite V W
+  have : Algebra.IsIntegral V W := Algebra.IsIntegral.of_finite V W
   refine ⟨W, inferInstance, inferInstance, inferInstance, hcW, inferInstance, algebraMap V W, fK, κ', hinj, hloc,
     RingHom.finite_algebraMap.2 hfin, hfK, hκ', GlobalTheory.unitBall_eq_of_integral_dvr p V W hinj κ κ' (fun v => ?_) hκ,
     fun a => ⟨e.symm ⟨y₀ a, hy a⟩, ?_⟩⟩

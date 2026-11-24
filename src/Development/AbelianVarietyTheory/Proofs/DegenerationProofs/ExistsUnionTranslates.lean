@@ -187,7 +187,7 @@ theorem ext_of_schemeDominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ 
   let Y' : Over Z := Over.mk s
   let f' : X' ⟶ Y' := Over.homMk f
   let g' : X' ⟶ Y' := Over.homMk g h.symm
-  haveI : IsSeparated Y'.hom := ‹IsSeparated s›
+  have : IsSeparated Y'.hom := ‹IsSeparated s›
   let U' : Over Z := Over.mk (d ≫ f ≫ s)
   let d' : U' ⟶ X' := Over.homMk d
   have e : d' ≫ f' = d' ≫ g' := by
@@ -200,7 +200,7 @@ theorem ext_of_schemeDominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ 
     apply le_bot_iff.1
     calc _ ≤ (l.left ≫ (equalizer.ι f' g').left).ker := Scheme.Hom.le_ker_comp _ _
       _ = ⊥ := by rw [← hd]; exact d.ker_eq_bot
-  haveI : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
+  have : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
   have h0 : IsIso ((Over.forget Z).map (equalizer.ι f' g')) := (inferInstance : IsIso (equalizer.ι f' g').left)
   have : IsIso (equalizer.ι f' g') := isIso_of_reflects_iso _ (Over.forget Z)
   have hfg : f' = g' := (cancel_epi (equalizer.ι f' g')).1 (equalizer.condition f' g')
@@ -1071,7 +1071,7 @@ theorem Ext.mem_sp [IsLocalRing R] {M : Model R A} {N : Model R A'} {f : A ⟶ A
     {X : Scheme.{0}} {i : X ⟶ M.Y.left} {g : X ⟶ N.Y.left} (h : Ext M N f i g) (o : X) :
     i o ∈ M.sp ↔ g o ∈ N.sp := by
   have e : N.Y.hom (g o) = M.Y.hom (i o) := congr($(h.1) o)
-  simp only [Model.sp, Set.mem_setOf_eq, e]
+  simp only [Model.sp, Set.mem_ofPred_eq, e]
 
 theorem exists_meet [IsLocalRing R] {N : Model R A} (hN : N.Irr) {X X' : Scheme.{0}} (g : X ⟶ N.Y.left) (g' : X' ⟶ N.Y.left)
     [IsOpenImmersion g] [IsOpenImmersion g'] {o : X} {o' : X'} (h : g o ∈ N.sp) (h' : g' o' ∈ N.sp) :

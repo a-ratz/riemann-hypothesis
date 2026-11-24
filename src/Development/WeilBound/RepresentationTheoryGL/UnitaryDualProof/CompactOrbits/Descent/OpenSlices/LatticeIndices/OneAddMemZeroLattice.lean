@@ -70,7 +70,7 @@ theorem one_add_mem_zero_lattice (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) {
     split_ifs
     · rw [map_one]
     · rw [map_zero]
-      exact zero_le'
+      exact zero_le
 
 theorem exists_unit {m : ℕ} (hm : 1 ≤ m) {a : Matrix (Fin n) (Fin n) k}
     (ha : ∀ i j, valuation k (a i j) ≤ valuation k (pi k) ^ m) :

@@ -106,7 +106,7 @@ private theorem finiteRing_sq_sub_mul_sq_eq_of_card {D : D7} (S X : HSp D) {d : 
       obtain ⟨α, hα, rfl⟩ := at_eq_pairA hb hi
       have h1 : (1 : D.host.E) ∈ ((D.host.AA : Submodule (𝓞 D.host.E) D.host.E) *
           ((D.host.AA⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E)) := by
-        rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ GlobalTheory.SkewLat.DualPair.AA_ne]
+        rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ GlobalTheory.SkewLat.DualPair.AA_ne]
         exact FractionalIdeal.one_mem_one _
       have h2 : ∀ z ∈ ((D.host.AA : Submodule (𝓞 D.host.E) D.host.E) *
           ((D.host.AA⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E)),

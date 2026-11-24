@@ -74,7 +74,7 @@ private theorem isUnit_of_map (h : IsGal σ q) {x : k} (hx : IsUnit (algebraMap 
 
 private theorem separable_of_map (h : IsGal σ q) {p : k[X]} (hp : p.Monic)
     (hs : (p.map (algebraMap k R)).Separable) [Nontrivial k] : p.Separable := by
-  haveI : Nontrivial R := h.inj.nontrivial
+  have : Nontrivial R := h.inj.nontrivial
   rw [Polynomial.separable_def] at hs ⊢
   rw [← Polynomial.isUnit_resultant_iff_isCoprime (hp.map _), Polynomial.derivative_map,
     Polynomial.natDegree_map_eq_of_injective h.inj, Polynomial.natDegree_map_eq_of_injective h.inj,
@@ -166,7 +166,7 @@ end
 
 theorem nmInj : NmInj := by
   intro k R _ _ _ _ σ q h n δ δ' hs he
-  haveI : Nontrivial R := h.inj.nontrivial
+  have : Nontrivial R := h.inj.nontrivial
   obtain ⟨⟨p, hp, hpe⟩, -⟩ := nmPoly k R σ q h n δ
   have hn : p.natDegree = n := by
     rw [← Polynomial.natDegree_map_eq_of_injective h.inj, ← hpe, cp,
@@ -207,7 +207,7 @@ theorem nmInj : NmInj := by
     exact ⟨Units.mkOfMulEqOne t t' h1, Units.ext ht⟩
   obtain ⟨t, ht⟩ := key _ hxc
   obtain ⟨t', ht'⟩ := key _ hxc'
-  haveI : Module.Finite k (AdjoinRoot p) := Module.Finite.of_basis b
+  have : Module.Finite k (AdjoinRoot p) := Module.Finite.of_basis b
   set τ : AdjoinRoot p ⊗[k] R ≃ₐ[AdjoinRoot p] AdjoinRoot p ⊗[k] R :=
     Algebra.TensorProduct.congr AlgEquiv.refl σ with hτ
   have hN : ∏ j ∈ Finset.range q, (τ ^ j) t = ∏ j ∈ Finset.range q, (τ ^ j) t' := by

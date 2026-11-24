@@ -271,7 +271,7 @@ theorem _root_.GlobalTheory.FitSquare.fitting_exact : ∀ (R : Type) [CommRing R
   rcases Nat.eq_zero_or_pos a with ha | ha
   · exact Or.inl ha
   · right
-    haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+    have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
     refine ⟨fun p p' => ?_, fun hb0 => ?_⟩
     · have hadj : T.adjugate (Sum.inr p) (Sum.inr p') = x ^ k * Ψ.adjugate p p' := by
         rw [adjugate_apply, adjugate_apply, det_eq_mul_of_toBlocks₂₁_eq_zero]

@@ -86,11 +86,11 @@ theorem lam_formula {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {nS n
         c * Φ (α v) := by
   classical
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := _root_.GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5
-  haveI hBor : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : Countable E := GlobalTheory.ThetaParsevalInner.countable_numberField E
-  haveI : Countable F := GlobalTheory.ThetaParsevalInner.countable_numberField F
-  haveI : Countable (ratLF F E nS nT) := by
+  have := i1; have := i2; have := i3; have := i4; have := i5
+  have hBor : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : Countable E := GlobalTheory.ThetaParsevalInner.countable_numberField E
+  have : Countable F := GlobalTheory.ThetaParsevalInner.countable_numberField F
+  have : Countable (ratLF F E nS nT) := by
     refine Function.Surjective.countable
       (f := fun m : Fin nT → Fin nS → E => (⟨(incAF F E).toAddMonoidHom.mapMatrix (Matrix.of m),
         AddMonoidHom.mem_range.2 ⟨_, rfl⟩⟩ : ratLF F E nS nT)) ?_
@@ -99,8 +99,8 @@ theorem lam_formula {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {nS n
   obtain ⟨Nn, hNn⟩ := (GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (WOF F E nS nT) (ratLF F E nS nT) K hK hKc).2
     (fun _ => (1 : ℂ)) continuous_const (fun _ _ _ => rfl)
   obtain ⟨h0, htop, -, -⟩ := hNn ν 𝓕 hν h𝓕
-  haveI : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.mpr htop
-  haveI := hν
+  have : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.mpr htop
+  have := hν
   have hstd := GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood F E σ B hB
   obtain ⟨hcont, hnorm, htriv, s0, hs0⟩ := hstd.1
   refine ⟨((ν 𝓕).toReal : ℂ), ?_, fun Φ hΦ v => ?_⟩
@@ -172,8 +172,8 @@ theorem lam_formula {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {nS n
   simp_rw [hint]
   rw [← integral_tsum_of_summable_integral_norm hFint hsumint]
   simp_rw [integral_const_mul, horth]
-  rw [tsum_eq_single 0 (fun ξ hξ => by rw [if_neg hξ, mul_zero])]
-  rw [if_pos rfl, ha, hemb]
+  rw [tsum_eq_single 0 (fun ξ hξ => by rw [ite_eq_right hξ, mul_zero])]
+  rw [ite_eq_left rfl, ha, hemb]
   have hz : (fun i : Fin N => (0 : AF F)) + x = x := by funext i; simp
   simp only [Pi.zero_apply, map_zero]
   rw [hz, Measure.real]

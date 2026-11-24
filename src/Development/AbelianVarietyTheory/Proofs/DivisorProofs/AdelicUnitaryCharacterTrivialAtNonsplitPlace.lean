@@ -313,7 +313,7 @@ theorem eq_one {ϖ : L} {q : ℕ} (hU : IsUnramInv ϖ σ q) {J : GL (Fin n) L}
   have hΛ := selfDual_intVec hσ hJ
   have hΛ' := selfDual_image hΛ g.2
   have hR := reflIn_image hσσ hσ hJ hh ν hν 1
-  simp only [OneMemClass.coe_one, Units.val_one, Matrix.one_mulVec, Set.setOf_mem_eq] at hR
+  simp only [OneMemClass.coe_one, Units.val_one, Matrix.one_mulVec, Set.ofPred_mem_eq] at hR
   obtain ⟨N, hN⟩ := exists_pow_mem hϖ (((g : GL (Fin n) L)⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L)
   obtain ⟨s, ⟨S, hS, es⟩, -, h1⟩ := exists_move hσσ hσ (form_herm hσσ hh) hτ hτ1 hx1
     (by rw [map_sub, hσσ, neg_sub]) hσϖ hϖ (kerEnd ν) _ ⊤ (Nat.lt_succ_self _)

@@ -79,10 +79,10 @@ theorem exists_finitePresentation_model_of_isColimit :
     simp only [CommRingCat.hom_comp, RingHom.coe_comp, Function.comp_apply] at h2
     rw [h2]
     exact h1
-  letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
-  letI : Algebra (F.obj j) D := ((algebraMap c.pt D).comp (c.ι.app j).hom).toAlgebra
-  haveI : IsScalarTower (F.obj j) c.pt D := IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)
-  haveI : P.HasCoeffs (F.obj j) := ⟨hj⟩
+  let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (F.obj j) D := ((algebraMap c.pt D).comp (c.ι.app j).hom).toAlgebra
+  have : IsScalarTower (F.obj j) c.pt D := IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)
+  have : P.HasCoeffs (F.obj j) := ⟨hj⟩
   exact ⟨j, P.ModelOfHasCoeffs (F.obj j), inferInstance, inferInstance, inferInstance,
     ⟨P.tensorModelOfHasCoeffsEquiv (F.obj j)⟩⟩
 

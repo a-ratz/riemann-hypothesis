@@ -91,14 +91,14 @@ theorem exists_complEquiv : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
     have h0 := key (s.i x)
     rw [sub_self, map_zero, map_eq_zero, sub_eq_zero] at h0
     exact h0
-  letI : Algebra (s.v.adicCompletion (maximalRealSubfield E)) (s.w.adicCompletion E) := φ.toAlgebra
-  haveI : ContinuousSMul (s.v.adicCompletion (maximalRealSubfield E)) (s.w.adicCompletion E) :=
+  let : Algebra (s.v.adicCompletion (maximalRealSubfield E)) (s.w.adicCompletion E) := φ.toAlgebra
+  have : ContinuousSMul (s.v.adicCompletion (maximalRealSubfield E)) (s.w.adicCompletion E) :=
     continuousSMul_of_algebraMap _ _ hcont
-  letI : NontriviallyNormedField (s.v.adicCompletion (maximalRealSubfield E)) :=
+  let : NontriviallyNormedField (s.v.adicCompletion (maximalRealSubfield E)) :=
     Valued.toNontriviallyNormedField _ _
   have hs : Function.Surjective φ := by
     have hcl : IsClosed (LinearMap.range (Algebra.linearMap (s.v.adicCompletion (maximalRealSubfield E))
-        (s.w.adicCompletion E)) : Set (s.w.adicCompletion E)) := Submodule.closed_of_finiteDimensional _
+        (s.w.adicCompletion E)) : Set (s.w.adicCompletion E)) := Submodule.isClosed_of_finiteDimensional _
     intro y
     exact (HeightOneSpectrum.denseRange_algebraMap E s.w).induction_on
       (p := fun y => y ∈ (LinearMap.range (Algebra.linearMap (s.v.adicCompletion (maximalRealSubfield E))
@@ -106,7 +106,7 @@ theorem exists_complEquiv : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
   let e : s.v.adicCompletion (maximalRealSubfield E) ≃ₗ[s.v.adicCompletion (maximalRealSubfield E)]
       s.w.adicCompletion E :=
     LinearEquiv.ofBijective (Algebra.linearMap _ _) ⟨φ.injective, hs⟩
-  haveI : FiniteDimensional (s.v.adicCompletion (maximalRealSubfield E)) (s.w.adicCompletion E) :=
+  have : FiniteDimensional (s.v.adicCompletion (maximalRealSubfield E)) (s.w.adicCompletion E) :=
     e.finiteDimensional
   have hinv : Continuous e.symm := e.symm.toLinearMap.continuous_of_finiteDimensional
   refine ⟨RingEquiv.ofBijective φ ⟨φ.injective, hs⟩, hcont, hinv.congr fun y => ?_, hi⟩

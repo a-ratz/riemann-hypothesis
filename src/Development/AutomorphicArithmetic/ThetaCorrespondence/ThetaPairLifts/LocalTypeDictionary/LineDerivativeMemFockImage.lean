@@ -172,7 +172,7 @@ theorem oneParam_eq_exp_lieU {n : ℕ} (G : Matrix (Fin n) (Fin n) ℂ) (u : ℝ
     (hc : Continuous u) (h0 : u 0 = 1) (hadd : ∀ s t, u (s + t) = u s * u t)
     (hU : ∀ t, u t ∈ Formalism.QuantumDeterminants.UH G) :
     ∃ Y ∈ GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.lieU G, ∀ t : ℝ, u t = NormedSpace.exp (t • Y) := by
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have hsm : ContDiff ℝ ∞ u :=
     GlobalTheory.contDiff_of_continuous_oneParameter (Matrix (Fin n) (Fin n) ℂ) u hc h0 hadd
   have hdiff : Differentiable ℝ u := hsm.differentiable (by simp)
@@ -323,7 +323,7 @@ theorem line_eq_expInf : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (X : 
     rfl)
   have hinf : ∀ t, g t ∈ GinfC X := fun t => mem_GinfC_of_at D X (g t) (by rw [← hmat]; exact hγ.2 _)
   have hcont : Continuous fun t : ℝ => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.mat (γ (Multiplicative.ofAdd t)) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp (hγ.1.comp continuous_ofAdd))
+    Units.continuous_val.comp (continuous_subtypeVal.comp (hγ.1.comp continuous_ofAdd))
   have hu : ∀ τ, Continuous fun t : ℝ => infMat D.sp.cm.sig X.gram (θ τ) (g t) := fun τ => by
     refine ((hcont.matrix_map (GlobalTheory.Member.Arch.continuous_inf _ _)).matrix_map
       (GlobalTheory.Mem.VolExists.infEmb_continuous (hθ τ))).congr fun t => ?_
@@ -668,7 +668,7 @@ theorem thetaInterchange_isPure (hPr : _root_.GlobalTheory.FunPr.ThetaLocalInput
     refine (((ev.tendsto g).comp hlim).mul_const (∏ᶠ v, φ v fun j => evFin F v (x j))).congr'
       (Eventually.of_forall fun t => ?_)
     rw [slope_def_module]
-    simp only [Function.comp_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.smul_apply, SchwartzMap.sub_apply, sub_zero, Complex.real_smul]
+    simp only [Function.comp_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, smul_apply, sub_apply, sub_zero, Complex.real_smul]
     ring
   · obtain ⟨Λ, hΛ⟩ := GlobalTheory.ThetaHeisCLM.exists_clm_thetaSum_rho_pure M ψ hψ hG w φ hφ hv
     simp only [hc, hΛ]

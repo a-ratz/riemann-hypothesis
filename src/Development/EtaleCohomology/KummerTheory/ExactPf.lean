@@ -103,8 +103,8 @@ theorem cls_eq (hD : Dict) (F : Shv R) {Y : Scheme.{0}} (m : ℤ) {x y : H R (sc
 theorem Exact_of (hD : Dict) (hG : Glue) (hF : Flasque) : Exact := by
   intro R _ F W U V X a b f g hmv n
   have hpb := hmv.2.2.1
-  haveI : IsOpenImmersion g := hmv.2.1
-  haveI : Mono a := hpb.mono_fst_of_mono
+  have : IsOpenImmersion g := hmv.2.1
+  have : Mono a := hpb.mono_fst_of_mono
   have hw : a ≫ f = b ≫ g := hpb.w
   refine ⟨?_, ?_, ?_⟩
   · intro u v huv
@@ -120,7 +120,7 @@ theorem Exact_of (hD : Dict) (hG : Glue) (hF : Flasque) : Exact := by
       have h3 := ((hD R (res R F) W n).2.2.2.1 _ _ _ _ hau ((hD R (res R F) W n).2.2.2.1 _ _ _ _ hbv hbv).2).1
       rw [add_neg_cancel, ← sub_eq_add_neg] at h3
       exact ((hD R (res R F) W n).2.2.1 _ _ h3).2.mp rfl
-    haveI := inj F (n - 1)
+    have := inj F (n - 1)
     obtain ⟨r', hr'⟩ := hF R ((res R F).X (n - 1)) a r
     change Sec.res a r' = r at hr'
     have hu1 : Sec.res a (u0 - Sec.map ((res R F).d (n - 1) n) r') = Sec.res b v0 := by
@@ -150,7 +150,7 @@ theorem Exact_of (hD : Dict) (hG : Glue) (hF : Flasque) : Exact := by
     rw [hgx] at hgz
     obtain ⟨t, ht⟩ := tr (res R F) (n + 1 - 1) n (n + 1) (by ring) _
       (((hD R (res R F) V (n + 1)).2.2.1 _ _ hgz).2.mp rfl)
-    haveI := inj F n
+    have := inj F n
     obtain ⟨t', ht'⟩ := hF R ((res R F).X n) g t
     change Sec.res g t' = t at ht'
     have hzg : Sec.res g (z0 - Sec.map ((res R F).d n (n + 1)) t') = 0 := by
@@ -196,7 +196,7 @@ theorem Exact_of (hD : Dict) (hG : Glue) (hF : Flasque) : Exact := by
       obtain ⟨v0, hv0⟩ := (hD R (res R F) V n).2.1 v
       have hu0c := ((hD R (res R F) U n).2.2.1 u u0 hu0).1
       have hv0c := ((hD R (res R F) V n).2.2.1 v v0 hv0).1
-      haveI := inj F n
+      have := inj F n
       obtain ⟨s', hs'⟩ := hF R ((res R F).X n) a (Sec.res b v0)
       change Sec.res a s' = Sec.res b v0 at hs'
       obtain ⟨t, htf, htg⟩ := (hG R ((res R F).X n) a b f g hmv).2 s' v0 hs'

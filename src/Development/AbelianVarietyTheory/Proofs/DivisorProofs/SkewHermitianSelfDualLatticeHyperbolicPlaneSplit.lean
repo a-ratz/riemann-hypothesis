@@ -133,7 +133,7 @@ theorem exists_re_pos_of_congr_diagonal {n : ℕ} (H Q : Matrix (Fin n) (Fin n) 
 theorem exists_algebraMap_eq_of_fixed {F E : Type} [Field F] [Field E] [CharZero E] [Algebra F E]
     (h2 : Module.finrank F E = 2) (σ : E →ₐ[F] E) {ξ : E} (hξ0 : ξ ≠ 0) (hξ : σ ξ = -ξ) {e : E}
     (he : σ e = e) : ∃ a : F, algebraMap F E a = e := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
   set V : Submodule F E := LinearMap.ker (σ.toLinearMap - LinearMap.id) with hV
   have mem : ∀ x, x ∈ V ↔ σ x = x := fun x => by
     simp [hV, sub_eq_zero]
@@ -181,10 +181,10 @@ theorem exists_isotropic_skew : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
     · have : (fun i => σ ((fun i => σ (v i)) i)) = v := funext fun i => hσσ _
       simp only [form]
       rw [this, hv, dotProduct_zero]
-  haveI := hTR
-  haveI := hTC
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
-  haveI : IsCMField E := IsCMField.ofCMExtension F E
+  have := hTR
+  have := hTC
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : IsCMField E := IsCMField.ofCMExtension F E
   have hcc : ∀ a, σ a = IsCMField.complexConj E a := fun a =>
     τ₀.injective (by rw [hconj, IsCMField.complexEmbedding_complexConj]; rfl)
   obtain ⟨x₀, hx₀⟩ : ∃ x, σ x ≠ x := by
@@ -580,7 +580,7 @@ theorem fg_no_line : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) (L : Sub
     refine ⟨(e / x i) • x, h _, ?_⟩
     simp [div_mul_cancel₀ _ hi]
   have hfin : Module.Finite (𝓞 E) E := ⟨by rw [← hP]; exact hL.map _⟩
-  haveI : Algebra.IsIntegral (𝓞 E) E := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsIntegral (𝓞 E) E := Algebra.IsIntegral.of_finite _ _
   exact NumberField.RingOfIntegers.not_isField E
     (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
 
@@ -619,7 +619,7 @@ theorem exists_partner : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) (φ 
       rw [map_smul, smul_eq_mul]
   have h1 : (1 : E) ∈ ((If⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) * I := by
     have : ((If⁻¹ * If : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) = ((If⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) * I :=
-      FractionalIdeal.coe_mul _ _
+      FractionalIdeal.coeToSubmodule_mul _ _
     rw [← this, inv_mul_cancel₀ hI0]
     exact (FractionalIdeal.mem_one_iff _).2 ⟨1, map_one _⟩
   obtain ⟨y₀, hy₀T, hy₀⟩ := hle h1
@@ -942,9 +942,9 @@ theorem plane_skew : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     have := hind₀ 0 0 (u - u') (by simp [Matrix.mulVec_sub, h])
     exact sub_eq_zero.1 this.2.2
   obtain ⟨𝔟, h𝔟⟩ := _root_.GlobalTheory.exists_fractionalIdeal_smul_mem_lattice E (n₁ + 2) Y.L hY.lat.toIsLattice x (smul_ne_zero hc hx₀)
-  haveI hlat1 : (lowLat ι Y.L).IsLattice E := _root_.GlobalTheory.PlaneSkew.isLattice_lowLat E (n₁ + 2) n₁ Y.L ι hY.lat.toIsLattice hinjι
+  have hlat1 : (lowLat ι Y.L).IsLattice E := _root_.GlobalTheory.PlaneSkew.isLattice_lowLat E (n₁ + 2) n₁ Y.L ι hY.lat.toIsLattice hinjι
 
-  haveI hfull : (lowLat ι Y.L).IsFullLattice E := by
+  have hfull : (lowLat ι Y.L).IsFullLattice E := by
     refine ⟨?_⟩
     apply eq_top_iff.mpr
     intro u _
@@ -1002,7 +1002,7 @@ theorem plane_skew : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
         cartan := fun w => (hθW w).1
         bas := fun v => by
           show IsSplitBasis (B.τ v) Y.L (if h : v.1 ∈ B.P then βY ⟨v.1, h⟩ else 1)
-          rw [dif_pos v.2]
+          rw [dite_eq_left v.2]
           exact (hβY v).1 }
   · exact
       { skew := gram_skew hCM hY.skew ι
@@ -1012,7 +1012,7 @@ theorem plane_skew : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
         cartan := hθ₁
         bas := fun v => by
           show IsSplitBasis (B.τ v) (lowLat ι Y.L) (if h : v.1 ∈ B.P then β₁ ⟨v.1, h⟩ else 1)
-          rw [dif_pos v.2]
+          rw [dite_eq_left v.2]
           exact hβ₁ v }
   · exact
       { rank := rfl
@@ -1026,8 +1026,8 @@ theorem plane_skew : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
         ideal := h𝔟
         cartan := fun w => ⟨(hθW w).2.1, (hθW w).2.2⟩
         bas := fun v i => by
-          have e1 : (GlobalTheory.ThK.reS Y Y').bas v = βY v := dif_pos v.2
-          have e2 : Y₁.bas v = β₁ v := dif_pos v.2
+          have e1 : (GlobalTheory.ThK.reS Y Y').bas v = βY v := dite_eq_left v.2
+          have e2 : Y₁.bas v = β₁ v := dite_eq_left v.2
           rw [e1, e2]
           exact (hβY v).2 i }
 

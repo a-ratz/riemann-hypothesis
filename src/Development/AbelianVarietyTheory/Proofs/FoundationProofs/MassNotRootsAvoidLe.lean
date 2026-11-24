@@ -132,10 +132,10 @@ private theorem padicValNat_pow_sub_one_eq_add (g d l : ℕ) (hg : 2 ≤ g) (h4 
     have e3 : (2 : ℤ) = ((2 : ℕ) : ℤ) := rfl
     rw [e1, e2, e3, Int.natCast_emultiplicity, Int.natCast_emultiplicity, Int.natCast_emultiplicity] at key
     have hN : g ^ d - 1 ≠ 0 := Nat.sub_ne_zero_of_lt (Nat.one_lt_pow hd (by omega))
-    rw [← Nat.cast_inj (R := ℕ∞), Nat.cast_add, padicValNat_eq_emultiplicity hN,
-      padicValNat_eq_emultiplicity (by omega : g - 1 ≠ 0), padicValNat_eq_emultiplicity hd]
+    rw [← Nat.cast_inj (R := ℕ∞), Nat.cast_add, multiplicity_eq_emultiplicity hN,
+      multiplicity_eq_emultiplicity (by omega : g - 1 ≠ 0), multiplicity_eq_emultiplicity hd]
     exact key
-  · have := padicValNat.pow_sub_pow hodd (by omega : 1 < g) hlg hlg' hd
+  · have := Nat.multiplicity_pow_sub_pow hodd (by omega : 1 < g) hlg hlg' hd
     rwa [one_pow] at this
 
 theorem pow_padicValNat_pow_sub_one_dvd (g d l : ℕ) (hg : 2 ≤ g) (h4 : 4 ∣ g - 1) (hd : d ≠ 0)
@@ -209,11 +209,11 @@ namespace GlobalTheory.BadShare
 
 theorem avoid_pow_natDegree_minpoly {g : ℕ} [Fact g.Prime] {x : AlgebraicClosure (ZMod g)} (hx : x ≠ 0) :
     x ^ (g ^ (minpoly (ZMod g) x).natDegree - 1) = 1 := by
-  haveI : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
+  have : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
   have hi : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
-  haveI := IntermediateField.adjoin.finiteDimensional hi
-  haveI : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
-  haveI : Fintype (IntermediateField.adjoin (ZMod g) {x}) := Fintype.ofFinite _
+  have := IntermediateField.adjoin.finiteDimensional hi
+  have : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
+  have : Fintype (IntermediateField.adjoin (ZMod g) {x}) := Fintype.ofFinite _
   let y : IntermediateField.adjoin (ZMod g) {x} := ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
   have hy : y ≠ 0 := fun h => hx (congrArg Subtype.val h)
   have h1 := FiniteField.pow_card_sub_one_eq_one y hy
@@ -278,7 +278,7 @@ theorem avoid_card_irreducible_le {g : ℕ} [Fact g.Prime] (c : (ZMod g)ˣ) (d :
     rw [minpoly.dvd_iff] at h3
     simpa [sub_eq_zero, hc'] using h3
   refine Finset.mem_filter.2 ⟨?_, hmin y hy⟩
-  simp only [T, Finset.mem_biUnion, Finset.mem_attach, true_and, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  simp only [T, Finset.mem_biUnion, Finset.mem_attach, true_and, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   by_cases hln : l ∣ n
   · exact ⟨⟨l, Nat.mem_primeFactors.2 ⟨hl, hln, hn.ne'⟩⟩, hyn, (samePart_iff_of_ne_zero hl hy0 hc0).2 ⟨a, hya⟩⟩
   · have : y = c' := eq_of_pow_eq ((hl.coprime_iff_not_dvd.2 hln).symm) hyn hcn hn.ne' hya

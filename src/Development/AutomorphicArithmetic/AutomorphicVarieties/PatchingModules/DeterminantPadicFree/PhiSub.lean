@@ -58,15 +58,15 @@ theorem UpperTheory.V.Pa.Det.phiSub :
   intro K hK
   have hK' : IsOpen ((K.map H.subtype : Subgroup G) : Set G) := by
     rw [Subgroup.coe_map]
-    exact hH.isOpenMap_subtype_val _ hK
-  haveI := hG (K.map H.subtype) hK'
+    exact hH.isOpenMap_subtypeVal _ hK
+  have := hG (K.map H.subtype) hK'
   let e := Subgroup.equivMapOfInjective K H.subtype H.subtype_injective
   have he : ∀ y : K.map H.subtype, (((e.symm y : K) : H) : G) = (y : G) := fun y =>
     congrArg Subtype.val (e.apply_symm_apply y)
   have hc : Continuous fun y : K.map H.subtype => (e.symm y : K) := by
     apply continuous_induced_rng.2
     apply continuous_induced_rng.2
-    exact continuous_subtype_val.congr fun y => (he y).symm
+    exact continuous_subtypeVal.congr fun y => (he y).symm
   refine Finite.of_injective
     (β := {ψ : K.map H.subtype →* Multiplicative (ZMod l) // IsOpen (ψ.ker : Set (K.map H.subtype))})
     (fun φ => ⟨φ.1.comp e.symm.toMonoidHom, by

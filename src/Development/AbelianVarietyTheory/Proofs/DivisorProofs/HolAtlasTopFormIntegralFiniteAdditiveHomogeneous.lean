@@ -127,7 +127,7 @@ theorem aem {r : A.ι → V n → ℝ} (hr : Good A r) (i : A.ι) (S : Set M) :
 theorem G_add {r₁ r₂ : A.ι → V n → ℝ} (h₁ : Good A r₁) (h₂ : Good A r₂) :
     glueMeas A.e (fun i y => ENNReal.ofReal (r₁ i (A.e i y)) + ENNReal.ofReal (r₂ i (A.e i y))) = G A r₁ + G A r₂ := by
   ext S hS
-  rw [Measure.add_apply]
+  rw [add_apply]
   exact glueMeas_add_of_compat_on A.e A.holo A.cover hS _ _
     (fun i j y _ hi hj => A.ofReal_compat r₁ h₁.2 i j y hi hj)
     (fun i j y _ hi hj => A.ofReal_compat r₂ h₂.2 i j y hi hj) (fun i => aem A h₁ i S)
@@ -139,7 +139,7 @@ theorem holAtlasGluedDensityMeasure_add_three {r₁ r₂ r₃ : A.ι → V n →
   have c₁ := A.ofReal_compat r₁ h₁.2
   have c₂ := A.ofReal_compat r₂ h₂.2
   have c₃ := A.ofReal_compat r₃ h₃.2
-  rw [Measure.add_apply, Measure.add_apply,
+  rw [add_apply, add_apply,
     glueMeas_add_of_compat_on A.e A.holo A.cover hS
       (fun i y => ENNReal.ofReal (r₁ i (A.e i y)) + ENNReal.ofReal (r₂ i (A.e i y)))
       (fun i y => ENNReal.ofReal (r₃ i (A.e i y)))
@@ -157,7 +157,7 @@ theorem G_smul {r : A.ι → V n → ℝ} (h : Good A r) {c : ℝ} (hc : 0 ≤ c
   have hc' : Good A (fun i v => c * r i v) :=
     ⟨fun i => continuousOn_const.mul (h.1 i), fun i j y hi hj => by simp only [h.2 i j y hi hj]; ring⟩
   refine ext_of_cover (fun i => (A.e i).source) (fun i => (A.e i).open_source) A.cover fun i S hS hSi => ?_
-  rw [Measure.smul_apply, G, G, glueMeas_apply _ _ A.holo (fun i j y hi hj => A.ofReal_compat (fun i v => c * r i v) hc'.2 i j y hi hj) i hS hSi,
+  rw [smul_apply, G, G, glueMeas_apply _ _ A.holo (fun i j y hi hj => A.ofReal_compat (fun i v => c * r i v) hc'.2 i j y hi hj) i hS hSi,
     glueMeas_apply _ _ A.holo (fun i j y hi hj => A.ofReal_compat _ h.2 i j y hi hj) i hS hSi,
     chartMeas_apply_of_subset _ _ hS hSi, chartMeas_apply_of_subset _ _ hS hSi, smul_eq_mul,
     ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]

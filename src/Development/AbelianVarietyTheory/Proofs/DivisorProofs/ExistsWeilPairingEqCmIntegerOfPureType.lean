@@ -236,8 +236,8 @@ theorem exists_weilEq_smul_of_pure : ∀ (E : Type) [Field E] [NumberField E] [I
       ∀ Fl : (Fin A.pol.g → ℂ) →ₗ[ℂ] (Fin B.pol.g → ℂ), (∀ z, uB.ex (Fl z) = uA.ex z ≫ f) →
       ∀ s z, Fl (G s z) = ρB s (Fl z) := by
     intro f hf Fl hFl s z
-    haveI := hf.isMonHom
-    haveI := A.t.act.hom s
+    have := hf.isMonHom
+    have := A.t.act.hom s
     have e := linear_lift_unique uA uB hA2 hB1 (A.t.act.act s ≫ f) (F := Fl ∘ₗ G s) (F' := ρB s ∘ₗ Fl)
       (fun z => by rw [LinearMap.comp_apply, hFl, hG, Category.assoc])
       (fun z => by rw [LinearMap.comp_apply, hρB, hFl, hf.comm, Category.assoc])

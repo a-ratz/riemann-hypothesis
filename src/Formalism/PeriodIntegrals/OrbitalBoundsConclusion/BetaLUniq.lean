@@ -332,7 +332,7 @@ theorem line_reduction_holds : LineReduce' := by
     exact hT_comm.mp (hzorth x hx)
 
   obtain ⟨v, hv, hvX⟩ : ∃ v ∈ orth S A, v ∉ X' := by
-    refine SetLike.not_le_iff_exists.mp fun h => ?_
+    refine IsConcreteLE.not_le_iff_exists.mp fun h => ?_
     have := Submodule.finrank_mono h
     omega
   have hvXp : v ∈ orth S Xp := orth_anti le_sup_right hv

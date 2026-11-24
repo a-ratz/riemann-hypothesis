@@ -322,7 +322,7 @@ theorem ud_phi_nsmul (h : UnitaryData H Λ α δ Ae) {x : V} (hx : x ∈ Λ) (k 
       simp [e, altE]
   have hsq : phiC H α Ae x ^ 2 = bC H Ae x x := by
     unfold phiC bC
-    rw [mul_pow, hαsq, one_mul, ← Complex.exp_nat_mul, hHc]
+    rw [mul_pow, hαsq, one_mul, ← Complex.exp_natCast_mul, hHc]
     congr 1
     push_cast
     ring
@@ -458,7 +458,7 @@ theorem UnitaryGauss_of (hG : GaussEighth) : UnitaryGauss := by
         rw [e]
         exact hyx
       exact h3
-  letI : Fintype (Λ ⧸ (latA Λ δ Ae).addSubgroupOf Λ) := Fintype.ofBijective f hf
+  let : Fintype (Λ ⧸ (latA Λ δ Ae).addSubgroupOf Λ) := Fintype.ofBijective f hf
   have hsum : ∑ x ∈ S, phiC H α Ae x = ∑ q : Λ ⧸ (latA Λ δ Ae).addSubgroupOf Λ, phiQ H Λ α δ Ae q := by
     rw [← Finset.sum_coe_sort S]
     exact Fintype.sum_bijective f hf _ _ (fun x => (phiQ_mk h (⟨x.1, hSΛ x.1 x.2⟩ : Λ)).symm)

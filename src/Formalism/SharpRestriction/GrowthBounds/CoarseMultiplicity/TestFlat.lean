@@ -84,7 +84,7 @@ theorem Xi_CC (hS : HidaSetting p n' W Qq O Kf ι σ jO w) (hm : 1 ≤ m)
   obtain ⟨⟨hv1, hv2⟩, hv3⟩ := hv
   obtain ⟨g, hg⟩ := edgeBasis hS m 1 e he
   have hpQ : ((p : ℕ) : Qq) ≠ 0 := by
-    haveI := hS.frac_alt
+    have := hS.frac_alt
     intro h0
     apply hS.p_unif.ne_zero
     apply IsFractionRing.injective W Qq
@@ -141,7 +141,7 @@ theorem pairing (hS : HidaSetting p n' W Qq O Kf ι σ jO w) (φ : WF p n' ≃+*
           (liftSubst p n' O w 1 (hhLetters TT) (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) (WF p n'))
             (F' : MvPolynomial ((TT × Bool) × Fin (m + 1)) (KK O))) = algebraMap O (KK O) y →
     beHH (m := m) p TT aT bT (Θ F) (XiH thK (zK Kf p (kapZ p m TT aT bT) TT aT bT) (Θ' F')) = algebraMap O Kf y := by
-  letI : Algebra (WF p n') O := algOfIdent jO φ
+  let : Algebra (WF p n') O := algOfIdent jO φ
   intro hy
   have hw := w_ne hS
   set c := algebraMap O Kf w with hc

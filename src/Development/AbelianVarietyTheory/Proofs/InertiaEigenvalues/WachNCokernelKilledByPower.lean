@@ -148,13 +148,13 @@ theorem flat_of_dense_sat {A E : Type} [CommRing A] [IsNoetherianRing A] [CommRi
       ∃ b : A, a = (p : A) ^ k * b) :
     Module.Flat A E := by
   let R := Localization.Away s
-  letI : Algebra R E := (IsLocalization.Away.lift s hs).toAlgebra
-  haveI : IsScalarTower A R E :=
+  let : Algebra R E := (IsLocalization.Away.lift s hs).toAlgebra
+  have : IsScalarTower A R E :=
     IsScalarTower.of_algebraMap_eq (fun a => (IsLocalization.lift_eq _ a).symm)
   let I : Ideal R := Ideal.span {(p : R)}
   have hmap : I.map (algebraMap R E) = Ideal.span {(p : E)} := by
     simp [I, Ideal.map_span]
-  haveI : IsAdicComplete I E := by
+  have : IsAdicComplete I E := by
     have h1 : IsHausdorff I E :=
       IsHausdorff.map_algebraMap_iff.mp (by rw [hmap]; exact hc.toIsHausdorff)
     have h2 : IsPrecomplete I E :=
@@ -201,8 +201,8 @@ theorem flat_of_dense_sat {A E : Type} [CommRing A] [IsNoetherianRing A] [CommRi
   let Φ : AdicCompletion I R ≃ₗ[R] E :=
     (LinearEquiv.ofBijective ((AdicCompletion.map I f).restrictScalars R) hbij).trans
       (AdicCompletion.ofLinearEquiv I E).symm
-  haveI : Module.Flat R E := Module.Flat.of_linearEquiv Φ.symm
-  haveI : Module.Flat A R := IsLocalization.flat R (Submonoid.powers s)
+  have : Module.Flat R E := Module.Flat.of_linearEquiv Φ.symm
+  have : Module.Flat A R := IsLocalization.flat R (Submonoid.powers s)
   exact Module.Flat.trans A R E
 
 end FlatCompl
@@ -535,8 +535,8 @@ theorem satM_free_loc {l : ℕ} [Fact l.Prime] {P : LocPrime l} (H : LocHW l P) 
     IsBaseChange (H.W K s LL h).EE (GlobalTheory.NL.Coker.satM l (((H.W K s LL h).N T₁).map
       (mapA (H.W K s LL h) π)) ((H.W K s LL h).N T₂)).subtype := by
   obtain ⟨_, -, hl⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
-  haveI := (P.PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := (P.PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   have hproj := H.W_proj K s LL h T₂
   generalize H.W K s LL h = W at hproj hsurj hflat ⊢
   set S := GlobalTheory.NL.Coker.satM l ((W.N T₁).map (mapA W π)) (W.N T₂) with hSdef
@@ -550,13 +550,13 @@ theorem satM_free_loc {l : ℕ} [Fact l.Prime] {P : LocPrime l} (H : LocHW l P) 
       exact W.map_N π c1 c2 z hz) ⟨x, hx, rfl⟩
   refine ⟨?_, hbc⟩
   obtain ⟨hfree, hrk⟩ := W.DD_free T₂
-  haveI : Module.Finite (AA K LL) ↥(W.N T₂) := Module.Finite.iff_fg.mpr (W.N_fg T₂)
-  haveI hR : IsNoetherianRing (PowerSeries ↥(OL LL)) := inferInstance
-  haveI hA : IsNoetherianRing (AA K LL) :=
+  have : Module.Finite (AA K LL) ↥(W.N T₂) := Module.Finite.iff_fg.mpr (W.N_fg T₂)
+  have hR : IsNoetherianRing (PowerSeries ↥(OL LL)) := inferInstance
+  have hA : IsNoetherianRing (AA K LL) :=
     isNoetherian_of_tower (PowerSeries ↥(OL LL)) (isNoetherian_pi' (R := PowerSeries ↥(OL LL)))
-  haveI hNn : IsNoetherian (AA K LL) ↥(W.N T₂) :=
+  have hNn : IsNoetherian (AA K LL) ↥(W.N T₂) :=
     isNoetherian_of_isNoetherianRing_of_finite (AA K LL) ↥(W.N T₂)
-  haveI : Module.Finite (AA K LL) ↥S :=
+  have : Module.Finite (AA K LL) ↥S :=
     Module.Finite.iff_fg.mpr (isNoetherian_submodule.mp hNn S hSN)
   have hl0 : ((l : ℕ) : ↥(OL LL)) ≠ 0 := by
     intro h0
@@ -616,8 +616,8 @@ theorem satM_free_and_spans : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.l
       Function.Exact (((HW l).W K s LL h).map ι) (((HW l).W K s LL h).map π) ∧
       Function.Surjective (((HW l).W K s LL h).map π) :=
     by
-      haveI := GlobalTheory.EtaleExact.finite_OL LL
-      haveI : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
+      have := GlobalTheory.EtaleExact.finite_OL LL
+      have : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
       have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
       refine GlobalTheory.EtaleExact.exact_of_tie (((F l).E K s LL h).tie)
         (GlobalTheory.EtaleExact.map_ne_top_of_tie (((F l).E K s LL h).tie) ?_ ?_) T₀ T₁ T₂ ι π hses
@@ -727,7 +727,7 @@ theorem span_phi_eq_top {T : LocLat G Qp LL O} {r : ℕ} (β : Module.Basis (Fin
 theorem phi_injective {T : LocLat G Qp LL O} {r : ℕ} (β : Module.Basis (Fin r) W.EE (W.DD T))
     (htop : Submodule.span W.EE (Set.range fun i => W.φD T (β i)) = ⊤) :
     Function.Injective (Fintype.linearCombination W.EE (fun i => W.φD T (β i))) := by
-  haveI : Module.Finite W.EE (W.DD T) := Module.Finite.of_basis β
+  have : Module.Finite W.EE (W.DD T) := Module.Finite.of_basis β
   refine OrzechProperty.injective_of_surjective_of_injective β.equivFun.symm.toLinearMap _
     β.equivFun.symm.injective ?_
   intro z
@@ -923,10 +923,10 @@ theorem coker_killed : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F 
   intro D HW F Cm l _ K s LL h W E C T₀ T₁ T₂ ι π h0 h1 h2 hs
   have hP : WachCharacterisationLattice W := _root_.GlobalTheory.NL.FrobeniusMatrixUniqueness.main D HW F l K s LL h
   have hp10 : p10 W T₂ := hP T₂ h2
-  haveI := GlobalTheory.EtaleExact.finite_OL LL
-  haveI : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
-  haveI := ((D.loc l).PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := GlobalTheory.EtaleExact.finite_OL LL
+  have : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
+  have := ((D.loc l).PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   have hfl : Module.Flat (AA K LL) W.EE :=
     _root_.GlobalTheory.flat_letA_of_dense_sat ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K)) ((D.loc l).PD K).p W.EE W.EE_π
       W.EE_complete W.EE_dense W.EE_sat

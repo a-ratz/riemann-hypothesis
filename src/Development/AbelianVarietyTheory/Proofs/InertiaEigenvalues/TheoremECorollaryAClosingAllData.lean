@@ -200,7 +200,7 @@ def jK₀ (PD : PeriodData G Qp K₀ K B BdR) : V ⊗[Qp] K₀ →ₗ[LL] V ⊗[
   AlgebraTensorModule.map (LinearMap.id : V →ₗ[LL] V) ((Algebra.linearMap K₀ B).restrictScalars Qp)
 
 theorem jK₀_injective [Module.Finite Qp V] : Function.Injective (jK₀ PD (LL := LL) (V := V)) := by
-  haveI := nontrivial_B PD
+  have := nontrivial_B PD
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   intro y hy
   let b := Module.finBasis Qp V
@@ -238,7 +238,7 @@ theorem finrank_tensor [FiniteDimensional LL V] [FiniteDimensional Qp K₀] :
 
 theorem isCrys_triv [FiniteDimensional LL V] [Module.Finite Qp V] (hρ : ∀ g x, ρ g x = x) :
     IsCrys PD ρ := by
-  haveI := PD.finK₀
+  have := PD.finK₀
   unfold IsCrys
   rw [Dcris_eq_range PD hρ, ← (LinearEquiv.ofInjective _ (jK₀_injective PD)).finrank_eq,
     finrank_tensor, mul_comm]
@@ -294,8 +294,8 @@ namespace GlobalTheory.TrivCrys
 
 theorem triv_crys_jump_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V), (∀ g x, ρ g x = x) → IsCrys (P.PD K) ρ ∧ ∀ (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (a : ℤ), IsJumpV (P.PD K) ρ τ a → a = 0 := by
   intro l _ P AI _ K LL V _ _ _ _ _ ρ hρ
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : Module.Finite ℚ_[l] V := Module.Finite.trans ↥LL.1 V
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : Module.Finite ℚ_[l] V := Module.Finite.trans ↥LL.1 V
   exact ⟨isCrys_triv (P.PD K) hρ, fun τ a h => jump_triv (P.PD K) hρ τ a h⟩
 
 end GlobalTheory.TrivCrys

@@ -224,7 +224,7 @@ theorem exists_grpIdent : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn
     fun kv => (hI.pibar kv.1 _).2 (hplg0 kv).2
   have hiso : ∀ kv : (Σ k : Fin 2, X.toD7.nd.PlG k), Nonempty (ZMod (X.toD7.host.g kv.1) ≃+* kP (plg kv).1) := by
     intro kv
-    haveI : Fact (X.toD7.host.g kv.1).Prime := ⟨hPr.g_prime kv.1⟩
+    have : Fact (X.toD7.host.g kv.1).Prime := ⟨hPr.g_prime kv.1⟩
     obtain ⟨e⟩ := Formalism.L2.Col.residueField_equiv_zmod (X := X.B.fields) (plg kv).1 (X.toD7.host.g kv.1) (hPr.vG_norm kv.1 _ (hmem kv))
     exact ⟨e.symm⟩
   let iso : ∀ kv : (Σ k : Fin 2, X.toD7.nd.PlG k), ZMod (X.toD7.host.g kv.1) ≃+* kP (plg kv).1 := fun kv => Classical.choice (hiso kv)
@@ -284,8 +284,8 @@ theorem absIrrChar_comp_mem_gxIrrSet : ∀ {G : Type} [inst : Group G] [inst_1 :
   have htr' : ∀ x, σ (χ x) = Matrix.trace ((ρc x : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) := htr
   have hchar : ∀ x, (PI.XgCTieBrWork.Chars.ofGL ρc).character x = σ (χ x) := fun x => by
     rw [PI.XgCTieBrWork.Chars.char_ofGL, htr']
-  haveI : NeZero (Nat.card G : ℂ) := ⟨by exact_mod_cast Nat.card_pos.ne'⟩
-  haveI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero (NeZero.ne _)
+  have : NeZero (Nat.card G : ℂ) := ⟨by exact_mod_cast Nat.card_pos.ne'⟩
+  have : Invertible (Nat.card G : ℂ) := invertibleOfNonzero (NeZero.ne _)
   have hfr := Representation.card_inv_mul_sum_char_mul_char_eq_finrank
     (PI.XgCTieBrWork.Chars.ofGL ρc) (PI.XgCTieBrWork.Chars.ofGL ρc)
   have hsum : ∑ g : G, (PI.XgCTieBrWork.Chars.ofGL ρc).character g *
@@ -335,7 +335,7 @@ theorem absIrrChar_mem_closure_primitiveRoot {G : Type} [Group G] [Fintype G] {K
     (g : G) : χ g ∈ Subring.closure ({z} : Set K) := by
   obtain ⟨n, ρ, -, hch⟩ := hχ
   set N := Fintype.card G with hN
-  haveI : NeZero N := ⟨Fintype.card_ne_zero⟩
+  have : NeZero N := ⟨Fintype.card_ne_zero⟩
   set f := ρ g with hf
   have hfN : f ^ N = 1 := by rw [hf, ← map_pow, pow_card_eq_one, map_one]
   have htr : LinearMap.trace (AlgebraicClosure K) _ f = (LinearMap.charpoly f).roots.sum := by
@@ -486,10 +486,10 @@ theorem classFun_char_scalar {G : Type} [Group G] [Fintype G] (e : MonoidAlgebra
   have hψ' := hψ
   obtain ⟨n, ρ, hρ, rfl⟩ := hψ
   have hcard : (Nat.card G : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
-  letI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard
+  let : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard
   have h1 := Representation.card_inv_mul_sum_char_mul_char_eq_finrank ρ ρ
   have horth := Formalism.L2.Col.gx_orth (G := G) (k := ℂ) hψ' hψ'
-  rw [if_pos rfl] at horth
+  rw [ite_eq_left rfl] at horth
   rw [horth] at h1
   have hfr : finrank ℂ (ρ.IntertwiningMap ρ) = 1 := by exact_mod_cast h1.symm
   have hnt : Nontrivial (Fin n → ℂ) := by
@@ -516,7 +516,7 @@ theorem classFun_char_scalar {G : Type} [Group G] [Fintype G] (e : MonoidAlgebra
     congr 2
     group
   let TI : ρ.IntertwiningMap ρ := ⟨T, hTI⟩
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' idI hid0).mp hfr TI
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' idI hid0).mp hfr TI
   have hT : T = c • LinearMap.id := by
     refine LinearMap.ext fun v => ?_
     have := congrArg (fun φ : ρ.IntertwiningMap ρ => φ.toLinearMap v) hc
@@ -558,7 +558,7 @@ theorem leftRegular_character (g : G) :
   by_cases h : g = 1
   · subst h
     simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun x _ => ?_
     have hx : g * x ≠ x := by simpa using h
     simp [Matrix.diag, LinearMap.toMatrix_apply, MonoidAlgebra.basis, hx]
@@ -656,7 +656,7 @@ theorem exists_goodSet_Ks (eR : Gc X.B px ≃* G0g X.toD7.nd) :
   let f := MonoidAlgebra.domCongr ℂ ℂ eR.symm
   let e : MonoidAlgebra ℂ (Gc X.B px) := f X.toD7.ntypes.e0
   have hcoeff : ∀ g, e.coeff g = X.toD7.ntypes.e0.coeff (eR g) := fun g => by
-    simp [e, f, MonoidAlgebra.domCongr_apply]
+    simp [e, f, MonoidAlgebra.coeff_domCongr]
   obtain ⟨hcen0, hid0⟩ := GlobalTheory.GoodLatCompare.goodSeriesIdempotent_central_idempotent X.toD7
   have hid : e * e = e := by simp only [e, ← map_mul, hid0]
   have hcen : e ∈ Subalgebra.center ℂ (MonoidAlgebra ℂ (Gc X.B px)) := by
@@ -921,8 +921,8 @@ theorem chr0_mem_Ks : ∀ (B : Base) (px : PreX B.toPre) (I : Col2.ColIn B px) (
   intro B px I p
   have hPr := (GlobalTheory.Mem.Col2.base_fields_primes_ok B px).2.1
   unfold chr0 P0 LevelP.ofLocal
-  letI : IsOneApply (lev0 I →* B.LLˣ) := ⟨fun _ => rfl⟩
-  letI : IsMulApply (lev0 I →* B.LLˣ) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply (lev0 I →* B.LLˣ) := ⟨fun _ => rfl⟩
+  let : IsMulApply (lev0 I →* B.LLˣ) := ⟨fun _ _ _ => rfl⟩
   erw [prod_apply, Units.coe_prod]
   refine B.Ks.prod_mem fun PP _ => ?_
   have hk : ∃ k, PP.1 ∈ (B.primes px).vG k := by
@@ -981,7 +981,7 @@ namespace GlobalTheory.Mem.R3.Grp
 theorem coeff_conj_of_central {G : Type} [Group G] (e : MonoidAlgebra ℂ G) (he : ∀ x, x * e = e * x) (k g : G) :
     e.coeff (k * g * k⁻¹) = e.coeff g := by
   have h := congrArg (fun a : MonoidAlgebra ℂ G => a.coeff (k * g)) (he (MonoidAlgebra.single k 1))
-  simp only [MonoidAlgebra.mul_single_apply, MonoidAlgebra.single_mul_apply] at h
+  simp only [MonoidAlgebra.coeff_mul_single_apply, MonoidAlgebra.coeff_single_mul_apply] at h
   simpa [mul_assoc] using h.symm
 
 theorem idemOf_coeff_conj : ∀ (X : Stages) (px : PreX X.B.toPre) (eR : Gc X.B px ≃* G0g X.toD7.nd) (Xg : Finset (Gc X.B px → X.B.LL)), GoodSet X (px := px) eR Xg → X.toD7.ntypes.e0 ∈ Subalgebra.center ℂ (MonoidAlgebra ℂ (G0g X.toD7.nd)) → ∀ a b : Gc X.B px, (idemOf Xg).coeff (a * b * a⁻¹) = (idemOf Xg).coeff b := by

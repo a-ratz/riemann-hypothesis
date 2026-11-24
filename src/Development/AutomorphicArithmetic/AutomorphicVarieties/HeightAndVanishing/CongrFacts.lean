@@ -61,7 +61,7 @@ private theorem res_eq_one (l : ℕ) [hl : Fact l.Prime] (h : ¬ IsUnit (l : O))
   have h0 : (l : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
     exact h
-  haveI : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 h0
+  have : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 h0
   have h1 : (IsLocalRing.residue O x - 1) ^ l ^ s = 0 := by
     rw [sub_pow_char_pow, ← map_pow, hx, map_one, one_pow, sub_self]
   exact sub_eq_zero.1 (pow_eq_zero_iff (pow_ne_zero s hl.out.ne_zero) |>.1 h1)
@@ -96,13 +96,13 @@ theorem UpperTheory.V.HV.congrFacts :
       (∀ (x y : c.Oˣ) (m : ℕ), ¬ l ∣ m → x ^ m = 1 → y ^ m = 1 → (x : c.O) - y ∈ IsLocalRing.maximalIdeal c.O → x = y) ∧
       ∀ (a b : G ℚ Ω →* c.Oˣ) (m : ℕ), ¬ l ∣ m → a ^ m = 1 → b ^ m = 1 → Congr c a b → a = b := by
   intro Ω _ _ _ l _ c
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   have hF := dvrFacts l c.O
   have hlu : ¬ IsUnit ((l : ℕ) : c.O) := by
     intro hu
     have hu' : IsUnit (algebraMap ℤ_[l] c.O ((l : ℕ) : ℤ_[l])) := by rwa [map_natCast]
-    haveI := hF.2.2.1
+    have := hF.2.2.1
     exact PadicInt.p_nonunit (IsLocalHom.map_nonunit _ hu')
   have cr : ∀ a b : G ℚ Ω →* c.Oˣ, Congr c a b ↔
       ∀ σ, IsLocalRing.residue c.O (a σ : c.O) = IsLocalRing.residue c.O (b σ : c.O) :=

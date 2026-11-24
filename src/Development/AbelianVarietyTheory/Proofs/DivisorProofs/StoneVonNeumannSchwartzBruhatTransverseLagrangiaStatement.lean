@@ -81,7 +81,7 @@ theorem exists_fixed {A B X : Type} [AddCommGroup A] [AddCommGroup B] [AddCommGr
     (hPπ : ∀ a, ∀ x ∈ P, π a x ∈ P) (hPS : ∀ b, ∀ x ∈ P, S b x ∈ P) (φ : X) (hφ : φ ∈ P) (hφ0 : φ ≠ 0)
     (hfix : ∀ a ∈ K, π a φ = φ) : ∃ f ∈ P, f ≠ 0 ∧ ∀ a, π a f = f := by
   classical
-  letI : Fintype (A ⧸ K) := Fintype.ofFinite _
+  let : Fintype (A ⧸ K) := Fintype.ofFinite _
   have hper : ∀ (b : B) (a : A), β (Quotient.out (a : A ⧸ K)) b = β a b := by
     intro b a
     have h : -a + Quotient.out (a : A ⧸ K) ∈ K :=
@@ -181,7 +181,7 @@ variable {κ : Type} [Fintype κ]
 
 theorem ind_mem_SB : Set.indicator {y : κ → k | ∀ r, y r ∈ 𝒪[k]} (fun _ => (1 : ℂ)) ∈ SB (κ → k) := by
   classical
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
   have e : {y : κ → k | ∀ r, y r ∈ 𝒪[k]} = Set.pi Set.univ fun _ : κ => (𝒪[k] : Set k) := by
     ext y; exact ⟨fun h r _ => h r, fun h r => h r trivial⟩
   have hK : IsCompact {y : κ → k | ∀ r, y r ∈ 𝒪[k]} := by
@@ -321,7 +321,7 @@ theorem GlobalTheory.LagVac.exists_vacuum : ∀ {k : Type} [Field k] [ValuativeR
   have hMT : ∀ (u z : intMat k (Fin n) (Fin d)) φ,
       schr ψ (wT u) (schr ψ (wM z) φ) = schr ψ (wM z) (schr ψ (wT u) φ) := fun u z φ => by
     rw [schr_comm, hTM', hψ _ (hpint u z), one_smul]
-  haveI := finite_quot (k := k) (Fin n) (Fin d) hN
+  have := finite_quot (k := k) (Fin n) (Fin d) hN
   obtain ⟨f, hf, hf0, hfix⟩ := exists_fixed
     (A := intMat k (Fin n) (Fin d) × intMat k (Fin n) (Fin d))
     (B := intMat k (Fin n) (Fin d) × intMat k (Fin n) (Fin d))
@@ -468,7 +468,7 @@ theorem sb_irreducible_vec : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
       have h' : valuation k w⁻¹ ≤ 1 := h
       rw [map_inv₀] at h'
       have hv0 : valuation k w ≠ 0 := (Valuation.ne_zero_iff _).2 hw0
-      have := (one_lt_inv₀ (zero_lt_iff.2 hv0)).2 hw1
+      have := (one_lt_inv₀ (pos_iff_ne_zero.2 hv0)).2 hw1
       exact absurd h' (not_le.2 this)
     have := mt (hcond w⁻¹).1 hno
     push_neg at this
@@ -805,7 +805,7 @@ theorem intertwiner_matrix : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
   have hιTm : ∀ Φ, ι (Tm Φ) = Φ.1 := by
     intro Φ
     have h1 : Submodule.linearProjOfIsCompl (GlobalTheory.WeilM.SB (κ → k)) C hC (Tm Φ) = ⟨Tm Φ, hrange Φ⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hC ⟨Tm Φ, hrange Φ⟩
+      Submodule.projectionOnto_apply_left hC ⟨Tm Φ, hrange Φ⟩
     have h2 : e.symm ⟨Tm Φ, hrange Φ⟩ = Φ := e.symm_apply_eq.2 (Subtype.ext rfl)
     show (e.symm (Submodule.linearProjOfIsCompl (GlobalTheory.WeilM.SB (κ → k)) C hC (Tm Φ))).1 = Φ.1
     rw [h1, h2]

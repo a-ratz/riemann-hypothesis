@@ -118,7 +118,7 @@ private theorem fin_supp (y : (Af F)ˣ) : Function.HasFiniteMulSupport fun w : P
   have h2 := Filter.eventually_cofinite.1 ((y⁻¹ : (Af F)ˣ) : Af F).2
   refine (h1.union h2).subset fun w hw => ?_
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   have a1 : Valued.v (pLoc F w (y : Af F)) ≤ 1 := hc.1
   have a2 : Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) ≤ 1 := hc.2
   have a3 : Valued.v (pLoc F w (y : Af F)) * Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) = 1 := by
@@ -314,7 +314,7 @@ private theorem aut_fin {φ : TR.Sm F 2} (h : TR.IsAutForm φ) (t : GL (Fin 2) (
   · have e : {k | TR.finRep F 2 k (s • TR.finRep F 2 t φ) = s • TR.finRep F 2 t φ} =
         (fun k => t⁻¹ * k * t) ⁻¹' {k | TR.finRep F 2 k φ = φ} := by
       ext k
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, map_smul, map_mul, Module.End.mul_apply]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, map_smul, map_mul, Module.End.mul_apply]
       rw [(smul_right_injective _ hs).eq_iff]
       constructor
       · intro hk
@@ -324,14 +324,14 @@ private theorem aut_fin {φ : TR.Sm F 2} (h : TR.IsAutForm φ) (t : GL (Fin 2) (
         rw [← Module.End.mul_apply (TR.finRep F 2 t), ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
     rw [e]
     exact h.level.preimage (by fun_prop)
-  · haveI := h.kfin
+  · have := h.kfin
     refine Submodule.finiteDimensional_of_le (S₂ := (Submodule.span ℂ (Set.range fun k => TR.cptRep F 2 k φ)).map
       (s • TR.finRep F 2 t)) (Submodule.span_le.2 ?_)
     rintro _ ⟨k, rfl⟩
     refine ⟨_, Submodule.subset_span ⟨k, rfl⟩, Subtype.ext (funext fun g => ?_)⟩
     change s * φ.1 (g * finGL F 2 t * TR.infGL F 2 _) = s * φ.1 (g * TR.infGL F 2 _ * finGL F 2 t)
     rw [mul_assoc, mul_assoc, TR.infGL_comm]
-  · haveI := h.zfin
+  · have := h.zfin
     refine Submodule.finiteDimensional_of_le
       (S₂ := (Submodule.span ℂ ((fun z : Module.End ℂ (TR.Sm F 2) => z φ) '' TR.Zalg F 2)).map
       (s • TR.finRep F 2 t)) (Submodule.span_le.2 ?_)
@@ -522,7 +522,7 @@ private theorem sum_step (χ : Ideal (𝓞 F) → ℂ) (hχ : ∀ I J, I ≠ ⊥
     ∑ᶠ r ∈ {r | r ∣ w.asIdeal * m}, χ r = χ w.asIdeal * ∑ᶠ r ∈ {r | r ∣ m}, χ r + ∑ᶠ r ∈ {r | r ∣ m ∧ ¬ w.asIdeal ∣ r}, χ r := by
   have hs : {r | r ∣ w.asIdeal * m} = (fun r => w.asIdeal * r) '' {r | r ∣ m} ∪ {r | r ∣ m ∧ ¬ w.asIdeal ∣ r} := by
     ext r
-    simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_image]
     constructor
     · intro h
       by_cases h1 : w.asIdeal ∣ r
@@ -647,7 +647,7 @@ private theorem step [IsTotallyReal F] (S : Subring ℂ) (ω : HChar F) (hS : �
       fun m => S.add_mem (g5 m) (S.mul_mem (S.neg_mem hyS) (div_mem S g5 _ _)), fun w hw => ?_, fun w hw => ?_⟩
     · rintro ⟨w, hw, hP⟩
       rcases Finset.mem_insert.1 hw with rfl | hw
-      · rw [hy, if_pos hP]
+      · rw [hy, ite_eq_left hP]
         ring
       · rw [g3 ⟨w, hw, hP⟩]
         ring
@@ -656,7 +656,7 @@ private theorem step [IsTotallyReal F] (S : Subring ℂ) (ω : HChar F) (hS : �
     · rcases Finset.mem_insert.1 hw with rfl | hw
       · apply rel_same
         have := g7 w hv
-        rw [chi_prime, if_pos hc] at this
+        rw [chi_prime, ite_eq_left hc] at this
         rw [hy]
         split_ifs
         · rwa [mul_one, add_comm]
@@ -678,7 +678,7 @@ theorem UpperTheory.V.Sd.emix :
     exact_mod_cast hl.out.ne_zero
   have hfin := Ideal.finite_factors hl0
   have hT : ∀ w : Pl F, w ∈ hfin.toFinset ↔ ((l : ℕ) : 𝓞 F) ∈ w.asIdeal := fun w => by
-    rw [hfin.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+    rw [hfin.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
   obtain ⟨φ, L, a, g1, g2, g3, g4, g5, g6, g7⟩ := step (intS ι) ω (val_mem ι hω) c P φ₀ L₀ h1 h2 hfin.toFinset
     fun w hw => hcl w ((hT w).1 hw)
   obtain ⟨w₀, hw₀, hw₁⟩ := hP
@@ -691,11 +691,11 @@ theorem UpperTheory.V.Sd.emix :
   rw [chi_prime, Nat.sub_self, pow_zero, mul_one]
   by_cases hw : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal
   · have := g6 w ((hT w).2 hw) m hm
-    simp only [levL, hw, if_true, one_ne_zero, if_false]
+    simp only [levL, hw, ite_true, one_ne_zero, ite_false]
     convert this
   · have := g7 w (fun h => hw ((hT w).1 h)) m hm
     rw [chi_prime] at this
-    simp only [levL, hw, if_false]
+    simp only [levL, hw, ite_false]
     rw [this]
     split_ifs <;> simp
 end -- clump:auto
@@ -725,7 +725,7 @@ theorem UpperTheory.V.Br.ctOne :
     UpperTheory.V.Br.CtOne := by
   intro F _ _
   obtain ⟨h1, h2, h3, h4, -, -, hx⟩ := UpperTheory.eisenstein_constantTerm_upperBlock F
-  letI iM : MeasurableSpace (UPos 2 1 → AdeleRing (𝓞 F) F) := MeasurableSpace.pi
+  let iM : MeasurableSpace (UPos 2 1 → AdeleRing (𝓞 F) F) := MeasurableSpace.pi
   have hμ : (unipMeasure F 2 1).IsAddHaarMeasure := inferInstance
   have hB : BorelSpace (UPos 2 1 → AdeleRing (𝓞 F) F) := Pi.borelSpace
   have hL : ratN F 2 1 = unipLattice F 2 1 := AddSubgroup.ext fun x =>
@@ -1030,12 +1030,12 @@ open UpperTheory.V.Br.CuspStabilizer in
 theorem UpperTheory.V.Br.cuspSet :
     UpperTheory.V.Br.CuspSet := by
   intro F _ _ _ M hM
-  haveI : CompactSpace (KLev F 2 1) := isCompact_iff_compactSpace.1 (isCompact_KLev le_rfl)
-  haveI : Finite (KLev F 2 1 ⧸ (KLev F 2 M).subgroupOf (KLev F 2 1)) :=
-    Subgroup.quotient_finite_of_isOpen _ ((isOpen_KLev hM).preimage continuous_subtype_val)
+  have : CompactSpace (KLev F 2 1) := isCompact_iff_compactSpace.1 (isCompact_KLev le_rfl)
+  have : Finite (KLev F 2 1 ⧸ (KLev F 2 M).subgroupOf (KLev F 2 1)) :=
+    Subgroup.quotient_finite_of_isOpen _ ((isOpen_KLev hM).preimage continuous_subtypeVal)
   let b : (InfinitePlace F → ℤˣ) × (KLev F 2 1 ⧸ (KLev F 2 M).subgroupOf (KLev F 2 1)) → GA F 2 := fun p =>
     TR.infGL F 2 (Unitary.toUnits (eps p.1)) * finGL F 2 p.2.out.1
-  haveI : ∀ g : GA F 2, (stab M g).FiniteIndex := stab_fin hM
+  have : ∀ g : GA F 2, (stab M g).FiniteIndex := stab_fin hM
   refine ⟨⋃ p, Set.range fun q : Ideles F ⧸ stab M (b p) => aff q.out 0 * b p,
     Set.finite_iUnion fun p => Set.finite_range _, fun Z hS hZ => Set.eq_univ_of_forall fun g => ?_⟩
   have h1 : ∀ p t, aff t 0 * b p ∈ Z := fun p t => by
@@ -1076,7 +1076,7 @@ private theorem exists_rep {K ι A : Type} [Group K] [TopologicalSpace K] [IsTop
       add_mem' := fun hf hg => ⟨hf.1.add hg.1, fun x a => by simp [hf.2, hg.2, mul_add]⟩
       zero_mem' := ⟨continuous_const, fun x a => by simp⟩
       smul_mem' := fun c f hf => ⟨hf.1.const_smul c, fun x a => by simp [hf.2, mul_left_comm]⟩ }
-  haveI : FiniteDimensional ℂ V := by
+  have : FiniteDimensional ℂ V := by
     refine Module.Finite.of_injective ((LinearMap.funLeft ℂ ℂ e).comp V.subtype) ?_
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro f hf
@@ -1209,7 +1209,7 @@ private theorem cont (φ : TR.Sm F 2) (g : GA F 2) : Continuous fun k : TR.Kinf 
   have e : (fun k : TR.Kinf F 2 => (TR.cptRep F 2 k φ).1 g) = fun k : TR.Kinf F 2 => TR.chart φ.1 g (TR.toL k.1) :=
     funext fun k => (TR.chart_val φ.1 g (Unitary.toUnits k)).symm
   rw [e]
-  exact (φ.2 g).continuousOn.comp_continuous continuous_subtype_val fun k => TR.val_mem_invSet (Unitary.toUnits k)
+  exact (φ.2 g).continuousOn.comp_continuous continuous_subtypeVal fun k => TR.val_mem_invSet (Unitary.toUnits k)
 
 end UpperTheory.V.Br.HolomorphicCuspFiniteness
 
@@ -1222,7 +1222,7 @@ theorem UpperTheory.V.Br.holCuspFin : UpperTheory.V.Br.HolCuspFin := by
   refine ⟨⟨M, hM1, hlev⟩, ?_⟩
   obtain ⟨W, _, _, _, ρ, hρ, hf⟩ := exists_rep (eps (F := F)) (rot (F := F))
     (fun θ => Complex.exp (Complex.I * k * ∑ v, (θ v : ℂ))) dec
-  haveI := cuspFormsFiniteReal F 2 (KLev F 2 M) (isOpen_KLev hM1) W ρ hρ
+  have := cuspFormsFiniteReal F 2 (KLev F 2 M) (isOpen_KLev hM1) W ρ hρ
     fun _ u => (u + ((k : ℂ) - 1) / 2) * (u - ((k : ℂ) - 1) / 2)
   refine Submodule.finiteDimensional_of_le (S₂ := _) (Submodule.span_mono (fun φ hφ => ?_) : _ ≤ Submodule.span ℂ
     {φ : TR.Sm F 2 | TR.IsCuspForm φ ∧ (∀ k ∈ KLev F 2 M, TR.finRep F 2 k φ = φ) ∧
@@ -1265,8 +1265,8 @@ private theorem fin_of_ker {V ι : Type*} [AddCommGroup V] [Module ℂ V] [Finit
   have hj : Function.Injective j := fun x y h => by
     have e := congrArg Subtype.val h
     exact Subtype.ext (Subtype.ext e)
-  haveI : Module.Finite ℂ (LinearMap.ker f) := Module.Finite.of_injective j hj
-  haveI : Module.Finite ℂ (W ⧸ LinearMap.ker f) := Module.Finite.equiv f.quotKerEquivRange.symm
+  have : Module.Finite ℂ (LinearMap.ker f) := Module.Finite.of_injective j hj
+  have : Module.Finite ℂ (W ⧸ LinearMap.ker f) := Module.Finite.equiv f.quotKerEquivRange.symm
   exact Module.Finite.of_submodule_quotient (LinearMap.ker f)
 
 theorem UpperTheory.V.Br.holFin0 :
@@ -1278,7 +1278,7 @@ theorem UpperTheory.V.Br.holFin0 :
   obtain ⟨h0, -, hadd, -⟩ := UpperTheory.V.Sd.holLin F k c ω
   have hint : ∀ φ : TR.Sm F 2, IsHol k c ω φ → ∀ g, IntegrableOn (fun x : NA F => φ.1 (unip x * g)) D μ := fun φ hφ =>
     (UpperTheory.eisenstein_constantTerm_of_periodMean_of_upperBlock UpperTheory.periodic_integral_fundamentalDomain_invariant UpperTheory.eisenstein_constantTerm_upperBlock F μ D hD φ.1 (UpperTheory.eisenstein_smooth_continuous F 2 φ hφ.aut.level) hφ.aut.left).1
-  haveI : Finite S := hS
+  have : Finite S := hS
   refine fin_of_ker _ _ h0 hadd hfin (fun φ (s : S) => cterm μ D φ.1 s.1) ?_ (fun φ ψ z hφ hψ => ?_) fun φ hφ h => ?_
   · funext s
     simp [cterm]
@@ -1439,9 +1439,9 @@ open UpperTheory.V.Sd in
 theorem UpperTheory.V.Sd.holLift_alt :
     _root_.UpperTheory.V.Af.HypothesesH' → UpperTheory.V.Sd.HolLift := by
   intro hP F _ _ _ l _ ι k hk1 c hc ω hω φ c₀ a t hφ hexp hint h1 ht hcong
-  haveI : RingHomSurjective (ι.symm : ℂ →+* Qbar l) := ⟨ι.symm.surjective⟩
-  haveI := _root_.UpperTheory.V.Sd.holomorphic_finite_of_printed_hida hP F k c hc ω hω
-  haveI : FiniteDimensional ℂ (SS k c ω) :=
+  have : RingHomSurjective (ι.symm : ℂ →+* Qbar l) := ⟨ι.symm.surjective⟩
+  have := _root_.UpperTheory.V.Sd.holomorphic_finite_of_printed_hida hP F k c hc ω hω
+  have : FiniteDimensional ℂ (SS k c ω) :=
     Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ {φ : TR.Sm F 2 | IsHol k c ω φ})
       fun ψ hψ => Submodule.subset_span hψ.1
   set V : Submodule (Qbar l) (Idx F → Qbar l) := (⊤ : Submodule ℂ (SS k c ω)).map (Phi ι k c ω) with hV
@@ -1577,9 +1577,9 @@ private theorem pow_cong {n k : ℕ} (h : ¬ l ∣ n) (hk : l - 1 ∣ k) : ‖(n
 variable {F : Type} [Field F] [NumberField F]
 private theorem dvd_normV (w : Pl F) : l ∣ normV w ↔ ((l : ℕ) : 𝓞 F) ∈ w.asIdeal := by
   have := w.isMaximal
-  letI := Ideal.Quotient.field w.asIdeal
+  let := Ideal.Quotient.field w.asIdeal
   have : Finite (𝓞 F ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
   rw [normV, Nat.card_eq_fintype_card, ← prime_dvd_char_iff_dvd_card, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast,
     ringChar.spec]
   have hq : (ringChar (𝓞 F ⧸ w.asIdeal)).Prime := CharP.prime_ringChar _
@@ -1644,12 +1644,12 @@ theorem UpperTheory.V.Z.Bc.propMHolZ_alt :
     by_cases h : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal
     · exact Or.inl (Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 h))
     · refine Or.inr fun hu => hw ?_
-      rw [levL, if_neg h]
+      rw [levL, ite_eq_right h]
       exact Nat.le_zero.1 ((hc w).2 fun x hx _ => hu x hx)
   have hL0 : ∀ w, levL l c w = 0 → ((l : ℕ) : 𝓞 F) ∉ w.asIdeal ∧ c w = 0 := fun w hw => by
     by_cases h : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal
-    · rw [levL, if_pos h] at hw; exact absurd hw one_ne_zero
-    · rw [levL, if_neg h] at hw; exact ⟨h, hw⟩
+    · rw [levL, ite_eq_left h] at hw; exact absurd hw one_ne_zero
+    · rw [levL, ite_eq_right h] at hw; exact ⟨h, hw⟩
   have nval : ∀ {η : HChar F}, IsOfFinOrder η → ∀ w, ‖ι.symm (η.val w : ℂˣ)‖ = 1 := fun h w => norm_val ι h _
   have hpow : ∀ w : Pl F, ((l : ℕ) : 𝓞 F) ∉ w.asIdeal → ‖(normV w : Qbar l) ^ k - 1‖ < 1 := fun w hw =>
     pow_cong (mt (dvd_normV w).1 hw) hkd'
@@ -1695,7 +1695,7 @@ theorem UpperTheory.V.Z.Bc.propMHolZ_alt :
     obtain ⟨u₁, u₂, e⟩ := hu w h0
     refine ⟨u₁, u₂, ?_⟩
     have h1 := hlam w
-    rw [e, eisT, if_neg (hL0 w h0).1, if_pos (hL0 w h0).2, HChar.val_mul] at h1
+    rw [e, eisT, ite_eq_right (hL0 w h0).1, ite_eq_left (hL0 w h0).2, HChar.val_mul] at h1
     have h2 := sm_sub (sm_mul (nval f₂ w).le (hpow w (hL0 w h0).1)) h1
     have h3 : ‖ι.symm (η₁.val w : ℂˣ) - 1‖ * ‖ι.symm (η₂.val w : ℂˣ) - 1‖ < 1 := by
       rw [← norm_mul]
@@ -1713,8 +1713,8 @@ theorem UpperTheory.V.Z.Bc.propMHolZ_alt :
     · exact e ▸ hlam w
     · rw [e, map_mul, map_pow, map_natCast, ← Nat.cast_pow] at h2
       exact absurd h2 (sm_mul (nval f₂ w).le (norm_nat_lt (dvd_pow ((dvd_normV w).2 hw) hk0.ne'))).ne
-  have e₁ : eisT l (η₁ * η₂) c P v = ((η₁ * η₂).val v : ℂˣ) := by rw [eisT, if_pos hvl, if_pos hvP]
-  have e₂ : eisT l (η₁ * η₂) c P v' = 1 := by rw [eisT, if_pos hvl', if_neg hvQ]
+  have e₁ : eisT l (η₁ * η₂) c P v = ((η₁ * η₂).val v : ℂˣ) := by rw [eisT, ite_eq_left hvl, ite_eq_left hvP]
+  have e₂ : eisT l (η₁ * η₂) c P v' = 1 := by rw [eisT, ite_eq_left hvl', ite_eq_right hvQ]
   have a₁ := hab v hvl (by rw [e₁]; exact nval hω v)
   have a₂ := hab v' hvl' (by rw [e₂, map_one, norm_one])
   rw [e₁] at a₁

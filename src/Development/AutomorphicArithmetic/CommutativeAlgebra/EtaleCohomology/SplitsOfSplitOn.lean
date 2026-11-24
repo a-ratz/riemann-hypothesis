@@ -89,7 +89,7 @@ private lemma splitOn_base {X' X Y Z : Scheme.{0}} (p : Z ⟶ Y) (x : X ⟶ Y) (
     have outer : IsPullback (𝟙 X') g g (𝟙 X) := IsPullback.of_horiz_isIso ⟨by simp⟩
     exact IsPullback.of_right (h₁₂ := pullback.snd p (g ≫ x)) (h₂₂ := pullback.snd p x) (v₁₃ := g)
       (by rwa [ht2, ht2']) (hw i) hsq.flip
-  haveI : IsIso (Sigma.desc t) := hI
+  have : IsIso (Sigma.desc t) := hI
   let c : Cofan (fun _ : Fin m => X) := Cofan.mk (pullback p x) t
   have hc : IsColimit c := by
     let e : ∐ (fun _ : Fin m => X) ≅ pullback p x := asIso (Sigma.desc t)
@@ -111,7 +111,7 @@ private lemma splitOn_base {X' X Y Z : Scheme.{0}} (p : Z ⟶ Y) (x : X ⟶ Y) (
   have e : Sigma.desc t' = (IsColimit.coconePointUniqueUpToIso (coproductIsCoproduct _) hc').hom := by
     apply Sigma.hom_ext
     intro j
-    rw [Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc]
     exact ((coproductIsCoproduct _).comp_coconePointUniqueUpToIso_hom hc' ⟨j⟩).symm
   show IsIso (Sigma.desc t')
   rw [e]
@@ -130,11 +130,11 @@ private lemma splitOn_perm {X Y Z : Scheme.{0}} (p : Z ⟶ Y) (x : X ⟶ Y) {m :
     intro j
     have e1 : Sigma.ι (fun _ : Fin m => X) j ≫ (Sigma.reindex σ (fun _ : Fin m => X)).hom =
         Sigma.ι (fun _ : Fin m => X) (σ j) := Sigma.ι_reindex_hom σ (fun _ : Fin m => X) j
-    rw [Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc]
     refine Eq.symm ?_
     refine (Category.assoc _ _ _).symm.trans ?_
     refine (congrArg (· ≫ _) e1).trans ?_
-    exact Sigma.ι_desc _ _
+    exact Sigma.ι_comp_desc _ _
   rw [e]
   infer_instance
 
@@ -151,7 +151,7 @@ private lemma splits_of_splitOn {Y Z : Scheme.{0}} (p : Z ⟶ Y) {U : Y.Opens} (
     ∀ ξ : Fin m → (Γ(Z, p ⁻¹ᵁ U) →ₐ[Γ(Y, U)] C),
       SplitOn p (Spec.map (CommRingCat.ofHom (algebraMap Γ(Y, U) C)) ≫ hU.fromSpec)
         (fun i => Spec.map (CommRingCat.ofHom (ξ i).toRingHom) ≫ hS.fromSpec) → Splits ξ := by
-  letI : Algebra Γ(Y, U) Γ(Z, p ⁻¹ᵁ U) := (p.app U).hom.toAlgebra
+  let : Algebra Γ(Y, U) Γ(Z, p ⁻¹ᵁ U) := (p.app U).hom.toAlgebra
   intro ξ ⟨h, hI⟩
   have pbA := isPullback_SpecMap_of_isPushout _ _ _ _
     (CommRingCat.isPushout_tensorProduct Γ(Y, U) C Γ(Z, p ⁻¹ᵁ U))
@@ -162,7 +162,7 @@ private lemma splits_of_splitOn {Y Z : Scheme.{0}} (p : Z ⟶ Y) {U : Y.Opens} (
   have claim : sigmaSpec (fun _ : Fin m => CommRingCat.of C) ≫ Φ ≫ P.isoPullback.hom = Sigma.desc t := by
     apply Sigma.hom_ext
     intro j
-    rw [ι_sigmaSpec_assoc, Sigma.ι_desc]
+    rw [ι_sigmaSpec_assoc, Sigma.ι_comp_desc]
     let E : CommRingCat.of (C ⊗[Γ(Y, U)] Γ(Z, p ⁻¹ᵁ U)) ⟶ CommRingCat.of C :=
       CommRingCat.ofHom (splitMap ξ).toRingHom ≫ CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin m => C) j)
     have hE : Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin m => C) j)) ≫ Φ = Spec.map E :=
@@ -178,11 +178,11 @@ private lemma splits_of_splitOn {Y Z : Scheme.{0}} (p : Z ⟶ Y) {U : Y.Opens} (
     apply pullback.hom_ext
     · rw [Category.assoc, P.isoPullback_hom_fst, pullback.lift_fst, ← Spec.map_comp_assoc, hE2]
     · rw [Category.assoc, P.isoPullback_hom_snd, pullback.lift_snd, ← Spec.map_comp, hE1, Spec.map_id]
-  haveI : IsIso (Sigma.desc t) := hI
+  have : IsIso (Sigma.desc t) := hI
   haveI : IsIso (sigmaSpec (fun _ : Fin m => CommRingCat.of C) ≫ Φ ≫ P.isoPullback.hom) := by
     rw [claim]; infer_instance
-  haveI : IsIso (Φ ≫ P.isoPullback.hom) := IsIso.of_isIso_comp_left (sigmaSpec (fun _ : Fin m => CommRingCat.of C)) _
-  haveI : IsIso Φ := IsIso.of_isIso_comp_right Φ P.isoPullback.hom
+  have : IsIso (Φ ≫ P.isoPullback.hom) := IsIso.of_isIso_comp_left (sigmaSpec (fun _ : Fin m => CommRingCat.of C)) _
+  have : IsIso Φ := IsIso.of_isIso_comp_right Φ P.isoPullback.hom
   exact isIso_SpecMap_iff.mp this
 
 private lemma spec_fac {B : Type} [CommRing B] {X : Scheme.{0}} (w : Spec (CommRingCat.of B) ⟶ X) {V : X.Opens}
@@ -201,10 +201,10 @@ private lemma app_comp_appLE {X Z Y : Scheme.{0}} (z : X ⟶ Z) (p : Z ⟶ Y) (y
 theorem splitRules : SplitRules := by
   refine ⟨fun p x g _ z H => ⟨splitOn_base p x g z H, fun σ => splitOn_perm p x z H σ⟩, ?_⟩
   intro l Y T U hU B _ y hy z hz hzy hsplit
-  haveI := T.fin
+  have := T.fin
   have hS : IsAffineOpen (T.p ⁻¹ᵁ U) := hU.preimage T.p
-  letI := T.alg U
-  letI : Algebra Γ(Y, U) B := ((y.appLE U ⊤ hy ≫ (Scheme.ΓSpecIso (CommRingCat.of B)).hom).hom).toAlgebra
+  let := T.alg U
+  let : Algebra Γ(Y, U) B := ((y.appLE U ⊤ hy ≫ (Scheme.ΓSpecIso (CommRingCat.of B)).hom).hom).toAlgebra
   let ζ : Fin T.d → (Γ(T.Z, T.p ⁻¹ᵁ U) →ₐ[Γ(Y, U)] B) := fun i =>
     { ((z i).appLE (T.p ⁻¹ᵁ U) ⊤ (hz i) ≫ (Scheme.ΓSpecIso (CommRingCat.of B)).hom).hom with
       commutes' := fun a => by

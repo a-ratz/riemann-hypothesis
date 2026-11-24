@@ -68,12 +68,12 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem map_mul_left_volM (h : GL n k) :
     (volM ν n n).map (fun x => h.val * x) =
       ENNReal.ofReal (nabs k (Matrix.GeneralLinearGroup.det h) ^ (-(Fintype.card n : ℝ))) • volM ν n n := by
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI : BorelSpace (Matrix n n k) := inferInstanceAs (BorelSpace (n → n → k))
-  haveI : LocallyCompactSpace (Matrix n n k) := inferInstanceAs (LocallyCompactSpace (n → n → k))
-  haveI : SecondCountableTopology (Matrix n n k) := inferInstanceAs (SecondCountableTopology (n → n → k))
-  haveI : (volM ν n n).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have := secondCountable k
+  have := t2Space k
+  have : BorelSpace (Matrix n n k) := inferInstanceAs (BorelSpace (n → n → k))
+  have : LocallyCompactSpace (Matrix n n k) := inferInstanceAs (LocallyCompactSpace (n → n → k))
+  have : SecondCountableTopology (Matrix n n k) := inferInstanceAs (SecondCountableTopology (n → n → k))
+  have : (volM ν n n).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   let e : Matrix n n k ≃+ Matrix n n k :=
     { toFun := fun x => h.val * x
       invFun := fun x => (h⁻¹).val * x
@@ -82,7 +82,7 @@ theorem map_mul_left_volM (h : GL n k) :
       map_add' := fun x y => Matrix.mul_add _ _ _ }
   have c1 : Continuous e := continuous_const.matrix_mul continuous_id
   have c2 : Continuous e.symm := continuous_const.matrix_mul continuous_id
-  haveI := e.isAddHaarMeasure_map (volM ν n n) c1 c2
+  have := e.isAddHaarMeasure_map (volM ν n n) c1 c2
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, (volM ν n n).map e = c • volM ν n n :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
   change (volM ν n n).map e = _
@@ -115,8 +115,8 @@ theorem continuous_density_volGL : Continuous fun g : GL n k =>
     (fun t : ℝ => ENNReal.ofReal (t ^ (-(Fintype.card n : ℝ))))).continuous
 
 theorem isMulLeftInvariant_volGL : (volGL ν n).IsMulLeftInvariant := by
-  haveI := secondCountable k
-  haveI : BorelSpace (Matrix n n k) := inferInstanceAs (BorelSpace (n → n → k))
+  have := secondCountable k
+  have : BorelSpace (Matrix n n k) := inferInstanceAs (BorelSpace (n → n → k))
   have hE := Model.measurableEmbedding_val (k := k) n
   have hd := (continuous_density_volGL (k := k) (n := n)).measurable
   set μ := (volM ν n n).comap (fun g : GL n k => g.val) with hμ
@@ -131,8 +131,8 @@ theorem isMulLeftInvariant_volGL : (volGL ν n).IsMulLeftInvariant := by
     ext s hs
     have cm : Measurable fun x : Matrix n n k => h.val * x :=
       (continuous_const.matrix_mul continuous_id).measurable
-    rw [Measure.map_apply (measurable_const_mul h) hs, Measure.smul_apply, hE.comap_apply, hE.comap_apply,
-      ← Measure.smul_apply, ← map_mul_left_volM ν h, Measure.map_apply cm (hE.measurableSet_image.2 hs)]
+    rw [Measure.map_apply (measurable_const_mul h) hs, smul_apply, hE.comap_apply, hE.comap_apply,
+      ← smul_apply, ← map_mul_left_volM ν h, Measure.map_apply cm (hE.measurableSet_image.2 hs)]
     congr 1
     ext x
     constructor
@@ -178,17 +178,17 @@ theorem volGL_KO : volGL ν n (KO k n) = volM ν n n ((fun g : GL n k => g.val) 
   simp only [h1, Real.one_rpow, ENNReal.ofReal_one]
 
 theorem isHaarMeasure_volGL : (volGL ν n).IsHaarMeasure := by
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI : (volM ν n n).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI := isMulLeftInvariant_volGL (n := n) ν
+  have := secondCountable k
+  have := t2Space k
+  have : (volM ν n n).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have := isMulLeftInvariant_volGL (n := n) ν
   have ho := SplitFlip.isOpen_KO (k := k) (n := n)
   have hc := SplitFlip.isCompact_KO (k := k) (n := n)
   have hoe : Topology.IsOpenEmbedding (fun g : GL n k => g.val) := by
     refine ⟨SplitFlip.isEmbedding_val_GL, ?_⟩
     have : Set.range (fun g : GL n k => g.val) = {x : Matrix n n k | x.det ≠ 0} := by
       ext x
-      simp only [Set.mem_range, Set.mem_setOf_eq]
+      simp only [Set.mem_range, Set.mem_ofPred_eq]
       rw [← isUnit_iff_ne_zero, ← Matrix.isUnit_iff_isUnit_det]
       rfl
     rw [this]

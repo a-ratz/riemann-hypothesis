@@ -146,8 +146,8 @@ theorem norm_diagCoef {V : Type*} [AddCommGroup V] [Module ℂ V] (H : Sesq V) (
 theorem diagonalIntegral : DiagIntegral := by
   classical
   intro V _ _ _ _ _ μ _ H Λ Λ₂ α hH hPos hL hS hS₂ hC hC₂ D' hD' hB y hy
-  haveI : DiscreteTopology Λ := hL.1
-  haveI : Countable Λ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
+  have : DiscreteTopology Λ := hL.1
+  have : Countable Λ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
   set F : Λ → V → ℂ := fun x z => diagCoef H α y (x : V) *
     Complex.exp (2 * (Real.pi : ℂ) * Complex.I * (altE H (y + (x : V)) z : ℂ)) with hF
   have hexp : ∀ z, α y * opU H y (fun v => kerP H α Λ v z) z * (wt H z : ℂ) = ∑' x : Λ, F x z :=
@@ -172,7 +172,7 @@ theorem diagonalIntegral : DiagIntegral := by
     rw [h3]
     nlinarith [Real.pi_pos]
   have hfin : μ D' < ⊤ := hB.measure_lt_top
-  haveI : IsFiniteMeasure (μ.restrict D') := MeasureTheory.isFiniteMeasure_restrict.mpr hfin.ne
+  have : IsFiniteMeasure (μ.restrict D') := MeasureTheory.isFiniteMeasure_restrict.mpr hfin.ne
   have hcont : ∀ x : Λ, Continuous (F x) := by
     intro x
     simp only [hF]
@@ -235,8 +235,8 @@ theorem KerPNonzero_of (hD : DiagIntegral) : KerPNonzero := by
   intro V _ _ _ H Λ α hH hPos hL hS hC
   by_contra hne
   push_neg at hne
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
   obtain ⟨D, hD1, hD2, hD3, -⟩ :=
     fundamentalDomainExists V MeasureTheory.Measure.addHaar (Λ ⊓ Λ) (by rw [inf_idem]; exact hL)
   have hint := hD V MeasureTheory.Measure.addHaar H Λ Λ α hH hPos hL hS hS hC hC D hD1 hD2 0 (zero_mem _)
@@ -339,7 +339,7 @@ theorem expFPS_hasSum {X : Type*} (c : X → ℂ) (l : X → V →L[ℂ] ℂ)
     HasSum (fun n => expFPS c l n fun _ => y) (∑' x, c x * Complex.exp (l x y)) := by
   have hterm : ∀ n x, expTerm c l n x (fun _ => y) = c x * (l x y) ^ n / (n ! : ℂ) := by
     intro n x
-    rw [expTerm, ContinuousMultilinearMap.smul_apply, powForm_diag, smul_eq_mul]
+    rw [expTerm, smul_apply, powForm_diag, smul_eq_mul]
     ring
   have hev : ∀ n, expFPS c l n (fun _ => y) = ∑' x, c x * (l x y) ^ n / (n ! : ℂ) := by
     intro n
@@ -423,13 +423,13 @@ def kL (H : Sesq V) (w x : V) : V →L[ℂ] ℂ :=
 
 theorem term_eq (H : Sesq V) (α : V → ℂ) (w x z : V) :
     α x * opU H x (kerK H w) z = kC H α w x * Complex.exp (kL H w x z) := by
-  simp only [opU, kerK, kC, kL, ContinuousLinearMap.smul_apply, LinearMap.coe_toContinuousLinearMap',
+  simp only [opU, kerK, kC, kL, smul_apply, LinearMap.coe_toContinuousLinearMap',
     LinearMap.flip_apply, smul_eq_mul, map_add, map_sub, LinearMap.add_apply]
   rw [mul_assoc]
   congr 1
   rw [← Complex.exp_add, ← Complex.exp_add]
   congr 1
-  simp only [ContinuousLinearMap.sub_apply, LinearMap.coe_toContinuousLinearMap', LinearMap.flip_apply]
+  simp only [sub_apply, LinearMap.coe_toContinuousLinearMap', LinearMap.flip_apply]
   ring
 
 theorem quad_bound (a b t : ℝ) (ha : 0 < a) : b * t ≤ a * t ^ 2 + b ^ 2 / (4 * a) := by
@@ -834,11 +834,11 @@ theorem const_value {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] [Finit
     (fun y => ∫ z in D', α y * opU H y (fun v => kerP H α Λ v z) z * (wt H z : ℂ) ∂μ)
     (fun y hy hyΛ => by
       have := hdiag y (hS₂.1 y hy)
-      rw [if_neg hyΛ] at this
+      rw [ite_eq_right hyΛ] at this
       exact this)
   rw [hsum]
   have := hdiag y₀ (hS₂.1 y₀ hy₀)
-  rw [if_pos hy₀Λ] at this
+  rw [ite_eq_left hy₀Λ] at this
   rw [this]
 
 end UC

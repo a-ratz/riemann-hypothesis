@@ -113,7 +113,7 @@ theorem blockScale_mem_domCell {c : K → ℂ} (hc : ∀ k, c k ≠ 0) (z : (Σ 
     (i : (k : K) → ι k) : (fun p : Σ k, ι k => c p.1 * z p) ∈ domCell i ↔ z ∈ domCell i := by
   have hpos : 0 < ‖∏ k, c k‖ :=
     norm_pos_iff.mpr (Finset.prod_ne_zero_iff.mpr fun k _ => hc k)
-  simp only [domCell, Set.mem_setOf_eq, segre_blockScale, norm_mul]
+  simp only [domCell, Set.mem_ofPred_eq, segre_blockScale, norm_mul]
   exact forall_congr' fun j =>
     ⟨fun h => le_of_mul_le_mul_left h hpos, fun h => mul_le_mul_of_nonneg_left h hpos.le⟩
 
@@ -130,10 +130,10 @@ theorem measurable_absLogNorm (A : HermLine ι) (hA : IsSmoothHerm A) (s : MRing
     by_cases hz : z ∈ T
     · have hz' : ∀ k, ∃ j, z ⟨k, j⟩ ≠ 0 := hz
       rw [Set.piecewise_eq_of_mem _ _ _ hz, Set.piecewise_eq_of_mem _ _ _ hz]
-      simp only [absLogNorm, if_pos hz', logNormC]
+      simp only [absLogNorm, ite_eq_left hz', logNormC]
     · have hz' : ¬ ∀ k, ∃ j, z ⟨k, j⟩ ≠ 0 := hz
       rw [Set.piecewise_eq_of_notMem _ _ _ hz]
-      simp only [absLogNorm, if_neg hz', Pi.zero_apply]
+      simp only [absLogNorm, ite_eq_right hz', Pi.zero_apply]
   rw [heq]
   refine Measurable.piecewise hTm ?_ measurable_const
   exact continuous_abs.measurable.comp
@@ -145,8 +145,8 @@ theorem absLogNorm_blockScale (A : HermLine ι) {s : MRingOver ℂ ι} {a : K �
   have hmem : (∀ k, ∃ j, c k * z ⟨k, j⟩ ≠ 0) ↔ ∀ k, ∃ j, z ⟨k, j⟩ ≠ 0 := by
     simp only [ne_eq, mul_eq_zero, hc, false_or]
   by_cases hz : ∀ k, ∃ j, z ⟨k, j⟩ ≠ 0
-  · simp only [absLogNorm, if_pos hz, if_pos (hmem.2 hz), logNormC_blockScale A hAa hs hc z]
-  · simp only [absLogNorm, if_neg hz, if_neg (mt hmem.1 hz)]
+  · simp only [absLogNorm, ite_eq_left hz, ite_eq_left (hmem.2 hz), logNormC_blockScale A hAa hs hc z]
+  · simp only [absLogNorm, ite_eq_right hz, ite_eq_right (mt hmem.1 hz)]
 
 end Weight
 

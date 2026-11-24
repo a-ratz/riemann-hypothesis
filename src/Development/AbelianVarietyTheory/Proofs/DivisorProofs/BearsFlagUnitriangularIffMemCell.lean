@@ -81,7 +81,7 @@ theorem exists_elim_row {R : Type} [CommRing R] {m : ℕ} (A : Matrix (Fin m) (F
     simp only [Matrix.vecMul, dotProduct, hB, Matrix.submatrix_apply, hj'] at h1
     simp only [Pi.sub_apply, Finset.sum_apply, sub_mul, Finset.sum_sub_distrib, Finset.sum_mul]
     rw [Finset.sum_comm]
-    simp only [Pi.single_apply, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true, one_mul]
+    simp only [Pi.single_apply, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, one_mul]
     rw [h1, sub_self]
 
 theorem exists_lu (R : Type) [CommRing R] (m : ℕ) (A : Matrix (Fin m) (Fin m) R)
@@ -93,11 +93,11 @@ theorem exists_lu (R : Type) [CommRing R] (m : ℕ) (A : Matrix (Fin m) (Fin m) 
   let L : Matrix (Fin m) (Fin m) R := Matrix.of r
   have hL : L.BlockTriangular OrderDual.toDual := fun i k hk => h0 i k hk
   have hdet : L.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular L hL]
+    rw [det_of_isLowerTriangular L hL]
     exact Finset.prod_eq_one fun i _ => h1 i
   have hu : IsUnit L.det := hdet ▸ isUnit_one
   have hAu : IsUnit A.det := by simpa using h (Fin.last m)
-  letI := L.invertibleOfIsUnitDet hu
+  let := L.invertibleOfIsUnitDet hu
   have hLi : L⁻¹.BlockTriangular OrderDual.toDual := Matrix.blockTriangular_inv_of_blockTriangular hL
   have hd : ∀ i, L⁻¹ i i = 1 := by
     intro i
@@ -210,12 +210,12 @@ theorem lowMul_upU_leadMinor_ne_zero (K : Type) [Field K] (s : ℕ) (y : Low s �
   have hUd : ∀ a : Fin s, upU y a a = 1 := by
     intro a; simp [upU, Matrix.of_apply]
   have hdiag : ∀ i, b i i ≠ 0 := by
-    have h1 : b.det = ∏ i, b i i := Matrix.det_of_lowerTriangular b (fun i j h => hb i j h)
+    have h1 : b.det = ∏ i, b i i := Matrix.det_of_isLowerTriangular b (fun i j h => hb i j h)
     rw [h1] at hdet
     intro i
     exact (Finset.prod_ne_zero_iff.mp hdet) i (Finset.mem_univ _)
   refine ⟨?_, ?_⟩
-  · rw [Matrix.det_of_upperTriangular (fun a c h => hU a c h)]
+  · rw [Matrix.det_of_isUpperTriangular (fun a c h => hU a c h)]
     simp [hUd]
   · intro k
     have hmul : (b * upU y).submatrix (Subtype.val : {a : Fin s // (a : ℕ) < k} → Fin s)
@@ -230,14 +230,14 @@ theorem lowMul_upU_leadMinor_ne_zero (K : Type) [Field K] (s : ℕ) (y : Low s �
         apply Finset.sum_eq_zero
         intro l _
         have : i.1 < l.1 := by
-          have := i.2; have := l.2; rw [Fin.lt_iff_val_lt_val]; omega
+          have := i.2; have := l.2; rw [Fin.lt_def]; omega
         rw [hb _ _ this, zero_mul]
       rw [h0, add_zero]
     rw [hmul, Matrix.det_mul]
     refine mul_ne_zero ?_ ?_
-    · rw [Matrix.det_of_lowerTriangular _ (fun i j h => hb i.1 j.1 h)]
+    · rw [Matrix.det_of_isLowerTriangular _ (fun i j h => hb i.1 j.1 h)]
       exact Finset.prod_ne_zero_iff.mpr (fun i _ => hdiag i.1)
-    · rw [Matrix.det_of_upperTriangular (fun i j h => hU i.1 j.1 h)]
+    · rw [Matrix.det_of_isUpperTriangular (fun i j h => hU i.1 j.1 h)]
       simp [hUd]
 
 end GlobalTheory.FlagCell2

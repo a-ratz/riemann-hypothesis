@@ -233,7 +233,7 @@ theorem cartan_core (val : Valuation L Γ) (hO : ∀ x, x ∈ O ↔ val x ≤ 1)
       calc val ((k : Matrix (Fin m) (Fin m) L) (σ j) j) *
             ∏ x ∈ Finset.univ.erase j, val ((k : Matrix (Fin m) (Fin m) L) (σ x) x)
           ≤ val ((k : Matrix (Fin m) (Fin m) L) (σ j) j) * 1 :=
-            mul_le_mul' le_rfl (Finset.prod_le_one' (fun x _ => hle _ _))
+            mul_le_mul' le_rfl (Finset.prod_le_one (fun x _ => hle _ _))
         _ < 1 := by rw [mul_one]; exact hsmall _ _ hσj hj
     rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with hs | hs <;> rw [hs]
     · rw [one_smul]

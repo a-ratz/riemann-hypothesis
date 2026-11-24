@@ -77,7 +77,7 @@ theorem wtRed_of (hWD : EvalWD (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z
     have e2 := hN f hf.1 S (FractionRing (S ⧸ P)) φ y' z' hz'
     have e3 := hW a n f hf (FractionRing (S ⧸ P)) _ z z' (hA _ z) (hA _ z') hbz
     have hw : φ (wchar (ex Dw a n) t) = wchar (ex Dw a n) (fun i => Units.map (φ : S →* FractionRing (S ⧸ P)) (t i)) := by
-      simp only [wchar, map_prod, map_pow, Units.coe_map, MonoidHom.coe_coe]
+      simp only [wchar, map_prod, map_pow, Units.coe_map, MonoidHom.coe_ofClass]
     have h0 : φ d = 0 := by
       rw [hd, map_sub, map_mul, ← e1, ← e2, e3, hw, sub_self]
     have h1 : algebraMap (S ⧸ P) (FractionRing (S ⧸ P)) (Ideal.Quotient.mk P d) = 0 := h0

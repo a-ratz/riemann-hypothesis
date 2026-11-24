@@ -196,7 +196,7 @@ private theorem part_tw {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     {ph : Ine (F := F) A →* (Qbar l)ˣ} (H : W.IsWtPart h κ wt ph) {β : G F Ω →* (Qbar l)ˣ} (hβ : IsOpen (β.ker : Set (G F Ω))) :
     W.IsWtPart h (κ * β.comp (Dec (F := F) A).subtype) wt (ph * (β.comp (Ine (F := F) A).subtype)⁻¹) := by
   refine ⟨Subgroup.isOpen_mono (H₁ := ph.ker ⊓ β.ker.comap (Ine (F := F) A).subtype) (fun g hg => ?_)
-    (H.1.inter (hβ.preimage continuous_subtype_val)), fun a ha g => ?_⟩
+    (H.1.inter (hβ.preimage continuous_subtypeVal)), fun a ha g => ?_⟩
   · have h1 : ph g = 1 := hg.1
     have h2 : β g = 1 := hg.2
     change ph g * (β g)⁻¹ = 1
@@ -261,7 +261,7 @@ private theorem autP (hP : Af.HypothesesH) (hn : 1 ≤ n) (r : Resid V.frame c.O
     rw [← MonoidHom.ker_comp_of_injective τ₀ _ hmap]
     exact (hτ t ht).1
   have h1 := decompU l L Ω s n hn V Q c m τ₀ ι hop lam d e ξ he F hF hK hI
-  refine SetLike.le_def.1 (iSup_le fun σ => ?_) h1
+  refine IsConcreteLE.le_iff.1 (iSup_le fun σ => ?_) h1
   by_cases h0 : YOf Q ι τ₀ e ξ σ.1 = ⊥
   · rw [h0]; exact bot_le
   · obtain ⟨Y, hY, -, hcomp, hLG⟩ := partU hP l L Ω s n hn V Q c r ι m τ₀ hτ lam d e ξ he σ.1 σ.2 h0

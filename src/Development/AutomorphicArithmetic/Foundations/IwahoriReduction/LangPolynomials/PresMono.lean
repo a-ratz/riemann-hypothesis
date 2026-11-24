@@ -64,12 +64,12 @@ theorem pPresMono : SPresMono := by
   obtain ⟨h1, h2, h3, h4, h5⟩ := hP
   obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hn
   have hlp : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
-    haveI : NeZero ((l ^ i : ℕ) : Ω) := ⟨by exact_mod_cast (pow_pos hlp.pos i).ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
+    have : NeZero ((l ^ i : ℕ) : Ω) := ⟨by exact_mod_cast (pow_pos hlp.pos i).ne'⟩
     infer_instance
-  haveI : NeZero (l ^ n') := ⟨(pow_pos hlp.pos n').ne'⟩
+  have : NeZero (l ^ n') := ⟨(pow_pos hlp.pos n').ne'⟩
   refine ⟨(hζ n').1, hn.trans h2, h3, h4, fun s hs hc _ => ?_⟩
   obtain ⟨k, hk, hcg⟩ := h5 s hs hc (fix_of_cycMod h2 hc h1.pow_eq_one)
   refine ⟨fun i => ((k i).val : ZMod (l ^ n')), fun i => ?_, ?_⟩

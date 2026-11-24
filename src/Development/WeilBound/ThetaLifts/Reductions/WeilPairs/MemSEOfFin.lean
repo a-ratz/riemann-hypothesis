@@ -67,13 +67,13 @@ theorem exists_ext {G : Type} [CommGroup G] (U V : Subgroup G) (lam : G →* Cir
     (h : ∀ x ∈ U, x ∈ V → lam x = 1) : ∃ ν : G →* Circle, (∀ x ∈ V, ν x = 1) ∧ ∀ x ∈ U, ν x = lam x := by
   let ψ0 : U →* G ⧸ V := (QuotientGroup.mk' V).comp U.subtype
   have hker : ψ0.ker ≤ (lam.comp U.subtype).ker := fun a ha => h a a.2 ((QuotientGroup.eq_one_iff _).1 ha)
-  letI : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
+  let : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
     obtain ⟨t, ht⟩ := Circle.exp_surjective u.toMul
     refine ⟨Additive.ofMul (Circle.exp (t / n)), ?_⟩
     show Additive.ofMul (Circle.exp (t / n) ^ n) = u
     rw [← Circle.exp_nsmul, nsmul_eq_mul, mul_div_cancel₀ _ (Nat.cast_ne_zero.2 hn), ht]
     rfl
-  letI : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
+  let : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
   obtain ⟨ρ, hρ⟩ := (Module.Baer.of_divisible (Additive Circle)).extension_property_addMonoidHom
     (MonoidHom.toAdditive (QuotientGroup.kerLift ψ0)) (QuotientGroup.kerLift_injective ψ0)
     (MonoidHom.toAdditive (QuotientGroup.lift ψ0.ker (lam.comp U.subtype) hker))
@@ -105,8 +105,8 @@ theorem fin_fI : finPartF F E (fI F E) = 1 := rfl
 
 theorem small (T : Set (AF F ⊗[F] E)) (hT : T ∈ 𝓝 0) : ∃ N : ℕ, 0 < N ∧ ∀ s ∈ SE F E, N • (fI F E * s) ∈ T := by
   classical
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI := IsModuleTopology.toContinuousSMul (AF F) (AF F ⊗[F] E)
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have := IsModuleTopology.toContinuousSMul (AF F) (AF F ⊗[F] E)
   let b := RingOfIntegers.basis E
   let P : Af F →+ AF F := AddMonoidHom.inr (Ainf F) (Af F)
   have hP : Continuous P := continuous_const.prodMk continuous_id
@@ -172,9 +172,9 @@ def GF : Subgroup (AF F ⊗[F] E)ˣ where
 
 theorem exists_level (η : (AF F ⊗[F] E)ˣ →* Circle) (hη : Continuous η) :
     ∃ N : ℕ, 0 < N ∧ ∀ w ∈ WE F E N, w ∈ GF F E → η w = 1 := by
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hV : {u | ‖((η u : Circle) : ℂ) - 1‖ < 1 / 2} ∈ 𝓝 (1 : (AF F ⊗[F] E)ˣ) := by
-    refine (isOpen_lt (((continuous_subtype_val.comp hη).sub continuous_const).norm) continuous_const).mem_nhds ?_
+    refine (isOpen_lt (((continuous_subtypeVal.comp hη).sub continuous_const).norm) continuous_const).mem_nhds ?_
     show ‖((η 1 : Circle) : ℂ) - 1‖ < 1 / 2
     simp
   rw [Units.isInducing_embedProduct.nhds_eq_comap, Filter.mem_comap] at hV
@@ -384,7 +384,7 @@ theorem exists_sep (v : HeightOneSpectrum (𝓞 F)) : ∃ N : ℕ, 0 < N ∧ ∀
   have hfin := NumberField.Embeddings.finite_of_norm_le F ℂ 8
   have hc : Continuous fun b : Af F => evalV F v b := RestrictedProduct.continuous_eval v
   let Z : Set (Fv F v) := algebraMap F (Fv F v) '' ({y : F | IsIntegral ℤ y ∧ ∀ φ : F →+* ℂ, ‖φ y‖ ≤ 8} \ {0})
-  have hZ : Z.Finite := (hfin.subset Set.diff_subset).image _
+  have hZ : Z.Finite := (hfin.subset Set.sdiff_subset).image _
   have h0 : (fun b : Af F => evalV F v b) ⁻¹' Zᶜ ∈ 𝓝 (0 : Af F) := by
     refine (hZ.isClosed.isOpen_compl.preimage hc).mem_nhds ?_
     rintro ⟨y, hy, e⟩

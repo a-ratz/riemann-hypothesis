@@ -137,7 +137,7 @@ theorem isFinite_of_tmap_injective (hl : (l : K) ≠ 0) {A B : AbVar K} (f : A �
   have h2 : C.dim ≤ A.dim := (GlobalTheory.T.abelianVariety_dim_le_of_finite_and_of_surjective K A C p).2 hp
   have h3 : A.dim = C.dim := le_antisymm (by omega) h2
   have hpf : IsFinite p.hom.left := GlobalTheory.T.isFinite_of_surjective_of_dim_eq' K A C p h3 hp
-  haveI := hi
+  have := hi
   rw [comp_hom, Over.comp_left]
   infer_instance
 

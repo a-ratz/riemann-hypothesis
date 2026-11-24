@@ -211,7 +211,7 @@ theorem lieD_smoothing (ν : Measure (Lie E a)) [ν.IsAddHaarMeasure] {α : Lie 
   rw [lieD, chart_smoothing, ← hf, hmain.fderiv, ContinuousLinearMap.integral_apply hint, smoothing,
     ← integral_mul_fderiv_lmul_eq_dens ν hα X hfs]
   refine integral_congr_ae (.of_forall fun y => ?_)
-  simp only [F', lmul_oneL, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, smul_eq_mul]
+  simp only [F', lmul_oneL, smul_apply, ContinuousLinearMap.comp_apply, smul_eq_mul]
   rfl
 
 theorem lieD_smoothing_eq_dens : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ)

@@ -82,7 +82,7 @@ theorem exists_finite_inj_polynomial (k B : Type) [Field k] [CommRing B] [IsDede
     [Algebra k B] [Algebra.FiniteType k B] (hB : ¬ IsField B) :
     ∃ f : Polynomial k →+* B, Function.Injective f ∧ f.Finite := by
   obtain ⟨s, g, hg, hfin⟩ := exists_finite_inj_algHom_of_fg k B
-  letI : Algebra (MvPolynomial (Fin s) k) B := g.toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin s) k) B := g.toRingHom.toAlgebra
   have : IsScalarTower k (MvPolynomial (Fin s) k) B :=
     IsScalarTower.of_algebraMap_eq fun c => (g.commutes c).symm
   have : Module.Finite (MvPolynomial (Fin s) k) B := hfin
@@ -112,12 +112,12 @@ theorem exists_isAlgebraic_ratFunc : ∀ (k B : Type) [Field k] [CommRing B] [Is
     ∃ _ : Algebra (RatFunc k) (FractionRing B), Algebra.IsAlgebraic (RatFunc k) (FractionRing B) := by
   intro k B _ _ _ _ _ hB
   obtain ⟨f, hf, hfin⟩ := exists_finite_inj_polynomial k B hB
-  letI : Algebra (Polynomial k) B := f.toAlgebra
+  let : Algebra (Polynomial k) B := f.toAlgebra
   have : Module.Finite (Polynomial k) B := hfin
   have hφ : Function.Injective (algebraMap (Polynomial k) (FractionRing B)) := by
     rw [IsScalarTower.algebraMap_eq (Polynomial k) B (FractionRing B)]
     exact (IsFractionRing.injective B (FractionRing B)).comp hf
-  letI alg : Algebra (RatFunc k) (FractionRing B) := (IsFractionRing.lift hφ (K := RatFunc k)).toAlgebra
+  let alg : Algebra (RatFunc k) (FractionRing B) := (IsFractionRing.lift hφ (K := RatFunc k)).toAlgebra
   have : IsScalarTower (Polynomial k) (RatFunc k) (FractionRing B) :=
     IsScalarTower.of_algebraMap_eq fun p => (IsFractionRing.lift_algebraMap hφ p).symm
   have : FaithfulSMul (Polynomial k) B := (faithfulSMul_iff_algebraMap_injective _ _).2 hf

@@ -412,17 +412,17 @@ theorem cong_glob_pair {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : L
   have h2 : uu' j i ∈ Formalism.L2.SG.Pf.StabIntSh.ddPow D ((i : ℕ) - (j : ℕ)) :=
     Formalism.L2.SG.Pf.ZsVolLat.frame_entry F' Λ hX' hz' m hm uu' huu' hfr' j i hji
   have hd : uu j i - uu' j i ∈ Formalism.L2.SG.Pf.StabIntSh.ddPow D ((i : ℕ) - (j : ℕ)) :=
-    (FractionalIdeal.mem_coe).1 (Submodule.sub_mem _ ((FractionalIdeal.mem_coe).2 h1) ((FractionalIdeal.mem_coe).2 h2))
-  refine (FractionalIdeal.mem_coe).1 (Formalism.L2.SG.Pf.ZsVolLat.mem_of_loc _ _ fun P => ?_)
+    (FractionalIdeal.mem_coeToSubmodule).1 (Submodule.sub_mem _ ((FractionalIdeal.mem_coeToSubmodule).2 h1) ((FractionalIdeal.mem_coeToSubmodule).2 h2))
+  refine (FractionalIdeal.mem_coeToSubmodule).1 (Formalism.L2.SG.Pf.ZsVolLat.mem_of_loc _ _ fun P => ?_)
   by_cases hgP : ((Lat.gS D : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal
   · obtain ⟨t, ht, o, ho⟩ := cong_at_pair F F' Λ hc hc' hz' hadm ν m hν hm F'' hadm'' hf'' uu uu' huu huu' hfr hfr' P hgP j i hji
     refine ⟨t, ht, ?_⟩
     rw [ho]
-    exact (FractionalIdeal.mem_coe).2 (Formalism.L2.SG.Pf.ZsVolLat.g_mul_mem (Formalism.L2.SG.Pf.ZsVolLat.o_mem_ddPow _ o))
+    exact (FractionalIdeal.mem_coeToSubmodule).2 (Formalism.L2.SG.Pf.ZsVolLat.g_mul_mem (Formalism.L2.SG.Pf.ZsVolLat.o_mem_ddPow _ o))
   · refine ⟨((Lat.gS D : ℕ) : 𝓞 D.host.E), hgP, ?_⟩
     have e : (((Lat.gS D : ℕ) : 𝓞 D.host.E) : D.host.E) = ((Lat.gS D : ℕ) : D.host.E) := by simp
     rw [e]
-    exact (FractionalIdeal.mem_coe).2 (Formalism.L2.SG.Pf.ZsVolLat.g_mul_mem hd)
+    exact (FractionalIdeal.mem_coeToSubmodule).2 (Formalism.L2.SG.Pf.ZsVolLat.g_mul_mem hd)
 
 variable (M : ∀ p : LocalSplitGroups.PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep)
   (δ : ∀ p : LocalSplitGroups.PlF D, (D.s.atP p).Fp) (u u' : D.what₂.Word)

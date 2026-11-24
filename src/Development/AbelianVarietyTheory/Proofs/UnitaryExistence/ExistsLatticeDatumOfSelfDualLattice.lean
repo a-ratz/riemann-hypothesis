@@ -191,7 +191,7 @@ theorem exists_datum_of_embedding (H : Host E) (D : Datum H) (ξ : E) (Gm : Matr
     ∃ (D' : Datum H) (φ'' : D'.La →ₗ[𝓞 E] (Fin r → E)), D'.p = D.p ∧ D'.q = D.q ∧
       LinearMap.range φ'' = LinearMap.range φ' ∧ Function.Injective φ'' ∧
       ∀ x y, ((D'.EF x y : ℤ) : ℚ) = traceHerm ξ Gm (φ'' x) (φ'' y) := by
-  haveI := D.fin
+  have := D.fin
   obtain ⟨N, ψ, hN, hψ⟩ := exists_factor φ φ' hinj hspan
   obtain ⟨M, χ, hM, hχ⟩ := exists_factor φ' φ hinj' hspan'
   have h1 : ∀ x, ψ (χ x) = (N * M) • x := fun x => hinj (by rw [hψ, hχ, map_nsmul, mul_smul])
@@ -256,8 +256,8 @@ theorem exists_datum_of_embedding (H : Host E) (D : Datum H) (ξ : E) (Gm : Matr
       have := hB w z
       rw [hw, hv] at this
       exact_mod_cast this
-  haveI : Module.IsTorsionFree (𝓞 E) L := Function.Injective.moduleIsTorsionFree φ' hinj' (map_smul φ')
-  haveI : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
+  have : Module.IsTorsionFree (𝓞 E) L := Function.Injective.moduleIsTorsionFree φ' hinj' (map_smul φ')
+  have : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
   have hproj : Module.Projective (𝓞 E) L := Module.Flat.projective_of_finitePresentation
   refine ⟨{ La := L, fin := inferInstance, proj := hproj, EF := B, alt := fun x => ?_, unimod := hbij,
             adj := fun a x y => ?_, p := D.p, q := D.q, rank := ?_, dom := ?_ }, φ', rfl, rfl, rfl, hinj', hB⟩
@@ -281,7 +281,7 @@ theorem exists_datum_of_selfDual (E : Type) [Field E] [NumberField E] [IsCMField
       (Function.Injective φ' ∧ Submodule.span E (Set.range φ') = ⊤ ∧ (∀ a b, cc (Gm a b) = Gm b a) ∧
         Gm.det ≠ 0 ∧ ∀ x y, ((D'.EF x y : ℤ) : ℚ) = Algebra.trace ℚ E (ξ * herm Gm (φ' x) (φ' y))) := by
   obtain ⟨hinj, hspan, hG, hdet, hEF⟩ := h
-  haveI : Module.Finite (𝓞 E) Λ' := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite (𝓞 E) Λ' := Module.Finite.iff_fg.mpr hfg
   obtain ⟨D', φ', hp, hq, hr, hi, hE⟩ := exists_datum_of_embedding H D ξ Gm φ hinj hspan hEF Λ' Λ'.subtype
     Λ'.injective_subtype (by rw [← LinearMap.coe_range, Submodule.range_subtype]; exact hspan')
     (fun v => by

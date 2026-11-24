@@ -257,7 +257,7 @@ theorem finite_sameBelow (u : HeightOneSpectrum (𝓞 E)) :
     rw [Ne, Submodule.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hN
   refine (Ideal.finite_factors hI).subset fun w' hw' => ?_
-  simp only [Set.mem_setOf_eq] at hw' ⊢
+  simp only [Set.mem_ofPred_eq] at hw' ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
   have h1 : ((N : ℤ)) ∈ Ideal.comap (algebraMap ℤ (𝓞 E)) u.asIdeal := by
     rw [Ideal.mem_comap, map_natCast]
@@ -618,7 +618,7 @@ theorem norm_prod_sat_eq_one : ∀ (E : Type) [Field E] [NumberField E] [_root_.
     unfold Tj dosetInd
     congr 1
     ext g
-    simp only [Set.mem_setOf_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
     refine exists_congr fun y => and_congr_right fun _ => exists_congr fun z => and_congr_right fun _ => ?_
     rw [Units.ext_iff, Units.val_mul, Units.val_mul, hS]
   have hc : ∀ g ∈ DoubleCoset.doubleCoset S (K : Set _) K, ∃! γ, γ ∈ ({S} : Finset _) ∧ γ⁻¹ * g ∈ K := by
@@ -714,7 +714,7 @@ theorem conj_locL (q : ℕ) (A B : Multiset ℂˣ) (x : ℝ) :
   congr 1
   refine Multiset.map_congr rfl fun a _ => ?_
   simp only [map_inv₀, map_sub, map_one, map_mul, conj_natCast_cpow_neg, Units.coe_map,
-    RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Complex.conj_conj]
+    RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Complex.conj_conj]
   ring
 
 theorem partial_conj : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a b : ℕ) (σ : CG E a) (σ' : CG E b),
@@ -945,7 +945,7 @@ theorem analyticAt_dslope' {f : ℂ → ℂ} {ξ x : ℂ} (hx : AnalyticAt ℂ f
   by_cases h : x = ξ
   · subst h
     obtain ⟨p, hp⟩ := hx
-    exact ⟨_, hp.has_fpower_series_dslope_fslope⟩
+    exact ⟨_, hp.dslope_fslope⟩
   · have h1 : AnalyticAt ℂ (fun t => (t - ξ)⁻¹ * (f t - f ξ)) x :=
       ((analyticAt_id.sub analyticAt_const).inv (sub_ne_zero.2 h)).mul (hx.sub analyticAt_const)
     refine h1.congr ?_
@@ -993,7 +993,7 @@ theorem offDiag : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
       have hopen : IsOpen {z : ℂ | H (starRingEnd ℂ z) ≠ 0} :=
         isOpen_ne_fun (hH.continuous.comp Complex.continuous_conj) continuous_const
       have hxmem : (x : ℂ) ∈ {z : ℂ | H (starRingEnd ℂ z) ≠ 0} := by
-        simp only [Set.mem_setOf_eq, Complex.conj_ofReal]
+        simp only [Set.mem_ofPred_eq, Complex.conj_ofReal]
         intro h0
         have := (hHpos x).1
         rw [h0, Complex.zero_re] at this
@@ -1528,7 +1528,7 @@ private theorem le_one_of_map {A C : Type} [Field A] [Field C] [Valued A ℤᵐ�
   have h2 := map_lt_one i hi h1
   rw [map_inv₀, map_inv₀] at h2
   have h3 : Valued.v (i x) ≠ 0 := by simpa using h0
-  exact absurd h2 (not_lt.2 ((one_le_inv₀ (zero_lt_iff.2 h3)).2 h))
+  exact absurd h2 (not_lt.2 ((one_le_inv₀ (pos_iff_ne_zero.2 h3)).2 h))
 
 private theorem normV_eq_of_iso {F K : Type} [Field F] [NumberField F] [Field K] [NumberField K] [Algebra F K]
     (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (𝓞 K)) [hl : w.asIdeal.LiesOver v.asIdeal]
@@ -1543,7 +1543,7 @@ private theorem normV_eq_of_iso {F K : Type} [Field F] [NumberField F] [Field K]
   have hle : v.asIdeal ≤ w.asIdeal.comap (algebraMap (𝓞 F) (𝓞 K)) := by
     rw [hl.over]
   let g := Ideal.quotientMap w.asIdeal (algebraMap (𝓞 F) (𝓞 K)) hle
-  letI := Ideal.Quotient.field v.asIdeal
+  let := Ideal.Quotient.field v.asIdeal
   have hinj : Function.Injective g := g.injective
   have hsurj : Function.Surjective g := by
     intro y

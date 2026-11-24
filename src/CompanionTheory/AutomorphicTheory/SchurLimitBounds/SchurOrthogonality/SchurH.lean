@@ -310,7 +310,7 @@ theorem exists_eq_smul_haar {G : Type*} [Group G] [TopologicalSpace G] [IsTopolo
     by_contra hn
     have h3 := measure_spanningSets_lt_top ν n
     have h4 := congrArg (fun m : Measure G => m (spanningSets ν n)) e
-    simp only [Measure.smul_apply, smul_eq_mul, ENNReal.top_mul hn] at h4
+    simp only [smul_apply, smul_eq_mul, ENNReal.top_mul hn] at h4
     exact h3.ne h4
   have h2 : μ Set.univ = 0 := by
     rw [← iUnion_spanningSets ν]

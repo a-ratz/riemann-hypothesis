@@ -55,7 +55,7 @@ open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 
 private theorem artin_rees {R M : Type} [CommRing R] [IsNoetherianRing R] [AddCommGroup M] [Module R M] (I : Ideal R)
     (P Q : Submodule R M) (hQ : Q.FG) (N : ℕ) : ∃ K : ℕ, ∀ x ∈ P, x ∈ I ^ K • Q → x ∈ I ^ N • P := by
-  haveI : Module.Finite R Q := Module.Finite.iff_fg.mpr hQ
+  have : Module.Finite R Q := Module.Finite.iff_fg.mpr hQ
   obtain ⟨k, hk⟩ := Ideal.exists_pow_inf_eq_pow_smul I (P.comap Q.subtype)
   refine ⟨k + N, fun x hxP hxQ => ?_⟩
   have hmap : I ^ (k + N) • Q = (I ^ (k + N) • (⊤ : Submodule R Q)).map Q.subtype := by
@@ -83,7 +83,7 @@ private theorem val_prod {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLoc
 theorem UpperTheory.V.Fr.cone_u :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ [IsCO O S.B], Cone O S.B S.u ∧ Integral O S.B S.u := by
   intro l _ O _ _ _ _ F C₀ n hF hn S _
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
   obtain ⟨hgrI, hgrM, hgr0, hgrFG, hfin, hnoethA, hmem⟩ := gr_A hF hn S
   obtain ⟨hcx, haB, hψB, hAR⟩ := cont_u hF hn S
   have hres : ∀ x : S.B, res O S.B x = res O S.R (x : S.R) := fun x => (res_map S.B.val x).symm
@@ -113,10 +113,10 @@ theorem UpperTheory.V.Fr.cone_u :
     apply List.prod_eq_zero
     exact List.mem_map.2 ⟨s, hs, hoff _ _ _ hne⟩
   · intro i j
-    haveI := isNoetherian_of_fg_of_noetherian _ (hgrFG (w n i - w n j))
+    have := isNoetherian_of_fg_of_noetherian _ (hgrFG (w n i - w n j))
     have hle : Submodule.span S.B (Set.range fun g => S.u.r g i j) ≤ S.gr (w n i - w n j) :=
       Submodule.span_le.2 (by rintro _ ⟨g, rfl⟩; exact hmem g i j)
-    haveI := isNoetherian_of_le hle
+    have := isNoetherian_of_le hle
     exact Module.Finite.iff_fg.1 inferInstance
   · intro i j N
     rw [hmax]

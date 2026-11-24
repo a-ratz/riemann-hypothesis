@@ -118,7 +118,7 @@ theorem exists_finset_rayIn (hR : GlobalTheory.NT.RayField) (P : Pre) : ∃ S : 
         (embLL0 (assemble B C W V S' N G)).fieldRange := by
   let φK : P.host.K →+* ℂ := P.host.φ₀.comp (algebraMap P.host.K P.host.E)
   obtain ⟨Rf, hRf⟩ := Fld.exists_isRayFieldIn φK hR (Fld.natIdeal_ne_bot (E := P.host.K) (Fld.modulus_ne_zero P))
-  haveI : NumberField Rf := hRf.numberField
+  have : NumberField Rf := hRf.numberField
   let b := Module.finBasis ℚ Rf
   refine ⟨Finset.univ.image (fun i => (b i : ℂ)), ?_, ?_⟩
   · intro z hz
@@ -135,7 +135,7 @@ theorem exists_finset_rayIn (hR : GlobalTheory.NT.RayField) (P : Pre) : ∃ S : 
       rw [← hsum]
       exact sum_mem fun i _ => IntermediateField.smul_mem _ (hS _ (Finset.mem_image.2 ⟨i, Finset.mem_univ _, rfl⟩))
     obtain ⟨hm, hNF, hray⟩ := hRf
-    letI := Fld.algOf φK Rf hm
+    let := Fld.algOf φK Rf hm
     refine ⟨Rf, inferInstance, hNF, Fld.algOf φK Rf hm, hray.1, hray.2, Rf.val.toRingHom, ?_, fun x => ?_⟩
     · ext x
       exact Fld.algOf_apply φK Rf hm x
@@ -182,7 +182,7 @@ theorem exists_finset_lam (P : Pre) : ∃ S : Finset ℂ, (∀ z ∈ S, IsAlgebr
       have h2 : n g = 2 * ((BlochKatoReduction.Gen.NFun P.R : ℤ) + 2 + ∑ j : Fin P.R.m, ⌈|(P.hc g).e j|⌉) := by exact_mod_cast h1
       exact ⟨(BlochKatoReduction.Gen.NFun P.R : ℤ) + 2 + ∑ j : Fin P.R.m, ⌈|(P.hc g).e j|⌉, by omega⟩)
   rw [Int.cast_zero, zero_div] at hv
-  haveI := hM
+  have := hM
   obtain ⟨α, hα, gα⟩ := GlobalTheory.Mem.DatHecke.exists_gen M
   refine ⟨{α}, by simpa using hα, fun B hB hS C W V S' N G _ cf => ?_⟩
   subst hB

@@ -121,7 +121,7 @@ theorem exists_ker_int_matrix_four_of_torsion_lift {G G' : Type} [CommGroup G] [
         simp only [Fin.prod_univ_four, Fin.sum_univ_four, zpow_add]
       rw [h4, h3]
       split_ifs <;> simp
-    simp only [h2, Finset.prod_ite_eq', Finset.mem_univ, if_true] at h1
+    simp only [h2, Finset.prod_ite_eq', Finset.mem_univ, ite_true] at h1
     obtain ⟨q, rfl⟩ := hm
     rw [pow_mul, h1, one_pow]
   choose a ha using fun I r => hψ.2 ⟨(e I).1 r, htor I r⟩
@@ -142,14 +142,14 @@ theorem exists_split_ker_of_split_torsion (laws : Out.Laws) (R : Type) [CommRing
     ∃ ζ : (Fin 4 → Fin (m ^ P.g)) → Fin 4 → (𝟙_ (Over (Sp R)) ⟶ P.A),
       (∀ I I', I ≠ I' → ∀ p : Sp R, ∃ r, (ζ I r).left p ≠ (ζ I' r).left p) ∧
       (∀ I c, (List.ofFn fun r : Fin 4 => ζ I r ^ al r c).prod = 1) := by
-  haveI : IsCommMonObj P.A := P.isAb.comm
+  have : IsCommMonObj P.A := P.isAb.comm
   let k := AlgebraicClosure (IsLocalRing.ResidueField R)
   let f : R →+* k := (algebraMap (IsLocalRing.ResidueField R) k).comp (IsLocalRing.residue R)
   let t : Sp k ⟶ Sp R := Spec.map (CommRingCat.ofHom f)
   have hN1 : 1 ≤ N := Nat.pos_of_ne_zero (by rintro rfl; simp at hN)
   have hNk : (N : k) ≠ 0 := by simpa using (hN.map f).ne_zero
   letI : CommGroup (𝟙_ (Over (Sp R)) ⟶ P.A) := Hom.commGroup
-  letI : CommGroup (Over.mk t ⟶ P.A) := Hom.commGroup
+  let : CommGroup (Over.mk t ⟶ P.A) := Hom.commGroup
   let φ : (𝟙_ (Over (Sp R)) ⟶ P.A) →* (Over.mk t ⟶ P.A) :=
     MonoidHom.mk' (fun u => toUnit (Over.mk t) ≫ u) fun u v => MonObj.comp_mul _ _ _
   have hφ : ∀ u, (φ u).left = (toUnit (Over.mk t)).left ≫ u.left := fun u => rfl
@@ -167,7 +167,7 @@ theorem exists_split_ker_of_split_torsion (laws : Out.Laws) (R : Type) [CommRing
     (fun u hu h1 => by
       haveI : PreconnectedSpace (𝟙_ (Over (Sp R))).left :=
         inferInstanceAs (PreconnectedSpace (PrimeSpectrum R))
-      haveI : Nonempty (Over.mk t).left := ⟨p₀⟩
+      have : Nonempty (Over.mk t).left := ⟨p₀⟩
       apply Over.OverMorphism.ext
       refine eq_of_preconnected_of_unramified (Out.mulA P.A N).left ?_ (toUnit (Over.mk t)).left ?_
       · rw [← Over.comp_left, ← Over.comp_left, hmul, hmul, hu, one_pow]

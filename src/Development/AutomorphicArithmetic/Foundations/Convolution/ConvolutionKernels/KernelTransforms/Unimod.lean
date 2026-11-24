@@ -60,5 +60,5 @@ theorem UpperTheory.ConvolutionTheory.Tf.unimod :
       ∀ (m : Measure (AdelicGLn.FiniteAdelicGL K n)) [m.IsHaarMeasure], m.IsMulRightInvariant ∧ m.IsInvInvariant := by
   intro K _ _ n
   refine ⟨fun ν _ => ⟨isMulRightInvariant_archGroup ν, isInvInvariant_archGroup ν⟩, fun m _ => ?_⟩
-  haveI hr : m.IsMulRightInvariant := Whittaker.isMulRightInvariant_finite K n m
+  have hr : m.IsMulRightInvariant := Whittaker.isMulRightInvariant_finite K n m
   exact ⟨hr, ⟨inv_eq_self_of_isMulRightInvariant m⟩⟩

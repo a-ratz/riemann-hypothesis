@@ -107,7 +107,7 @@ private theorem charpoly_eq_prod_flag_characters {H k : Type} [Group H] [CommRin
   have h1 := Matrix.charpoly_units_conj g (W.mat r s)
   have h2 : ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
     fun i j hij => (hg s).1 i j hij
-  have h3 := Matrix.charpoly_of_upperTriangular _ h2
+  have h3 := charpoly_of_isUpperTriangular _ h2
   rw [← h1]
   simp only [Units.val_mul, Matrix.coe_units_inv] at h3
   refine h3.trans ?_
@@ -179,7 +179,7 @@ private theorem free_up (K L : IntermediateField ℚ Ω) [NumberField K] [Number
     (ψ : Fin n → Dec (F := L) A →* (Qbar l)ˣ)
     (hfl : W.HasFlag ((Af.tw (r.comp (resQ L)) ka).comp (Dec (F := L) A).subtype) ψ) :
     ∃ g : Dec (F := L) A, cycZ L Ω l g = 1 ∧ Pr.FreeRatios fun i => ψ i g := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   obtain ⟨g, hg, hc, α, hα, hcp⟩ := hf A hA
   have hi : L.fixingSubgroup.index ≠ 0 := by
     rw [← IntermediateField.finrank_eq_fixingSubgroup_index Ω L]
@@ -262,7 +262,7 @@ private theorem rg_sign {K Ω : Type} [Field K] [NumberField K] [IsCMField K] (h
   set d : Ω := algebraMap K Ω δ with hd
   have hd0 : d ≠ 0 := by simpa [hd] using hδ0
   have hdd : d * d = algebraMap ℚ Ω q := by rw [IsScalarTower.algebraMap_apply ℚ K Ω, hq', map_mul]
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hne : -d ≠ d := fun e => hd0 (by linear_combination (-1 / 2 : Ω) * e)
   have hpm : ∀ g : G ℚ Ω, g d = d ∨ g d = -d := fun g => by
     have : g d * g d = d * d := by rw [← map_mul, hdd, AlgEquiv.commutes]

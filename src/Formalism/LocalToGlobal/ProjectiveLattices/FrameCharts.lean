@@ -329,7 +329,7 @@ theorem frBorBC : FrBorBCF Xo c := by
   refine ⟨hxz, fun τ i => ?_, ?_⟩
   · obtain ⟨cf, hci, hlow, hc⟩ := hcomb τ i
     refine ⟨fun j => φ (cf j), ?_, fun j hj => by simp only [hlow j hj, map_zero], ?_⟩
-    · simp only [hci, Units.coe_map, MonoidHom.coe_coe]
+    · simp only [hci, Units.coe_map, MonoidHom.coe_ofClass]
     · exact isCombAt_pull φ.toRingHom hx1 (hu1 τ) (hu2 τ i) hc
   · let pm : Gx z'.x ⟶ Gx z.x :=
       pullback.lift (pullback.fst (Over.mk z'.x).hom Xo.univ.t.G.hom) (pullback.snd (Over.mk z'.x).hom Xo.univ.t.G.hom)

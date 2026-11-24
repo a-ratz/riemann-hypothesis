@@ -78,8 +78,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.X.Kato.embConj :
     ∀ (l : ℕ) [Fact l.Prime] (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra ℚ Ω] [Algebra K Ω] [IsScalarTower ℚ K Ω] [IsAlgClosure K Ω] (j₀ : Ω →+* Om l) (τ : K →+* Om l), ∃ g : G ℚ Ω, (j₀.comp (g : Ω →+* Ω)).comp (algebraMap K Ω) = τ := by
   intro l _ K Ω _ _ _ _ _ _ _ j₀ τ
-  haveI : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ K Ω
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ K Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
   have hsub : ∀ x : K, ∃ b : Ω, j₀ b = τ x := by
     intro x
     have hp : minpoly ℚ x ≠ 0 := minpoly.ne_zero (Algebra.IsIntegral.isIntegral x)
@@ -97,7 +97,7 @@ theorem UpperTheory.V.X.Kato.embConj :
       map_mul' := fun a b => j₀.injective (by rw [hf, map_mul, map_mul, hf, hf])
       map_zero' := j₀.injective (by rw [hf, map_zero, map_zero])
       map_add' := fun a b => j₀.injective (by rw [hf, map_add (f := _), map_add (f := _), hf, hf]) }
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let g0 : Ω →ₐ[ℚ] Ω := (τ'.toRatAlgHom).liftNormal Ω
   refine ⟨AlgEquiv.ofBijective g0 (Algebra.IsAlgebraic.algHom_bijective g0), ?_⟩
   ext x
@@ -118,11 +118,11 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.X.Kato.resAway :
     ∀ (l : ℕ) [Fact l.Prime] (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra ℚ Ω] [Algebra K Ω] [IsScalarTower ℚ K Ω] [IsAlgClosure K Ω] (C V : Type) [CommRing C] [AddCommGroup V] [Module C V] (ρ : Representation C (G ℚ Ω) V) (c : G ℚ Ω → V), (∀ g h, c (g * h) = c g + ρ g (c h)) → (∀ w : HeightOneSpectrum (𝓞 ℚ), ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal → ∃ A : ValuationSubring Ω, IsPlaceOver A w ∧ ∃ x : V, ∀ s ∈ Ine (F := ℚ) A, c s = ρ s x - x) → ∀ w : HeightOneSpectrum (𝓞 K), ((l : ℕ) : 𝓞 K) ∉ w.asIdeal → ∃ A : ValuationSubring Ω, IsPlaceOver A w ∧ ∃ x : V, ∀ s ∈ Ine (F := K) A, c (s.restrictScalars ℚ) = ρ (s.restrictScalars ℚ) x - x := by
   intro l _ K Ω _ _ _ _ _ _ _ C V _ _ _ ρ c hc hyp w hw
-  haveI : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ K Ω
+  have : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ K Ω
   obtain ⟨B, hB⟩ := exists_isPlaceOver (F := K) Ω w
   have hne : w.asIdeal.comap (algebraMap (𝓞 ℚ) (𝓞 K)) ≠ ⊥ := by
     obtain ⟨y, hy, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot w.ne_bot
-    exact Ideal.comap_ne_bot_of_integral_mem hy0 hy (Algebra.IsIntegral.isIntegral y)
+    exact Ideal.under_ne_bot_of_integral_mem hy0 hy (Algebra.IsIntegral.isIntegral y)
   let p : HeightOneSpectrum (𝓞 ℚ) := ⟨w.asIdeal.comap (algebraMap (𝓞 ℚ) (𝓞 K)), Ideal.comap_isPrime _ _, hne⟩
   have hBp : IsPlaceOver B p := by
     intro y
@@ -174,7 +174,7 @@ theorem UpperTheory.V.X.Kato.bkRes :
     UpperTheory.V.X.Kato.resAway l K Ω C V ρ c hcc hbk.away, fun τ => ?_⟩
   obtain ⟨j₀, -, -, x, hx⟩ := hbk.above (τ.comp (algebraMap ℚ K))
   obtain ⟨g, hg⟩ := UpperTheory.V.X.Kato.embConj l K Ω j₀ τ
-  refine ⟨j₀.comp (g : Ω →+* Ω), hg, ⟨hcont'.comp (continuous_fst.comp continuous_subtype_val),
+  refine ⟨j₀.comp (g : Ω →+* Ω), hg, ⟨hcont'.comp (continuous_fst.comp continuous_subtypeVal),
     fun s t => hcc' s.1.1 t.1.1⟩,
     TensorProduct.AlgebraTensorModule.map (ρ g⁻¹) LinearMap.id x - c g⁻¹ ⊗ₜ[ℚ_[l]] (1 : UpperTheory.V.Loc.Bcr l), ?_⟩
   rintro ⟨⟨s, σ⟩, hs⟩
@@ -228,7 +228,7 @@ private theorem avg {Γ k M : Type} [Group Γ] [Field k] [CharZero k] [AddCommGr
     (H : Subgroup Γ) [H.FiniteIndex] (c : Γ → M) (hc : ∀ g h, c (g * h) = c g + R g (c h)) (X : M)
     (hX : ∀ h ∈ H, c h = R h X - X) : ∃ Y, ∀ g, c g = R g Y - Y := by
   classical
-  haveI : Fintype (Γ ⧸ H) := Fintype.ofFinite _
+  have : Fintype (Γ ⧸ H) := Fintype.ofFinite _
   let d : Γ → M := fun g => c g - (R g X - X)
   have hd : ∀ g h, d (g * h) = d g + R g (d h) := fun g h => by
     simp only [d, hc, map_mul, map_sub, Module.End.mul_apply]
@@ -281,7 +281,7 @@ private theorem zero_NS {l : ℕ} [Fact l.Prime] {F Ω : Type} [Field F] [Number
         have h1 := hc.2 a a⁻¹
         rw [mul_inv_cancel, c1, hρ a ha.1, ha.2, zero_add] at h1
         exact ⟨inv_mem ha.1, h1.symm⟩ }
-  haveI : N.Normal := ⟨fun a ha g => by
+  have : N.Normal := ⟨fun a ha g => by
     refine ⟨(inferInstance : (NS Ω S).Normal).conj_mem a ha.1 g, ?_⟩
     have h1 := hc.2 g g⁻¹
     rw [mul_inv_cancel, c1] at h1
@@ -404,7 +404,7 @@ theorem UpperTheory.V.Th.adDown :
       refine (hRK w _).trans ?_
       simp only [mul_inv_rev, inv_inv, Units.val_mul, Matrix.mul_neg, Matrix.neg_mul, Matrix.mul_assoc]
   obtain ⟨X, hX⟩ := hz _ R' hform hext z hz1 hb'
-  haveI : (Base.galOf ℚ (W.Lp L) Ω).FiniteIndex :=
+  have : (Base.galOf ℚ (W.Lp L) Ω).FiniteIndex :=
     ⟨by rw [(Base.galEmbTop ℚ (W.Lp L) Ω).2.2]; exact Module.finrank_pos.ne'⟩
   refine (mem_coboundaries1 _ _).2 (avg R (Base.galOf ℚ (W.Lp L) Ω) c hc.2 X fun h hh => ?_)
   rw [← Base.range_galEmb] at hh

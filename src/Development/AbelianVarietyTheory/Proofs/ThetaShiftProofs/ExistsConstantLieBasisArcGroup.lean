@@ -435,7 +435,7 @@ theorem lieImg_of_tr {ν : GtPt a.D₀ (epsR A)} {g : GtPt W.P.D.toPre (epsR (Po
   intro n ρ κ vn h₁ h₂ h₃ h₄ _ h₆ x
   have hI : (Ideal.span {PowerSeries.X} : Ideal (PowerSeries A)) ≠ ⊤ := by
     rw [Ne, Ideal.span_singleton_eq_top]
-    exact PowerSeries.X_prime.not_unit
+    exact PowerSeries.prime_X.not_isUnit
   have : IsLocalRing (PowerSeries A ⧸ Ideal.span {(PowerSeries.X : PowerSeries A)} ^ (n + 1)) :=
     isLocalRing_quotient_pow hI n
   have := isLocalRing_dual (PowerSeries A ⧸ Ideal.span {(PowerSeries.X : PowerSeries A)} ^ (n + 1))
@@ -504,7 +504,7 @@ theorem exists_red (w : epsR (PowerSeries A) ⟶ W.t.G) :
 
 theorem exists_act {ν : GtPt a.D₀ (epsR A)} {v : epsR (PowerSeries A) ⟶ W.t.G} (hv : LieImg W ν v) (x : 𝓞 E) :
     ∃ ν', LieImg W ν' (v ≫ W.t.act.act x) := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨g, hg, hp⟩ := exists_tr W hG hv
   obtain ⟨ν', hν'⟩ := TorusModel.exists_isSmulPt hG a.oa x ν
   obtain ⟨g', hg'⟩ := exists_tr_down hG W.spec.1 W.spec.2.1 W.e.toAddEquiv W.spec.2.2.2.2.1 (cstE A)

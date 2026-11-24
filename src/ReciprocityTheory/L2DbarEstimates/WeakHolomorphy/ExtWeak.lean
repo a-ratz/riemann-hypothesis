@@ -150,7 +150,7 @@ theorem logCutoff_le_one (F : V n → ℂ) (k : ℝ) (z : V n) : extCut F k z �
 
 theorem logCutoff_eq_one {F : V n → ℂ} {k : ℝ} (hk : 0 < k) {z : V n} (hz : F z ≠ 0)
     (h : -Real.log (‖F z‖ ^ 2) ≤ k) : extCut F k z = 1 := by
-  simp only [extCut, hz, if_false]
+  simp only [extCut, hz, ite_false]
   exact extCh_of_le_one ((div_le_one hk).2 h)
 
 theorem logCutoff_eventuallyEq_zero {F : V n → ℂ} {k : ℝ} (hk : 0 < k) {z : V n}
@@ -279,7 +279,7 @@ theorem dbarDir_extensionCutoff_mul {F g : V n → ℂ} {k : ℝ} {z : V n} (v :
       ((extCut F k z : ℂ) • fderiv ℝ g z + g z • (ofRealCLM.comp (fderiv ℝ (extCut F k) z))) z :=
     hcC.mul hg.hasFDerivAt
   rw [hm.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+  simp only [add_apply, smul_apply, smul_eq_mul,
     ContinuousLinearMap.comp_apply, ofRealCLM_apply]
   ring
 
@@ -336,7 +336,7 @@ lemma hasLineDerivAt_halfLogRatioSq_comp {Ω : Set (V n)} {F : V n → ℂ} (hΩ
   have hC := (hasDerivAt_cutP hs).comp_hasFDerivAt z hN
   have hL := hC.hasLineDerivAt (μ • e)
   refine HasDerivAt.congr_deriv hL ?_
-  simp only [lineFirstVariation, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [lineFirstVariation, smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.coe_restrictScalars', innerSL_apply_apply, map_smul, smul_eq_mul,
     nsmul_eq_mul, Nat.cast_ofNat]
   ring
@@ -367,7 +367,7 @@ lemma integrable_of_bounded_of_isCompact {T : Set (V n)} (hT : IsCompact T) {h :
     (hm : AEStronglyMeasurable h (volume.restrict T)) {C : ℝ} (hb : ∀ z ∈ T, ‖h z‖ ≤ C)
     (h0 : ∀ z ∉ T, h z = 0) : Integrable h := by
   have hTm : MeasurableSet T := hT.isClosed.measurableSet
-  haveI : IsFiniteMeasure (volume.restrict T) := isFiniteMeasure_restrict.2 hT.measure_lt_top.ne
+  have : IsFiniteMeasure (volume.restrict T) := isFiniteMeasure_restrict.2 hT.measure_lt_top.ne
   have hb' : ∀ᵐ z ∂(volume.restrict T), ‖h z‖ ≤ C :=
     (ae_restrict_iff' hTm).2 (Filter.Eventually.of_forall hb)
   have hon : IntegrableOn h T := by
@@ -608,7 +608,7 @@ lemma grad_log_sq {Ω : Set (V n)} {F : V n → ℂ} (hΩ : IsOpen Ω) (hF : Dif
     have hi : |inner ℝ (F z) (D h)| ≤ ‖F z‖ * (‖D‖ * ‖h‖) :=
       (abs_real_inner_le_norm _ _).trans
         (mul_le_mul_of_nonneg_left (D.le_opNorm h) (norm_nonneg _))
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    simp only [smul_apply, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.coe_restrictScalars', innerSL_apply_apply, nsmul_eq_mul, smul_eq_mul,
       Real.norm_eq_abs, abs_mul, abs_inv, Nat.cast_ofNat]
     rw [abs_of_pos (by positivity : (0:ℝ) < ‖F z‖ ^ 2), abs_two]
@@ -832,7 +832,7 @@ theorem measurableSet_ge_of_continuousOn {W : Set (V n)} (hW : IsOpen W) {f : V 
   have h1 : IsOpen (W ∩ f ⁻¹' Set.Iio c) := hf.isOpen_inter_preimage hW isOpen_Iio
   have h2 : {z | z ∈ W ∧ c ≤ f z} = W \ (W ∩ f ⁻¹' Set.Iio c) := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_diff, Set.mem_inter_iff, Set.mem_preimage,
+    simp only [mem_ofPred_eq, Set.mem_sdiff, Set.mem_inter_iff, Set.mem_preimage,
       Set.mem_Iio, not_and, not_lt]
     exact ⟨fun ⟨a, b⟩ => ⟨a, fun _ => b⟩, fun ⟨a, b⟩ => ⟨a, b a⟩⟩
   rw [h2]
@@ -876,7 +876,7 @@ theorem extErr_le {F g u : V n → ℂ} {k C0 Mg : ℝ} (hk : 0 < k) (hC0 : 0 �
   have hMg0 : 0 ≤ Mg := (norm_nonneg _).trans (hMg z)
   by_cases hmem : z ∈ tsupport g ∩ {z | F z ≠ 0 ∧ k ≤ -Real.log (‖F z‖ ^ 2) ∧
       -Real.log (‖F z‖ ^ 2) ≤ 2 * k}
-  · rw [Set.indicator_apply, if_pos hmem]
+  · rw [Set.indicator_apply, ite_eq_left hmem]
     have hD := norm_fderiv_logCutoff_le hk hC0b hFd hz
     have hE : ‖extErr F k v z‖ ≤ 2 * ‖v‖ * ‖fderiv ℝ (extCut F k) z‖ := by
       unfold extErr
@@ -890,7 +890,7 @@ theorem extErr_le {F g u : V n → ℂ} {k C0 Mg : ℝ} (hk : 0 < k) (hC0 : 0 �
             rw [norm_smul, Complex.norm_I, one_mul]; ring
     have hK : 0 ≤ Mg * (2 * ‖v‖) * C0 * k⁻¹ :=
       mul_nonneg (mul_nonneg (mul_nonneg hMg0 (by positivity)) hC0) (inv_nonneg.mpr hk.le)
-    rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm,
+    rw [← ofReal_norm, ← ofReal_norm, ← ofReal_norm,
       ← ENNReal.ofReal_mul (norm_nonneg _), ← ENNReal.ofReal_mul hK]
     apply ENNReal.ofReal_le_ofReal
     rw [norm_mul, norm_mul]
@@ -902,7 +902,7 @@ theorem extErr_le {F g u : V n → ℂ} {k C0 Mg : ℝ} (hk : 0 < k) (hC0 : 0 �
           gcongr
           exact hMg z
       _ = _ := by ring
-  · rw [Set.indicator_apply, if_neg hmem, mul_zero, nonpos_iff_eq_zero, enorm_eq_zero]
+  · rw [Set.indicator_apply, ite_eq_right hmem, mul_zero, nonpos_iff_eq_zero, eNorm_eq_zero]
     by_cases hzt : z ∈ tsupport g
     · have h2 : ¬ (k ≤ -Real.log (‖F z‖ ^ 2) ∧ -Real.log (‖F z‖ ^ 2) ≤ 2 * k) :=
         fun hb => hmem ⟨hzt, hz, hb⟩
@@ -921,7 +921,7 @@ private theorem locallyIntegrableOn_indicator_of_sq_integrableOn {Ω W : Set (V 
   rw [integrable_indicator_iff hW, IntegrableOn, Measure.restrict_restrict hW]
   have hfin : volume (W ∩ ball x r) < ⊤ :=
     (measure_mono Set.inter_subset_right).trans_lt measure_ball_lt_top
-  haveI : IsFiniteMeasure (volume.restrict (W ∩ ball x r)) :=
+  have : IsFiniteMeasure (volume.restrict (W ∩ ball x r)) :=
     isFiniteMeasure_restrict.mpr hfin.ne
   refine Integrable.mono' (((hu2.mono_set Set.inter_subset_left).add
     (integrable_const (1 : ℝ))).div_const 2)
@@ -957,7 +957,7 @@ private theorem bound_lemma_3 {Ω : Set (V n)} {F u g : V n → ℂ} {C0 Mg : �
   rw [← hT]
   have hK : 0 ≤ Mg * (2 * ‖v‖) * C0 * ((j : ℝ) + 1)⁻¹ :=
     mul_nonneg (mul_nonneg (mul_nonneg hMg0 (by positivity)) hC0) (inv_nonneg.mpr hk.le)
-  have step1 := enorm_integral_le_lintegral_enorm
+  have step1 := eNorm_integral_le_lintegral_eNorm
     (μ := volume.restrict (Ω \ {z | F z = 0})) (fun z => u z * g z * extErr F ((j : ℝ) + 1) v z)
   have step2 : ∫⁻ z in Ω \ {z | F z = 0}, ‖u z * g z * extErr F ((j : ℝ) + 1) v z‖ₑ ≤
       ∫⁻ z in Ω \ {z | F z = 0}, ENNReal.ofReal (Mg * (2 * ‖v‖) * C0 * ((j : ℝ) + 1)⁻¹) *
@@ -970,15 +970,15 @@ private theorem bound_lemma_3 {Ω : Set (V n)} {F u g : V n → ℂ} {C0 Mg : �
     congr 1
     by_cases hzS : z ∈ S
     · rw [Set.indicator_of_mem hzS, Set.indicator_of_mem hzS, Set.indicator_of_mem hzS]
-    · rw [Set.indicator_apply, if_neg hzS, Set.indicator_apply, if_neg hzS, zero_mul]
+    · rw [Set.indicator_apply, ite_eq_right hzS, Set.indicator_apply, ite_eq_right hzS, zero_mul]
   have step3 := lintegral_const_mul' (μ := volume.restrict (Ω \ {z | F z = 0}))
     (ENNReal.ofReal (Mg * (2 * ‖v‖) * C0 * ((j : ℝ) + 1)⁻¹))
     (fun z => S.indicator (fun z => ‖u z‖ₑ) z *
       S.indicator (fun z => ‖fderiv ℝ (fun w => Real.log (‖F w‖ ^ 2)) z‖ₑ) z)
     ENNReal.ofReal_ne_top
   have step4 := ENNReal.lintegral_mul_le_Lp_mul_Lq (volume.restrict (Ω \ {z | F z = 0}))
-    Real.HolderConjugate.two_two ((hum.enorm).indicator hSm')
-    ((measurable_fderiv ℝ (fun w => Real.log (‖F w‖ ^ 2))).enorm.aemeasurable.indicator hSm')
+    Real.HolderConjugate.two_two ((hum.eNorm).indicator hSm')
+    ((measurable_fderiv ℝ (fun w => Real.log (‖F w‖ ^ 2))).eNorm.aemeasurable.indicator hSm')
   have step5 : ∫⁻ z in Ω \ {z | F z = 0}, S.indicator (fun z => ‖u z‖ₑ) z ^ (2 : ℝ) ≤
       ∫⁻ z in T, ‖u z‖ₑ ^ 2 := by
     calc ∫⁻ z in Ω \ {z | F z = 0}, S.indicator (fun z => ‖u z‖ₑ) z ^ (2 : ℝ) ≤
@@ -990,7 +990,7 @@ private theorem bound_lemma_3 {Ω : Set (V n)} {F u g : V n → ℂ} {C0 Mg : �
               rw [hT]
               exact ⟨⟨hgΩ hzS.1, hzS.2.1⟩, hzS.2.2.1⟩
             rw [Set.indicator_of_mem hzS, Set.indicator_of_mem hzT, ENNReal.rpow_two]
-          · rw [Set.indicator_apply, if_neg hzS, ENNReal.zero_rpow_of_pos (by norm_num)]
+          · rw [Set.indicator_apply, ite_eq_right hzS, ENNReal.zero_rpow_of_pos (by norm_num)]
             exact zero_le
       _ ≤ ∫⁻ z, T.indicator (fun z => ‖u z‖ₑ ^ 2) z := setLIntegral_le_lintegral _ _
       _ = ∫⁻ z in T, ‖u z‖ₑ ^ 2 := lintegral_indicator hTm' _
@@ -1004,7 +1004,7 @@ private theorem bound_lemma_3 {Ω : Set (V n)} {F u g : V n → ℂ} {C0 Mg : �
           refine lintegral_mono (fun z => ?_)
           by_cases hzS : z ∈ S
           · rw [Set.indicator_of_mem hzS, Set.indicator_of_mem hzS, ENNReal.rpow_two]
-          · rw [Set.indicator_apply, if_neg hzS, Set.indicator_apply, if_neg hzS,
+          · rw [Set.indicator_apply, ite_eq_right hzS, Set.indicator_apply, ite_eq_right hzS,
               ENNReal.zero_rpow_of_pos (by norm_num)]
       _ ≤ ∫⁻ z, S.indicator (fun z => ‖fderiv ℝ (fun w => Real.log (‖F w‖ ^ 2)) z‖ₑ ^ 2) z :=
           setLIntegral_le_lintegral _ _
@@ -1042,7 +1042,7 @@ private theorem main_lemma_2 {Ω : Set (V n)} {F u g : V n → ℂ} (hΩ : IsOpe
     ∫ z in Ω \ {z | F z = 0}, u z * dbarDir g z v = 0 := by
   classical
   set W := Ω \ {z | F z = 0} with hWdef
-  have hWsub : W ⊆ Ω := Set.diff_subset
+  have hWsub : W ⊆ Ω := sdiff_subset
   have hWo : IsOpen W := by
     have e : W = Ω ∩ F ⁻¹' {0}ᶜ := by ext z; simp [hWdef]
     rw [e]
@@ -1121,7 +1121,7 @@ private theorem main_lemma_2 {Ω : Set (V n)} {F u g : V n → ℂ} (hΩ : IsOpe
     intro z hz
     exact pow_ne_zero 2 (norm_ne_zero_iff.mpr hz.2)
   have hm2 : ∫⁻ z in W, ‖u z‖ₑ ^ 2 < ⊤ := by
-    have e : ∀ z, ‖‖u z‖ ^ 2‖ₑ = ‖u z‖ₑ ^ 2 := fun z => by rw [enorm_pow, enorm_norm]
+    have e : ∀ z, ‖‖u z‖ ^ 2‖ₑ = ‖u z‖ₑ ^ 2 := fun z => by rw [eNorm_pow, eNorm_norm]
     have h := hu2.2
     unfold HasFiniteIntegral at h
     simpa only [e] using h
@@ -1135,7 +1135,7 @@ private theorem main_lemma_2 {Ω : Set (V n)} {F u g : V n → ℂ} (hΩ : IsOpe
         ({z | z ∈ W ∧ k ≤ -Real.log (‖F z‖ ^ 2)} ∩
           {z | z ∈ W ∧ -(2 * k) ≤ - -Real.log (‖F z‖ ^ 2)}) := by
       ext z
-      simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, mem_ofPred_eq]
       constructor
       · rintro ⟨hz, hF0, h1, h2⟩
         have hzW : z ∈ W := ⟨hgΩ hz, hF0⟩
@@ -1198,8 +1198,8 @@ theorem extWeak_of_smooth {Ω : Set (V n)} {F u : V n → ℂ} (hΩ : IsOpen Ω)
       funext z
       by_cases hz : z ∈ Ω \ {z | F z = 0}
       · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz]
-      · rw [Set.indicator_apply, if_neg hz, Set.indicator_apply, if_neg hz, zero_mul]
-    rw [e, setIntegral_indicator hWm, Set.inter_eq_right.mpr Set.diff_subset]
+      · rw [Set.indicator_apply, ite_eq_right hz, Set.indicator_apply, ite_eq_right hz, zero_mul]
+    rw [e, setIntegral_indicator hWm, Set.inter_eq_right.mpr sdiff_subset]
   rw [hred]
   exact main_lemma_2 hΩ hF hsm hu hu2 hg v
 

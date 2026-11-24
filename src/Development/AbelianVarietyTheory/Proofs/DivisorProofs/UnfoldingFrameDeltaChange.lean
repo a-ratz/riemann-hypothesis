@@ -78,15 +78,15 @@ theorem rdU_unfExt_of_isBC (hle : c.F ≤ c'.F) {σ : c.F →+* ℂ} (σ' : c'.F
   show (if h : x ∈ (U.X k).dom then toC (evR Xo c' f' ((unfExt hle σ' hσ U).un k ⟨x, h⟩)) else 0) =
     ∑ i, σ' (as i) * (if h : x ∈ (U.X k).dom then toC (evR Xo c (fs i) (U.un k ⟨x, h⟩)) else 0)
   by_cases hx : x ∈ (U.X k).dom
-  · simp only [dif_pos hx]
+  · simp only [dite_eq_left hx]
     exact @hBC (CAt σ') _ σ.toAlgebra σ'.toAlgebra hσ _
-  · simp only [dif_neg hx, mul_zero, Finset.sum_const_zero]
+  · simp only [dite_eq_right hx, mul_zero, Finset.sum_const_zero]
 
 theorem isUnf_unfExt (hle : c.F ≤ c'.F) {σ : c.F →+* ℂ} (σ' : c'.F →+* ℂ)
     (hσ : ∀ a, σ' (incF c c' hle a) = σ a) {U : Unf Xo c σ r} (hU : IsUnf U) : IsUnf (unfExt hle σ' hσ U) := by
   obtain rfl : σ = σ'.comp (incF c c' hle) := RingHom.ext fun a => (hσ a).symm
   obtain ⟨h1, h2, h3, h4, h5, h6⟩ := hU
-  letI : Algebra c.F (CAt σ') := (σ'.comp (incF c c' hle)).toAlgebra
+  let : Algebra c.F (CAt σ') := (σ'.comp (incF c c' hle)).toAlgebra
   refine ⟨h1, h2, fun y => ?_, h4, fun a n hd f' hf' k => ?_, h6⟩
   · exact h3 (FrPt.res hle (S := CAt σ') hσ y)
   · obtain ⟨m, as, fs, hfs, hBC⟩ := (secBC_and_cuspBC E H Dw l Xo c c' hle).1 a n f' hf'

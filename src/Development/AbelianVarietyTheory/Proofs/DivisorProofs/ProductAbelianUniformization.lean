@@ -86,8 +86,8 @@ theorem mem_sqLat (Λ : Submodule ℤ (Fin g → ℂ)) (v : Fin (g + g) → ℂ)
 theorem sqLat_discrete (Λ : Submodule ℤ (Fin g → ℂ)) [DiscreteTopology Λ] : DiscreteTopology (sqLat Λ) := by
   refine DiscreteTopology.of_continuous_injective (β := Λ × Λ)
     (f := fun z => (⟨halfL g z.1, z.2.1⟩, ⟨halfR g z.1, z.2.2⟩))
-    (Continuous.prodMk (((halfL g).continuous.comp continuous_subtype_val).subtype_mk _)
-      (((halfR g).continuous.comp continuous_subtype_val).subtype_mk _)) fun z z' h => ?_
+    (Continuous.prodMk (((halfL g).continuous.comp continuous_subtypeVal).subtype_mk _)
+      (((halfR g).continuous.comp continuous_subtypeVal).subtype_mk _)) fun z z' h => ?_
   refine Subtype.ext ?_
   rw [← append_halves z.1, ← append_halves z'.1]
   simp only [Prod.mk.injEq] at h

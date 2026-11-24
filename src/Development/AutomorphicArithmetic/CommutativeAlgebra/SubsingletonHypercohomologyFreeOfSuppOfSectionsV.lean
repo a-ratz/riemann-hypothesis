@@ -55,11 +55,11 @@ theorem UpperTheory.subsingleton_hypercohomology_free_of_supp_of_sections_vanish
     ∀ (Q : Scheme.{0} → Prop) (G : Shv ℤ), (∀ U : Scheme.{0}, Q U → Subsingleton (Sec G U)) → ∀ P : PSh, Supp Q P → ∀ n : ℤ, Subsingleton (HK ℤ (sgl ((free ℤ).obj P)) G n) := by
   intro Q G hG P hP n
   apply UpperTheory.subsingleton_hypercohomology_free_of_subsingleton_cohomology
-  haveI : (res ℤ G).IsKInjective := (_root_.GlobalTheory.EtC.ResBasic.res_basic ℤ G).1
+  have : (res ℤ G).IsKInjective := (_root_.GlobalTheory.EtC.ResBasic.res_basic ℤ G).1
   refine GlobalTheory.T.subsingleton_hypercohomology_of_locallyExact_on_support ℤ (disc.obj P) (res ℤ G) ?_ n
   intro U hU m b hb
   have hQ : Q U := hP U hU
-  haveI : Subsingleton (Sec G U) := hG U hQ
+  have : Subsingleton (Sec G U) := hG U hQ
   obtain ⟨h0, -, h3, hneg⟩ := GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness ℤ G U
   have hz : ∀ (c : Sec ((res ℤ G).X m) U), b = c → c = 0 →
       Loc U fun V g => ∃ a : Sec ((res ℤ G).X (m - 1)) V,
@@ -68,7 +68,7 @@ theorem UpperTheory.subsingleton_hypercohomology_free_of_supp_of_sections_vanish
     refine ⟨⊤, (Scheme.etaleTopology.{0}).top_mem U, fun V g _ => ⟨0, ?_⟩⟩
     simp
   rcases lt_trichotomy m 0 with h | h | h
-  · haveI := hneg m h
+  · have := hneg m h
     exact hz b rfl (Subsingleton.elim _ _)
   · subst h
     obtain ⟨a, rfl⟩ := (h0 b).1 hb

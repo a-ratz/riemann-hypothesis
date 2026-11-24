@@ -137,9 +137,9 @@ theorem flat_quot_smul_top_of_surj_flat :
   let σ : P ⧸ K ≃+* R₁ := RingHom.quotientKerEquivOfSurjective hf
   have hσ : ((a₁.comp (σ : P ⧸ K →+* R₁))).Flat :=
     RingHom.Flat.comp (RingHom.Flat.of_bijective σ.bijective) ha
-  letI : Algebra (P ⧸ K) B₁ := (a₁.comp (σ : P ⧸ K →+* R₁)).toAlgebra
-  haveI : Module.Flat (P ⧸ K) B₁ := hσ
-  letI : Algebra P B₁ := (c₁.comp (algebraMap P B)).toAlgebra
+  let : Algebra (P ⧸ K) B₁ := (a₁.comp (σ : P ⧸ K →+* R₁)).toAlgebra
+  have : Module.Flat (P ⧸ K) B₁ := hσ
+  let : Algebra P B₁ := (c₁.comp (algebraMap P B)).toAlgebra
   let g : B →ₗ[P] B₁ :=
     { toFun := c₁
       map_add' := c₁.map_add
@@ -197,8 +197,8 @@ theorem mul_tensor_injective : ∀ (P R₂ B B₂ : Type) [CommRing P] [CommRing
     RingHom.ker c₂ = (RingHom.ker f₂).map (algebraMap P B) → K₁ ⊓ RingHom.ker f₂ = ⊥ →
     a₂.Flat → Function.Injective (TensorProduct.lift ((LinearMap.lsmul P B).comp K₁.subtype)) := by
   intro P R₂ B B₂ _ _ _ _ _ K₁ f₂ a₂ c₂ hf hc hcomp hker hK hflat
-  letI := a₂.toAlgebra
-  haveI : Module.Flat R₂ B₂ := hflat
+  let := a₂.toAlgebra
+  have : Module.Flat R₂ B₂ := hflat
   have hc' : ∀ p : P, c₂ (algebraMap P B p) = a₂ (f₂ p) := fun p => by
     simpa using congrArg (fun g : P →+* B₂ => g p) hcomp
   have hsmulB : ∀ (p : P) (b : B), c₂ (p • b) = f₂ p • c₂ b := fun p b => by
@@ -470,7 +470,7 @@ theorem flat_of_isNilpotent : ∀ (B : Type) [CommRing B] (I : Ideal B), IsNilpo
   let e : ((B ⧸ I) ⊗[B] M) ≃ₗ[B ⧸ I] (M ⧸ (I • ⊤ : Submodule B M)) :=
     (TensorProduct.quotTensorEquivQuotSMul M I).extendScalarsOfSurjective
       Ideal.Quotient.mk_surjective
-  haveI : Module.Flat (B ⧸ I) ((B ⧸ I) ⊗[B] M) := Module.Flat.of_linearEquiv e
+  have : Module.Flat (B ⧸ I) ((B ⧸ I) ⊗[B] M) := Module.Flat.of_linearEquiv e
   have hq := rTensor_injective_quotient I K.subtype π K.injective_subtype hex hπ hIM
   have hall := rTensor_injective_of_pow_smul_eq_bot I K.subtype
     (rTensor_injective_of_quotient_module I K.subtype π hex hπ hq) n
@@ -673,7 +673,7 @@ theorem schlessinger_flat : ∀ (P R₁ R₂ R₀ B₁ B₂ B₀ B : CommRingCat
   have nil₁ : IsNilpotent (RingHom.ker f₁.hom) :=
     isNilpotent_ker_of_fibre P R₁ R₂ R₀ f₁.hom f₂.hom g₁.hom g₂.hom wP jP hn₂
   refine ⟨?_, isPushout_of_surjective_of_ker a f₁ c₁ a₁ hac₁ sf₁ sc₁ kc₁, isPushout_of_surjective_of_ker a f₂ c₂ a₂ hac₂ sf₂ sc₂ kc₂⟩
-  letI : Algebra P B := a.hom.toAlgebra
+  let : Algebra P B := a.hom.toAlgebra
   change Module.Flat P B
   exact GlobalTheory.NilpotentFlat.flat_of_isNilpotent P (RingHom.ker f₁.hom) nil₁ B
     (flat_quotient_of_flat P R₁ B B₁ f₁.hom a₁.hom c₁.hom sf₁ sc₁ w₁ kc₁ hfl₁)
@@ -807,8 +807,8 @@ theorem isPullback_of_forall_isPushout_app :
   suffices hiso : IsIso φ by
     exact IsPullback.of_iso_pullback ⟨w⟩ (asIso φ) hφ1 hφ2
   have hPb : IsPullback (pullback.fst y q) (pullback.snd y q) y q := IsPullback.of_hasPullback y q
-  haveI : IsAffineHom q := inferInstance
-  haveI : IsAffineHom (pullback.fst y q) :=
+  have : IsAffineHom q := inferInstance
+  have : IsAffineHom (pullback.fst y q) :=
     isAffineHom_isStableUnderBaseChange.of_isPullback hPb.flip inferInstance
   let U : Y.affineOpens → (pullback y q).Opens := fun V => pullback.fst y q ⁻¹ᵁ V.1
   have hU : ⨆ V, U V = ⊤ := by
@@ -822,8 +822,8 @@ theorem isPullback_of_forall_isPushout_app :
     rw [← Scheme.Hom.comp_preimage, hφ1]
   have hUa : IsAffineOpen (U V) := V.2.preimage _
   have hSa : IsAffineOpen (φ ⁻¹ᵁ U V) := by rw [hpre]; exact V.2.preimage j
-  haveI : IsAffine (U V).toScheme := hUa
-  haveI : IsAffine (φ ⁻¹ᵁ U V).toScheme := hSa
+  have : IsAffine (U V).toScheme := hUa
+  have : IsAffine (φ ⁻¹ᵁ U V).toScheme := hSa
 
   have P1 := GlobalTheory.AffBaseChange.isPushout_appLE_of_isPullback_of_isAffine Y (pullback y q) S S'
     (pullback.fst y q) (pullback.snd y q) y q hPb hS hS' V.1 V.2
@@ -963,15 +963,15 @@ theorem glue_of_subsingleton_right (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : 
   have hbij : Function.Bijective f₁.hom :=
     ⟨fun x y h ↦ hinj x y h (Subsingleton.elim _ _),
       fun a ↦ (hex a 0 (Subsingleton.elim _ _)).imp fun x hx ↦ hx.1⟩
-  haveI : IsIso f₁ := (ConcreteCategory.isIso_iff_bijective _).2 hbij
-  haveI : IsEmpty (Spec R₂) := inferInstanceAs (IsEmpty (PrimeSpectrum R₂))
-  haveI : IsEmpty Y₂.left := ⟨fun x ↦ isEmptyElim (Y₂.hom.base x)⟩
-  haveI : IsEmpty Y₀.left := ⟨fun x ↦ isEmptyElim (i₂.base x)⟩
+  have : IsIso f₁ := (ConcreteCategory.isIso_iff_bijective _).2 hbij
+  have : IsEmpty (Spec R₂) := inferInstanceAs (IsEmpty (PrimeSpectrum R₂))
+  have : IsEmpty Y₂.left := ⟨fun x ↦ isEmptyElim (Y₂.hom.base x)⟩
+  have : IsEmpty Y₀.left := ⟨fun x ↦ isEmptyElim (i₂.base x)⟩
   let Y : Over (Spec P) := Over.mk (Y₁.hom ≫ Spec.map f₁)
   refine ⟨Y, 𝟙 _, isInitialOfIsEmpty.to _, ?_, ?_, ?_, ?_⟩
   · exact IsPullback.of_horiz_isIso ⟨by simp [Y]⟩
   · have hpb := IsPullback.of_hasPullback Y.hom (Spec.map f₂)
-    haveI : IsEmpty ((pullback Y.hom (Spec.map f₂) : Scheme.{0})) :=
+    have : IsEmpty ((pullback Y.hom (Spec.map f₂) : Scheme.{0})) :=
       ⟨fun x ↦ isEmptyElim ((pullback.snd Y.hom (Spec.map f₂)).base x)⟩
     let e : pullback Y.hom (Spec.map f₂) ≅ Y₂.left :=
       isInitialOfIsEmpty.uniqueUpToIso isInitialOfIsEmpty
@@ -981,7 +981,7 @@ theorem glue_of_subsingleton_right (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : 
       | simp
   · show Flat (Y₁.hom ≫ Spec.map f₁)
     infer_instance
-  · haveI : IsIso i₂ := ⟨isInitialOfIsEmpty.to _, isInitialOfIsEmpty.hom_ext _ _,
+  · have : IsIso i₂ := ⟨isInitialOfIsEmpty.to _, isInitialOfIsEmpty.hom_ext _ _,
       isInitialOfIsEmpty.hom_ext _ _⟩
     exact IsPushout.of_vert_isIso ⟨isInitialOfIsEmpty.hom_ext _ _⟩
 
@@ -1243,8 +1243,8 @@ theorem locallyOfFinitePresentation_specMap_of_isPullback_nilpotent {P R₁ A : 
       rw [Iso.eq_inv_comp, hsq.isoPullback_hom_snd]
     rw [e]
     exact MorphismProperty.comp_mem _ _ _ (locallyOfFinitePresentation_of_isOpenImmersion _) hsnd
-  letI := φ.hom.toAlgebra
-  letI := f₁.hom.toAlgebra
+  let := φ.hom.toAlgebra
+  let := f₁.hom.toAlgebra
   have hT : LocallyOfFinitePresentation ((pullbackSpecIso P A R₁).inv ≫ pullback.snd _ _) :=
     MorphismProperty.comp_mem _ _ _ (locallyOfFinitePresentation_of_isOpenImmersion _) h1
   rw [pullbackSpecIso_inv_snd, LocallyOfFinitePresentation.SpecMap_iff] at hT
@@ -1254,12 +1254,12 @@ theorem locallyOfFinitePresentation_specMap_of_isPullback_nilpotent {P R₁ A : 
 theorem locallyOfFinitePresentation_of_nilpotent_thickening :
     ∀ (P R₁ : CommRingCat.{0}) (f₁ : P ⟶ R₁), Function.Surjective f₁ → IsNilpotent (RingHom.ker f₁.hom) → IsNoetherianRing P → ∀ (Y : Over (Spec P)) (Y₁ : Over (Spec R₁)) (j₁ : Y₁.left ⟶ Y.left), IsPullback j₁ Y₁.hom Y.hom (Spec.map f₁) → LocallyOfFinitePresentation Y₁.hom → LocallyOfFinitePresentation Y.hom := by
   intro P R₁ f₁ hs hn hP Y Y₁ j₁ hpb hY₁
-  haveI : IsZariskiLocalAtSource @LocallyOfFinitePresentation.{0} :=
+  have : IsZariskiLocalAtSource @LocallyOfFinitePresentation.{0} :=
     HasRingHomProperty.instIsZariskiLocalAtSource
   rw [IsZariskiLocalAtSource.iff_of_openCover (P := @LocallyOfFinitePresentation.{0})
     Y.left.affineOpenCover.openCover]
   intro i
-  haveI : IsOpenImmersion (Y.left.affineOpenCover.f i) :=
+  have : IsOpenImmersion (Y.left.affineOpenCover.f i) :=
     inferInstanceAs (IsOpenImmersion (Y.left.affineOpenCover.openCover.f i))
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (Y.left.affineOpenCover.f i ≫ Y.hom)
   have hsq : IsPullback (pullback.fst (Y.left.affineOpenCover.f i) j₁)
@@ -1334,8 +1334,8 @@ theorem main_of_nontrivial (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R�
     ∃ (A : Over (Spec P)) (_ : GrpObj A) (φ₁ : A₁.left ⟶ A.left) (φ₂ : A₂.left ⟶ A.left),
       IsAbelianScheme A ∧ IsGrpPullback A₁ A (Spec.map f₁) φ₁ ∧ IsGrpPullback A₂ A (Spec.map f₂) φ₂ ∧
         ψ₁ ≫ φ₁ = ψ₂ ≫ φ₂ := by
-  haveI := h₁.smooth
-  haveI := h₂.smooth
+  have := h₁.smooth
+  have := h₂.smooth
   obtain ⟨Y, j₁, j₂, hj₁, hj₂, hY, hpo⟩ := _root_.GlobalTheory.FerrandGlue.ferrand_glue_artinian P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hpb hl ha hg₁ hg₂
     A₁ A₂ A₀ ψ₁ ψ₂ hψ₁.1 hψ₂.1 inferInstance inferInstance
   obtain ⟨G, hc, hG₁, hG₂⟩ := _root_.GlobalTheory.GlueGrpLaw.exists_glued_grp P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hpb hl ha hg₁ hg₂ A₁ A₂ A₀ ψ₁ ψ₂
@@ -1416,7 +1416,7 @@ theorem point_factors (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (
   · right
     have h₂ : RingHom.ker f₂.hom ≤ RingHom.ker χ.hom := by
       intro b hb
-      obtain ⟨a, ha, ha'⟩ := SetLike.not_le_iff_exists.1 h
+      obtain ⟨a, ha, ha'⟩ := IsConcreteLE.not_le_iff_exists.1 h
       rw [RingHom.mem_ker] at ha hb ⊢
       rw [RingHom.mem_ker] at ha'
       have hab : a * b = 0 := hinj _ _ (by rw [map_mul, ha, zero_mul, map_zero])
@@ -1454,8 +1454,8 @@ theorem units_lift_of_surjective {R R₀ : Type} [CommRing R] [CommRing R₀] (h
     (hg : Function.Surjective g) (r : R₀ˣ) : ∃ r' : Rˣ, g r' = r := by
   rcases subsingleton_or_nontrivial R₀ with h | h
   · exact ⟨1, Subsingleton.elim _ _⟩
-  · haveI := hR h
-    haveI : IsLocalHom g := IsLocalHom.of_surjective g hg
+  · have := hR h
+    have : IsLocalHom g := IsLocalHom.of_surjective g hg
     obtain ⟨a, ha⟩ := hg r
     exact ⟨(isUnit_of_map_unit g a (ha ▸ r.isUnit)).unit, ha⟩
 
@@ -1466,7 +1466,7 @@ theorem units_lift_baseChange (P R₂ R₀ : CommRingCat.{0}) (f₂ : P ⟶ R₂
   have hpb : IsPullback (fst A (Over.mk (Spec.map (f₂ ≫ g₂)))).left (snd A (Over.mk (Spec.map (f₂ ≫ g₂)))).left
       A.hom (Over.mk (Spec.map (f₂ ≫ g₂))).hom := IsPullback.of_hasPullback _ _
   obtain ⟨G, -, hAb, -⟩ := GlobalTheory.AbCoh.exists_grpObj_isGrpPullback_of_isPullback P R₀ (f₂ ≫ g₂).hom A _ _ _ hpb
-  letI := G
+  let := G
   have hbij := GlobalTheory.globalFns_holds _ _ (hAb hA)
   let e := RingEquiv.ofBijective _ hbij
   intro u
@@ -1491,7 +1491,7 @@ theorem units_lift_baseChange (P R₂ R₀ : CommRingCat.{0}) (f₂ : P ⟶ R₂
     exact congrArg (fun φ => φ.hom (e.symm u₀)) (Scheme.ΓSpecIso R₀).hom_inv_id
   have h2 := congrArg (fun φ => φ.appTop.hom ((Scheme.ΓSpecIso R₂).inv.hom r₂)) hw
   simp only [Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.comp_apply] at h2
-  simp only [Units.coe_map, IsUnit.unit_spec, MonoidHom.coe_coe]
+  simp only [Units.coe_map, IsUnit.unit_spec, MonoidHom.coe_ofClass]
   exact h2.trans ((congrArg _ key).trans (e.apply_symm_apply u₀))
 
 theorem surjective_of_isPullback {P R₁ R₂ R₀ : CommRingCat.{0}} {f₁ : P ⟶ R₁} {f₂ : P ⟶ R₂} {g₁ : R₁ ⟶ R₀}
@@ -1504,10 +1504,10 @@ theorem surjective_of_isPullback {P R₁ R₂ R₀ : CommRingCat.{0}} {f₁ : P 
 
 theorem pic_eq_zero_of_pull_eq_zero : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f₂ : P ⟶ R₂) (g₁ : R₁ ⟶ R₀) (g₂ : R₂ ⟶ R₀), IsPullback f₁ f₂ g₁ g₂ → IsLocalRing P → IsArtinianRing P → Function.Surjective g₁ → Function.Surjective g₂ → ∀ (A : Over (Spec P)) [GrpObj A] (A₁ : Over (Spec R₁)) (A₂ : Over (Spec R₂)) (φ₁ : A₁.left ⟶ A.left) (φ₂ : A₂.left ⟶ A.left), IsAbelianScheme A → IsPullback φ₁ A₁.hom A.hom (Spec.map f₁) → IsPullback φ₂ A₂.hom A.hom (Spec.map f₂) → ∀ c : GlobalTheory.CechPic.Pic A.left, GlobalTheory.CechPic.pull φ₁ c = 0 → GlobalTheory.CechPic.pull φ₂ c = 0 → c = 0 := by
   intro P R₁ R₂ R₀ f₁ f₂ g₁ g₂ h hP _ hg₁ hg₂ A _ A₁ A₂ φ₁ φ₂ hA h₁ h₂ c hc₁ hc₂
-  haveI : Flat A.hom := by have := hA.smooth; infer_instance
+  have : Flat A.hom := by have := hA.smooth; infer_instance
   have hf₂ := surjective_of_isPullback h hg₁
   have hloc : Nontrivial R₀ → IsLocalRing R₂ := fun _ => by
-    haveI : Nontrivial R₂ := g₂.hom.domain_nontrivial
+    have : Nontrivial R₂ := g₂.hom.domain_nontrivial
     exact IsLocalRing.of_surjective' f₂.hom hf₂
   let T : Over (Spec P) := Over.mk (𝟙 (Spec P))
   let T₁ : Over (Spec P) := Over.mk (Spec.map f₁)
@@ -1676,8 +1676,8 @@ theorem principal_of_pull : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (P R₁ R
   have hdiso : LBIso c₁.diag (c.diag.pull φ) := by
     refine (cls_eq_iff hD₁ (pull_isLB hD _)).1 ?_
     rw [cls_pull hD, hd]
-  haveI := c.ab.proper
-  haveI := c.ab.smooth
+  have := c.ab.proper
+  have := c.ab.smooth
   have hA : Out.RelAmple c.A c.diag :=
     GlobalTheory.SharpLift.relAmple_of_closed_proper P c.A c.diag hD R₁ f₁.hom hf₁ c₁.A φ hφ.1 c₁.diag hD₁ hdiso hA₁
   refine ⟨hA, fun T x hx => ?_⟩
@@ -1719,8 +1719,8 @@ theorem principal_of_pull : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (P R₁ R
     hK₁ T x ((cls_eq_zero_iff (pull_isLB c₁.isLB _)).1 hx)
   have hAL : Out.RelAmple G L :=
     PosDefAmple.relAmple_linComb_of_posDef hl.globalFns g n 8 _ _ _ _ c G pr W8 hmon huniv hA hpos
-  haveI : IsLocalRing R₁ := IsLocalRing.of_surjective' f₁.hom hf₁
-  haveI : IsLocalHom f₁.hom := Function.Surjective.isLocalHom f₁.hom hf₁
+  have : IsLocalRing R₁ := IsLocalRing.of_surjective' f₁.hom hf₁
+  have : IsLocalHom f₁.hom := Function.Surjective.isLocalHom f₁.hom hf₁
   have hK : Out.KTriv G L := GlobalTheory.SharpLift.kTriv_of_localHom P R₁ f₁.hom G hG L hL hAL G' ψ hψ L' hL' hiso hK'
   have hx' : GlobalTheory.PrincipalIntegral.pair (cls c.P c.isLB) (snd c.A T ≫ x) (fst c.A T) = 0 := (cls_eq_zero_iff (pull_isLB c.isLB _)).2 hx
   exact kernel_of_kTriv (n := 8) (G := G) hadd (pair_comm c) hmon huniv hL hLW (0 : Fin 8) hK T x hx'
@@ -1808,7 +1808,7 @@ theorem exists_principal_glue : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (P R�
   obtain ⟨c₀, ⟨ψ₁, ψ₁₂, hψ₁, sψ₁, iψ₁, lψ₁⟩, ⟨ψ₂, ψ₂₂, hψ₂, sψ₂, iψ₂, lψ₂⟩⟩ := hc₀
   obtain ⟨A, instA, φ₁, φ₂, hA, hφ₁, hφ₂, hcomm⟩ :=
     lem_ab P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hs₁ hs₂ c₁.A c₂.A c₀.A ψ₁ ψ₂ c₁.ab c₂.ab hψ₁ hψ₂
-  haveI := hA.comm
+  have := hA.comm
   have hAA : IsAbelianScheme (G2 A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
   obtain ⟨φ₁₂, sφ₁⟩ := exists_isSquare hφ₁.1.w
   obtain ⟨φ₂₂, sφ₂⟩ := exists_isSquare hφ₂.1.w
@@ -1817,7 +1817,7 @@ theorem exists_principal_glue : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (P R�
   have e₁₂ : ψ₁₂ ≫ φ₁₂ = χ₂ := isSquare_comp rfl sψ₁ sφ₁ sχ
   have e₂₂ : ψ₂₂ ≫ φ₂₂ = χ₂ := isSquare_comp hcomm.symm sψ₂ sφ₂ sχ
   have flat : Flat (G2 A).hom := by
-    haveI := hAA.smooth
+    have := hAA.smooth
     infer_instance
   have hiso₀ : LBIso (c₁.P.pull ψ₁₂) (c₂.P.pull ψ₂₂) :=
     LBIso.trans (pull_isLB c₁.isLB _) c₀.isLB (pull_isLB c₂.isLB _) iψ₁.symm iψ₂
@@ -1908,9 +1908,9 @@ theorem exists_principal_glue : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (P R�
   refine ⟨c, ?_, pb₁, pb₂⟩
   rcases lem_pt P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hs₁ hs₂ (IsLocalRing.ResidueField P)
       (Spec.map (CommRingCat.ofHom (IsLocalRing.residue P))) with ⟨y, -⟩ | ⟨y, -⟩
-  · haveI := nontrivial_of_pt R₁ _ y
+  · have := nontrivial_of_pt R₁ _ y
     exact lem_princ g n hn hodd P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hs₁ hs₂ inferInstance β c c₁ pb₁ hp₁
-  · haveI := nontrivial_of_pt R₂ _ y
+  · have := nontrivial_of_pt R₂ _ y
     exact lem_princ g n hn hodd P R₂ R₁ R₀ f₂ f₁ g₂ g₁ hP.flip hloc hart hs₂ hs₁ inferInstance β c c₂ pb₂ hp₂
 
 end GlobalTheory.ArtinGlue

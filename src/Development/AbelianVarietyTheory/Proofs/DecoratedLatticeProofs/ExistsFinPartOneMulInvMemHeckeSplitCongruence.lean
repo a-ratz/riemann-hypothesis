@@ -97,20 +97,20 @@ theorem exists_avoid (c : 𝓞 E ≃+* 𝓞 E) (hc : ∀ x, c (c x) = x) (δ : �
     have h1 := hu Q ((finite_mem ht₀).mem_toFinset.2 hd)
     rw [pow_one] at h1
     by_cases h : y₁ ∈ Q.asIdeal
-    · simp only [h, if_true] at h1
+    · simp only [h, ite_true] at h1
       have h2 : (M : 𝓞 E) * (u * c u) ∈ Q.asIdeal := by simpa using sub_mem hy h
       have h3 : u ∈ Q.asIdeal := by
         rcases Q.isPrime.mem_or_mem ((Q.isPrime.mem_or_mem h2).resolve_left hMQ) with h3 | h3
         · exact h3
         · exact hc u ▸ hQ _ h3
       exact Q.isPrime.one_notMem (by simpa using sub_mem h3 h1)
-    · simp only [h, if_false, sub_zero] at h1
+    · simp only [h, ite_false, sub_zero] at h1
       exact h (by simpa using sub_mem hy (Ideal.mul_mem_left _ (M : 𝓞 E) (Ideal.mul_mem_right (c u) _ h1)))
 
 theorem local_close {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero Γ] (v : Valuation K Γ) {s y n m : K}
     (hs : s ≠ 0) (hm : v m ≤ v s) (hm1 : v m ≤ 1) (hlt : v (n * m) < 1) (hy : v (y - s) ≤ v (n * m * m)) :
     v (s * y⁻¹) = 1 ∧ v (s * y⁻¹ - 1) ≤ v n := by
-  have hs' : 0 < v s := zero_lt_iff.2 (v.ne_zero_iff.2 hs)
+  have hs' : 0 < v s := pos_iff_ne_zero.2 (v.ne_zero_iff.2 hs)
   have h1 : v (y - s) ≤ v (n * m) * v s := hy.trans (by rw [v.map_mul]; gcongr)
   have h2 : v y = v s := v.map_eq_of_sub_lt (h1.trans_lt (mul_lt_of_lt_one_left hs' hlt))
   have hy0 : y ≠ 0 := v.ne_zero_iff.1 (h2 ▸ hs'.ne')

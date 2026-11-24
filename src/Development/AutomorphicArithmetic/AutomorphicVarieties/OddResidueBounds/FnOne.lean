@@ -74,9 +74,9 @@ theorem UpperTheory.V.Odd.fnOne :
     have hlN0 : NeZero (l * N) := ⟨Nat.mul_ne_zero hl.out.ne_zero hN.ne'⟩
     have hlNq : NeZero ((l * N : ℕ) : ℚ) := ⟨by exact_mod_cast hlN0.out⟩
     have hNq : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hN0.out⟩
-    letI hcyc : IsCyclotomicExtension {l * N} ℚ (CyclotomicField (l * N) ℚ) :=
+    let hcyc : IsCyclotomicExtension {l * N} ℚ (CyclotomicField (l * N) ℚ) :=
       CyclotomicField.isCyclotomicExtension (l * N) ℚ
-    letI hcycN : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
+    let hcycN : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
       CyclotomicField.isCyclotomicExtension N ℚ
     obtain ⟨ζ, hζ⟩ : ∃ ζ : CyclotomicField (l * N) ℚ, IsPrimitiveRoot ζ (l * N) :=
       ⟨_, IsCyclotomicExtension.zeta_spec (l * N) ℚ (CyclotomicField (l * N) ℚ)⟩
@@ -93,7 +93,7 @@ theorem UpperTheory.V.Odd.fnOne :
       rwa [Polynomial.C_1] at h
     let ψ := Polynomial.IsSplittingField.lift (CyclotomicField N ℚ)
       (Polynomial.X ^ N - 1 : Polynomial ℚ) hsplitN
-    letI : Algebra E (CyclotomicField (l * N) ℚ) := ((ψ.comp φ) : E →+* _).toAlgebra
+    let : Algebra E (CyclotomicField (l * N) ℚ) := ((ψ.comp φ) : E →+* _).toAlgebra
     have hsplitl : (Polynomial.map (algebraMap E (CyclotomicField (l * N) ℚ))
         (Polynomial.X ^ l - 1)).Splits := by
       rw [Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow, Polynomial.map_X]

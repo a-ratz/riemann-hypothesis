@@ -892,8 +892,8 @@ lemma eps_eq (n : ℕ) : eps n = if n % 2 = 0 then -1 else 1 := by
   unfold eps Φe
   have h : ((n : ZMod 2) = 0) ↔ n % 2 = 0 := by rw [ZMod.natCast_eq_zero_iff]; omega
   by_cases hn : n % 2 = 0
-  · rw [if_pos (h.mpr hn), if_pos hn]
-  · rw [if_neg (fun h' => hn (h.mp h')), if_neg hn]
+  · rw [ite_eq_left (h.mpr hn), ite_eq_left hn]
+  · rw [ite_eq_right (fun h' => hn (h.mp h')), ite_eq_right hn]
 
 lemma Ap_eps (n : ℕ) : Ap eps n = ((n % 2 : ℕ) : ℂ) := by
   induction n with
@@ -962,7 +962,7 @@ lemma LFunction_Φe {s : ℂ} (hs : s ≠ 1) :
       DirichletCharacter.LFunction (1 : DirichletCharacter ℂ 2) s - (2 : ℂ) ^ (-s) * riemannZeta s := by
     rw [DirichletCharacter.LFunction, ZMod.LFunction, ZMod.LFunction]
     simp_rw [Φe_eq, sub_mul, Finset.sum_sub_distrib, mul_sub, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, map_zero, HurwitzZeta.hurwitzZeta_zero]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_zero, HurwitzZeta.hurwitzZeta_zero]
     push_cast
     ring
   have h3 := DirichletCharacter.LFunctionTrivChar_eq_mul_riemannZeta (N := 2) hs
@@ -987,8 +987,8 @@ lemma alt_sum (s : ℂ) (N : ℕ) :
       fun g => Finset.sum_Icc_succ_top (by omega) _
     rw [hA (fun n => (n : ℂ) ^ (-s)), hA (fun n => eps n * (n : ℂ) ^ (-s)),
       hB (fun n => (n : ℂ) ^ (-s))]
-    have e1 : eps (2 * N + 1) = 1 := by rw [eps_eq, if_neg (by omega)]
-    have e2 : eps (2 * N + 2) = -1 := by rw [eps_eq, if_pos (by omega)]
+    have e1 : eps (2 * N + 1) = 1 := by rw [eps_eq, ite_eq_right (by omega)]
+    have e2 : eps (2 * N + 2) = -1 := by rw [eps_eq, ite_eq_left (by omega)]
     have hb : ((2 * N + 2 : ℕ) : ℂ) ^ (-s) = (2 : ℂ) ^ (-s) * ((N + 1 : ℕ) : ℂ) ^ (-s) := by
       have h := natCast_mul_natCast_cpow 2 (N + 1) (-s)
       rw [show ((2 * N + 2 : ℕ) : ℂ) = ((2 : ℕ) : ℂ) * ((N + 1 : ℕ) : ℂ) by push_cast; ring, h]

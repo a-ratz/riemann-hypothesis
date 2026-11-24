@@ -413,19 +413,19 @@ theorem exists_eq_of_finite (O : Type) {S : Type} [CommRing O] [HenselianLocalRi
     (h2 : IsUnit (2 : O)) {m d : S} (hm : IsUnit m) (hd : IsUnit d) :
     ∃ a b : S, m = a * a - d * (b * b) := by
   let T := QuadraticAlgebra S d 0
-  haveI : Module.Finite O T := Module.Finite.trans S T
+  have : Module.Finite O T := Module.Finite.trans S T
   let I : Ideal T := (maximalIdeal O).map (algebraMap O T)
   have hI : I ≤ (⊥ : Ideal T).jacobson := by
     refine le_sInf fun M hM => Ideal.map_le_iff_le_comap.2 ?_
-    haveI := hM.2
+    have := hM.2
     exact (eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := O) M)).ge
-  haveI : HenselianRing T I := GlobalTheory.henselianRing_of_finite O I hI
-  haveI : Finite (O ⧸ maximalIdeal O) := inferInstanceAs (Finite (ResidueField O))
-  haveI : Module.Finite O (T ⧸ I) :=
+  have : HenselianRing T I := GlobalTheory.henselianRing_of_finite O I hI
+  have : Finite (O ⧸ maximalIdeal O) := inferInstanceAs (Finite (ResidueField O))
+  have : Module.Finite O (T ⧸ I) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ O I).toLinearMap Ideal.Quotient.mk_surjective
-  haveI : Module.Finite (O ⧸ maximalIdeal O) (T ⧸ I) :=
+  have : Module.Finite (O ⧸ maximalIdeal O) (T ⧸ I) :=
     Module.Finite.of_restrictScalars_finite O _ _
-  haveI : Finite (T ⧸ I) := Module.finite_of_finite (O ⧸ maximalIdeal O)
+  have : Finite (T ⧸ I) := Module.finite_of_finite (O ⧸ maximalIdeal O)
   have hc : ∀ s : S, starRingEnd T (algebraMap S T s) = algebraMap S T s := by
     intro s
     ext <;> simp [T, starRingEnd_apply, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one]
@@ -457,7 +457,7 @@ theorem exists_eq_of_isIntegral (O : Type) {A : Type} [CommRing O] [HenselianLoc
     (im : IsIntegral O m) (im' : IsIntegral O m') (id : IsIntegral O d) (id' : IsIntegral O d') :
     ∃ a b : A, m = a * a - d * (b * b) := by
   let S := Algebra.adjoin O ({m, m', d, d'} : Set A)
-  haveI : Module.Finite O S := Algebra.finite_adjoin_of_finite_of_isIntegral (Set.toFinite _) (by
+  have : Module.Finite O S := Algebra.finite_adjoin_of_finite_of_isIntegral (Set.toFinite _) (by
     rintro x (rfl | rfl | rfl | rfl) <;> assumption)
   have h1 : m ∈ S := Algebra.subset_adjoin (by simp)
   have h1' : m' ∈ S := Algebra.subset_adjoin (by simp)
@@ -488,7 +488,7 @@ theorem exists_eq_sq_sub_mul_sq : ∀ (L : Type) [CommRing L] [IsReduced L] [Alg
     ∃ a b : v.adicCompletion ℚ ⊗[ℚ] L, m = a * a - d * (b * b) := by
   intro L _ _ _ _ v hv m m' d d' hm hd im im' id id'
   obtain ⟨hH, hF⟩ := GlobalTheory.IntAdicHensel.henselianLocalRing_and_finite_residueField v
-  letI : Algebra (v.adicCompletionIntegers ℚ) (v.adicCompletion ℚ ⊗[ℚ] L) :=
+  let : Algebra (v.adicCompletionIntegers ℚ) (v.adicCompletion ℚ ⊗[ℚ] L) :=
     ((algebraMap (v.adicCompletion ℚ) (v.adicCompletion ℚ ⊗[ℚ] L)).comp
       (v.adicCompletionIntegers ℚ).subtype).toAlgebra
   have key : ∀ x : v.adicCompletion ℚ ⊗[ℚ] L,
@@ -570,7 +570,7 @@ theorem fixed_algebra_exists : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (β 
         intro q
         refine ⟨Algebra.commutes q _, ?_⟩
         rw [hshalg, ← Algebra.commutes q (β : G.C), mul_assoc, Units.mul_inv, mul_one] }
-  letI cr : CommRing S :=
+  let cr : CommRing S :=
     { (inferInstance : Ring S) with
       mul_comm := fun a b => Subtype.ext (hcomm a b a.2.1 b.2.1).eq }
   have hred : IsReduced S := by
@@ -579,9 +579,9 @@ theorem fixed_algebra_exists : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (β 
       have := congrArg Subtype.val hk
       simpa using this
     exact GlobalTheory.LKCx.ClsReg.eq_zero_of_commute_of_pow_eq_zero p G (Y : G.C) hsep hdeg x x.2.1 k hk'
-  haveI := G.towerC
-  haveI := G.finC
-  haveI : FiniteDimensional ℚ G.C := Module.Finite.trans G.F G.C
+  have := G.towerC
+  have := G.finC
+  have : FiniteDimensional ℚ G.C := Module.Finite.trans G.F G.C
   have hfd : FiniteDimensional ℚ S :=
     Module.Finite.of_injective (S.val.toLinearMap) Subtype.val_injective
   refine ⟨S, cr, hred, S.algebra, hfd, S.val, Subtype.val_injective, fun c => ?_⟩
@@ -642,7 +642,7 @@ theorem GlobalTheory.LocNormTau.exists_norm_of_tau_fixed_sep : ∀ (p : ℕ) [Fa
     rw [Filter.eventually_cofinite]
     refine Set.Subsingleton.finite ?_
     intro w₁ h₁ w₂ h₂
-    simp only [Set.mem_setOf_eq, not_not] at h₁ h₂
+    simp only [Set.mem_ofPred_eq, not_not] at h₁ h₂
     exact Subtype.ext (IsDedekindDomain.HeightOneSpectrum.ext (h₁.trans h₂.symm))
   filter_upwards [hne2, GlobalTheory.T.eventually_isIntegral_of_integralCoordsLocalTensor p G, GlobalTheory.T.eventually_integralCoords_scalarTensorInclusion p G (ι d), GlobalTheory.T.eventually_integralCoords_scalarTensorInclusion p G (ι di)] with w h2 hint hId hId'
   intro m hmY hmI hmI' hmτ

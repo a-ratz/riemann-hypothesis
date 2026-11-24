@@ -265,21 +265,21 @@ namespace GlobalTheory.ResidueEisenstein.ModConj
 open GlobalTheory.ResidueEisenstein.ModConj.SkewSplit in
 theorem addEquivAddHaarChar_skewA_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (j : ℕ) [LocallyCompactSpace (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] [SecondCountableTopology (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] [MeasurableSpace (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] [BorelSpace (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] (l : (AF F ⊗[F] E)ˣ) (L : GlobalTheory.ResidueEisenstein.ModConj.skewA σ j ≃ₜ+ GlobalTheory.ResidueEisenstein.ModConj.skewA σ j), (∀ s, (L s : Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) = ((l : AF F ⊗[F] E) * sigR (AF F) σ (l : AF F ⊗[F] E)) • (s : Matrix (Fin j) (Fin j) (AF F ⊗[F] E))) → addEquivAddHaarChar L = absE F E l ^ (j * j) := by
   intro F E _ _ _ _ _ σ hcm j _ _ _ _ l L hL
-  haveI : IsTotallyReal F := hcm.1
+  have : IsTotallyReal F := hcm.1
   have hσ := GlobalTheory.ImaginaryModulus.sig_sig hcm
   obtain ⟨δ, hδ0, hδ⟩ := GlobalTheory.ImaginaryModulus.exists_anti hcm
   obtain ⟨-, hlc, hsc, ht2⟩ := topAE F E
-  haveI : LocallyCompactSpace (AF F ⊗[F] E) := hlc
-  haveI : SecondCountableTopology (AF F ⊗[F] E) := hsc
-  haveI : T2Space (AF F ⊗[F] E) := ht2
-  haveI : LocallyCompactSpace (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) :=
+  have : LocallyCompactSpace (AF F ⊗[F] E) := hlc
+  have : SecondCountableTopology (AF F ⊗[F] E) := hsc
+  have : T2Space (AF F ⊗[F] E) := ht2
+  have : LocallyCompactSpace (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin j → Fin j → AF F ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin j → Fin j → AF F ⊗[F] E))
-  letI : MeasurableSpace (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) := borel _
-  haveI : BorelSpace (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) := ⟨rfl⟩
-  haveI : T2Space (skewA σ j) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : BorelSpace (skewA σ j × skewA σ j) := Prod.borelSpace
+  let : MeasurableSpace (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) := borel _
+  have : BorelSpace (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) := ⟨rfl⟩
+  have : T2Space (skewA σ j) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : BorelSpace (skewA σ j × skewA σ j) := Prod.borelSpace
   set Φ := split σ hσ j δ hδ0 hδ
   set M : Matrix (Fin j) (Fin j) (AF F ⊗[F] E) ≃ₜ+ Matrix (Fin j) (Fin j) (AF F ⊗[F] E) :=
     (Φ.symm.trans (GlobalTheory.ModuLR.prodCE L L)).trans Φ
@@ -552,8 +552,8 @@ open GlobalTheory.SphEis GlobalTheory.SphEis.UnipCrd
 
 theorem chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (j m : ℕ) (C D : Matrix (Fin n) (Fin j) E) (Z : Matrix (Fin n) (Fin m) E) (J₀ : Matrix (Fin m) (Fin m) E), GlobalTheory.SphEis.Fr σ J C D Z J₀ → ∃ φ : Matrix (Fin j) (Fin m) (AF F ⊗[F] E) × GlobalTheory.ResidueEisenstein.ModConj.skewA σ j → GAd σ J, Continuous φ ∧ ∀ b s, GlobalTheory.SphEis.Crd σ J C D Z J₀ (φ (b, s)) b ((s : Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) - inclR (F := F) (AF F) (2⁻¹ : E) • (b * GlobalTheory.SphEis.plus σ J₀ b)) := by
   intro F E _ _ _ _ _ σ n J j m C D Z J₀ hF
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hsg : Continuous (sigR (AF F) σ) := GlobalTheory.AdelicUnitaryTop.continuous_sigR (AF F) σ
   have hcT : ∀ {X : Type} [TopologicalSpace X] {p q : ℕ} {f : X → Matrix (Fin p) (Fin q) (AF F ⊗[F] E)},
       Continuous f → Continuous fun x => cT (sigR (AF F) σ) (f x) := fun hf => (hf.matrix_map hsg).matrix_transpose
@@ -569,7 +569,7 @@ theorem chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
       inclR (F := F) (AF F) (2⁻¹ : E) • (p.1 * plus σ J₀ p.1) := by
     have := hbp.const_smul (inclR (F := F) (AF F) (2⁻¹ : E)); exact this
   have hs : Continuous fun p : Matrix (Fin j) (Fin m) (AF F ⊗[F] E) × skewA σ j =>
-      (p.2 : Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) := continuous_subtype_val.comp continuous_snd
+      (p.2 : Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) := continuous_subtypeVal.comp continuous_snd
   have hc : Continuous cF := hs.sub hh
   have hM : Continuous fun p : Matrix (Fin j) (Fin m) (AF F ⊗[F] E) × skewA σ j => uMat σ J C D Z J₀ p.1 (cF p) :=
     ((continuous_const.matrix_mul continuous_const).add
@@ -899,7 +899,7 @@ theorem map_haar_eq_smul_of_coords : ∀ (Q L A C : Type) [Group Q] [Topological
       ← Measure.map_map hΦm hTmp.measurable, hTmp.map_eq]
   have hfin : IsFiniteMeasureOnCompacts ν₀ := Measure.IsFiniteMeasureOnCompacts.map P Φ
   have hpos : ν₀.IsOpenPosMeasure := Φ.continuous.isOpenPosMeasure_map Φ.surjective
-  haveI : ν₀.inv.IsHaarMeasure := by constructor
+  have : ν₀.inv.IsHaarMeasure := by constructor
   have hα_map : ν₀.map α = (kA * kC) • ν₀ := by
     have hcomp : α ∘ Φ = Φ ∘ Prod.map id (Prod.map sA sC) := by
       funext p; exact hαΦ p.1 p.2.1 p.2.2
@@ -969,23 +969,23 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     rw [← hβt, hdet, map_pow, NNReal.coe_pow]
 
   have hFD : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   obtain ⟨eE⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : SecondCountableTopology (AF F ⊗[F] E) := eE.secondCountableTopology
-  haveI : LocallyCompactSpace (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) :=
+  have : SecondCountableTopology (AF F ⊗[F] E) := eE.secondCountableTopology
+  have : LocallyCompactSpace (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin (r + 1) → Fin m → AF F ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin (r + 1) → Fin m → AF F ⊗[F] E))
-  haveI : T2Space (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) :=
+  have : T2Space (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) :=
     inferInstanceAs (T2Space (Fin (r + 1) → Fin m → AF F ⊗[F] E))
-  letI : MeasurableSpace (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) := borel _
-  haveI : BorelSpace (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) :=
+  let : MeasurableSpace (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) := borel _
+  have : BorelSpace (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin (r + 1) → Fin (r + 1) → AF F ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin (r + 1) → Fin (r + 1) → AF F ⊗[F] E))
-  letI : MeasurableSpace (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) := borel _
-  haveI : BorelSpace (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) := ⟨rfl⟩
+  let : MeasurableSpace (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) := borel _
+  have : BorelSpace (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) := ⟨rfl⟩
   have hsc : Continuous (sigR (AF F) σ) := by
     have h0 := IsModuleTopology.continuous_of_linearMap (R := AF F) (LinearMap.baseChange (AF F) σ.toLinearMap)
     refine h0.congr fun x => ?_
@@ -997,10 +997,10 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     fun {p q} => (continuous_id.matrix_map hsc).matrix_transpose
   have hSk : IsClosed (skewA σ (r + 1) : Set (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E))) :=
     isClosed_eq (continuous_id.add hcT) continuous_const
-  haveI : LocallyCompactSpace (skewA σ (r + 1)) := hSk.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (skewA σ (r + 1)) := hSk.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have hff := GlobalTheory.SphEis.frame_facts F E σ n J (r + 1) m X Y Z J₀ hF
-  haveI : LocallyCompactSpace (unipRad σ J X) := GlobalTheory.UAut.locallyCompact_unipRad h hJ hff.1
-  haveI i1 : SecondCountableTopology (skewA σ (r + 1)) :=
+  have : LocallyCompactSpace (unipRad σ J X) := GlobalTheory.UAut.locallyCompact_unipRad h hJ hff.1
+  have i1 : SecondCountableTopology (skewA σ (r + 1)) :=
     TopologicalSpace.Subtype.secondCountableTopology (skewA σ (r + 1) : Set (Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)))
   have i2 : BorelSpace (skewA σ (r + 1)) := inferInstance
   have i3 : T2Space (skewA σ (r + 1)) := inferInstance
@@ -1067,7 +1067,7 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
         (c + cT (sigR (AF F) σ) c + x * GlobalTheory.SphEis.plus σ J₀ x) + ((hf2 + hf2) - 1) • (x * GlobalTheory.SphEis.plus σ J₀ x) by rw [sub_smul, one_smul, add_smul]; abel,
       hcc, hh, sub_self, zero_smul, add_zero]
   have hinvc : Continuous fun u : unipRad σ J X => κc u + hf2 • (βc u * GlobalTheory.SphEis.plus σ J₀ (βc u)) :=
-    (hκcont.comp continuous_subtype_val).add ((hPcont.comp (hβcont.comp continuous_subtype_val)).const_smul hf2)
+    (hκcont.comp continuous_subtypeVal).add ((hPcont.comp (hβcont.comp continuous_subtypeVal)).const_smul hf2)
   let Φ : Unit × (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E) × skewA σ (r + 1)) ≃ₜ unipRad σ J X :=
     { toFun := fun p => ⟨φ p.2, hφmem p.2⟩
       invFun := fun u => ((), (βc u, ⟨κc u + hf2 • (βc u * GlobalTheory.SphEis.plus σ J₀ (βc u)), hinvmem u⟩))
@@ -1090,7 +1090,7 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
         change φ (βc u, ⟨_, hinvmem u⟩) = u
         exact (hlaw _ u _ _ 0 0 h1).2.1 hu'
       continuous_toFun := Continuous.subtype_mk (hφc.comp continuous_snd) _
-      continuous_invFun := continuous_const.prodMk ((hβcont.comp continuous_subtype_val).prodMk
+      continuous_invFun := continuous_const.prodMk ((hβcont.comp continuous_subtypeVal).prodMk
         (hinvc.subtype_mk hinvmem)) }
 
   have hplusc : Continuous (GlobalTheory.SphEis.plus σ J₀ : Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E) → _) :=
@@ -1142,7 +1142,7 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
       map_one' := Subtype.ext (by simp)
       map_mul' := fun u v => Subtype.ext (by simp [mul_assoc]) }
   have hαc : Continuous α :=
-    Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+    Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
 
   let lI : GL (Fin (r + 1)) (AF F ⊗[F] E) :=
     Units.map (Matrix.scalar (Fin (r + 1)) : AF F ⊗[F] E →+* Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)).toMonoidHom l
@@ -1174,9 +1174,9 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
       left_inv := fun s => Subtype.ext (by simp [smul_smul])
       right_inv := fun s => Subtype.ext (by simp [smul_smul])
       map_add' := fun s s' => Subtype.ext (by simp [smul_add])
-      continuous_toFun := Continuous.subtype_mk (continuous_subtype_val.const_smul (u2 : AF F ⊗[F] E)) _
+      continuous_toFun := Continuous.subtype_mk (continuous_subtypeVal.const_smul (u2 : AF F ⊗[F] E)) _
       continuous_invFun := Continuous.subtype_mk
-        (continuous_subtype_val.const_smul (((u2⁻¹ : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E))) _ }
+        (continuous_subtypeVal.const_smul (((u2⁻¹ : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E))) _ }
   let sC : skewA σ (r + 1) →+ skewA σ (r + 1) := Lc.toAddEquiv.toAddMonoidHom
   have hsC : ∀ s, (sC s : Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) =
       ((l : AF F ⊗[F] E) * sigR (AF F) σ (l : AF F ⊗[F] E)) • (s : Matrix (Fin (r + 1)) (Fin (r + 1)) (AF F ⊗[F] E)) :=
@@ -1226,11 +1226,11 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   have hmap := GlobalTheory.ModulusCoord.map_haar_eq_smul_of_coords (unipRad σ J X) Unit
     (Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E)) (skewA σ (r + 1)) Φ hT α sA sC kA kC hαc
     (GlobalTheory.ModuLR.lrCE lI δ).continuous Lc.continuous hαΦ hsA' hsC' ν hν
-  have hfm : Measurable fun u : unipRad σ J X => f u := hf.comp measurable_subtype_coe
+  have hfm : Measurable fun u : unipRad σ J X => f u := hf.comp measurable_subtypeVal
   have hk : ((kA * kC : ℝ≥0) : ℝ) = Real.exp (-(((n : ℝ) - (r + 1)) * t)) := by
     have hn : (n : ℝ) = m + 2 * (r + 1) := by exact_mod_cast hF.dim.symm
     rw [hkA, hkC, NNReal.coe_mul, NNReal.coe_inv, NNReal.coe_inv, NNReal.coe_pow, NNReal.coe_pow, pow_mul, pow_mul, habs, hn,
-      ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_neg, ← Real.exp_neg, ← Real.exp_add]
+      ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_neg, ← Real.exp_neg, ← Real.exp_add]
     congr 1
     push_cast
     ring

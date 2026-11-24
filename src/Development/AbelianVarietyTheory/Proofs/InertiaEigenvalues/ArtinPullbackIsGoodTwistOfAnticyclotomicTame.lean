@@ -300,14 +300,14 @@ variable [IsTopologicalGroup (G D.host.E Ω)] [CompactSpace (G D.host.E Ω)]
 
 theorem finite_range {A : Type} [CommGroup A] {φ : G D.host.E Ω →* A} (h : IsOpen (φ.ker : Set (G D.host.E Ω))) :
     Finite φ.range := by
-  haveI := Subgroup.quotient_finite_of_isOpen φ.ker h
+  have := Subgroup.quotient_finite_of_isOpen φ.ker h
   exact Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange φ).toEquiv
 
 theorem pull_eq_of_chars (a : Recip D Ω) {A : Type} [CommGroup A] {φ : G D.host.E Ω →* A}
     (hφ : IsOpen (φ.ker : Set (G D.host.E Ω))) {x y : (AE D)ˣ}
     (h : ∀ f : φ.range →* ℂˣ, a.pull (f.comp φ.rangeRestrict) x = a.pull (f.comp φ.rangeRestrict) y) :
     a.pull φ x = a.pull φ y := by
-  haveI := finite_range hφ
+  have := finite_range hφ
   have h0 : IsOpen (φ.rangeRestrict.ker : Set (G D.host.E Ω)) := by rw [MonoidHom.ker_rangeRestrict]; exact hφ
   have e1 : φ = φ.range.subtype.comp φ.rangeRestrict := MonoidHom.ext fun _ => rfl
   have e : a.pull φ = φ.range.subtype.comp (a.pull φ.rangeRestrict) := by
@@ -323,8 +323,8 @@ theorem char_props {A : Type} [CommGroup A] {φ : G D.host.E Ω →* A} (hφ : I
     IsOpen ((f.comp φ.rangeRestrict).ker : Set (G D.host.E Ω)) ∧
       ∃ n : ℕ, ∀ σ, (f.comp φ.rangeRestrict) σ ^ (l ^ n) = 1 := by
   classical
-  haveI := finite_range hφ
-  haveI := Fintype.ofFinite φ.range
+  have := finite_range hφ
+  have := Fintype.ofFinite φ.range
   refine ⟨Subgroup.isOpen_mono (H₁ := φ.ker) (fun g hg => ?_) hφ, ?_⟩
   · have : φ.rangeRestrict g = 1 := Subtype.ext (MonoidHom.mem_ker.1 hg)
     rw [MonoidHom.mem_ker, MonoidHom.comp_apply, this, map_one]
@@ -359,7 +359,7 @@ theorem real_C : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.ho
       exact Finset.prod_eq_one fun w' _ => GlobalTheory.ToricDistribution.locInf_of_pow hm hpw w' _
   let ψ : Neutral.B1.Ideles D.host.F →* Circle := c.comp (Formalism.L2.Theta.idF D)
   have hcI : Continuous (algebraMap (AF D.host.F) (AE D)) := by
-    haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+    have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
     exact (continuous_id.smul continuous_const).congr fun a => (Algebra.algebraMap_eq_smul_one a).symm
   have hcont : Continuous ψ := hc.1.1.comp (Continuous.units_map _ hcI)
   have e : ∀ k : D.host.F, algebraMap (AF D.host.F) (AE D) (algebraMap D.host.F (AF D.host.F) k) =

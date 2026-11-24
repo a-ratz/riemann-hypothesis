@@ -174,8 +174,8 @@ theorem countable_nf (K : Type*) [Field K] [NumberField K] : Countable K := by
 
 theorem ROset_countable (Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V) (γ : (VS D).V ≃ₗ[D.host.E] (VS D).V) :
     (ROset X F0 F0' Λ Λ' γ).Countable := by
-  haveI : Countable X.B.I.E := countable_nf X.B.I.E
-  haveI : Countable (Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
+  have : Countable X.B.I.E := countable_nf X.B.I.E
+  have : Countable (Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
   have hsub : ROset X F0 F0' Λ Λ' γ ⊆ ⋃ M : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E,
       {s : X.B.I.Ginf | ∀ v, uMat (s v) = (X.B.I.P v)⁻¹ * M.map (X.B.I.φ v) * X.B.I.P v} := by
     intro y hy
@@ -183,7 +183,7 @@ theorem ROset_countable (Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V) (γ : (VS 
     obtain ⟨M, -, h1, -, -⟩ := hx
     rw [Set.mem_iUnion]
     refine ⟨(M : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E), ?_⟩
-    rw [Set.mem_setOf_eq, hyx]
+    rw [Set.mem_ofPred_eq, hyx]
     exact h1
   refine Set.Countable.mono hsub (Set.countable_iUnion fun M => Set.Subsingleton.countable ?_)
   intro s hs s' hs'
@@ -249,7 +249,7 @@ theorem wu_N {D : D7} (X : HidaSetting D) (u : D.what₂.Word) {s : X.B.I.Ginf} 
     X.Wu u (s * x) = X.psiInfU u s • X.Wu u x := by
   have h1 : X.Wu u (s * x) = X.psiInfU u s • X.piU u s (X.Wu u x) := (X.Wu_spec u).1 s (fun v => (hs v).1) x
   have h2 : X.piU u s = 1 := (X.piU_rep u).2.2.2.1 s hs
-  rw [h1, h2, ContinuousLinearMap.one_apply]
+  rw [h1, h2, one_apply_eq_self]
 
 theorem integrand_inv (hN : NLamNinf) (hC : ChiTrivialC) {D : D7} {X : HidaSetting D} (Y : Full X)
     {u u' : D.what₂.Word} {Λ Λ' : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Λ ∈ Y.what₂ u) (hΛ' : Λ' ∈ Y.what₂ u')
@@ -272,13 +272,13 @@ theorem integrand_inv (hN : NLamNinf) (hC : ChiTrivialC) {D : D7} {X : HidaSetti
 
 theorem ooFundIndepC_of (hN : NLamNinf) (hC : ChiTrivialC) : OOFundIndepC := by
   intro D X Y u u' hF _ t Ω hΩ
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
   have hex : ∃ Ω, Formalism.L2.SG.HidaSetting.IsSFund X.B.I (ROinf t) Ω := hF t
   have hΩ' : Formalism.L2.SG.HidaSetting.IsSFund X.B.I (ROinf t) (FundOf t) := by
     unfold FundOf
     rw [dite_eq_left hex]
     exact hex.choose_spec
-  haveI := ROsub_countable X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin
+  have := ROsub_countable X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin
   simp only [OOt, OO]
   exact setIntegral_fd_eq (ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin) _ hΩ hΩ' _
     (fun s hs x => integrand_inv hN hC Y t.mem t.mem' t.rep s hs x)
@@ -346,7 +346,7 @@ theorem rankOneInnerOperator_smul_smul {V V' : Type*} [NormedAddCommGroup V] [In
     [NormedAddCommGroup V'] [InnerProductSpace ℂ V'] (a b : ℂ) (v : V) (w : V') :
     rk1 (a • v) (b • w) = (a * starRingEnd ℂ b) • rk1 v w := by
   ext x
-  simp only [rk1, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, inner_smul_left, ContinuousLinearMap.smul_apply, smul_smul]
+  simp only [rk1, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, inner_smul_left, smul_apply, smul_smul]
   congr 1
   ring
 
@@ -390,8 +390,8 @@ theorem oo_rel (hN : NLamNinf) (hC : ChiTrivialC) {D : D7} {X : HidaSetting D} (
       (X.psiInfU u xn.1 * X.psiInfU u' xn'.1) •
         (haveI := FiniteDimensional.complete ℂ (X.Vpi u)
          OO (Formalism.L2.SG.ProjRows.muInf X.B.I) Ωp (X.Wu u) (X.Wu u') p.1.1.1) := by
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
-  haveI := ROsub_countable X (X.Fu u) (X.Fu u') Λ Λ' p.1.2
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
+  have := ROsub_countable X (X.Fu u) (X.Fu u') Λ Λ' p.1.2
   have hxN : xn.1 ∈ X.NinfU u := hN D X u Λ xn n hxn hn
   have hxN' : xn'.1 ∈ X.NinfU u' := hN D X u' Λ' xn' n' hxn' hn'
   have hpsi : starRingEnd ℂ (X.psiInfU u' xn'.1) * X.psiInfU u' xn'.1 = 1 := by
@@ -504,7 +504,7 @@ theorem psiInfU_cont {D : D7} (X : HidaSetting D) (u : D.what₂.Word) : Continu
   rw [h]
   simp only [psiInf]
   refine continuous_finsetProd _ fun v _ => ?_
-  exact (psiR_cont_lemma _ _ _ _ _).comp (Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v)))
+  exact (psiR_cont_lemma _ _ _ _ _).comp (Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v)))
 
 variable {D : D7} {X : HidaSetting D} {u u' : D.what₂.Word} {what₂ rows' : Finset (Submodule (𝓞 D.host.E) (VS D).V)}
 
@@ -550,11 +550,11 @@ theorem ooVanish_of (hA : AvgCore) (hU : GinfUnimod) (hN : NLamNinf) (hC : ChiTr
     (h1 : RClosedC) (h2 : RODiscreteC) (h3 : RCocompactC) (h4 : NonRelCharC)
     (Y : Full X) (t : GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u')) (ht : ¬ t.relevant) :
     OOt t = 0 := by
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
-  haveI := hU X.B.I
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
+  have := hU X.B.I
   by_cases hex : ∃ Ω, Formalism.L2.SG.HidaSetting.IsSFund X.B.I (ROinf t) Ω
   swap
-  · simp only [OOt, OO, FundOf, dif_neg hex, Measure.restrict_empty, integral_zero_measure]
+  · simp only [OOt, OO, FundOf, dite_eq_right hex, Measure.restrict_empty, integral_zero_measure]
   have hΩ : IsSF (ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin : Set X.B.I.Ginf) (FundOf t) := by
     unfold FundOf
     rw [dite_eq_left hex]

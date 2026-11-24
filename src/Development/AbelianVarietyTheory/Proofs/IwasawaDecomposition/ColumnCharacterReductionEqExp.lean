@@ -81,7 +81,7 @@ theorem absNorm_and_unram {p : ℕ} (hp : p.Prime) (hs : GlobalTheory.St.G.Split
   · intro h2
     have e : (Ideal.span {(p : ℤ)}).ramificationIdx' v.asIdeal = v.asIdeal.ramificationIdx ℤ := by
       rw [← hu]; exact Ideal.ramificationIdx'_eq_ramificationIdx _ _ (by rw [hu, Ne, Ideal.span_singleton_eq_bot]; exact hp'.ne_zero)
-    have h3 := Ideal.ramificationIdx_ne_one_iff (p := Ideal.span {(p : ℤ)}) (P := v.asIdeal) (by simpa [Ideal.map_span] using h)
+    have h3 := Ideal.ramificationIdx'_ne_one_iff (p := Ideal.span {(p : ℤ)}) (P := v.asIdeal) (by simpa [Ideal.map_span] using h)
     exact (h3.2 (by simpa [Ideal.map_span] using h2)) (e.trans key.1.1)
 
 end Place

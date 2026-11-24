@@ -85,8 +85,8 @@ private theorem int_zero {μ : Measure U4} (hH : Haar4 μ) {ν ν' : Fin (2 + 2)
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coefIdem :
     ∀ (μ : Measure U4) ψ n q n' q', Haar4 μ → μ.IsOpenPosMeasure → Coef ψ n q n' q' → Continuous ψ ∧ ψ 1 = 1 ∧ Idem μ (eOf μ ψ) ∧ RFix μ (eOf μ ψ) ψ := by
   intro μ ψ n q n' q' hH hO hC
-  haveI : CompactSpace U4 := u4.2.2.2.2.2.2.2.2.2.2.2.1
-  haveI : IsProbabilityMeasure μ := hH.prob
+  have : CompactSpace U4 := u4.2.2.2.2.2.2.2.2.2.2.2.1
+  have : IsProbabilityMeasure μ := hH.prob
   obtain ⟨J, _, j₀, a, b, ν, hcont, hexp, ha0, hb0, hν0, hw, -, hne⟩ := hC.exp
   have hψc : Continuous ψ := ha0 ▸ (hcont j₀).1
   have hψ1 : ψ 1 = 1 := by
@@ -101,7 +101,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coefIdem :
     rwa [ha0] at this
   set c : ℝ := ∫ h, ‖ψ h‖ ^ 2 ∂μ with hc
   have hcpos : 0 < c := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := (1 : U4)) (by fun_prop)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := (1 : U4)) (by fun_prop)
       (HasCompactSupport.of_compactSpace _) (fun _ => by positivity) ?_
     simp [hψ1]
   have hc0 : (c : ℂ) ≠ 0 := by exact_mod_cast hcpos.ne'

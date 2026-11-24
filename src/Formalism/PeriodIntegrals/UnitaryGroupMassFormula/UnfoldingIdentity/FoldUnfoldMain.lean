@@ -85,8 +85,8 @@ theorem count_ae_one {G : Type*} [Group G] [MeasurableSpace G] [MeasurableMul G]
 
 theorem foldUnfold_main : PI.FoldUnfold.FoldUnfold := by
   intro G _ _ _ μ _ Γ S _ hSΓ F hF FΓ hFΓ D hD f hf hfS
-  haveI : Countable S := Function.Injective.countable (Subgroup.inclusion_injective hSΓ)
-  haveI : Countable D := Function.Injective.countable
+  have : Countable S := Function.Injective.countable (Subgroup.inclusion_injective hSΓ)
+  have : Countable D := Function.Injective.countable
     (f := fun d : D => (⟨d.1, hD.1 d.2⟩ : Γ)) (fun a b h => Subtype.ext (congrArg (fun γ : Γ => (γ : G)) h))
 
   have hpt : ∀ᵐ x ∂μ, ∑' γ : Γ, F.indicator f ((γ : G) * x) = ∑' δ : D, f ((δ : G) * x) := by

@@ -65,13 +65,13 @@ theorem val_le_unif (q : Unif k) {x : k} (hx : valuation k x < 1) :
     simpa using this.symm
   rw [h, Valuation.map_mul]
   have hc1 : valuation k (c : k) ≤ 1 := c.2
-  exact (mul_le_mul_of_nonneg_right hc1 zero_le').trans_eq (one_mul _)
+  exact (mul_le_mul_of_nonneg_right hc1 zero_le).trans_eq (one_mul _)
 
 theorem val_unif_lt_one (q : Unif k) : valuation k ((q.1 : 𝒪[k]) : k) < 1 :=
   Valuation.Integer.not_isUnit_iff_valuation_lt_one.1 q.2.not_isUnit
 
 theorem val_unif_pos (q : Unif k) : 0 < valuation k ((q.1 : 𝒪[k]) : k) := by
-  rw [zero_lt_iff, Valuation.ne_zero_iff]
+  rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
   exact fun h => q.2.ne_zero (Subtype.ext h)
 
 variable {D : D7}
@@ -94,7 +94,7 @@ theorem val_lt_of_mem_idS_of_forall (p : SplitPt D k) {PP : Formalism.L2.DIV.Pl 
     exact Valuation.map_add_lt _ hx hy
   · intro c x _ hx
     rw [smul_eq_mul, Subring.coe_mul, map_mul, Valuation.map_mul]
-    exact (mul_le_mul_of_nonneg_right (p.val_prF_le_one he c) zero_le').trans_lt (by rwa [one_mul])
+    exact (mul_le_mul_of_nonneg_right (p.val_prF_le_one he c) zero_le).trans_lt (by rwa [one_mul])
 
 theorem val_eq_unif_and_unit : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k]
@@ -131,7 +131,7 @@ theorem val_eq_unif_and_unit : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k
     rw [pow_two] at ha
     refine Submodule.mul_induction_on ha (fun x hx y hy => ?_) (fun x y hx hy => ?_)
     · rw [map_mul, Valuation.map_mul]
-      calc _ ≤ valuation k (f x) * γ := mul_le_mul_of_nonneg_left (val_le_unif q ((hlt _).1 hy)) zero_le'
+      calc _ ≤ valuation k (f x) * γ := mul_le_mul_of_nonneg_left (val_le_unif q ((hlt _).1 hy)) zero_le
         _ < 1 * γ := mul_lt_mul_of_pos_right ((hlt _).1 hx) hγ0
         _ = γ := one_mul _
     · rw [map_add (f := _)]; exact Valuation.map_add_lt _ hx hy
@@ -143,7 +143,7 @@ theorem val_eq_unif_and_unit : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k
     rw [map_add (f := _)]
     refine Valuation.map_add_lt _ ?_ (hsq y hy)
     rw [map_mul, Valuation.map_mul]
-    exact (mul_le_mul_of_nonneg_right (hle c) zero_le').trans_lt (by rwa [one_mul])
+    exact (mul_le_mul_of_nonneg_right (hle c) zero_le).trans_lt (by rwa [one_mul])
 
   have hs : toEAf D (p.sec ((q.1 : 𝒪[k]) : k)) ∈ Formalism.L2.Herm.intAf D.host.F D.host.E :=
     GlobalTheory.IdemRes.toEAf_mem_of_finPart ((p.int_iff _).1 q.1.2)

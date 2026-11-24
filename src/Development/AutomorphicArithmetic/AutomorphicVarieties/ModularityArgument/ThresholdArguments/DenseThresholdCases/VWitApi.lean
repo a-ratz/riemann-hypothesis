@@ -75,7 +75,7 @@ variable (K : Type) [Field K] [NumberField K] [IsCMField F] [IsCMField K] [Algeb
 end
 theorem WitQ.weak_admissible_iso (e : RepIso r r') (h : _root_.UpperTheory.V.Z.Win.WitAQ ι r) : _root_.UpperTheory.V.Z.Win.WitAQ ι r' := by
   intro K _ _ _ _ _ _ h2 hi
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed F, haveI := IsAlgClosure.isAlgebraic (R := F) (K := Ω); Algebra.IsAlgebraic.tower_top (K := F) K⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed F, haveI := IsAlgClosure.isAlgebraic (R := F) (K := Ω); Algebra.IsAlgebraic.tower_top (K := F) K⟩
   obtain ⟨g, hg⟩ := e
   have e' : RepIso (r.comp (AlgEquiv.restrictScalarsHom F : G K Ω →* G F Ω)) (r'.comp (AlgEquiv.restrictScalarsHom F : G K Ω →* G F Ω)) :=
     ⟨g, fun s => hg _⟩

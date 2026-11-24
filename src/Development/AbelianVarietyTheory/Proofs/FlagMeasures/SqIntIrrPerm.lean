@@ -100,8 +100,8 @@ lemma homUJ_cont {ε ε' : Fin n → Bool} (φ : Matrix (Fin n) (Fin n) ℂ →*
     (h : ∀ g ∈ UJset ε', φ g ∈ UJset ε) (hc : Continuous φ) : Continuous (homUJ φ h) := by
   refine continuous_induced_rng.2 ?_
   rw [Units.continuous_iff]
-  exact ⟨hc.comp (Units.continuous_val.comp continuous_subtype_val),
-    hc.comp (Units.continuous_coe_inv.comp continuous_subtype_val)⟩
+  exact ⟨hc.comp (Units.continuous_val.comp continuous_subtypeVal),
+    hc.comp (Units.continuous_coe_inv.comp continuous_subtypeVal)⟩
 
 lemma memLp_hom {ε ε' : Fin n → Bool} (φ ψ : Matrix (Fin n) (Fin n) ℂ →* Matrix (Fin n) (Fin n) ℂ)
     (h : ∀ g ∈ UJset ε', φ g ∈ UJset ε) (h' : ∀ g ∈ UJset ε, ψ g ∈ UJset ε')

@@ -220,7 +220,7 @@ theorem convex_logDom : Convex ℝ (logDom n k) := by
   exacts [convex_halfSpace_re_lt 0, convex_ball _ _]
 
 theorem isOpen_logDom : IsOpen (logDom n k) := by
-  rw [logDom, Set.setOf_forall]
+  rw [logDom, Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun j => ?_
   split_ifs
   exacts [isOpen_lt (by fun_prop) continuous_const, isOpen_lt (by fun_prop) continuous_const]
@@ -338,7 +338,7 @@ theorem exists_marking (hP : IsPeriod (Fu.Di i) (fun j => Formalism.L2.PjFree.re
   · have := hP.2.2.1
     rw [← Fintype.range_linearCombination]
     exact DiscreteTopology.of_continuous_injective (β := P.range) (f := fun w => ⟨L.symm w.1, (key _).2 w.2⟩)
-      ((L.symm.toContinuousLinearEquiv.continuous.comp continuous_subtype_val).subtype_mk _)
+      ((L.symm.toContinuousLinearEquiv.continuous.comp continuous_subtypeVal).subtype_mk _)
       fun w w' h => Subtype.ext (L.symm.injective (congrArg Subtype.val h))
   · refine Iff.trans ?_ (key w)
     exact exists_congr fun v => L.eq_symm_apply.symm
@@ -369,7 +369,7 @@ theorem pt_mem (h : IsLogChart k ch ex lam ρ) {s : Fin n → ℂ} (hs : s ∈ l
     logExp k s ∈ ch.target ∧ ch.symm (logExp k s) ∈ ch.source ∧ Inner (ch.symm (logExp k s)) := by
   have ht : logExp k s ∈ ch.target := h.1.1 ▸ logExp_mem hs
   refine ⟨ht, ch.map_target ht, (h.2.1 _ (ch.map_target ht)).2 fun j hj => ?_⟩
-  rw [ch.right_inv ht, logExp, if_pos hj]
+  rw [ch.right_inv ht, logExp, ite_eq_left hj]
   exact Complex.exp_ne_zero _
 
 theorem isHolTo_chart (h : IsLogChart k ch ex lam ρ) {B : Set (Fin n → ℂ)} (hB : IsOpen B) (hBD : B ⊆ logDom n k) :

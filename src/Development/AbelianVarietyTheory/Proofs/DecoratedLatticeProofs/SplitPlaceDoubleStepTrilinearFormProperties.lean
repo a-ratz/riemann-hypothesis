@@ -197,7 +197,7 @@ theorem valK_comb : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
   let R₁ : SB (Matrix Q.n₁ Q.n₀ Q.k) := ⟨_, GlobalTheory.LocMod.GValProof.one_mem_SB _ _⟩
   let R₂ : SB (Matrix Q.n₂ Q.n₁ Q.k) := ⟨_, GlobalTheory.LocMod.GValProof.one_mem_SB _ _⟩
   have e₁ : flatBF S.s₁ (T₁ O₁) = U₁ P₁ := hU₁ O₁ P₁ (by
-    rw [hO₁, (hun Q.n₁ Q.n₀ Q.n₀ (Q.c + 1 + 1) (σ + 1 + 1)).1, if_neg (by omega)])
+    rw [hO₁, (hun Q.n₁ Q.n₀ Q.n₀ (Q.c + 1 + 1) (σ + 1 + 1)).1, ite_eq_right (by omega)])
   have e₂ : flatFB S.s₂ (T₂ O₂) = U₂ P₂ := hU₂ O₂ P₂ (by
     rw [hO₂, (hun Q.n₂ Q.n₁ Q.n₀ (Q.c + 1) (σ + 1)).2.1 (by omega) (by omega)])
   obtain ⟨ΞO, hΞO, eΛ⟩ := hcon P₁ P₂
@@ -368,7 +368,7 @@ theorem per_int {ρ : ℕ} (B : BesLev D ρ) {ψ : AddChar (AF D.host.F) ℂ} (h
   have hμ : B.vA.μ B.vA.𝓕 < ⊤ := GlobalTheory.Unf.vol_fund_lt_top B.cpt B.vA
   have hν1 : B.vN.ν B.vN.𝓝 = 1 := B.vN.unit.2.2
   have hν : B.vN.ν B.vN.𝓝 < ⊤ := by rw [hν1]; exact ENNReal.one_lt_top
-  haveI : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 hν.ne
+  have : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 hν.ne
   have hemb := GlobalTheory.Unf.BesSemi.continuous_embA B.d B.o
   have hpsi := GlobalTheory.CharLaws.continuous_psiBes ψ B.d hψ.1.1 1 (vecB B.o B.ζ)
   obtain ⟨K, hK⟩ := hΩc.exists_bound_of_continuousOn hf.1.continuousOn
@@ -386,14 +386,14 @@ theorem per_int {ρ : ℕ} (B : BesLev D ρ) {ψ : AddChar (AF D.host.F) ℂ} (h
   have hcont : ∀ h, Continuous (GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h) := by
     intro h
     change Continuous fun n : flagN B.d => φ h * f (n.1 * embA B.d B.o h) * star (psiBes ψ B.d 1 (vecB B.o B.ζ) n.1)
-    exact (continuous_const.mul (hf.1.comp (continuous_subtype_val.mul continuous_const))).mul
-      (continuous_star.comp (hpsi.comp continuous_subtype_val))
+    exact (continuous_const.mul (hf.1.comp (continuous_subtypeVal.mul continuous_const))).mul
+      (continuous_star.comp (hpsi.comp continuous_subtypeVal))
   have hcontH : ∀ n : flagN B.d, Continuous fun h => GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h n := by
     intro n
     simp only [GlobalTheory.MixPer.besFun]
     exact (hφ.2.mul (hf.1.comp (continuous_const.mul hemb))).mul continuous_const
   have houtC : Continuous fun h => ∫ n in B.vN.𝓝, GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h n ∂B.vN.ν := by
-    haveI := GlobalTheory.Unf.EvalCont.firstCountable_GA B.A
+    have := GlobalTheory.Unf.EvalCont.firstCountable_GA B.A
     exact continuous_of_dominated (bound := fun _ => Cφ * K)
       (fun h => (hcont h).aestronglyMeasurable)
       (fun h => Filter.Eventually.of_forall fun n => hbd h n) (integrable_const _)
@@ -1183,17 +1183,17 @@ theorem tri : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1)
     obtain ⟨-, hψk, -, -, -⟩ := _root_.GlobalTheory.LocChar.weil_char_split D Q.k (ofSplit Q.q) ψ hstd
     exact (hψk Q.ψk Q.char).1
   have hΛθ : ∀ Ξ, IsBiTheta ψ S.B.A S.J.W₀ S.B'.A (Λ Ξ) := by
-    haveI := GlobalTheory.SplitWeil.t2Space Q.k
-    haveI : NonarchimedeanAddGroup Q.k := ⟨fun V hV => by
+    have := GlobalTheory.SplitWeil.t2Space Q.k
+    have : NonarchimedeanAddGroup Q.k := ⟨fun V hV => by
       obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
       exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
         GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
-    haveI : TotallyDisconnectedSpace Q.k := inferInstance
-    haveI : ∀ n n' : Type, T2Space (Matrix n n' Q.k) := fun n n' => inferInstanceAs (T2Space (n → n' → Q.k))
-    haveI : ∀ n n' : Type, TotallyDisconnectedSpace (Matrix n n' Q.k) :=
+    have : TotallyDisconnectedSpace Q.k := inferInstance
+    have : ∀ n n' : Type, T2Space (Matrix n n' Q.k) := fun n n' => inferInstanceAs (T2Space (n → n' → Q.k))
+    have : ∀ n n' : Type, TotallyDisconnectedSpace (Matrix n n' Q.k) :=
       fun n n' => inferInstanceAs (TotallyDisconnectedSpace (n → n' → Q.k))
-    haveI : LocallyCompactSpace (Matrix Q.n₁ Q.n₀ Q.k) := inferInstanceAs (LocallyCompactSpace (Q.n₁ → Q.n₀ → Q.k))
-    haveI : LocallyCompactSpace (Matrix Q.n₂ Q.n₁ Q.k) := inferInstanceAs (LocallyCompactSpace (Q.n₂ → Q.n₁ → Q.k))
+    have : LocallyCompactSpace (Matrix Q.n₁ Q.n₀ Q.k) := inferInstanceAs (LocallyCompactSpace (Q.n₁ → Q.n₀ → Q.k))
+    have : LocallyCompactSpace (Matrix Q.n₂ Q.n₁ Q.k) := inferInstanceAs (LocallyCompactSpace (Q.n₂ → Q.n₁ → Q.k))
     refine isBiTheta_of_prod Λ fun Ξ₁ Ξ₂ => ?_
     obtain ⟨φ₀, φ₀', hφ₀⟩ := GlobalTheory.ContractionLocal.exists_normPair Q.ψk Q.ν hψkc hν Q.n₁
     obtain ⟨Ξ', h1, h2⟩ := hΛe (GlobalTheory.ContractionLocal.colTens φ₀ Ξ₁) (GlobalTheory.ContractionLocal.rowTens φ₀' Ξ₂)

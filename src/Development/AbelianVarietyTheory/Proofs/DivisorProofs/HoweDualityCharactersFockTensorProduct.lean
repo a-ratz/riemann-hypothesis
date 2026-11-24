@@ -934,19 +934,19 @@ theorem intw_fMap {x t : ℚ} {M : GKMod R S} {pr : Pol P Q R S →ₗ[ℂ] M.V}
 theorem hw_chMod (p q : ℕ) (x : ℚ) : IsHW (chMod p q x).act (fun _ => x) (1 : ℂ) := by
   refine ⟨one_ne_zero, (mem_hwSub _ _ _).2 ⟨fun a => ?_, fun a b hab => ?_⟩⟩
   · change chAct p q x _ 1 - _ = 0
-    rw [chAct_apply, trace_Eab, if_pos rfl]; simp [smul_eq_mul]
+    rw [chAct_apply, trace_Eab, ite_eq_left rfl]; simp [smul_eq_mul]
   · change chAct p q x _ 1 = 0
     have : a ≠ b := by
       rintro rfl
       cases a <;> simp [posC] at hab
-    rw [chAct_apply, trace_Eab, if_neg this]; simp
+    rw [chAct_apply, trace_Eab, ite_eq_right this]; simp
 
 theorem hw_chMod_eq {p q : ℕ} {x : ℚ} {ν : Ix p q → ℚ} {w : (chMod p q x).V}
     (h : IsHW (chMod p q x).act ν w) : ν = fun _ => x := by
   funext a
   have h1 := ((mem_hwSub _ _ _).1 h.2).1 a
   change chAct p q x _ w - _ = 0 at h1
-  rw [chAct_apply, trace_Eab, if_pos rfl, mul_one, ← sub_smul, smul_eq_zero] at h1
+  rw [chAct_apply, trace_Eab, ite_eq_left rfl, mul_one, ← sub_smul, smul_eq_zero] at h1
   rcases h1 with h1 | h1
   · exact_mod_cast (sub_eq_zero.1 h1).symm
   · exact absurd h1 h.1
@@ -989,14 +989,14 @@ theorem genBy_of_isLift : ∀ (P Q R S : ℕ) (x t : ℚ) (M : Formalism.BasicNo
   have hw0 : IsHW M.act (fun c => μ' c + t) (pr P0) := by
     refine ⟨hpr0, (mem_hwSub _ _ _).2 ⟨fun a => ?_, fun a b hab => ?_⟩⟩
     · have e := ((mem_hwSub _ _ _).1 h20.2).1 a
-      rw [hL.2.2, trace_Eab, if_pos rfl, sub_eq_zero.1 e, map_smul]
+      rw [hL.2.2, trace_Eab, ite_eq_left rfl, sub_eq_zero.1 e, map_smul]
       push_cast
       module
     · have e := ((mem_hwSub _ _ _).1 h20.2).2 a b hab
       have : a ≠ b := by
         rintro rfl
         cases a <;> simp [posC] at hab
-      rw [hL.2.2, trace_Eab, if_neg this, e, map_zero]
+      rw [hL.2.2, trace_Eab, ite_eq_right this, e, map_zero]
       simp
   refine ⟨μ', hshape, pr P0, hw0, ?_⟩
 
@@ -1036,7 +1036,7 @@ theorem genBy_of_isLift : ∀ (P Q R S : ℕ) (x t : ℚ) (M : Formalism.BasicNo
     obtain rfl : ν = μ' :=
       (GlobalTheory.JointShapeUniq.jointShape_unique_deg P Q R S _ _ _ _ hsh hshape).1.1 rfl
     have hline := GlobalTheory.JointHarm.finrank_joint_highest_of_shape P Q R S _ _ hshape
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨P0, hP0mem⟩ : ↥(hwSub (fockAct1 P Q R S)
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨P0, hP0mem⟩ : ↥(hwSub (fockAct1 P Q R S)
       (fun _ => x) ⊓ hwSub (fockAct2 P Q R S) ν ⊓ Submodule.span ℂ (jointHarm P Q R S)))
       (fun h => h10.1 (congrArg Subtype.val h))).1 hline ⟨u, hmem⟩
     have hu' : u = c • P0 := (congrArg Subtype.val hc).symm
@@ -1052,7 +1052,7 @@ theorem genBy_of_isLift : ∀ (P Q R S : ℕ) (x t : ℚ) (M : Formalism.BasicNo
       funext a
       have e := ((mem_hwSub _ _ _).1 hhw.2).1 a
       have e2 := congrArg pr e
-      rw [map_sub, map_smul, hL.2.1, trace_Eab, if_pos rfl, mul_one, map_zero, ← sub_smul,
+      rw [map_sub, map_smul, hL.2.1, trace_Eab, ite_eq_left rfl, mul_one, map_zero, ← sub_smul,
         smul_eq_zero] at e2
       rcases e2 with e2 | e2
       · exact_mod_cast (sub_eq_zero.1 e2).symm
@@ -1149,7 +1149,7 @@ def charSub (p q r s : ℕ) (x : ℚ) : Submodule ℂ (Pol p q r s) where
 
 theorem isKC_Eab {a b : Ix p q} (hab : sameBlock a b) : IsKC (Eab a b) := by
   intro c d hcd
-  rw [Eab, Matrix.single_apply, if_neg]
+  rw [Eab, Matrix.single_apply, ite_eq_right]
   rintro ⟨rfl, rfl⟩
   exact hcd hab
 
@@ -1573,7 +1573,7 @@ theorem left_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 else
     by_cases hab : a = b
     · subst hab; simp [mul_add, add_mul, mul_assoc]
     · simp [hab, mul_add, add_mul, mul_assoc]
-  simp only [Finset.sum_mul_sum, h1, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+  simp only [Finset.sum_mul_sum, h1, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
     Finset.sum_const, Finset.card_univ]
 
 theorem right_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 else 0) (c e : J) :
@@ -1591,7 +1591,7 @@ theorem right_expand (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 els
     by_cases hdc : d = c
     · subst hdc; simp [mul_add, add_mul, mul_assoc]
     · simp [hdc, mul_add, add_mul, mul_assoc]
-  simp only [Finset.sum_mul, h1, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+  simp only [Finset.sum_mul, h1, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     Finset.sum_const, Finset.card_univ]
 
 theorem key (hlu : ∀ i j, l i * u j = u j * l i + if i = j then 1 else 0)
@@ -1653,10 +1653,10 @@ theorem sq_shift (X : J → J → A) (k : ℂ) (c e : J) :
       ∑ d, X c d * X d e + (2 * k) • X c e + if c = e then (k * k) • (1 : A) else 0 := by
   simp only [mul_add, add_mul, Finset.sum_add_distrib, ite_mul, mul_ite, zero_mul, mul_zero,
     smul_mul_assoc, one_mul, mul_smul_comm, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, smul_smul]
+    Finset.mem_univ, ite_true, smul_smul]
   by_cases hce : c = e
-  · subst hce; simp only [if_true]; module
-  · simp only [hce, if_false]; module
+  · subst hce; simp only [ite_true]; module
+  · simp only [hce, ite_false]; module
 
 theorem rhs_shift (E : I → I → A) (Y : I → I → A) (m x : ℂ) :
     ∑ a, ∑ b, (E b a + (if b = a then m • (1 : A) else 0) - (x * if b = a then 1 else 0) • (1 : A)) * Y a b =
@@ -1665,9 +1665,9 @@ theorem rhs_shift (E : I → I → A) (Y : I → I → A) (m x : ℂ) :
       E b a * Y a b + if b = a then (m - x) • Y a b else 0 := by
     intro a b
     by_cases h : b = a
-    · simp only [h, if_true, mul_one, sub_mul, add_mul, smul_mul_assoc, one_mul, sub_smul]; abel
+    · simp only [h, ite_true, mul_one, sub_mul, add_mul, smul_mul_assoc, one_mul, sub_smul]; abel
     · simp [h]
-  simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.smul_sum]
+  simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.smul_sum]
 
 end Alg
 
@@ -1687,9 +1687,9 @@ theorem qop_eq (x : ℂ) (c e : Ix R S) :
     (fun a b => raiB (a, c) * lowB (b, e)) ((Fintype.card (Ix R S) : ℂ) / 2) x
   rw [hs, hr]
   by_cases hce : c = e
-  · subst hce; simp only [if_true]
+  · subst hce; simp only [ite_true]
     linear_combination (norm := module) hk
-  · simp only [hce, if_false]
+  · simp only [hce, ite_false]
     linear_combination (norm := module) hk
 
 theorem qop_mem_coinv (P Q R S : ℕ) (x : ℂ) :
@@ -1797,12 +1797,12 @@ theorem quad_main (h : ∀ b c e, l b c * u b e = u b e * l b c + if c = e then 
   simp only [qop, hG]
   simp only [neg_mul_neg, add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
     smul_smul, Finset.sum_add_distrib, ite_smul, zero_smul, ite_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_eq,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   by_cases hij : i = j
   · subst hij
-    simp only [if_true]
+    simp only [ite_true]
     module
-  · simp only [hij, Ne.symm hij, if_false]
+  · simp only [hij, Ne.symm hij, ite_false]
     module
 
 end Main

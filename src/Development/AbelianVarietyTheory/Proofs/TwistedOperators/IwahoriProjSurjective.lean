@@ -78,9 +78,9 @@ theorem exists_fixed_map_eq {π : Representation ℂ G V} (hπ : IsSmooth π) {H
     have hx' : π (g⁻¹ * x) u = u := hx
     conv_rhs => rw [← hx']
     rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel_left]
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hH
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hH
   have hfin : (Set.range fun h : H => π h u).Finite :=
-    (hlc.comp_continuous continuous_subtype_val).range_finite
+    (hlc.comp_continuous continuous_subtypeVal).range_finite
   set S := hfin.toFinset with hS
   have hmem : ∀ w, w ∈ S ↔ ∃ h : H, π h u = w := fun w => by simp [hS]
   have hne : (S.card : ℂ) ≠ 0 :=
@@ -120,7 +120,7 @@ theorem exists_fixed_mk_eq {π : Representation ℂ G V} (hπ : IsAdmissible π)
   obtain ⟨u, rfl⟩ : ∃ u, p u = y := Submodule.mkQ_surjective _ y
   obtain ⟨t, ht⟩ := hcon _ ((ho.inter (hπ.1 u)).mem_nhds ⟨one_mem I, by simp⟩)
   set Y := (fixed π I).map p with hY
-  haveI := hπ.2 I ho hc
+  have := hπ.2 I ho hc
   have key : ∀ w, (∀ c ∈ C, π ((s t)⁻¹ * c * s t) w = w) → (∀ d ∈ M₀, σ d (p w) = p w) →
       σ t (p w) ∈ Y := by
     intro w h1 h2
@@ -161,13 +161,13 @@ theorem exists_mul_mem_borel (h : GL n R)
   have hdiag : ∀ i, IsLocalRing.residue R ((h : Matrix n n R) i i) ≠ 0 := by
     intro i
     have h1 := (GeneralLinearGroup.det (GeneralLinearGroup.map (IsLocalRing.residue R) h)).ne_zero
-    rw [GeneralLinearGroup.val_det_apply, det_of_upperTriangular (mem_borel _ |>.1 hh)] at h1
+    rw [GeneralLinearGroup.val_det_apply, det_of_isUpperTriangular (mem_borel _ |>.1 hh)] at h1
     exact Finset.prod_ne_zero_iff.1 h1 i (Finset.mem_univ i)
   let A : n → Matrix n n R := fun j => Matrix.of fun i l =>
     if j < i then (h : Matrix n n R) i l else (1 : Matrix n n R) i l
   have hA : ∀ j, IsUnit (A j).det := by
     intro j
-    rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det, det_of_upperTriangular]
+    rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det, det_of_isUpperTriangular]
     · refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
       by_cases hji : j < i
       · simpa [A, hji] using hdiag i
@@ -187,7 +187,7 @@ theorem exists_mul_mem_borel (h : GL n R)
   have hL0 : ∀ i j, i < j → L i j = 0 := fun i j hij => by rw [hL i j hij.le, one_apply_ne hij.ne]
   have hL1 : ∀ i, L i i = 1 := fun i => by rw [hL i i le_rfl, one_apply_eq]
   have hdet : L.det = 1 := by
-    rw [det_of_lowerTriangular L fun i j hij => hL0 i j hij]
+    rw [det_of_isLowerTriangular L fun i j hij => hL0 i j hij]
     simp [hL1]
   refine ⟨GeneralLinearGroup.mk'' L (by rw [hdet]; exact isUnit_one), hL0, hL1, fun i j hij => ?_⟩
   have hij' : j < i := hij
@@ -287,7 +287,7 @@ theorem lowerInt_contract : ∀ U ∈ 𝓝 (1 : GL n k), ∃ t : n → kˣ, ∀ 
       show valuation k _ < _
       rw [this, map_mul, map_mul, map_pow]
       exact (mul_le_of_le_one_right' (mul_le_one' (pow_le_one' hp.1.2.le _) (p.2.2.1 i j))).trans_lt hp.1.1
-  haveI : (comap (fun x : kˣ => (x : k)) (𝓝 0)).NeBot := by
+  have : (comap (fun x : kˣ => (x : k)) (𝓝 0)).NeBot := by
     refine comap_neBot fun s hs => ?_
     obtain ⟨γ, hγ⟩ := (IsValuativeTopology.mem_nhds_zero_iff s).1 hs
     obtain ⟨δ, hδ0, hδ⟩ : ∃ δ : ValueGroupWithZero k, δ ≠ 0 ∧ δ < γ :=

@@ -473,7 +473,7 @@ theorem twF_map_cls {q : ℕ} (j : ℤ) {A B : CommRingCat.{0}} (f : A ⟶ B) (�
 
 theorem twF_eq_zero_of_not_unit {q : ℕ} (j : ℤ) {A : CommRingCat.{0}} (hq : ¬ IsUnit (q : A)) (t : (twF q j).obj A) :
     t = 0 := by
-  haveI : IsEmpty (Prim q A) := ⟨fun ζ => hq ζ.2.1⟩
+  have : IsEmpty (Prim q A) := ⟨fun ζ => hq ζ.2.1⟩
   obtain ⟨f, rfl⟩ := Submodule.Quotient.mk_surjective _ t
   rw [Subsingleton.elim f 0]
   exact Submodule.Quotient.mk_zero _
@@ -485,7 +485,7 @@ theorem LeafTwPt_of (hA : LeafTwAdj) (hG : LeafTwGen) (hF : LeafTwFieldZ) : Leaf
   · refine ⟨U, 𝟙 U, inferInstance, ⟨u, rfl⟩, ?_⟩
     rw [twF_eq_zero_of_not_unit j hq t]; exact map_zero _
   obtain ⟨W₁, w₁, hw₁, ⟨w, hw⟩, ⟨ζ⟩⟩ := hA q U u hq
-  haveI := hw₁
+  have := hw₁
   obtain ⟨O, c, hwO, hO⟩ := hG q j W₁ ζ (((twF q j).map (Scheme.Γ.map w₁.op)).hom t) w
   have hO' : ((twF q j).map (Scheme.Γ.map (O.ι ≫ w₁).op)).hom t =
       ULift.up c • twCls j (ζ.map (Scheme.Γ.map O.ι.op).hom) := by

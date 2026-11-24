@@ -170,8 +170,8 @@ private theorem op_detect {O B A R κ : Type} [CommRing O] [IsLocalRing O] [Comm
   let p' : A →ₐ[O] A ⧸ I := Ideal.Quotient.mkₐ O I
   have hp' : Function.Surjective p' := Ideal.Quotient.mk_surjective
   have hpp : ∀ x, p'' (p' x) = p x := fun x => rfl
-  haveI : Nontrivial (A ⧸ I) := p''.toRingHom.domain_nontrivial
-  haveI : IsCO O (A ⧸ I) := co_quot O A _ p' hp'
+  have : Nontrivial (A ⧸ I) := p''.toRingHom.domain_nontrivial
+  have : IsCO O (A ⧸ I) := co_quot O A _ p' hp'
   obtain ⟨s, hs1, hs2⟩ := H (A ⧸ I) p' p'' (p' (d • ε u0)) hp' (AlgHom.ext hpp)
     (fun x hx => by
       obtain ⟨x, rfl⟩ := hp' x
@@ -214,13 +214,13 @@ private theorem op_detect {O B A R κ : Type} [CommRing O] [IsLocalRing O] [Comm
     rw [sub_mul, sub_eq_zero] at this
     rw [this, Algebra.smul_def]
   have h7 := hind (fun u => b u - if u = u0 then 1 + ∑ v, b v * (c v * d) else 0) (by
-    simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
       add_smul, one_smul, Finset.sum_smul]
     simp only [δ, smul_sub, Finset.sum_sub_distrib, smul_smul] at h6
     linear_combination h6)
   have h8 : ∑ u, (b u - if u = u0 then 1 + ∑ v, b v * (c v * d) else 0) * (c u * d) ∈ maximalIdeal O :=
     Ideal.sum_mem _ fun u _ => Ideal.mul_mem_right _ _ (h7 u)
-  simp only [sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+  simp only [sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     hd, mul_one] at h8
   rw [sub_add_cancel_right, neg_mem_iff] at h8
   exact (maximalIdeal.isMaximal O).ne_top ((Ideal.eq_top_iff_one _).2 h8)
@@ -233,7 +233,7 @@ private theorem op_ker {O B A R σ σB τ : Type} [CommRing O] [IsLocalRing O] [
     (h2 : ∀ c : τ → O, ∑ t, c t • p (π (X (e (.inr t)))) ∈ (maximalIdeal B).map (p.comp i) ⊔ maximalIdeal R ^ 2 →
       ∀ t, c t ∈ maximalIdeal O) :
     RingHom.ker p ≤ (maximalIdeal B).map i ⊔ maximalIdeal A ^ 2 := by
-  haveI : IsCO O (MvPowerSeries σ O) := co_mvps O O σ
+  have : IsCO O (MvPowerSeries σ O) := co_mvps O O σ
   intro x hx
   obtain ⟨g, rfl⟩ := hπ x
   have hx' : p (π g) = 0 := hx
@@ -295,7 +295,7 @@ private theorem op_min_pres (O : Type) [CommRing O] [IsLocalRing O] [IsNoetheria
       RingHom.ker π ≤ (maximalIdeal O).map (Algebra.ofId O (MvPowerSeries (Fin a) O)) ⊔ maximalIdeal _ ^ 2 := by
   obtain ⟨a, z, hz, hmin⟩ := op_min_fin (maximalIdeal R) ((maximalIdeal O).map (Algebra.ofId O R))
     (Ideal.map_le_iff_le_comap.2 fun x hx => (op_loc (Algebra.ofId O R) x).2 hx)
-  haveI : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O _
+  have : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O _
   have hzm : ∀ s, z s ∈ maximalIdeal R := fun s => hz ▸ Ideal.mem_sup_right (Ideal.subset_span ⟨s, rfl⟩)
   obtain ⟨π, ⟨-, hX⟩, -⟩ := co_ev O O R (Fin a) (Algebra.ofId O R) z hzm
   refine ⟨a, π, co_surj O _ R π (le_sup_of_le_left ?_), ?_⟩
@@ -319,8 +319,8 @@ private theorem op_count (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRi
     (a : ℕ) (π : MvPowerSeries (Fin a) O →ₐ[O] R) (hπ : Function.Surjective π)
     (hk : RingHom.ker π ≤ (maximalIdeal O).map (Algebra.ofId O (MvPowerSeries (Fin a) O)) ⊔ maximalIdeal _ ^ 2) :
     Nat.card (R →ₐ[O] DualNumber (ResidueField O)) = Nat.card (ResidueField O) ^ a := by
-  haveI : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O _
-  haveI : IsCO O (DualNumber (ResidueField O)) := (co_res O).2
+  have : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O _
+  have : IsCO O (DualNumber (ResidueField O)) := (co_res O).2
   have hm : ∀ x : DualNumber (ResidueField O),
       x ∈ maximalIdeal (DualNumber (ResidueField O)) ↔ x.fst = 0 := fun x => by
     rw [mem_maximalIdeal, mem_nonunits_iff, TrivSqZeroExt.isUnit_iff_isUnit_fst, isUnit_iff_ne_zero, not_not]
@@ -373,7 +373,7 @@ theorem UpperTheory.V.Alg.obs_pres :
   intro O _ _ _ _ _ R _ _ _ V _ _ _ H
   classical
   obtain ⟨a, π₀, hπ₀, hk⟩ := op_min_pres O R
-  haveI : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O _
+  have : IsCO O (MvPowerSeries (Fin a) O) := co_mvps O O _
   obtain ⟨n, f, hf, hmin⟩ := op_min_fin (RingHom.ker π₀) ⊥ bot_le
   rw [bot_sup_eq] at hf hmin
   have bound : n ≤ Module.finrank (ResidueField O) V := by
@@ -384,8 +384,8 @@ theorem UpperTheory.V.Alg.obs_pres :
     have hπ0 : ∀ x, π x = 0 ↔ x ∈ N := fun x => Ideal.Quotient.eq_zero_iff_mem
     let p : (MvPowerSeries (Fin a) O ⧸ N) →ₐ[O] R := Ideal.Quotient.liftₐ N π₀ hNK
     have hpπ : ∀ x, p (π x) = π₀ x := fun x => rfl
-    haveI : Nontrivial (MvPowerSeries (Fin a) O ⧸ N) := p.toRingHom.domain_nontrivial
-    haveI : IsCO O (MvPowerSeries (Fin a) O ⧸ N) := co_quot O _ _ π hπ
+    have : Nontrivial (MvPowerSeries (Fin a) O ⧸ N) := p.toRingHom.domain_nontrivial
+    have : IsCO O (MvPowerSeries (Fin a) O ⧸ N) := co_quot O _ _ π hπ
     have hp : Function.Surjective p := fun x => by
       obtain ⟨y, rfl⟩ := hπ₀ x
       exact ⟨π y, rfl⟩
@@ -443,10 +443,10 @@ theorem UpperTheory.V.Alg.obs_pres :
   rw [hf]
   refine le_antisymm (Ideal.span_mono ?_) (Ideal.span_le.2 ?_)
   · rintro _ ⟨u, rfl⟩
-    exact ⟨⟨u, u.2.trans_le bound⟩, dif_pos u.2⟩
+    exact ⟨⟨u, u.2.trans_le bound⟩, dite_eq_left u.2⟩
   · rintro _ ⟨u, rfl⟩
     by_cases h : u.1 < n
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       exact Ideal.subset_span ⟨_, rfl⟩
-    · simp only [dif_neg h]
+    · simp only [dite_eq_right h]
       exact zero_mem _

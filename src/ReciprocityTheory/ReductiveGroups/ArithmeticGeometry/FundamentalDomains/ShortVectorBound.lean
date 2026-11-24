@@ -162,7 +162,7 @@ theorem counting_exponential_sum_holds : CountingExponentialSum := by
           ≤ Real.exp (2 * y - w - 2) * Real.exp (-Real.pi * ((y : ℝ) - 1)) :=
             mul_le_mul_of_nonneg_right hcard (Real.exp_pos _).le
         _ = Real.exp (Real.pi - w - 2) * q ^ y := by
-            rw [hq, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+            rw [hq, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
             congr 1
             ring
     have step3 : ∑ y ∈ s.image mj, Real.exp (Real.pi - w - 2) * q ^ y ≤
@@ -194,7 +194,7 @@ theorem counting_exponential_sum_holds : CountingExponentialSum := by
     have h1 : Real.log 2 < 2 := by linarith [Real.log_two_lt_d9]
     nlinarith [Real.log_pos (show (1 : ℝ) < 2 by norm_num)]
   have hq4 : q ^ 4 = Real.exp (8 - 4 * Real.pi) := by
-    rw [hq, ← Real.exp_nat_mul]
+    rw [hq, ← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring

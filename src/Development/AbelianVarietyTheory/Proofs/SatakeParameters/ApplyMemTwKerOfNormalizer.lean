@@ -69,10 +69,10 @@ theorem mem_fixed_sup {A B : Subgroup G} {v : V} (hA : v ∈ fixed π A) (hB : v
   let H : Subgroup G :=
     { carrier := {g | π g v = v}
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *; rw [hy, hx]
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *; rw [hy, hx]
       one_mem' := by simp
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul]; simp }
   have h : A ⊔ B ≤ H := sup_le (fun g hg => mem_fixed.1 hA g hg) (fun g hg => mem_fixed.1 hB g hg)
@@ -269,10 +269,10 @@ theorem comm_pr_of_side {u : Matrix (Fin n) (Fin n) A}
     rwa [Matrix.sub_apply, one_apply_ne (ne_of_side e T hij), sub_zero] at this
   constructor <;> ext i j
   · rw [mul_pr_apply, pr_mul_apply]
-    by_cases a : blk e i ∈ T <;> by_cases b : blk e j ∈ T <;> simp only [a, b, if_true, if_false] <;>
+    by_cases a : blk e i ∈ T <;> by_cases b : blk e j ∈ T <;> simp only [a, b, ite_true, ite_false] <;>
       first | rfl | exact (h' i j (by tauto)).symm | exact h' i j (by tauto)
   · rw [mul_qr_apply, qr_mul_apply]
-    by_cases a : blk e i ∈ T <;> by_cases b : blk e j ∈ T <;> simp only [a, b, if_true, if_false] <;>
+    by_cases a : blk e i ∈ T <;> by_cases b : blk e j ∈ T <;> simp only [a, b, ite_true, ite_false] <;>
       first | rfl | exact (h' i j (by tauto)).symm | exact h' i j (by tauto)
 
 end Blocks
@@ -350,7 +350,7 @@ theorem exists_lift {Z : Fin n → Fin n → Prop} (hZ : ∀ i l j, Z i l → Z 
   have hL : ∀ y, IsLocalRing.residue 𝒪[k] (L y) = y := fun y => by
     by_cases h : y = 0
     · simp [L, h]
-    · simp only [L, if_neg h]; exact Function.surjInv_eq _ _
+    · simp only [L, ite_eq_right h]; exact Function.surjInv_eq _ _
   let Y : Matrix (Fin n) (Fin n) 𝒪[k] := fun i j => L ((u.val - 1) i j)
   have hYz : ∀ i j, ¬ Z i j → Y i j = 0 := fun i j h => by
     show L ((u.val - 1) i j) = 0
@@ -466,7 +466,7 @@ theorem conj_KOne_mem (hT : ∀ a b : Fin s, a ≤ b → b ∈ T → a ∈ T) {g
   have hnu : nu ∈ unipRad k e ⊓ KO k (Fin n) := by
     refine ⟨mem_unipRad_of fun i j hij => ?_, mem_KO.2 ⟨intM_one.add hYi, ?_⟩⟩
     · show (1 + Y - 1) i j = 0
-      rw [add_sub_cancel_left, hY, if_neg fun h' => hij (blk_lt_of_side hT h'.1 h'.2)]
+      rw [add_sub_cancel_left, hY, ite_eq_right fun h' => hij (blk_lt_of_side hT h'.1 h'.2)]
     · show IntM (1 - Y)
       rw [sub_eq_add_neg]; exact intM_one.add hYi.neg
   have hk : nu⁻¹ * h ∈ KOne k (Fin n) := by
@@ -666,7 +666,7 @@ theorem step {T : Finset (Fin s)} (hT : ∀ a b : Fin s, a ≤ b → b ∈ T →
     rw [apply_conj hc1 hc2, mem_fixed.1 hw _ (Subgroup.mem_sup_left (conj_lower_mem hc1 hc2 (intM_incl a) ha))]
   set W := GlobalTheory.OppRad.S (repF π) (GlobalTheory.OppRad.U (pr e T 𝓀[k]) (qr e T 𝓀[k])) X with hW
   have hW2 : π (dia e hc C) (W : V) ∈ twKer π (KOne k (Fin n)) 1 := by
-    haveI := Fintype.ofFinite (GlobalTheory.OppRad.U (pr e T 𝓀[k]) (qr e T 𝓀[k]))
+    have := Fintype.ofFinite (GlobalTheory.OppRad.U (pr e T 𝓀[k]) (qr e T 𝓀[k]))
 
     rw [hW, GlobalTheory.OppRad.S_apply, Submodule.coe_sum, map_sum]
     refine Submodule.sum_mem _ fun u _ => ?_
@@ -753,7 +753,7 @@ theorem claim_of_antitone (hπ : IsSmooth π) :
     have hCC : (fun a => C' a + ind T a) = C := funext fun a => by
       simp only [C', ind]
       by_cases h : a ∈ T
-      · have := (hmemT a).1 h; simp only [h, if_true]; omega
+      · have := (hmemT a).1 h; simp only [h, ite_true]; omega
       · simp [h]
     have hT : ∀ a b : Fin s, a ≤ b → b ∈ T → a ∈ T := fun a b hab hb =>
       (hmemT a).2 (lt_of_lt_of_le ((hmemT b).1 hb) (hC hab))
@@ -767,14 +767,14 @@ theorem claim_of_antitone (hπ : IsSmooth π) :
       simp only [C', ind]
       by_cases hb : b ∈ T
       · have ha := hT a b hab hb
-        simp only [ha, hb, if_true]; omega
+        simp only [ha, hb, ite_true]; omega
       · have := hz b hb
-        simp only [hb, if_false]; split_ifs <;> omega
+        simp only [hb, ite_false]; split_ifs <;> omega
     have hlt : ∑ a, C' a < m := by
       rw [← hm]
       refine Finset.sum_lt_sum (fun a _ => Nat.sub_le _ _) ⟨a0, Finset.mem_univ _, ?_⟩
       have : a0 ∈ T := (hmemT a0).2 (Nat.pos_of_ne_zero ha0)
-      simp only [C', ind, this, if_true]
+      simp only [C', ind, this, ite_true]
       omega
     rw [← hCC]
     exact step hc1 hc2 hT hC' (ih _ hlt C' rfl hanti)

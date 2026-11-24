@@ -62,7 +62,7 @@ theorem isOpen_int (hL : Y.L.IsFullLattice E) (v : Pl F) : IsOpen (intGrp σ Y v
   have ce : Continuous (evFin F v) := (RestrictedProduct.continuous_eval v).comp continuous_snd
   let U : Set (Fin m → AF F) := {a | ∀ i, evFin F v (a i) ∈ v.adicCompletionIntegers F}
   have hU : IsOpen U := by
-    simp only [U, Set.setOf_forall]
+    simp only [U, Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => (Valued.isOpen_valuationSubring _).preimage (ce.comp (continuous_apply i))
   have hV := IsModuleTopology.isOpenMap_of_surjective (gen_surj hL hs) U hU
   set V := (Fintype.linearCombination (AF F) fun i => incV F (x i).1) '' U with eV
@@ -81,7 +81,7 @@ theorem isOpen_int (hL : Y.L.IsFullLattice E) (v : Pl F) : IsOpen (intGrp σ Y v
     split_ifs
     exacts [one_mem _, zero_mem _], by rw [Fintype.linearCombination_apply_single, one_smul]⟩
   have o : IsOpen {g : UA σ Y.J | ∀ i, mat g *ᵥ incV F (x i).1 ∈ V} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => hV.preimage (cont_mat.matrix_mulVec continuous_const)
   have o1 : ∀ i, mat (1 : UA σ Y.J) *ᵥ incV F (x i).1 ∈ V := fun i => by
     rw [show mat (1 : UA σ Y.J) = 1 from rfl, Matrix.one_mulVec]
@@ -120,7 +120,7 @@ theorem isCompact_int (hL : Y.L.IsFullLattice E) (v : Pl F) : IsCompact {g : loc
   have e := (Units.isClosedEmbedding_embedProduct.comp hc.isClosedEmbedding_subtypeVal).comp
     (isClosed_loc (σ := σ) (Y := Y) (v := v)).isClosedEmbedding_subtypeVal
   refine (e.isCompact_preimage (hC.prod (hC.image MulOpposite.continuous_op))).of_isClosed_subset
-    ((isClosed_int hL.toIsLattice v).preimage continuous_subtype_val) fun g hg => ⟨h _ g.2 hg, _, h _ (inv_mem g.2) ?_, rfl⟩
+    ((isClosed_int hL.toIsLattice v).preimage continuous_subtypeVal) fun g hg => ⟨h _ g.2 hg, _, h _ (inv_mem g.2) ?_, rfl⟩
   exact (intGrp σ Y v).inv_mem hg
 
 theorem _root_.GlobalTheory.ThK.Dbl.locMeas : LocMeas := by
@@ -128,7 +128,7 @@ theorem _root_.GlobalTheory.ThK.Dbl.locMeas : LocMeas := by
   obtain ⟨b1, b2⟩ := lcsc_loc (σ := σ) (Y := Y) v
   have hfull := herm_full hY
   let K : TopologicalSpace.PositiveCompacts (locGrp σ Y v) := ⟨⟨_, isCompact_int hfull v⟩, 1, mem_interior_iff_mem_nhds.2
-    (((isOpen_int hfull v).preimage continuous_subtype_val).mem_nhds (intGrp σ Y v).one_mem)⟩
+    (((isOpen_int hfull v).preimage continuous_subtypeVal).mem_nhds (intGrp σ Y v).one_mem)⟩
   exact ⟨Measure.haarMeasure K, inferInstance, Measure.haarMeasure_self⟩
 
 end GlobalTheory.ThK.Dbl.Euler

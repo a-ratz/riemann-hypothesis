@@ -419,9 +419,9 @@ theorem exists_lift_marked : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨A₃, ex₃, rd₃, mk₃, hm₃, hmk₃, ho₃⟩ := anFib_lift_ex E H Dw l Xo c n d hk hlev r g X bas idx e x L y A hsym
     hx hL y₃ h₃ mk hmk
   rcases Nat.eq_zero_or_pos (Dw.p + Dw.q) with h0 | hpq
-  · haveI := Dw.fin
-    haveI := Dw.proj
-    haveI : Subsingleton Dw.La := Module.finrank_zero_iff.1 (Dw.rank.trans h0)
+  · have := Dw.fin
+    have := Dw.proj
+    have : Subsingleton Dw.La := Module.finrank_zero_iff.1 (Dw.rank.trans h0)
     have : mk₂ = mk₃ := LinearMap.ext fun a => by rw [Subsingleton.elim a 0, map_zero, map_zero]
     exact ⟨y₃, A₃, h₃, this ▸ hmk₃, rd₃⟩
   obtain ⟨hd, hM, -, -, -, hE, -⟩ := id hlev

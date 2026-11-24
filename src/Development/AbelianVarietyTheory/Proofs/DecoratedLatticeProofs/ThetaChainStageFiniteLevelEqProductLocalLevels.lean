@@ -128,7 +128,7 @@ theorem levLoc : ∀ D : D7, ForStageQ D fun c w _ s => MeasurableSet (levSet s)
   intro D c w hw j _ s hs
   obtain ⟨hr, hL, hfl⟩ := hs
   have hfr : Formalism.L2.DIV.IsFrame s.β s.Λ := hfl.frame
-  haveI : s.ν.IsHaarMeasure := hfl.haar
+  have : s.ν.IsHaarMeasure := hfl.haar
   have hsd : IsSelfDualC s.V s.Λ := hfl.selfDual
   have hP : s.L.P.H = ⊥ := by rw [hL]; rfl
   have hPl : ∀ PP, PP ∈ s.L.Pg ∨ PP ∈ s.L.Q → (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) ∈ c.S := by
@@ -191,7 +191,7 @@ theorem levLoc : ∀ D : D7, ForStageQ D fun c w _ s => MeasurableSet (levSet s)
     obtain ⟨U, hU, hUK⟩ := h1
     let Lf : Subgroup (GfC V) := K.subgroupOf (GfC V)
     have hLf : IsOpen (Lf : Set (GfC V)) := by
-      refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) (fun k hk => ?_) (hU.preimage continuous_subtype_val)
+      refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) (fun k hk => ?_) (hU.preimage continuous_subtypeVal)
       exact hUK k hk k.2
     have e : (A : Set (GA D V)) = GlobalTheory.AutMult.toFin V ⁻¹' (Lf : Set (GfC V)) := by
       ext g
@@ -209,7 +209,7 @@ theorem levLoc : ∀ D : D7, ForStageQ D fun c w _ s => MeasurableSet (levSet s)
   have hIopen : IsOpen (I : Set (GA D V)) := Subgroup.isOpen_mono (H₁ := A) hAint hAopen
   have hker : {g : GA D V | g ∈ A ∧ GlobalTheory.AutMult.toInf V g = 1} = (K : Set (GA D V)) := by
     ext g
-    simp only [Set.mem_setOf_eq, GlobalTheory.ChainOnto.HaarInf.toInf_eq_one_iff]
+    simp only [Set.mem_ofPred_eq, GlobalTheory.ChainOnto.HaarInf.toInf_eq_one_iff]
     exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
   have hKc : IsCompact (K : Set (GA D V)) :=
     GlobalTheory.T.isCompact_finite_adelic_subgroup_integral_open D V s.Λ hsd K inf_le_left h3 h1
@@ -219,7 +219,7 @@ theorem levLoc : ∀ D : D7, ForStageQ D fun c w _ s => MeasurableSet (levSet s)
     rw [Subgroup.subtype_apply, GlobalTheory.ChainOnto.HaarInf.finE_of_mem_ginfC V b.2]; exact one_mem _
   have hHaar : (Measure.map (GlobalTheory.AutMult.toInf V) (s.ν.restrict (A : Set (GA D V)))).IsHaarMeasure :=
     _root_.GlobalTheory.ChainOnto.map_restrict_isHaar (GA D V) (GinfC V) s.ν A (GinfC V).subtype (GlobalTheory.AutMult.toInf V) hAopen
-      continuous_subtype_val (GlobalTheory.AutMult.continuous_toInf V) hpi hiA (hker ▸ hKc)
+      continuous_subtypeVal (GlobalTheory.AutMult.continuous_toInf V) hpi hiA (hker ▸ hKc)
   refine ⟨hAopen.measurableSet, hIopen.measurableSet, hloc, fun g hg => ?_, fun κ hκ =>
     ⟨GlobalTheory.ChainOnto.LevelFacts.levChi_norm s.β s.L κ, h3 κ hκ⟩, ?_⟩
   · exact ⟨GlobalTheory.AutMult.toInf V g, GlobalTheory.AutMult.toFin V g, hfinK g hg, (GlobalTheory.AutMult.toInf_mul_toFin g).symm⟩

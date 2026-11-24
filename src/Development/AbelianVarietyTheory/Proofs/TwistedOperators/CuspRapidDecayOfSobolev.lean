@@ -97,7 +97,7 @@ theorem kernel_le (H : KernelBound V W A d) (hθ : IsInfFam θ) (hω : IsWeilDat
   have hm0 : m ≠ 0 := by simpa using h0
   have hc : IsCovolOne (ratL W V) (m⁻¹ • μ) 𝓓 :=
     ⟨Measure.IsAddHaarMeasure.nnreal_smul μ (inv_ne_zero hm0), h𝓓.mono Measure.smul_absolutelyContinuous, by
-      rw [Measure.smul_apply, ← hm, ENNReal.smul_def, smul_eq_mul, ← ENNReal.coe_mul, inv_mul_cancel₀ hm0]; rfl⟩
+      rw [smul_apply, ← hm, ENNReal.smul_def, smul_eq_mul, ← ENNReal.coe_mul, inv_mul_cancel₀ hm0]; rfl⟩
   lift C to ℝ≥0 using hC0
   refine ⟨C * m⁻¹ ^ (2 : ℝ≥0∞).toReal⁻¹ * 2 ^ A, fun f hf g h => ?_⟩
   have h2 := (hC χS χT ω hω _ _ hc f hf).2 g
@@ -116,13 +116,13 @@ theorem growthSize_lift_le (H : KernelBound V W A d) (hθ : IsInfFam θ) (hω : 
   refine ⟨C, fun f hf ν 𝓕 F => iSup_le fun g => ?_⟩
   have hs := sobO_ne_top hω.std hθ hμ h𝓓 hf.1 d
   have hg := pow_pos (height_pos V g) A
-  rw [ENNReal.ofReal_div_of_pos hg, ofReal_norm_eq_enorm]
-  refine ENNReal.div_le_of_le_mul ((enorm_integral_le_lintegral_enorm _).trans ?_)
+  rw [ENNReal.ofReal_div_of_pos hg, ofReal_norm]
+  refine ENNReal.div_le_of_le_mul ((eNorm_integral_le_lintegral_eNorm _).trans ?_)
   rw [mul_right_comm, decayInt, ← lintegral_const_mul' _ _
     (ENNReal.mul_ne_top (ENNReal.mul_ne_top ENNReal.coe_ne_top hs) ENNReal.ofReal_ne_top)]
   refine lintegral_mono fun h => ?_
   rw [← ENNReal.ofReal_toReal hs, ← ENNReal.ofReal_coe_nnreal, ← ENNReal.ofReal_mul C.coe_nonneg,
-    ← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_mul (by positivity), ← ofReal_norm_eq_enorm, norm_mul]
+    ← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_mul (by positivity), ← ofReal_norm, norm_mul]
   exact ENNReal.ofReal_le_ofReal ((mul_le_mul_of_nonneg_right (hC f hf g h) (norm_nonneg _)).trans_eq (by ring))
 
 theorem integrand_le (H : KernelBound V W A d) (hθ : IsInfFam θ) (hω : IsWeilDatumO ψ V W χS χT ω)

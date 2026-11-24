@@ -62,8 +62,8 @@ theorem jK_appTop_injective (R : Type) [CommRing R] [IsDomain R] :
 
 theorem Modif.gp_appTop_injective {R : Type} [CommRing R] [IsDomain R] (M : Modif R) :
     Function.Injective M.gp.appTop.hom := by
-  haveI := M.integral
-  haveI := M.dominant
+  have := M.integral
+  have := M.dominant
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro s hs
   rw [← AlgebraicGeometry.basicOpen_eq_bot_iff, eq_bot_iff]
@@ -81,8 +81,8 @@ theorem Modif.appTop_comp {R : Type} [CommRing R] [IsDomain R] (M : Modif R) (a 
 theorem Modif.appTop_bijective_surjective : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R]
     [IsIntegrallyClosed R] (M : Modif R), Function.Bijective M.π.appTop.hom ∧ Surjective M.π := by
   intro R _ _ _ _ M
-  haveI := M.proper
-  haveI := M.integral
+  have := M.proper
+  have := M.integral
   have hinj : Function.Injective M.π.appTop.hom := fun a b h => jK_appTop_injective R (by
     rw [← M.appTop_comp, ← M.appTop_comp, h])
   refine ⟨⟨hinj, fun b => ?_⟩, ⟨?_⟩⟩

@@ -113,8 +113,8 @@ theorem UpperTheory.V.UnitaryThreeInertia.lt_basis :
       ∃ h : GL (Fin 3) R, InHat h ∧ GrMat 𝒜 h.val ∧ InHat (GeneralLinearGroup.map (p : R →+* R') h) ∧ TriIn η Ψ I r' (GeneralLinearGroup.map (p : R →+* R') h) := by
   intro O R R' D _ _ _ _ _ _ _ _ _ _ 𝒜 _ p hp η Ψ I r' x hr hx hΨ hc hex
   obtain ⟨X, hX, hXp⟩ := hex
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
-  haveI : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp
   have hm : ∀ y : R, p y ∈ maximalIdeal R' ↔ y ∈ maximalIdeal R := by
     intro y
     simp only [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
@@ -175,9 +175,9 @@ private theorem UpperTheory.V.UnitaryThreeInertia.residue_coordinates_decomposit
     ∃ (n : ℕ) (p : Fin n → M →ₗ[O] ResidueField O) (q : Fin n → ResidueField O →ₗ[O] M),
       ∀ x, ∑ i, q i (p i x) = x := by
   have hT : Module.IsTorsionBySet O M (maximalIdeal O) := fun x a => hM a.1 a.2 x
-  letI : Module (ResidueField O) M := hT.module
-  haveI : IsScalarTower O (ResidueField O) M := hT.isScalarTower
-  haveI : Module.Finite (ResidueField O) M := Module.Finite.of_finite
+  let : Module (ResidueField O) M := hT.module
+  have : IsScalarTower O (ResidueField O) M := hT.isScalarTower
+  have : Module.Finite (ResidueField O) M := Module.Finite.of_finite
   let B := Module.finBasis (ResidueField O) M
   refine ⟨_, fun i => (B.coord i).restrictScalars O,
     fun i => (LinearMap.toSpanSingleton (ResidueField O) M (B i)).restrictScalars O, fun x => ?_⟩
@@ -407,7 +407,7 @@ private theorem sgnAct_one_add (hI : I * I = ⊥) (q : GL (Fin m) C)
       rw [hq, Matrix.add_mul, Matrix.mul_sub, Matrix.mul_sub, entIn_mul_zero hI hX hX]
       simp
     rw [sgnAct_neg_one, theta_val, hinv]
-    simp only [h, if_false, thetaLie, Matrix.transpose_sub, Matrix.transpose_one, Matrix.mul_sub,
+    simp only [h, ite_false, thetaLie, Matrix.transpose_sub, Matrix.transpose_one, Matrix.mul_sub,
       Matrix.sub_mul, Matrix.mul_one, Jmat_mul_Jmat]
     rw [sub_eq_add_neg]
 
@@ -549,7 +549,7 @@ private theorem Up.mul {g h : GL (Fin 3) R} (hg : Up g) (hh : Up h) : Up (g * h)
   Matrix.BlockTriangular.mul hg hh
 
 private theorem Up.inv {g : GL (Fin 3) R} (hg : Up g) : Up g⁻¹ := by
-  letI : Invertible (g : Matrix (Fin 3) (Fin 3) R) := g.invertible
+  let : Invertible (g : Matrix (Fin 3) (Fin 3) R) := g.invertible
   have := Matrix.blockTriangular_inv_of_blockTriangular hg
   unfold Up
   rwa [Matrix.coe_units_inv]
@@ -736,7 +736,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.lt_grSub :
     rcases Int.units_eq_one_or s with rfl | rfl
     · rw [sgnAct_one]; exact hg
     · rw [sgnAct_neg_one]; exact htheta g hg
-  haveI : Finite (GG (m := 3) (R := R)) :=
+  have : Finite (GG (m := 3) (R := R)) :=
     Finite.of_injective (fun x : GG (m := 3) (R := R) => (x.left, x.right))
     (fun x y h => SemidirectProduct.ext (congrArg Prod.fst h) (congrArg Prod.snd h))
   let S0 : Submonoid (GG (m := 3) (R := R)) :=
@@ -842,7 +842,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.lt_zhat :
       ∃ w : D →* E, IsLocallyConstant w ∧ (∀ s ∈ I, w s = 1) ∧ q.comp w = w' ∧ ∀ g, w g ∈ Subgroup.zpowers e := by
   intro D E E' _ _ _ _ _ _ I φ hcl hd q w' e hw' hw'I hqe
   obtain ⟨d, hdc, hdI, hdφ⟩ := hd (orderOf e) (orderOf_pos e)
-  haveI : NeZero (orderOf e) := ⟨(orderOf_pos e).ne'⟩
+  have : NeZero (orderOf e) := ⟨(orderOf_pos e).ne'⟩
   let w : D →* E :=
     { toFun := fun g => e ^ (Multiplicative.toAdd (d g)).val
       map_one' := by simp
@@ -1017,8 +1017,8 @@ theorem UpperTheory.V.UnitaryThreeInertia.lt_torus :
       ∃ u : D →* GG (m := 3) (R := R), push p u = u' ∧ IsLocallyConstant (mats u) ∧ (∀ g, (u g).mat.IsDiag) ∧ (∀ g a, (u g).mat a a ∈ A) ∧
         ∀ s ∈ I, ∀ a, (u s).mat a a = algebraMap O R (psi Ψ a s) := by
   intro O R R' D _ _ _ _ _ _ _ _ _ _ _ _ A p hp η Ψ I φ hcl hcyc hη hηI hΨ u' hmult hloc hdiag hlift hI
-  haveI : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp
-  haveI : Finite (GG (m := 3) (R := R)) := Finite.of_injective (fun x : GG (m := 3) (R := R) => (x.left, x.right))
+  have : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp
+  have : Finite (GG (m := 3) (R := R)) := Finite.of_injective (fun x : GG (m := 3) (R := R) => (x.left, x.right))
     (fun x y h => SemidirectProduct.ext (congrArg Prod.fst h) (congrArg Prod.snd h))
   have hinvA : ∀ v : Rˣ, (v : R) ∈ A → ((v⁻¹ : Rˣ) : R) ∈ A := by
     intro v hv
@@ -1433,8 +1433,8 @@ private theorem tri_lift {O R R' D : Type} [CommRing O] [IsLocalRing O] [CommRin
     ∃ r : D →* GG (m := 3) (R := R), push p r = r' ∧ IsLocallyConstant (mats r) ∧ (∀ g, GrMat 𝒜 (r g).mat) ∧
       (∀ g a b, wt a b < 0 → (r g).mat a b = 0) ∧ ∀ s ∈ I, ∀ a, (r s).mat a a = algebraMap O R (psi Ψ a s) := by
   classical
-  haveI : Finite R := hs.fin
-  haveI : Finite R' := Finite.of_surjective p hp
+  have : Finite R := hs.fin
+  have : Finite R' := Finite.of_surjective p hp
   obtain ⟨B, dg, hB, hdg⟩ := lt_diag (R := R')
   obtain ⟨B0, dg0, hB0, hdg0⟩ := lt_diag (R := R)
   obtain ⟨S, hS⟩ := lt_grSub (O := O) 𝒜
@@ -1483,7 +1483,7 @@ private theorem tri_lift {O R R' D : Type} [CommRing O] [IsLocalRing O] [CommRin
         have h1 := congrFun (congrFun (hupm g) a) a
         rw [hu'mat, Matrix.diagonal_apply_eq] at h1
         exact h1
-    simp only [s, L, dif_pos h]
+    simp only [s, L, dite_eq_left h]
     exact h.choose_spec
   have hr'lc : IsLocallyConstant r' := lc_hom η r' hη hr.mult hlc
   have hulc' : IsLocallyConstant u := lc_hom η u hη hur hulc
@@ -1675,9 +1675,9 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_graded_lift_unitary_local_tame 
   intro O _ _ _ _ _ _ G Γ ι _ _ _ _ _ _ _ _ _ _ _ _ _ F hF hV R R' _ _ _ _ _ _ 𝒜 _ p j hp hs v hv r' hr hloc hlc hgr
   subst hv
   classical
-  haveI : Finite R := hs.fin
+  have : Finite R := hs.fin
   have hvT : F.vl ∈ F.Tb := Set.mem_insert _ _
-  have hlocc : Continuous (F.loc F.vl) := hF.π_cont.comp continuous_subtype_val
+  have hlocc : Continuous (F.loc F.vl) := hF.π_cont.comp continuous_subtypeVal
   have hηlc : IsLocallyConstant (F.ηv F.vl) := hF.η_cont.comp_continuous hlocc
   obtain ⟨x, hx1, hx2⟩ := hF.x F.vl hvT
   obtain ⟨h, hhin, hhg, hh'in, hhtri⟩ := lt_basis 𝒜 p hp (F.ηv F.vl) (F.Ψv F.vl) (F.Iv F.vl) r' x hr hx1 hx2

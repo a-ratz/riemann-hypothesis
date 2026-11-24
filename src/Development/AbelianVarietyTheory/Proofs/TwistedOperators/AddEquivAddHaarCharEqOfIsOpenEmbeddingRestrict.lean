@@ -61,7 +61,7 @@ theorem nnreal_smul_cancel {Y : Type} [TopologicalSpace Y] [MeasurableSpace Y] [
   have h0 : ρ K ≠ 0 := (Measure.measure_pos_of_mem_nhds ρ hKn).ne'
   have hT : ρ K ≠ ∞ := hK.measure_lt_top.ne
   have e := congrArg (fun μ : Measure Y => μ K) h
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
   exact_mod_cast (ENNReal.mul_left_inj h0 hT).1 e
 
 theorem addEquivAddHaarChar_eq_of_isOpenEmbedding :
@@ -73,8 +73,8 @@ theorem addEquivAddHaarChar_eq_of_isOpenEmbedding :
     exact absurd ⟨0⟩ hne
   let μ : Measure G := Measure.addHaar
   let ν : Measure G' := μ.comap j
-  haveI : ν.IsAddHaarMeasure := Measure.IsAddHaarMeasure.comap (mH := inferInstance) μ hj
-  haveI : ν.Regular := inferInstance
+  have : ν.IsAddHaarMeasure := Measure.IsAddHaarMeasure.comap (mH := inferInstance) μ hj
+  have : ν.Regular := inferInstance
   have hjm : ∀ s, MeasurableSet s → MeasurableSet ((j : G' → G) '' s) :=
     fun s hs => hj.measurableEmbedding.measurableSet_image' hs
   have hem : ∀ s, MeasurableSet s → MeasurableSet ((e : G → G) '' s) :=
@@ -90,9 +90,9 @@ theorem addEquivAddHaarChar_eq_of_isOpenEmbedding :
     rw [Measure.comap_comap he'm hj.injective hjm, ← hfun,
       ← Measure.comap_comap hjm e.injective hem, ← h1]
     have hs : ∀ (c : ℝ≥0) (m : Measure G), c • m = (c : ℝ≥0∞) • m := fun c m => by
-      ext s hs; rw [Measure.smul_apply, Measure.smul_apply]; rfl
+      ext s hs; rw [smul_apply, smul_apply]; rfl
     have hs' : ∀ (c : ℝ≥0) (m : Measure G'), c • m = (c : ℝ≥0∞) • m := fun c m => by
-      ext s hs; rw [Measure.smul_apply, Measure.smul_apply]; rfl
+      ext s hs; rw [smul_apply, smul_apply]; rfl
     rw [hs, hs', Measure.comap_smul]
   exact nnreal_smul_cancel ν key
 

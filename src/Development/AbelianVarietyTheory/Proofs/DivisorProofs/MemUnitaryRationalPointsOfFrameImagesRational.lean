@@ -70,7 +70,7 @@ theorem mem_ratPts_of_cols_rat : ∀ (F E : Type) [Field F] [NumberField F] [Fie
           simp only [Matrix.map_add _ (map_add ι), Matrix.map_mul, Matrix.mul_add, ← Matrix.mul_assoc]
           rw [hC, hZ, hD]
   have hdet : x.det ≠ 0 := by
-    haveI : Nontrivial (AF F ⊗[F] E) := ⟨⟨ι 0, ι 1, fun e => zero_ne_one (hinj e)⟩⟩
+    have : Nontrivial (AF F ⊗[F] E) := ⟨⟨ι 0, ι 1, fun e => zero_ne_one (hinj e)⟩⟩
     intro h0
     have hu : IsUnit (x.map ι).det := by
       rw [← hM]; exact Matrix.isUnits_det_units _

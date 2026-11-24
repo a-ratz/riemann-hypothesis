@@ -110,7 +110,7 @@ theorem pr_lt {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) (z : �
   rw [h.2 z hz, ← q.sec_pr, ← q.int_iff]
   change (q.pr.comp (incA D)) _ ∉ _ ↔ _
   rw [map_inv₀, Valuation.mem_integer_iff, map_inv₀, not_le]
-  exact one_lt_inv₀ (a := valuation k ((q.pr.comp (incA D)) (z : D.host.E))) (zero_lt_iff.2 ((map_ne_zero _).2 h0))
+  exact one_lt_inv₀ (a := valuation k ((q.pr.comp (incA D)) (z : D.host.E))) (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))
 
 theorem exists_chart {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) : ∃ π : EAf D →+* k, (∀ a, π (toEAf D a) = q.pr a) ∧
     (∀ z, toEAf D q.e * z ∈ Formalism.L2.Herm.intAf D.host.F D.host.E ↔ π z ∈ 𝒪[k]) ∧
@@ -199,9 +199,9 @@ theorem blkOf_zPos {κ l t j n r : ℕ} (hr : r = κ + l) {e : Ix (Fin κ ⊕ Fi
   unfold blkOf
   rw [he a]
   rcases a with (a | a) | ⟨p, i⟩
-  · rw [if_pos (by have := a.2; simp only [zPos]; omega)]; rfl
-  · rw [if_pos (by have := a.2; simp only [zPos]; omega)]; rfl
-  · rw [if_neg (by simp only [zPos]; omega)]
+  · rw [ite_eq_left (by have := a.2; simp only [zPos]; omega)]; rfl
+  · rw [ite_eq_left (by have := a.2; simp only [zPos]; omega)]; rfl
+  · rw [ite_eq_right (by simp only [zPos]; omega)]
     have ht : 0 < t := i.pos
     have : zPos (κ := κ) (l := l) (Sum.inr (p, i)) - r = i.val + t * p.val := by
       simp only [zPos, mul_comm t]; omega
@@ -388,7 +388,7 @@ theorem red_at {PP : Formalism.L2.DIV.Pl D.host.E} (G : GAt d τ PP) {j n : ℕ}
     (hy : ∀ a b, ¬ FreeIx G.S.ρ a b → valuation G.k (π (Y.val (e a) (e b)) - (1 : Matrix _ _ G.k) a b) < 1) :
     Formalism.UG.bc (resS D.host.F PP) Y ∈ blockTri (blkOf D.R.r D.R.t) ∧
       ∃ x, G.Red x (upperLeftBlock hr (Formalism.UG.bc (resS D.host.F PP) Y)) := by
-  haveI : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
+  have : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
   have hs := G.hs
   obtain ⟨c1, x, c2⟩ := red_of_pattern G.S (by unfold Ranks.r; omega) hr he (resS D.host.F PP)
     (π.comp (Formalism.L2.Herm.intAf D.host.F D.host.E).subtype) h3 h4 Y hy

@@ -57,7 +57,7 @@ private theorem sq_on_le {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
     GlobalTheory.AutomorphicL2Unitary.aestronglyMeasurable_quotMeasure_iff_lift.mp (Lp.aestronglyMeasurable F)
   have key : ∫⁻ x, ‖GlobalTheory.AutomorphicL2Unitary.lift Γ (F : GlobalTheory.AutomorphicL2Unitary.Quot Γ → ℂ) x‖ₑ ^ (2 : ℝ) ∂(μ.restrict S) ≤
       (N : ℝ≥0∞) * ∫⁻ q, ‖(F : GlobalTheory.AutomorphicL2Unitary.Quot Γ → ℂ) q‖ₑ ^ (2 : ℝ) ∂(GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ) := by
-    rw [← lintegral_indicator hS, GlobalTheory.AutomorphicL2Unitary.lintegral_eq_lintegral_tsum (Γ := Γ) ((hmeasF.enorm.pow_const _).indicator hS),
+    rw [← lintegral_indicator hS, GlobalTheory.AutomorphicL2Unitary.lintegral_eq_lintegral_tsum (Γ := Γ) ((hmeasF.eNorm.pow_const _).indicator hS),
       ← lintegral_const_mul' _ _ (ENNReal.natCast_ne_top N)]
     refine lintegral_mono (fun q => ?_)
     have hq : ∀ γ : Γ, S.indicator (fun x => ‖GlobalTheory.AutomorphicL2Unitary.lift Γ (F : GlobalTheory.AutomorphicL2Unitary.Quot Γ → ℂ) x‖ₑ ^ (2 : ℝ))
@@ -76,8 +76,8 @@ private theorem sq_on_le {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
     gcongr
     have h1 := ENat.toENNReal_le.mpr (hN (Quotient.out q))
     simpa using h1
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num),
-    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num),
+    eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num)]
   simp only [ENNReal.toReal_ofNat]
   have hN2 : (N : ℝ≥0∞) ^ (1 / 2 : ℝ) ≤ N := by
     rcases Nat.eq_zero_or_pos N with h0 | h0
@@ -124,24 +124,24 @@ theorem UpperTheory.V.Cj.H.cvCount :
     have hE : ‖cv ψ F x‖ₑ ≤ (N * eLpNorm F 2 (GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ) * μ (tsupport ψ)⁻¹ ^ (1 / 2 : ℝ)) *
         ENNReal.ofReal (max C0 0) := by
       calc ‖cv ψ F x‖ₑ ≤ ∫⁻ y, ‖GlobalTheory.AutomorphicL2Unitary.lift Γ (F : GlobalTheory.AutomorphicL2Unitary.Quot Γ → ℂ) y * ψ (y⁻¹ * x)‖ₑ ∂μ :=
-            enorm_integral_le_lintegral_enorm _
+            eNorm_integral_le_lintegral_eNorm _
         _ ≤ ∫⁻ y, {y : G | ψ (y⁻¹ * x) ≠ 0}.indicator
               (fun y => ‖GlobalTheory.AutomorphicL2Unitary.lift Γ (F : GlobalTheory.AutomorphicL2Unitary.Quot Γ → ℂ) y‖ₑ) y * ENNReal.ofReal (max C0 0) ∂μ := by
             refine lintegral_mono (fun y => ?_)
             by_cases hy : y ∈ {y : G | ψ (y⁻¹ * x) ≠ 0}
-            · rw [Set.indicator_of_mem hy, enorm_mul]
+            · rw [Set.indicator_of_mem hy, eNorm_mul]
               gcongr
               rw [← ofReal_norm]
               exact ENNReal.ofReal_le_ofReal (hC _)
             · have h0 : ψ (y⁻¹ * x) = 0 := not_not.mp hy
-              rw [h0, mul_zero, enorm_zero]
+              rw [h0, mul_zero, eNorm_zero]
               exact bot_le
         _ = (∫⁻ y in {y : G | ψ (y⁻¹ * x) ≠ 0}, ‖GlobalTheory.AutomorphicL2Unitary.lift Γ (F : GlobalTheory.AutomorphicL2Unitary.Quot Γ → ℂ) y‖ₑ ∂μ) *
               ENNReal.ofReal (max C0 0) := by
             rw [lintegral_mul_const' _ _ ENNReal.ofReal_ne_top, lintegral_indicator hS]
         _ = eLpNorm (GlobalTheory.AutomorphicL2Unitary.lift Γ (F : GlobalTheory.AutomorphicL2Unitary.Quot Γ → ℂ)) 1 (μ.restrict {y : G | ψ (y⁻¹ * x) ≠ 0}) *
               ENNReal.ofReal (max C0 0) := by
-            rw [eLpNorm_one_eq_lintegral_enorm]
+            rw [eLpNorm_one_eq_lintegral_eNorm]
             exact hmeas.restrict
         _ ≤ _ := by
             gcongr
@@ -153,7 +153,7 @@ theorem UpperTheory.V.Cj.H.cvCount :
       have h2 : μ (tsupport ψ)⁻¹ ^ (1 / 2 : ℝ) ≠ ⊤ := ENNReal.rpow_ne_top_of_nonneg (by norm_num) hMfin
       exact ENNReal.mul_ne_top (ENNReal.mul_ne_top (ENNReal.mul_ne_top (ENNReal.natCast_ne_top N) h1) h2)
         ENNReal.ofReal_ne_top
-    calc ‖cv ψ F x‖ = ‖cv ψ F x‖ₑ.toReal := (toReal_enorm _).symm
+    calc ‖cv ψ F x‖ = ‖cv ψ F x‖ₑ.toReal := (toReal_eNorm _).symm
       _ ≤ _ := ENNReal.toReal_mono hRfin hE
       _ = max C0 0 * (μ (tsupport ψ)⁻¹).toReal ^ (1 / 2 : ℝ) * N * ‖F‖ := by
         rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_ofReal hC',

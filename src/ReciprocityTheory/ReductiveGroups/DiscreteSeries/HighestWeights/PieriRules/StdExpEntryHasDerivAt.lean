@@ -122,7 +122,7 @@ theorem stdRho_apply (ε : Fin n → Bool) (k : KG ε) :
 theorem stdRho_cont (ε : Fin n → Bool) :
     Continuous (fun k : KG ε => ((stdRho ε k : unitary (Matrix (Fin n) (Fin n) ℂ)) :
       Matrix (Fin n) (Fin n) ℂ)) :=
-  (continuous_toM ε).comp continuous_subtype_val
+  (continuous_toM ε).comp continuous_subtypeVal
 
 theorem std_exp_entry_hasDerivAt (X : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
     HasDerivAt (fun t : ℝ => (NormedSpace.exp ((t : ℂ) • X)) i j) (X i j) 0 := by

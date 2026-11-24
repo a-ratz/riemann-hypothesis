@@ -258,7 +258,7 @@ theorem reorder_holds : Reorder := by
     obtain ⟨k', hk'⟩ := x'
     subst hk'
     have hI : I' k' = fun j => I (e (sz' k') hl ⟨k', rfl⟩).1 (Fin.cast (e (sz' k') hl ⟨k', rfl⟩).2.symm j) :=
-      dif_pos hl
+      dite_eq_left hl
     simp only
     rw [hI]
     exact initMinor_cast B (e (sz' k') hl ⟨k', rfl⟩).2 _ _ _

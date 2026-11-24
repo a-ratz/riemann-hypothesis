@@ -85,9 +85,9 @@ theorem ind_index (χ : G → ℂ) (l : (G → ℂ) →ₗ[ℂ] ℂ) (hl : ∀ �
     {H K : Subgroup G} (hHK : H ≤ K) (ho : IsOpen (H : Set G)) (hc : IsCompact (K : Set G)) (hχ : ∀ k ∈ K, χ k = 1) :
     l (ind K) = H.relIndex K * l (ind H) := by
   classical
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hc
-  haveI : DiscreteTopology (K ⧸ H.subgroupOf K) := QuotientGroup.discreteTopology (ho.preimage continuous_subtype_val)
-  haveI : Fintype (K ⧸ H.subgroupOf K) := @Fintype.ofFinite _ finite_of_compact_of_discrete
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hc
+  have : DiscreteTopology (K ⧸ H.subgroupOf K) := QuotientGroup.discreteTopology (ho.preimage continuous_subtypeVal)
+  have : Fintype (K ⧸ H.subgroupOf K) := @Fintype.ofFinite _ finite_of_compact_of_discrete
   have hH := ind_mem ho (hc.of_isClosed_subset (H.isClosed_of_isOpen ho) hHK)
   have : ind K = ∑ q : K ⧸ H.subgroupOf K, fun x => ind H (x * q.out.1) := by
     ext x
@@ -180,7 +180,7 @@ theorem left_of_right (χ : G →* ℂ) (θ : G →* G) (cθ : Continuous θ) (i
       obtain ⟨k, hk, hχ⟩ := hχ
       rw [ind_zero χ l hl o c hk hχ, ind_zero χ l hl o' c' (k := g⁻¹ * k * g) ((hK' _).2 (by simpa [mul_assoc] using hk))]
       rw [← hconj]; simpa [mul_assoc] using hχ
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology o
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology o
   have hfin : ((fun x : G => ((x⁻¹ : G) : G ⧸ K)) '' tsupport φ).Finite :=
     (IsCompact.image hφ.2 (QuotientGroup.continuous_mk.comp continuous_inv)).finite_of_discrete
   have hmem : ∀ (x : G) (q : G ⧸ K), x * q.out ∈ (K : Set G) ↔ ((x⁻¹ : G) : G ⧸ K) = q := by
@@ -399,11 +399,11 @@ theorem toGL_val {X : Matrix (Fin d) (Fin d) k} (h : X.det ≠ 0) : (toGL X).1 =
 theorem toGL_coe (x : GL (Fin d) k) : toGL x.1 = x := Units.ext (toGL_val x.det_ne_zero)
 
 theorem cont_toGL : ContinuousOn (toGL (k := k) (d := d)) {X | X.det ≠ 0} := by
-  rw [continuousOn_iff_continuous_restrict, Units.continuous_iff]
-  refine ⟨continuous_subtype_val.congr fun X => (toGL_val X.2).symm, ?_⟩
+  rw [continuousOn_iff_continuous_domRestrict, Units.continuous_iff]
+  refine ⟨continuous_subtypeVal.congr fun X => (toGL_val X.2).symm, ?_⟩
   have : ContinuousOn (fun X : Matrix (Fin d) (Fin d) k => X⁻¹) {X | X.det ≠ 0} := fun X hX =>
     (continuousAt_matrix_inv X (by rw [Ring.inverse_eq_inv']; exact continuousAt_inv₀ hX)).continuousWithinAt
-  refine this.restrict.congr fun X => ?_
+  refine this.domRestrict.congr fun X => ?_
   rw [coe_units_inv]
   exact congrArg _ (toGL_val X.2).symm
 
@@ -436,12 +436,12 @@ theorem top_cell (ξ : kˣ →* ℂˣ) (l : (Matrix (Fin d) (Fin d) k → ℂ) �
       · exact h0 _ (not_not.1 h)
   · rw [hm, hm]
     refine Eq.trans ?_ (hl (fun X => if X.det ≠ 0 then ψ (toGL X) else 0) (sb_chart (T := Set.univ) hU cont_toGL Units.continuous_val.continuousOn (fun X hX => toGL_val hX)
-      (fun x _ => x.det_ne_zero) hψ (fun _ h => absurd trivial h) (fun X hX => if_pos hX) fun X hX => if_neg hX) h)
+      (fun x _ => x.det_ne_zero) hψ (fun _ h => absurd trivial h) (fun X hX => ite_eq_left hX) fun X hX => ite_eq_right hX) h)
     congr 1; ext X
     by_cases hX : X.det = 0
     · simp [hX]
     · have : (X * h.1).det ≠ 0 := by rw [det_mul]; exact mul_ne_zero hX h.det_ne_zero
-      rw [if_pos hX, if_pos this]
+      rw [ite_eq_left hX, ite_eq_left this]
       congr 1; apply Units.ext
       rw [Units.val_mul, toGL_val hX, toGL_val this]
 

@@ -71,7 +71,7 @@ private theorem term {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ �
   have hB := hPow _ _ c (hMap (X.gal s) _ _ (hRep (U f)))
   have heq : (Units.map (X.gal s : X.K →* X.K) (U f)) ^ c = U (galU X s f ^ c) := by
     ext
-    simp only [U, Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_coe]
+    simp only [U, Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_ofClass]
     rw [hpow, hGalSl]
     rfl
   rw [heq] at hB
@@ -108,7 +108,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sXiTw :
   have hM0 : M₀ ∣ M := hL.eq ▸ Dvd.intro_left N rfl
   have hlM : l ^ n ∣ M := hL.dl.trans hM0
   have hN : 0 < N := Nat.pos_of_ne_zero (NeZero.ne N)
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨-, -, -, -, -, -, -, hcyc⟩ := sSlD Ω ε X N hN
   have hone : ∀ (K : ℕ) [NeZero K], cycM K (1 : Gal(Ω/ℚ)) = 1 := by
     intro K _
@@ -162,7 +162,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sXiTw :
     rw [mul_assoc, inv_mul_cancel, mul_one]
   simp only [hdet, hP]
   by_cases h : Cnd l N g (m : Matrix (Fin 2) (Fin 2) (ZMod M)) ∧ P (Matrix.GeneralLinearGroup.det m)
-  · rw [if_pos h, if_pos ⟨hC.2 h.1, h.2⟩]
+  · rw [ite_eq_left h, ite_eq_left ⟨hC.2 h.1, h.2⟩]
     unfold tw
     rw [hgr x m, hgr y m]
     refine term X l n N hN s _ _ _ _ ?_
@@ -189,4 +189,4 @@ theorem UpperTheory.V.Z.Kato.Nb.sXiTw :
       linear_combination (φ ((m : Matrix (Fin 2) (Fin 2) (ZMod M)) 0 1) * PadicInt.toZModPow n (u 1)) * hdd
     rw [key]
     ring
-  · rw [if_neg h, if_neg (fun h' => h ⟨hC.1 h'.1, h'.2⟩), map_zero, sub_zero, map_zero]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h ⟨hC.1 h'.1, h'.2⟩), map_zero, sub_zero, map_zero]

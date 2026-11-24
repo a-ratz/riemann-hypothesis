@@ -236,7 +236,7 @@ theorem det_updateRow_one {A : Type*} [CommRing A] (j : Fin k) (v : Fin k → A)
 theorem emb_inj {w w' : Fin k → R.W} (h : (emb w : Fin k → R.Qq) = emb w') : w = w' := by
   funext i
   have h1 := congrFun h i
-  haveI := R.std.1.frac_alt
+  have := R.std.1.frac_alt
   exact IsFractionRing.injective R.W R.Qq h1
 
 theorem famS (v : Fin k → R.W ⧸ Ideal.span {(p : R.W)}) (hv : v ≠ 0) :
@@ -329,7 +329,7 @@ theorem famT (c : Fin k → R.W ⧸ Ideal.span {(p : R.W)}) (j : Fin k) (a : Fin
           apply Finset.sum_eq_zero
           intro l _
           simp [map_mul, R.res_p]
-        · simp only [hc, if_false, mul_one]
+        · simp only [hc, ite_false, mul_one]
           rw [phi_col R c j a c0 hc, ha c0, sub_self]
     | zero =>
       refine ⟨0, ?_, ?_⟩
@@ -368,20 +368,20 @@ end Fam
 
 theorem restEdgeCountSrc : RestEdgeCountSrc := by
   intro p n' R k hk L hL
-  haveI hmax : (Ideal.span {(p : R.W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible R.std.1.p_unif
-  letI : Field (R.W ⧸ Ideal.span {(p : R.W)}) := Ideal.Quotient.field _
-  haveI := R.std.1.frac_alt
+  have hmax : (Ideal.span {(p : R.W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible R.std.1.p_unif
+  let : Field (R.W ⧸ Ideal.span {(p : R.W)}) := Ideal.Quotient.field _
+  have := R.std.1.frac_alt
   have hcard : Nat.card (R.W ⧸ Ideal.span {(p : R.W)}) = p ^ n' := R.std.1.res_card
   have hp5 : 5 ≤ p := R.std.1.five_le
   have hq2 : 2 ≤ p ^ n' := le_trans (by omega) (Nat.le_self_pow (by have := R.std.1.two_le; omega) p)
-  haveI : Finite (R.W ⧸ Ideal.span {(p : R.W)}) := Nat.finite_of_card_ne_zero (by rw [hcard]; omega)
-  haveI : Finite (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)})) := by
+  have : Finite (R.W ⧸ Ideal.span {(p : R.W)}) := Nat.finite_of_card_ne_zero (by rw [hcard]; omega)
+  have : Finite (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)})) := by
     unfold Projectivization
     infer_instance
   set Ne := Nat.card (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)}))
   let eqv := Finite.equivFin (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)}))
   set v : Fin Ne → Fin k → R.W ⧸ Ideal.span {(p : R.W)} := fun i => (eqv.symm i).rep with hvdef
-  have hv0 : ∀ i, v i ≠ 0 := fun i => Projectivization.rep_nonzero _
+  have hv0 : ∀ i, v i ≠ 0 := fun i => Projectivization.rep_ne_zero _
   choose es he using fun i => famS R (v i) (hv0 i)
   have hp0 : (p : R.Qq) ≠ 0 := by
     have h1 : (p : R.W) ≠ 0 := R.std.1.p_unif.ne_zero
@@ -434,20 +434,20 @@ theorem restEdgeCountSrc : RestEdgeCountSrc := by
 
 theorem restEdgeCount : RestEdgeCount := by
   intro p n' R k hk L hL
-  haveI hmax : (Ideal.span {(p : R.W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible R.std.1.p_unif
-  letI : Field (R.W ⧸ Ideal.span {(p : R.W)}) := Ideal.Quotient.field _
-  haveI := R.std.1.frac_alt
+  have hmax : (Ideal.span {(p : R.W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible R.std.1.p_unif
+  let : Field (R.W ⧸ Ideal.span {(p : R.W)}) := Ideal.Quotient.field _
+  have := R.std.1.frac_alt
   have hcard : Nat.card (R.W ⧸ Ideal.span {(p : R.W)}) = p ^ n' := R.std.1.res_card
   have hp5 : 5 ≤ p := R.std.1.five_le
   have hq2 : 2 ≤ p ^ n' := le_trans (by omega) (Nat.le_self_pow (by have := R.std.1.two_le; omega) p)
-  haveI : Finite (R.W ⧸ Ideal.span {(p : R.W)}) := Nat.finite_of_card_ne_zero (by rw [hcard]; omega)
-  haveI : Finite (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)})) := by
+  have : Finite (R.W ⧸ Ideal.span {(p : R.W)}) := Nat.finite_of_card_ne_zero (by rw [hcard]; omega)
+  have : Finite (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)})) := by
     unfold Projectivization
     infer_instance
   set Ne := Nat.card (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)}))
   let eqv := Finite.equivFin (Projectivization (R.W ⧸ Ideal.span {(p : R.W)}) (Fin k → R.W ⧸ Ideal.span {(p : R.W)}))
   set cc : Fin Ne → Fin k → R.W ⧸ Ideal.span {(p : R.W)} := fun i => (eqv.symm i).rep with hccdef
-  have hc0 : ∀ i, cc i ≠ 0 := fun i => Projectivization.rep_nonzero _
+  have hc0 : ∀ i, cc i ≠ 0 := fun i => Projectivization.rep_ne_zero _
   choose jj hjj using fun i => Function.ne_iff.mp (hc0 i)
   have hjj' : ∀ i, cc i (jj i) ≠ 0 := fun i => by simpa using hjj i
   choose aa haa using fun i l => Ideal.Quotient.mk_surjective (cc i l * (cc i (jj i))⁻¹)

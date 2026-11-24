@@ -86,8 +86,8 @@ theorem gen_le_norm [IsDomain T] (S : Finset T) : (gen S).toSubring ≤ norm S :
 theorem norm_mono [IsDomain T] : Monotone (norm (T := T)) := by
   intro S S' h x ⟨hx, s, hs, hs0, hsx⟩
   have hle : gen S ≤ gen S' := Algebra.adjoin_mono (by exact_mod_cast h)
-  letI : Algebra (gen S) (gen S') := (Subalgebra.inclusion hle).toAlgebra
-  haveI : IsScalarTower (gen S) (gen S') T := .of_algebraMap_eq fun _ => rfl
+  let : Algebra (gen S) (gen S') := (Subalgebra.inclusion hle).toAlgebra
+  have : IsScalarTower (gen S) (gen S') T := .of_algebraMap_eq fun _ => rfl
   exact ⟨hx.tower_top, s, hle hs, hs0, hle hsx⟩
 
 end GlobalTheory.NormalApprox
@@ -172,14 +172,14 @@ noncomputable def normEquiv [IsIntegrallyClosed T] :
       (AlgEquiv.ofInjective _ (fun _ _ h => Subtype.ext ((toFrac S).toRingHom.injective h))).symm.toRingEquiv)
 
 theorem norm_isNoetherianRing [IsIntegrallyClosed T] : IsNoetherianRing (norm S) := by
-  haveI : IsNoetherianRing (gen S) := Algebra.FiniteType.isNoetherianRing ℤ _
-  haveI := GlobalTheory.finite_integralClosure_of_essFiniteType_int (gen S)
-  haveI : IsNoetherianRing (integralClosure (gen S) (FractionRing (gen S))) :=
+  have : IsNoetherianRing (gen S) := Algebra.FiniteType.isNoetherianRing ℤ _
+  have := GlobalTheory.finite_integralClosure_of_essFiniteType_int (gen S)
+  have : IsNoetherianRing (integralClosure (gen S) (FractionRing (gen S))) :=
     Algebra.FiniteType.isNoetherianRing (gen S) _
   exact isNoetherianRing_of_ringEquiv _ (normEquiv S).symm
 
 theorem norm_isIntegrallyClosed [IsIntegrallyClosed T] : IsIntegrallyClosed (norm S) := by
-  haveI : IsIntegrallyClosed (integralClosure (gen S) (FractionRing (gen S))) :=
+  have : IsIntegrallyClosed (integralClosure (gen S) (FractionRing (gen S))) :=
     integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing (gen S))
   exact IsIntegrallyClosed.of_equiv (normEquiv S).symm
 

@@ -169,7 +169,7 @@ theorem exists_finite_projection (V : HSp D) : ∃ p : GA D V →* GA D V, Conti
   have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
   have i0 := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hc : Continuous fun h : GA D V => (matHom V h).1 :=
-    Units.continuous_val.comp (continuous_subtype_val (p := (· ∈ HR (AF D.host.F) D.sp.cm.sig V.gram)))
+    Units.continuous_val.comp (continuous_subtypeVal (p := (· ∈ HR (AF D.host.F) D.sp.cm.sig V.gram)))
   have hc' : Continuous fun g : GA D V => (matHom V (p g)).1 :=
     (continuous_proj (R := AE D) ε hc).congr fun g => (hm g).symm
   refine ⟨p, ?_, h1, fun g => ?_, fun ξ g hg => ?_⟩
@@ -201,7 +201,7 @@ theorem transvection_measure : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFa
     rw [isOpen_singleton_iff_nhds_eq_pure]
     refine le_antisymm (Filter.le_pure_iff.2 ?_) (pure_le_nhds _)
     have hc : ContinuousAt (fun x : (GQ V).subgroupOf (ZI V ξ) => Multiplicative.toAdd (e.symm x)) 1 :=
-      (continuous_toAdd.comp (e.symm.continuous.comp continuous_subtype_val)).continuousAt
+      (continuous_toAdd.comp (e.symm.continuous.comp continuous_subtypeVal)).continuousAt
     refine Filter.mem_of_superset (hc.preimage_mem_nhds (by simpa using hU)) ?_
     rintro ⟨z, hz⟩ hy
     obtain ⟨a, rfl⟩ := e.surjective z
@@ -231,7 +231,7 @@ theorem transvection_measure : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFa
     exact ⟨Measure.haar, S, inferInstance, h, hK'.closure_of_subset hS⟩
   · obtain ⟨p, hp, h1, h2, h3⟩ := exists_finite_projection V
     let f : Multiplicative (AF D.host.F) →* GA D V := p.comp ((ZI V ξ).subtype.comp e.toMulEquiv.toMonoidHom)
-    have hf : Continuous f := hp.comp (continuous_subtype_val.comp e.continuous)
+    have hf : Continuous f := hp.comp (continuous_subtypeVal.comp e.continuous)
     obtain ⟨a, ha⟩ := e.surjective ⟨z, hz⟩
     obtain ⟨x, hx⟩ := exists_sub_mem_of_isOpen D.host.F (Subgroup.toAddSubgroup' (U.comap f))
       (hU.preimage (hf.comp continuous_ofAdd)) a.toAdd

@@ -98,7 +98,7 @@ theorem _root_.GlobalTheory.isLocalHom_and_isAdicComplete_of_finite_dvr :
   have hloc : IsLocalHom (algebraMap V V') :=
     RingHom.IsIntegral.isLocalHom (fun x => Algebra.IsIntegral.isIntegral x) hinj
   refine ⟨hloc, ?_⟩
-  haveI : FaithfulSMul V V' := (faithfulSMul_iff_algebraMap_injective V V').2 hinj
+  have : FaithfulSMul V V' := (faithfulSMul_iff_algebraMap_injective V V').2 hinj
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
   obtain ⟨e, he, hpow⟩ := exists_pow_maximalIdeal_eq_span hinj hϖ
   let b := Module.Free.chooseBasis V V'
@@ -108,7 +108,7 @@ theorem _root_.GlobalTheory.isLocalHom_and_isAdicComplete_of_finite_dvr :
   have hV' : ∀ n, (maximalIdeal V' ^ n • ⊤ : Submodule V' V') = maximalIdeal V' ^ n := by
     intro n
     rw [smul_eq_mul, Ideal.mul_top]
-  haveI hH : IsHausdorff (maximalIdeal V') V' :=
+  have hH : IsHausdorff (maximalIdeal V') V' :=
     IsHausdorff.of_isLocalRing (maximalIdeal V') V' (IsLocalRing.maximalIdeal.isMaximal V').ne_top
   have hP : IsPrecomplete (maximalIdeal V') V' := by
     rw [isPrecomplete_iff]

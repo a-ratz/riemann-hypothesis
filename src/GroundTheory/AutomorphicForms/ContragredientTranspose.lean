@@ -118,7 +118,7 @@ theorem map_sigma_eq (μ : Measure (GL (Fin n) F)) [μ.IsHaarMeasure] : μ.map s
   have hKT : μ K ≠ ⊤ := (GLnLocal.isCompact_integralGL F n).measure_lt_top.ne
   have hc : c = 1 := by
     have h := congrArg (fun ν : Measure (GL (Fin n) F) => ν K) e2
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h
     have h' := (ENNReal.mul_eq_right hK0 hKT).1 h.symm
     have hcc : (c * c : NNReal) = 1 := by exact_mod_cast h'
     have hr : ((c : ℝ) * (c : ℝ)) = 1 := by exact_mod_cast hcc

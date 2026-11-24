@@ -69,7 +69,7 @@ private theorem range_subset {S : Type} [CommRing S] [IsLocalRing S] {Y : Scheme
 variable {R : Type} [CommRing R] [IsLocalRing R] {a : R}
 
 private theorem quot_local (ha : ¬ IsUnit a) (m : ℕ) : IsLocalRing (R ⧸ Ideal.span {a ^ (m + 1)}) := by
-  haveI : Nontrivial (R ⧸ Ideal.span {a ^ (m + 1)}) := by
+  have : Nontrivial (R ⧸ Ideal.span {a ^ (m + 1)}) := by
     refine Ideal.Quotient.nontrivial_iff.mpr ?_
     rw [Ne, Ideal.span_singleton_eq_top]
     exact fun h => ha (isUnit_of_dvd_unit (dvd_pow_self a (Nat.succ_ne_zero m)) h)
@@ -78,15 +78,15 @@ private theorem quot_local (ha : ¬ IsUnit a) (m : ℕ) : IsLocalRing (R ⧸ Ide
 private theorem spec_closed {S S' : Type} [CommRing S] [CommRing S'] [IsLocalRing S] [IsLocalRing S']
     (f : S →+* S') (hf : Function.Surjective f) {Y : Scheme.{0}} (g : Spec (CommRingCat.of S) ⟶ Y) :
     (Spec.map (CommRingCat.ofHom f) ≫ g) (closedPoint S') = g (closedPoint S) := by
-  haveI : IsLocalHom f := IsLocalHom.of_surjective f hf
-  haveI : IsLocalHom (CommRingCat.ofHom f).hom := this
+  have : IsLocalHom f := IsLocalHom.of_surjective f hf
+  have : IsLocalHom (CommRingCat.ofHom f).hom := this
   exact congrArg g (Spec_closedPoint (f := CommRingCat.ofHom f))
 
 theorem scheme_ext (ha : ¬ IsUnit a) (hc : IsAdicComplete (Ideal.span {a}) R) {Y : Scheme.{0}}
     (f g : Spec (CommRingCat.of R) ⟶ Y)
     (h : ∀ m : ℕ, Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk (Ideal.span {a ^ m}))) ≫ f =
       Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk (Ideal.span {a ^ m}))) ≫ g) : f = g := by
-  haveI := quot_local ha 0
+  have := quot_local ha 0
   have hcl : f (closedPoint R) = g (closedPoint R) := by
     rw [← spec_closed (Ideal.Quotient.mk (Ideal.span {a ^ (0 + 1)})) Ideal.Quotient.mk_surjective f,
       ← spec_closed (Ideal.Quotient.mk (Ideal.span {a ^ (0 + 1)})) Ideal.Quotient.mk_surjective g, h]
@@ -107,7 +107,7 @@ theorem scheme_lim (ha : ¬ IsUnit a) (hc : IsAdicComplete (Ideal.span {a}) R) {
       (Ideal.span_singleton_le_span_singleton.mpr (pow_dvd_pow a (Nat.le_succ m))))) ≫ y (m + 1) = y m) :
     ∃ Q : Spec (CommRingCat.of R) ⟶ Y, ∀ m : ℕ,
       Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk (Ideal.span {a ^ m}))) ≫ Q = y m := by
-  haveI := quot_local ha
+  have := quot_local ha
   obtain ⟨A, j, _, hx, -⟩ :=
     Scheme.exists_affine_mem_range_and_range_subset (x := y (0 + 1) (closedPoint _)) (U := ⊤) trivial
   have hcl : ∀ m : ℕ, y (m + 1) (closedPoint _) ∈ Set.range j := by

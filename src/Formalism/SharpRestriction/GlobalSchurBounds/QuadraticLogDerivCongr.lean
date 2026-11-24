@@ -86,7 +86,7 @@ theorem arithOf_heq {φ φ' : Formalism.HC.Frame} (H : Formalism.HC.HostRaw φ) 
   have hN : H.condN = H'.condN := by
     show H.QS * H.q * H.d = H'.QS * H'.q * H'.d
     rw [hq, hd, hQ]
-  haveI : NeZero H.condN :=
+  have : NeZero H.condN :=
     ⟨Nat.mul_ne_zero (Nat.mul_ne_zero H.QS_pos.ne' H.hyp.1.ne_zero) H.hyp.2.1.ne_zero⟩
   apply heq_of_eq
   unfold arithOf
@@ -928,7 +928,7 @@ theorem thick_iff (D : D7) (T2 : Finset D.R.A) (u0 : D.R.A)
     unfold Formalism.HC.Frame.tau2 gOfM thickPl
     refine Prod.ext (Prod.ext ?_ rfl) rfl
     show (-1 : ℤˣ) = if (1 : ZMod 2) = 0 then 1 else -1
-    rw [if_neg (by decide)]
+    rw [ite_eq_right (by decide)]
   · rintro ⟨s, hs, hγ⟩
     refine ⟨D.R.dig s, (hT2 _).2 ⟨s, hs, rfl⟩, ?_⟩
     unfold Formalism.HC.Frame.tau2 gOfM at hγ
@@ -939,7 +939,7 @@ theorem thick_iff (D : D7) (T2 : Finset D.R.A) (u0 : D.R.A)
       have h0 : ρ.1.2 = 0 := by
         have : ∀ z : ZMod 2, z ≠ 1 → z = 0 := by decide
         exact this _ hne
-      rw [if_pos h0] at hA
+      rw [ite_eq_left h0] at hA
       exact absurd hA (by decide)
     have h11 : ρ.1.1 = 0 := hρ
     unfold thickPl

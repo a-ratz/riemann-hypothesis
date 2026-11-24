@@ -155,7 +155,7 @@ include hc
 theorem bot_or_top (U : Submodule ℂ c.W) (hU : ∀ γ ∈ GQ V, ∀ w ∈ U, c.ρ γ w ∈ U) : U = ⊥ ∨ U = ⊤ := by
   refine hc.2.2.2.2 U fun h => ?_
   rintro _ ⟨w, hw, rfl⟩
-  refine closed_eq_univ V {h | c.ρ h w ∈ U} (U.closed_of_finiteDimensional.preimage (hc.2.2.1 w))
+  refine closed_eq_univ V {h | c.ρ h w ∈ U} (U.isClosed_of_finiteDimensional.preimage (hc.2.2.1 w))
     (fun γ hγ => hU γ hγ w hw) (fun h k hk H => ?_) h
   show c.ρ (h * k) w ∈ U
   rw [map_mul, hc.1 k hk, mul_one]
@@ -555,7 +555,7 @@ theorem rs_coef : ∀ {B B' : Base} {f : Fr B.toPre} {f' : Fr B'.toPre} {T : TwD
     (if (w'.st Z').toD7.sp.Vneg ((i' : ℕ) + 1) then -(Vc (w'.st Z').toD7 i').gram else (Vc (w'.st Z').toD7 i').gram)
     (by
       rw [GlobalTheory.StdFrame.neg_eq_false_of_posDef _ i' ((by with_unfolding_all exact ((B.V_posDef ((i' : ℕ) + 1) (by omega) ((by with_unfolding_all exact (i'.2 :)))) :)))]
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       exact GlobalTheory.Mem.R3.BrgRead.gram_V (w'.st Z') w'.ok.spaces i')
   choose c0 hc1 hc2 hc3 using hG
   refine ⟨cp, c0, ?_, fun i' => (by with_unfolding_all exact ((z.pins.char.base.models.cV ((by with_unfolding_all exact (i' :)))) :)), hc1, hc2, ?_⟩

@@ -67,7 +67,7 @@ theorem _root_.GlobalTheory.AdicSum.sumI_unique [IsNoetherianRing R] (hI : I ≤
   obtain ⟨N', hN', hs', -, hconv'⟩ := h'
   set M := N ⊔ N' with hM
   have hMfg : M.FG := hN.sup hN'
-  haveI : Module.Finite R M := Module.Finite.iff_fg.mpr hMfg
+  have : Module.Finite R M := Module.Finite.iff_fg.mpr hMfg
   have hmem : s - s' ∈ M := M.sub_mem (Submodule.mem_sup_left hs) (Submodule.mem_sup_right hs')
   have hpow : ∀ n : ℕ, (⟨s - s', hmem⟩ : M) ∈ I ^ n • (⊤ : Submodule R M) := by
     intro n
@@ -189,9 +189,9 @@ theorem _root_.GlobalTheory.AdicSum.sumF_calculus : ∀ (R : Type) [CommRing R] 
         _root_.GlobalTheory.UT.SumF I F x s) := by
   intro R _ _ I hadm F _ _ Ix x x' s s'
   obtain ⟨hnoeth, -, -, hcomplete⟩ := hadm
-  haveI := hnoeth
-  haveI := hcomplete
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  have := hnoeth
+  have := hcomplete
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   refine ⟨fun h h' => _root_.GlobalTheory.AdicSum.sumI_unique (IsAdicComplete.le_jacobson_bot I) h h',
     fun h h' c => ?_, fun Jx e he h0 => _root_.GlobalTheory.AdicSum.sumI_comp_iff he h0⟩
   let f : F →ₗ[R] F :=

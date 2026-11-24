@@ -81,9 +81,9 @@ lemma idem_free {R : Type} [CommRing R] [IsLocalRing R] {g : ℕ} (P : Matrix (F
     first
     | exact hff y
     | simp [hff]
-  haveI : Module.Projective R (LinearMap.range f) :=
+  have : Module.Projective R (LinearMap.range f) :=
     Module.Projective.of_split (LinearMap.range f).subtype f.rangeRestrict hsplit
-  haveI : Module.Free R (LinearMap.range f) := by
+  have : Module.Free R (LinearMap.range f) := by
     first
     | exact Module.free_of_flat_of_isLocalRing
     | exact Module.free_of_flat_of_localRing
@@ -155,15 +155,15 @@ lemma involutionPerm_involutive {m : ℕ} (e : Fin m → O) (π : Equiv.Perm (Fi
     have h2 : e (π (π k)) = e k := by
       rw [← hσ, ← hσ, hinv]
     have h3 := horth (π (π k)) k
-    rw [if_neg hne, h2, horth k k, if_pos rfl] at h3
+    rw [ite_eq_right hne, h2, horth k k, ite_eq_left rfl] at h3
     exact hk h3
 
 end Inv
 
 theorem wdetLen : WdetLenStatement := by
   intro p _ g C _ _ _ v R _ _ _ O _ _ σ cp hS H m e π horth hσ hsT hPT hsL hPL w hw cw cwb hcw hcwb
-  haveI := htd_domain hS
-  haveI := isLocal_of_integers hS.integers
+  have := htd_domain hS
+  have := isLocal_of_integers hS.integers
   by_cases hw0 : e w = 0
   · have he' : e (π w) = 0 := by
       have h := hσ w; rw [hw0, map_zero] at h; exact h.symm
@@ -182,10 +182,10 @@ theorem wdetLen : WdetLenStatement := by
       obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ a
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ b
       rw [Subsingleton.elim x y]⟩
-    haveI := hsubL _ hw0
-    haveI := hsubD _ hw0
-    haveI := hsubD _ he'
-    haveI : Subsingleton (qW H (e w) (e (π w))) := by
+    have := hsubL _ hw0
+    have := hsubD _ hw0
+    have := hsubD _ he'
+    have : Subsingleton (qW H (e w) (e (π w))) := by
       refine ⟨fun x y => Subtype.ext ?_⟩
       funext k
       rcases k with k | k
@@ -205,9 +205,9 @@ theorem wdetLen : WdetLenStatement := by
             ⟨0, Submodule.zero_mem _⟩
           exact congrArg Subtype.val this
         exact (congrFun hx k).trans (congrFun hy k).symm
-    haveI : Subsingleton (htCoker H (e w) (e (π w))) := hquot _
-    haveI : Subsingleton (htCoker H (e (π w)) (e w)) := hquot _
-    haveI : Subsingleton (xMod H e π w) := hquot _
+    have : Subsingleton (htCoker H (e w) (e (π w))) := hquot _
+    have : Subsingleton (htCoker H (e (π w)) (e w)) := hquot _
+    have : Subsingleton (xMod H e π w) := hquot _
     have h1 : cw = 1 := hasLen_unique hS.integers hcw (hasLen_subsingleton v R _)
     have h2 : cwb = 1 := hasLen_unique hS.integers hcwb (hasLen_subsingleton v R _)
     exact ⟨0, 1, ⟨LinearEquiv.ofSubsingleton _ _⟩, hasLen_subsingleton v R _, by simp [h1, h2]⟩
@@ -233,19 +233,19 @@ theorem wdetLen : WdetLenStatement := by
   have hTo : ∀ a b, εT a * εT b = if a = b then εT a else 0 := by
     intro a b
     refine Fin.cases ?_ (fun i => ?_) a <;> refine Fin.cases ?_ (fun j => ?_) b
-    · simp only [hεT, Fin.cons_zero, if_true, ← map_mul, H.projectors.1]
+    · simp only [hεT, Fin.cons_zero, ite_true, ← map_mul, H.projectors.1]
     · simp only [hεT, Fin.cons_zero, Fin.cons_succ, ← map_mul, hPcomm, map_zero,
-        (Fin.succ_ne_zero j).symm, if_false]
+        (Fin.succ_ne_zero j).symm, ite_false]
     · simp only [hεT, Fin.cons_zero, Fin.cons_succ, ← map_mul, hPT, map_zero,
-        Fin.succ_ne_zero i, if_false]
+        Fin.succ_ne_zero i, ite_false]
     · simp only [hεT, Fin.cons_succ, ← map_mul, ← map_mul H.ρ, horth, Fin.succ_inj]
       split_ifs <;> simp
   have hLo : ∀ a b, εL a * εL b = if a = b then εL a else 0 := by
     intro a b
     refine Fin.cases ?_ (fun i => ?_) a <;> refine Fin.cases ?_ (fun j => ?_) b
-    · simp only [hεL, Fin.cons_zero, if_true, H.projectors.2.1]
-    · simp only [hεL, Fin.cons_zero, Fin.cons_succ, hPLcomm, (Fin.succ_ne_zero j).symm, if_false]
-    · simp only [hεL, Fin.cons_zero, Fin.cons_succ, hPL, Fin.succ_ne_zero i, if_false]
+    · simp only [hεL, Fin.cons_zero, ite_true, H.projectors.2.1]
+    · simp only [hεL, Fin.cons_zero, Fin.cons_succ, hPLcomm, (Fin.succ_ne_zero j).symm, ite_false]
+    · simp only [hεL, Fin.cons_zero, Fin.cons_succ, hPL, Fin.succ_ne_zero i, ite_false]
     · simp only [hεL, Fin.cons_succ, ← map_mul, horth, Fin.succ_inj]
       split_ifs <;> simp
   have hTs : ∑ a, εT a = 1 := by
@@ -279,7 +279,7 @@ theorem wdetLen : WdetLenStatement := by
     simp only [hεT, hεL, Fin.cons_zero, Fin.cons_succ, btP, hι, RingHom.mapMatrix_apply]
     rw [add_comm]
   rw [hbt] at hua hub
-  have hidem : H.ρL (e w) * H.ρL (e w) = H.ρL (e w) := by rw [← map_mul, horth, if_pos rfl]
+  have hidem : H.ρL (e w) * H.ρL (e w) = H.ρL (e w) := by rw [← map_mul, horth, ite_eq_left rfl]
   obtain ⟨d, ⟨φ⟩⟩ := idem_free (H.ρL (e w)) hidem
   obtain ⟨hEt, -, hEdet⟩ := htd_E H
   have hcw' : HasLen v R (cokE H.Ht εT εL w.succ (π' w.succ)) cw := by

@@ -100,9 +100,9 @@ theorem theta_int : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   have h𝓕' : IsFundamentalDomain Γ 𝓕 μ := h𝓕
   have h0 := (_root_.GlobalTheory.CompanionTheory.SW.LatticeUnimod.unimodular_of_isFundamentalDomain (HA (AF F) σ J) Γ μ 𝓕 h𝓕' hfin).1
   have h1 := hint.2
-  rw [hasFiniteIntegral_iff_enorm, theta_lint F E σ hcm M J hJ μ 𝓕 hμ h𝓕 n S _ hΦ.enorm,
+  rw [hasFiniteIntegral_iff_eNorm, theta_lint F E σ hcm M J hJ μ 𝓕 hμ h𝓕 n S _ hΦ.eNorm,
     lintegral_tsum (f := fun (X : S) h => ‖Φ (actW (AF F) σ J h⁻¹ (ratTup (AF F) X.1))‖ₑ)
-      fun X => (hΦ.enorm.comp (hm _)).aemeasurable] at h1
+      fun X => (hΦ.eNorm.comp (hm _)).aemeasurable] at h1
   have h2 := (ENNReal.lt_top_of_mul_ne_top_right h1.ne hi).ne
   rw [thetaMeas, integrable_smul_measure hi (ENNReal.inv_ne_top.2 h0)] at hint
   rw [thetaMeas, integral_smul_measure, integral_sum_measure hint, meanC, ENNReal.toReal_inv]
@@ -169,7 +169,7 @@ theorem theta_inv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     have e : ∀ (h : HA (AF F) σ J) (X : {X | gramE σ J X = T}), Set.indicator
         {X : Fin n → Fin M → AF F ⊗[F] E | gramR (AF F) σ J X = T.map (inclR (AF F))}ᶜ (1 : (Fin n → Fin M → AF F ⊗[F] E) → ℝ≥0∞)
         (actW (AF F) σ J h⁻¹ (ratTup (AF F) X.1)) = 0 := fun h X =>
-      Set.indicator_of_notMem (Set.notMem_compl_iff.2 (by rw [Set.mem_setOf_eq, ag, hrat, X.2])) _
+      Set.indicator_of_notMem (Set.notMem_compl_iff.2 (by rw [Set.mem_ofPred_eq, ag, hrat, X.2])) _
     simp [e]
 
 end CompanionTheory.PlacePermOperatorBicommutantSpan

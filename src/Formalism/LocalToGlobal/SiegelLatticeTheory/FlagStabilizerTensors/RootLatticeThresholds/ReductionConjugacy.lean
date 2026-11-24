@@ -170,20 +170,20 @@ theorem mem_wLat0_of_iv (p : ℕ) (hp0 : 0 < p) (hpw : (p : 𝓞 I.E) ∈ w.asId
 
 theorem charP_res (p : ℕ) (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p) :
     CharP (𝓞 I.E ⧸ w.asIdeal) p := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Finite (𝓞 I.E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hp.ne_zero)
-  haveI := Fintype.ofFinite (𝓞 I.E ⧸ w.asIdeal)
+  have : Fact p.Prime := ⟨hp⟩
+  have : Finite (𝓞 I.E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hp.ne_zero)
+  have := Fintype.ofFinite (𝓞 I.E ⧸ w.asIdeal)
   exact charP_of_card_eq_prime (by rw [← Nat.card_eq_fintype_card, hcard])
 
 theorem p_mem (p : ℕ) (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p) :
     (p : 𝓞 I.E) ∈ w.asIdeal := by
-  haveI := charP_res I w p hp hcard
+  have := charP_res I w p hp hcard
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   exact CharP.cast_eq_zero _ p
 
 theorem int_mem_iff (p : ℕ) (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p) (z : ℤ) :
     (z : 𝓞 I.E) ∈ w.asIdeal ↔ (p : ℤ) ∣ z := by
-  haveI := charP_res I w p hp hcard
+  have := charP_res I w p hp hcard
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_intCast]
   exact CharP.intCast_eq_zero_iff _ p z
 
@@ -271,7 +271,7 @@ theorem indep {b : Fin I.n → (Fin I.n → I.E)} (hb : ∀ i, b i ∈ I.L)
 theorem zcoef (p : ℕ) (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p)
     {b : Fin I.n → (Fin I.n → I.E)} (hb : IsRedBasis0 I w b) (z : Fin I.n → ℤ)
     (hz : ∑ l, z l • b l ∈ wLat0 I w) (l : Fin I.n) : ((z l : ℤ) : ZMod p) = 0 := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   have hsp := span_of_red I w hb
   have hc : ∑ j, (z j : 𝓞 I.E) • b j ∈ w.asIdeal • I.L := by
     rw [← wLat0_eq]
@@ -421,7 +421,7 @@ theorem reduction_conjugacy : Formalism.L2.SG.Pf.RowDictPf.RedConj0 := by
     have h2 : (wLat0 I w).mkQ (b i) = ∑ l, (CM * DM) l i • (wLat0 I w).mkQ (b l) := by
       rw [hqD i]; simp only [hqC]; exact comb _ CM DM i
     simp only [Matrix.sub_apply, sub_smul, Finset.sum_sub_distrib, Matrix.one_apply, ite_smul, one_smul,
-      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [← h2, sub_self]
 
   have hTb : ∀ j, I.fmat x *ᵥ iv I (b j) ∈ I.Lf := T_mem I w hb.1 hMb

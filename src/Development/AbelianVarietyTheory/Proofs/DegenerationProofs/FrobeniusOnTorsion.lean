@@ -927,7 +927,7 @@ theorem frob_pullPow : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G], Sm
     (fun x _ => Set.mem_iUnion.2 ⟨x, hxV x⟩)
   choose m hm hfix using fun p : s × s => hF.2 (V p.1 ⊓ V p.2) ((hA p.1).inf (hA p.2))
     (res (inf_le_inf (hV p.1) (hV p.2)) (L.g (c p.1) (c p.2))).val
-  refine ⟨∏ p, m p, Finset.one_le_prod' fun p _ => hm p, fun l => ?_⟩
+  refine ⟨∏ p, m p, Finset.one_le_prod fun p _ => hm p, fun l => ?_⟩
   have := pullPow_of_fix hL (F ^ ((∏ p, m p) * l)).asHom.left (q ^ ((∏ p, m p) * l))
     (fun a : s => V a) (fun a => c a) (fun y => by
       obtain ⟨a, ha, hy⟩ := Set.mem_iUnion₂.1 (hs (Set.mem_univ y))
@@ -964,7 +964,7 @@ theorem card_torsion_le_mul {A B : Type} [CommGroup A] [CommGroup B] (f : A →*
   have hc : ∀ x : {x : A // x ^ n = 1}, (c (f x)) ^ n = 1 ∧ f (c (f x)) = f x := by
     intro x
     have h : ∃ a : {x : A // x ^ n = 1}, f a = f x := ⟨x, rfl⟩
-    simp only [c, dif_pos h]
+    simp only [c, dite_eq_left h]
     exact ⟨h.choose.2, h.choose_spec⟩
   let Φ : {x : A // x ^ n = 1} → {x : A // f x = 1 ∧ x ^ n = 1} × {y : B // y ^ n = 1} := fun x =>
     (⟨x * (c (f x))⁻¹, by
@@ -1250,13 +1250,13 @@ theorem GlobalTheory.SS.frobenius_on_torsion : ∀ (k : Type) [Field k] [IsAlgCl
   let W : Subgroup (𝟙_ (Over (Sp k)) ⟶ G) :=
     { carrier := {x | x ≫ (F ^ (m1 * m2)).asHom = x ^ (q ^ (m1 * m2))}
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [MonObj.mul_comp, hx, hy, mul_pow]
       one_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         rw [MonObj.one_comp, one_pow]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         rw [GrpObj.inv_comp, hx, inv_pow] }
   have hlk : ∀ n : ℕ, ((l ^ n : ℕ) : k) ≠ 0 := by
     intro n h

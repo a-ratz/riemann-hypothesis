@@ -80,7 +80,7 @@ theorem pow_eq_one_of_geometric_points : ∀ (S : Scheme.{0}) (A : Over S) [GrpO
     · rw [Category.assoc, Category.assoc, hy, hu, MonObj.comp_pow, hf, MonObj.comp_one]
     · rw [Category.assoc, Category.assoc, pullback.lift_snd, pullback.lift_snd]
   have hyu : y₁ = u₁ := by
-    haveI := hPe
+    have := hPe
     have hw : y₁.left ≫ P.hom = u₁.left ≫ P.hom := by rw [Over.w, Over.w]
     let l : T.left ⟶ pullback P.hom P.hom := pullback.lift _ _ hw
     have hl1 : l ≫ pullback.fst _ _ = y₁.left := pullback.lift_fst _ _ _

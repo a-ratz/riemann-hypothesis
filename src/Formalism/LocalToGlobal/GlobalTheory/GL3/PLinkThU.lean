@@ -93,7 +93,7 @@ theorem dens_U (T : Tor D) (G : VC D N N' → ℂ) (x z : VC D N N') :
     dens D T (U D T x G) z = dens D T G (z + x) := by
   have h := re_Hf_add T z x
   simp only [dens, U, norm_mul, Complex.norm_exp, mul_pow]
-  rw [h, mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [h, mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 1
   congr 1
   simp only [Complex.sub_re, Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
@@ -144,10 +144,10 @@ theorem normSq_U_of_full (T : Tor D) (La' : AddSubgroup (VC D N N')) (hL : FullL
     (G : VC D N N' → ℂ) (hG : G ∈ ThSp D T La') (x : VC D N N') :
     normSq D T La' (U D T x G) = normSq D T La' G := by
   obtain ⟨hd, hs⟩ := hL
-  haveI := hd
-  haveI : Countable La' := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : DiscreteTopology (AddSubgroup.toIntSubmodule La') := hd
-  haveI : IsZLattice ℝ (AddSubgroup.toIntSubmodule La') := ⟨hs⟩
+  have := hd
+  have : Countable La' := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : DiscreteTopology (AddSubgroup.toIntSubmodule La') := hd
+  have : IsZLattice ℝ (AddSubgroup.toIntSubmodule La') := ⟨hs⟩
   refine normSq_U_of_fd T La' ⟨_, ZLattice.isAddFundamentalDomain
     (Module.Free.chooseBasis ℤ (AddSubgroup.toIntSubmodule La')) volume⟩ G hG x
 
@@ -307,7 +307,7 @@ theorem finite_mat (N N' : ℕ) (r : ℝ) :
       Set.pi Set.univ fun _ => Set.pi Set.univ fun _ =>
         {x : 𝓞 D.host.E | ∀ τ, ‖embT D τ (x : D.host.E)‖ ≤ r} := by
     ext A
-    simp only [Set.mem_setOf_eq, Set.mem_pi]
+    simp only [Set.mem_ofPred_eq, Set.mem_pi]
     exact ⟨fun h i _ j _ τ => h τ i j, fun h τ i j => h i (Set.mem_univ _) j (Set.mem_univ _) τ⟩
   rw [h2]
   exact Set.Finite.pi fun _ => Set.Finite.pi fun _ => hF
@@ -328,7 +328,7 @@ theorem isIntegral_iff_mem (x : D.host.E) :
 theorem natMul_of (b : 𝓞 D.host.E) (hb : b ≠ 0) :
     ∃ n : ℕ, n ≠ 0 ∧ ∃ t : 𝓞 D.host.E, (n : 𝓞 D.host.E) = t * b := by
   have hI : (Ideal.span {b}).comap (algebraMap ℤ (𝓞 D.host.E)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hb (Ideal.mem_span_singleton_self b)
+    Ideal.under_ne_bot_of_integral_mem hb (Ideal.mem_span_singleton_self b)
       (Algebra.IsIntegral.isIntegral b)
   obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
   rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hm
@@ -378,7 +378,7 @@ theorem sd_bounds {N : ℕ} (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E))
     (hL : letI := D.host.cmStar; IsSDLat D.host.E N L) :
     ∃ m : ℤ, m ≠ 0 ∧ (∀ x ∈ L, ∀ i, IsIntegral ℤ ((m : D.host.E) * x i)) ∧
       (∀ z : Fin N → D.host.E, (∀ i, IsIntegral ℤ (z i)) → (fun i => (m : D.host.E) * z i) ∈ L) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨⟨s, hs⟩, -, hdual⟩ := hL
   classical
   obtain ⟨m, hm, hmT⟩ := exists_int_mul D (Finset.univ.biUnion fun i => s.image fun g => g i)
@@ -601,7 +601,7 @@ theorem disc_of_finite {V : Type*} [NormedAddCommGroup V] (S : AddSubgroup V)
     Metric.isOpen_ball.inter hT.isClosed.isOpen_compl, ?_⟩
   ext y
   simp only [Set.mem_preimage, Set.mem_inter_iff, Metric.mem_ball, dist_zero_right,
-    Set.mem_compl_iff, Set.mem_diff, Set.mem_setOf_eq, Set.mem_singleton_iff]
+    Set.mem_compl_iff, Set.mem_sdiff, Set.mem_ofPred_eq, Set.mem_singleton_iff]
   constructor
   · rintro ⟨h1, h2⟩
     by_contra hne
@@ -638,7 +638,7 @@ theorem La_lower {N N' : ℕ} (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E
   obtain ⟨M, hM, hY⟩ := YY_lower D L L' hA.2.2.1 hA.2.2.2
   obtain ⟨c, hc, hc0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hcc.1
   have hI : cc.comap (algebraMap ℤ (𝓞 D.host.K)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hc0 hc (Algebra.IsIntegral.isIntegral c)
+    Ideal.under_ne_bot_of_integral_mem hc0 hc (Algebra.IsIntegral.isIntegral c)
   obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
   rw [Ideal.mem_comap] at hm
   have hcast : D.host.φ₀ (((algebraMap ℤ (𝓞 D.host.K) m : 𝓞 D.host.K) : D.host.K) : D.host.E) =

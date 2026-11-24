@@ -58,7 +58,7 @@ section Local
 variable (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F))
 
 theorem countable_numberField : Countable F :=
-  Finsupp.Countable.of_moduleFinite (R := ℚ)
+  Countable.of_moduleFinite (R := ℚ)
 
 theorem separableSpace_Fv : TopologicalSpace.SeparableSpace (Fv F v) := by
   have := countable_numberField F

@@ -65,7 +65,7 @@ private theorem unitHk_apply (hI : HeckePair I) (x : G) (v : fixd (permRep A I) 
   have e := (hkApply A G _ (permRep A I) I I x hx).1 v
   change ((hk2 (permRep A I) I I x v : fixd (permRep A I) I) : MonoidAlgebra A (G ⧸ I)) = _
   rw [e]
-  haveI : Fintype (MulAction.orbit I (x : G ⧸ I)) := Set.Finite.fintype hx
+  have : Fintype (MulAction.orbit I (x : G ⧸ I)) := Set.Finite.fintype hx
   unfold dc
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, LinearMap.sum_apply]
 
@@ -107,7 +107,7 @@ private theorem unitHk_alg_comm (hI : HeckePair I) (v : fixd (permRep A I) I) (T
   | mem T hT =>
     obtain ⟨x, rfl⟩ := hT
     intro w w' hw
-    haveI : Fintype (MulAction.orbit I (x : G ⧸ I)) := Set.Finite.fintype (hI x)
+    have : Fintype (MulAction.orbit I (x : G ⧸ I)) := Set.Finite.fintype (hI x)
 
     rw [unitHk_apply hI, unitHk_apply hI, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, map_sum, ← hw]
     simp only [unitHk_phi_comm]
@@ -139,7 +139,7 @@ open Classical in
 private theorem unitHk_coeff (hI : HeckePair I) (x : G) (p : G ⧸ I) :
     (hk (permRep A I) I x (unitHk_e A I) : MonoidAlgebra A (G ⧸ I)).coeff p =
       if p ∈ MulAction.orbit I (x : G ⧸ I) then 1 else 0 := by
-  haveI : Fintype (MulAction.orbit I (x : G ⧸ I)) := Set.Finite.fintype (hI x)
+  have : Fintype (MulAction.orbit I (x : G ⧸ I)) := Set.Finite.fintype (hI x)
   rw [unitHk_apply hI, finsum_eq_sum_of_fintype]
   have hs : ∀ q : MulAction.orbit I (x : G ⧸ I),
       permRep A I (q : G ⧸ I).out (unitHk_e A I : MonoidAlgebra A (G ⧸ I)) = MonoidAlgebra.single (q : G ⧸ I) 1 := by
@@ -151,17 +151,17 @@ private theorem unitHk_coeff (hI : HeckePair I) (x : G) (p : G ⧸ I) :
     rw [MulAction.Quotient.smul_mk, smul_eq_mul, mul_one, QuotientGroup.out_eq']
   simp only [hs, MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_single, Finsupp.finsetSum_apply, Finsupp.single_apply]
   by_cases hp : p ∈ MulAction.orbit I (x : G ⧸ I)
-  · rw [if_pos hp, Finset.sum_eq_single ⟨p, hp⟩]
+  · rw [ite_eq_left hp, Finset.sum_eq_single ⟨p, hp⟩]
     · simp
     · intro q _ hq
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       exact hq (Subtype.ext e)
     · intro h
       exact absurd (Finset.mem_univ _) h
-  · rw [if_neg hp]
+  · rw [ite_eq_right hp]
     refine Finset.sum_eq_zero fun q _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e
     exact hp (e ▸ q.2)
 
@@ -195,7 +195,7 @@ private theorem unitHk_surj (hI : HeckePair I) (v : fixd (permRep A I) I) :
       calc (v : MonoidAlgebra A (G ⧸ I)).coeff ((u : G) • (x : G ⧸ I))
           = (permRep A I (u : G) (v : MonoidAlgebra A (G ⧸ I))).coeff ((u : G) • (x : G ⧸ I)) := by rw [hv']
         _ = (v : MonoidAlgebra A (G ⧸ I)).coeff ((u : G)⁻¹ • (u : G) • (x : G ⧸ I)) :=
-          Representation.ofMulAction_apply _ _ _
+          Representation.coeff_ofMulAction _ _ _
         _ = c := by rw [inv_smul_smul]
     set v' : fixd (permRep A I) I := v - c • hk (permRep A I) I x (unitHk_e A I) with hv'
     have hco : ∀ q, (v' : MonoidAlgebra A (G ⧸ I)).coeff q =
@@ -213,9 +213,9 @@ private theorem unitHk_surj (hI : HeckePair I) (v : fixd (permRep A I) I) :
         by_cases ho : q ∈ MulAction.orbit I (x : G ⧸ I)
         · rw [inv q ho] at hq0
           exact absurd hq0 (Finsupp.mem_support_iff.1 hp)
-        · rw [if_neg ho, hq0]
+        · rw [ite_eq_right ho, hq0]
           simp
-      · rw [Finsupp.mem_support_iff, not_not, hco, if_pos (MulAction.mem_orbit_self _)]
+      · rw [Finsupp.mem_support_iff, not_not, hco, ite_eq_left (MulAction.mem_orbit_self _)]
         simp [hc]
     obtain ⟨T', hT', hTe⟩ := ih _ (hv ▸ Finset.card_lt_card hsub) v' rfl
     refine ⟨T' + c • hk (permRep A I) I x, Subalgebra.add_mem _ hT' hT1, ?_⟩

@@ -117,7 +117,7 @@ private theorem unramifiedAt_of_dec_fixes (L Ω : Type) [Field L] [NumberField L
     [IsAlgClosure L Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 L)) (hA : IsPlaceOver A w)
     (hfix : ∀ g ∈ Dec (F := maximalRealSubfield L) A, Fixes L g) :
     Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield L)) w.asIdeal := by
-  haveI : IsAlgClosure (maximalRealSubfield L) Ω :=
+  have : IsAlgClosure (maximalRealSubfield L) Ω :=
     ⟨IsAlgClosure.isAlgClosed L, Algebra.IsAlgebraic.trans _ L Ω⟩
   have hAv : IsPlaceOver A (w.under (𝓞 (maximalRealSubfield L))) := fun x => by
     rw [IsScalarTower.algebraMap_apply (maximalRealSubfield L) L Ω]
@@ -176,7 +176,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.apartUp :
     have hker : RingHom.ker (algebraMap (𝓞 K) (𝓞 M)) ≤ v.asIdeal := by
       rw [(RingHom.injective_iff_ker_eq_bot _).1 hinj]
       exact bot_le
-    haveI := v.isMaximal
+    have := v.isMaximal
     obtain ⟨Q, hQ, hQm⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 M) v.asIdeal hker
     have hne : Q ≠ ⊥ := by
       rintro rfl
@@ -281,7 +281,7 @@ private theorem apart_of_moves {E Y Ω : Type} [Field E] [NumberField E] [IsCMFi
     (hfix : ∀ g ∈ Dec (F := maximalRealSubfield E) A, g (algebraMap Y Ω δ) = algebraMap Y Ω δ)
     {w₁ w₂ : HeightOneSpectrum (𝓞 Y)} (hw₁ : IsPlaceOver A w₁) (hw₂ : IsPlaceOver (σ • A) w₂) : GlobalTheory.Cong.Apart w₁ w₂ := by
   intro hv
-  haveI : IsAlgClosure (maximalRealSubfield Y) Ω :=
+  have : IsAlgClosure (maximalRealSubfield Y) Ω :=
     ⟨IsAlgClosure.isAlgClosed Y, Algebra.IsAlgebraic.trans _ Y Ω⟩
   have h1 := over_under (F := maximalRealSubfield Y) hw₁
   have h2 := over_under (F := maximalRealSubfield Y) hw₂
@@ -311,8 +311,8 @@ private theorem apart_of_moves {E Y Ω : Type} [Field E] [NumberField E] [IsCMFi
     have b : ρ' (algebraMap Y Ω δ) = ρ (algebraMap Y Ω δ) := rfl
     rw [a, b, hσ, hρδ] at h4
     exact h4
-  haveI : CharZero Y := algebraRat.charZero Y
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
+  have : CharZero Y := algebraRat.charZero Y
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
   have h6 : algebraMap Y Ω δ = 0 := self_eq_neg.1 h5.symm
   have h7 : δ = 0 := (map_eq_zero _).1 h6
   rw [h7] at hδ
@@ -362,10 +362,10 @@ private theorem chi_one {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] {p : �
 
 private theorem exists_prim {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     (p : ℕ) [Fact p.Prime] : ∃ ζ : Ω, IsPrimitiveRoot ζ p := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : NeZero (p : Ω) := ⟨by exact_mod_cast (Fact.out : p.Prime).ne_zero⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω p
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : NeZero (p : Ω) := ⟨by exact_mod_cast (Fact.out : p.Prime).ne_zero⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω p
 
 private theorem chi_conj {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] {p : ℕ} [Fact p.Prime] {ζ : Ω}
     (hζ : IsPrimitiveRoot ζ p) (j : Ω →+* ℂ) (c : G F Ω) (hc : ∀ x, j (c x) = starRingEnd ℂ (j x)) :
@@ -386,8 +386,8 @@ private theorem chi_conj {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] {p : 
 private theorem good_ker {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {p : ℕ}
     [Fact p.Prime] {ζ : Ω} (hζ : IsPrimitiveRoot ζ p) (lam : (ZMod p)ˣ →* ℂˣ) (h1 : lam (-1) = 1) :
     Good (lam.comp (hζ.autToPow F)).ker := by
-  haveI : Algebra.IsIntegral F Ω := (IsAlgClosure.isAlgebraic (R := F) (K := Ω)).isIntegral
-  refine ⟨?_, Abelianization.commutator_subset_ker _, ?_⟩
+  have : Algebra.IsIntegral F Ω := (IsAlgClosure.isAlgebraic (R := F) (K := Ω)).isIntegral
+  refine ⟨?_, Group.Abelianization.commutator_le_ker _, ?_⟩
   · refine Subgroup.isOpen_mono (H₁ := MulAction.stabilizer (G F Ω) ζ) ?_
       (stabilizer_isOpen_of_isIntegral (K := F) ζ)
     intro g hg
@@ -403,7 +403,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.freshChar :
     PowChar → InertiaGen → DecPow → FreshPrime → FreshChar := by
   intro hPow hIG hDP hFP F Ω _ _ _ _ _ U hU T hT n hn
   obtain ⟨u, huT, hpr, hpu, hpu2, hdec, hdvd, hTt⟩ := hFP F Ω U hU T hT n hn
-  haveI : Fact (Nat.Prime (normV u)) := ⟨hpr⟩
+  have : Fact (Nat.Prime (normV u)) := ⟨hpr⟩
   obtain ⟨lam, hlamn, hlam1, hlamord⟩ := hPow (normV u) n hn hdvd
   obtain ⟨ζ, hζ⟩ := exists_prim (F := F) (Ω := Ω) (normV u)
   refine ⟨lam.comp (hζ.autToPow F), good_ker hζ lam hlam1, ?_, ?_, u, huT, hpr, ?_, ?_⟩
@@ -472,16 +472,16 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.freshPrime :
   unfold RootMod at hR
   unfold FreshPrime
   intro F Ω _ _ _ _ _ U hU T hT n hn
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : NeZero (((2 * n : ℕ)) : Ω) := ⟨by exact_mod_cast (by omega : 2 * n ≠ 0)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (2 * n)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : NeZero (((2 * n : ℕ)) : Ω) := ⟨by exact_mod_cast (by omega : 2 * n ≠ 0)⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (2 * n)
   have hroot : ∀ t : HeightOneSpectrum (𝓞 F), ∃ x : Ω, x ^ n = (normV t : Ω) :=
     fun t => IsAlgClosed.exists_pow_nat_eq _ hn
   choose y hy using hroot
   set S : Set Ω := insert ζ (y '' T) with hSeq
-  haveI : Finite S := (Set.Finite.insert ζ (hT.image y)).to_subtype
-  haveI : FiniteDimensional F (IntermediateField.adjoin F S) :=
+  have : Finite S := (Set.Finite.insert ζ (hT.image y)).to_subtype
+  have : FiniteDimensional F (IntermediateField.adjoin F S) :=
     IntermediateField.finiteDimensional_adjoin
       (fun x _ => (Algebra.IsAlgebraic.isAlgebraic (R := F) x).isIntegral)
   set U' : Subgroup (G F Ω) := U ⊓ (IntermediateField.adjoin F S).fixingSubgroup with hU'eq
@@ -581,7 +581,7 @@ theorem inclOf : InclOf := by
     have h2 : eY (φ x) = IntermediateField.inclusion hle (eX x) := eY.apply_symm_apply _
     rw [h2]
     rfl
-  letI alg : Algebra X.K Y.K := φ.toRingHom.toAlgebra
+  let alg : Algebra X.K Y.K := φ.toRingHom.toAlgebra
   have t1 : IsScalarTower E X.K Y.K := IsScalarTower.of_algebraMap_eq (fun a => (φ.commutes a).symm)
   have t2 : IsScalarTower X.K Y.K Ω := IsScalarTower.of_algebraMap_eq (fun x => (hφ x).symm)
   refine ⟨alg, t1, t2, IsGalois.tower_top_of_isGalois E X.K Y.K, ?_⟩
@@ -594,7 +594,7 @@ theorem inclOf : InclOf := by
   have hsub : g.fieldRange.fixingSubgroup ≤ f.fieldRange.fixingSubgroup := by
     rw [hX, hY]; exact hXY
   have rel := Subgroup.relIndex_mul_index hsub
-  haveI : FiniteDimensional E X.K := Module.Finite.of_restrictScalars_finite ℚ E X.K
+  have : FiniteDimensional E X.K := Module.Finite.of_restrictScalars_finite ℚ E X.K
   have hpos : 0 < Module.finrank E X.K := Module.finrank_pos
   rw [fX, iX] at tw hpos
   rw [fY, iY, ← rel] at tw
@@ -656,7 +656,7 @@ variable {Ω : Type} [Field Ω] (A : ValuationSubring Ω)
 
 private theorem val_root (x : Ω) {n : ℕ} (hn : n ≠ 0) (h : x ^ n = 1) : A.valuation x = 1 := by
   have : A.valuation x ^ n = 1 := by rw [← map_pow, h, map_one]
-  exact (pow_eq_one_iff_of_nonneg zero_le' hn).1 this
+  exact (pow_eq_one_iff_of_nonneg zero_le hn).1 this
 
 private theorem val_one_sub_pow_le {ζ : Ω} (hζ : A.valuation ζ ≤ 1) (j : ℕ) :
     A.valuation (1 - ζ ^ j) ≤ A.valuation (1 - ζ) := by
@@ -667,8 +667,8 @@ private theorem val_one_sub_pow_le {ζ : Ω} (hζ : A.valuation ζ ≤ 1) (j : �
 
 private theorem val_p {p : ℕ} (hp : p.Prime) {ζ : Ω} (hζ : IsPrimitiveRoot ζ p) :
     A.valuation (1 - ζ) ^ (p - 1) = A.valuation ((p : ℕ) : Ω) := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hall : ∀ μ ∈ primitiveRoots p Ω, A.valuation (1 - μ) = A.valuation (1 - ζ) := by
     intro μ hμ
     rw [mem_primitiveRoots hp.pos] at hμ
@@ -754,15 +754,15 @@ theorem inertiaGen : InertiaGen := by
   unfold InertiaGen
   intro F Ω _ _ _ _ _ A u hA p _ hpu hpu2 ζ hζ
   have hp : p.Prime := Fact.out
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   have hm : 0 < p - 1 := by
     have := hp.two_le
     omega
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : NeZero (((p - 1 : ℕ)) : Ω) := ⟨by exact_mod_cast hm.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : NeZero (((p - 1 : ℕ)) : Ω) := ⟨by exact_mod_cast hm.ne'⟩
   obtain ⟨Y, hY⟩ := IsAlgClosed.exists_pow_nat_eq ((p : ℕ) : Ω) hm
-  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (p - 1)
+  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (p - 1)
   have hndvd : ¬ p ∣ p - 1 := fun h => absurd (Nat.le_of_dvd hm h) (by omega)
   obtain ⟨σ, hσ, hσY⟩ :=
     GlobalTheory.TameKummerInertia.tame_kummer_surj F Ω A u hA p hpu hpu2 (p - 1) hm hndvd Y μ hY hμ.pow_eq_one
@@ -1043,8 +1043,8 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.rootMod :
       simpa using hvp
     have hch : ringChar (IsLocalRing.ResidueField A) = p :=
       (hp.eq_one_or_self_of_dvd _ (ringChar.dvd hp0)).resolve_left (CharP.ringChar_ne_one)
-    haveI := ringChar.of_eq hch
-    haveI : Fact p.Prime := ⟨hp⟩
+    have := ringChar.of_eq hch
+    have : Fact p.Prime := ⟨hp⟩
     have hlt := hσ y hvy
     rw [hfy, hN] at hlt
     have hry : r yA ^ p = r yA := by
@@ -1142,7 +1142,7 @@ private theorem norm_not_mem_sq {F : Type} [Field F] [NumberField F] (u : Height
   classical
   have hprime : Nat.Prime (Ideal.absNorm u.asIdeal) :=
     ((GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramified F).1 u).2 hd
-  haveI : Fact (Nat.Prime (Ideal.absNorm u.asIdeal)) := ⟨hprime⟩
+  have : Fact (Nat.Prime (Ideal.absNorm u.asIdeal)) := ⟨hprime⟩
   have hmemZ : ((Ideal.absNorm u.asIdeal : ℕ) : ℤ) ∈ u.asIdeal.under ℤ := by
     rw [Ideal.under_def, Ideal.mem_comap]
     simpa using Ideal.absNorm_mem u.asIdeal
@@ -1168,7 +1168,7 @@ private theorem dec_le {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
   intro d hd
   have h := GlobalTheory.TameQuot.closure_frob_sup_Ine F Ω B u hB ⟨σ, hσ.1⟩ hσ
   have hc : IsClosed ((N.subgroupOf (Dec (F := F) B) : Subgroup (Dec (F := F) B)) : Set (Dec (F := F) B)) :=
-    (N.isClosed_of_isOpen hNo).preimage continuous_subtype_val
+    (N.isClosed_of_isOpen hNo).preimage continuous_subtypeVal
   have h2 := Subgroup.topologicalClosure_minimal
     (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) B) ⊔ (Ine (F := F) B).subgroupOf (Dec (F := F) B))
     (sup_le (Subgroup.zpowers_le.2 (Subgroup.mem_subgroupOf.2 hσN))

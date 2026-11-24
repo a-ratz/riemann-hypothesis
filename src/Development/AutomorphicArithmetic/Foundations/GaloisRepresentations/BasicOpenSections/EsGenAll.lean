@@ -89,7 +89,7 @@ theorem UpperTheory.Gal.Mod.generic_fibre_eqv_of_smooth_of_normal_local_domain :
     congr 2
     ext t
     simp [e]
-  haveI : IsIso u := by
+  have : IsIso u := by
     have : IsIso (CommRingCat.ofHom ((e : FractionRing T ≃+* L) : FractionRing T →+* L)) :=
       (RingEquiv.toCommRingCatIso (e : FractionRing T ≃+* L)).isIso_hom
     infer_instance
@@ -299,7 +299,7 @@ theorem UpperTheory.Gal.Mod.specialization_eqv_of_proper_of_strictly_henselian :
     Spec.map (CommRingCat.ofHom (e : IsLocalRing.ResidueField A →+* k))
   have hIso : IsIso (CommRingCat.ofHom (e : IsLocalRing.ResidueField A →+* k)) :=
     (e.toCommRingCatIso).isIso_hom
-  haveI : IsIso s := by
+  have : IsIso s := by
     dsimp only [s]
     infer_instance
   let f := Spec.map (CommRingCat.ofHom (IsLocalRing.residue A))
@@ -308,7 +308,7 @@ theorem UpperTheory.Gal.Mod.specialization_eqv_of_proper_of_strictly_henselian :
     rw [hcomp, Spec.map_comp]
   let φ : pullback p (Spec.map (CommRingCat.ofHom r)) ⟶ pullback p f :=
     pullback.map _ _ _ _ (𝟙 _) s (𝟙 _) (by simp) (by simp [hg])
-  haveI : IsIso φ := by
+  have : IsIso φ := by
     dsimp only [φ]
     infer_instance
   have hφ : pullback.fst p (Spec.map (CommRingCat.ofHom r)) = φ ≫ pullback.fst p f := by
@@ -359,7 +359,7 @@ theorem UpperTheory.Gal.Mod.spSpecIf :
       Eqv _ (sch.map iY) (tw q i) ∧ Eqv _ (sch.map jY) (tw q i) := by
     intro q hq i
     have hqV : IsUnit (q : V) := UpperTheory.Gal.Mod.spUnit V kb r hr q hq
-    haveI : NeZero q := ⟨by rintro rfl; simp at hq⟩
+    have : NeZero q := ⟨by rintro rfl; simp at hq⟩
     have h2 := UpperTheory.Gal.Mod.specialization_eqv_of_proper_of_strictly_henselian hE2 q V hSH hqV kb r hr
       (pullback.snd p (Spec.map (CommRingCat.ofHom ι))) i
     have h3 := UpperTheory.Gal.Mod.generic_fibre_eqv_of_smooth_of_normal_local_domain hE3 q V hAIC hqV Ω

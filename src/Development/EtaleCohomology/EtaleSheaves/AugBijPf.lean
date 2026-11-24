@@ -110,7 +110,7 @@ theorem LocSurj_of (hR : Root) : LocSurj := by
   intro q φ hnat hgen T hT f
   let O : ZMod q → T.Opens := fun c => ⟨{t | f t = c}, f.isLocallyConstant.isOpen_fiber c⟩
   choose W h he hs hζ using fun c => hR q (O c) (unit_res (O c).ι hT)
-  refine ⟨ZMod q, W, fun c => h c ≫ (O c).ι, fun c => by haveI := he c; infer_instance, ?_, ?_⟩
+  refine ⟨ZMod q, W, fun c => h c ≫ (O c).ι, fun c => by have := he c; infer_instance, ?_, ?_⟩
   · intro t
     have ht : t ∈ Set.range (O (f t)).ι.base := by rw [Scheme.Opens.range_ι]; exact (rfl : f t = f t)
     obtain ⟨u, hu⟩ := ht
@@ -192,7 +192,7 @@ theorem LocInj_of (hR : Root) (hL : SecLoc) (hE : GenEq) : LocInj := by
   obtain ⟨W, h, he, hs, ⟨ζ⟩⟩ := hR q T hT
   obtain ⟨ι, V, g, hge, hgs, ha⟩ := hL (ZMod q) (twF q 0) W (Sec.res h x)
   choose a ha using ha
-  refine ⟨{i // Nonempty (V i)}, fun i => V i.1, fun i => g i.1 ≫ h, fun i => by haveI := hge i.1; haveI := he; infer_instance,
+  refine ⟨{i // Nonempty (V i)}, fun i => V i.1, fun i => g i.1 ≫ h, fun i => by have := hge i.1; have := he; infer_instance,
     ?_, ?_⟩
   · intro t
     obtain ⟨w, rfl⟩ := hs t

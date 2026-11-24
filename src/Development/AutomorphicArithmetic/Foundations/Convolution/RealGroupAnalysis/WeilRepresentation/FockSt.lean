@@ -151,7 +151,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.vacFd :
   obtain ⟨K', hK', hKp⟩ := fixCpt D.δ hδ Λ
   have hU : ∀ y ∈ K', {z : Fin 4 → FiniteAdeleRing (𝓞 F) F | ∀ i, z i - y i ∈ Λ} ∈ 𝓝 y := fun y _ => by
     have ho : IsOpen {z : Fin 4 → FiniteAdeleRing (𝓞 F) F | ∀ i, z i - y i ∈ Λ} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i =>
         Λ.isOpen.preimage ((continuous_apply i).sub continuous_const)
     exact ho.mem_nhds fun i => by simp [Λ.zero_mem]
@@ -167,7 +167,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.vacFd :
   by_contra hv
   have hv' : φ.1.1 v ≠ 0 := hv
   have hmem := ht (hKp φ.1 φ.2.2 v hv')
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hmem
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hmem
   obtain ⟨y, hy, hyv⟩ := hmem
   have hfix := (φ.2.2 (fun i => ((0, (v i).2 - y i) : A F)) (fun i => ⟨rfl, hyv i⟩)
     (fun i => ((0, y i) : A F))).1

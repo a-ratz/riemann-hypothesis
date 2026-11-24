@@ -301,7 +301,7 @@ namespace GlobalTheory.Core.Deg
 
 theorem gam_absorb {C Gam : ℝ} (hC : 0 ≤ C) {k f : ℕ} (hf : 1 ≤ f) (hG : Gam ≤ Real.exp ((k : ℝ) / 8)) :
     C ^ (k * f) * Gam ≤ (Real.exp 1 * C) ^ (k * f) := by
-  rw [mul_pow, ← Real.exp_nat_mul, mul_one, mul_comm (Real.exp _)]
+  rw [mul_pow, ← Real.exp_natCast_mul, mul_one, mul_comm (Real.exp _)]
   refine mul_le_mul_of_nonneg_left (hG.trans (Real.exp_le_exp.2 ?_)) (by positivity)
   have hf' : (1:ℝ) ≤ f := by exact_mod_cast hf
   have hk : (0:ℝ) ≤ k := Nat.cast_nonneg k
@@ -952,11 +952,11 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.Core.Deg.exists_termLoop_of_standingHypotheses : ∀ (D : D7) (large₂ : SizeData₂ D) (X : HidaSetting D) (Y : Full X) (hF : FinX Y) (hI : SIso D.s (sOf hF)) (u : D.what₂.Word) (C' Cl Cg cb Cu cT CT : ℝ), 29 ≤ C' → 72 ≤ Cl → Ties D → StandingHypotheses D large₂ C' Cl Cg cb Cu cT CT → ConcTie X Y → ∃ (W : WittDat X) (H : TieHyp W hI) (Am : AmpDat X) (hV : PvalForm W hI Am) (Z : LoopTie D large₂ (termTieOf W hI H Am hV) u u 1), TieAt hF hI large₂ u (termTieOf W hI H Am hV) Z ∧ ∀ t, Z.volR t = Formalism.L2.SG.LoopTerm.volRC hI t := by
   intro D large₂ X Y hF hI u C' Cl Cg cb Cu cT CT hC' hCl hT hS hCT
-  haveI : Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow := ⟨GlobalTheory.DecTransport.decLow_main⟩
-  haveI : Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc := ⟨GlobalTheory.Sloc.CoefWeighted.coefWeightedLoc_uncond⟩
+  have : Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow := ⟨GlobalTheory.DecTransport.decLow_main⟩
+  have : Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc := ⟨GlobalTheory.Sloc.CoefWeighted.coefWeightedLoc_uncond⟩
   have hG : Formalism.L2.SG.ConcreteSettingExists.GapHyp D := Formalism.L2.SG.ThmSOwn.gap_hypothesis_of_hypotheses hS (by linarith) hC'
   have hWD : Formalism.L2.SG.WuDecay.WuDecay X := hCT.2.2.2.2.1
-  haveI : Nonempty D.what₂.Word := ⟨u⟩
+  have : Nonempty D.what₂.Word := ⟨u⟩
   obtain ⟨C⟩ := Formalism.L2.SG.Pf.choiceExists X 1 one_pos
   have hB : Formalism.L2.SG.LocWSOf.WuBessel C := Formalism.L2.SG.Pf.wuBesselOfLoc_all C hG GlobalTheory.uniqGap_and_besselOfW.2
     (Formalism.L2.SG.Pf.LocF.locFactor_holds hG C) (fun τ => Formalism.L2.SG.Pf.dsTr C τ) (fun τ => Formalism.L2.SG.Pf.haarTr C τ)

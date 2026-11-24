@@ -118,7 +118,7 @@ theorem UpperTheory.V.AlgebraTools.proLResOf_normal :
     let c : H →* H := (MulAut.conjNormal g).toMonoidHom
     have hc : Continuous c := by
       apply Continuous.subtype_mk
-      exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+      exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
     have := res_map l H c hc hy
     refine Subgroup.mem_map.mpr ⟨c y, this, ?_⟩
     simp [c, MulAut.conjNormal_apply]
@@ -130,6 +130,6 @@ theorem UpperTheory.V.AlgebraTools.proLResOf_normal :
     have hle : proLRes l H ≤ (O.toOpenSubgroup : Subgroup G).comap H.subtype :=
       Subgroup.map_le_iff_le_comap.mp hO
     have hopen : IsOpen (((O.toOpenSubgroup : Subgroup G).comap H.subtype : Subgroup H) : Set H) :=
-      O.toOpenSubgroup.isOpen.preimage continuous_subtype_val
+      O.toOpenSubgroup.isOpen.preimage continuous_subtypeVal
     obtain ⟨k, hk⟩ := res_pow l H _ hopen hle ⟨h, hh⟩
     exact ⟨k, hk⟩

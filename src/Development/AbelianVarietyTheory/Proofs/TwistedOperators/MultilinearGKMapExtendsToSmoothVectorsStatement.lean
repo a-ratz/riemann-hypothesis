@@ -214,17 +214,17 @@ theorem bilinear_bound_of_dense_right : ∀ {E : Type} [AddCommGroup E] [Module 
     (∀ a ∈ D₂, ∀ i, ∃ q : Seminorm ℂ E, Continuous q ∧ ∀ w, p i (F w a) ≤ q (j₁ w)) →
     ∀ b i, ∃ q : Seminorm ℂ E, Continuous q ∧ ∀ w, p i (F w b) ≤ q (j₁ w) := by
   intro E _ _ _ _ _ _ p hp X₁ X₂ _ _ _ _ j₁ j₂ hinj hcl D₂ hdense F h₁ h₂ b i
-  haveI : ContinuousSMul ℂ E := hp.continuousSMul
-  haveI : FirstCountableTopology E := hp.firstCountableTopology
-  haveI : PolynormableSpace ℂ E := hp.toPolynormableSpace
-  haveI : IsTopologicalAddGroup E := inferInstance
+  have : ContinuousSMul ℂ E := hp.continuousSMul
+  have : FirstCountableTopology E := hp.firstCountableTopology
+  have : PolynormableSpace ℂ E := hp.toPolynormableSpace
+  have : IsTopologicalAddGroup E := inferInstance
   set Y : Submodule ℂ E := LinearMap.range j₁ with hYdef
   have hYc : IsClosed (Y : Set E) := by simpa [Y, LinearMap.coe_range] using hcl
-  haveI : IsUniformAddGroup Y := Y.toAddSubgroup.isUniformAddGroup
-  haveI : CompleteSpace Y := hYc.completeSpace_coe
-  haveI : FirstCountableTopology Y := Topology.IsInducing.subtypeVal.firstCountableTopology
-  haveI : (𝓤 Y).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
-  haveI : BarrelledSpace ℂ Y := inferInstance
+  have : IsUniformAddGroup Y := Y.toAddSubgroup.isUniformAddGroup
+  have : CompleteSpace Y := hYc.completeSpace_coe
+  have : FirstCountableTopology Y := Topology.IsInducing.subtypeVal.firstCountableTopology
+  have : (𝓤 Y).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : BarrelledSpace ℂ Y := inferInstance
   let e : X₁ ≃ₗ[ℂ] Y := LinearEquiv.ofInjective j₁ hinj
   have he : ∀ w, ((e w : Y) : E) = j₁ w := fun w => rfl
 
@@ -234,14 +234,14 @@ theorem bilinear_bound_of_dense_right : ∀ {E : Type} [AddCommGroup E] [Module 
     intro a
     refine hp.continuous_of_continuous_comp (gl a) fun k => ?_
     obtain ⟨q, hq, hle⟩ := h₂ a a.2 k
-    refine Seminorm.continuous_of_le (q := q.comp Y.subtype) (hq.comp continuous_subtype_val) ?_
+    refine Seminorm.continuous_of_le (q := q.comp Y.subtype) (hq.comp continuous_subtypeVal) ?_
     intro y
     have := hle (e.symm y)
     rw [← he, e.apply_symm_apply] at this
     simpa [Seminorm.comp_apply, hgl] using this
   let g : D₂ → Y →L[ℂ] E := fun a => ⟨gl a, hgc a⟩
   let l : Filter D₂ := Filter.comap (fun a : D₂ => j₂ a) (𝓝 (j₂ b))
-  haveI : l.NeBot := by
+  have : l.NeBot := by
     rw [Filter.comap_neBot_iff]
     intro t ht
     obtain ⟨_, htx, ⟨a, ha, rfl⟩⟩ := mem_closure_iff_nhds.mp (hdense b) t ht
@@ -348,7 +348,7 @@ theorem invariant_insert (A B : ∀ τ, Submodule ℂ (H τ)) (hAB : ∀ τ, A �
     (hT : Invariant A B Rk Rg C T₀ s T) : ∃ T', Invariant A B Rk Rg C T₀ (insert τ₀ s) T' := by
   obtain ⟨hTa, hTb, hTc⟩ := hT
   set D' := piecewiseSubmodule A B (insert τ₀ s) with hD'
-  have hD'0 : D' τ₀ = B τ₀ := if_pos (Finset.mem_insert_self τ₀ s)
+  have hD'0 : D' τ₀ = B τ₀ := ite_eq_left (Finset.mem_insert_self τ₀ s)
   have hBD' : ∀ x ∈ B τ₀, x ∈ D' τ₀ := fun x hx => by rw [hD'0]; exact hx
   have hD'B : ∀ x ∈ D' τ₀, x ∈ B τ₀ := fun x hx => by rw [← hD'0]; exact hx
   have hD'ne : ∀ τ, τ ≠ τ₀ → D' τ = piecewiseSubmodule A B s τ := by
@@ -360,7 +360,7 @@ theorem invariant_insert (A B : ∀ τ, Submodule ℂ (H τ)) (hAB : ∀ τ, A �
     split_ifs
     · exact hAB τ hx
     · exact hx
-  have hD0 : piecewiseSubmodule A B s τ₀ = A τ₀ := if_neg hτ₀
+  have hD0 : piecewiseSubmodule A B s τ₀ = A τ₀ := ite_eq_right hτ₀
 
   have hret := fun τ => (D' τ).subtype.exists_leftInverse_of_injective (Submodule.ker_subtype _)
   choose g hg using hret
@@ -521,7 +521,7 @@ theorem invariant_insert (A B : ∀ τ, Submodule ℂ (H τ)) (hAB : ∀ τ, A �
       · exact absurd h hne
       · exact h
     have hBDτ : ∀ x ∈ B τ, x ∈ D' τ := fun x hx => by
-      rw [hD'ne τ hne]; simp only [piecewiseSubmodule, if_pos hτs]; exact hx
+      rw [hD'ne τ hne]; simp only [piecewiseSubmodule, ite_eq_left hτs]; exact hx
     constructor
     · let F : H τ →ₗ[ℂ] H τ₀ →ₗ[ℂ] E := LinearMap.mk₂ ℂ (fun w b => T' (update (update u τ w) τ₀ b))
         (by intro w₁ w₂ b; rw [update_comm hne, update_comm hne, update_comm hne, T'.map_update_add])
@@ -608,8 +608,8 @@ theorem mem_closure_of_forall_dual_vanish :
     {p : ℕ → Seminorm ℂ E}, WithSeminorms p → ∀ (Z : Submodule ℂ E) (x : E),
     (∀ f : E →L[ℂ] ℂ, (∀ z ∈ Z, f z = 0) → f x = 0) → x ∈ closure (Z : Set E) := by
   intro E _ _ _ _ p hp Z x h
-  haveI := hp.continuousSMul
-  haveI : LocallyConvexSpace ℝ E := hp.toLocallyConvexSpace
+  have := hp.continuousSMul
+  have : LocallyConvexSpace ℝ E := hp.toLocallyConvexSpace
   by_contra hx
   rw [← Z.topologicalClosure_coe] at hx
   obtain ⟨f, u, hfx, hf⟩ := RCLike.geometric_hahn_banach_point_closed (𝕜 := ℂ)
@@ -793,7 +793,7 @@ open GlobalTheory.SmoothGlob
 variable {E : Type} [AddCommGroup E] [Module ℂ E] [UniformSpace E] [IsUniformAddGroup E] [CompleteSpace E] [T2Space E]
 
 theorem smul_seminorm_cont {q : Seminorm ℂ E} (hq : Continuous q) (c : NNReal) : Continuous (c • q) := by
-  rw [Seminorm.coe_smul]
+  rw [FunLike.coe_smul]
   exact hq.const_smul c
 
 theorem bound_via {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {ε : Fin n → Bool}
@@ -805,7 +805,7 @@ theorem bound_via {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace
   obtain ⟨S, C, hS, hb⟩ := hL i
   obtain ⟨q, hq, hqb⟩ := hN S hS
   refine ⟨Real.toNNReal |C| • q, smul_seminorm_cont hq _, fun w hw => ?_⟩
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul, Real.coe_toNNReal _ (abs_nonneg C)]
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul, Real.coe_toNNReal _ (abs_nonneg C)]
   calc p i (L w) ≤ C * sobNorm σ S w := hb w hw
     _ ≤ |C| * sobNorm σ S w := mul_le_mul_of_nonneg_right (le_abs_self C) (sobNorm_nonneg σ S w)
     _ ≤ |C| * q (N w) := mul_le_mul_of_nonneg_left (hqb w hw) (abs_nonneg C)
@@ -836,7 +836,7 @@ open GlobalTheory.SmoothGlob
 
 theorem extend_positions : GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (E : Type) [AddCommGroup E] [Module ℂ E] [UniformSpace E] [IsUniformAddGroup E] [CompleteSpace E] [T2Space E] (p : ℕ → Seminorm ℂ E) (π dπ : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ → (E →L[ℂ] E)), (∀ τ, GlobalTheory.SmoothGlob.IsSmoothModRep (M.ε τ) p (π τ) (dπ τ)) → (∀ τ τ', τ ≠ τ' → ∀ g ∈ Formalism.MainNotions.S.UJset (M.ε τ), ∀ g' ∈ Formalism.MainNotions.S.UJset (M.ε τ'), (π τ g).comp (π τ' g') = (π τ' g').comp (π τ g)) → ∀ T₀ : MultilinearMap (RingHom.id ℂ) (fun τ : D.what₂.Tau => GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ) E, (∀ τ, ∀ k ∈ Formalism.REAL.Kset (M.ε τ), ∀ (u : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.KVec M) (w : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ), (w : M.H τ) = M.σ τ k (u τ) → T₀ (Function.update u τ w) = π τ k (T₀ u)) → (∀ τ, ∀ X ∈ GlobalTheory.SmoothGlob.lieSet (M.ε τ), ∀ (u : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.KVec M) (w : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ), (w : M.H τ) = dRep (M.σ τ) X (u τ) → T₀ (Function.update u τ w) = dπ τ X (T₀ u)) → ∃ T : MultilinearMap (RingHom.id ℂ) (fun τ : D.what₂.Tau => M.sm τ) E, (∀ (v : M.Vec) (u : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.KVec M), (∀ τ, (v τ : M.H τ) = u τ) → T v = T₀ u) ∧ (∀ τ, ∀ g ∈ Formalism.MainNotions.S.UJset (M.ε τ), ∀ (v : M.Vec) (w : M.sm τ), (w : M.H τ) = M.σ τ g (v τ) → T (Function.update v τ w) = π τ g (T v)) ∧ ∀ τ (i : ℕ) (v : M.Vec), ∃ (L : List (List (Matrix (Fin V.rank) (Fin V.rank) ℂ))) (C : ℝ), (∀ l ∈ L, ∀ X ∈ l, X ∈ GlobalTheory.SmoothGlob.lieSet (M.ε τ)) ∧ ∀ w : M.sm τ, p i (T (Function.update v τ w)) ≤ C * GlobalTheory.SmoothGlob.sobNorm (M.σ τ) L w := by
   intro hHC hCW D V S M E _ _ _ _ _ _ p π dπ hπ hcomm T₀ hK hL
-  haveI hc : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
+  have hc : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
   have hsm : ∀ τ w, w ∈ M.sm τ ↔ SmoothVec (lieSet (M.ε τ)) (M.σ τ) w := fun τ w => GlobalTheory.T.mem_smoothVectors_discreteSeriesModel_iff M τ w
   have hstd : ∀ τ, GlobalTheory.TypeSum.Std (M.ε τ) (M.σ τ) := fun τ => GlobalTheory.TypeSum.std_of_isDS hHC (M.ds τ)
   have hAB : ∀ τ, GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ ≤ M.sm τ := fun τ v hv => (hsm τ v).2 ((hstd τ).2.2.1 v hv)

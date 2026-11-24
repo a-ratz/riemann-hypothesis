@@ -101,7 +101,7 @@ theorem dualityFor_absGal (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p
 theorem localTateDuality : ReciprocityTheory.Gal.LocalTateDuality := by
   intro F Ω _ _ _ _ _ l _ r M _ _ _ _ _ A rho v _ hA hrho
   obtain ⟨p, hp, hpv⟩ := exists_prime_mem_asIdeal v
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hval : A.valuation ((p : ℕ) : Ω) < 1 := by
     have := (hA ((p : ℕ) : 𝓞 F)).2 hpv
     simpa using this

@@ -87,7 +87,7 @@ theorem fockM_comm : ∀ {V : Type} [AddCommGroup V] [Module ℂ V] {W : Type} [
   rw [fockM_comm_sum] at h11 h1i hi1 hii
   by_cases hjk : j = k
   · rw [hjk]
-  · simp only [if_neg hjk, Complex.zero_im, Complex.ofReal_zero, mul_zero, zero_smul, sub_eq_zero] at h11 h1i hi1 hii
+  · simp only [ite_eq_right hjk, Complex.zero_im, Complex.ofReal_zero, mul_zero, zero_smul, sub_eq_zero] at h11 h1i hi1 hii
     unfold fockM
     have c : Commute (H (unitAt j 1) - (lineSign j.2.1 j.2.2 * Complex.I) • H (unitAt j Complex.I))
         (H (unitAt k 1) - (lineSign k.2.1 k.2.2 * Complex.I) • H (unitAt k Complex.I)) :=
@@ -302,7 +302,7 @@ theorem polMap_index_injective (W Λ : Type) [Fintype W] :
     rw [Finsupp.finsetSum_apply, Finset.sum_eq_single w]
     · exact Finsupp.mapDomain_apply_of_injective (Prod.mk_right_injective w) _ _
     · intro v _ hv
-      apply Finsupp.mapDomain_notin_range
+      apply Finsupp.mapDomain_of_notMem_range
       rintro ⟨x, hx⟩
       exact hv (congrArg Prod.fst hx)
     · intro h

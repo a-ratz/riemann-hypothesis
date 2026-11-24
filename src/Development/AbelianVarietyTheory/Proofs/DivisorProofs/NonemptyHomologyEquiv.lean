@@ -91,8 +91,8 @@ theorem nonempty_coh_equiv {R : Type} [CommRing R] (f : X ⟶ Spec (CommRingCat.
     (hD : ∀ s : Finset κ, s.Nonempty → IsAffineOpen (⨅ i ∈ s, D i)) (n : ℕ) :
     letI := algebraΓOfHom f
     Nonempty ((cechLB f M D).homology n ≃ₗ[R] coh (twist (structureModule X) M) n) := by
-  letI := algebraΓOfHom f
-  haveI := LB.isQuasicoherent_toMod hM
+  let := algebraΓOfHom f
+  have := LB.isQuasicoherent_toMod hM
   exact ⟨((HomologicalComplex.homologyFunctor _ _ n).mapIso (cechIso f M D)).toLinearEquiv ≪≫ₗ
     cechHEquivCoh R hc hD (LB.toMod M) n ≪≫ₗ (cohOn.mapIso R ⊤ n (Twist.unitTwistIso M)).symm⟩
 
@@ -104,8 +104,8 @@ theorem hdim_pull [QuasiCompact f] [IsSeparated f]
     letI := algebraΓOfHom f
     letI := algebraΓOfHom f'
     hdim E (twist (structureModule X') (M.pull π)) n = hdim k (twist (structureModule X) M) n := by
-  letI := algebraΓOfHom f
-  letI := algebraΓOfHom f'
+  let := algebraΓOfHom f
+  let := algebraΓOfHom f'
   have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace f
   have := isAffineHom_diagonal_of_isSeparated f
   obtain ⟨m, D, hD, hc⟩ := exists_fin_affine_cover (X := X) (V := ⊤) isCompact_univ
@@ -124,8 +124,8 @@ theorem interNum_pull [QuasiCompact f] [IsSeparated f]
     letI := algebraΓOfHom f
     letI := algebraΓOfHom f'
     interNum E (structureModule X') (fun i => (L i).pull π) = interNum k (structureModule X) L := by
-  letI := algebraΓOfHom f
-  letI := algebraΓOfHom f'
+  let := algebraΓOfHom f
+  let := algebraΓOfHom f'
   have h : chiPic k (structureModule X) = chiPic E (structureModule X') ∘ pull π := by
     funext c
     obtain ⟨M, hM, rfl⟩ := cls_surj c

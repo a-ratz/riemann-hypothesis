@@ -110,14 +110,14 @@ theorem isIntegral_sq_mul_wp_sub_div : ∀ (N : ℕ) [NeZero N] (τ : ℍ) (ω :
       rw [hmem]
       have e : (N : ℂ) ^ 2 * (cP N p.1.1 n - cP N p.1.2 n) =
           (N : ℂ) ^ 2 * cB N p.1.1 n - (N : ℂ) ^ 2 * cB N p.1.2 n := by
-        simp only [cP, if_neg p.2.1, if_neg p.2.2]; ring
+        simp only [cP, ite_eq_right p.2.1, ite_eq_right p.2.2]; ring
       rw [e]
       exact (_root_.GlobalTheory.WpFam.isIntegral_coefficients N N p.1.1 n (NeZero.pos N) (hNx _)).1.sub
         (_root_.GlobalTheory.WpFam.isIntegral_coefficients N N p.1.2 n (NeZero.pos N) (hNx _)).1
   have hjR : IsIntegral R (jT τ) := hj.tower_top
   have hT := _root_.GlobalTheory.QFam.isIntegral_value_div ι act 2 N (fun p τ => (N : ℂ) ^ 2 * (wp N p.1.1 τ - wp N p.1.2 τ)) R τ ω
     (NeZero.pos N) hRA.actBij hfam hQ hjR hω ⟨(x, y), hx, hy⟩
-  haveI : Algebra.IsIntegral ℤ R := ⟨fun r => by
+  have : Algebra.IsIntegral ℤ R := ⟨fun r => by
     have h : IsIntegral ℤ ((r : ℂ)) := (hmem _).1 r.2
     exact (isIntegral_algHom_iff (R.subtype.toIntAlgHom) Subtype.coe_injective).1 h⟩
   exact isIntegral_trans _ hT
@@ -144,7 +144,7 @@ namespace GlobalTheory.WpInt
 theorem isIntegral_int_of_closure (y : ℂ)
     (hy : IsIntegral (integralClosure ℤ ℂ).toSubring y) : IsIntegral ℤ y := by
   set R : Subring ℂ := (integralClosure ℤ ℂ).toSubring
-  haveI : Algebra.IsIntegral ℤ R := ⟨fun r => by
+  have : Algebra.IsIntegral ℤ R := ⟨fun r => by
     have h : IsIntegral ℤ (r : ℂ) := r.2
     exact (isIntegral_algHom_iff (R.subtype.toIntAlgHom) Subtype.coe_injective).mp h⟩
   exact isIntegral_trans (R := ℤ) (A := R) y hy
@@ -230,7 +230,7 @@ theorem wp_eq {L : PeriodPair} {c : ℂ} {τ : ℍ} (M : ℕ) (P : ℂ) (x : Fin
 
 theorem main : ∀ (L : PeriodPair) (β Ω : ℂ) (M : ℕ), MulStable L β → β.im ≠ 0 → Ω ^ 12 = latDisc L → 0 < M → (∀ P, (M : ℂ) * P ∈ L.lattice → IsIntegral ℤ (12 * (M : ℂ) ^ 2 * L.weierstrassP P / Ω ^ 2) ∧ IsIntegral ℤ ((M : ℂ) ^ 3 * L.derivWeierstrassP P / Ω ^ 3)) ∧ ∀ P Q, P ∉ L.lattice → Q ∉ L.lattice → (M : ℂ) * P ∈ L.lattice → (M : ℂ) * Q ∈ L.lattice → IsIntegral ℤ ((M : ℂ) ^ 2 * (L.weierstrassP P - L.weierstrassP Q) / Ω ^ 2) := by
   intro L β Ω M hβ hβi hΩ hM
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨c, τ, hτ⟩ := latTau L
   have hj := _root_.GlobalTheory.JInt.main L c τ β hτ hβ hβi
   have hω := (GlobalTheory.QFam.jT_eq_and_pow_twelve_eq_DD L c τ hτ).2 Ω hΩ

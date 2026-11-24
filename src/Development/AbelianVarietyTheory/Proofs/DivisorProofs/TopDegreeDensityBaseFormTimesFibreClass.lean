@@ -333,7 +333,7 @@ theorem det_schur_bilinear_entry (B : Type) [Fintype B] [DecidableEq B]
       exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
   have hdet : M.det = Q.det := by
     rw [hM, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, hPz, hPz', hR]; ring
-  letI : Invertible D := ⟨Matrix.of fun _ _ => q⁻¹, by ext; simp [D, Matrix.mul_apply, hq0],
+  let : Invertible D := ⟨Matrix.of fun _ _ => q⁻¹, by ext; simp [D, Matrix.mul_apply, hq0],
     by ext; simp [D, Matrix.mul_apply, hq0]⟩
   rw [Matrix.det_fromBlocks₂₂] at hdet
   have hD : D.det = q := by simp [D, Matrix.det_unique]
@@ -424,7 +424,7 @@ noncomputable def ixB {s : ℕ} (i : Fin s) : {a : Fin s // (a : ℕ) < i} ⊕ U
       exacts [⟨.inl ⟨c, h⟩, rfl⟩, ⟨.inr (), Subtype.ext (Fin.ext h.symm)⟩])
 
 theorem det_upU {s : ℕ} (y : Low s → ℂ) : (upU y).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [Matrix.det_of_isUpperTriangular]
   · simp [upU]
   · intro a b h
     have h : b < a := h
@@ -440,7 +440,7 @@ theorem row_lt {s : ℕ} {i : Fin s} {y y' : Low s → ℂ} (h : ∀ j : Low s, 
 
 theorem row_ge {s : ℕ} {i : Fin s} (y : Low s → ℂ) {a : Fin s} (ha : i ≤ a) (c : Fin s) :
     upU (fun j => if j.1.2 < i then y j else 0) a c = if a = c then 1 else 0 := by
-  simp only [upU, Matrix.of_apply, ha.not_gt, if_false]
+  simp only [upU, Matrix.of_apply, ha.not_gt, ite_false]
   split_ifs with h1 h2
   · exact absurd h2 h1.ne
   all_goals rfl
@@ -454,7 +454,7 @@ theorem rows_eq {s : ℕ} {i : Fin s} {y y' : Low s → ℂ} (h : ∀ j : Low s,
   rintro (a | a) c <;> refine Eq.trans ?_ Matrix.mul_apply.symm
   · simp only [Fintype.sum_sum_type, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
       Matrix.zero_apply, zero_mul, Finset.sum_const_zero, add_zero, Matrix.one_apply, ite_mul, one_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, Matrix.submatrix_apply, id]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, Matrix.submatrix_apply, id]
     exact congrFun (row_lt h a.2) c
   · simp only [Fintype.sum_sum_type, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂,
       Matrix.zero_apply, zero_mul, Finset.sum_const_zero, zero_add, Matrix.submatrix_apply, id, Matrix.of_apply]
@@ -468,11 +468,11 @@ theorem rows_eq {s : ℕ} {i : Fin s} {y y' : Low s → ℂ} (h : ∀ j : Low s,
     · have h1 : ixA i (.inl c) < i := c.2
       simp [upU, h1.not_gt, h1.ne']
     · simp only [EmbeddingLike.apply_eq_iff_eq, Sum.inr.injEq, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       obtain _ | ⟨⟨⟨b, a⟩, hab⟩, rfl⟩ := c
       · change upU y' i i = 1
         simp [upU]
-      · exact dif_pos hab
+      · exact dite_eq_left hab
 
 theorem conj_mul {A B C : Type} [Fintype B] [Fintype C] (W : Matrix A B ℂ) (R : Matrix B C ℂ) (G : Matrix C C ℂ) :
     W * R * G * (W * R)ᴴ = W * (R * G * Rᴴ) * Wᴴ := by
@@ -591,11 +591,11 @@ theorem del_affForm (Q : Matrix ι ι ℂ) (c : ι → ℂ) (L : ι → E →L[�
   unfold affForm
   rw [del_sum fun i _ => (ContDiff.sum fun j _ =>
     contDiff_term (c i) (c j) (Q i j) (L i) (L j)).differentiable two_ne_zero x,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [del_sum fun j _ =>
     (contDiff_term (c i) (c j) (Q i j) (L i) (L j)).differentiable two_ne_zero x,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   exact Finset.sum_congr rfl fun j _ => del_term _ _ _ _ _ _ _
 
 theorem dbar_affForm (Q : Matrix ι ι ℂ) (c : ι → ℂ) (L : ι → E →L[ℂ] ℂ) (x v : E) :
@@ -603,11 +603,11 @@ theorem dbar_affForm (Q : Matrix ι ι ℂ) (c : ι → ℂ) (L : ι → E →L[
   unfold affForm
   rw [dbar_sum fun i _ => (ContDiff.sum fun j _ =>
     contDiff_term (c i) (c j) (Q i j) (L i) (L j)).differentiable two_ne_zero x,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [dbar_sum fun j _ =>
     (contDiff_term (c i) (c j) (Q i j) (L i) (L j)).differentiable two_ne_zero x,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   exact Finset.sum_congr rfl fun j _ => dbar_term _ _ _ _ _ _ _
 
 theorem ddbar_affForm (Q : Matrix ι ι ℂ) (c : ι → ℂ) (L : ι → E →L[ℂ] ℂ) (x v w : E) :
@@ -620,11 +620,11 @@ theorem ddbar_affForm (Q : Matrix ι ι ℂ) (c : ι → ℂ) (L : ι → E →L
   rw [this, sub_self, zero_add,
     del_sum fun i _ => (ContDiff.sum fun j _ =>
     contDiff_term (c i) (L j w) (Q i j) (L i) 0).differentiable two_ne_zero x,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [del_sum fun j _ =>
     (contDiff_term (c i) (L j w) (Q i j) (L i) 0).differentiable two_ne_zero x,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [del_term]; simp
 
@@ -667,7 +667,7 @@ theorem leviForm_log_herm : ∀ (n : ℕ) (B : Type) [Fintype B] [DecidableEq B]
   let M : (B → ℂ) →L[ℂ] V n :=
     ∑ a, (ContinuousLinearMap.proj a : (B → ℂ) →L[ℂ] ℂ).smulRight (coordVec (e a))
   have hM : ∀ t, M t = ∑ a, t a • coordVec (e a) := fun t => by
-    simp [M, ContinuousLinearMap.sum_apply]
+    simp [M, sum_apply]
   have hM1 : ∀ a, M (Pi.single a 1) = coordVec (e a) := fun a => by
     rw [hM]; simp [Pi.single_apply, ite_smul]
   have hφ : HasFDerivAt (fun t => z + M t) M 0 := M.hasFDerivAt.const_add z
@@ -688,7 +688,7 @@ theorem leviForm_log_herm : ∀ (n : ℕ) (B : Type) [Fintype B] [DecidableEq B]
   have hL : ∀ (a : B) i, L i (Pi.single a 1) = if i = some a then 1 else 0 := by
     intro a i; cases i <;> simp [L, Pi.single_apply]
   simp only [hL, map_zero, add_zero, apply_ite (starRingEnd ℂ), map_one, ite_mul, mul_ite, one_mul,
-    zero_mul, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    zero_mul, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     Finset.sum_ite_irrel, Finset.sum_const_zero]
   rfl
 
@@ -823,7 +823,7 @@ theorem row_levi_det_of (hR : ∀ (n : ℕ) (B : Type) [Fintype B] [DecidableEq 
   have hM : (Matrix.of fun a b : {j : Cell m // j.root = ⟨τ, i⟩} => -leviForm (cellPot ε G ⟨τ, i⟩) w (coordVec (ε.symm (.inr a.1))) (coordVec (ε.symm (.inr b.1)))).submatrix (rowEquiv m τ i) (rowEquiv m τ i) = Matrix.of fun a b : {j : Low (m τ) // j.1.2 = i} => Q (some a) (some b) / q - (∑ c, Q (some a) c * Option.elim c 1 (fun b => star (w (e b)))) * (∑ c, Option.elim c 1 (fun a => w (e a)) * Q c (some b)) / q ^ 2 := by
     ext a b
     have := hR' a b
-    simp only [leviForm_neg, ContinuousLinearMap.neg_apply, hstar] at this
+    simp only [leviForm_neg, neg_apply, hstar] at this
     rw [Matrix.submatrix_apply, Matrix.of_apply, Matrix.of_apply, ← this]
     rfl
   rw [hM, hD', card_row_sub]
@@ -1033,7 +1033,7 @@ theorem GlobalTheory.FlagCellDens.main : ∀ (s : ℕ) (G : Matrix (Fin s) (Fin 
     rw [this, Complex.norm_real, Real.norm_eq_abs, abs_of_pos h1]
   have h0 : Δ 0 = 1 := by
     simp only [hΔ, leadMinor]
-    haveI : IsEmpty {a : Fin s // (a : ℕ) < 0} := ⟨fun a => Nat.not_lt_zero _ a.2⟩
+    have : IsEmpty {a : Fin s // (a : ℕ) < 0} := ⟨fun a => Nat.not_lt_zero _ a.2⟩
     rw [Matrix.det_isEmpty]; simp
   have hp : ∀ k, k ≤ s → 0 < Δ k := fun k _ => (leadMinor_pos hM k).1
   rw [Finset.prod_mul_distrib, GlobalTheory.FlagFibre.dens]

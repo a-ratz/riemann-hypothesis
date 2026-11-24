@@ -74,7 +74,7 @@ private theorem isIntegralHom_absFrob_affine (p f : ℕ) (hp : Nat.Prime p) (Y :
 theorem UpperTheory.Gal.crystallineComparison.Mod.frobFin_of :
     FrobFin := by
   intro p f hp κ _ _ _ X s hs h
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hk0 : ((p : ℕ) : κ) = 0 := CharP.cast_eq_zero κ p
   have hκ : ((p : ℕ) : Γ(Sp κ, ⊤)) = 0 := GlobalTheory.SS.FrobField.cast_zero_sp κ hk0
   have hsp : GlobalTheory.SS.FrobField.absFrob (Sp κ) p f hp hκ = spMap (GlobalTheory.SS.FrobField.powHom κ p f hp hk0) :=
@@ -89,7 +89,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.frobFin_of :
       obtain ⟨x, hx⟩ := IsAlgClosed.exists_pow_nat_eq y (pow_pos hp.pos f)
       exact ⟨x, hx⟩
   let e : κ ≃+* κ := RingEquiv.ofBijective _ hb
-  haveI : IsIso (spMap (GlobalTheory.SS.FrobField.powHom κ p f hp hk0)) := by
+  have : IsIso (spMap (GlobalTheory.SS.FrobField.powHom κ p f hp hk0)) := by
     change IsIso (Spec.map (RingEquiv.toCommRingCatIso e).hom)
     infer_instance
   refine ⟨?_, ⟨fun x => ⟨x, rfl⟩⟩⟩
@@ -97,7 +97,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.frobFin_of :
   constructor
   · rw [@HasAffineProperty.eq_targetAffineLocally @IsIntegralHom _ IsIntegralHom.hasAffineProperty]
     intro U
-    haveI : IsAffine U.1.toScheme := U.2
+    have : IsAffine U.1.toScheme := U.2
     apply (@HasAffineProperty.iff_of_isAffine @IsIntegralHom _ IsIntegralHom.hasAffineProperty _ _ _ _).mp
     have hU : ((p : ℕ) : Γ(U.1.toScheme, ⊤)) = 0 := GlobalTheory.SS.FrobField.cast_zero_of_hom U.1.ι h
     have heq : GlobalTheory.SS.FrobField.absFrob X p f hp h ⁻¹ᵁ U.1 = U.1 := rfl
@@ -106,11 +106,11 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.frobFin_of :
       rw [← cancel_mono U.1.ι, morphismRestrict_ι, Category.assoc,
         GlobalTheory.SS.FrobField.absFrob_nat U.1.ι p f hp hU h, ← Category.assoc, Scheme.isoOfEq_hom_ι]
     rw [hres]
-    haveI := isIntegralHom_absFrob_affine p f hp U.1.toScheme hU
+    have := isIntegralHom_absFrob_affine p f hp U.1.toScheme hU
     infer_instance
   · have hc : GlobalTheory.SS.FrobField.absFrob X p f hp h ≫ s = s ≫ spMap (GlobalTheory.SS.FrobField.powHom κ p f hp hk0) := by
       rw [GlobalTheory.SS.FrobField.absFrob_nat s p f hp h hκ, hsp]
-    haveI : LocallyOfFiniteType (GlobalTheory.SS.FrobField.absFrob X p f hp h ≫ s) := by
+    have : LocallyOfFiniteType (GlobalTheory.SS.FrobField.absFrob X p f hp h ≫ s) := by
       rw [hc]
       infer_instance
     exact locallyOfFiniteType_of_comp _ s

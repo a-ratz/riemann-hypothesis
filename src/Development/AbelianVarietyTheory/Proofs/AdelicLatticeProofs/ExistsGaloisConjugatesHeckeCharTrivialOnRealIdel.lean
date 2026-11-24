@@ -107,9 +107,9 @@ namespace GlobalTheory
 open scoped Topology BigOperators in
 private lemma continuous_circle_toUnits' : Continuous Circle.toUnits := by
   rw [Units.continuous_iff]
-  refine ⟨continuous_subtype_val, ?_⟩
+  refine ⟨continuous_subtypeVal, ?_⟩
   have : Continuous (fun w : Circle => ((w⁻¹ : Circle) : ℂ)) :=
-    continuous_subtype_val.comp continuous_inv
+    continuous_subtypeVal.comp continuous_inv
   convert this using 2 with w
   simp
 
@@ -367,7 +367,7 @@ theorem exists_conjugates : ∀ (D : D7) (Q : Par D) (χ₀ : (AE D)ˣ →* Circ
     intro σ
     obtain ⟨ψ, ψc, hψ⟩ := exists_transport Q.c.F.val.toRingHom σ ((χ₀.comp b).comp (intIdeles D).subtype)
       (fun x => hy _ (hbu x)) m hm (fun x => hm1 _ (hbu x)) (Subtype.val ⁻¹' _)
-      (((hop N hN).preimage continuous_subtype_val).mem_nhds
+      (((hop N hN).preimage continuous_subtypeVal).mem_nhds
         ⟨(intIdeles D).one_mem.1, (intIdeles D).one_mem.2, 0, zero_mem _, by
           show finPart D 1 - 1 = _
           rw [RingHom.map_one, sub_self, nsmul_zero]⟩)
@@ -384,7 +384,7 @@ theorem exists_conjugates : ∀ (D : D7) (Q : Par D) (χ₀ : (AE D)ˣ →* Circ
       exact continuous_finsetProd _ fun τ _ => (continuous_angle D (θc _)).zpow _
     obtain ⟨χ, χc, χ1, χ2⟩ := _root_.GlobalTheory.exists_continuous_circle_char_extension (AE D)ˣ (intIdeles D)
       ((Units.map (incA D).toMonoidHom).range ⊔ (idF D).range) (A.comp (intIdeles D).subtype * ψ) Hopen
-      ((Ac.comp continuous_subtype_val).mul ψc) (by
+      ((Ac.comp continuous_subtypeVal).mul ψc) (by
         intro x hx
         obtain ⟨_, ⟨e, rfl⟩, _, ⟨r, rfl⟩, hx⟩ := Subgroup.mem_sup.1 hx
         have han : ∀ τ, ((angle D (θ τ) x : Circle) : ℂ) =
@@ -425,12 +425,12 @@ theorem exists_conjugates : ∀ (D : D7) (Q : Par D) (χ₀ : (AE D)ˣ →* Circ
     exact hψ ⟨x, hx.2⟩ y ((congrArg _ h1).trans hy)
   choose χ hχ using key
   classical
-  refine ⟨fun σ => if σ = Q.c.F.val.toRingHom then χ₀ else χ σ, if_pos rfl, fun σ => ?_⟩
+  refine ⟨fun σ => if σ = Q.c.F.val.toRingHom then χ₀ else χ σ, ite_eq_left rfl, fun σ => ?_⟩
   by_cases h : σ = Q.c.F.val.toRingHom
   · subst h
-    simp only [if_true]
+    simp only [ite_true]
     exact ⟨hH, hF, fun x hx => (hy x hx).imp fun y h => ⟨h, h⟩⟩
-  · simp only [if_neg h]
+  · simp only [ite_eq_right h]
     exact hχ σ
 
 end GlobalTheory.HeckeConj

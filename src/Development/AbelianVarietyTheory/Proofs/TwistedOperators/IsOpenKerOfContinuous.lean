@@ -132,7 +132,7 @@ theorem ballLat_isLattice (s : kˣ) : (ballLat m s).IsFullLattice k := by
     · rw [← Finset.univ_sum_single x]
       refine sum_mem fun i _ => ?_
       have h1 : x i * (s : k)⁻¹ ∈ 𝒪[k] := by
-        rw [Valuation.mem_integer_iff, map_mul, map_inv₀, mul_inv_le_iff₀ (by simp [zero_lt_iff]), one_mul]
+        rw [Valuation.mem_integer_iff, map_mul, map_inv₀, mul_inv_le_iff₀ (by simp [pos_iff_ne_zero]), one_mul]
         exact hx i
       have e : (Pi.single i (x i) : m → k) = (⟨_, h1⟩ : 𝒪[k]) • (Pi.single i (s : k) : m → k) := by
         funext j
@@ -171,7 +171,7 @@ theorem exists_subset_ballLat {K : Set (m → k)} (hK : IsCompact K) :
   exact ⟨s, fun x hx i => hs (Set.mem_iUnion.2 ⟨i, x, hx, rfl⟩)⟩
 
 theorem isCompact_lattice (L : Submodule 𝒪[k] (m → k)) (hL : L.IsFullLattice k) : IsCompact (L : Set (m → k)) := by
-  letI : L.IsFullLattice k := hL
+  let : L.IsFullLattice k := hL
   obtain ⟨S, hS⟩ := hL.toIsLattice.fg
   obtain ⟨s, hs⟩ := exists_subset_ballLat (K := (S : Set (m → k))) S.finite_toSet.isCompact
   have h1 : L ≤ ballLat m s := hS ▸ Submodule.span_le.2 hs
@@ -194,7 +194,7 @@ theorem perp_mem_nhds (hψ : Continuous ψ) (L : Submodule 𝒪[k] (m → k)) (h
 
 theorem isCompact_perp (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) [DecidableEq m] (L : Submodule 𝒪[k] (m → k))
     (hL : L.IsFullLattice k) : IsCompact (perp ψ L : Set (m → k)) := by
-  letI : L.IsFullLattice k := hL
+  let : L.IsFullLattice k := hL
   have h := ExchangeSupport.mem_SB_of hψ1 ((perp ψ L : Set (m → k)).indicator fun _ => (1 : ℂ)) ?_ ?_
   · have h2 : IsCompact (closure _) := h.2
     rwa [Set.support_indicator, Function.support_const one_ne_zero, Set.inter_univ,
@@ -217,7 +217,7 @@ variable {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologicalAddGroup
 theorem exists_isReps (D B : AddSubgroup V) (hD : IsCompact (D : Set V)) (hB : IsOpen (B : Set V)) :
     ∃ T, IsReps D B T := by
   classical
-  haveI : DiscreteTopology (V ⧸ B) := QuotientAddGroup.discreteTopology hB
+  have : DiscreteTopology (V ⧸ B) := QuotientAddGroup.discreteTopology hB
   have hfin : ((QuotientAddGroup.mk : V → V ⧸ B) '' D).Finite :=
     (hD.image QuotientAddGroup.continuous_mk).finite_of_discrete
   have hs : ∀ q : V ⧸ B, ∃ v : V, q ∈ (QuotientAddGroup.mk : V → V ⧸ B) '' D →

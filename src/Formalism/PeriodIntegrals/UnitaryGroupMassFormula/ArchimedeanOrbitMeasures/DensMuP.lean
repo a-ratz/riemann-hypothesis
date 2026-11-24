@@ -55,7 +55,7 @@ theorem selfDual_transport {V W : Type} [AddCommGroup V] [TopologicalSpace V] [I
     [MeasurableSpace W] [BorelSpace W] (μ : Measure V) (χ : V → V → ℂ) (e : V ≃ₜ W)
     (he : ∀ x y, e (x + y) = e x + e y) (h : SelfDual μ χ) :
     SelfDual (μ.map e) (fun x y => χ (e.symm x) (e.symm y)) := by
-  haveI := h.1
+  have := h.1
   let ea : V ≃+ W := AddEquiv.mk' e.toEquiv he
   let em : V ≃ᵐ W := e.toMeasurableEquiv
   have hm : μ.map e = μ.map em := rfl

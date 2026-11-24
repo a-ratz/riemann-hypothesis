@@ -82,7 +82,7 @@ theorem glueSet_iff {h1 : V1 →ₗ⋆[K] V1 →ₗ[K] K} {z : V1} (hz0 : h1 z z
       IsGlueLat h1 z Λ := by
   have hz : z ≠ 0 := z_ne_zero hz0
   unfold Formalism.L2.SG.Pf.Cnt.GlueSet IsGlueLat
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hl, hu, he⟩
     have hzmem : z ∈ Λ ⊓ (Submodule.span K {z}).restrictScalars (𝓞 K) := by

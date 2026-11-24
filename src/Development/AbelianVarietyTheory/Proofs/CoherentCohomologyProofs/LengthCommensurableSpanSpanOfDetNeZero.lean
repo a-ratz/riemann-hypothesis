@@ -91,7 +91,7 @@ theorem length_self_eq_top (R : Type u_1) [CommRing R] [IsDomain R] [IsDiscreteV
   by_contra hne
   rw [← ne_eq, Module.length_ne_top_iff, isFiniteLength_iff_isNoetherian_isArtinian] at hne
   obtain ⟨_, hA⟩ := hne
-  haveI : IsArtinianRing R := hA
+  have : IsArtinianRing R := hA
   exact IsDiscreteValuationRing.not_isField R (IsArtinianRing.isField_of_isDomain R)
 
 theorem main : ∀ {R : Type u_1} [inst : CommRing R] [inst_1 : IsDomain R] [IsDiscreteValuationRing R] {M : Type u_2} [inst_3 : AddCommGroup M] [inst_4 : Module R M] [Module.Free R M] [Module.Finite R M] {f : M →ₗ[R] M}, (LinearMap.det : (M →ₗ[R] M) → R) f = (0 : R) → Module.length R (M ⧸ LinearMap.range f) = ⊤ := by

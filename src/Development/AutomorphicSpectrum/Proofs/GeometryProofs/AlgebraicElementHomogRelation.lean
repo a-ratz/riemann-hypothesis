@@ -264,8 +264,8 @@ theorem algebraic_form_poly : ∀ (K₀ : Type) [Fintype K₀] (J₀ : K₀ → 
         ∑ j ∈ Finset.range (n + 1), eval w (map (Int.castRingHom ℂ) (c j)) * τ ^ j = 0 →
         ∑ j ∈ Finset.range (n + 1), (j : ℂ) * eval w (map (Int.castRingHom ℂ) (c j)) * τ ^ (j - 1) ≠ 0 := by
   intro K₀ _ J₀ _ Ω₀ Ω _ _ _ y₀ i α hy hα
-  letI := i.toAlgebra
-  haveI : CharZero Ω₀ := RingHom.charZero i
+  let := i.toAlgebra
+  have : CharZero Ω₀ := RingHom.charZero i
   have hα' : IsAlgebraic Ω₀ α := hα
   have hint : IsIntegral Ω₀ α := hα'.isIntegral
   have hsep : (minpoly Ω₀ α).Separable := (minpoly.irreducible hint).separable

@@ -224,7 +224,7 @@ theorem quadratic_kappa_identity : GQKap := by
       (fun q => by rw [inverse_apply _ hggv, hgg]; show ((Q.GGl _ _ _ _ _ : ℝ) : ℂ)⁻¹ = _; rw [hGG q]) Φ).trans ?_
     exact (hsc ((MA.DQ P).ggiP P.TT) (trR P Bs e Φ)).symm
   have hTT : 0 ≤ P.TT := (mul_pos hP.T_pos hP.T'_pos).le
-  haveI : Fact ((MA.DQ P).Laws P.TT) := ⟨Formalism.FourierDecayAlt.P.analytic_laws P.r P.TT hTT⟩
+  have : Fact ((MA.DQ P).Laws P.TT) := ⟨Formalism.FourierDecayAlt.P.analytic_laws P.r P.TT hTT⟩
   have hx : ∀ Y : ℝ, Intw P Bs e (d.κ fun ρ => M.xC P ρ (Y : ℂ)) (MA.kap P (MA.DQ P) fun ρ => M.xC P ρ (Y : ℂ)) := by
     intro Y
     have h1 := intw_mul hsm hGGi (hQ Y 1 1)
@@ -354,12 +354,12 @@ private theorem ne_and_unique_index_of_up {l : ℕ} (hl : l ∈ Finset.Icc 1 (P.
   rw [Finset.mem_Icc] at hl
   obtain ⟨i, hi⟩ : ∃ i : Fin (P.k - 1), (i : ℕ) + 1 = l := ⟨⟨l - 1, by omega⟩, show l - 1 + 1 = l by omega⟩
   have h1 := hU i
-  rw [if_pos hi] at h1
+  rw [ite_eq_left hi] at h1
   refine ⟨fun h => ?_, fun j hj h2 => ?_⟩
   · subst h
     omega
   · have h3 := h2 i
-    rw [if_neg (by omega)] at h3
+    rw [ite_eq_right (by omega)] at h3
     omega
 
 theorem projected_block_lower_sum (hR : Rai κ S) {B : A} (hB : ∀ f, Commute (κ f) B) {l : ℕ} (hl : l ∈ Finset.Icc 1 (P.k - 1))
@@ -1004,12 +1004,12 @@ theorem mat_gen {Ty : Type} [Fintype Ty] [DecidableEq Ty] (Qd : Ty → (Wq →L[
     B.hsInner (∑ π', ∑ ρ', c π' ρ' • Qd ρ' (T0 (Qd π' (e π)))) (e ρ) = c π ρ * B.hsInner (T0 (e π)) (e ρ) := by
   rw [kap_hsInner_sum_left, Finset.sum_eq_single π]
   · rw [kap_hsInner_sum_left, Finset.sum_eq_single ρ]
-    · rw [kap_hsInner_smul_left, hQadj, hline π π, hline ρ ρ, if_pos rfl, if_pos rfl]
+    · rw [kap_hsInner_smul_left, hQadj, hline π π, hline ρ ρ, ite_eq_left rfl, ite_eq_left rfl]
     · intro ρ' _ hne
-      rw [kap_hsInner_smul_left, hQadj, hline ρ' ρ, if_neg hne, hsInner_zero_r, mul_zero]
+      rw [kap_hsInner_smul_left, hQadj, hline ρ' ρ, ite_eq_right hne, hsInner_zero_r, mul_zero]
     · intro h; exact absurd (Finset.mem_univ ρ) h
   · intro π' _ hne
-    rw [hline π' π, if_neg hne, map_zero]
+    rw [hline π' π, ite_eq_right hne, map_zero]
     simp only [map_zero, smul_zero, Finset.sum_const_zero]
     exact hsInner_zero_l _
   · intro h; exact absurd (Finset.mem_univ π) h
@@ -1024,7 +1024,7 @@ theorem mat_gen' {Ty : Type} [Fintype Ty] [DecidableEq Ty] (Qd : Ty → (Wq →L
   unfold B.hsInner at h
   rw [← h]
   congr 2
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
+  simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply,
     ContinuousLinearMap.comp_apply]
 
 theorem sandw_apply (A : Wp →L[ℂ] Wp) (B' : Wq →L[ℂ] Wq) (X : Wq →L[ℂ] Wp) : sandw A B' X = A.comp (X.comp B') := rfl
@@ -1060,7 +1060,7 @@ theorem ssnRep_of (hTP : TypeProj) (hTF : ThtFacts) (hTG : ThtGaugeConst) : SSnR
     exact cd_comp ((hQs π).comp contDiff_fst) (cd_comp hca ((hQs ρ).comp contDiff_fst))
   ·
     intro a a' ι A B'
-    simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, ContinuousLinearMap.comp_apply]
+    simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply, ContinuousLinearMap.comp_apply]
     rw [kap_hsInner_sum_left, kap_hsInner_sum_right]
     refine Finset.sum_congr rfl fun π _ => ?_
     rw [kap_hsInner_sum_left, kap_hsInner_sum_right]
@@ -1076,18 +1076,18 @@ theorem ssnRep_of (hTP : TypeProj) (hTF : ThtFacts) (hTG : ThtGaugeConst) : SSnR
           ∑ π, ∑ ρ, ((T v).base.π h).comp ((F π ρ X).comp ((T v).base.π' h'⁻¹)) := by
       intro F
       have := map_sum (sandw ((T v).base.π h) ((T v).base.π' h'⁻¹)) (fun π => (∑ ρ, F π ρ) X) Finset.univ
-      simp only [sandw_apply, ContinuousLinearMap.coe_sum', Finset.sum_apply] at this ⊢
+      simp only [sandw_apply, FunLike.coe_sum, Finset.sum_apply] at this ⊢
       rw [this]
       refine Finset.sum_congr rfl fun π _ => ?_
       exact map_sum (sandw ((T v).base.π h) ((T v).base.π' h'⁻¹)) (fun ρ => F π ρ X) Finset.univ
     constructor
     · rw [hsum]
-      simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, ContinuousLinearMap.comp_apply]
+      simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply, ContinuousLinearMap.comp_apply]
       refine Finset.sum_congr rfl fun π _ => Finset.sum_congr rfl fun ρ _ => ?_
       rw [hQeq π h hh h' hh' a X, (heqv h hh h' hh' a a' ι _).1, hQeq ρ h hh h' hh' a _]
       split_ifs <;> ext y <;> simp
     · rw [hsum]
-      simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, ContinuousLinearMap.comp_apply]
+      simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply, ContinuousLinearMap.comp_apply]
       refine Finset.sum_congr rfl fun π _ => Finset.sum_congr rfl fun ρ _ => ?_
       rw [hQeq ρ h hh h' hh' a X, (heqv h hh h' hh' a a' ι _).2, hQeq π h hh h' hh' a _]
       split_ifs <;> ext y <;> simp
@@ -1102,7 +1102,7 @@ theorem ssnRep_of (hTP : TypeProj) (hTF : ThtFacts) (hTG : ThtGaugeConst) : SSnR
         (SSn.io0 S.G.k S.G.r (T v).base.z (T v).base.z' (T v).base.μsec q.2))
       (fun π' ρ' => if M.Up (D.parOf S v) l π' ρ' then κ π' else 0) (fun σ => e σ q.2)
       (fun σ => hQadj σ _) hline π ρ).trans ?_
-    rw [hph (SSn.phD q.1), ContinuousLinearMap.smul_apply, inner_hs_smul]
+    rw [hph (SSn.phD q.1), smul_apply, inner_hs_smul]
     unfold SSn.ssnV
     split_ifs with hup
     · have h1 := hκ q.2 hζ π ρ hup
@@ -1152,7 +1152,7 @@ theorem theta_gauge_constancy_holds : ThtGaugeConstOfCore := by
   have hSSF := hA (Wp (S.pl v)) (Wq (S.pl v)) (D.parOf S v) (T v).base hk X d hAct e hFrB hGQ
   refine ⟨θ, fun ζ hζ π ρ hup => ?_⟩
   have hent := hE (Wp (S.pl v)) (Wq (S.pl v)) (D.parOf S v) (T v).base hk X d hAct e hFrB hSSF l hl SS hSS ζ hζ π ρ
-  rw [if_pos hup] at hent
+  rw [ite_eq_left hup] at hent
   obtain ⟨hP1, hH1, -, -⟩ := hDU Cc E Wp Wq S T f χ ν' m₀ top A₀ hB v ζ hζ
   set n0 := SSn.nu0 S.G.k S.G.r (T v).base.z (T v).base.z' (T v).base.μsec ζ with hn0
   have hN0 : PRho.nrmW S.G.k S.G.r (T v).base.z n0 = 1 := by
@@ -1366,7 +1366,7 @@ theorem theta_constancy_assembly_scalar : ThConstOfCutS := by
   intro ζ hζ π ρ hup Xf hXf hfix
   have hex : ∃ ρ, M.Up P l π ρ := ⟨ρ, hup⟩
   have hρ : hex.choose = ρ := tc_up_unique hex.choose_spec hup
-  simp only [dif_pos hex]
+  simp only [dite_eq_left hex]
   have := (main π hex.choose hex.choose_spec).choose_spec ζ hζ Xf hXf hfix
   subst hρ
   exact this

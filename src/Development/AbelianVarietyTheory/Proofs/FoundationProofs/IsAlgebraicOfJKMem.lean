@@ -113,8 +113,8 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 
 theorem isAlgebraic_of_jK_mem [Algebra.IsAlgebraic ℚ Ω] (X : Tower Ω ε) (F : Subfield X.K) (hj : X.jK ∈ F) (f : X.K) :
     IsAlgebraic F f := by
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
   let A : IntermediateField F X.K := algebraicClosure F X.K
   have hc : ∀ c : Ω, algebraMap Ω X.K c ∈ A := by
     intro c
@@ -146,9 +146,9 @@ theorem gal_mem_lev (X : Tower Ω ε) (Γ' : Subgroup SL(2, ℤ)) (m : ℕ) (ζ 
 theorem normal : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [Algebra.IsAlgebraic ℚ Ω] (ε : Ω →+* ℂ) (X : GlobalTheory.KZ.Tower Ω ε) (Γ' : Subgroup SL(2, ℤ)) (m : ℕ) (ζ : Ω), 0 < m → IsPrimitiveRoot ζ m → CongruenceSubgroup.Gamma m ≤ Γ' → letI := GlobalTheory.K4.algMdl X Γ' (IntermediateField.adjoin ℚ {ζ}).fixingSubgroup; Normal (GlobalTheory.K4.mdl X Γ' (IntermediateField.adjoin ℚ {ζ}).fixingSubgroup) (GlobalTheory.K4.lev X Γ') := by
   intro Ω _ _ _ ε X Γ' m ζ hm hζ hΓ
   set S := (IntermediateField.adjoin ℚ {ζ}).fixingSubgroup with hS
-  letI := algMdl X Γ' S
-  haveI := isScalarTower_mdl X Γ' S
-  haveI : Algebra.IsAlgebraic (mdl X Γ' S) (lev X Γ') := ⟨fun f =>
+  let := algMdl X Γ' S
+  have := isScalarTower_mdl X Γ' S
+  have : Algebra.IsAlgebraic (mdl X Γ' S) (lev X Γ') := ⟨fun f =>
     (isAlgebraic_algebraMap_iff (A := X.K) (lev X Γ').subtype.injective).1
       (isAlgebraic_of_jK_mem X _ (jK_mem_mdl X Γ' S) (f : X.K))⟩
   apply normal_of_fixed

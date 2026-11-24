@@ -66,11 +66,11 @@ theorem val_mem_of_ae {L : Type} [Field L] [NumberField L] (χ : HChar L) (Λ : 
   obtain ⟨b, hb1, hb2⟩ : ∃ a ∈ P.asIdeal, a ∉ P.asIdeal ^ 2 := by
     have := Ideal.pow_succ_lt_pow P.ne_bot 1 (P := P.asIdeal)
     rw [pow_one] at this
-    exact SetLike.exists_of_lt this
+    exact IsConcreteLE.exists_of_lt this
   obtain ⟨a, ha⟩ := IsDedekindDomain.exists_forall_sub_mem_ideal (s := S) (fun v => v.asIdeal) (fun _ => 2)
     (fun v _ => v.prime) (fun v _ w _ h h' => h (HeightOneSpectrum.ext h')) (fun v => if v.1 = P then b else 1)
   have h1 := ha P hP
-  rw [if_pos rfl] at h1
+  rw [ite_eq_left rfl] at h1
   have ha2 : a ∉ P.asIdeal ^ 2 := fun h => hb2 (by simpa using (P.asIdeal ^ 2).sub_mem h h1)
   have ha1 : a ∈ P.asIdeal := by
     have := P.asIdeal.add_mem (Ideal.pow_le_self two_ne_zero h1) hb1
@@ -85,7 +85,7 @@ theorem val_mem_of_ae {L : Type} [Field L] [NumberField L] (χ : HChar L) (Λ : 
   have h := TypeValues.productRule χ S hu (Units.mk0 _ ha0)
   rw [hi, one_mul, Finset.prod_eq_single_of_mem P hP (fun v hvS hvP => TypeValues.locK_eq_one (ht v) _ a rfl (by
     have h1 := ha v hvS
-    rw [if_neg hvP] at h1
+    rw [ite_eq_right hvP] at h1
     exact Ideal.pow_le_self two_ne_zero h1)), hval] at h
   rw [eq_inv_of_mul_eq_one_left h]
   refine Λ.inv_mem (finprod_induction (· ∈ Λ) Λ.one_mem (fun _ _ => Λ.mul_mem) fun v => ?_)
@@ -197,7 +197,7 @@ theorem psiL_gal {D : D7} {cf : CharFrame D} {C : NChoice D} {tp : TupTied D cf 
     exact inv_mem ⟨_, rfl⟩
   intro v _ hl huv B σ hB hσ
   have : IsTotallyComplex D.host.E := by
-    letI := D.host.cmStar
+    let := D.host.cmStar
     exact D.sp.cm.cmUnram.1
   obtain ⟨n, hn⟩ := hP.ord
   have hm := val_mem_of_ae _ _ S hP.tame

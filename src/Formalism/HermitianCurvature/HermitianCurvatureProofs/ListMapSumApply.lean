@@ -131,7 +131,7 @@ def mkTerm (D : RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf → Mat k r �
 lemma mkTerm_word (D : RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf → Mat k r → C6.EndH Wp Wq)
     {e : CT k r nf × List (Mat k r)} (h : ∀ X ∈ e.2, inLie k r X) : (mkTerm D fib e).word = e.2 := by
   dsimp only [mkTerm]
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 lemma opApply_mk (D : RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf → Mat k r → C6.EndH Wp Wq) (Lf : FS k r nf)
     (hL : ∀ e ∈ Lf, ∀ X ∈ e.2, inLie k r X) (F : Mat k r → (Wq →L[ℂ] Wp)) (g : Mat k r) :
@@ -235,6 +235,6 @@ theorem comp_identity (D : RealPlaceData k r Wp Wq) {nf : ℕ} (fib : Fin nf →
   rw [list_map_sum_apply, List.map_map]
   congr 1
   refine List.map_congr_left fun e _ => ?_
-  simp only [Function.comp_apply, cv_mul, ContinuousLinearMap.mul_apply]
+  simp only [Function.comp_apply, cv_mul, mul_apply_eq_comp]
 
 end Formalism.FourierDecayAlt.P.MinorPolynomials

@@ -606,7 +606,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   let L := EuclideanSpace.equiv (Fin d) ℂ
   let x : (Fin d → ℂ) → (U.X k).dom := fun b =>
     if h : G (L.symm b) ∈ (U.X k).dom then ⟨G (L.symm b), h⟩ else ⟨G u₀, h₀⟩
-  have hxb : ∀ b (h : G (L.symm b) ∈ (U.X k).dom), x b = ⟨G (L.symm b), h⟩ := fun b h => dif_pos h
+  have hxb : ∀ b (h : G (L.symm b) ∈ (U.X k).dom), x b = ⟨G (L.symm b), h⟩ := fun b h => dite_eq_left h
   let P : (Fin d → ℂ) → ((F.Di (ik k)).La →+ (Fin g → ℂ)) := fun b => Pm k (x b)
   let p : (Fin d → ℂ) → (Sp ℂ ⟶ Xo.XF c) := fun b => GlobalTheory.AllWt.ptF (S := CAt σ) (U.un k (x b))
   have hu : ∀ b, F.u (ik k) (P b) =
@@ -665,7 +665,7 @@ theorem coords_holomorphic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       obtain ⟨w, hw, -⟩ := hExp.2.2 _ ht
       exact ⟨w, (hgF τ i) ▸ hw⟩
     have hW : IsDerivAt0 (Ex b) (Wd i b) (spMap (dualMap (ev' b)) ≫ fR.v τ i) := by
-      have e0 : Wd i b = hex.choose := dif_pos hex
+      have e0 : Wd i b = hex.choose := dite_eq_left hex
       rw [e0]
       exact hex.choose_spec
     refine ⟨hW, ?_⟩
@@ -980,7 +980,7 @@ theorem exists_holo_coord_frameAt : ∀ (E : Type) [Field E] [NumberField E] [Is
   classical
   let ev : V X.dim → (Γ(X.X, W) →+* ℂ) := fun u =>
     if h : c'.e.symm u ∈ ptsIn X.str (σ.comp e.toRingHom) W then evHom h else evHom hyW
-  have hev : ∀ u (h : c'.e.symm u ∈ ptsIn X.str (σ.comp e.toRingHom) W), ev u = evHom h := fun u h => dif_pos h
+  have hev : ∀ u (h : c'.e.symm u ∈ ptsIn X.str (σ.comp e.toRingHom) W), ev u = evHom h := fun u h => dite_eq_left h
   set S : Set (V X.dim) := c'.e.target ∩ c'.e.symm ⁻¹' ptsIn X.str (σ.comp e.toRingHom) W with hSdef
   have hSo : IsOpen S := c'.e.continuousOn_symm.isOpen_inter_preimage c'.e.open_target (isOpen_ptsIn _)
   have hu0 : c'.e y ∈ S := ⟨c'.e.map_source hyc, by show c'.e.symm (c'.e y) ∈ ptsIn X.str (σ.comp e.toRingHom) W; rw [c'.e.left_inv hyc]; exact hyW⟩
@@ -1048,7 +1048,7 @@ namespace GlobalTheory.OpenBaseDim
 
 theorem dim_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (T : TorModel Y) (F : Type) [Field F] (e : F ≃+* c.F) (σ : c.F →+* ℂ) (U : Formalism.L2.PjFree.Unf Xo c σ (Dw.p + Dw.q)), Formalism.L2.PjFree.GoodEmb c σ → Formalism.L2.PjFree.IsUnf U → ∀ (X : Var F) (j : X.X ⟶ gen T.Z), IsOpenImmersion j → ∀ (hj : j ≫ genStr T.Z ≫ spMap e.toRingHom = X.str), (∃ y, y ∈ ptsIn X.str (σ.comp e.toRingHom) (openPart j)) → ∀ k : U.Comp, X.dim = (U.X k).Ψ.card * (Dw.p * Dw.q) := by
   intro E _ _ _ H Dw l Xo c O _ β Y T F _ e σ U _ _ X j hoi _ _ k
-  haveI := hoi
+  have := hoi
   have hcard : (U.X k).Ψ.card = Module.finrank ℚ E / 2 := by
     rw [← Fintype.card_coe]; exact ReciprocityTheory.ChartRestriction.G.FD.QuadraticCoefficientForms.card_Psi (U.X k)
   obtain ⟨Uo, hUo, hx, -⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.1 X.X.isBasis_affineOpens
@@ -1136,7 +1136,7 @@ theorem continuous_frameAt {E : Type} [Field E] [NumberField E] [IsCMField E] {r
 
 theorem locInj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r j : ℕ) (X : ReciprocityTheory.ChartRestriction.G.FD.Data E r) (hj : j ≤ r) (Tau : Type) [Fintype Tau] (κ : Tau ≃ X.Ψ), X.p0 = r - j → ∀ z₀ ∈ Formalism.DegreeFormula.DomI Tau j (r - j), ∃ O : Set (Tau → Matrix (Fin j) (Fin (r - j)) ℂ), IsOpen O ∧ z₀ ∈ O ∧ ∀ z ∈ O ∩ Formalism.DegreeFormula.DomI Tau j (r - j), ∀ z' ∈ O ∩ Formalism.DegreeFormula.DomI Tau j (r - j), ∀ γ ∈ X.Γ, z' = Formalism.DegreeFormula.moebI (GlobalTheory.TrueCx.toUpq X hj κ γ) z → z = z' := by
   intro E _ _ _ r j X hj Tau _ κ hp z₀ hz₀
-  haveI : LocallyCompactSpace (Tau → Matrix (Fin j) (Fin (r - j)) ℂ) :=
+  have : LocallyCompactSpace (Tau → Matrix (Fin j) (Fin (r - j)) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Tau → Fin j → Fin (r - j) → ℂ))
 
   obtain ⟨C, hCn, hCD, hCc⟩ := local_compact_nhds (isOpen_domI.mem_nhds hz₀)
@@ -1323,13 +1323,13 @@ namespace GlobalTheory.LieBase
 theorem isHol_chart_framePt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (T : TorModel Y) (F : Type) [Field F] (e : F ≃+* c.F) (σ : c.F →+* ℂ) (U : Formalism.L2.PjFree.Unf Xo c σ (Dw.p + Dw.q)), Formalism.L2.PjFree.GoodEmb c σ → Formalism.L2.PjFree.IsUnf U → ∀ (X : Var F) (j : X.X ⟶ gen T.Z), IsOpenImmersion j → ∀ (hj : j ≫ genStr T.Z ≫ spMap e.toRingHom = X.str), ∀ (c' : AlgChart X.str (σ.comp e.toRingHom) X.dim) (k : U.Comp) (n : ℕ) (W : Set (V n)) (ψ : V n → Frame (U.X k).Ψ (Dw.p + Dw.q)), IsOpen W → (∀ w ∈ W, ψ w ∈ (U.X k).dom) → (∀ τ i i', DifferentiableOn ℂ (fun w => mat (ψ w) τ i i') W) → ∃ q : V n → CxPts X.str (σ.comp e.toRingHom), IsOpen {w | w ∈ W ∧ ∃ h : ψ w ∈ (U.X k).dom, ∃ y' ∈ c'.e.source, cxOf e σ hj y' = cxPt T.Z (U.un k ⟨ψ w, h⟩)} ∧ (∀ w ∈ W, ∀ h : ψ w ∈ (U.X k).dom, (∃ y' ∈ c'.e.source, cxOf e σ hj y' = cxPt T.Z (U.un k ⟨ψ w, h⟩)) → q w ∈ c'.e.source ∧ cxOf e σ hj (q w) = cxPt T.Z (U.un k ⟨ψ w, h⟩)) ∧ DifferentiableOn ℂ (fun w => c'.e (q w)) {w | w ∈ W ∧ ∃ h : ψ w ∈ (U.X k).dom, ∃ y' ∈ c'.e.source, cxOf e σ hj y' = cxPt T.Z (U.un k ⟨ψ w, h⟩)} := by
   intro E _ _ _ H Dw l Xo c O _ β Y T F _ e σ U _hσ hU X j hji hj c' k n W ψ hW hψW hψd
   classical
-  haveI := hji
+  have := hji
   have hU' : Formalism.L2.Pj.IsUnf U.toPj := (Formalism.L2.PjFree.isUnf_ofPj U.toPj).1 hU
   by_cases hne : ((U.X k).dom).Nonempty
   · obtain ⟨x₀, hx₀⟩ := hne
     let sf : Frame (U.X k).Ψ (Dw.p + Dw.q) → (U.X k).dom := fun x =>
       if h : x ∈ (U.X k).dom then ⟨x, h⟩ else ⟨x₀, hx₀⟩
-    have hsf : ∀ x (h : x ∈ (U.X k).dom), sf x = ⟨x, h⟩ := fun x h => dif_pos h
+    have hsf : ∀ x (h : x ∈ (U.X k).dom), sf x = ⟨x, h⟩ := fun x h => dite_eq_left h
     have h1 := BdArc.Leave.isHolTo_ptC (U := U.toPj) hU' k sf fun x h => by rw [hsf x h]
     have h2 := LocLift.isHolTo_comp_hom h1 T.Z.jQ
     have hψ : DifferentiableOn ℂ ψ W :=
@@ -1353,7 +1353,7 @@ theorem isHol_chart_framePt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       if h : ∃ y' ∈ c'.e.source, cxOf e σ hj y' = P w then h.choose else c'.e.symm 0
     have hq : ∀ w, (∃ y' ∈ c'.e.source, cxOf e σ hj y' = P w) →
         q w ∈ c'.e.source ∧ cxOf e σ hj (q w) = P w := fun w h => by
-      simp only [q, dif_pos h]
+      simp only [q, dite_eq_left h]
       exact h.choose_spec
     refine ⟨q, ?_, fun w _ h hex => ?_, ?_⟩
     · rw [hS]
@@ -1410,7 +1410,7 @@ theorem exists_un : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     have hp : p = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
     subst hp
     exact not_not.1 hy
-  haveI := T.Z.jQ_open
+  have := T.Z.jQ_open
   let xF := IsOpenImmersion.lift T.Z.jQ y.1 hr
   have hxF : xF ≫ T.Z.jQ = y.1 := IsOpenImmersion.lift_fac _ _ _
   have hs : xF ≫ Limits.pullback.snd _ _ = spMap (algebraMap c.F (CAt σ)) := by
@@ -1420,7 +1420,7 @@ theorem exists_un : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   have hover : (xF ≫ Limits.pullback.fst _ _) ≫ Xo.s = sOf c (CAt σ) := by
     rw [Category.assoc, Limits.pullback.condition, ← Category.assoc, hs]
     exact GlobalTheory.ShFam.OpenReg.spMap_comp _ _
-  haveI : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
+  have : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
   obtain ⟨z, hz⟩ : ∃ z : FrPt Xo c (CAt σ), z.x = xF ≫ Limits.pullback.fst _ _ :=
     GlobalTheory.FlagTan.exists_frPt _ hover
   obtain ⟨k, f, t, hb⟩ := hU.2.2.1 z
@@ -1444,7 +1444,7 @@ theorem exists_holo_frame_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   have hn := _root_.GlobalTheory.OpenBaseDim.dim_eq E H Dw l Xo c O β Y T F e σ U hσ hU X j hjo hj ⟨y, hy⟩ k
   obtain ⟨W, a, ψ, hWo, haW, hψd, hψh, hψa, hinj⟩ := _root_.GlobalTheory.UnifSlice.exists_slice E H Dw l Xo c σ U hσ hU k x₀ X.dim hn
   obtain ⟨q, hOo, hq, hqd⟩ := _root_.GlobalTheory.LieBase.isHol_chart_framePt E H Dw l Xo c O β Y T F e σ U hσ hU X j hjo hj c' k X.dim W ψ hWo hψd hψh
-  haveI := T.Z.jQ_open
+  have := T.Z.jQ_open
   have hxeq : ∀ {z z' : FrPt Xo c (CAt σ)}, cxPt T.Z z = cxPt T.Z z' → z.x = z'.x := by
     intro z z' h
     have h1 : GlobalTheory.AllWt.ptF (S := CAt σ) z = GlobalTheory.AllWt.ptF (S := CAt σ) z' :=

@@ -319,7 +319,7 @@ theorem eventually_quad_ne {E : Type} [Field E] [CharZero E] (a b c : E) (ha : a
   refine (Set.Finite.preimage (fun _ _ _ _ h => Rat.cast_injective h)
     (Finset.finite_toSet p.roots.toFinset)).subset ?_
   intro t ht
-  simp only [Set.mem_setOf_eq, not_not] at ht
+  simp only [Set.mem_ofPred_eq, not_not] at ht
   simp only [Set.mem_preimage, Finset.mem_coe, Multiset.mem_toFinset]
   rw [Polynomial.mem_roots hp0]
   show Polynomial.eval (t : E) p = 0

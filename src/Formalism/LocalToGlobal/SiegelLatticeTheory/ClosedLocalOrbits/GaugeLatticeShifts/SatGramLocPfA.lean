@@ -81,7 +81,7 @@ theorem image_places_primesOver (p : ℕ) (hp : p.Prime) :
     (fun v : HeightOneSpectrum (𝓞 K) => v.asIdeal) '' {v | ((p : ℕ) : 𝓞 K) ∈ v.asIdeal} =
       (Ideal.span {(p : ℤ)}).primesOver (𝓞 K) := by
   ext P
-  simp only [Set.mem_image, Set.mem_setOf_eq, Ideal.primesOver]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Ideal.primesOver]
   constructor
   · rintro ⟨v, hv, rfl⟩
     exact ⟨v.isPrime, liesOver_natCast p hp v hv⟩
@@ -121,13 +121,13 @@ theorem card_quot_split (p : ℕ) (hp : p.Prime)
     (hs : {v : HeightOneSpectrum (𝓞 K) | ((p : ℕ) : 𝓞 K) ∈ v.asIdeal}.ncard = Module.finrank ℚ K)
     (v : HeightOneSpectrum (𝓞 K)) (hv : ((p : ℕ) : 𝓞 K) ∈ v.asIdeal) :
     Nat.card (𝓞 K ⧸ v.asIdeal) = p := by
-  haveI := liesOver_natCast p hp v hv
+  have := liesOver_natCast p hp v hv
   have h := Ideal.absNorm_eq_pow_inertiaDeg' v.asIdeal hp
   have hf := (ram_inertia_split p hp hs v hv).2
   have h2 : (Ideal.span {((p : ℕ) : ℤ)}).inertiaDeg' v.asIdeal = 1 := by
-    haveI : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal :=
+    have : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal :=
       PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
-    haveI : v.asIdeal.IsMaximal := v.isMaximal
+    have : v.asIdeal.IsMaximal := v.isMaximal
     rw [Ideal.inertiaDeg'_eq_inertiaDeg, hf]
   rw [h2, pow_one] at h
   rw [← h, Ideal.absNorm_apply, Submodule.cardQuot_apply]

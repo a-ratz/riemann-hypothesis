@@ -122,7 +122,7 @@ theorem tauIn_moved (hρ : Function.Injective ρ) (p : IsPullDeg ρ Q D) (τ₀ 
   intro a b
   obtain ⟨-, k, hk, hv⟩ := hT (p.xe a) (p.xe b)
   refine ⟨h₁ a b, Units.map (ArcPull.fracMap hρ).toMonoidHom k, ?_, fun z J' hJ' => ?_⟩
-  · rw [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, hk, map_prod]
+  · rw [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, hk, map_prod]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [map_zpow₀, ArcPull.fracMap_algebraMap, hε]
   · choose J hJ using fun χ : (TK V₁).left ⟶ Q.P.A.left => exists_chart Q.P.isLB (χ z)

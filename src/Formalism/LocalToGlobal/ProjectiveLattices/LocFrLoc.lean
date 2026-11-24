@@ -207,7 +207,7 @@ open ReciprocityTheory.ChartRestriction.G.Chart (JetR tvec tmap eigLat IsUnivCha
 
 private theorem free_range_idem_lemma {V : Type} [CommRing V] [IsLocalRing V] {n : ℕ}
     (g : Module.End V (Fin n → V)) (hg : IsIdempotentElem g) : Module.Free V (LinearMap.range g) := by
-  haveI : Module.Projective V (LinearMap.range g) :=
+  have : Module.Projective V (LinearMap.range g) :=
     Module.Projective.of_split (LinearMap.range g).subtype g.rangeRestrict
       (LinearMap.ext fun ⟨x, hx⟩ => Subtype.ext (by
         obtain ⟨y, rfl⟩ := hx
@@ -230,10 +230,10 @@ theorem finrank_range_idem {V k : Type} [CommRing V] [IsLocalRing V] [Field k] [
       have h2 := LinearMap.congr_fun he y
       simp only [Module.End.mul_apply] at h2
       simp [h2]
-  haveI := free_range_idem_lemma e he
-  haveI : Module.Free V (LinearMap.ker e) := by
+  have := free_range_idem_lemma e he
+  have : Module.Free V (LinearMap.ker e) := by
     rw [hker]; exact free_range_idem_lemma (1 - e) he.one_sub
-  haveI : Module.Finite V (LinearMap.ker e) := by
+  have : Module.Finite V (LinearMap.ker e) := by
     rw [hker]; infer_instance
   have hP : LinearMap.IsProj (LinearMap.range e) e :=
     ⟨fun x => LinearMap.mem_range_self e x, fun x hx => by
@@ -346,12 +346,12 @@ theorem exists_eig_basis [IsLocalRing L] [Algebra c.F L] (hx0 : x ≫ Xo.s = sOf
           by_cases h : τ' = τ
           · subst h; rwa [Pi.single_eq_same]
           · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-        rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+        rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
       refine ⟨LinearMap.ext fun m => e₂ _ (e₁ m), Submodule.ext fun m => ?_⟩
       rw [ReciprocityTheory.ChartRestriction.G.Chart.mem_eigLat_iff]
       exact ⟨fun ⟨m', h⟩ => h ▸ e₁ m', fun h => ⟨m, e₂ m h⟩⟩
   let k := IsLocalRing.ResidueField L
-  letI : Algebra c.F k := ((algebraMap L k).comp (algebraMap c.F L)).toAlgebra
+  let : Algebra c.F k := ((algebraMap L k).comp (algebraMap c.F L)).toAlgebra
   have : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
   obtain ⟨xc', hx', -, htm⟩ := gsv_bc (L' := k) hx
   have hx0' : (spMap (algebraMap L k) ≫ x) ≫ Xo.s = sOf c k := by

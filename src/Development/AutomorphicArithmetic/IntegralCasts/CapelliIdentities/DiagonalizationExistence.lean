@@ -69,7 +69,7 @@ theorem UpperTheory.Reformulated.B.DiagonalizationExistence.exists_diag :
   have hli : LinearIndependent κ v :=
     Module.End.eigenvectors_linearIndependent' (Matrix.toLin' M) a ha v hv
   have hU : IsUnit (Matrix.of fun r c => v c r : Matrix (Fin n) (Fin n) κ) :=
-    Matrix.linearIndependent_cols_iff_isUnit.mp hli
+    Matrix.linearIndependent_col_iff_isUnit.mp hli
   obtain ⟨P, hP⟩ := hU
   refine ⟨P, ?_⟩
   rw [hP]

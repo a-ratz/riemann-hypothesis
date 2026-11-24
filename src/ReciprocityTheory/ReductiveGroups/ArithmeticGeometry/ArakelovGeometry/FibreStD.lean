@@ -146,9 +146,9 @@ theorem chartGen_indep (y : Fin (D + 1) → Ω) (hfree : coordIdeal ℤ y = ⊥)
 theorem chartRing_closed (y : Fin (D + 1) → Ω) (hfree : coordIdeal ℤ y = ⊥) :
     IsIntegrallyClosed (chartRing y) := by
   have hind := chartGen_indep y hfree
-  haveI : UniqueFactorizationMonoid (chartRing y) :=
+  have : UniqueFactorizationMonoid (chartRing y) :=
     MulEquiv.uniqueFactorizationMonoid hind.aevalEquiv.toRingEquiv.toMulEquiv inferInstance
-  haveI : IsDomain (chartRing y) := Subalgebra.isDomain _
+  have : IsDomain (chartRing y) := Subalgebra.isDomain _
   exact UniqueFactorizationMonoid.instIsIntegrallyClosed
 
 theorem chartRing_frac (y : Fin (D + 1) → Ω) (hfree : coordIdeal ℤ y = ⊥) :

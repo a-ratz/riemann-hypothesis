@@ -64,7 +64,7 @@ private theorem list_prod_apply {H : Type*} [NormedAddCommGroup H] [InnerProduct
   | nil => simp
   | cons A L ih =>
     have h1 := ih fun B hB => h B (List.mem_cons_of_mem _ hB)
-    rw [List.prod_cons, ContinuousLinearMap.mul_apply, h1, map_smul, h A List.mem_cons_self, smul_smul, List.length_cons,
+    rw [List.prod_cons, mul_apply_eq_comp, h1, map_smul, h A List.mem_cons_self, smul_smul, List.length_cons,
       pow_succ]
 
 section One
@@ -176,7 +176,7 @@ private theorem Z_closed (T : Ty σ n q w₀) (V : Submodule ℂ (LL μ)) (hV : 
   have e : (T.Z μ V O y : Set (LL μ)) = (V : Set (LL μ)) ∩ ((⋂ i, {v | O i v = (y : ℂ) • v}) ∩
       ⋂ w, ⋂ (_ : w ∉ T.marked), (eigL μ w (T.J w) (T.χ w) : Set (LL μ))) := by
     ext v
-    simp only [SetLike.mem_coe, mem_Z, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_Z, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [e]
   refine hV.inter (IsClosed.inter (isClosed_iInter fun i => isClosed_eq (O i).continuous (continuous_const_smul _)) ?_)
   exact isClosed_iInter fun w => isClosed_iInter fun _ =>
@@ -225,7 +225,7 @@ private theorem Z_fin (hn : 0 < n) (μ : Measure (normOneGL (K := E) (n := n))) 
     (y : ℝ) (hy : 0 < y) (U : ∀ w : Pl E, Subgroup (Gw n w)) (hU : ∀ w ∈ T.marked, CO (U w)) :
     FiniteDimensional ℂ ↥(T.Z μ V (fun i => OComponent μ (s i) (hs i) νF a) y ⊓ ⨅ w ∈ T.marked, fixL μ w (U w)) := by
   obtain ⟨-, -, -, -, -, -, hH, hβ⟩ := UpperTheory.ConvolutionTheory.L1.archBasic F E σ m D n
-  haveI := hH νF
+  have := hH νF
   obtain ⟨β, hβ⟩ := hβ fun _ => a
   have hop : Oinf μ (Measure.map (glueA D n) (Measure.pi fun _ => νF)) β =
       (List.ofFn fun i => OComponent μ (s i) (hs i) νF a).prod :=
@@ -242,9 +242,9 @@ private theorem Z_fin (hn : 0 < n) (μ : Measure (normOneGL (K := E) (n := n))) 
     if w ∈ T.marked then U w else kerS (T.J w) (T.χ w) (T.chr w)
   have hU' : ∀ w ∈ P, CO (U' w) := fun w _ => by
     by_cases hw : w ∈ T.marked
-    · simpa only [U', if_pos hw] using hU w hw
-    · simpa only [U', if_neg hw] using kerS_co (T.co w) (T.chr w)
-  haveI := UpperTheory.ConvolutionTheory.C.eigAdm E n hn μ (Measure.map (glueA D n) (Measure.pi fun _ => νF)) β (y ^ (m + 1)) (pow_ne_zero _ hy.ne') P U' hU'
+    · simpa only [U', ite_eq_left hw] using hU w hw
+    · simpa only [U', ite_eq_right hw] using kerS_co (T.co w) (T.chr w)
+  have := UpperTheory.ConvolutionTheory.C.eigAdm E n hn μ (Measure.map (glueA D n) (Measure.pi fun _ => νF)) β (y ^ (m + 1)) (pow_ne_zero _ hy.ne') P U' hU'
   refine Submodule.finiteDimensional_of_le (fun v hv => ?_)
     (S₂ := eigIn (cuspidalL2 μ) (Oinf μ (Measure.map (glueA D n) (Measure.pi fun _ => νF)) β) (y ^ (m + 1)) ⊓ sphOff μ P ⊓
       ⨅ w ∈ P, fixL μ w (U' w))
@@ -267,8 +267,8 @@ private theorem Z_fin (hn : 0 < n) (μ : Measure (normOneGL (K := E) (n := n))) 
     simp
   · refine (Submodule.mem_iInf _).2 fun w => (Submodule.mem_iInf _).2 fun _ => ?_
     by_cases hw : w ∈ T.marked
-    · simpa only [U', if_pos hw] using hf' w hw
-    · simp only [U', if_neg hw]
+    · simpa only [U', ite_eq_left hw] using hf' w hw
+    · simp only [U', ite_eq_right hw]
       refine (mem_fixL' μ _ _ _).2 fun x hx => ?_
       rw [(mem_eigL' μ _ _ _ _).1 (h3 w hw) x hx.1, hx.2, one_smul]
 

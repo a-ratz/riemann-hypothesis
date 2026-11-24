@@ -471,7 +471,7 @@ theorem cartan_one : ∀ (T : Type 1) [Category.{0} T] (Cov : MorphismProperty T
     refine ⟨b - 1, fun n hn U => ?_⟩
     have h1 := AddCommGrpCat.subsingleton_of_isZero (hb (n + 1) (by omega) U).1
     have h2 := AddCommGrpCat.subsingleton_of_isZero (hb n (by omega) U).2
-    haveI : Subsingleton ((K.obj U).X n) :=
+    have : Subsingleton ((K.obj U).X n) :=
       ⟨fun x y => ext n U x y (@Subsingleton.elim _ h1 _ _) (@Subsingleton.elim _ h2 _ _)⟩
     exact AddCommGrpCat.isZero_of_subsingleton _
 

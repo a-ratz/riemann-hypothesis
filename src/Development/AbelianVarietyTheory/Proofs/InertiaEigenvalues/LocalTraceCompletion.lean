@@ -132,8 +132,8 @@ variable {K L Ω : Type} [Field K] [NumberField K] [Field L] [NumberField L] [Fi
 theorem trace_mem {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 K)} (h : IsPlaceOver A v)
     (hL : IsLocalExt L h) (z : L) (hz : algebraMap L Ω z ∈ A) :
     algebraMap K Ω (Algebra.trace K L z) ∈ A := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : Normal K Ω := IsAlgClosure.normal K Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : Normal K Ω := IsAlgClosure.normal K Ω
   rw [trace_eq_sum_embeddings Ω]
   refine sum_mem fun s _ => ?_
   obtain ⟨τ, hτ⟩ := hL (AlgEquiv.ofBijective (s.liftNormal Ω) (AlgHom.normal_bijective K Ω Ω _))
@@ -148,7 +148,7 @@ theorem valuation_trace_le {A : ValuationSubring Ω} {v : HeightOneSpectrum (�
   have hc' : algebraMap K L c ≠ 0 := (_root_.map_ne_zero _).2 hc
   have h1 : v'.valuation L (z * (algebraMap K L c)⁻¹) ≤ 1 := by
     rw [map_mul, map_inv₀]
-    exact mul_inv_le_one_of_le₀ hz zero_le'
+    exact mul_inv_le_one_of_le₀ hz zero_le
   have h2 := trace_mem h hL _ ((algebraMap_mem_iff h' _).2 h1)
   rw [algebraMap_mem_iff h, ← map_inv₀, mul_comm, ← Algebra.smul_def, LinearMap.map_smul, smul_eq_mul,
     map_mul, map_inv₀] at h2
@@ -196,8 +196,8 @@ theorem continuous_traceMap {A : ValuationSubring Ω} {v : HeightOneSpectrum (�
   refine ⟨Units.mk0 ((Valued.v : Valuation (WithVal (v'.valuation L)) ℤᵐ⁰).restrict
     (WithVal.toVal _ (algebraMap K L (algebraMap (𝓞 K) K (π ^ n))))) ?_, fun z hz => hγ ?_⟩
   · simpa using hd
-  · rw [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hz
-    rw [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+  · rw [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hz
+    rw [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
     have e : traceMap K v v' z = algebraMap K _ (Algebra.trace K L (WithVal.ofVal z)) := rfl
     rw [e, GlobalTheory.Idele.valued_algebraMap]
     exact (valuation_trace_le h h' hL hp0 hz.le).trans_lt (hpv.trans_lt hn)

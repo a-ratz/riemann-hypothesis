@@ -177,7 +177,7 @@ theorem dg_discrete (Λ : AddSubgroup ℂ) {r : ℝ} (hr : 0 < r) (H : ∀ w ∈
     · intro h
       exact Subtype.ext (H w hw h)
   rw [this]
-  exact Metric.isOpen_ball.preimage continuous_subtype_val
+  exact Metric.isOpen_ball.preimage continuous_subtypeVal
 
 theorem dg_span (Λ : AddSubgroup ℂ) (h : Formalism.MainNotions.TaylorLogMetric.discr Λ ≠ 0) {r : ℝ} (hr : 0 < r)
     (H : ∀ w ∈ Λ, ‖w‖ < r → w = 0) : Submodule.span ℝ (Λ : Set ℂ) = ⊤ := by

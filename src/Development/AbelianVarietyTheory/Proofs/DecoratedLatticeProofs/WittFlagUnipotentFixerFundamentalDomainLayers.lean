@@ -194,19 +194,19 @@ end Concrete
 
 theorem fundDomain_layers : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypDec V V₀ ρ) (e : skewA D ρ × (Mx D ρ V₀.rank × UX D ρ) ≃ᵐ flagN d), (∀ p, (e p : GA D V) = d.nC p.1 * (d.nB p.2.1 * d.levi p.2.2.1)) → ∀ (lC : Measure (skewA D ρ)) (𝓒 : Set (skewA D ρ)), lC.IsAddHaarMeasure → SFinite lC → IsAddFundamentalDomain ((ratMx D ρ ρ).addSubgroupOf (skewA D ρ)) 𝓒 lC → ∀ (vb : VolM D ρ V₀.rank) (ν : Measure (UX D ρ)), SFinite vb.μ → SFinite ν → IsFundamentalDomain ((GQ V ⊓ radX d).subgroupOf (flagN d)) (e '' (𝓒 ×ˢ (vb.𝓕 ×ˢ Set.univ))) ((lC.prod (vb.μ.prod ν)).map e) := by
   intro D V V₀ ρ d e he lC 𝓒 _ _ hC vb ν _ _
-  haveI : IsTopologicalAddGroup (Mx D ρ ρ) := (lattice_Mx D ρ ρ).1
-  haveI : SecondCountableTopology (Mx D ρ ρ) := (lattice_Mx D ρ ρ).2.2.1
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).1
-  haveI : SecondCountableTopology (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.1
-  haveI : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
-  haveI : DiscreteTopology (ratMx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.2.2.1
-  haveI : Countable (ratMx D ρ V₀.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : BorelSpace (skewA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (skewA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : IsTopologicalAddGroup (skewA D ρ) := inferInstance
-  haveI hca : ContinuousAdd (skewA D ρ) := IsTopologicalAddGroup.toContinuousAdd
-  haveI : MeasurableAdd₂ (skewA D ρ) := @ContinuousAdd.measurableMul₂ (skewA D ρ) _ _ _ _ _ hca
+  have : IsTopologicalAddGroup (Mx D ρ ρ) := (lattice_Mx D ρ ρ).1
+  have : SecondCountableTopology (Mx D ρ ρ) := (lattice_Mx D ρ ρ).2.2.1
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).1
+  have : SecondCountableTopology (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.1
+  have : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
+  have : DiscreteTopology (ratMx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.2.2.1
+  have : Countable (ratMx D ρ V₀.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (skewA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (skewA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : IsTopologicalAddGroup (skewA D ρ) := inferInstance
+  have hca : ContinuousAdd (skewA D ρ) := IsTopologicalAddGroup.toContinuousAdd
+  have : MeasurableAdd₂ (skewA D ρ) := @ContinuousAdd.measurableMul₂ (skewA D ρ) _ _ _ _ _ hca
   have hstr := GlobalTheory.MixPer.flag_jacobi_structure D V V₀ ρ d
   have hκ : ∀ b' : Mx D ρ V₀.rank, Measurable (cComm V₀ b') := by
     intro b'

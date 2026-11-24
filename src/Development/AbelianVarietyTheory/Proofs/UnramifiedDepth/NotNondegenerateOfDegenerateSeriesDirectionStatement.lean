@@ -129,12 +129,12 @@ theorem prod_pow_of_mul_eq_zero {A κ : Type} [CommRing A] [Fintype κ] [Decidab
     ∏ i, x i ^ k i = ∏ i, (0 : A) ^ k i + ∑ i, if k = Pi.single i 1 then x i else 0 := by
   by_cases h0 : k = 0
   · subst h0
-    rw [Finset.sum_eq_zero fun i _ => if_neg fun h => by simpa using congrFun h i]
+    rw [Finset.sum_eq_zero fun i _ => ite_eq_right fun h => by simpa using congrFun h i]
     simp
   obtain ⟨i, hi⟩ := Function.ne_iff.1 h0
   have hi : k i ≠ 0 := hi
   rw [Finset.prod_eq_zero (f := fun i => (0 : A) ^ k i) (Finset.mem_univ i) (zero_pow hi), zero_add,
-    Finset.sum_eq_single i (fun j _ hj => if_neg fun h => hi (by rw [h]; simp [hj.symm])) (by simp)]
+    Finset.sum_eq_single i (fun j _ hj => ite_eq_right fun h => hi (by rw [h]; simp [hj.symm])) (by simp)]
   split_ifs with h
   · subst h
     rw [Finset.prod_eq_single i (fun j _ hj => by simp [hj]) (by simp)]
@@ -218,7 +218,7 @@ theorem evalPoints_first_order_of_sq_eq_zero {R : Type} [CommRing R] {d : ℕ} (
         Finsupp.equivFunOnFinite.symm n := by
       ext ⟨a, j⟩
       refine Fin.cases ?_ (fun a => ?_) a
-      · rw [Finsupp.add_apply, Finsupp.mapDomain_notin_range _ _
+      · rw [Finsupp.add_apply, Finsupp.mapDomain_of_notMem_range _ _
           (by rintro ⟨q, hq⟩; exact Fin.succ_ne_zero _ (congrArg Prod.fst hq))]
         simp [hn0, Finsupp.single_apply, Pi.single_apply, eq_comm]
       · rw [Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective hinj _ (a, j),

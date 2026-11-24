@@ -61,7 +61,7 @@ theorem continuity_of_sobolev_chart (h4 : SobChart) (h5 : FoldCont) : Cont1 := b
   obtain ⟨d, Y, hY, hch⟩ := h4 G s hs
   have hc := h5 G π hπ w hw l hl d Y hY
   have h0 : dL π l (π (oneProd Y 0) w) = dL π l w := by
-    rw [oneProd_zero, hπ.1, ContinuousLinearMap.one_apply]
+    rw [oneProd_zero, hπ.1, one_apply_eq_self]
   obtain ⟨η, hη, hηc⟩ := Metric.continuous_iff.1 hc 0 ε hε
   obtain ⟨δ, hδ, hδc⟩ := hch η hη
   refine ⟨δ, hδ, fun g hg hgd => ?_⟩

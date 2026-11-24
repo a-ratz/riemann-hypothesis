@@ -125,7 +125,7 @@ theorem pullTop_injective (f : W ⟶ Y) [IsIso f] : Function.Injective (pullTop 
   intro a b h
   ext1
   have h' := congrArg Units.val h
-  simp only [pullTop, Units.coe_map, MonoidHom.coe_coe] at h'
+  simp only [pullTop, Units.coe_map, MonoidHom.coe_ofClass] at h'
   exact (asIso (Scheme.Hom.appTop f)).commRingCatIsoToRingEquiv.injective h'
 
 theorem isConst_one_of_corr_oneGen {φ : J → (Y ⟶ Z)} {ε : J → ℤ}
@@ -299,7 +299,7 @@ theorem psi_eq_toOpen (y : X) (r : K) (hq : (q y : FractionRing K) = algebraMap 
       ((TK K).left.presheaf.map (homOfLE h).op).hom (((toricPre K X q).psi y).s j).val := by
   rw [show ((toricPre K X q).psi y).s j = gv (unitOn (q y)) _ from cg_isConst _ _ _ j, jK_toOpen]
   unfold gv res unitOn
-  simp only [Units.coe_map, MonoidHom.coe_coe, hq]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass, hq]
   conv_rhs => rw [← CommRingCat.comp_apply]
   erw [← Functor.map_comp]
   rfl
@@ -383,7 +383,7 @@ theorem psiIn_iff (y : X) (J : Ideal K) :
   refine ⟨r, hr, ?_⟩
   rw [show ((toricPre K X q).psi y).s (fun _ => PUnit.unit) = gv (unitOn (q y)) _ from cg_isConst _ _ _ _, jK_toOpen] at e
   unfold gv res unitOn at e
-  simp only [Units.coe_map, MonoidHom.coe_coe] at e
+  simp only [Units.coe_map, MonoidHom.coe_ofClass] at e
   conv_rhs at e => rw [← CommRingCat.comp_apply]
   erw [← Functor.map_comp] at e
   have e2 := eq_of_map_eq_of_eq_univ (by simp) _ e

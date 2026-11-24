@@ -429,9 +429,9 @@ end Group
 
 theorem finrank_sections_pullback_mulByN_twists : Out.Laws → Out.Laws2 → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Out.PolAV (Sp K)) (M : LB P.A.left) (k r : ℕ), M.IsLB → (k : K) ≠ 0 → (∀ y : 𝟙_ (Over (Sp K)) ⟶ P.A, y ^ k = 1 → SectionsHaveFiniteDimension P.A.hom (LB.div M (LB.LinComb P.L (K := Fin 2) ![𝟙 P.A.left, ((toUnit P.A ≫ y) * 𝟙 P.A).left] ![1, -1])) r) → SectionsHaveFiniteDimension P.A.hom (M.pull (Out.mulA P.A k).left) (k ^ (2 * P.g) * r) := by
   intro h₁ h₂ K _ _ P M k r hM hk hr
-  haveI := P.isAb.comm
-  haveI : NeZero (k : K) := ⟨hk⟩
-  haveI : NeZero k := .of_neZero_natCast K
+  have := P.isAb.comm
+  have : NeZero (k : K) := ⟨hk⟩
+  have : NeZero k := .of_neZero_natCast K
   obtain ⟨rig, hrig⟩ := P.rigid
   let L : RigLB P.A := ⟨P.L, rig, P.isLB, hrig⟩
   obtain ⟨⟨cb⟩, -⟩ := h₁.cube _ P L rfl
@@ -439,12 +439,12 @@ theorem finrank_sections_pullback_mulByN_twists : Out.Laws → Out.Laws2 → ∀
     let h := h₁.mulN S P n hn; ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1⟩) K P k hk)
   let G : Subgroup (𝟙_ (Over (Sp K)) ⟶ P.A) := (powMonoidHom k).ker
   have hcard : Nat.card G = k ^ (2 * P.g) := (h₁.mulN _ P k NeZero.one_le).2.2.2.2 K (𝟙 _) hk
-  haveI : Finite G := Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ (NeZero.ne k))
-  haveI := Fintype.ofFinite G
+  have : Finite G := Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ (NeZero.ne k))
+  have := Fintype.ofFinite G
   have hτq : ∀ y : {y : 𝟙_ (Over (Sp K)) ⟶ P.A // y ^ k = 1},
       ((toUnit P.A ≫ y.1) * 𝟙 P.A).left ≫ (Out.mulA P.A k).left = (Out.mulA P.A k).left :=
     fun y => transl_mulA _ k y.1 y.2
-  letI := secModule P.A.hom (M.pull (Out.mulA P.A k).left)
+  let := secModule P.A.hom (M.pull (Out.mulA P.A k).left)
   let ρ : Representation K G (M.pull (Out.mulA P.A k).left).Sec :=
     { toFun := fun y =>
         { toFun := tr (hτq ⟨y.1, y.2⟩)
@@ -472,7 +472,7 @@ theorem finrank_sections_pullback_mulByN_twists : Out.Laws → Out.Laws2 → ∀
       obtain ⟨F, hadd, hsmul, hinj, hF⟩ := exists_weight_map hM (Semi.LB.isLB_linComb P.isLB _ _) hD hτq P.A.hom
         (Over.w _) u hu (fun g => (χ ⟨g.1, g.2⟩).val) hχ
       obtain ⟨E⟩ := (lineBundle_global_sections_functionField_iff _ _ _).1 (hr b hb)
-      letI := secModule P.A.hom (LB.div M (LB.LinComb P.L (K := Fin 2)
+      let := secModule P.A.hom (LB.div M (LB.LinComb P.L (K := Fin 2)
         ![𝟙 P.A.left, ((toUnit P.A ≫ b) * 𝟙 P.A).left] ![1, -1]))
       refine ⟨LinearMap.comp ⟨⟨F, hadd⟩, hsmul⟩ E.toLinearMap, hinj.comp E.injective, fun v => ?_⟩
       refine Iff.trans ⟨fun ⟨x, hx⟩ => ⟨_, hx⟩, fun ⟨x, hx⟩ => ⟨E.symm x, ?_⟩⟩ ((hF v).trans

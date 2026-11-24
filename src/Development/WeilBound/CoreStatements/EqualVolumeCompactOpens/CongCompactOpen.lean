@@ -177,7 +177,7 @@ theorem congCompactOpen : CongCompactOpen := by
       (tube (fun g => (g : Matrix _ _ R) - 1) Λ' (Units.continuous_val.sub continuous_const) ho')
     convert this using 1
     ext g
-    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_setOf_eq, sub_mulVec, one_mulVec]
+    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_ofPred_eq, sub_mulVec, one_mulVec]
     constructor
     · intro hg
       exact ⟨⟨fun x hx => (hg.1 x).1 hx, fun x hx => ((congGrp Λ Λ').inv_mem hg).1 x |>.1 hx⟩, hg.2⟩

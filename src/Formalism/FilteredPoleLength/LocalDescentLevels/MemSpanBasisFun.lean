@@ -307,12 +307,12 @@ theorem quotientLength : QuotientLength := by
       Submodule.span O (Set.range fun j => (algebraMap O K ϖ) ^ e • th j)) ≠ ⊤ := by
     intro htop
     rw [htop, top_add] at hq
-    exact (ENat.coe_ne_top _) (top_le_iff.1 (by exact_mod_cast hq))
+    exact (ENat.natCast_ne_top _) (top_le_iff.1 (by exact_mod_cast hq))
   lift ql X ((X ⊓ N.restrictScalars O) ⊔
       Submodule.span O (Set.range fun j => (algebraMap O K ϖ) ^ e • th j)) to ℕ using hfin with m hm
   refine ⟨m, rfl, ?_⟩
   have hq' : m + A' ≤ A + n * be := by exact_mod_cast hq
-  simp only [ENat.toNat_coe]
+  simp only [ENat.toNat_natCast]
   have hq'' : (m : ℤ) + A' ≤ A + n * be := by exact_mod_cast hq'
   linarith
 

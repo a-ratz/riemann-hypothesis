@@ -283,7 +283,7 @@ theorem norm_eigen_le_one_of_conj_Kres : ∀ (p : ℕ) [Fact p.Prime] (Kw : Inte
     intro i j
     simp only [B, RingHom.mapMatrix_apply, Matrix.map_apply, GeneralLinearGroup.map_apply]
     exact IntBound.norm_mu_le_one p Kw r _ (k0 i j).2
-  haveI : Nonempty (Fin n) := by
+  have : Nonempty (Fin n) := by
     by_contra h
     rw [not_nonempty_iff] at h
     exact hv' (Subsingleton.elim _ _)
@@ -702,9 +702,9 @@ theorem UpperTheory.Gal.Spc.boundQ :
     ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) P.β x t) (L : G.Level) (g : G.GAf) (q : ℕ) [Fact q.Prime], q ≠ p → ∃ B : ℝ, ∀ w : P.cent, P.toAf x t hx w ∈ L.K.toSubgroup.map (MulAut.conj g).toMonoidHom → ∀ i, ‖(((Module.finBasis ℚ G.C).repr ((w : G.Cˣ × ℚˣ).1 : G.C) i : ℚ) : ℚ_[q])‖ ≤ B := by
   intro p _ G P x t hx L g q _ hqp
   obtain ⟨φ, hφ⟩ := UpperTheory.Gal.Spc.boundQ_exists_hom p q hqp
-  letI τ : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) _
-  haveI : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) _
+  let τ : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) _
+  have : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) _
   let b := Module.finBasis ℚ G.C
   let bA := b.baseChange (AfP p)
   let F : G.GAf → (Fin (Module.finrank ℚ G.C) → ℚ_[q]) := fun v i =>
@@ -712,7 +712,7 @@ theorem UpperTheory.Gal.Spc.boundQ :
       (((v : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1 : AfP p ⊗[ℚ] G.C) * (x : AfP p ⊗[ℚ] G.C))) i)
   have hval : Continuous (fun v : G.GAf =>
       (((v : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1 : AfP p ⊗[ℚ] G.C))) :=
-    Units.continuous_val.comp (continuous_fst.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_fst.comp continuous_subtypeVal)
   have hF : Continuous F := by
     refine continuous_pi fun i => hφ.comp ?_
     have hc : Continuous (fun z : AfP p ⊗[ℚ] G.C => bA.repr z i) :=
@@ -762,9 +762,9 @@ private theorem units_field {M L : Type} [CommRing M] [Algebra ℚ M] [Module.Fi
       (∀ (q : ℕ) [Fact q.Prime] (τ : M →+* PadicAlgCl q), ‖τ (x : M)‖ ≤ 1) →
       (∀ (q : ℕ) [Fact q.Prime] (τ : M →+* PadicAlgCl q), ‖τ ((x⁻¹ : Mˣ) : M)‖ ≤ 1) →
       Units.map (π : M →* L) x ∈ T := by
-  haveI : CharZero L := (RingHom.charZero_iff (π.comp (algebraMap ℚ M)).injective).1 inferInstance
-  haveI : Module.Finite ℚ L := Module.Finite.of_surjective π.toRatAlgHom.toLinearMap hπ
-  haveI : NumberField L := ⟨⟩
+  have : CharZero L := (RingHom.charZero_iff (π.comp (algebraMap ℚ M)).injective).1 inferInstance
+  have : Module.Finite ℚ L := Module.Finite.of_surjective π.toRatAlgHom.toLinearMap hπ
+  have : NumberField L := ⟨⟩
   let τ₀ : L →ₐ[ℚ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -824,15 +824,15 @@ private theorem units_finite {M : Type} [CommRing M] [Algebra ℚ M] [Module.Fin
     (c : M →ₐ[ℚ] M) (hc : ∀ (τ : M →+* ℂ) (a : M), τ (c a) = (starRingEnd ℂ) (τ a)) :
     {x : Mˣ | x ∈ GlobalTheory.LKTorus.simT ℚ c ∧ (∀ (q : ℕ) [Fact q.Prime] (τ : M →+* PadicAlgCl q), ‖τ (x : M)‖ ≤ 1) ∧
       ∀ (q : ℕ) [Fact q.Prime] (τ : M →+* PadicAlgCl q), ‖τ ((x⁻¹ : Mˣ) : M)‖ ≤ 1}.Finite := by
-  haveI : IsArtinianRing M := IsArtinianRing.of_finite ℚ M
-  haveI : Finite (MaximalSpectrum M) := inferInstance
+  have : IsArtinianRing M := IsArtinianRing.of_finite ℚ M
+  have : Finite (MaximalSpectrum M) := inferInstance
   have key : ∀ m : MaximalSpectrum M, ∃ T : Set (M ⧸ m.asIdeal)ˣ, T.Finite ∧ ∀ x : Mˣ, x ∈ GlobalTheory.LKTorus.simT ℚ c →
       (∀ (q : ℕ) [Fact q.Prime] (τ : M →+* PadicAlgCl q), ‖τ (x : M)‖ ≤ 1) →
       (∀ (q : ℕ) [Fact q.Prime] (τ : M →+* PadicAlgCl q), ‖τ ((x⁻¹ : Mˣ) : M)‖ ≤ 1) →
       Units.map ((Ideal.Quotient.mk m.asIdeal : M →+* M ⧸ m.asIdeal) : M →* M ⧸ m.asIdeal) x ∈ T := by
     intro m
-    haveI := m.isMaximal
-    letI : Field (M ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
+    have := m.isMaximal
+    let : Field (M ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
     exact units_field (Ideal.Quotient.mk m.asIdeal) Ideal.Quotient.mk_surjective c hc
   choose T hT hxT using key
   let φ : Mˣ → ∀ m : MaximalSpectrum M, (M ⧸ m.asIdeal)ˣ := fun x m =>
@@ -866,7 +866,7 @@ private theorem fm_reduced {p : ℕ} [Fact p.Prime] {G : HTGroup p} (P : Pair G)
   exact AdjoinRoot.mk_eq_zero.2 ((hsq.dvd_pow_iff_dvd hpos.ne').1 hn)
 
 private theorem fm_finite {p : ℕ} [Fact p.Prime] {G : HTGroup p} (P : Pair G) : Module.Finite ℚ (FM P) := by
-  haveI : Module.Finite G.F (FM P) :=
+  have : Module.Finite G.F (FM P) :=
     (AdjoinRoot.powerBasis (minpoly.ne_zero (IsIntegral.of_finite G.F (P.γ : G.C)))).finite
   exact Module.Finite.trans G.F (FM P)
 
@@ -925,8 +925,8 @@ private theorem stab_finite {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
       rw [← hApow]
       have := hB (w ^ k) (S.pow_mem hw k).1 i
       simpa [f, hA] using this
-  haveI := fm_reduced P
-  haveI := fm_finite P
+  have := fm_reduced P
+  have := fm_finite P
   have hfin := units_finite (iM P) (GlobalTheory.T.betaTwistedInvolution_eq_complexConj_of_marked p G P μ ha hM)
   let U : S → (FM P)ˣ := fun w => ⟨A w, A (w : P.cent)⁻¹, hAinv w, by rw [mul_comm]; exact hAinv w⟩
   have hU : ∀ w : S, U w ∈ {x : (FM P)ˣ | x ∈ GlobalTheory.LKTorus.simT ℚ (iM P) ∧
@@ -948,7 +948,7 @@ private theorem stab_finite {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
         (Units.mul_left_inj P.β).1 e1
       exact Units.ext ((algebraMap ℚ G.C).injective e3).symm
     exact Subtype.ext (Subtype.ext (Prod.ext hu hs))
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   exact Finite.of_injective (fun w => (⟨U w, hU w⟩ : {x : (FM P)ˣ | x ∈ GlobalTheory.LKTorus.simT ℚ (iM P) ∧
       (∀ (q : ℕ) [Fact q.Prime] (τ : FM P →+* PadicAlgCl q), ‖τ (x : FM P)‖ ≤ 1) ∧
       ∀ (q : ℕ) [Fact q.Prime] (τ : FM P →+* PadicAlgCl q), ‖τ ((x⁻¹ : (FM P)ˣ) : FM P)‖ ≤ 1}))
@@ -972,7 +972,7 @@ private theorem pointSum_zero {Γ G₁ G₂ : Type} [Group Γ] [Group G₁] [Gro
     simp
   · unfold pointSum
     refine finsum_of_infinite_support fun hfin => hs (hfin.subset fun q hq => ?_)
-    haveI := hstab (Quotient.out q)
+    have := hstab (Quotient.out q)
     exact mul_ne_zero (inv_ne_zero (Nat.cast_ne_zero.2 Nat.card_pos.ne')) hq
 
 private theorem termAt_zero {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a = 1) (Lv : G.Level) (Q : Pair G) (μ : ℂ)

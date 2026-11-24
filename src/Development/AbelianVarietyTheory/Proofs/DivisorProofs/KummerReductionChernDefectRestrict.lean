@@ -66,7 +66,7 @@ namespace GlobalTheory.EtC.RedChern
 theorem defect_mul_prim (Q q : ℕ) [NeZero Q] (hqQ : q ∣ Q) (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤))
     (v w : (Γ(U, ⊤))ˣ) (h : (w : Γ(U, ⊤)) = ζ.1 * v) : defect Q q U w = defect Q q U v := by
   have hq0 : q ≠ 0 := fun h0 => NeZero.ne Q (Nat.eq_zero_of_zero_dvd (h0 ▸ hqQ))
-  haveI : NeZero q := ⟨hq0⟩
+  have : NeZero q := ⟨hq0⟩
   obtain ⟨ξ, hξ⟩ := (GlobalTheory.T.primitiveRoot_pow_unit_sub_prod_properties Q Γ(U, ⊤)).2.2.2.2.2 q hqQ ζ
   have h1 : kumT Q U w = kumT Q U v + resGen 1 ζ := (_root_.GlobalTheory.EtC.KummerSplit.isKum_kumT Q).2 U ζ v w h
   have h2 : (redMap Q q 1).app U 0 (resGen 1 ζ) = resGen 1 ξ := GlobalTheory.T.tateTwistReductionResolutionMap_generator Q q hqQ 1 U ζ ξ hξ

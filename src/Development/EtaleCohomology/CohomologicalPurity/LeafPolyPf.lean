@@ -65,9 +65,9 @@ theorem leafPoly : LateralTheory.CohomologicalPurity.ChartCut.LeafPoly := by
   let P := MvPolynomial (Fin d ⊕ Fin e) R
   let S := MvPolynomial (Fin d) (MvPolynomial (Fin e) R)
   let Cc := MvPolynomial (Fin d) (A ⧸ I)
-  letI : Algebra P A := ψ.toAlgebra
-  letI : Algebra P S := (kap d e R).toAlgebra
-  letI : Algebra S (S ⊗[P] A) := Algebra.TensorProduct.leftAlgebra (R := P) (A := S) (B := A)
+  let : Algebra P A := ψ.toAlgebra
+  let : Algebra P S := (kap d e R).toAlgebra
+  let : Algebra S (S ⊗[P] A) := Algebra.TensorProduct.leftAlgebra (R := P) (A := S) (B := A)
   have hb : (algebraMap S (S ⊗[P] A)).Etale :=
     RingHom.IsStableUnderBaseChange.tensorProduct RingHom.Etale.isStableUnderBaseChange S hψ
   have hx : ∀ j, x j ∈ I := fun j => hI ▸ Ideal.subset_span ⟨j, rfl⟩
@@ -75,7 +75,7 @@ theorem leafPoly : LateralTheory.CohomologicalPurity.ChartCut.LeafPoly := by
   let gy : MvPolynomial (Fin e) R →+* A ⧸ I := eval₂Hom ((Ideal.Quotient.mk I).comp φ) fun i => Ideal.Quotient.mk I (y i)
   let FS : S →+* Cc := eval₂Hom ((C : A ⧸ I →+* Cc).comp gy) X
   let ρ : P →+* Cc := (C : A ⧸ I →+* Cc).comp ((Ideal.Quotient.mk I).comp ψ)
-  letI : Algebra P Cc := ρ.toAlgebra
+  let : Algebra P Cc := ρ.toAlgebra
   have hFSC : ∀ p, FS (C p) = C (gy p) := fun p => MvPolynomial.eval₂Hom_C _ _ _
   have hFSX : ∀ j, FS (X j) = X j := fun j => MvPolynomial.eval₂Hom_X' _ _ _
   have hgC : ∀ r, gy (C r) = Ideal.Quotient.mk I (φ r) := fun r => MvPolynomial.eval₂Hom_C _ _ _

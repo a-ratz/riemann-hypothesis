@@ -74,7 +74,7 @@ theorem exists_lift_valR {O T : Type} [CommRing O] [IsLocalRing O] [CommRing T] 
     ∃ (U' : X.Opens) (f' : Γ(X, U')), ⊤ ≤ c ⁻¹ᵁ U' ∧ π (valR c U' f') = valR ce U f := by
   have hy : ce (cpt T) ∈ U := hU trivial
   obtain ⟨a, ha⟩ := i.stalkMap_surjective (ce (cpt T)) ((Y.presheaf.germ U _ hy).hom f)
-  obtain ⟨U', hU', f', rfl⟩ := X.presheaf.germ_exist a
+  obtain ⟨U', hU', f', rfl⟩ := X.presheaf.exists_germ_eq a
   have hcl : spMap π (cpt T) = cpt O := IsLocalRing.comap_closedPoint π
   have h1 : (spMap π ≫ c) (cpt T) ∈ U' := by rw [← h]; exact hU'
   have h2 : ⊤ ≤ c ⁻¹ᵁ U' := (top_le_iff_cpt c U').2 (by rw [← hcl]; exact h1)
@@ -95,12 +95,12 @@ theorem exists_finite_values {V : Type} [CommRing V] (j : V →+* OO p) (K₀ : 
   have hWt : ⊤ ≤ c ⁻¹ᵁ W := (top_le_iff_cpt c W).2 hyW
   have hft : (s.appLE ⊤ W le_top).hom.FiniteType :=
     HasRingHomProperty.appLE @LocallyOfFiniteType s inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨W, hW⟩ le_top
-  letI := (s.appLE ⊤ W le_top).hom.toAlgebra
+  let := (s.appLE ⊤ W le_top).hom.toAlgebra
   obtain ⟨t, ht⟩ := hft.1
   let φ : Γ(X, W) →+* PadicAlgCl p := (OO p).subtype.comp (CrdCalc.valHom c W hWt)
   have hφ : ∀ f, φ f = ((valR c W f : OO p) : PadicAlgCl p) := fun f => by
     rw [CrdCalc.valR_eq c W hWt]; rfl
-  haveI : FiniteDimensional ℚ_[p] (IntermediateField.adjoin ℚ_[p] (φ '' (t : Set Γ(X, W)))) :=
+  have : FiniteDimensional ℚ_[p] (IntermediateField.adjoin ℚ_[p] (φ '' (t : Set Γ(X, W)))) :=
     haveI : Finite (φ '' (t : Set Γ(X, W))) := ((t.finite_toSet).image φ).to_subtype
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine ⟨K₀ ⊔ IntermediateField.adjoin ℚ_[p] (φ '' (t : Set Γ(X, W))), inferInstance, ?_⟩
@@ -149,8 +149,8 @@ theorem exists_tendsto (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDim
     ∃ a, Tendsto ω atTop (𝓝 a) := by
   have hc : CauchySeq ω := cauchySeq_of_le_geometric r r hr fun e => by
     rw [dist_comm, dist_eq_norm, ← pow_succ']; exact h e
-  haveI : FiniteDimensional ℚ_[p] K.toSubmodule := inferInstanceAs (FiniteDimensional ℚ_[p] K)
-  obtain ⟨a, -, ha⟩ := cauchySeq_tendsto_of_isComplete K.toSubmodule.complete_of_finiteDimensional hK hc
+  have : FiniteDimensional ℚ_[p] K.toSubmodule := inferInstanceAs (FiniteDimensional ℚ_[p] K)
+  obtain ⟨a, -, ha⟩ := cauchySeq_tendsto_of_isComplete K.toSubmodule.isComplete_of_finiteDimensional hK hc
   exact ⟨a, ha⟩
 
 theorem hasSum_of_levels {Ix : Type} {r : ℝ} (hr₀ : 0 ≤ r) (hr : r < 1) (x : Ix → PadicAlgCl p)
@@ -279,7 +279,7 @@ theorem factor_wVal (e : ℕ) :
     have hz : x z ∈ U := ht (show z ∈ (⊤ : (Sp A).Opens) from trivial)
     have e1 : ∀ c, (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom c) = c :=
       fun c => congrArg (fun f => CommRingCat.Hom.hom f c) (Iso.hom_inv_id (Scheme.ΓSpecIso (CommRingCat.of A)))
-    rw [valR, dif_pos ht, gm, dif_pos hz]
+    rw [valR, dite_eq_left ht, gm, dite_eq_left hz]
     show ((Sp A).presheaf.germ ⊤ z trivial).hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
         ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ ht).hom a.val))) =
       ((Sp A).presheaf.germ (x ⁻¹ᵁ U) z hz).hom ((x.app U).hom a.val)
@@ -364,7 +364,7 @@ theorem hasSum_integral (c : Sp (OO p) ⟶ u.G.left) (b₀ : Sp (OO p) ⟶ u.D.t
     have hz : x z ∈ U := ht (show z ∈ (⊤ : (Sp A).Opens) from trivial)
     have e1 : ∀ c, (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom c) = c :=
       fun c => congrArg (fun f => CommRingCat.Hom.hom f c) (Iso.hom_inv_id (Scheme.ΓSpecIso (CommRingCat.of A)))
-    rw [valR, dif_pos ht, gm, dif_pos hz]
+    rw [valR, dite_eq_left ht, gm, dite_eq_left hz]
     show ((Sp A).presheaf.germ ⊤ z trivial).hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
         ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ ht).hom a.val))) =
       ((Sp A).presheaf.germ (x ⁻¹ᵁ U) z hz).hom ((x.app U).hom a.val)

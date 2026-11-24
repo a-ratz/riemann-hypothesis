@@ -63,7 +63,7 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N Formalism.Bas
 
 private theorem UpperTheory.V.Loc.finite_field_enough_roots_of_unity (k : Type) [Field k] [Finite k] :
     HasEnoughRootsOfUnity k (Nat.card kˣ) := by
-  haveI : NeZero (Nat.card kˣ) := ⟨Nat.card_pos.ne'⟩
+  have : NeZero (Nat.card kˣ) := ⟨Nat.card_pos.ne'⟩
   refine HasEnoughRootsOfUnity.of_card_le ?_
   have htop : rootsOfUnity (Nat.card kˣ) k = ⊤ := by
     refine eq_top_iff.mpr fun x _ => ?_
@@ -99,16 +99,16 @@ private theorem UpperTheory.V.Loc.mem_closure_of_kernel_containment {G k J : Typ
   have hω : ω = ψ.comp Φ.rangeRestrict := by
     ext g
     rw [MonoidHom.comp_apply, hψ]
-  haveI : Finite (A →* kˣ) :=
+  have : Finite (A →* kˣ) :=
     Finite.of_injective (fun f : A →* kˣ => (f : A → kˣ)) DFunLike.coe_injective
-  haveI : NeZero (Nat.card kˣ) := ⟨Nat.card_pos.ne'⟩
-  haveI := UpperTheory.V.Loc.finite_field_enough_roots_of_unity k
-  haveI : HasEnoughRootsOfUnity k (Monoid.exponent A) := by
+  have : NeZero (Nat.card kˣ) := ⟨Nat.card_pos.ne'⟩
+  have := UpperTheory.V.Loc.finite_field_enough_roots_of_unity k
+  have : HasEnoughRootsOfUnity k (Monoid.exponent A) := by
     refine HasEnoughRootsOfUnity.of_dvd k (n := Nat.card kˣ) ?_
     refine Monoid.exponent_dvd_of_forall_pow_eq_one fun a => ?_
     refine Subtype.ext (funext fun j => ?_)
     simp [pow_card_eq_one']
-  haveI : HasEnoughRootsOfUnity k (Monoid.exponent (A →* kˣ)) := by
+  have : HasEnoughRootsOfUnity k (Monoid.exponent (A →* kˣ)) := by
     refine HasEnoughRootsOfUnity.of_dvd k (n := Nat.card kˣ) ?_
     refine Monoid.exponent_dvd_of_forall_pow_eq_one fun f => ?_
     refine MonoidHom.ext fun a => ?_

@@ -97,7 +97,7 @@ theorem bicommutant_restriction_prime :
       obtain ⟨⟨g', h⟩, rfl⟩ := hv
       have e : π g (π (j g') (y h)) = π (j (p g * g')) (y (π k h)) := by
         rw [hpg, map_mul, map_mul]
-        simp only [ContinuousLinearMap.mul_apply, a1, a2]
+        simp only [mul_apply_eq_comp, a1, a2]
       simpa only [e] using hgen (p g * g') (π k h)
     | zero => simp
     | add u w _ _ hu hw => simpa only [map_add (f := _)] using W₀.add_mem hu hw
@@ -158,7 +158,7 @@ theorem exists_minimal_of_no_family_below
       obtain ⟨T, hTL, hTS, hT0, hTne⟩ := hmin
       refine ih T hTL hT0 ?_
       intro f hfL hf0 hfT hpw
-      haveI : CompleteSpace T := (hcl T hTL).completeSpace_coe
+      have : CompleteSpace T := (hcl T hTL).completeSpace_coe
       have hR0 : S ⊓ Tᗮ ≠ ⊥ := by
         intro h
         apply hTne
@@ -356,7 +356,7 @@ theorem no_orthogonal_idempotents : ∀ (R : Type) [Ring R] (A S : Set R) (E : R
   intro R _ A S E m q hmul hS hprime hstd hA hne hid horth hE
   let qq : ℕ → R := fun i => if h : i < m + 1 then q ⟨i, h⟩ else 0
   have hqq : ∀ i (h : i ≤ m), qq i = q ⟨i, Nat.lt_succ_of_le h⟩ := fun i h =>
-    dif_pos (Nat.lt_succ_of_le h)
+    dite_eq_left (Nat.lt_succ_of_le h)
   refine no_chain_nat A S E m qq hmul hS hprime hstd ?_ ?_ ?_ ?_ ?_
   · intro i h
     rw [hqq i h]
@@ -396,7 +396,7 @@ theorem schur_on_minimal_subspace :
     (∀ U : Submodule ℂ H, IsClosed (U : Set H) → U ≤ Q → (∀ T ∈ N, ∀ v ∈ U, T v ∈ U) → U = ⊥ ∨ U = Q) →
     ∀ A : H →L[ℂ] H, (∀ T ∈ N, T * A = A * T) → ∃ c : ℂ, ∀ v ∈ Q, A v - c • v ∈ Qᗮ := by
   intro H _ _ _ N Q hstar hQc hQinv hmin A hcomm
-  haveI : CompleteSpace Q := hQc.completeSpace_coe
+  have : CompleteSpace Q := hQc.completeSpace_coe
 
   let σ : N → (Q →L[ℂ] Q) := fun T =>
     (T.1.comp Q.subtypeL).codRestrict Q (fun v => hQinv T.1 T.2 v v.2)
@@ -500,7 +500,7 @@ theorem diag_mem_of_bicomm (σ : G →* (H →L[ℂ] H)) (hσ : ∀ g v, ‖σ g
     (hT : ∀ S : H →L[ℂ] H, (∀ g, S * σ g = σ g * S) → S * T = T * S)
     (z : PiLp 2 (fun _ : ι => H)) (hz : z ∈ C) :
     diag T z ∈ C := by
-  haveI : CompleteSpace C := hcl.completeSpace_coe
+  have : CompleteSpace C := hcl.completeSpace_coe
   have hPg := proj_comm (ι := ι) σ hσ C hC
   let Q : ι → ι → H →L[ℂ] H := fun k l =>
     (PiLp.proj 2 (fun _ : ι => H) k).comp (C.starProjection.comp (incl l))
@@ -509,7 +509,7 @@ theorem diag_mem_of_bicomm (σ : G →* (H →L[ℂ] H)) (hσ : ∀ g v, ‖σ g
     apply hT
     intro g
     ext v
-    simp only [Q, ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, PiLp.proj_apply]
+    simp only [Q, mul_apply_eq_comp, ContinuousLinearMap.comp_apply, PiLp.proj_apply]
     rw [← diag_incl, hPg, diag_apply]
   have hsum : ∀ w : PiLp 2 (fun _ : ι => H), ∀ k,
       (C.starProjection w).ofLp k = ∑ l, Q k l (w.ofLp l) := by
@@ -539,7 +539,7 @@ theorem sum_eq_zero_of_bicomm (σ : G →* (H →L[ℂ] H)) (hσ : ∀ g v, ‖�
       diag (σ a) (diag (σ b) w) = diag (σ (a * b)) w := by
     intro a b w
     ext k
-    simp only [diag_apply, map_mul, ContinuousLinearMap.mul_apply]
+    simp only [diag_apply, map_mul, mul_apply_eq_comp]
   have hCinv : ∀ g, ∀ z ∈ V.topologicalClosure, diag (σ g) z ∈ V.topologicalClosure := by
     intro g
     have hle : V ≤ V.topologicalClosure.comap
@@ -624,12 +624,12 @@ theorem standard_polynomial_vanishes_on_bicommutant (σ : G →* (H →L[ℂ] H)
             simp [b, Function.update_of_ne hik]
         rw [hb, hAB]
         ext v
-        simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.mul_apply,
-          ContinuousLinearMap.zero_apply]
+        simp only [sum_apply, mul_apply_eq_comp,
+          zero_apply]
         refine sum_eq_zero_of_bicomm σ hσ A (fun π => B π v) ?_ (a k) (ha k)
         intro x
         have hv := congrArg (fun S : H →L[ℂ] H => S v) ((hAB (σ x)).symm.trans (hσk x))
-        simpa [ContinuousLinearMap.sum_apply, ContinuousLinearMap.mul_apply] using hv
+        simpa [sum_apply, mul_apply_eq_comp] using hv
       · have hiff : ∀ i : Fin M, ((i : ℕ) < j + 1 ↔ (i : ℕ) < j) := fun i => by
           have := i.isLt
           omega
@@ -682,7 +682,7 @@ theorem starProjection_commute {G H : Type} [Group G] [NormedAddCommGroup H] [In
     [U.HasOrthogonalProjection] (hU : ∀ g, ∀ v ∈ U, σ g v ∈ U) (g : G) :
     U.starProjection * σ g = σ g * U.starProjection := by
   ext v
-  simp only [ContinuousLinearMap.mul_apply]
+  simp only [mul_apply_eq_comp]
   have h1 : U.starProjection v ∈ U := Submodule.starProjection_apply_mem U v
   have h2 : v - U.starProjection v ∈ Uᗮ := Submodule.sub_starProjection_mem_orthogonal v
   have h3 : σ g v = σ g (U.starProjection v) + σ g (v - U.starProjection v) := by
@@ -695,7 +695,7 @@ theorem exists_isIrredSubrep : ∀ (G H : Type) [Group G] [NormedAddCommGroup H]
     (∀ T : H →L[ℂ] H, (∀ g, T * σ g = σ g * T) → ∀ v ∈ Q, T v ∈ Q) →
     (∀ g, ∃ c : ℂ, σ g ξ - c • ξ ∈ Qᗮ) → ∃ W, IsIrredSubrep σ W := by
   intro G H _ _ _ _ σ hσ Q ξ hQ hξQ hξ hcomm hscal
-  haveI : CompleteSpace Q := hQ.completeSpace_coe
+  have : CompleteSpace Q := hQ.completeSpace_coe
 
   let S : Submodule ℂ H := Submodule.span ℂ (Set.range fun g => σ g ξ)
   have hSstable : ∀ g, ∀ v ∈ S, σ g v ∈ S := by
@@ -719,7 +719,7 @@ theorem exists_isIrredSubrep : ∀ (G H : Type) [Group G] [NormedAddCommGroup H]
 
   have hline : ∀ w ∈ S.topologicalClosure, Q.starProjection w ∈ (ℂ ∙ ξ) := by
     have hclosed : IsClosed (((ℂ ∙ ξ).comap (Q.starProjection : H →ₗ[ℂ] H) : Submodule ℂ H) : Set H) :=
-      (Submodule.closed_of_finiteDimensional (ℂ ∙ ξ)).preimage Q.starProjection.continuous
+      (Submodule.isClosed_of_finiteDimensional (ℂ ∙ ξ)).preimage Q.starProjection.continuous
     refine fun w hw => hmin _ hclosed (fun g => ?_) hw
     obtain ⟨c, hc⟩ := hscal g
     have e : σ g ξ = c • ξ + (σ g ξ - c • ξ) := by abel
@@ -728,7 +728,7 @@ theorem exists_isIrredSubrep : ∀ (G H : Type) [Group G] [NormedAddCommGroup H]
       Submodule.starProjection_eq_self_iff.2 hξQ]
     exact Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self ξ)
   refine ⟨S.topologicalClosure, hW, fun h => hξ (by simpa [h] using hξW), fun U hUW hU => ?_⟩
-  haveI : CompleteSpace U := hU.1.completeSpace_coe
+  have : CompleteSpace U := hU.1.completeSpace_coe
   have hPc := starProjection_commute σ hσ U hU.2
   have hPQ : U.starProjection ξ ∈ Q := hcomm _ hPc ξ hξQ
   have hPU : U.starProjection ξ ∈ U := Submodule.starProjection_apply_mem U ξ

@@ -104,7 +104,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.HoloLift.holo_of_analytic_lift : ∀ 
   rcases V.eq_empty_or_nonempty with rfl | hne
   · refine ⟨continuousOn_empty _, fun k w hw => ?_⟩
     exact absurd hw.1 (Set.notMem_empty w)
-  haveI : Nonempty V := hne.to_subtype
+  have : Nonempty V := hne.to_subtype
   let B : FinHolAtlas e V := inclAtlas hV
   let Vf : V → Set V := fun _ => Set.univ
   let μf : V → V → (Σ k, ι k) → ℂ := fun _ u => μ u
@@ -124,7 +124,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.HoloLift.holo_of_analytic_lift : ∀ 
     obtain ⟨i, hi⟩ := (R.mem (h y) (h y) (R.mem_U _)).1 k
     exact ⟨i, Proj.orbit_ne (hh y) hi⟩
   have hcont : Continuous h := CovMap.continuous_of_orbit_of_ne R B hVo hVm hμf hnz hc hh
-  refine ⟨continuousOn_iff_continuous_restrict.2 hcont, fun k w hw => ?_⟩
+  refine ⟨continuousOn_iff_continuous_domRestrict.2 hcont, fun k w hw => ?_⟩
   have hA := Proj.analytic_of_orbit R B hVo hVm hμf hc hh hcont (0 : Fin 1) k
   have hmem : w ∈ (B.chart (0 : Fin 1)).target ∩
       (B.chart (0 : Fin 1)).symm ⁻¹' (h ⁻¹' (R.A.chart k).source) := by

@@ -113,7 +113,7 @@ theorem exists_open_eq_closed (f : ℂ → ℂ) (T : ℝ)
   obtain ⟨T', a1, a2, a3⟩ := (h1.and (h2.and h3)).exists
   refine ⟨T', a3.le, a2.le, ?_⟩
   ext ρ
-  simp only [Set.mem_setOf_eq, sub_zero] at a1 ⊢
+  simp only [Set.mem_ofPred_eq, sub_zero] at a1 ⊢
   constructor
   · rintro ⟨b0, b1, b2, b3⟩
     exact ⟨b0, b1, by linarith, b3⟩
@@ -340,7 +340,7 @@ theorem sum_not_coprime_le (q N : ℕ) (hq : q ≠ 0) :
         refine ⟨hk, Nat.le_log_of_pow_le (by norm_num) ?_⟩
         exact (Nat.pow_le_pow_left hp.two_le k).trans hnN
       have hTp : (if p ^ k ∈ (Icc 1 L).image (p ^ ·) then Real.log p else 0) = Real.log p :=
-        if_pos (Finset.mem_image.2 ⟨k, hkL, rfl⟩)
+        ite_eq_left (Finset.mem_image.2 ⟨k, hkL, rfl⟩)
       rw [hmin, ← hTp]
       exact Finset.single_le_sum (f := fun p' : ℕ => if p ^ k ∈ (Icc 1 L).image (p' ^ ·) then Real.log p' else 0)
         (fun p' _ => hT0 p' (p ^ k)) hpmem
@@ -454,7 +454,7 @@ theorem recip_le_sum_windows {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q
     apply mul_nonneg (inv_nonneg.mpr (Nat.cast_nonneg j))
     apply add_nonneg <;> split_ifs <;> norm_num
   by_cases h1 : 1 < |ρ.im|
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     obtain ⟨hre0, hre1, hT, hL⟩ := hρ
     rw [sub_zero] at hT
     have hk1 : 1 ≤ ⌊|ρ.im|⌋₊ := Nat.le_floor (by rw [Nat.cast_one]; exact h1.le)
@@ -470,14 +470,14 @@ theorem recip_le_sum_windows {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q
           have hab : |ρ.im| = ρ.im := abs_of_nonneg him
           rw [abs_le]
           constructor <;> linarith
-        rw [if_pos hmem]
+        rw [ite_eq_left hmem]
         split_ifs <;> norm_num
       · have hmem : ρ ∈ zerosIn χ (-(⌊|ρ.im|⌋₊ : ℝ)) 1 := by
           refine ⟨hre0, hre1, ?_, hL⟩
           have hab : |ρ.im| = -ρ.im := abs_of_neg him
           rw [abs_le]
           constructor <;> linarith
-        rw [if_pos hmem]
+        rw [ite_eq_left hmem]
         split_ifs <;> norm_num
     calc 1 / ‖ρ‖ ≤ ((⌊|ρ.im|⌋₊ : ℕ) : ℝ)⁻¹ := by
           rw [one_div]
@@ -486,7 +486,7 @@ theorem recip_le_sum_windows {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q
           (if ρ ∈ zerosIn χ (-(⌊|ρ.im|⌋₊ : ℝ)) 1 then 1 else 0)) :=
           le_mul_of_one_le_right (inv_nonneg.mpr hkpos.le) hind
       _ ≤ _ := Finset.single_le_sum (fun j _ => hnn j) (Finset.mem_Icc.mpr ⟨hk1, hkT⟩)
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     exact Finset.sum_nonneg (fun j _ => hnn j)
 
 theorem zsumR_recip_le : GlobalTheory.Mem.An.ZeroCount → ∃ C : ℝ, ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q), χ.IsPrimitive → ∀ T : ℝ, 2 ≤ T → zsumR χ 0 T (fun ρ => if 1 < |ρ.im| then 1 / ‖ρ‖ else 0) ≤ C * Real.log (q * T) ^ 2 ∧ zsumR χ 0 1 (fun _ => 1) ≤ C * Real.log (3 * q) := by
@@ -659,7 +659,7 @@ theorem recip_bound : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : Diri
     rw [zsumR_eq, zsumR_eq, zsumR_eq]
     have e : (zfin χ 0 1).toFinset = (zfin χ 0 T).toFinset.filter (fun ρ => ¬ 1 < |ρ.im|) := by
       ext ρ
-      simp only [Set.Finite.mem_toFinset, Finset.mem_filter, zerosIn, Set.mem_setOf_eq, sub_zero,
+      simp only [Set.Finite.mem_toFinset, Finset.mem_filter, zerosIn, Set.mem_ofPred_eq, sub_zero,
         not_lt]
       constructor
       · rintro ⟨a, b, c, d⟩
@@ -699,11 +699,11 @@ theorem left_zeros {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) (u T : �
   refine norm_sum_le_of_le _ fun ρ _ => ?_
   have hu0 : 0 < u := by linarith
   by_cases h : 1 / 2 ≤ ρ.re
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     have : (ord χ ρ : ℂ) = zmult χ ρ := rfl
     rw [this, sub_self, norm_zero]
     positivity
-  · rw [if_neg h, sub_zero, norm_mul, norm_div, Complex.norm_cpow_eq_rpow_re_of_pos hu0,
+  · rw [ite_eq_right h, sub_zero, norm_mul, norm_div, Complex.norm_cpow_eq_rpow_re_of_pos hu0,
       Complex.norm_natCast, Real.sqrt_eq_rpow]
     have h1 : u ^ ρ.re ≤ u ^ (1 / 2 : ℝ) := Real.rpow_le_rpow_of_exponent_le hu (not_le.mp h).le
     calc (zmult χ ρ : ℝ) * (u ^ ρ.re / ‖ρ‖) = u ^ ρ.re * ((zmult χ ρ : ℝ) * (1 / ‖ρ‖)) := by ring
@@ -793,7 +793,7 @@ theorem explicit_formula_right : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q]
   obtain ⟨B, hB, HB⟩ := recip_bound
   refine ⟨2 + |A| * (2 + B) + 2 * B, by positivity, fun q _ χ u T hT hu => ?_⟩
   refine ⟨(zfin χ 0 T).subset (box_subset χ T), ?_⟩
-  haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   have hprim := χ.primitiveCharacter_isPrimitive
   have hN : (1 : ℝ) ≤ χ.conductor := by
     exact_mod_cast Nat.one_le_iff_ne_zero.mpr χ.conductor_ne_zero
@@ -831,8 +831,8 @@ theorem explicit_formula_right : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q]
     unfold Formalism.MainNotions.GlobalTheoryTheory.psi0
     congr 1
     by_cases h : χ = 1
-    · rw [if_pos h, if_pos (hone.mpr h)]
-    · rw [if_neg h, if_neg (mt hone.mp h)]
+    · rw [ite_eq_left h, ite_eq_left (hone.mpr h)]
+    · rw [ite_eq_right h, ite_eq_right (mt hone.mp h)]
   have hu0 : 0 < u := by linarith
   have hT0 : 0 < T := by linarith
   have hZ0 : 0 ≤ zsumR χ.primitiveCharacter 0 1 (fun ρ => 1 / ‖ρ‖) := by
@@ -946,9 +946,9 @@ theorem weighted_fejer_split (J : ℕ) (θ : ℝ) (w : ℂ) :
   rw [Finset.sum_div, Finset.sum_div, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun j _ => ?_
   have e1 : Complex.exp (θ * I) ^ j = Complex.exp (((j * θ : ℝ) : ℂ) * I) := by
-    rw [← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← exp_natCast_mul]; congr 1; push_cast; ring
   have e2 : Complex.exp (-(θ * I)) ^ j = Complex.exp (((-(j * θ) : ℝ) : ℂ) * I) := by
-    rw [← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← exp_natCast_mul]; congr 1; push_cast; ring
   rw [mul_pow, mul_pow, e1, e2, Complex.mul_re, Complex.mul_re, Complex.exp_ofReal_mul_I_re,
     Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im, Complex.exp_ofReal_mul_I_im,
     Real.cos_neg, Real.sin_neg]
@@ -1125,7 +1125,7 @@ theorem powerSum_repulsion :
     linarith
   have hJ0 : (0 : ℝ) < J := by linarith
   have hP : (1 + x) ^ J ≤ Real.exp (x * J) := by
-    rw [mul_comm, Real.exp_nat_mul]
+    rw [mul_comm, Real.exp_natCast_mul]
     exact pow_le_pow_left₀ (by linarith) (by linarith [Real.add_one_le_exp x]) J
   have hP0 : 0 < (1 + x) ^ J := by positivity
   have h1 : (J : ℝ) * 1 ≤ J * (32 * J * δ * (1 + x) ^ J) := by nlinarith
@@ -1327,7 +1327,7 @@ theorem exists_list : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : Diri
     rw [Multiset.count_sum', Finset.sum_eq_single_of_mem w hw]
     · simp
     · intro b _ hb
-      rw [Multiset.count_replicate, if_neg hb]
+      rw [Multiset.count_replicate, ite_eq_right hb]
   · rw [finsum_mem_eq_finite_toFinset_sum _ hfin] at hsum
     rw [Multiset.card_sum]
     simp only [Multiset.card_replicate]
@@ -1440,7 +1440,7 @@ theorem repulsion : ∃ c : ℝ, 0 < c ∧ ∀ (q : ℕ) [NeZero q] (χ₁ χ : 
       obtain ⟨V, d, -, r⟩ := exists_erase hβ hβ' W3 t fun hd => by
         rw [← Multiset.one_le_count_iff_mem, m3 β hd hβ1 hz₁]; exact one_le_ord χ₁ hβ1 hz₁
       refine ⟨W2, V, le_rfl, d, hρ2, fun j => ?_⟩
-      rw [if_pos rfl, if_neg h1, Complex.zero_re]
+      rw [ite_eq_left rfl, ite_eq_right h1, Complex.zero_re]
       linarith [r j]
     by_cases b : χ = χ₁
     · subst b
@@ -1452,10 +1452,10 @@ theorem repulsion : ∃ c : ℝ, 0 < c ∧ ∀ (q : ℕ) [NeZero q] (χ₁ χ : 
           rw [m2 ρ hρd hρ1 hz, hb]
           simpa [hb] using hcase
         · exact Or.inl hb
-      · rw [if_neg a, if_pos (hmul.2 rfl), Complex.zero_re]
+      · rw [ite_eq_right a, ite_eq_left (hmul.2 rfl), Complex.zero_re]
         linarith [r j]
     · refine ⟨W2, W3, le_rfl, le_rfl, hρ2, fun j => ?_⟩
-      rw [if_neg a, if_neg (mt hmul.1 b), Complex.zero_re]
+      rw [ite_eq_right a, ite_eq_right (mt hmul.1 b), Complex.zero_re]
       have : (0 : ℝ) ≤ j * (1 - β) := by have : 0 ≤ 1 - β := by linarith
                                          positivity
       have : (0 : ℝ) ≤ 1 / 2 ^ j := by positivity
@@ -1496,8 +1496,8 @@ theorem repulsion : ∃ c : ℝ, 0 < c ∧ ∀ (q : ℕ) [NeZero q] (χ₁ χ : 
     have a3 := s3 k
     have b1 := r1 (k + 1)
     have b2 := r23 (k + 1)
-    rw [if_pos rfl] at a0
-    rw [if_neg h1, Complex.zero_re] at a1
+    rw [ite_eq_left rfl] at a0
+    rw [ite_eq_right h1, Complex.zero_re] at a1
     simp only [Complex.add_re] at hp ⊢
     have f : (8 * C + 4) * L / 2 ^ (k + 1) = 4 * (2 * C * L / 2 ^ (k + 1)) + 4 * L * (1 / 2 ^ (k + 1)) := by
       ring
@@ -1536,9 +1536,9 @@ lemma orth (M : ℕ) [NeZero M] (b : ℕ) (hb : Nat.Coprime b M) (u : ℝ) :
   rw [h2, h]
   by_cases hn : n ≡ b [MOD M]
   · have : (b : ZMod M) = n := (ZMod.natCast_eq_natCast_iff _ _ _).2 hn.symm
-    rw [if_pos hn, if_pos this]; push_cast; ring
+    rw [ite_eq_left hn, ite_eq_left this]; push_cast; ring
   · have : ¬ (b : ZMod M) = n := fun h => hn ((ZMod.natCast_eq_natCast_iff _ _ _).1 h).symm
-    rw [if_neg hn, if_neg this]; simp
+    rw [ite_eq_right hn, ite_eq_right this]; simp
 
 lemma zsum (s t : Set ℂ) (ht : t.Finite) (hst : s ⊆ t) (o : ℂ → ℕ) (u : ℝ) (hu : 0 < u)
     (h : ∀ ρ ∈ s, 1 / 2 ≤ ρ.re) :
@@ -1571,7 +1571,7 @@ lemma combine (M : ℕ) [NeZero M] (b : ℕ) (hb : Nat.Coprime b M) (u E x : ℝ
     IsUnit.of_mul_eq_one (b : ZMod M) (ZMod.inv_mul_of_unit _ hu)
   have h4 : ∑ χ : DirichletCharacter ℂ M, χ (b : ZMod M)⁻¹ * (if χ = 1 then (u : ℂ) else 0) = u := by
     simp_rw [mul_ite, mul_zero]
-    rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _), MulChar.one_apply hui, one_mul]
+    rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _), MulChar.one_apply hui, one_mul]
   have key : (((M.totient : ℝ) * psiAP M b u - (u - x) : ℝ) : ℂ) =
       ∑ χ : DirichletCharacter ℂ M, χ (b : ZMod M)⁻¹ *
         (((∑ n ∈ Finset.Icc 1 ⌊u⌋₊, ((Λ n : ℝ) : ℂ) * χ (n : ZMod M)) -
@@ -1613,26 +1613,26 @@ lemma struct (M : ℕ) [NeZero M] (b : ℕ) (hb : Nat.Coprime b M) (θ : ℤ) (�
     · by_cases hχ : χ = χ₁
       · subst hχ
         have hi : zerosBox χ (1 / 2) T = insert (β : ℂ) (zerosBox χ (1 / 2) T \ {(β : ℂ)}) := by
-          rw [Set.insert_diff_singleton, Set.insert_eq_of_mem hβ]
+          rw [Set.insert_sdiff_singleton, Set.insert_eq_of_mem hβ]
         have : ∑ᶠ ρ ∈ zerosBox χ (1 / 2) T, (ord χ ρ : ℂ) * ((u : ℂ) ^ ρ / ρ) =
             (u : ℂ) ^ (β : ℂ) / β +
             ∑ᶠ ρ ∈ zerosBox χ (1 / 2) T \ {(β : ℂ)}, (ord χ ρ : ℂ) * ((u : ℂ) ^ ρ / ρ) := by
           conv_lhs => rw [hi]
-          rw [finsum_mem_insert _ (by simp) ((h1 χ).1.diff), ho]; simp
-        simp only [if_true]
+          rw [finsum_mem_insert _ (by simp) ((h1 χ).1.sdiff), ho]; simp
+        simp only [ite_true]
         rw [this, add_sub_cancel_left]
         refine zsum (zerosBox χ (1 / 2) T \ {(β : ℂ)}) _ ((h1 χ).1.inter_of_left _) (fun ρ hρ => ⟨hρ.1, ?_⟩) _ u hu fun ρ hρ => hρ.1.1
         rcases h2 χ ρ hρ.1 with h | h
         · exact absurd h.2 hρ.2
         · exact h
-      · simp only [if_neg hχ]
+      · simp only [ite_eq_right hχ]
         rw [sub_zero]
         refine zsum _ _ ((h1 χ).1.inter_of_left _) (fun ρ hρ => ⟨hρ, ?_⟩) _ u hu fun ρ hρ => hρ.1
         rcases h2 χ ρ hρ with h | h
         · exact absurd h.1 hχ
         · exact h
     · simp_rw [mul_ite, mul_zero]
-      rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+      rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _)]
       have ha : χ₁ (b : ZMod M) * χ₁ (b : ZMod M) = 1 := by
         have := congrArg (fun ψ : DirichletCharacter ℂ M => ψ (b : ZMod M)) hsq
         simp only [pow_two, MulChar.mul_apply, MulChar.one_apply hbu] at this
@@ -1876,7 +1876,7 @@ theorem psiAP_relative : ∃ c₀ : ℝ, 0 < c₀ ∧ ∀ c₁ : ℝ, 0 < c₁ �
     have e2 : Real.exp V / T = Real.exp V * Real.exp (-(8 * m + √V)) := by
       rw [Real.exp_neg, div_eq_mul_inv]
     have e3 : √(Real.exp V) * (M : ℝ) ^ 3 = Real.exp V * (Real.exp (-(V / 2)) * Real.exp (3 * m)) := by
-      rw [← Real.exp_half, hMm, ← Real.exp_nat_mul]
+      rw [← Real.exp_half, hMm, ← Real.exp_natCast_mul]
       simp only [← Real.exp_add]; congr 1; push_cast; ring
     have e4 : Real.exp V ^ (-(a / L) / 2) = Real.exp (-(a * (V / L) / 2)) := by
       rw [← Real.exp_mul]; congr 1; ring
@@ -1910,7 +1910,7 @@ theorem psiAP_relative : ∃ c₀ : ℝ, 0 < c₀ ∧ ∀ c₁ : ℝ, 0 < c₁ �
       exact (le_abs_self _).trans this
     refine core a _ ha (le_min hmin1 ?_) hexp ?_ (Or.inr ⟨χ₁, hχ₁.1, hθ, ⟨?_, ?_, ?_, hz⟩, ho, ?_⟩)
     · have h1 : Real.exp (-(3 * m)) = 1 / (M : ℝ) ^ 3 := by
-        rw [hMm, ← Real.exp_nat_mul, Real.exp_neg, one_div]; norm_num
+        rw [hMm, ← Real.exp_natCast_mul, Real.exp_neg, one_div]; norm_num
       have h2 : m ≤ M := by rw [hMm]; linarith [Real.add_one_le_exp m]
       have h3 : c / (M : ℝ) ^ 3 ≤ c / ((M : ℝ) ^ 2 * m) := by
         rw [pow_succ (M : ℝ) 2]; gcongr

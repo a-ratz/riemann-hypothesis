@@ -216,11 +216,11 @@ theorem exists_oAct_oLinear_of_actsAs : ∀ (R : Type) [CommRing R] [IsDomain R]
   let fA : O → (A.A ⟶ A.A) := fun a => U.gen.inv ≫ F.map (oG.act a) ≫ U.gen.hom
   let oA : A.OAct O :=
     { act := fA
-      hom := fun a => by haveI := hg a; dsimp [fA]; infer_instance
+      hom := fun a => by have := hg a; dsimp [fA]; infer_instance
       map_one := by simp [fA, F, one]
       map_mul := fun a b => by simp [fA, F, mul]
       map_add := fun a b => by
-        haveI := hg a; haveI := hg b
+        have := hg a; have := hg b
         simp only [fA, F, add, pull_padd]
         rw [padd_comp_hom, padd, padd, comp_lift_assoc]
       rosati := fun a => GlobalTheory.Mum.RosGeneric.rosatiAdj_generic_of_actsAs R hR D A G hG U O o a (oG.act a)
@@ -634,7 +634,7 @@ theorem gs_res_fn {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (W : (S
 theorem eq_zero_of_generic {R : Type} [CommRing R] [IsDomain R] (W : (Sp R).Opens)
     (lam : Sp (FractionRing R) ⟶ W.toScheme) (hl : lam ≫ W.ι = jK R) (z : Sp (FractionRing R))
     (d : Γ(W.toScheme, ⊤)) (hd : gsHom lam z d = 0) : d = 0 := by
-  haveI : AlgebraicGeometry.IsReduced W.toScheme := isReduced_of_isOpenImmersion W.ι
+  have : AlgebraicGeometry.IsReduced W.toScheme := isReduced_of_isOpenImmersion W.ι
   refine eq_zero_of_basicOpen_eq_bot d ?_
   by_contra hne
   obtain ⟨w, hw⟩ : ∃ w, w ∈ W.toScheme.basicOpen d := by
@@ -726,7 +726,7 @@ namespace GlobalTheory.FactorPeriod
 
 theorem factor_period : ∀ (R V : Type) [CommRing R] [IsDomain R] [CommRing V] [IsDomain V] (θ : R →+* V) (Q : Data R) (D₀ : DegPre R) (F : PFactor Q D₀) (W : (Sp R).Opens) (ψW : PsiOn D₀ W) (g : (TK V).left ⟶ W.toScheme), g ≫ W.ι = jK V ≫ spMap θ → ∀ (a b : Q.X) (u : LB.Gen (LB.LinComb Q.M.L (lamPts (Q.c a) (Q.c b)) negε)) (x y : R) (k : (FractionRing R)ˣ) (k' : (FractionRing V)ˣ), u.IsGen → θ y ≠ 0 → (k : FractionRing R) * algebraMap R _ y = algebraMap R _ x → (k' : FractionRing V) * algebraMap V _ (θ y) = algebraMap V _ (θ x) → (∀ z J, Good Q.M.L z J → val (Q.tau a b) (𝟙 _) z J = gm (𝟙 (TK R).left) z ⊤ (unitOn k) * val u (toUnit (TK R)).left z J) → ∀ z J J', Good D₀.P.L z J → Good Q.M.L z J' → gm (𝟙 (TK V).left) z ⊤ (unitOn k') * val u ((TK V).hom ≫ spMap θ) z J' = lamVal F.w (((TK V).hom ≫ spMap θ) ≫ (lift (Q.c a) (Q.c b)).left) z J J' * val (ψW.tau (F.xi a) (F.f • F.xi b)) g z J := by
   intro R V _ _ _ _ θ Q D₀ F W ψW g hg a b u x y k k' hu hy hk hk' hτ z J J' hJ hJ'
-  letI := D₀.P.isAb.comm
+  let := D₀.P.isAb.comm
   obtain ⟨t, ht, tv, tl⟩ := GlobalTheory.T.exists_period_generator_on_open R D₀ W ψW (F.xi a) (F.f • F.xi b)
   have hQ : ∀ T : Over (Sp R), (lift (toUnit T ≫ Q.c a) (toUnit T ≫ Q.c b)).left ≫
       (lift (fst Q.B Q.B ≫ F.inc) (snd Q.B Q.B ≫ F.inc ≫ F.o.onB.act F.f) : G2 Q.B ⟶ G2 D₀.P.A).left =
@@ -847,8 +847,8 @@ theorem factor_tau_pull : ∀ (R V : Type) [CommRing R] [IsDomain R] [CommRing V
   intro R V _ _ _ _ θ Q D₀ F D₁ hD _ o₁ hx ho Q' ex hQ
   obtain ⟨β, β₂, wP, gβ, sβ, hwP, hc, hτ⟩ := hQ
   refine ⟨β, gβ, hc, fun inc xi hi hxi hcx => ?_⟩
-  letI := D₀.P.isAb.comm
-  letI := D₁.P.isAb.comm
+  let := D₀.P.isAb.comm
+  let := D₁.P.isAb.comm
   obtain ⟨w₁₂, hw₁₂, v₁₂⟩ := GlobalTheory.T.mumfordBundleIso_comp_values_mul _ _ _ Q'.B Q.B D₀.P.A Q'.M.L Q.M.L D₀.P.L Q'.M.isLB Q.M.isLB D₀.P.isLB
     β₂ _ _ rfl F.w F.w_gen wP hwP
   obtain ⟨δ₂, w₀, sδ, hw₀, v₀⟩ := GlobalTheory.T.exists_periods_pulled_degeneration_data R V θ D₀ D₁ hD
@@ -990,7 +990,7 @@ theorem pullData_refines : ∀ (R V : Type) [CommRing R] [IsDomain R] [CommRing 
   obtain ⟨β, β₂, w, hpb, hsq, hw, hc, ht⟩ := hP
   obtain ⟨β', β'₂, w', hpb', hsq', hw', hc', ht'⟩ := hR
   have hs : spMap (RingHom.id V) = 𝟙 (Sp V) := Spec.map_id _
-  letI := D.P.isAb.comm
+  let := D.P.isAb.comm
   obtain ⟨w'', hw'', hv⟩ := GlobalTheory.T.mumfordBundleIso_comp_values_mul _ _ _ D.P.A Q'.B Q.B D.P.L Q'.M.L Q.M.L
     D.P.isLB Q'.M.isLB Q.M.isLB β'₂ β₂ _ rfl w hw w' hw'
   refine ⟨β' ≫ β, β'₂ ≫ β₂, w'', ?_, ?_, hw'', fun a => ?_, fun a b => ?_⟩
@@ -1318,7 +1318,7 @@ theorem sameFib_trait_chart : ∀ {g n : ℕ} {φ : InvFun ℤ} (F : SFam g n (z
   obtain ⟨hG', κ, πK, α, α₂, hκ, -, hα, hα₂, hΛ', -⟩ := hU
 
   have hκ' : κ = spMap fK := by
-    haveI := GlobalTheory.Mum.EvenDesc.mono_jK T.V
+    have := GlobalTheory.Mum.EvenDesc.mono_jK T.V
     rw [← cancel_mono (jK T.V), hκ]
     have e₁ : (algebraMap V' (FractionRing V')).comp f = fK.comp (algebraMap T.V (FractionRing T.V)) :=
       RingHom.ext fun a => (hfK a).symm
@@ -1332,9 +1332,9 @@ theorem sameFib_trait_chart : ∀ {g n : ℕ} {φ : InvFun ℤ} (F : SFam g n (z
   obtain ⟨hD, -⟩ := GlobalTheory.DegPullId.exists_isPullDeg_id_self V' _ hAdm D'
   obtain ⟨ψ, hψm, hψL, -⟩ := GlobalTheory.exists_generic_iso_of_unif GlobalTheory.firstFiveLaws.1 GlobalTheory.firstFiveLaws.2.1 V'
     (maximalIdeal V') hAdm (maximalIdeal.isMaximal V').ne_top D' D' A'' A' G'' G' hsG'' hsG' U'' U' hD
-  haveI := hψm
-  haveI := U''.gen_hom
-  haveI : IsMonHom U''.gen.symm.hom := inferInstanceAs (IsMonHom U''.gen.inv)
+  have := hψm
+  have := U''.gen_hom
+  have : IsMonHom U''.gen.symm.hom := inferInstanceAs (IsMonHom U''.gen.inv)
 
   let b : A'.A.left ⟶ G''.left := ψ.hom.left ≫ U''.gen.inv.left ≫ pullback.fst G''.hom (jK V')
   have hb : IsGrpPullback A'.A G'' (jK V') b :=

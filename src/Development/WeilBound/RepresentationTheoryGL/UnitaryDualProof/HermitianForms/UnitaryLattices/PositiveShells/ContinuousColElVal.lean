@@ -124,10 +124,10 @@ theorem colEl_val {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) (i j : F
       congr 1
       · simp [Matrix.one_apply, Fin.ext_iff]
       · by_cases c : (j : ℕ) = m + 1 ∧ (i : ℕ) ≤ m
-        · rw [dif_pos ⟨c.1, by simp only [Fin.val_mk]; omega⟩, dif_pos c]
-        · rw [dif_neg (by simp only [Fin.val_mk]; omega), dif_neg c]
-    · rw [blkAt_val_right h _ i j (by omega), dif_neg (by omega), add_zero]
-  · rw [blkAt_val_left h _ i j (by omega), dif_neg (by omega), add_zero]
+        · rw [dite_eq_left ⟨c.1, by simp only [Fin.val_mk]; omega⟩, dite_eq_left c]
+        · rw [dite_eq_right (by simp only [Fin.val_mk]; omega), dite_eq_right c]
+    · rw [blkAt_val_right h _ i j (by omega), dite_eq_right (by omega), add_zero]
+  · rw [blkAt_val_left h _ i j (by omega), dite_eq_right (by omega), add_zero]
 
 theorem colEl_add {m N : ℕ} (h : m + 2 ≤ N) (x y : Fin (m + 1) → k) :
     colEl k m N h (x + y) = colEl k m N h x * colEl k m N h y := by
@@ -149,9 +149,9 @@ theorem continuous_colEl_val {m N : ℕ} (h : m + 2 ≤ N) :
   refine continuous_matrix fun i j => ?_
   simp only [colEl_val]
   by_cases c : (j : ℕ) = m + 1 ∧ (i : ℕ) ≤ m
-  · simp only [dif_pos c]
+  · simp only [dite_eq_left c]
     exact continuous_const.add (continuous_apply _)
-  · simp only [dif_neg c]
+  · simp only [dite_eq_right c]
     exact continuous_const
 
 theorem continuous_colEl {m N : ℕ} (h : m + 2 ≤ N) : Continuous (colEl k m N h) := by
@@ -181,12 +181,12 @@ theorem colEl_mem_unipB {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) : 
   rw [mem_unipB]
   refine ⟨fun i j hij => ?_, fun i => ?_⟩
   · have := Fin.lt_def.1 hij
-    rw [colEl_val, one_apply_ne (fun e => by rw [e] at this; omega), dif_neg (by omega), add_zero]
-  · rw [colEl_val, one_apply_eq, dif_neg (by omega), add_zero]
+    rw [colEl_val, one_apply_ne (fun e => by rw [e] at this; omega), dite_eq_right (by omega), add_zero]
+  · rw [colEl_val, one_apply_eq, dite_eq_right (by omega), add_zero]
 
 theorem colEl_mem_derUnip {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) : colEl k m N h x ∈ derUnip k N (m + 1) :=
   Subgroup.mem_inf.2 ⟨colEl_mem_unipB h x, (mem_colFix_iff _).2 fun r i hi => by
-    rw [colEl_val, dif_neg (by omega), add_zero]⟩
+    rw [colEl_val, dite_eq_right (by omega), add_zero]⟩
 
 theorem derChar_colEl (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) :
     derChar k ψ N (m + 1) ⟨colEl k m N h x, colEl_mem_derUnip h x⟩ = 1 := by
@@ -195,7 +195,7 @@ theorem derChar_colEl (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N) (x :
   rw [Finset.sum_eq_zero, AddChar.map_zero_eq_one, map_one]
   intro p hp
   obtain ⟨h1, h2⟩ := (Finset.mem_filter.1 hp).2
-  rw [colEl_val, one_apply_ne (fun e => by rw [e] at h1; omega), dif_neg (by omega), add_zero]
+  rw [colEl_val, one_apply_ne (fun e => by rw [e] at h1; omega), dite_eq_right (by omega), add_zero]
 
 theorem scalAt_val {n N : ℕ} (hn : n ≤ N) (z : kˣ) :
     (scalAt k n N hn z : Matrix (Fin N) (Fin N) k) = diagonal fun i : Fin N => if (i : ℕ) < n then (z : k) else 1 := by
@@ -220,9 +220,9 @@ theorem scalAt_mul_colEl {m N : ℕ} (h : m + 2 ≤ N) (z : kˣ) (x : Fin (m + 1
   rw [scalAt_val, diagonal_mul, mul_diagonal, colEl_val, colEl_val]
   simp only [Pi.smul_apply, smul_eq_mul]
   by_cases c : (j : ℕ) = m + 1 ∧ (i : ℕ) ≤ m
-  · rw [dif_pos c, dif_pos c, one_apply_ne (fun e => by rw [e] at c; omega), if_pos (by omega), if_neg (by omega)]
+  · rw [dite_eq_left c, dite_eq_left c, one_apply_ne (fun e => by rw [e] at c; omega), ite_eq_left (by omega), ite_eq_right (by omega)]
     ring
-  · rw [dif_neg c, dif_neg c]
+  · rw [dite_eq_right c, dite_eq_right c]
     by_cases e : i = j
     · subst e; simp
     · simp [one_apply_ne e]
@@ -234,10 +234,10 @@ theorem det_unip (n : ℕ) (x : Fin n → k) : Matrix.GeneralLinearGroup.det (un
   ext
   rw [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one, det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
-    rw [unip_val, one_apply_eq, dif_neg (by omega), add_zero]
+    rw [unip_val, one_apply_eq, dite_eq_right (by omega), add_zero]
   · intro i j hij
     have := Fin.lt_def.1 hij
-    rw [unip_val, one_apply_ne (fun e => by rw [e] at this; simp at this), dif_neg (by simp at this; omega), add_zero]
+    rw [unip_val, one_apply_ne (fun e => by rw [e] at this; simp at this), dite_eq_right (by simp at this; omega), add_zero]
 
 theorem nabs_one' : nabs k 1 = 1 := by simp [nabs]
 
@@ -284,7 +284,7 @@ theorem det_scalAt (m : ℕ) (z : kˣ) :
   ext
   rw [Matrix.GeneralLinearGroup.val_det_apply, scalAt_val, det_diagonal, Fin.prod_univ_castSucc]
   simp
-  rw [Finset.prod_congr rfl (fun x _ => if_pos (Nat.lt_succ_iff.1 x.isLt))]
+  rw [Finset.prod_congr rfl (fun x _ => ite_eq_left (Nat.lt_succ_iff.1 x.isLt))]
   simp
 
 theorem B_scalAt {m N : ℕ} (h : m + 2 ≤ N) {V : Type} [AddCommGroup V] [Module ℂ V]
@@ -338,14 +338,14 @@ theorem colEl_mul_apply {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) (M
   rw [e1]
   congr 1
   by_cases hi : (i : ℕ) ≤ m
-  · rw [dif_pos hi, Finset.sum_eq_single ⟨m + 1, by omega⟩]
-    · rw [dif_pos ⟨rfl, hi⟩]
+  · rw [dite_eq_left hi, Finset.sum_eq_single ⟨m + 1, by omega⟩]
+    · rw [dite_eq_left ⟨rfl, hi⟩]
     · intro l _ hl
-      rw [dif_neg (fun c => hl (Fin.ext c.1)), zero_mul]
+      rw [dite_eq_right (fun c => hl (Fin.ext c.1)), zero_mul]
     · intro hn
       exact absurd (Finset.mem_univ _) hn
-  · rw [dif_neg hi]
-    exact Finset.sum_eq_zero fun l _ => by rw [dif_neg (fun c => hi c.2), zero_mul]
+  · rw [dite_eq_right hi]
+    exact Finset.sum_eq_zero fun l _ => by rw [dite_eq_right (fun c => hi c.2), zero_mul]
 
 theorem conj_colEl (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) (u : derUnip k N (m + 2)) :
     ∃ hu : colEl k m N h x * (u : GL (Fin N) k) * (colEl k m N h x)⁻¹ ∈ derUnip k N (m + 2),
@@ -391,9 +391,9 @@ theorem derKer_le (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N) {V : Typ
     · have hi1 : i = j1 := Fin.ext (by simp [j1]; omega)
       subst hi1
       by_cases hr : (r : ℕ) ≤ m
-      · rw [dif_pos hr, hd, mul_one, one_apply_ne (fun e => by rw [e] at hr; simp [j1] at hr)]
+      · rw [dite_eq_left hr, hd, mul_one, one_apply_ne (fun e => by rw [e] at hr; simp [j1] at hr)]
         simp [a]
-      · rw [dif_neg hr, add_zero]
+      · rw [dite_eq_right hr, add_zero]
         by_cases e : r = j1
         · rw [e, hd, one_apply_eq]
         · rw [one_apply_ne e]
@@ -404,7 +404,7 @@ theorem derKer_le (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N) {V : Typ
     congr 2
     refine Finset.sum_congr rfl fun p hp => ?_
     obtain ⟨h1, h2⟩ := (Finset.mem_filter.1 hp).2
-    rw [hu', Units.val_mul, colEl_mul_apply, dif_neg (by omega), add_zero]
+    rw [hu', Units.val_mul, colEl_mul_apply, dite_eq_right (by omega), add_zero]
   have hUu : U = colEl k m N h a * u' := by
     rw [hu', ← mul_assoc, colEl_mul_neg, one_mul]
   have h1 : π u' v - ((lvlChar k ψ N (m + 2) ⟨u', hmem⟩ : ℂˣ) : ℂ) • v ∈

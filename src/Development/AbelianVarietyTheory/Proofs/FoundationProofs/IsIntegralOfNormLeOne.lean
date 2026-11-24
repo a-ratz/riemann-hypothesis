@@ -76,7 +76,7 @@ theorem mem_OL_of_norm_le_one (K : Loc.FinExt l) (x : K.1) (h : ‖(x : PadicAlg
     (isIntegral_of_norm_le_one _ h)
 
 theorem compactSpace_GK (K : Loc.FinExt l) : CompactSpace ↥(Loc.GK K) := by
-  haveI := K.2
+  have := K.2
   have h : IsClosed ((Loc.GK K : Subgroup (Loc.GQ l)) : Set (Loc.GQ l)) :=
     IntermediateField.fixingSubgroup_isClosed K.1
   exact isCompact_iff_compactSpace.1 h.isCompact
@@ -85,7 +85,7 @@ theorem exists_pow_mul_mem_OL {X : Type} [TopologicalSpace X] [CompactSpace X] (
     (c : X → Fin m → K.1) (hc : Continuous c) :
     ∃ N : ℕ, ∀ g j, (l : K.1) ^ N * c g j ∈ Loc.OL K := by
   have hc' : Continuous fun g (j : Fin m) => ((c g j : K.1) : PadicAlgCl l) :=
-    continuous_pi fun j => continuous_subtype_val.comp ((continuous_apply j).comp hc)
+    continuous_pi fun j => continuous_subtypeVal.comp ((continuous_apply j).comp hc)
   obtain ⟨C, hC⟩ := (isCompact_range hc').isBounded.exists_norm_le
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   obtain ⟨N, hN⟩ := pow_unbounded_of_one_lt C hl

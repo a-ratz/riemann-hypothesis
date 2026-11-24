@@ -160,8 +160,8 @@ theorem exists_baseChange_semiAbelian_data : ∀ (R : Type) [CommRing R] [IsDoma
     have e₁ : x₀ = Out.toBase pA.w x := Over.OverMorphism.ext hx
     have e₂ : y₀ = Out.toBase pA.w y := Over.OverMorphism.ext hy
     rw [e₁, e₂, ← mA]; rfl⟩
-  haveI := hmon
-  haveI : IsMonHom gen.symm.hom := by show IsMonHom gen.inv; infer_instance
+  have := hmon
+  have : IsMonHom gen.symm.hom := by show IsMonHom gen.inv; infer_instance
   have gpGen : IsGrpPullback A.A G (jK R) (gen.inv.left ≫ pullback.fst G.hom (jK R)) :=
     ((isGrpPullback_of_iso gen.symm).comp (isGrpPullback_pullback G (jK R))).congr (Category.id_comp _) rfl
   have sq : spMap (GlobalTheory.ArcPull.fracMap hinj) ≫ jK R = jK R' ≫ spMap ρ :=
@@ -385,7 +385,7 @@ namespace GlobalTheory.TorusPic
 theorem triv_of_isLB_splitTorus : ∀ (A : Type) [CommRing A], IsField A → ∀ (X : Type) [AddCommGroup X]
     [Module.Free ℤ X] [Module.Finite ℤ X] (N : LB (splitTorus (Sp A) X).left), N.IsLB → Triv N := by
   intro A _ hA X _ _ _ N hN
-  letI := hA.toField
+  let := hA.toField
   have : IsAffine (splitTorus (Sp A) X).left := by
     have := Diag.isAffineHom_hom (Sp A) X
     exact isAffine_of_isAffineHom (splitTorus (Sp A) X).hom
@@ -587,7 +587,7 @@ theorem nonempty_cubTriv {A : Type} [CommRing A] [IsLocalRing A] (hA : IsNilpote
   obtain ⟨i₀, h₀, -⟩ := existsUnique_torusCompat (G' := (Over.pullback (red (maximalIdeal A))).obj G) hG.1 i
   have := h₀.isMonHom hG
   obtain ⟨P₀, w, hP⟩ := exists_pull P (toBase_mul_pullback G (red (maximalIdeal A)))
-  letI : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field _
+  let : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field _
   obtain ⟨τ, hτ⟩ := TorusPic.triv_of_isLB_splitTorus (A ⧸ maximalIdeal A) (Field.toIsField _) X (P₀.L.L.pull i₀.left)
     (pull_isLB P₀.L.isLB _)
   have e1 : (1 : splitTorus (Sp (A ⧸ maximalIdeal A)) X ⟶ splitTorus _ X).left ≫ i₀.left =
@@ -1075,13 +1075,13 @@ open GlobalTheory.RigidTranslate GlobalTheory.PolTranslate GlobalTheory.GenTrans
 theorem GlobalTheory.Mum.exists_transl_pkg : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.LN.CDvr R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (P : GlobalTheory.UU.CP G) (A : PolAV (Sp (FractionRing R))) (gen : ((Over.pullback (jK R)).obj G) ≅ A.A), IsMonHom gen.hom → LBIso (A.L.pull gen.hom.left) (P.L.L.pull (pullback.fst G.hom (jK R))) → ∀ a : Over.mk (jK R) ⟶ G, a * a = 1 → ∃ (P₁ : GlobalTheory.UU.CP G) (A₁ : PolAV (Sp (FractionRing R))) (gen₁ : (Over.pullback (jK R)).obj G ≅ A₁.A), IsMonHom gen₁.hom ∧ LBIso (A₁.L.pull gen₁.hom.left) (P₁.L.L.pull (pullback.fst G.hom (jK R))) ∧ LBIso (abelian₂ G P₁.L.L) (abelian₂ G P.L.L) ∧ GlobalTheory.GenTransl.IsGenTransl G P.L.L P₁.L.L a := by
   intro R _ _ _ hR G _ _ hG P A gen hgen hL a ha
   obtain ⟨hdvr, -, -⟩ := hR
-  haveI := hdvr
-  haveI := hG.smooth
-  haveI := hG.separated
-  haveI := hG.quasiCompact
-  haveI : GeometricallyIntegral G.hom := @GlobalTheory.geometricallyIntegral_of_isSemiAbelian _ G _ hG
-  haveI := A.isAb.comm
-  haveI := A.isAb.proper
+  have := hdvr
+  have := hG.smooth
+  have := hG.separated
+  have := hG.quasiCompact
+  have : GeometricallyIntegral G.hom := @GlobalTheory.geometricallyIntegral_of_isSemiAbelian _ G _ hG
+  have := A.isAb.comm
+  have := A.isAb.proper
   let b := genPoint G a
   have hb : b * b = 1 := genPoint_mul_self G a ha
   let b' : 𝟙_ _ ⟶ A.A := b ≫ gen.hom
@@ -1107,7 +1107,7 @@ theorem GlobalTheory.Mum.exists_transl_pkg : ∀ (R : Type) [CommRing R] [IsDoma
   have hPL := P.L.isLB
 
   have htr : LBIso LG (P.L.L.pull (genPr G * genPt G a).left) := by
-    haveI hU : Unique (Sp (FractionRing R)) := inferInstanceAs (Unique (PrimeSpectrum (FractionRing R)))
+    have hU : Unique (Sp (FractionRing R)) := inferInstanceAs (Unique (PrimeSpectrum (FractionRing R)))
     let p0 : (𝟙_ (Over (Sp (FractionRing R)))).left := hU.default
     obtain ⟨i, hi⟩ := exists_chart A.isLB (b'.left p0)
     have h1 : LBIso LG (A.L.pull (gen.hom.left ≫ (transl b').left)) :=
@@ -1238,9 +1238,9 @@ theorem twoTorsRat_of_pullback :∀ (R : Type) [CommRing R] [IsDomain R] (G : Ov
   refine ⟨K', inferInstance, inferInstance, hfin, ?_⟩
   intro R₂ _ _ ρ i hi G₁ _ β hβ F _ _ x hx
   let f : FractionRing R →+* FractionRing R₂ := i.comp (algebraMap (FractionRing R) K')
-  letI : Algebra K' (FractionRing R₂) := i.toAlgebra
-  letI : Algebra (FractionRing R) (FractionRing R₂) := f.toAlgebra
-  haveI : IsScalarTower (FractionRing R) K' (FractionRing R₂) := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra K' (FractionRing R₂) := i.toAlgebra
+  let : Algebra (FractionRing R) (FractionRing R₂) := f.toAlgebra
+  have : IsScalarTower (FractionRing R) K' (FractionRing R₂) := IsScalarTower.of_algebraMap_eq' rfl
   let σ : FractionRing R₂ →+* F := algebraMap (FractionRing R₂) F
   have hsq : spMap f ≫ jK R = jK R₂ ≫ spMap ρ := by
     rw [jK, jK, spMap, spMap, ← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ← CommRingCat.ofHom_comp]
@@ -1367,14 +1367,14 @@ theorem cDvr_of_finExt : ∀ (R R' : Type) [CommRing R] [IsDomain R] [IsLocalRin
   intro R R' _ _ _ _ _ _ ρ hR hE
   obtain ⟨hdvr, -, hc0⟩ := hR
   obtain ⟨⟨hnoeth, -, hic, hcomp⟩, hinj, hfin⟩ := hE
-  letI : Algebra R R' := ρ.toAlgebra
-  haveI : Module.Finite R R' := hfin
-  haveI : Algebra.IsIntegral R R' := inferInstance
-  haveI := hnoeth
-  haveI := hic
+  let : Algebra R R' := ρ.toAlgebra
+  have : Module.Finite R R' := hfin
+  have : Algebra.IsIntegral R R' := inferInstance
+  have := hnoeth
+  have := hic
   have hinj' : Function.Injective (algebraMap R R') := hinj
-  haveI : Ring.DimensionLEOne R' := Ring.DimensionLEOne.of_isIntegral R R'
-  haveI : IsDedekindDomain R' := { }
+  have : Ring.DimensionLEOne R' := Ring.DimensionLEOne.of_isIntegral R R'
+  have : IsDedekindDomain R' := { }
   have hnf : ¬ IsField R' := fun h =>
     IsDiscreteValuationRing.not_isField R (isField_of_isIntegral_of_isField hinj' h)
   have hdvr' : IsDiscreteValuationRing R' := ((IsDiscreteValuationRing.TFAE R' hnf).out 1 3).2 (inferInstance : IsDedekindDomain R')
@@ -1438,13 +1438,13 @@ noncomputable section
 theorem exists_finExt_splitClosed_twoTorsRat : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.LN.CDvr R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (A : PolAV (Sp (FractionRing R))) (gen : ((Over.pullback (jK R)).obj G) ≅ A.A), IsMonHom gen.hom → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R'), GlobalTheory.LN.CDvr R' ∧ FinExt ρ ∧ ∀ (G₁ : Over (Sp R')) [GrpObj G₁] [IsCommMonObj G₁] (β : G₁.left ⟶ G.left), IsGrpPullback G₁ G (spMap ρ) β → SplitClosed G₁ ∧ TwoTorsRat G₁ := by
   intro R _ _ _ hR G _ _ hG A gen hgen
   obtain ⟨K', _, _, hK'fin, H⟩ := GlobalTheory.T.exists_finite_ext_two_torsion_rational_pullbacks R G A gen hgen
-  haveI : IsDiscreteValuationRing R := hR.1
-  haveI : IsAdicComplete (maximalIdeal R) R := hR.2.1
-  haveI : CharZero R := hR.2.2
-  haveI : CharZero (FractionRing R) := (algebraMap R (FractionRing R)).charZero_iff (IsFractionRing.injective R _) |>.1 inferInstance
+  have : IsDiscreteValuationRing R := hR.1
+  have : IsAdicComplete (maximalIdeal R) R := hR.2.1
+  have : CharZero R := hR.2.2
+  have : CharZero (FractionRing R) := (algebraMap R (FractionRing R)).charZero_iff (IsFractionRing.injective R _) |>.1 inferInstance
   obtain ⟨W, _, _, _, hWc, _, _, _, hc, hWfin, hWinj, hWloc, -, -⟩ :=
     GlobalTheory.SS.exists_complete_dvr_finite_extension R (FractionRing R) K'
-  haveI : CharZero W := (algebraMap R W).charZero_iff hWinj |>.1 inferInstance
+  have : CharZero W := (algebraMap R W).charZero_iff hWinj |>.1 inferInstance
   have hWd : GlobalTheory.LN.CDvr W := ⟨inferInstance, hWc, inferInstance⟩
   have hGW : IsSemiAbelian ((Over.pullback (spMap (algebraMap R W))).obj G) := IsSemiAbelian.pullback _ G hG
   obtain ⟨R₂, _, _, _, ρ₂, G', _, _, β', X, _, _, _, hfin₂, hpb', ⟨Q⟩⟩ :=
@@ -1460,7 +1460,7 @@ theorem exists_finExt_splitClosed_twoTorsRat : ∀ (R : Type) [CommRing R] [IsDo
   have hgam : IsGrpPullback G₁ _ (spMap ρ₂) gam :=
     IsGrpPullback.cancel hGWp (hβ.congr hsp (pullback.lift_fst _ _ _).symm) (pullback.lift_snd _ _ _)
   obtain ⟨e, he, -⟩ := grpPullback_iso hgam hpb'
-  haveI := he
+  have := he
   have hsplit' : SplitClosed G' := ⟨X, inferInstance, inferInstance, inferInstance, ⟨Q⟩⟩
   refine ⟨splitClosed_of_isGrpPullback_id (isGrpPullback_of_iso e) hsplit', ?_⟩
   · let j : FractionRing W →+* FractionRing R₂ :=
@@ -1573,10 +1573,10 @@ open GlobalTheory.Mum.UExt in
 theorem GlobalTheory.Mum.exists_unif_finExt_lam : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.LN.CDvr R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (A : PolAV (Sp (FractionRing R))) (gen : ((Over.pullback (jK R)).obj G) ≅ A.A), IsMonHom gen.hom → ∀ PP : LB (G2 G).left, ExtLam G (A.L.pull gen.hom.left) PP → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (D₁ : DegData R' (maximalIdeal R')) (G₁ : Over (Sp R')) (_ : GrpObj G₁) (_ : IsCommMonObj G₁) (β : G₁.left ⟶ G.left) (β₂ : (G2 G₁).left ⟶ (G2 G).left) (A₁ : PolAV (Sp (FractionRing R'))) (U₁ : Unif (maximalIdeal R') D₁ A₁ G₁), GlobalTheory.LN.CDvr R' ∧ FinExt ρ ∧ IsGrpPullback G₁ G (spMap ρ) β ∧ Geo.Tor.IsSquare β β₂ ∧ LBIso (abelian₂ G₁ U₁.LG.L) (PP.pull β₂) := by
   intro R _ _ _ hR G _ _ hG A gen hgen PP hPP
   obtain ⟨hdvr, hcomp, hchar⟩ := hR
-  haveI := hG.smooth
-  haveI := hG.separated
-  haveI := hG.quasiCompact
-  haveI : GeometricallyIntegral G.hom := @GlobalTheory.geometricallyIntegral_of_isSemiAbelian _ G _ hG
+  have := hG.smooth
+  have := hG.separated
+  have := hG.quasiCompact
+  have : GeometricallyIntegral G.hom := @GlobalTheory.geometricallyIntegral_of_isSemiAbelian _ G _ hG
   have hL : (A.L.pull gen.hom.left).IsLB := LB.isLB_pull A.isLB _
   obtain ⟨L', hL', hLL'⟩ := GlobalTheory.T.lineBundle_generic_fibre_extends_over_dvr R G (A.L.pull gen.hom.left) hL
   have hpr : IsProper (pullback.snd G.hom (jK R)) := by

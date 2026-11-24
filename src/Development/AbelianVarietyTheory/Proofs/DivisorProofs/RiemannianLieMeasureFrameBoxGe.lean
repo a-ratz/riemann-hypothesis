@@ -251,7 +251,7 @@ theorem riemLie_frameBox_ge : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     _ ≤ _ := by
       refine measure_mono fun Y hY => ?_
       simp only [Set.mem_preimage, C, Set.mem_pi, Set.mem_univ, Set.mem_Ioo, true_implies] at hY
-      simp only [Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq]
       intro τ a c
       have e : Matrix.of (fromFrame x Y.1 τ) =
           mat x τ * Matrix.of (fun a b => Y.1 (τ, a, b)) * (mat x τ)⁻¹ := rfl

@@ -585,7 +585,7 @@ theorem integrable_slice (hψ : Continuous ψ) {f : Sp k n → ℂ} (hf : f ∈ 
     rfl
   obtain ⟨hl2, hcs2⟩ := h2
   have hc2 : Continuous fun u : Fin (dd Z) → k => (ψ (u ⬝ᵥ D τ Z p.1) : ℂ) :=
-    continuous_subtype_val.comp (hψ.comp (continuous_id.dotProduct continuous_const))
+    continuous_subtypeVal.comp (hψ.comp (continuous_id.dotProduct continuous_const))
   exact (hl2.continuous.mul hc2).integrable_of_hasCompactSupport hcs2.mul_right
 
 def phiS (hψ : Continuous ψ) : (supportedIn (Set.univ : Set (Sp k n))) →ₗ[ℂ] (Sp k n → ℂ) where
@@ -778,15 +778,15 @@ theorem fourQ : FourQ k := by
   intro hT n Z hZ
   obtain ⟨τ, hs, hnd, hnil⟩ := hT n Z hZ
   have h : Hyp τ Z := ⟨hs, hnd, hnil⟩
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   obtain ⟨ψ, hψ⟩ := GlobalTheory.SplitWeil.exists_hasConductor_one (k := k)
   have hψc : Continuous ψ := (GlobalTheory.T.addChar_conductor_integers_continuous_ne_one k ψ hψ).1
   let ν : Measure k := Measure.addHaar
   obtain ⟨C, hC⟩ := Submodule.exists_isCompl (supportedIn (Set.univ : Set (Sp k n)))
   let Φ : (Sp k n → ℂ) →ₗ[ℂ] (Sp k n → ℂ) := LinearMap.ofIsCompl hC (phiS ψ ν h hψc) 0
   have hΦ : ∀ f (hf : f ∈ supportedIn (Set.univ : Set (Sp k n))), Φ f = phi0 ψ ν h f := fun f hf =>
-    LinearMap.ofIsCompl_left_apply hC (⟨f, hf⟩ : supportedIn (Set.univ : Set (Sp k n)))
+    LinearMap.ofIsCompl_apply_left hC (⟨f, hf⟩ : supportedIn (Set.univ : Set (Sp k n)))
   have h1 : ∀ f ∈ supportedIn (Set.univ : Set (Sp k n)), Φ f ∈ supportedIn (Set.univ : Set (Sp k n)) :=
     fun f hf => by rw [hΦ f hf]; exact test_vector_mem_schwartz_bruhat ψ ν h hψ hf
   set K : ℂ := ((distribHaarChar k (Matrix.GeneralLinearGroup.det (Gu h)) : ℝ) : ℂ)⁻¹ *
@@ -933,21 +933,21 @@ theorem psi_lift (hZ : CR Z) {A : Set (Matrix (Fin n) (Fin n) k)} (hAZ : A ⊆ Z
     {h : Sp k n → ℂ} (hh : h ∈ supportedIn (UU : Set (Sp k n))) :
     ∃ f ∈ supportedIn (UU : Set (Sp k n)), ∀ p ∈ OO Z, f p = psi Z A h p := by
   classical
-  haveI : TotallyDisconnectedSpace k := totallyDisconnectedSpace_localField
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) k) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → k))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
+  have : TotallyDisconnectedSpace k := totallyDisconnectedSpace_localField
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) k) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → k))
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → k))
-  haveI : T2Space (Matrix (Fin n) (Fin n) k) := inferInstanceAs (T2Space (Fin n → Fin n → k))
+  have : T2Space (Matrix (Fin n) (Fin n) k) := inferInstanceAs (T2Space (Fin n → Fin n → k))
   have hUU : IsOpen (UU : Set (Sp k n)) := isOpen_ne_fun continuous_snd continuous_const
   have hOU : OO Z ⊆ UU := fun p hp => hp.2
   have hhl : IsLocallyConstant h := (GroundTheory.Automorphic.mem_locallyConstantCompactSupport.1 hh.1).1
   have hhc : HasCompactSupport h := (GroundTheory.Automorphic.mem_locallyConstantCompactSupport.1 hh.1).2
 
   have hg1 : Continuous (fun p : OO Z => zpart Z (p : Sp k n).1) :=
-    (continuousOn_zpart hZ).comp_continuous (continuous_fst.comp continuous_subtype_val) fun p => p.2.1
+    (continuousOn_zpart hZ).comp_continuous (continuous_fst.comp continuous_subtypeVal) fun p => p.2.1
   have hg2 : Continuous (fun p : OO Z => (((p : Sp k n).1 - zpart Z (p : Sp k n).1, (p : Sp k n).2) : Sp k n)) :=
-    ((continuous_fst.comp continuous_subtype_val).sub hg1).prodMk (continuous_snd.comp continuous_subtype_val)
+    ((continuous_fst.comp continuous_subtypeVal).sub hg1).prodMk (continuous_snd.comp continuous_subtypeVal)
 
   set S : Set (OO Z) := {p | zpart Z (p : Sp k n).1 ∈ A} with hSdef
   have hSc : IsClosed S := hAc.isClosed.preimage hg1
@@ -1034,7 +1034,7 @@ theorem psi_cosets {L M : AddSubgroup (Matrix (Fin n) (Fin n) k)} (hL : IsLat Z 
         ∑ d ∈ D, psi Z ((fun a => a + d) '' (M : Set (Matrix (Fin n) (Fin n) k))) h := by
   classical
   have hfi : (M.addSubgroupOf L).FiniteIndex := ⟨lat_index_pos hL hM hML⟩
-  haveI : Fintype (L ⧸ M.addSubgroupOf L) := Fintype.ofFinite _
+  have : Fintype (L ⧸ M.addSubgroupOf L) := Fintype.ofFinite _
   let f : (L ⧸ M.addSubgroupOf L) → Matrix (Fin n) (Fin n) k := fun q => ((Quotient.out q : L) : Matrix (Fin n) (Fin n) k)
   have hf : Function.Injective f := fun a b hab => Quotient.out_inj.1 (Subtype.ext hab)
   have hmem : ∀ z q, z ∈ (fun a => a + f q) '' (M : Set (Matrix (Fin n) (Fin n) k)) ↔ z - f q ∈ M := by
@@ -1061,10 +1061,10 @@ theorem psi_cosets {L M : AddSubgroup (Matrix (Fin n) (Fin n) k)} (hL : IsLat Z 
           rw [show -z + f q = -(z - f q) by abel, neg_mem_iff]
         rw [QuotientAddGroup.out_eq'] at e
         by_cases h : (QuotientAddGroup.mk ⟨z, hz⟩ : L ⧸ M.addSubgroupOf L) = q
-        · rw [if_pos h, Set.indicator_of_mem ((hmem z q).2 (e.2 h))]
+        · rw [ite_eq_left h, Set.indicator_of_mem ((hmem z q).2 (e.2 h))]
           rfl
-        · rw [if_neg h, Set.indicator_of_notMem (fun h' => h (e.1 ((hmem z q).1 h')))]
-      simp only [hq, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        · rw [ite_eq_right h, Set.indicator_of_notMem (fun h' => h (e.1 ((hmem z q).1 h')))]
+      simp only [hq, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rfl
     · rw [Set.indicator_of_notMem (show z ∉ (L : Set (Matrix (Fin n) (Fin n) k)) from hz)]
       symm

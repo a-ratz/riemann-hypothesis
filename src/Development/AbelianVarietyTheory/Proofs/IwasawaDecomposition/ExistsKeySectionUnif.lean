@@ -296,7 +296,7 @@ theorem exists_pow_eq_of_continuous_root : ∀ (B : Type) [CommRing B] [IsDomain
     obtain ⟨χ', h1', h2'⟩ := key w hw
     have h := hconst χ χ'
     simp only [h1, h1', h2, h2'] at h
-    exact (div_left_inj' (hρ0 ψ)).1 h
+    exact (div_left_inj₀ (hρ0 ψ)).1 h
   have hsep : (P.map (ψ : B →+* ℂ)).Separable := by
     refine (separable_X_pow_sub_C (n := n) (ψ u) (Nat.cast_ne_zero.2 hn.ne') (hu ψ)).of_dvd ?_
     simpa using Polynomial.map_dvd (ψ : B →+* ℂ) hdvd
@@ -340,7 +340,7 @@ theorem exists_eq_smul_pow {K : Type} [Field K] [Algebra K ℂ] {A : Type} [Comm
     (hρ : ∀ (m : ℕ) (V : Set (Fin m → ℂ)) (s : (Fin m → ℂ) → (A →ₐ[K] ℂ)), IsOpen V →
       (∀ a : A, DifferentiableOn ℂ (fun p => s p a) V) → ContinuousOn (fun p => ρ (s p)) V)
     (hu : ∀ ψ : A →ₐ[K] ℂ, ρ ψ ^ n = C * ψ (u : A)) : ∃ (a : K) (b : A), a ≠ 0 ∧ (u : A) = a • b ^ n := by
-  haveI : Nontrivial A := by
+  have : Nontrivial A := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact not_subsingleton (ℂ ⊗[K] A) inferInstance
@@ -401,10 +401,10 @@ theorem exists_chart_units {κ : GlobalTheory.KeyCl.Rule} (h₁ : GlobalTheory.K
     charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
   choose Ψ hΨ using fun Z : Comp Xo c => _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om Z) (genFr h Z) hpq
   refine ⟨fun Z => κ (Om Z) (Ψ Z).key, fun C => ?_⟩
-  haveI := C.sm
-  haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-  haveI : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
-  haveI : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
+  have := C.sm
+  have : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
+  have : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
+  have : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
   obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e C.R C.y hpq
   obtain ⟨Φ', hΦ'⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om C.Z) C.yg hpq
   obtain ⟨u, hu⟩ := h₃ C.R Φ.key

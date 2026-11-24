@@ -107,7 +107,7 @@ open GlobalTheory.TorusExt
 theorem b_eq_of_equiv {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} {F : Type} [Field F]
     [Algebra (FractionRing R) F] (hB : D.TauBimult) {j : ℕ} (hj : 0 < j) {p p' : QkPt D F j}
     (h : QkPt.Equiv D F p p') (hy : p.y = 0) (hy' : p'.y = 0) : p'.g.b = p.g.b := by
-  letI := gtGroup D F
+  let := gtGroup D F
   obtain ⟨z, h₁, t, ht, h₂⟩ := h
   rw [hy, hy', zero_add] at h₁
   have hz : z = 0 := by
@@ -127,7 +127,7 @@ theorem b_eq_of_equiv {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} {F : T
 
 theorem act_compat_on_torsion : Laws → BrGtSt → AllD fun {E} _ _ _ {H} D => letI := H.starRing; ∀ (R : Type) [CommRing R] [IsDomain R] (C : Type) [NormedField C] [IsAlgClosed C] [Algebra (FractionRing R) C] (A : ArcF D R C) (o : Full D C) (M : Mdl o), M.P.TorsionIso → ∀ (N' : NumD C) (ν' : NumOf M.P.D.toPre C N') (k : ℕ) (β : A.N.Form k) (u r : Cˣ) (J : NumD.Iso (A.N.twist β u) N') (j : ℕ), 0 < j → r ^ j = u → (∀ x (p : (A.N.twist β u).QT j) (q' : N'.QT j) p' z, TwRel β u r (A.q _ x) p → q'.1.1.toAdd = J.e p.1.1.toAdd → J.Rel p.1.2 q'.1.2 → ν'.QPt p' q' → z.left = (o.I.ev j x).left ≫ M.φ → M.P.ToA C j p' z) → ∀ (x : 𝓞 E) (b : A.N.A), b ^ j = 1 → J.φ (actV (N := A.N) A.ν A.oa.onB x b) = actV ν' M.P.oD.onB x (J.φ b) := by
   intro hL hBr E _ _ _ H D R _ _ C _ _ _ A o M hT N' ν' k β u r J j hj hr hlab x b hb
-  letI := H.starRing
+  let := H.starRing
   have hG := hL.globalFns
   have hB := A.bimult
   have hB' : M.P.D.toPre.TauBimult := M.P.D.tau_bimult
@@ -144,7 +144,7 @@ theorem act_compat_on_torsion : Laws → BrGtSt → AllD fun {E} _ _ _ {H} D => 
       (a : O) (p : QkPt D₁ C j), p.y = 0 →
       ∃ q : QkPt D₁ C j, q.y = 0 ∧ q.g.b = p.g.b ≫ oa.onB.act a ∧ QkAct oa a p q := by
     intro V _ _ D₁ O _ _ _ _ hB₁ oa a p hy
-    letI := gtGroup D₁ C
+    let := gtGroup D₁ C
     obtain ⟨z, hz, t, ht, ha⟩ := qk_equiv_refl hB₁ p
     have hz' : z = 0 := by
       have h : j • z = 0 := add_left_cancel (hz.symm.trans (add_zero _).symm)
@@ -248,8 +248,8 @@ theorem cdv_powerSeries (k : Type) [Field k] [CharZero k] : CDV (PowerSeries k) 
 theorem exists_lift (R K L : Type) [CommRing R] [IsDomain R] [Field K] [Algebra R K]
     [FaithfulSMul R K] [Algebra.IsAlgebraic R K] [Field L] [IsAlgClosed L] (ψ : R →+* L)
     (hψ : Function.Injective ψ) : ∃ e : K →+* L, ∀ x, e (algebraMap R K x) = ψ x := by
-  letI : Algebra R L := ψ.toAlgebra
-  haveI : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).2 hψ
+  let : Algebra R L := ψ.toAlgebra
+  have : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).2 hψ
   let e : K →ₐ[R] L := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -260,7 +260,7 @@ theorem exists_lift (R K L : Type) [CommRing R] [IsDomain R] [Field K] [Algebra 
 theorem exists_cdv_over_powerSeries : ∀ (O' : Type) [CommRing O'] [IsDomain O'] [CharZero O'] (K : Type) [Field K] [Algebra (PowerSeries O') K] [FaithfulSMul (PowerSeries O') K] [Algebra.IsAlgebraic (PowerSeries O') K], ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsLocalRing W) (φ : PowerSeries O' →+* W) (K₁ : Type) (_ : Field K₁) (_ : Algebra (FractionRing W) K₁) (_ : Algebra.IsAlgebraic (FractionRing W) K₁) (e : K →+* K₁), CDV W ∧ φ PowerSeries.X ∈ IsLocalRing.maximalIdeal W ∧ ∀ x, e (algebraMap (PowerSeries O') K x) = algebraMap (FractionRing W) K₁ (algebraMap W _ (φ x)) := by
   intro O' _ _ _ K _ _ _ _
   let F := FractionRing O'
-  haveI : CharZero F := IsFractionRing.charZero_of_isFractionRing O'
+  have : CharZero F := IsFractionRing.charZero_of_isFractionRing O'
   let W := PowerSeries F
   let φ : PowerSeries O' →+* W := PowerSeries.map (algebraMap O' F)
   have hφ : Function.Injective φ :=
@@ -371,10 +371,10 @@ theorem isCoordPt_descend (hL : Laws) {K C : Type} [Field K] [IsAlgClosed K] [Fi
 theorem exists_descend : Laws → AllD fun {E} _ _ _ {H} D => ∀ (K C : Type) [Field K] [Field C] (f : K →+* C) (o : Full D K) (o' : Full D C), FullExt f o o' → ∀ (I' : FullI o') (ζ : ℕ → Kˣ), (∀ n, 0 < n → (I'.ζ n : C) = f (ζ n)) → ∃ I : FullI o, (∀ n, 0 < n → I.ζ n = ζ n) ∧ ∀ m, Odd m → (∀ (v : D.La → K) (v' : D.La → C) (s : Cˣ), (∀ x, f (v x) = s * v' x) → (withI o' I').Theta m v' → (withI o I).Theta m v) ∧ ∀ j, 0 < j → ∀ z (v : D.La → K) (v' : D.La → C) (s : Cˣ), (∀ x, f (v x) = s * v' x) → (withI o' I').Coord m (I'.ev j z) v' → (withI o I).Coord m (I.ev j z) v := by
   intro hL E _ _ _ H D K C _ _ f o o' hext I' ζ hζ
   obtain ⟨-, hz, φ, hp, hw, -, hev⟩ := hext
-  haveI := o.closed
-  haveI := o'.closed
-  haveI := o.charZero
-  haveI := o'.charZero
+  have := o.closed
+  have := o'.closed
+  have := o.charZero
+  have := o'.charZero
   obtain ⟨g, hg⟩ := tateIso_differ_by_similitude E H D C _ _ _
     (fun n x y c c' _ _ _ => weilIs_unique_fieldPoint _ _ _ o'.P.isLB C (𝟙 _) n x y c c') o'.I I'
   obtain ⟨ν, h₀, h₁, h₂⟩ := ReZeta.exists_exponent o'.I.ζ I'.ζ o'.I.ζ_prim o'.I.ζ_pow I'.ζ_prim I'.ζ_pow
@@ -618,7 +618,7 @@ theorem exists_extend {F : Type} [Field F] [CharZero F] [Algebra.IsAlgebraic ℚ
     have h1 : IsAlgebraic ℤ (x : F) := (IsFractionRing.isAlgebraic_iff ℤ ℚ F).2 (Algebra.IsAlgebraic.isAlgebraic _)
     have h2 : IsAlgebraic ℤ x :=
       (isAlgebraic_algHom_iff (V.subtype.toIntAlgHom) Subtype.val_injective).1 h1
-    refine Ideal.comap_ne_bot_of_algebraic_mem (I := RingHom.ker b) h0 hx h2 ?_
+    refine Ideal.under_ne_bot_of_algebraic_mem (I := RingHom.ker b) h0 hx h2 ?_
     refine (Submodule.eq_bot_iff _).2 fun n hn => ?_
     have h3 : b (algebraMap ℤ V n) = 0 := hn
     simpa using h3
@@ -776,7 +776,7 @@ theorem actq_cancel {F : Type} [Field F] {s s' s₀ s₀' t h₁ h₂ h₃ h₄ 
 
 theorem actCompat_of_rosV : GlobalFnsSt → BrGtSt → AllD fun {E} _ _ _ {H} D => letI := H.starRing; ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] [Algebra (FractionRing R') F] (A : ArcF D R F) (D' : DegPre R') [Module (𝓞 E) D'.X] (oa' : D'.OAct (𝓞 E)), D'.PsiEven → D'.TauBimult → ∀ (N' : NumD F) (ν' : NumOf D' F N') (k : ℕ) (β : A.N.Form k) (u : Fˣ) (r : ℕ → Fˣ) (J : NumD.Iso (A.N.twist β u) N'), Roots u r → A.Bal β → (∀ (x : 𝓞 E) y, ν'.eX (J.e (A.act x y)) = x • ν'.eX (J.e y)) → (∀ (x : 𝓞 E) b, J.φ (actV (N := A.N) A.ν A.oa.onB x b) = actV ν' oa'.onB x (J.φ b)) → (∀ a : 𝓞 E, ∃ ρ ρ', RosV A.ν A.oa.onB a ρ ∧ RosV ν' oa'.onB a ρ' ∧ ∀ b b' : A.N.A, ρ' (J.φ b) (J.φ b') * (J.h (actV (N := A.N) A.ν A.oa.onB (star a) b) * J.h b' * J.h (b * actV (N := A.N) A.ν A.oa.onB a b') : Fˣ) = ρ b b' * (J.h (actV (N := A.N) A.ν A.oa.onB (star a) b * b') * J.h b * J.h (actV (N := A.N) A.ν A.oa.onB a b') : Fˣ)) → ActCompat A.ν A.oa ν' oa' β u r J := by
   intro hG hB E _ _ _ H D
-  letI := H.starRing
+  let := H.starRing
   intro R R' _ _ _ _ F _ _ _ _ A D' _ oa' he' hb' N' ν' k β u r J hr hbal hX hA hρ
   intro j hj x p₀ p₁ p₀' p₁' q₀ q₁ q₀' q₁' ⟨q, hqy, hqg, hqe⟩ h₀ h₁ t₀ t₁ h₀' h₁'
   obtain ⟨-, -, -, -, B⟩ := hB R A.D₀ A.even A.bimult F A.N A.ν
@@ -980,7 +980,7 @@ theorem actCompat_of_match (hL : Laws) (hL2 : Laws2) {E : Type} [Field E] [Numbe
     (hA : ∀ x, (νW.eA x).left ≫ φ = (A.ν.eA x).left) (hg : GeoIso νW ν' J.toIso) :
     letI := H.starRing
     ActCompat A.ν a.oa ν' M.P.oD A.be u r J := by
-  letI := H.starRing
+  let := H.starRing
   have hG := hL.globalFns
   have hnC : (n : C) ≠ 0 := fun h => by rw [h, norm_zero] at h1; exact zero_ne_one h1
   obtain ⟨hp, hw, -, hact, -⟩ := hm
@@ -1061,18 +1061,18 @@ theorem actCompat_of_match (hL : Laws) (hL2 : Laws2) {E : Type} [Field E] [Numbe
 
 theorem exists_has : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN.HomExtSt → ThetaPtDeterminesSt → EndDeterminedOnTorsionSt → ThetaUnifAV → AllA fun {E} _ _ _ {H} {D} {l} {Xo} {c} {W₀} Y {O'} _ _ {b} a => ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra (FractionRing O') K] [Algebra (PowerSeries O') K] [FaithfulSMul (PowerSeries O') K] [Algebra.IsAlgebraic (PowerSeries O') K], (∀ x, algebraMap (FractionRing O') K (algebraMap O' _ x) = algebraMap (PowerSeries O') K (PowerSeries.C x)) → ∀ (S : Ser a K (algebraMap _ K)) (n : ℕ), n.Prime → Odd n → IsUnit (n : O') → ∀ o₀ : Full D K, o₀.ρ = S.A.ρ → (∀ j, o₀.I.ζ (n ^ j) = S.A.I.ζ (n ^ j) ∧ o₀.Theta (n ^ j) (S.v (n ^ j))) → ∃ o, S.Has o := by
   intro hV h6 hU hH hT hE hA E _ _ _ H D l Xo c W₀ Y O' _ _ _ b ϖ a hb K _ _ _ _ _ _ hK S n hn ho hu o₀ hρ h₀
-  letI := H.starRing
+  let := H.starRing
   have hL := hV.1.1
   have hL2 := hV.1.2.1
   have hGt := GlobalTheory.T.torus_torsion_points_correspond_values
   have hFam := GlobalTheory.T.families_values_correspond hL hL2
-  haveI := o₀.charZero
+  have := o₀.charZero
   obtain ⟨W, _, _, _, φ, K₁, _, _, _, e, hW, hX, he⟩ := GlobalTheory.T.exists_completeDVR_over_powerSeries_uniformiser O' K
-  haveI := hW.1
+  have := hW.1
   obtain ⟨C, _, _, _, _, _, g₁, hg₁, hC⟩ := GlobalTheory.T.exists_complete_isAlgClosed_cExt' W K₁
   let gam : K →+* C := g₁.comp e
-  haveI : CharZero C := (RingHom.charZero_iff gam.injective).1 inferInstance
-  letI : Algebra (FractionRing O') C := (gam.comp (algebraMap (FractionRing O') K)).toAlgebra
+  have : CharZero C := (RingHom.charZero_iff gam.injective).1 inferInstance
+  let : Algebra (FractionRing O') C := (gam.comp (algebraMap (FractionRing O') K)).toAlgebra
   have hgam : ∀ x, gam (algebraMap (PowerSeries O') K x) = algebraMap (FractionRing W) C (algebraMap W _ (φ x)) :=
     fun x => (congrArg g₁ (he x)).trans (hg₁ _)
   have hOC : ∀ x, algebraMap (FractionRing O') C (algebraMap O' _ x) =
@@ -1113,12 +1113,12 @@ theorem exists_has : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN
         rw [Pi.smul_apply, hs, smul_eq_mul, Units.inv_mul_cancel_left]
   have hloc : IsLocalRing O' ∧ IsNoetherianRing O' := by
     rcases hb with h | h
-    · letI := h.1.toField
+    · let := h.1.toField
       exact ⟨inferInstance, inferInstance⟩
-    · haveI := h.1
+    · have := h.1
       exact ⟨inferInstance, inferInstance⟩
-  haveI := hloc.1
-  haveI := hloc.2
+  have := hloc.1
+  have := hloc.2
   have hTI : M.P.TorsionIso := haveI := M.admissible_base_of_complete_dvr.2
     GlobalTheory.T.torsionIso_of_linear_uniformisation_triple hV.1 hV.2.1 hV.2.2.1 hV.2.2.2.1 hV.2.2.2.2 E H M.W _ M.admissible_base_of_complete_dvr.1 M.t M.P
   have hac := actCompat_of_match hL hL2 a hO A M hTI hint hr hn ho h1 ν' J hJX hlab oW ψ he' w e' νW hm hA' hgeo

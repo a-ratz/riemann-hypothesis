@@ -141,8 +141,8 @@ theorem reach_of_approx (π : K) (hπ : Tendsto (fun k : ℕ => π ^ k) atTop (�
     rintro _ ⟨p, hp, rfl⟩
     exact hk p hp
   intro p hp
-  letI : MeasurableSpace X := borel X
-  letI : BorelSpace X := ⟨rfl⟩
+  let : MeasurableSpace X := borel X
+  let : BorelSpace X := ⟨rfl⟩
   have hmem : p ∈ ⋂ k, thick S (smulSub (π ^ k) P) := by
     refine mem_iInter.2 fun k => ?_
     obtain ⟨l, hl, hpl⟩ := hstep k p hp

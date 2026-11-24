@@ -167,7 +167,7 @@ theorem hasGen_lam_pull_of_eq_on_open : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsAb
 
   let x0 : U.toScheme := ⟨t, ht⟩
   let K : Type := U.toScheme.residueField x0
-  letI : Field K := inferInstanceAs (Field (U.toScheme.residueField x0))
+  let : Field K := inferInstanceAs (Field (U.toScheme.residueField x0))
   let q : Sp K ⟶ U.toScheme := U.toScheme.fromSpecResidueField x0
   let p : Sp K ⟶ T.left := q ≫ U.ι
   let φ := Spec.preimage (p ≫ T.hom)
@@ -278,9 +278,9 @@ theorem locally_eq_const_of_pow_eq_one : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsA
       rw [hf, comp_pow_overScheme_grpObj, Category.comp_id, hx]; rfl
     have h2 := congrArg (fun h => h.left) h1
     simpa [hTu] using h2
-  haveI : IsFinite f.left := hfin
-  haveI : Etale f.left := het
-  haveI := hA.smooth
+  have : IsFinite f.left := hfin
+  have : Etale f.left := het
+  have := hA.smooth
   have hη : η[A].left ≫ A.hom = 𝟙 _ := by simpa using Over.w η[A]
   have hfw : f.left ≫ A.hom = A.hom := Over.w f
   have hpt : T.hom t = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
@@ -289,7 +289,7 @@ theorem locally_eq_const_of_pow_eq_one : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsA
     rw [ha_def, ← Scheme.Hom.comp_apply, hxf, Scheme.Hom.comp_apply, hpt]
   have he : IsClosed ({η[A].left (IsLocalRing.closedPoint ℂ)} : Set A.left) :=
     ((pointEquivClosedPoint A.hom) ⟨η[A].left, hη⟩).2
-  haveI : JacobsonSpace A.left := LocallyOfFiniteType.jacobsonSpace A.hom
+  have : JacobsonSpace A.left := LocallyOfFiniteType.jacobsonSpace A.hom
   have ha : IsClosed ({a} : Set A.left) := by
     rw [isClosed_singleton_iff_locallyOfFiniteType]
     have h1 : LocallyOfFiniteType (A.left.fromSpecResidueField (f.left a)) :=
@@ -548,9 +548,9 @@ theorem exists_abelian_of_isPeriod : ∀ (O : Type) [Ring O] (bar : O → O) (g 
     simp
   obtain ⟨A, _, hA, hdim, M, u, χ, hM, hu, hAH⟩ :=
     GlobalTheory.riemann_polarised_torus g Λ H₁ hΛd hΛs hH₁ hH₁pos hH₁int
-  haveI := hA.comm
-  haveI := hA.smooth
-  haveI := hA.proper
+  have := hA.comm
+  have := hA.smooth
+  have := hA.proper
   have hker : ∀ z, u.ex z = 1 ↔ z ∈ Q.range := fun z => (u.ker z).trans (hu z)
   obtain ⟨u', χ', hex, hF'⟩ := GlobalTheory.TorusRM.exists_isFactorAH_lam_diag g A hA M u H₁ χ hM
     (GlobalTheory.TorusRM.isFactorAH_of_isAH hAH)
@@ -574,7 +574,7 @@ theorem exists_abelian_of_isPeriod : ∀ (O : Type) [Ring O] (bar : O → O) (g 
     exact ⟨a • y, by rw [Matrix.mulVecLin_apply, hlin]⟩
   choose ψ hψ hlift using fun a =>
     GlobalTheory.HolUnifEnd.exists_isMonHom_of_map_lattice A g hA hdim M u (Matrix.mulVecLin (ρ a)) (hρΛ a)
-  haveI : IsReduced A.left := isReduced_of_smooth_complex _ A.hom hA.smooth
+  have : IsReduced A.left := isReduced_of_smooth_complex _ A.hom hA.smooth
   have hext : ∀ f f' : A ⟶ A, (∀ z, u.ex z ≫ f = u.ex z ≫ f') → f = f' := fun f f' h =>
     GlobalTheory.ComplexPoints.over_hom_ext_of_complexPoints fun x => by
       obtain ⟨z, rfl⟩ := u.ex_onto x
@@ -763,7 +763,7 @@ theorem pre_injective {k : Type} [Field k] (j : ℂ →+* k) (A : Over (Sp ℂ))
   intro x y h
   have hf : Flat (spMap j) := by
     rw [Flat.SpecMap_iff]
-    letI := j.toAlgebra
+    let := j.toAlgebra
     exact (inferInstance : Module.Flat ℂ k)
   have hs : Surjective (spMap j) := ⟨fun q => ⟨default, Subsingleton.elim (α := PrimeSpectrum ℂ) _ _⟩⟩
   have : Epi (spMap j) := Flat.epi_of_flat_of_surjective _
@@ -820,8 +820,8 @@ theorem exists_tateIsoO_of_period : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
   let ev : ℕ → D.La → (Over.mk (spMap j) ⟶ A) := fun n a =>
     if 0 < n ∧ n.Coprime p then π (e ((n : ℂ)⁻¹ • Q (f n a))) else 1
   have hev : ∀ n, 0 < n → n.Coprime p → ∀ a, ev n a = π (e ((n : ℂ)⁻¹ • Q (f n a))) :=
-    fun n hn hc a => if_pos ⟨hn, hc⟩
-  have hev' : ∀ n, ¬ (0 < n ∧ n.Coprime p) → ∀ a, ev n a = 1 := fun n h a => if_neg h
+    fun n hn hc a => ite_eq_left ⟨hn, hc⟩
+  have hev' : ∀ n, ¬ (0 < n ∧ n.Coprime p) → ∀ a, ev n a = 1 := fun n h a => ite_eq_right h
   refine ⟨{ ζ := fun n => Units.map j.toMonoidHom (GlobalTheory.PeriodTate.rt n (ν n))
             ζ_prim := fun n hn hc => (GlobalTheory.PeriodTate.rt_prim hn (hgen n hn hc).1).map_of_injective
               (Units.map_injective j.injective)
@@ -846,7 +846,7 @@ theorem exists_tateIsoO_of_period : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
       rw [hd, hshift n h.1, show π (e ((n : ℂ)⁻¹ • Q (f n a))) ≫ act.act c =
         π (e ((n : ℂ)⁻¹ • Q (f n a)) ≫ act.act c) from Category.assoc _ _ _, ← hact, hP.1, Matrix.mulVec_smul]
     · rw [hev' n h, hev' n h]
-      haveI := act.hom c
+      have := act.hom c
       exact (GlobalTheory.HTTate.one_comp_hom (act.act c)).symm
   · rw [hev n hn hc, map_eq_one_iff π hπ, hker]
     have hk : (∃ e, f n a = n • e) ↔ ∃ e : D.La, a = n • e := (hgen n hn hc).2.2.1 a
@@ -986,7 +986,7 @@ theorem baseChange_specDecomp : ∀ (g a m : ℕ) (O : Type) [CommRing O] (ρ : 
       set_option synthInstance.maxHeartbeats 100000 in
         simp [Matrix.trace, map_sum]
     rw [htj, htr, map_natCast] at h1
-    haveI : CharZero k := (RingHom.charZero_iff j.injective).1 inferInstance
+    have : CharZero k := (RingHom.charZero_iff j.injective).1 inferInstance
     exact_mod_cast h1.symm
 
 end GlobalTheory.SpecBC
@@ -1110,9 +1110,9 @@ theorem extend {K : Type} [Field K] [NumberField K] {g : ℕ} (ψ : 𝓞 K →+*
   have hcomm : ∀ a ∈ Set.range ψ, ∀ b ∈ Set.range ψ, a * b = b * a := by
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩
     rw [← map_mul, mul_comm, map_mul]
-  letI : IsMulCommutative (Algebra.adjoin ℚ (Set.range ψ)) :=
+  let : IsMulCommutative (Algebra.adjoin ℚ (Set.range ψ)) :=
     Algebra.isMulCommutative_adjoin ℚ (fun a ha b hb _ => hcomm a ha b hb)
-  letI : CommRing (Algebra.adjoin ℚ (Set.range ψ)) := by
+  let : CommRing (Algebra.adjoin ℚ (Set.range ψ)) := by
     open scoped IsMulCommutative in infer_instance
   let ψ' : 𝓞 K →+* Algebra.adjoin ℚ (Set.range ψ) :=
     ψ.codRestrict (Algebra.adjoin ℚ (Set.range ψ)) fun x => Algebra.subset_adjoin ⟨x, rfl⟩
@@ -1244,13 +1244,13 @@ theorem lie_projectors : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
     intro i
     have h := hcoef (τ i)
     have h1 : τ i ∈ I := Finset.mem_image_of_mem _ (Finset.mem_univ _)
-    simp only [coef, h1, hτω i, hnJ (τ i) (hτω i), if_true, if_false] at h
+    simp only [coef, h1, hτω i, hnJ (τ i) (hτω i), ite_true, ite_false] at h
     linear_combination h
   have hzero : ∀ τ', τ' ∉ I → τ' (D.ω : D.F) = lam → E τ' = 0 := by
     intro τ' hI' hω'
     refine idem_eq_zero (hidem τ') ?_
     have h := hcoef τ'
-    simp only [coef, hI', hω', hnJ τ' hω', if_true, if_false] at h
+    simp only [coef, hI', hω', hnJ τ' hω', ite_true, ite_false] at h
     linear_combination h
   refine ⟨fun i => E (τ i), fun i => hidem _, hmτ, fun i c => ?_, fun i c => ?_, ?_⟩
   · rw [hΦ', hl, hτ]
@@ -1263,10 +1263,10 @@ theorem lie_projectors : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
     refine Finset.sum_congr rfl fun τ' _ => ?_
     by_cases hI' : τ' ∈ I
     · obtain ⟨i, _, rfl⟩ := Finset.mem_image.mp hI'
-      rw [if_pos hI', ← sub_smul, hτω i]
+      rw [ite_eq_left hI', ← sub_smul, hτω i]
       congr 1
       ring
-    · rw [if_neg hI', smul_zero]
+    · rw [ite_eq_right hI', smul_zero]
       by_cases hω' : τ' (D.ω : D.F) = lam
       · rw [hzero τ' hI' hω', smul_zero, smul_zero, sub_zero]
       · have hq : (τ' (D.ω : D.F) - lam) * (τ' (D.ω : D.F) - ((D.tr : ℂ) - lam)) = 0 := by

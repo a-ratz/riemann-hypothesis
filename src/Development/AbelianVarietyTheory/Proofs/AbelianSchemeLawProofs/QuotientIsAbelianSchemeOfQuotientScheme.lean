@@ -136,7 +136,7 @@ theorem exists_grpObj {A H Q : Over S} [GrpObj A] [IsCommMonObj A] [GrpObj H] (i
   have key : ∀ {W : Over S} (a b : W ⟶ A), lift (a ≫ q) (b ≫ q) ≫ m = (a * b) ≫ q := by
     intro W a b
     rw [← lift_map, Category.assoc, hm, Hom.mul_def, Category.assoc]
-  letI : MonObj Q :=
+  let : MonObj Q :=
     { one := η[A] ≫ q
       mul := m
       one_mul := by
@@ -169,7 +169,7 @@ theorem exists_grpObj {A H Q : Over S} [GrpObj A] [IsCommMonObj A] [GrpObj H] (i
           ext <;> simp [hm]
         rw [reassoc_of% h1, reassoc_of% h2, hm, MonObj.mul_assoc_assoc] }
   have hhom : IsMonHom q := ⟨rfl, hm.symm⟩
-  letI : GrpObj Q :=
+  let : GrpObj Q :=
     { inv := n
       left_inv := by
         rw [← cancel_epi q, comp_lift_assoc, hn, Category.comp_id]
@@ -229,8 +229,8 @@ lemma geometricallyConnected_of_comp {X Y Z : Scheme.{0}} (p : X ⟶ Y) (f : Y �
 lemma smooth_of_grpObj_of_flat (Q : Over S) [GrpObj Q] [Flat Q.hom]
     [LocallyOfFinitePresentation Q.hom] [GeometricallyReduced Q.hom] : Smooth Q.hom := by
   refine Smooth.of_smooth_fiberToSpecResidueField _ fun y => ?_
-  letI : GrpObj (Over.mk Q.hom) := inferInstanceAs (GrpObj Q)
-  letI : GrpObj (Over.mk (pullback.snd Q.hom (S.fromSpecResidueField y))) :=
+  let : GrpObj (Over.mk Q.hom) := inferInstanceAs (GrpObj Q)
+  let : GrpObj (Over.mk (pullback.snd Q.hom (S.fromSpecResidueField y))) :=
     Over.grpObjMkPullbackSnd
   exact smooth_of_grpObj (K := S.residueField y) (pullback.snd Q.hom (S.fromSpecResidueField y))
 

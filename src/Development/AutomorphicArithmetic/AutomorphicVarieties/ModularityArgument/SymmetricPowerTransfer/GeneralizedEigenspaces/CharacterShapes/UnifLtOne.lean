@@ -153,7 +153,7 @@ private theorem diagonal_parameter_dominant {t : Dat.Par F} (h : ∀ v ∈ A.Sg,
 
 private theorem cone_le {t : Dat.Par F} (h : A.Cone t) : ∀ v ∈ A.Sg, valuation (Kv v) (t v : Kv v) ≤ 1 := by
   intro v hv
-  refine (h v hv).le.trans (pow_le_one₀ zero_le' ?_)
+  refine (h v hv).le.trans (pow_le_one₀ zero_le ?_)
   rw [GlAx.unif_spec]
   exact uniformizer_lt_one.le
 
@@ -335,9 +335,9 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 section Grp
 
-private theorem indicator_eq_one_of_true {p : Prop} (h : p) : one p = 1 := if_pos h
+private theorem indicator_eq_one_of_true {p : Prop} (h : p) : one p = 1 := ite_eq_left h
 
-private theorem one_f {p : Prop} (h : ¬ p) : one p = 0 := if_neg h
+private theorem one_f {p : Prop} (h : ¬ p) : one p = 0 := ite_eq_right h
 
 private theorem transfer {G : Type} [Group G] (S U2 : Subgroup G) (hS : S.Normal) (x : G) (U : Subgroup S)
     (hU : ∀ g : S, g ∈ U ↔ x⁻¹ * g * x ∈ U2) (a b : S) (hxa : Commute x (a : G)) (hxb : Commute x (b : G))
@@ -441,12 +441,12 @@ private theorem fs_loc (A : SD Δ) (hA : A.Ok) (t : Dat.Par F) (g y : DA Δ) (hg
   classical
   obtain ⟨-, -, hS, -, -⟩ := datOk F Δ A hA
   have h' : v ∈ A.dat.Sg := h
-  have hSv : A.dat.S v = (A.V v).data (A.hs v h) (A.Ry v) (A.χ v) := dif_pos h
+  have hSv : A.dat.S v = (A.V v).data (A.hs v h) (A.Ry v) (A.χ v) := dite_eq_left h
   have hJ : A.dat.J2v v = ((A.V v).J 2).comap (eD (A.hs v h)) := by
-    refine (if_pos h').trans ?_
+    refine (ite_eq_left h').trans ?_
     rw [hSv]
     rfl
-  have hf : A.dat.fSv t v (y.1 v) = (A.dat.S v).fS (t v) (y.1 v) := if_pos h'
+  have hf : A.dat.fSv t v (y.1 v) = (A.dat.S v).fS (t v) (y.1 v) := ite_eq_left h'
   obtain ⟨hbij, -⟩ := eD_facts (Kv v) (Ov v) (hS v h).1 (hS v h).2.1 _ _ (A.hs v h) (hS v h).2.2.1
   have hd := (dcMap _ _ ℂ (eD (A.hs v h)) hbij ((A.V v).J 2) (g.1 v) (g.1 v)).1 (y.1 v)
   rw [hg.1 v h] at hd
@@ -456,14 +456,14 @@ private theorem fs_loc (A : SD Δ) (hA : A.Ok) (t : Dat.Par F) (g y : DA Δ) (hg
 private theorem fs_eq (A : SD Δ) (hA : A.Ok) (t : Dat.Par F) (g : DA Δ) (hg : A.IsElD g (SD.dS t)) (y : DA Δ) :
     A.dat.FS t y = one (y ∈ DC A.dat.U2 g) := by
   classical
-  have hb : ∀ v ∉ A.Sg, A.dat.J2v v = KD _ (Ov v) := fun v hv => if_neg hv
+  have hb : ∀ v ∉ A.Sg, A.dat.J2v v = KD _ (Ov v) := fun v hv => ite_eq_right hv
   have hgU : ∀ v ∉ A.Sg, (rpg _ _).p v g ∈ A.dat.J2v v := fun v hv => by
     show g.1 v ∈ _
     rw [hg.2 v hv]
     exact one_mem _
   have hbox := (uFBox (Pl F) (DA Δ) (fun v => DX (cv v Δ)) (fun v => KD (cv v Δ) (Ov v)) A.dat.J2v (rpg _ _) A.Sg hb g hgU).1 y
   have hloc := fs_loc A hA t g y hg
-  have hoff : ∀ v, v ∉ A.Sg → A.dat.fSv t v (y.1 v) = one (y.1 v ∈ KD _ (Ov v)) := fun v h => if_neg h
+  have hoff : ∀ v, v ∉ A.Sg → A.dat.fSv t v (y.1 v) = one (y.1 v ∈ KD _ (Ov v)) := fun v h => ite_eq_right h
   by_cases hy : y ∈ DC A.dat.U2 g
   · rw [indicator_eq_one_of_true hy]
     have hm := hbox.1 hy
@@ -488,7 +488,7 @@ private theorem fs_eq (A : SD Δ) (hA : A.Ok) (t : Dat.Par F) (g : DA Δ) (hg : 
     refine (A.Sg.finite_toSet.union (Filter.eventually_cofinite.1
       (show ∀ᶠ v in Filter.cofinite, y.1 v ∈ KD (cv v Δ) (Ov v) from y.2))).subset fun w hw => ?_
     by_contra hc
-    simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hc
+    simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hc
     exact hw ((hoff w hc.1).trans (indicator_eq_one_of_true hc.2))
 
 private theorem commute_of_off_of_isElD (A : SD Δ) (x : DA Δ) (hx : A.dat.Off x) (g : DA Δ) (d : ParN F 2) (hg : A.IsElD g d) : Commute x g := by
@@ -732,13 +732,13 @@ private theorem exists_prod_range_iterate_eq_zero_of_commute_of_isNilpotent (n :
     (hn : ∀ a, IsNilpotent (n a)) (a : Λ) :
     ∃ m : ℕ, ((List.range m).map (fun i => n (σ^[i] a))).prod = 0 := by
   let A := Algebra.adjoin ℂ (Set.range n)
-  letI : IsMulCommutative A := Algebra.isMulCommutative_adjoin ℂ (by
+  let : IsMulCommutative A := Algebra.isMulCommutative_adjoin ℂ (by
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ _
     exact hc x y)
-  letI : CommRing A := by
+  let : CommRing A := by
     open scoped IsMulCommutative in
     exact inferInstance
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite ℂ A
+  have : IsArtinianRing A := IsArtinianRing.of_finite ℂ A
   obtain ⟨m, hm⟩ := IsArtinianRing.isNilpotent_nilradical A
   let g : ℕ → A := fun i => ⟨n (σ^[i] a), Algebra.subset_adjoin ⟨σ^[i] a, rfl⟩⟩
   have hmem : ∀ i, g i ∈ nilradical A := by
@@ -973,13 +973,13 @@ theorem UpperTheory.V.Z.Sym.Glob.gqK :
     UpperTheory.V.Z.Sym.Glob.GqK := by
   classical
   intro F _ _ Δ D hD ι hι t ht τ hτ γ j hγ hj z hz
-  haveI := hD.real
+  have := hD.real
   have hr := cm_ne hτ
   have htr : ∀ v, HasTr ((ι γ).1 v) (cv v τ) := fun v => hasTr_map _ (hι γ v) hγ
-  have f1 : ∀ v ∈ D.Sg, D.fKv t v = (D.S v).fK (t v) := fun v hv => funext fun g => if_pos hv
-  have f2 : ∀ v ∉ D.Sg, D.fKv t v = fZD (Ov v) (D.χ v) := fun v hv => funext fun g => if_neg hv
-  have J1 : ∀ v ∈ D.Sg, D.J2v v = (D.S v).J2 := fun v hv => if_pos hv
-  have J2 : ∀ v ∉ D.Sg, D.J2v v = KD _ (Ov v) := fun v hv => if_neg hv
+  have f1 : ∀ v ∈ D.Sg, D.fKv t v = (D.S v).fK (t v) := fun v hv => funext fun g => ite_eq_left hv
+  have f2 : ∀ v ∉ D.Sg, D.fKv t v = fZD (Ov v) (D.χ v) := fun v hv => funext fun g => ite_eq_right hv
+  have J1 : ∀ v ∈ D.Sg, D.J2v v = (D.S v).J2 := fun v hv => ite_eq_left hv
+  have J2 : ∀ v ∉ D.Sg, D.J2v v = KD _ (Ov v) := fun v hv => ite_eq_right hv
   choose zv hzv using fun v => zEx (cv_reg hr v)
   have ez : ∀ v jv, IsEmb (cv v τ) ((ι γ).1 v) jv → (ι (j z)).1 v = jv (zv v) := fun v jv hjv =>
     dx_ext ((hι (j z) v).trans (emb_map _ (hι γ v) hj hjv z _ (by
@@ -988,7 +988,7 @@ theorem UpperTheory.V.Z.Sym.Glob.gqK :
     have := (Loc.fzdLaw _ _ _ (hD.off v hv) _ (hD.chi v).1).2 1 1 k (by simp [IsScal, mt]) hk
     simpa using this
   by_cases hA : D.admitted t τ
-  · rw [show one (D.admitted t τ) = 1 from if_pos hA, one_mul]
+  · rw [show one (D.admitted t τ) = 1 from ite_eq_left hA, one_mul]
     refine gqD D hD ι hι t ht τ hτ hA γ j hγ hj (j z) (D.fKv t) (fun v => ?_) _ _ fun v jv hjv => ?_
     · by_cases hv : v ∈ D.Sg
       · rw [f1 v hv, J1 v hv]
@@ -1001,7 +1001,7 @@ theorem UpperTheory.V.Z.Sym.Glob.gqK :
       by_cases hv : v ∈ D.Sg
       · rw [f1 v hv, J1 v hv]
         obtain ⟨-, h1, -, h3, -⟩ := (hD.sig v hv).D_orb _ (ht v hv) _ _ _ (cv_reg hr v) (htr v) hjv _ (hzv v)
-        exact ⟨h1, fun _ => by rw [h3, show one (Ind _ _ _) = 1 from if_pos (hA v hv), mul_one], fun h => absurd hv h⟩
+        exact ⟨h1, fun _ => by rw [h3, show one (Ind _ _ _) = 1 from ite_eq_left (hA v hv), mul_one], fun h => absurd hv h⟩
       · rw [f2 v hv, J2 v hv]
         refine ⟨(Loc.finD _ _ _ _ (hD.off v hv) (cv_reg hr v) _ _ (htr v) hjv).2.1 _ (hzv v) _, fun h => absurd h hv, fun _ =>
           ⟨(locD _ _ _ _ (hD.off v hv) (cv_reg hr v) _ _ (htr v) hjv _ (hD.chi v).1 _ (hzv v)).2, fun h1 h2 => ?_⟩⟩
@@ -1009,14 +1009,14 @@ theorem UpperTheory.V.Z.Sym.Glob.gqK :
         refine ⟨k1 v hv _ h3, fun y hy => h4 y ?_⟩
         by_contra h
         exact hy ((Loc.fzdLaw _ _ _ (hD.off v hv) _ (hD.chi v).1).1 _ h)
-  · rw [show one (D.admitted t τ) = 0 from if_neg hA, zero_mul, mul_zero]
+  · rw [show one (D.admitted t τ) = 0 from ite_eq_right hA, zero_mul, mul_zero]
     refine gqOn_zero _ _ _ _ fun y => ?_
     obtain ⟨v, hv⟩ := not_forall.1 hA
     obtain ⟨hv, hI⟩ := Classical.not_imp.1 hv
     refine fin_mulSupp (D.fKv t) D.Sg (fun v hv k hk => by rw [f2 v hv]; exact k1 v hv k hk) _ (v := v) ?_
     rw [f1 v hv]
     by_contra h
-    haveI : CharZero (Kv v) := algebraRat.charZero _
+    have : CharZero (Kv v) := algebraRat.charZero _
     obtain ⟨jv, hjv⟩ := (embAlg (Kv v) _ _ ((map_ne_zero _).2 hD.ne0) (cv_reg hr v) _ (htr v)).1
     have h' : (D.S v).fK (t v) ((y.out.1 v)⁻¹ * (ι (j z)).1 v * y.out.1 v) ≠ 0 := h
     rw [ez v jv hjv] at h'
@@ -1044,8 +1044,8 @@ private theorem quot_sum_congr {Y : Type} (s s' : Setoid Y) (h : s = s') (k k' :
 private theorem gqOn_surj {H' H G : Type} [Group H'] [Group H] [Group G] (e : H' →* H) (he : Function.Surjective e)
     (j : H →* G) (H₀ : Subgroup H) (U : Subgroup G) (k : G ⧸ U → ℂ) :
     gqOn (j.comp e) (H₀.comap e) U k = gqOn j H₀ U k := by
-  letI a : MulAction H (G ⧸ U) := MulAction.compHom _ j
-  letI a' : MulAction H' (G ⧸ U) := MulAction.compHom _ (j.comp e)
+  let a : MulAction H (G ⧸ U) := MulAction.compHom _ j
+  let a' : MulAction H' (G ⧸ U) := MulAction.compHom _ (j.comp e)
   have hs : ∀ (x : H') (y : G ⧸ U), x • y = e x • y := fun _ _ => rfl
   refine quot_sum_congr (orbitRel H' (G ⧸ U)) (orbitRel H (G ⧸ U)) ?_
     (fun y => k y / ((H₀.comap e).relIndex (stabilizer H' y) : ℂ)) (fun y => k y / (H₀.relIndex (stabilizer H y) : ℂ)) ?_
@@ -1286,17 +1286,17 @@ private theorem supp (hD : D.Ok) (t : Dat.Par F) (g : DA Δ) (h : D.FK t g ≠ 0
   have hfin : (Function.mulSupport fun v => D.fKv t v (g.1 v)).Finite := by
     refine (D.Sg.finite_toSet.union (Filter.eventually_cofinite.1 ((rpg _ _).ae g))).subset fun w hw => ?_
     by_contra hn
-    simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at hn
+    simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at hn
     apply hw
     have := (fzdLaw (Ov w) (Kv w) (cv w Δ) (hD.off w hn.1) (D.χ w) (hD.chi w).1).2 1 1 (g.1 w) (by simp [IsScal]) hn.2
     have hw' : w ∉ D.Sg := hn.1
     rw [one_mul] at this
-    simp only [Dat.fKv, if_neg hw', this, map_one, inv_one, Units.val_one]
+    simp only [Dat.fKv, ite_eq_right hw', this, map_one, inv_one, Units.val_one]
   intro h0
   apply h
   unfold Dat.FK
   refine finprod_eq_zero _ v ?_ hfin
-  simp only [Dat.fKv, if_pos hv, h0]
+  simp only [Dat.fKv, ite_eq_left hv, h0]
 
 private theorem real_emb (hD : D.Ok) : Nonempty (F →+* ℝ) := by
   have := hD.real
@@ -1356,7 +1356,7 @@ theorem UpperTheory.V.Z.Sym.Glob.sideK :
         ((∏ v ∈ D.Sg, (D.S v).cK : ℝ) : ℂ) * (ch i.1 * ms i.1 * D.nK i.1) := fun i => by
       rw [term_eq B hB.Γ₀ hΔ (hreg i) (hγ i) (hj i) (hz i), hB.tr _ _ (htd i).1 (htd i).2, hB.U,
         gqK F Δ D hD B.ι hι t ht i.1 i.2.1 (γ i) (j i) (hγ i) (hj i) (z i) (hz i)]
-      have : one (D.admitted t i.1) = 1 := if_pos i.2.2
+      have : one (D.admitted t i.1) = 1 := ite_eq_left i.2.2
       rw [this]
       push_cast
       ring
@@ -1446,7 +1446,7 @@ private theorem exS_ne (a : Chs F) : (fun p : coneS A => A.exS a p.1) ≠ 0 := b
   intro h
   have hp : A.Cone fun v => unif (Kv v) ^ 3 := fun v _ => by
     rw [Units.val_pow_eq_pow_val, map_pow]
-    exact pow_lt_pow_right_of_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _))) (unif_lt_one _) (by norm_num)
+    exact pow_lt_pow_right_of_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _))) (unif_lt_one _) (by norm_num)
   have := congrFun h ⟨_, hp⟩
   exact Finset.prod_ne_zero_iff.2 (fun v _ => ((expoEq (Kv v) (a v)).2.2 2 _).1 _) this
 
@@ -1486,9 +1486,9 @@ theorem UpperTheory.V.Z.Sym.So.specF : SpecF := by
   have hB' := hB.1
   have e0 := hB.2
   subst e0
-  haveI : FiniteDimensional ℂ BG.Forms := Tf.formsFin _ _ _ BG (finG F Δ A.dat hD VG ch BG s hG).1
-  haveI : FiniteDimensional ℂ BK.Forms := Tf.formsFin _ _ _ BK (finK F Δ A.dat hD VK ch BK hK).1
-  haveI : ∀ i, FiniteDimensional ℂ (B' i).Forms := fun i => Tf.formsFin _ _ _ (B' i) (finS F Δ A.dat hD VS ch (y i) (B' i) (hB' i)).1
+  have : FiniteDimensional ℂ BG.Forms := Tf.formsFin _ _ _ BG (finG F Δ A.dat hD VG ch BG s hG).1
+  have : FiniteDimensional ℂ BK.Forms := Tf.formsFin _ _ _ BK (finK F Δ A.dat hD VK ch BK hK).1
+  have : ∀ i, FiniteDimensional ℂ (B' i).Forms := fun i => Tf.formsFin _ _ _ (B' i) (finS F Δ A.dat hD VS ch (y i) (B' i) (hB' i)).1
   refine (gOpsEx F Δ A hA VG ch BG s hG).elim fun u hu => hu.elim fun Θ hu => ?_
   refine (gSpec F Δ A hA VG BG s u Θ hu).elim fun I h => h.elim fun X h => h.elim fun b h => h.elim fun β h => ?_
   have k := kSpec F Δ A hA VK ch BK hK

@@ -137,19 +137,19 @@ private theorem cl_mvps_max {O σ : Type} [CommRing O] [IsLocalRing O] (g : MvPo
 theorem UpperTheory.V.CA.cl_mvps :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (R : Type) [CommRing R] [Algebra O R] [IsLocalRing R], IsCL O R → ∀ (σ : Type) [Finite σ] (a : σ → R), (∀ s, a s ∈ maximalIdeal R) → maximalIdeal R ≤ (Ideal.span (Set.range a) ⊔ (maximalIdeal O).map (algebraMap O R)).radical → ∃ φ : MvPowerSeries σ O →ₐ[O] R, (∀ s, φ (MvPowerSeries.X s) = a s) ∧ φ.toRingHom.Finite ∧ IsLocalHom φ := by
   intro O _ _ _ _ R _ _ _ hR σ _ a ha hrad
-  haveI := hR.noeth
-  haveI := hR.complete
-  haveI := hR.isLocalHom
+  have := hR.noeth
+  have := hR.complete
+  have := hR.isLocalHom
   let φ : MvPowerSeries σ O →ₐ[O] R := GlobalTheory.mvEvalAdic O (maximalIdeal R) a ha
   have hX : ∀ s, φ (MvPowerSeries.X s) = a s := GlobalTheory.mvEvalAdic_X _ a ha
   have hXm : ∀ s, φ (MvPowerSeries.X s) ∈ maximalIdeal R := fun s => (hX s).symm ▸ ha s
   refine ⟨φ, hX, ?_, ?_⟩
-  · letI : Algebra (MvPowerSeries σ O) R := φ.toRingHom.toAlgebra
+  · let : Algebra (MvPowerSeries σ O) R := φ.toRingHom.toAlgebra
     show Module.Finite (MvPowerSeries σ O) R
-    haveI hOO : IsCO O O := ⟨inferInstance, ⟨fun x hx => by simpa using hx⟩, fun x => ⟨x, by simp⟩⟩
-    haveI hCO := co_mvps O O σ
-    haveI := hCO.complete
-    haveI : IsScalarTower O (MvPowerSeries σ O) R :=
+    have hOO : IsCO O O := ⟨inferInstance, ⟨fun x hx => by simpa using hx⟩, fun x => ⟨x, by simp⟩⟩
+    have hCO := co_mvps O O σ
+    have := hCO.complete
+    have : IsScalarTower O (MvPowerSeries σ O) R :=
       IsScalarTower.of_algebraMap_eq (fun c => (φ.commutes c).symm)
     have hJ : Ideal.span (Set.range a) ⊔ (maximalIdeal O).map (algebraMap O R) ≤
         (maximalIdeal (MvPowerSeries σ O)).map (algebraMap (MvPowerSeries σ O) R) := by
@@ -178,14 +178,14 @@ theorem UpperTheory.V.CA.cl_mvps :
       have h3 := Ideal.add_mem _ h2 h1
       have h4 : φ g ∈ maximalIdeal R := by simpa using h3
       exact h4
-    haveI : IsHausdorff ((maximalIdeal (MvPowerSeries σ O)).map (algebraMap (MvPowerSeries σ O) R)) R :=
+    have : IsHausdorff ((maximalIdeal (MvPowerSeries σ O)).map (algebraMap (MvPowerSeries σ O) R)) R :=
       IsHausdorff.of_isLocalRing _ R (ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal R).ne_top hJm)
     obtain ⟨N, hN⟩ := Ideal.exists_pow_le_of_le_radical_of_fg
       (hrad.trans (Ideal.radical_mono hJ)) (IsNoetherian.noetherian (maximalIdeal R))
-    haveI : Module.Finite O (R ⧸ maximalIdeal R) := hR.res_fin
-    haveI : Module.Finite (MvPowerSeries σ O) (R ⧸ maximalIdeal R) :=
+    have : Module.Finite O (R ⧸ maximalIdeal R) := hR.res_fin
+    have : Module.Finite (MvPowerSeries σ O) (R ⧸ maximalIdeal R) :=
       Module.Finite.of_restrictScalars_finite O _ _
-    haveI : Module.Finite (MvPowerSeries σ O)
+    have : Module.Finite (MvPowerSeries σ O)
         (R ⧸ (maximalIdeal (MvPowerSeries σ O)).map (algebraMap (MvPowerSeries σ O) R)) :=
       cl_mvps_fin (A := MvPowerSeries σ O) inferInstance hN
     exact GlobalTheory.FormalIsogeny.finite_of_finite_quotient_map (maximalIdeal (MvPowerSeries σ O))

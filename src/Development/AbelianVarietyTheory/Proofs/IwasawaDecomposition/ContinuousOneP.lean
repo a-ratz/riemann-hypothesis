@@ -81,7 +81,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 theorem hasDerivAt_exp_entry {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (t : ℝ) (i j : Fin n) :
     HasDerivAt (fun s : ℝ => (NormedSpace.exp (s • X) : Matrix (Fin n) (Fin n) ℂ) i j)
       ((NormedSpace.exp (t • X) * X : Matrix (Fin n) (Fin n) ℂ) i j) t := by
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X t
   exact (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ i j)).hasFDerivAt.comp_hasDerivAt t h
 

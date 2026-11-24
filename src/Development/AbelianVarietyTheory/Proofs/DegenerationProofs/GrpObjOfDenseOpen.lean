@@ -178,7 +178,7 @@ theorem grpObj_of_dense_open :
   have oneP : ∀ (T : Over U), toUnit _ ≫ e = pushPt h.w (1 : T ⟶ A) :=
     fun T => pushPt_one h.w he T
   have surj := pushPt_surjective h
-  letI inst : GrpObj G :=
+  let inst : GrpObj G :=
     { one := e
       mul := m
       inv := i

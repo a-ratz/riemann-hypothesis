@@ -142,9 +142,9 @@ theorem continuous_cyc : Continuous fun g : Br.G D.nbr i w hw =>
       Br.LL D.nbr i w hw) := by
   rw [← GlobalTheory.CycBridge.locChi_epsU_eq_cycLL D i w hw]
   have hfc : Continuous (D.nbr i w hw).toLL :=
-    continuous_subtype_val.comp (D.nbr i w hw).eO_cont
+    continuous_subtypeVal.comp (D.nbr i w hw).eO_cont
   have hι : Continuous fun g : Br.G D.nbr i w hw => ((Br.iota D.nbr i w hw g : Gw D.nd w) : GE D.nd) :=
-    continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw)
+    continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw)
   exact hfc.comp ((GlobalTheory.Pass.FamCont.epsU_cont D.nd i).comp hι)
 
 end Loc

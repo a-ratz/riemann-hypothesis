@@ -232,7 +232,7 @@ theorem isFactorAH_diagUnif (u : HolUnif A M g) {Hm : Matrix (Fin g) (Fin g) ℂ
       intro I
       rw [hF.2.2 ⟨((I.down.card : ℕ) : ℂ) • (l : Fin g → ℂ), smul_mem_lat u l I⟩ (J PUnit.unit I) _ (hc I)]
       simp only []
-      rw [herm_smul_nat, herm_smul_nat, smul_add, mul_zpow, mul_zpow, Complex.exp_int_mul]
+      rw [herm_smul_nat, herm_smul_nat, smul_add, mul_zpow, mul_zpow, Complex.exp_intCast_mul]
       congr 3
       rw [hE]
       ring_nf
@@ -261,5 +261,5 @@ theorem GlobalTheory.TorusRM.exists_isFactorAH_lam_diag : ∀ (g : ℕ) (A : Ove
     ∃ (u' : HolUnif A ((abelian₂ A M).pull (lift (𝟙 A) (𝟙 A)).left) g) (χ' : u'.Λ → ℂ),
       u'.ex = u.ex ∧ IsFactorAH u' ((2 : ℂ) • Hm) χ' := by
   intro g A _ hA M u Hm χ hM hF
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   exact ⟨diagUnif u, diagChar u χ, rfl, isFactorAH_diagUnif u hF⟩

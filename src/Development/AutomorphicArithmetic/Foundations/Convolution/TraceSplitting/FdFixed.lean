@@ -141,7 +141,7 @@ private theorem exists_ext {ι α : Type} {P : α → Type} (f : ι → α) (hf 
     obtain rfl := hf e
     rfl
   have h : ∃ j, f j = f i := ⟨i, rfl⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   exact aux _ _
 
 private theorem prod_mem_of {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (W : Submodule ℂ H)
@@ -174,7 +174,7 @@ private theorem oloc_fix {w w' : Pl K} (h : w ≠ w') [MeasurableSpace (Gw n w)]
     rw [hB, ← ContinuousLinearMap.adjoint_inner_left, hB]
     refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
     have h1 := congrArg (· b) (rhoL_comm' μ h g x)
-    simp only [ContinuousLinearMap.mul_apply] at h1
+    simp only [mul_apply_eq_comp] at h1
     simp only
     rw [ContinuousLinearMap.adjoint_inner_left, h1]
   simp only [fixL, fixF, Submodule.mem_iInf] at hv ⊢
@@ -233,18 +233,18 @@ theorem UpperTheory.ConvolutionTheory.C.termE :
         ∀ (u : Pl E) (X : Type) [AddCommGroup X] [Module ℂ X] (ρ : Representation ℂ (Gw n u) X) (f : Gw n u → ℂ) (z : ℂ),
           HasTrace (m u) ρ f z → HasTrace (mm u) ρ f (bb u * z) := by
     have h0 : ∀ u, m u (T.J u) ≠ 0 := fun u => by
-      haveI := hm u
+      have := hm u
       exact ((T.co u).2.measure_pos (m u) ⟨1, Subgroup.one_mem _⟩).ne'
     have ht : ∀ u, m u (T.J u) ≠ ⊤ := fun u => by
-      haveI := hm u
+      have := hm u
       exact (T.co u).1.measure_lt_top.ne
     have hd0 : ∀ u, (m u (T.J u))⁻¹ ≠ 0 := fun u => ENNReal.inv_ne_zero.2 (ht u)
     have hdt : ∀ u, (m u (T.J u))⁻¹ ≠ ⊤ := fun u => ENNReal.inv_ne_top.2 (h0 u)
     refine ⟨fun u => (m u (T.J u))⁻¹ • m u, fun u => ?_, fun u => ?_, fun u => (((m u (T.J u))⁻¹.toReal : ℝ) : ℂ),
       fun u => ?_, fun u X _ _ ρ f z h => hasTrace_smul _ (hd0 u) (hdt u) h⟩
-    · haveI := hm u
+    · have := hm u
       exact Measure.IsHaarMeasure.smul _ (hd0 u) (hdt u)
-    · rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel (h0 u) (ht u)]
+    · rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel (h0 u) (ht u)]
     · exact Complex.ofReal_ne_zero.2 (ENNReal.toReal_ne_zero.2 ⟨hd0 u, hdt u⟩)
   have hJq : T.J w₀.1 = GLnLocal.iwahori (w₀.1.adicCompletion E) n := T.at_q w₀
   have hne : ∀ i, (T.mk' (p i)).1 ≠ w₀.1 := by
@@ -271,7 +271,7 @@ theorem UpperTheory.ConvolutionTheory.C.termE :
           c₁ * trOn (T.Y μ V O y) (Uiw μ w₀.1 (j • e) ∘L (List.ofFn B).prod) := by
     intro L ψ hfit e l 𝔢 he hsd j
     have hB : ∀ i, ∃ B, IsOloc μ (T.mk' (p i)).1 (mm _) (ψ (p i)) B := fun i => by
-      haveI := hmm (T.mk' (p i)).1
+      have := hmm (T.mk' (p i)).1
       exact (UpperTheory.ConvolutionTheory.C.olocEx E n μ (T.mk' (p i)).1 (mm _) (ψ (p i)) (hfit.test _ (hpm i)).1).exists
     choose B hB using hB
     refine ⟨B, hB, ?_⟩
@@ -363,7 +363,7 @@ theorem UpperTheory.ConvolutionTheory.C.termE :
   have h3 : ∀ i, IsOloc μ (w i) (mm (w i)) (φ i) (T' i) := by
     intro i
     refine Fin.cases ?_ (fun i => ?_) i
-    · haveI := hmm w₀.1
+    · have := hmm w₀.1
       exact UpperTheory.ConvolutionTheory.C.hopOloc E n μ w₀.1 (mm w₀.1) (GLnLocal.iwahori (w₀.1.adicCompletion E) n)
         (Cartan.diagPow (w₀.1.adicCompletion E) n (j • e)) hCO (by rw [← hJq]; exact hmm1 _)
     · exact hB i
@@ -430,7 +430,7 @@ theorem UpperTheory.ConvolutionTheory.T.termE :
   obtain ⟨y, hy, hY⟩ := (UpperTheory.ConvolutionTheory.L1.twistY F E σ hσ m n hm hn μ θ hθ D s hs hsl νE νF b a aE aF hAS q w₀ hq T V hV hVθ hR).1 hne
   have hJ : T.J w₀.1 = GLnLocal.iwahori (w₀.1.adicCompletion E) n := T.at_q w₀
   have hcoI : CO (GLnLocal.iwahori (w₀.1.adicCompletion E) n) := hJ ▸ T.co w₀.1
-  haveI := hmm w₀.1
+  have := hmm w₀.1
   have h0 : mm w₀.1 (GLnLocal.iwahori (w₀.1.adicCompletion E) n : Set (Gw n w₀.1)) ≠ 0 :=
     hcoI.2.measure_ne_zero _ ⟨1, one_mem _⟩
   have hT : mm w₀.1 (GLnLocal.iwahori (w₀.1.adicCompletion E) n : Set (Gw n w₀.1)) ≠ ⊤ :=
@@ -440,7 +440,7 @@ theorem UpperTheory.ConvolutionTheory.T.termE :
     refine ⟨(mm w₀.1 (GLnLocal.iwahori (w₀.1.adicCompletion E) n : Set (Gw n w₀.1)))⁻¹ • mm w₀.1,
       Measure.IsHaarMeasure.smul _ (ENNReal.inv_ne_zero.2 hT) (ENNReal.inv_ne_top.2 h0), ?_⟩
     simp [ENNReal.inv_mul_cancel h0 hT]
-  haveI := hm₀
+  have := hm₀
   have hmm' : ∀ u, (Function.update mm w₀.1 m₀ u).IsHaarMeasure := by
     intro u
     by_cases h : u = w₀.1

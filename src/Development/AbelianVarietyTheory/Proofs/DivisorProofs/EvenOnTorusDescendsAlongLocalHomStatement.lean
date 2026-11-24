@@ -195,10 +195,10 @@ open GlobalTheory GlobalTheory.UU GlobalTheory.CubTrivTorus GlobalTheory.CubeLif
 
 theorem exists_twist_even : ∀ (k k' : Type) [CommRing k] [CommRing k'], IsField k → IsField k' → ∀ (ρ : k →+* k') (G₀ : Over (Sp k)) [GrpObj G₀] [IsCommMonObj G₀] (G'₀ : Over (Sp k')) [GrpObj G'₀] [IsCommMonObj G'₀] (β₀ : G'₀.left ⟶ G₀.left) (hβ₀ : IsGrpPullback G'₀ G₀ (spMap ρ) β₀) (P₀ : GlobalTheory.UU.CP G₀) (P'₀ : GlobalTheory.UU.CP G'₀) (w₀ : LB.Iso P'₀.L.L (P₀.L.L.pull β₀)), GlobalTheory.UU.IsCPMap P'₀ P₀ (spMap ρ) β₀ hβ₀.1.w w₀ → ∀ (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (i : splitTorus (Sp k) X ⟶ G₀) (i₁ : splitTorus (Sp k') X ⟶ G'₀), IsMonHom i → IsMonHom i₁ → GlobalTheory.UU.TorusCompat (spMap ρ) β₀ i₁ i → ∀ (σ : GlobalTheory.UU.CubTriv P₀.c i) (σ₁ : GlobalTheory.UU.CubTriv P'₀.c i₁), GlobalTheory.UU.CubTriv.Even (P := P'₀) σ₁ → ∃ χ : X, GlobalTheory.UU.CubTriv.Even (P := P₀) (σ.twist χ) := by
   intro k k' _ _ hk hk' ρ G₀ _ _ G'₀ _ _ β₀ hβ₀ P₀ P'₀ w₀ hm X _ _ _ i i₁ hi hi₁ hc σ σ₁ hσ₁
-  haveI := hi
-  haveI := hi₁
-  haveI : ConnectedSpace (Sp k) := by letI := hk.toField; infer_instance
-  haveI : ConnectedSpace (Sp k') := by letI := hk'.toField; infer_instance
+  have := hi
+  have := hi₁
+  have : ConnectedSpace (Sp k) := by let := hk.toField; infer_instance
+  have : ConnectedSpace (Sp k') := by let := hk'.toField; infer_instance
   obtain ⟨κ, hκ⟩ := exists_char_odd P₀ σ
   let f := spMap ρ
   let hw : β₀ ≫ G₀.hom = G'₀.hom ≫ f := hβ₀.1.w
@@ -494,10 +494,10 @@ open GlobalTheory GlobalTheory.UU GlobalTheory.EvenGenTorus TorusCube
 
 theorem exists_cubTriv : ∀ (k : Type) [CommRing k], IsField k → ∀ (G₀ : Over (Sp k)) [GrpObj G₀] [IsCommMonObj G₀] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (P₀ : GlobalTheory.UU.CP G₀) (i : splitTorus (Sp k) X ⟶ G₀), IsMonHom i → Nonempty (GlobalTheory.UU.CubTriv P₀.c i) := by
   intro k _ hk G₀ _ _ X _ _ _ P₀ i hi
-  letI := hk.toField
-  haveI := hi
-  haveI : IsAffine (splitTorus (Sp k) X).left := isAffine_of_isAffineHom (splitTorus (Sp k) X).hom
-  haveI := GlobalTheory.SS.LiftTorus.subsingleton_pic_torus k X
+  let := hk.toField
+  have := hi
+  have : IsAffine (splitTorus (Sp k) X).left := isAffine_of_isAffineHom (splitTorus (Sp k) X).hom
+  have := GlobalTheory.SS.LiftTorus.subsingleton_pic_torus k X
   obtain ⟨τ, hτ⟩ := GlobalTheory.LB.exists_isGen_of_subsingleton_pic_top
     (ReciprocityTheory.ChartRestriction.G.Semi.LB.isLB_linComb P₀.L.isLB (K := PUnit) (fun _ => i.left) (fun _ => 1))
   have e1 : (1 : splitTorus (Sp k) X ⟶ splitTorus (Sp k) X).left ≫ i.left = (1 : splitTorus (Sp k) X ⟶ G₀).left := by
@@ -636,23 +636,23 @@ theorem isMonHom_of_comp_mono_torus {C : Type*} [Category C] [CartesianMonoidalC
 
 theorem exists_torus_factor : ∀ (k k' : Type) [CommRing k] [CommRing k'], IsField k' → ∀ (ρ : k →+* k') (G₀ : Over (Sp k)) [GrpObj G₀] (G'₀ : Over (Sp k')) [GrpObj G'₀] (β₀ : G'₀.left ⟶ G₀.left), IsGrpPullback G'₀ G₀ (spMap ρ) β₀ → ∀ (X X' : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] [AddCommGroup X'] (Q₀ : GlobalTheory.UU.TQ G₀ X) (Q'₀ : GlobalTheory.UU.TQ G'₀ X'), ∃ (i₁ : splitTorus (Sp k') X ⟶ G'₀) (e : splitTorus (Sp k') X ⟶ splitTorus (Sp k') X'), IsMonHom e ∧ e ≫ Q'₀.i = i₁ ∧ GlobalTheory.UU.TorusCompat (spMap ρ) β₀ i₁ Q₀.i := by
   intro k k' _ _ hk' ρ G₀ _ G'₀ _ β₀ hβ₀ X X' _ _ _ _ Q₀ Q'₀
-  letI : Field k' := hk'.toField
+  let : Field k' := hk'.toField
   obtain ⟨i₁, h₁, -⟩ := GlobalTheory.UU.existsUnique_torusCompat hβ₀.1 Q₀.i
-  haveI := Q₀.i_hom
-  haveI := Q'₀.i_hom
-  haveI := Q'₀.q_hom
-  haveI hi₁ : IsMonHom i₁ := GlobalTheory.UU.TorusCompat.isMonHom hβ₀ h₁
-  haveI : IsProper Q'₀.B.hom := Q'₀.isAb.proper
+  have := Q₀.i_hom
+  have := Q'₀.i_hom
+  have := Q'₀.q_hom
+  have hi₁ : IsMonHom i₁ := GlobalTheory.UU.TorusCompat.isMonHom hβ₀ h₁
+  have : IsProper Q'₀.B.hom := Q'₀.isAb.proper
   have hc : i₁ ≫ Q'₀.q = toUnit _ ≫ η[Q'₀.B] := by
     have h := GlobalTheory.TorusConst.eq_const (K := k') X (i₁ ≫ Q'₀.q)
     rw [IsMonHom.one_hom] at h
     exact h
   let e := Q'₀.isKernel.lift i₁ (toUnit _) hc
   have he : e ≫ Q'₀.i = i₁ := Q'₀.isKernel.lift_fst _ _ hc
-  haveI : Mono Q'₀.i := by
-    haveI : Mono (η[Q'₀.B]) := ⟨fun a b _ => toUnit_unique a b⟩
+  have : Mono Q'₀.i := by
+    have : Mono (η[Q'₀.B]) := ⟨fun a b _ => toUnit_unique a b⟩
     exact Q'₀.isKernel.mono_fst_of_mono
-  haveI : IsMonHom (e ≫ Q'₀.i) := he ▸ hi₁
+  have : IsMonHom (e ≫ Q'₀.i) := he ▸ hi₁
   exact ⟨i₁, e, isMonHom_of_comp_mono_torus e Q'₀.i, he, h₁⟩
 
 end GlobalTheory.Mum

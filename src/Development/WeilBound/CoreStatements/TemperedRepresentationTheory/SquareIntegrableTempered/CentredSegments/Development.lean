@@ -307,7 +307,7 @@ theorem scalar_mul_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     fin_cases a
     · exact h0 v
     · exact h1 v
-  haveI := GlobalTheory.CompanionTheory.TensorIrr.nontrivial_piTensorProduct_irrGL k x
+  have := GlobalTheory.CompanionTheory.TensorIrr.nontrivial_piTensorProduct_irrGL k x
   have hfin := smul_eq_of_equiv E (subQuot_apply_of_smul S T hjac)
     (piTensor_apply_of_smul x g cc hcc)
   rw [Fin.prod_univ_two] at hfin
@@ -432,7 +432,7 @@ theorem scalarBy_of_isLSeg (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
   obtain ⟨hd, -, f, hf, -⟩ := hL
   obtain ⟨ω, -, hω⟩ := exists_smooth_hasCentralChar Γ.first.2.rep.smooth Γ.first.2.rep.irr
   have hωc : ((ω t : ℂˣ) : ℂ) = c := by
-    haveI := Model.nontrivial_of_isIrreducible Γ.first.2.rep.irr
+    have := Model.nontrivial_of_isIrreducible Γ.first.2.rep.irr
     obtain ⟨w, hw⟩ := exists_ne (0 : Γ.first.2.rep.V)
     have h1 : ((ω t : ℂˣ) : ℂ) • w = c • w := (hω t w).symm.trans (hc w)
     exact smul_left_injective ℂ hw h1
@@ -643,7 +643,7 @@ theorem lintegral_sq_lt_top_of_cover {X ι κ : Type*} [MeasurableSpace X] (μ :
     rintro ⟨i, j⟩
     have h3 : ∫⁻ x in A i j, ‖F x‖ₑ ^ (2 : ℝ) ∂μ ≤ ∫⁻ x in A i j, ENNReal.ofReal (b i j ^ 2) ∂μ := by
       refine setLIntegral_mono measurable_const fun x hx => ?_
-      rw [ENNReal.rpow_two, ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+      rw [ENNReal.rpow_two, ← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
       exact ENNReal.ofReal_le_ofReal (pow_le_pow_left₀ (norm_nonneg _) (hF i j x hx) 2)
     refine h3.trans ?_
     rw [setLIntegral_const, ENNReal.ofReal_mul (sq_nonneg _), mul_assoc]

@@ -245,7 +245,7 @@ theorem localFourier_localFourier {f : K → ℂ} (hf : f ∈ schwartzBruhat K) 
       (((residueCard K : ℝ) ^ (-addCharConductor ψ) * μ.real (valBall K 0) ^ 2 : ℝ) : ℂ) * f (-z) := by
   obtain ⟨N, M, hN, hM⟩ := exists_invariant_of_mem_schwartzBruhat hf
   have hfi : Integrable f μ := integrable_of_mem_schwartzBruhat μ hf
-  have hψc : Continuous fun x => (ψ x : ℂ) := continuous_subtype_val.comp hψ
+  have hψc : Continuous fun x => (ψ x : ℂ) := continuous_subtypeVal.comp hψ
   let B : Set K := valBall K (addCharConductor ψ - N)
   have hBm : MeasurableSet B := measurableSet_valBall _
   have : IsFiniteMeasure (μ.restrict B) :=
@@ -288,7 +288,7 @@ theorem localFourier_localFourier {f : K → ℂ} (hf : f ∈ schwartzBruhat K) 
     · have ht : IsTrivialOn (ψ.mulShift (x + z)) (addCharConductor ψ - N) := by
         rw [isTrivialOn_mulShift_iff_mem hψ hψ1]
         simpa using hxz
-      rw [if_pos ht, Set.indicator_of_mem (show x + z ∈ (valBall K N : Set K) from hxz)]
+      rw [ite_eq_left ht, Set.indicator_of_mem (show x + z ∈ (valBall K N : Set K) from hxz)]
       have : f x = f (-z) := by
         have := hN (-z) (x + z) hxz
         rw [show -z + (x + z) = x by ring] at this
@@ -297,7 +297,7 @@ theorem localFourier_localFourier {f : K → ℂ} (hf : f ∈ schwartzBruhat K) 
     · have ht : ¬ IsTrivialOn (ψ.mulShift (x + z)) (addCharConductor ψ - N) := by
         rw [isTrivialOn_mulShift_iff_mem hψ hψ1]
         simpa using hxz
-      rw [if_neg ht, Set.indicator_of_notMem (show x + z ∉ (valBall K N : Set K) from hxz),
+      rw [ite_eq_right ht, Set.indicator_of_notMem (show x + z ∉ (valBall K N : Set K) from hxz),
         mul_zero]
   rw [hA, hB, integral_integral_swap hG]
   simp only [hinner]
@@ -357,7 +357,7 @@ instance (ψ : AddChar K Circle) : (selfDualMeasure ψ).IsAddHaarMeasure := by
 
 theorem selfDualMeasure_integers (ψ : AddChar K Circle) :
     selfDualMeasure ψ (𝒪[K] : Set K) = ((residueCard K : ℝ≥0) ^ ((addCharConductor ψ : ℝ) / 2) : ℝ≥0) := by
-  rw [selfDualMeasure, Measure.smul_apply, haarIntegers_integers, ENNReal.smul_def, smul_eq_mul,
+  rw [selfDualMeasure, smul_apply, haarIntegers_integers, ENNReal.smul_def, smul_eq_mul,
     mul_one]
 
 theorem selfDualMeasure_real_valBall_zero (ψ : AddChar K Circle) :
@@ -460,7 +460,7 @@ theorem measurable_modulus_inv : Measurable fun x : K => ((modulus x : ℝ≥0�
 theorem multHaar_apply (s : Set Kˣ) :
     multHaar K s =
       multHaarConst K * ∫⁻ x in Units.val '' s, ((modulus x : ℝ≥0∞))⁻¹ ∂(haarIntegers K) := by
-  rw [multHaar, measurableEmbedding_units_val.comap_apply, Measure.smul_apply, withDensity_apply',
+  rw [multHaar, measurableEmbedding_units_val.comap_apply, smul_apply, withDensity_apply',
     smul_eq_mul]
 
 theorem integral_multHaar {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : K → E) :

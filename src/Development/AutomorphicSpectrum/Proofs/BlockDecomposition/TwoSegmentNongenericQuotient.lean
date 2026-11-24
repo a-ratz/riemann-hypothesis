@@ -80,7 +80,7 @@ theorem isSmooth_of_injective (π : Representation ℂ (GL (Fin N) k) V) (σ : R
   intro w
   have : {g : GL (Fin N) k | σ g w = w} = {g | π g (f w) = f w} := by
     ext g
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [← Representation.IntertwiningMap.isIntertwining _ _ f g w, hf.eq_iff]
   rw [this]
   exact hπ _

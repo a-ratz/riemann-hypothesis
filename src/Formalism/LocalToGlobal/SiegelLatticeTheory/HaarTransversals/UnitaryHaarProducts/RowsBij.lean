@@ -485,7 +485,7 @@ theorem rows_bijective (hP : ProjRowsR) (hUn : UnimodGf) : RowsBij := by
         _ = ⟪z, (T.comp ((π (a⁻¹ * b)).comp T)) z⟫_ℂ := rfl
         _ = mInf I σ w (a⁻¹ * b) * ⟪z, z⟫_ℂ := by
           rw [hRP.2.2 (a⁻¹ * b)]
-          rw [ContinuousLinearMap.smul_apply, inner_smul_right, hz]
+          rw [smul_apply, inner_smul_right, hz]
         _ = ⟪z, z⟫_ℂ * mInf I σ w (a⁻¹ * b) := mul_comm _ _
     let Φ₁ : (I.Ginf →₀ ℂ) →ₗ[ℂ] Hs := Finsupp.linearCombination ℂ fun g => σs g tw
     let Φ₂ : (I.Ginf →₀ ℂ) →ₗ[ℂ] I.L2 μf fund := Finsupp.linearCombination ℂ fun g => π g z
@@ -524,7 +524,7 @@ theorem rows_bijective (hP : ProjRowsR) (hUn : UnimodGf) : RowsBij := by
         · intro hx; exact ⟨⟨x, hx⟩, rfl⟩
       rw [DenseRange, h1, Finsupp.range_linearCombination, Submodule.dense_iff_topologicalClosure_eq_top]
       exact hcyc
-    have hui : IsUniformInducing eL := isUniformEmbedding_subtype_val.isUniformInducing
+    have hui : IsUniformInducing eL := isUniformEmbedding_subtypeVal.isUniformInducing
     let A := BL.extend eL
     have hAk : ∀ k, A (σs k tw) = π k z := by
       intro k
@@ -542,7 +542,7 @@ theorem rows_bijective (hP : ProjRowsR) (hUn : UnimodGf) : RowsBij := by
           (ContinuousLinearMap.isClosed_ker _)
         rintro _ ⟨k, rfl⟩
         simp only [SetLike.mem_coe, LinearMap.mem_ker, ContinuousLinearMap.coe_coe,
-          ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply]
+          sub_apply, ContinuousLinearMap.comp_apply]
         rw [hσmul, hAk, hAk, hπmul, ContinuousLinearMap.comp_apply, sub_self]
       rw [hcyc] at hker2
       ext1 u
@@ -550,7 +550,7 @@ theorem rows_bijective (hP : ProjRowsR) (hUn : UnimodGf) : RowsBij := by
       rw [LinearMap.mem_ker, ContinuousLinearMap.coe_coe] at this
       exact sub_eq_zero.1 this
     · have := hAk 1
-      rwa [hσ1, hπone, ContinuousLinearMap.one_apply] at this
+      rwa [hσ1, hπone, one_apply_eq_self] at this
 
   have hmemE : ∀ S, S ∈ I.eHom σs μf fund R Re ↔
       ∃ A : Hs →L[ℂ] I.L2 μf fund, (∀ g, A.comp (σs g) = (π g).comp A) ∧ Re.comp A = S := by
@@ -578,7 +578,7 @@ theorem rows_bijective (hP : ProjRowsR) (hUn : UnimodGf) : RowsBij := by
     ext1 u
     have := LinearMap.mem_ker.1 (hker2 (Submodule.mem_top (x := u)))
     rw [ContinuousLinearMap.coe_coe] at this
-    rw [this, ContinuousLinearMap.zero_apply]
+    rw [this, zero_apply]
   ·
     ext v
     constructor

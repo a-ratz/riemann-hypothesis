@@ -87,7 +87,7 @@ theorem exists_extension {K M : Type} [Field K] [NumberField K] [Field M] [Numbe
   obtain ⟨p, hp, hp0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot u.ne_bot
   have hpK : (p : K) ≠ 0 := fun h => hp0 (RingOfIntegers.coe_eq_zero_iff.1 h)
   have hfp : ‖f p‖ < 1 := Valued.toNormedField.norm_lt_one_iff.2 ((h2 p).2 hp)
-  letI : PseudoMetricSpace K := PseudoMetricSpace.induced (algebraMap K (u.adicCompletion K)) inferInstance
+  let : PseudoMetricSpace K := PseudoMetricSpace.induced (algebraMap K (u.adicCompletion K)) inferInstance
   have ue : IsUniformInducing (algebraMap K (u.adicCompletion K)) := ⟨rfl⟩
   have dr := HeightOneSpectrum.denseRange_algebraMap K u
   have hf : UniformContinuous f := by
@@ -216,7 +216,7 @@ theorem adele_ext (s : SplitPlace L) {z z' : AL L} (h1 : s.proj z = s.proj z')
   obtain ⟨x, y, hz⟩ := exists_coords b (z - z')
   rw [hz] at h1 h2 h3' ⊢
   have hd : s.i δ ≠ 0 := (map_ne_zero s.i).2 h0
-  haveI : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
+  have : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
   rw [map_add (f := _), proj_tmul, proj_tmul, hb0, hb1, map_one] at h1
   rw [map_add (f := _), map_add (f := _), conj_tmul, conj_tmul, proj_tmul, proj_tmul, hb0, hb1, map_one, map_one, hδ, map_neg] at h2
   have key : ∀ u, x u = 0 ∧ y u = 0 := by
@@ -262,7 +262,7 @@ def pair (s : SplitPlace L) (δ : L) (a b : s.v.adicCompletion L⁺) : AL L :=
 
 theorem proj_pair (s : SplitPlace L) {δ : L} (h0 : δ ≠ 0) (a b : s.v.adicCompletion L⁺) : s.proj (pair s δ a b) = a := by
   have hd : s.i δ ≠ 0 := (map_ne_zero s.i).2 h0
-  haveI : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
+  have : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
   rw [pair, map_add (f := _), proj_tmul, proj_tmul, single_self, single_self, map_one]
   field_simp
   ring
@@ -270,7 +270,7 @@ theorem proj_pair (s : SplitPlace L) {δ : L} (h0 : δ ≠ 0) (a b : s.v.adicCom
 theorem proj_conj_pair (s : SplitPlace L) {δ : L} (h0 : δ ≠ 0) (hδ : IsCMField.complexConj L δ = -δ)
     (a b : s.v.adicCompletion L⁺) : s.proj (conjAL L (pair s δ a b)) = b := by
   have hd : s.i δ ≠ 0 := (map_ne_zero s.i).2 h0
-  haveI : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
+  have : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
   rw [pair, map_add (f := _), map_add (f := _), conj_tmul, conj_tmul, proj_tmul, proj_tmul, single_self, single_self, map_one, map_one,
     hδ, map_neg]
   field_simp
@@ -296,7 +296,7 @@ theorem pair_div (s : SplitPlace L) (δ : 𝓞 L) {N : ℕ} (hN : 0 < N) {a b : 
     (h1 : (a + b) / 2 / N ∈ s.v.adicCompletionIntegers L⁺)
     (h2 : (a - b) / (2 * s.i δ) / N ∈ s.v.adicCompletionIntegers L⁺) :
     ∃ y ∈ ALint L, pair s δ a b = (N : AL L) * y := by
-  haveI : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
+  have : CharZero (s.v.adicCompletion L⁺) := charZero_of_injective_algebraMap (algebraMap L⁺ _).injective
   have hN' : (N : s.v.adicCompletion L⁺) ≠ 0 := Nat.cast_ne_zero.2 hN.ne'
   have hδ : (δ : L) ⊗ₜ[L⁺] (1 : AFplus L) ∈ ALint L := Subring.subset_closure (Or.inl ⟨δ, rfl⟩)
   refine ⟨_, add_mem (one_tmul_single_mem h1) (mul_mem hδ (one_tmul_single_mem h2)), ?_⟩

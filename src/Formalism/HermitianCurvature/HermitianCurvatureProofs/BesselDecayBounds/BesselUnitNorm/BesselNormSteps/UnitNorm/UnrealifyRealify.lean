@@ -359,7 +359,7 @@ theorem continuous_expLie (S : Set (Mx k r)) :
   have h1 : Continuous (fun x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool) => unrealify x) :=
     (unrealL k r).continuous_of_finiteDimensional
   have h0 : Continuous (fun x : lieE S =>
-      (x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool))) := continuous_subtype_val
+      (x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool))) := continuous_subtypeVal
   have h2 : Continuous (fun x : lieE S => NormedSpace.exp (unrealify (x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool)) : Mx k r)) :=
     by
       have h3 : Continuous (fun x : lieE S => (unrealify (x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool)) : Mx k r)) := by
@@ -371,7 +371,7 @@ theorem muN_conc (κ : ENNReal) : (haarLie (Nset k r) κ) {x : Mt k r | Matrix.o
   have hs : MeasurableSet {x : Mt k r | Matrix.of x ∉ Nset k r} :=
     (((isClosed_N k r).preimage continuous_of).measurableSet).compl
   unfold haarLie
-  rw [Measure.smul_apply, Measure.map_apply (continuous_expLie _).measurable hs]
+  rw [smul_apply, Measure.map_apply (continuous_expLie _).measurable hs]
   have : (fun x : lieE (Nset k r) => (fun i j => NormedSpace.exp (unrealify (x : EuclideanSpace ℝ _)) i j : Mt k r)) ⁻¹'
       {x : Mt k r | Matrix.of x ∉ Nset k r} = ∅ := by
     ext x

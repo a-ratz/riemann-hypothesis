@@ -77,12 +77,12 @@ theorem measurable_fibre_lintegral [LocallyCompactSpace V] [SecondCountableTopol
   classical
   have hnull := fibre_compl_null hf
   obtain ⟨-, -, h3⟩ := hf
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   let K := CompactExhaustion.choice U
   let L : ℕ → Set V := fun n => Subtype.val '' K n
   let W : ℕ → Set V := fun n => Subtype.val '' interior (K (n + 1))
-  have hLc : ∀ n, IsCompact (L n) := fun n => (K.isCompact n).image continuous_subtype_val
-  have hWo : ∀ n, IsOpen (W n) := fun n => hU.isOpenMap_subtype_val _ isOpen_interior
+  have hLc : ∀ n, IsCompact (L n) := fun n => (K.isCompact n).image continuous_subtypeVal
+  have hWo : ∀ n, IsOpen (W n) := fun n => hU.isOpenMap_subtypeVal _ isOpen_interior
   have hLW : ∀ n, L n ⊆ W n := fun n => Set.image_mono (K.subset_interior_succ n)
   have hWL : ∀ n, W n ⊆ L (n + 1) := fun n => Set.image_mono interior_subset
   have hWU : ∀ n, W n ⊆ U := by
@@ -368,33 +368,33 @@ theorem GlobalTheory.CompanionTheory.SiegelND.Coef.avgInfN_tendsto : ∀ (F E : 
   intro F E _ _ _ _ _ σ hCM M J hJ n hM d b laminf hstd minf hm c hc φ hφ ρ hρ hsm
   have hLoc := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   obtain ⟨l1, l2, l3, l4, -, -, -, -⟩ := id hLoc
-  haveI := l1
-  haveI := l2
-  haveI := l3
-  haveI := l4
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have := l1
+  have := l2
+  have := l3
+  have := l4
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨t1, t2, t3, t4, -, -, -, t8, -, t10⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := t8 n M
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have := t8 n M
   obtain ⟨x1, x2, x3, x4, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM (Ainf F) n
-  haveI := x1
-  haveI := x2
-  haveI := x3
-  haveI := x4
-  haveI : LocallyCompactSpace (HermR (Ainf F) σ n) := x1
-  haveI : SecondCountableTopology (HermR (Ainf F) σ n) := x2
-  haveI : T2Space (HermR (Ainf F) σ n) := x3
-  haveI : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have := x1
+  have := x2
+  have := x3
+  have := x4
+  have : LocallyCompactSpace (HermR (Ainf F) σ n) := x1
+  have : SecondCountableTopology (HermR (Ainf F) σ n) := x2
+  have : T2Space (HermR (Ainf F) σ n) := x3
+  have : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   obtain ⟨-, hW, hH⟩ := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Ainf F) d b laminf hstd.1
   set μ := GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b laminf n M with hμdef
   let ν : Measure (HermR (Ainf F) σ n) := GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ b laminf n
-  haveI hμH : μ.IsAddHaarMeasure := hW n M
-  haveI hνH : ν.IsAddHaarMeasure := hH n
-  haveI : ν.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular ν
+  have hμH : μ.IsAddHaarMeasure := hW n M
+  have hνH : ν.IsAddHaarMeasure := hH n
+  have : ν.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular ν
   have hqc : Continuous fun X : Fin n → Fin M → Ainf F ⊗[F] E => gramH hCM hJ (Ainf F) X :=
     (t10 n M J).subtype_mk _
   have hUo : IsOpen {X : Fin n → Fin M → Ainf F ⊗[F] E | IsUnit (gramR (Ainf F) σ J X).det} :=

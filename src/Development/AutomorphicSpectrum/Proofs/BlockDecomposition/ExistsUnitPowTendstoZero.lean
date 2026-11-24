@@ -69,7 +69,7 @@ theorem exists_unit_pow_tendsto_zero : ∀ (k : Type) [Field k] [ValuativeRel k]
   rw [Units.val_mk0] at hm
   filter_upwards [eventually_ge_atTop m] with n hn
   have h : ValuativeRel.valuation k ((Units.mk0 r hr : kˣ) : k) ^ n ≤ ValuativeRel.valuation k r ^ m := by
-    simpa using pow_le_pow_of_le_one zero_le' hr1.le hn
+    simpa using pow_le_pow_of_le_one zero_le hr1.le hn
   simpa using lt_of_le_of_lt h hm
 
 end GlobalTheory.CompanionTheory.LocalFieldPow

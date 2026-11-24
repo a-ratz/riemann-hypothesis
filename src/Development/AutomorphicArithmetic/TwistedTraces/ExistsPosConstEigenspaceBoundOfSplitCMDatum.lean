@@ -146,7 +146,7 @@ private theorem dep_extend {ι α : Type*} {β : α → Type*} (w : ι → α) (
     rw [e]
     intro hs
     rfl
-  · exact dif_neg hv
+  · exact dite_eq_right hv
 
 section Loc
 variable {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure]
@@ -207,7 +207,7 @@ private theorem list_prj (hco : ∀ w, CO (J w) ∧ IsChr (J w) (χ w)) (L : Lis
     have hc : Commute (prj (eigL μ v (J v) (χ v))) (prj (GA μ J χ (A ∪ {v | v ∈ L}))) :=
       (hcm _ fun x _ => (GA_commute μ hco hv x).symm).symm
     have hs : A ∪ {u | u ∈ v :: L} = insert v (A ∪ {v | v ∈ L}) := by
-      ext u; simp only [Set.mem_union, Set.mem_setOf_eq, List.mem_cons, Set.mem_insert_iff]; tauto
+      ext u; simp only [Set.mem_union, Set.mem_ofPred_eq, List.mem_cons, Set.mem_insert_iff]; tauto
     have hG : GA μ J χ (insert v (A ∪ {v | v ∈ L})) = eigL μ v (J v) (χ v) ⊓ GA μ J χ (A ∪ {v | v ∈ L}) := by
       simp only [GA]; rw [iInf_insert]
     rw [List.map_cons, List.prod_cons, hs, hG, ← prj_comp_of_commute hcl (GA_closed μ hco _) hc, ← h1]
@@ -226,7 +226,7 @@ private theorem oloc_scale (v : Pl K) [MeasurableSpace (Gw n v)] [BorelSpace (Gw
   have ha : (a • m).real (J : Set (Gw n v)) = a := by
     simp [Measure.real, hJ]
   intro x y
-  rw [ha, ContinuousLinearMap.smul_apply, inner_smul_right, hT, integral_smul_nnreal_measure]
+  rw [ha, smul_apply, inner_smul_right, hT, integral_smul_nnreal_measure]
   rfl
 
 end BernoulliSumsFrobeniusOrbits
@@ -255,7 +255,7 @@ private theorem mem_levOn (P : Finset (Pl K)) (h : AdelicGLn.FiniteAdelicGL K n)
       · rw [Subgroup.mem_bot] at h1; rw [h1]; exact one_mem _
       · exact h1
     · have h1 := H v
-      rw [if_pos hv] at h1
+      rw [ite_eq_left hv] at h1
       exact Subgroup.mem_bot.1 h1
   · rintro ⟨H1, H2⟩ v
     split_ifs with hv
@@ -276,7 +276,7 @@ private theorem sph_eq {J : ∀ w : Pl K, Subgroup (Gw n w)} {χ : ∀ w : Pl K,
     (hco : ∀ w, CO (J w) ∧ IsChr (J w) (χ w)) (W : Finset (Pl K))
     (hW : ∀ v ∉ W, J v = GLnLocal.integralGL (v.adicCompletion K) n ∧ χ v = 1) :
     sphOff μ W = GA μ J χ {v | v ∉ W} := by
-  simp only [sphOff, GA, Set.mem_setOf_eq]
+  simp only [sphOff, GA, Set.mem_ofPred_eq]
   refine iInf_congr fun v => iInf_congr fun hv => ?_
   obtain ⟨h1, h2⟩ := hW v hv
   have e := (eigBasic K n μ v (J v) (χ v) (hco v).1 (hco v).2).2.1
@@ -295,12 +295,12 @@ private theorem test_ind {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
 
 private theorem finprod_split {ι α : Type*} [Fintype ι] (w : ι → α) (hw : Function.Injective w) (F : α → ℂ)
     (hF : (Function.mulSupport F).Finite) : ∏ᶠ v, F v = (∏ i, F (w i)) * ∏ᶠ (u) (_ : u ∉ Set.range w), F u := by
-  have h := finprod_mem_inter_mul_diff' (f := F) (s := Set.univ) (Set.range w) (hF.subset Set.inter_subset_right)
+  have h := finprod_mem_inter_mul_sdiff' (f := F) (s := Set.univ) (Set.range w) (hF.subset Set.inter_subset_right)
   rw [Set.univ_inter, finprod_mem_range hw, finprod_eq_prod_of_fintype, finprod_mem_univ] at h
   rw [← h]
   congr 1
   refine finprod_congr fun u => ?_
-  simp [Set.mem_diff]
+  simp [Set.mem_sdiff]
 
 end SlopeTestRemainingChoices
 
@@ -322,8 +322,8 @@ theorem UpperTheory.exists_bound_dim_simultaneousLocalEigenspace_of_openCompact 
             prj (⨅ (u : Pl K) (_ : u ∉ Set.range w), eigL μ u (J u) (χ u))) := by
   intro K _ _ n hn μ _ ν _ J χ hco hcof
   classical
-  letI bm : ∀ v : Pl K, MeasurableSpace (Gw n v) := fun v => borel _
-  haveI bs : ∀ v : Pl K, BorelSpace (Gw n v) := fun v => ⟨rfl⟩
+  let bm : ∀ v : Pl K, MeasurableSpace (Gw n v) := fun v => borel _
+  have bs : ∀ v : Pl K, BorelSpace (Gw n v) := fun v => ⟨rfl⟩
   have hOc : ∀ v : Pl K, IsCompact ((GLnLocal.integralGL (v.adicCompletion K) n : Subgroup (Gw n v)) : Set (Gw n v)) :=
     fun v => GLnLocal.isCompact_integralGL _ n
   have hOo : ∀ v : Pl K, IsOpen ((GLnLocal.integralGL (v.adicCompletion K) n : Subgroup (Gw n v)) : Set (Gw n v)) :=
@@ -334,8 +334,8 @@ theorem UpperTheory.exists_bound_dim_simultaneousLocalEigenspace_of_openCompact 
     ⟨⟨_, (hco v).1.1⟩, ⟨1, mem_interior_iff_mem_nhds.2 ((hco v).1.2.mem_nhds (one_mem _))⟩⟩
   let mO : ∀ v : Pl K, Measure (Gw n v) := fun v => Measure.haarMeasure (KO v)
   let mJ : ∀ v : Pl K, Measure (Gw n v) := fun v => Measure.haarMeasure (KJ v)
-  haveI hOH : ∀ v, (mO v).IsHaarMeasure := fun v => by dsimp only [mO]; infer_instance
-  haveI hJH : ∀ v, (mJ v).IsHaarMeasure := fun v => by dsimp only [mJ]; infer_instance
+  have hOH : ∀ v, (mO v).IsHaarMeasure := fun v => by dsimp only [mO]; infer_instance
+  have hJH : ∀ v, (mJ v).IsHaarMeasure := fun v => by dsimp only [mJ]; infer_instance
   have hmO : ∀ v : Pl K, mO v (GLnLocal.integralGL (v.adicCompletion K) n : Subgroup (Gw n v)) = 1 :=
     fun v => Measure.haarMeasure_self (K₀ := KO v)
   have hmJ : ∀ v : Pl K, mJ v (J v) = 1 := fun v => Measure.haarMeasure_self (K₀ := KJ v)
@@ -354,7 +354,7 @@ theorem UpperTheory.exists_bound_dim_simultaneousLocalEigenspace_of_openCompact 
       (AdelicGLn.isCompact_integralFiniteGL K n).measure_lt_top.ne) (Finset.prod_pos fun v _ => hc0 v), ?_⟩
   intro β r w hw inst bor mm hmm ψ T hT e he
   obtain rfl : inst = fun i => bm (w i) := funext fun i => (bor i).measurable_eq
-  haveI hmI : ∀ i, (mm i).IsHaarMeasure := fun i => (hmm i).1
+  have hmI : ∀ i, (mm i).IsHaarMeasure := fun i => (hmm i).1
 
   let B0 : Finset (Pl K) := hBad.toFinset.filter (· ∉ Set.range w)
   let b : Fin B0.card → Pl K := fun j => (B0.equivFin.symm j).1
@@ -442,7 +442,7 @@ theorem UpperTheory.exists_bound_dim_simultaneousLocalEigenspace_of_openCompact 
     exact Finset.mem_image.2 ⟨Fin.natAdd _ j, Finset.mem_univ _, hw'r j⟩))
   have hU : {v | v ∉ W} ∪ {v | v ∈ List.ofFn b} = {v | v ∉ Set.range w} := by
     ext v
-    simp only [Set.mem_union, Set.mem_setOf_eq]
+    simp only [Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro (hv | hv)
       · exact (hrange v (hWm v hv)).1
@@ -460,7 +460,7 @@ theorem UpperTheory.exists_bound_dim_simultaneousLocalEigenspace_of_openCompact 
           exact Or.inr ((List.mem_ofFn' _ _).2 ⟨j, rfl⟩)
       · exact Or.inl hvW
   have hGU : GA μ J χ {v | v ∉ Set.range w} = ⨅ (u : Pl K) (_ : u ∉ Set.range w), eigL μ u (J u) (χ u) := by
-    simp only [UpperTheory.ConvolutionTheory.L1.GA, Set.mem_setOf_eq]
+    simp only [UpperTheory.ConvolutionTheory.L1.GA, Set.mem_ofPred_eq]
   have hXlist : (List.ofFn fun i => X (w' i)).prod =
       (List.ofFn T).prod * (List.ofFn fun j => prj (eigL μ (b j) (J (b j)) (χ (b j)))).prod := by
     have : (fun i => X (w' i)) = Fin.append T (fun j => prj (eigL μ (b j) (J (b j)) (χ (b j)))) := by
@@ -653,7 +653,7 @@ private theorem list_prj (hco : ∀ w, CO (J w) ∧ IsChr (J w) (χ w)) (L : Lis
     have hc : Commute (prj (eigL μ v (J v) (χ v))) (prj (GAx μ J χ (A ∪ {v | v ∈ L}))) :=
       (hcm _ fun x _ => (GA_commute μ hco hv x).symm).symm
     have hs : A ∪ {u | u ∈ v :: L} = insert v (A ∪ {v | v ∈ L}) := by
-      ext u; simp only [Set.mem_union, Set.mem_setOf_eq, List.mem_cons, Set.mem_insert_iff]; tauto
+      ext u; simp only [Set.mem_union, Set.mem_ofPred_eq, List.mem_cons, Set.mem_insert_iff]; tauto
     have hG : GAx μ J χ (insert v (A ∪ {v | v ∈ L})) = eigL μ v (J v) (χ v) ⊓ GAx μ J χ (A ∪ {v | v ∈ L}) := by
       simp only [GAx]; rw [iInf_insert]
     rw [List.map_cons, List.prod_cons, hs, hG, ← prj_comp_of_commute hcl (GA_closed μ hco _) hc, ← h1]
@@ -671,11 +671,11 @@ private theorem haar_right {G : Type} [Group G] [TopologicalSpace G] [IsTopologi
     ext x
     simp only [Set.mem_preimage, Set.mem_image]
     exact ⟨fun h => ⟨_, h, by simp⟩, by rintro ⟨y, hy, rfl⟩; simpa using hy⟩
-  haveI : (Measure.map (· * u) m).IsMulLeftInvariant := ⟨fun g => by
+  have : (Measure.map (· * u) m).IsMulLeftInvariant := ⟨fun g => by
     rw [Measure.map_map (measurable_const_mul g) (measurable_mul_const u)]
     have : (g * ·) ∘ (· * u) = (· * u) ∘ (g * ·) := by ext; simp [mul_assoc]
     rw [this, ← Measure.map_map (measurable_mul_const u) (measurable_const_mul g), map_mul_left_eq_self]⟩
-  haveI : IsFiniteMeasureOnCompacts (Measure.map (· * u) m) := ⟨fun C hC => by
+  have : IsFiniteMeasureOnCompacts (Measure.map (· * u) m) := ⟨fun C hC => by
     rw [Measure.map_apply (measurable_mul_const u) hC.measurableSet, hpre]
     exact (hC.image (continuous_mul_const _)).measure_lt_top⟩
   have e := Measure.isMulLeftInvariant_eq_smul (Measure.map (· * u) m) m
@@ -688,7 +688,7 @@ private theorem haar_right {G : Type} [Group G] [TopologicalSpace G] [IsTopologi
   have h2 : m J = a * m J := by
     have := congrArg (· (J : Set G)) e
     simp only [Measure.map_apply (measurable_mul_const u) hJm, h1] at this
-    simpa [Measure.smul_apply] using this
+    simpa [smul_apply] using this
   have h3 : m (J : Set G) ≠ 0 := (hJ.2.measure_pos m ⟨1, J.one_mem⟩).ne'
   have h4 : m (J : Set G) ≠ ⊤ := hJ.1.measure_lt_top.ne
   have ha : (a : ENNReal) = 1 := by
@@ -783,25 +783,25 @@ private theorem exists_ext {ι A : Type*} {X : A → Type*} (wi : ι → A) (hw 
     (ψ : ∀ i, X (wi i)) (d : ∀ a, X a) :
     ∃ h : ∀ a, X a, (∀ i, h (wi i) = ψ i) ∧ ∀ a, a ∉ Set.range wi → h a = d a := by
   refine ⟨fun a => if ha : ∃ i, wi i = a then ha.choose_spec ▸ ψ ha.choose else d a, fun i => ?_,
-    fun a ha => dif_neg ha⟩
+    fun a ha => dite_eq_right ha⟩
   have key : ∀ j (hj : wi j = wi i), (hj ▸ ψ j : X (wi i)) = ψ i := by
     intro j hj
     obtain rfl := hw hj
     rfl
   have ha : ∃ j, wi j = wi i := ⟨i, rfl⟩
-  simp only [dif_pos ha]
+  simp only [dite_eq_left ha]
   exact key _ _
 
 private theorem finprod_split {A M : Type*} [CommMonoid M] {r : ℕ} (wi : Fin r → A) (hw : Function.Injective wi)
     (X : A → M) (hX : (Function.mulSupport X).Finite) :
     ∏ᶠ u, X u = (∏ i, X (wi i)) * ∏ᶠ (u) (_ : u ∉ Set.range wi), X u := by
-  have h := finprod_mem_inter_mul_diff' (f := X) (s := Set.univ) (Set.range wi)
+  have h := finprod_mem_inter_mul_sdiff' (f := X) (s := Set.univ) (Set.range wi)
     (hX.subset Set.inter_subset_right)
   rw [Set.univ_inter, finprod_mem_univ, finprod_mem_range hw, finprod_eq_prod_of_fintype] at h
   rw [← h]
   congr 1
   refine finprod_congr fun u => ?_
-  simp only [Set.mem_diff, Set.mem_univ, true_and]
+  simp only [Set.mem_sdiff, Set.mem_univ, true_and]
 
 section Main
 
@@ -859,7 +859,7 @@ private theorem prodFn_eq {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (w.
 private theorem prodFn_test {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (w.1.adicCompletion E) → ℂ)
     (hc : ∀ w, IsLocallyConstant (h w) ∧ HasCompactSupport (h w)) :
     IsLocallyConstant (GM.prodFn h) ∧ HasCompactSupport (GM.prodFn h) := by
-  haveI : Fintype (PlacesOver E v) := Fintype.ofFinite _
+  have : Fintype (PlacesOver E v) := Fintype.ofFinite _
   rw [prodFn_eq]
   constructor
   · have key : ∀ T : Finset (PlacesOver E v),
@@ -873,9 +873,9 @@ private theorem prodFn_test {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (
         simp only [Finset.prod_insert ha]
         exact ((hc a).1.comp_continuous (cmp_cont a)).mul ih
     exact key _
-  · haveI : T2Space (CompletionsOver E v) := Pi.t2Space
-    haveI : T2Space (GL (Fin n) (CompletionsOver E v)) := Units.instT2Space
-    haveI : R1Space (GL (Fin n) (CompletionsOver E v)) := T2Space.r1Space
+  · have : T2Space (CompletionsOver E v) := Pi.t2Space
+    have : T2Space (GL (Fin n) (CompletionsOver E v)) := Units.instT2Space
+    have : R1Space (GL (Fin n) (CompletionsOver E v)) := T2Space.r1Space
     refine HasCompactSupport.intro ((isCompact_univ_pi fun w => (hc w).2.isCompact).image glue_cont) fun g hg => ?_
     by_contra hne
     refine hg ⟨fun w => GM.cmp w g, fun w _ => subset_tsupport _ ?_, ?_⟩
@@ -885,7 +885,7 @@ private theorem prodFn_test {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (
 private theorem unit_prod (v : Pl F) :
     (GM.prodFn fun w : PlacesOver E v => (GLnLocal.integralGL (w.1.adicCompletion E) n : Set (GL (Fin n) (w.1.adicCompletion E))).indicator (1 : GL (Fin n) (w.1.adicCompletion E) → ℂ)) =
       (unitSet E n v).indicator 1 := by
-  haveI : Fintype (PlacesOver E v) := Fintype.ofFinite _
+  have : Fintype (PlacesOver E v) := Fintype.ofFinite _
   funext g
   rw [GM.prodFn, finprod_eq_prod_of_fintype]
   by_cases hg : g ∈ unitSet E n v
@@ -942,7 +942,7 @@ private theorem phi_eq (T : Ty σ n q w₀) (L : GM.Loc σ n q w₀) (ψ : ∀ v
     · have hu := huq v (Finset.mem_filter.2 ⟨hS, hs⟩)
       funext g
       rw [hF.nonsplit v hS hs g, GM.prodFn]
-      letI : Unique (PlacesOver E v) := ⟨⟨T.mk' v⟩, hu⟩
+      let : Unique (PlacesOver E v) := ⟨⟨T.mk' v⟩, hu⟩
       rw [finprod_unique]
       have hd : (default : PlacesOver E v) = T.mk' v := hu _
       rw [hd, h1 v hS]
@@ -986,14 +986,14 @@ theorem UpperTheory.exists_pos_const_eigenspace_bound_of_split_CMDatum :
   have hcof : ∀ᶠ w : Pl E in Filter.cofinite,
       w.under (𝓞 F) ∉ T.S ∧ w.under (𝓞 F) ≠ q := by
     refine Filter.eventually_cofinite.2 (hfin.subset fun w hw => ?_)
-    simp only [Set.mem_setOf_eq, not_and_or, not_not] at hw
-    simp only [Set.mem_setOf_eq, Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe]
+    simp only [Set.mem_ofPred_eq, not_and_or, not_not] at hw
+    simp only [Set.mem_ofPred_eq, Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe]
     tauto
   have hco : ∀ w, CO (T.J w) ∧ IsChr (T.J w) (T.χ w) := fun w => ⟨T.co w, T.chr w⟩
   obtain ⟨κ, hκ, H⟩ := UpperTheory.exists_bound_dim_simultaneousLocalEigenspace_of_openCompact E n hn μ νE T.J T.χ hco (hcof.mono fun w hw => T.off w hw.1 hw.2)
   refine ⟨κ, hκ, ?_⟩
   intro L ψ hF r₁ p₁ hp₁ hsp₁ r₂ p₂ hp₂ hns₂ _ _ mm hmm B₁ B₂ hB₁ hB₂ g hg
-  haveI hmI : ∀ u, (mm u).IsHaarMeasure := fun u => (hmm u).1
+  have hmI : ∀ u, (mm u).IsHaarMeasure := fun u => (hmm u).1
   let pp : Fin (r₁ + r₂) → Pl F := Fin.append p₁ p₂
   let B : Fin (r₁ + r₂) → LL μ →L[ℂ] LL μ := Fin.append B₁ B₂
   have hl : ∀ i, pp (Fin.castAdd r₂ i) = p₁ i := fun i => Fin.append_left _ _ _
@@ -1095,7 +1095,7 @@ theorem UpperTheory.exists_pos_const_eigenspace_bound_of_split_CMDatum :
   have hset : {u | u ∉ Set.range fun i => (T.mk' (pp i)).1} ∪ {v | v ∈ List.ofFn wsp} =
       {u : Pl E | u.under (𝓞 F) ∉ (nsS T : Set (Pl F))} := by
     ext u
-    simp only [Set.mem_union, Set.mem_setOf_eq]
+    simp only [Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro (hu | hu) hn'
       · have hn2 : u.under (𝓞 F) ∈ nsS T := hn'
@@ -1128,10 +1128,10 @@ theorem UpperTheory.exists_pos_const_eigenspace_bound_of_split_CMDatum :
       · exact Or.inl hr'
   have hoff : GAx μ T.J T.χ ({u | u ∉ Set.range fun i => (T.mk' (pp i)).1} ∪ {v | v ∈ List.ofFn wsp}) = offN μ T := by
     rw [hset]
-    simp only [GAx, offN, Set.mem_setOf_eq]
+    simp only [GAx, offN, Set.mem_ofPred_eq]
   have hQ : GAx μ T.J T.χ {u | u ∉ Set.range fun i => (T.mk' (pp i)).1} =
       ⨅ (u : Pl E) (_ : u ∉ Set.range fun i => (T.mk' (pp i)).1), eigL μ u (T.J u) (T.χ u) := by
-    simp only [GAx, Set.mem_setOf_eq]
+    simp only [GAx, Set.mem_ofPred_eq]
   rw [hoff, hQ, List.map_ofFn] at hlist
   set P : LL μ →L[ℂ] LL μ := (List.ofFn fun i => prj (eigL μ (wsp i) (T.J (wsp i)) (T.χ (wsp i)))).prod with hP
   have hlist' : P * prj (⨅ (u : Pl E) (_ : u ∉ Set.range fun i => (T.mk' (pp i)).1), eigL μ u (T.J u) (T.χ u)) =

@@ -365,7 +365,7 @@ theorem eq_of_isCusp (hLC : LocalConverseGL) (hBZ : BernsteinZelevinskyFinitenes
     {ψ : AddChar (w.adicCompletion E) Circle} (hψc : Continuous ψ) (hψ : ψ ≠ 1) (he : e ψ = e' ψ)
     (H : LawsMin a ha e rc) (H' : LawsMin a ha e' rc') (x : IrrGL (k := w.adicCompletion E)) (hx : x.IsCusp)
     (ih : ∀ y : IrrGL (k := w.adicCompletion E), y.1 < x.1 → rc y = rc' y) : rc x = rc' x := by
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
   obtain ⟨n, c⟩ := x
   obtain ⟨hn, hc⟩ := hx
@@ -399,7 +399,7 @@ theorem eq_of_isCusp (hLC : LocalConverseGL) (hBZ : BernsteinZelevinskyFinitenes
 
 theorem eq_of_lawsMin : LocalConverseGL → LanglandsExhaustionGL → BernsteinZelevinskyFiniteness → ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (a : Weil h →* (w.adicCompletion E)ˣ) (ha : IsLocalArtin h a) (e : AddChar (w.adicCompletion E) Circle → WD h → ℂˣ) (rc : IrrGL (k := w.adicCompletion E) → WD h) (rc' : IrrGL (k := w.adicCompletion E) → WD h) (ψ : AddChar (w.adicCompletion E) Circle) (e' : AddChar (w.adicCompletion E) Circle → WD h → ℂˣ), Continuous ψ → ψ ≠ 1 → e ψ = e' ψ → LawsMin a ha e rc → LawsMin a ha e' rc' → rc = rc' := by
   intro hLC hEx hBZ E Ω _ _ _ _ _ A w h a ha e rc rc' ψ e' hψc hψ he H H'
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
   have main : ∀ n, ∀ x : IrrGL (k := w.adicCompletion E), x.1 = n → rc x = rc' x := by
     intro n

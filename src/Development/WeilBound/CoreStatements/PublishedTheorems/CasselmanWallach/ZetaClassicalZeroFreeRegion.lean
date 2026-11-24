@@ -94,7 +94,7 @@ private theorem exists_sobNorm_bound_of_sobBdOn_continuous_seminorm {n : ℕ} {�
     Seminorm.finset_sup_apply_le (Finset.sum_nonneg fun _ _ => apply_nonneg _ _)
       (fun i hi => Finset.single_le_sum (f := fun j => p j (T w)) (fun _ _ => apply_nonneg _ _) hi)
   calc q (T w) ≤ (C0 • s.sup p) (T w) := Seminorm.le_def.1 hle (T w)
-    _ = (C0 : ℝ) * (s.sup p) (T w) := by rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+    _ = (C0 : ℝ) * (s.sup p) (T w) := by rw [smul_apply, NNReal.smul_def, smul_eq_mul]
     _ ≤ (C0 : ℝ) * ∑ j ∈ s, p j (T w) := mul_le_mul_of_nonneg_left hsup C0.2
     _ ≤ (C0 : ℝ) * (C * sobNorm σ S w) := mul_le_mul_of_nonneg_left (hb w hw) C0.2
     _ = C0 * C * sobNorm σ S w := by ring

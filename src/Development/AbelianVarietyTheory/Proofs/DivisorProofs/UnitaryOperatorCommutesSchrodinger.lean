@@ -181,11 +181,11 @@ theorem schur : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Type) [Field F] [N
       ∀ φ ∈ schA F κ, ∫⁻ x, ‖M φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
     ∃ z : ℂ, ∀ φ ∈ schA F κ, M φ = z • φ := by
   intro _ F _ _ κ _ ψ hψ M hpres hcomm hiso
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   let μ : Measure (κ → AF F) := Measure.addHaar
-  haveI hμH : μ.IsAddHaarMeasure := by dsimp [μ]; infer_instance
+  have hμH : μ.IsAddHaarMeasure := by dsimp [μ]; infer_instance
   have hL2 : ∀ φ ∈ schA F κ, MemLp φ 2 μ := fun φ hφ =>
     GlobalTheory.WeilM.schA_memLp_two F κ μ hμH φ hφ
   have hint : ∀ φ ∈ schA F κ, Integrable (fun x => ‖φ x‖ ^ 2) μ := fun φ hφ =>
@@ -197,7 +197,7 @@ theorem schur : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Type) [Field F] [N
       rw [ofReal_integral_eq_lintegral_ofReal (hint g hg) (Filter.Eventually.of_forall fun x => by positivity)]
       congr 1
       funext x
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     rw [e _ (hpres φ hφ), e φ hφ] at h
     exact (ENNReal.ofReal_eq_ofReal_iff (integral_nonneg fun x => by positivity)
       (integral_nonneg fun x => by positivity)).1 h

@@ -77,7 +77,7 @@ theorem ph_of_isMu {a : ℂ} (ha : IsMu a) : Ph a := by
 
 theorem isMu_ex (q : ℚ) : IsMu (ex q) := by
   refine ⟨2 * q.den, Nat.mul_pos two_pos q.den_pos, ?_⟩
-  rw [ex, ← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+  rw [ex, ← exp_natCast_mul, Complex.exp_eq_one_iff]
   refine ⟨q.num, ?_⟩
   have : (q.den : ℂ) * (q : ℂ) = q.num := by exact_mod_cast Rat.den_mul_eq_num q
   rw [← this]; push_cast; ring

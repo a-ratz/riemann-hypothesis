@@ -121,7 +121,7 @@ theorem prod_map_X {σ : Type} [DecidableEq σ] (s : Multiset σ) :
   | empty => simp
   | cons a t ih =>
     rw [Multiset.map_cons, Multiset.prod_cons, ih, ← Multiset.singleton_add, map_add (f := _),
-      Multiset.toFinsupp_singleton, X, monomial_mul, one_mul]
+      Multiset.toFinsupp_singleton, X, monomial_mul_monomial, one_mul]
 
 theorem length_classList_of_hom {K σ : Type} (cls : σ → K → ℤ) {H : MvPolynomial σ ℝ} {m : ℕ}
     (hH : H.IsHomogeneous m) {μ : σ →₀ ℕ} (hμ : μ ∈ H.support) : (classList cls μ).length = m := by

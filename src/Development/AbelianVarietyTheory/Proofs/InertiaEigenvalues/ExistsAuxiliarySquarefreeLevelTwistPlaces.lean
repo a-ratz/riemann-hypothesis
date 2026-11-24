@@ -392,7 +392,7 @@ theorem exists_field_adjoin_root (k : Subfield ℂ) (L : IntermediateField ℚ �
     (hL : L.toSubfield ≤ k) {z : ℂ} (hz : z ∈ k) (ho : IsOfFinOrder z) :
     ∃ L' : IntermediateField ℚ ℂ, FiniteDimensional ℚ L' ∧ Normal ℚ L' ∧ L ≤ L' ∧ L'.toSubfield ≤ k ∧ z ∈ L' := by
   have hn : 0 < orderOf z := ho.orderOf_pos
-  haveI : NeZero (orderOf z) := ⟨hn.ne'⟩
+  have : NeZero (orderOf z) := ⟨hn.ne'⟩
   have hζ : IsPrimitiveRoot z (orderOf z) := IsPrimitiveRoot.orderOf z
   let p : Polynomial ℚ := Polynomial.X ^ (orderOf z) - 1
   have hp0 : p ≠ 0 := by simpa [p] using Polynomial.X_pow_sub_C_ne_zero hn (1 : ℚ)
@@ -400,10 +400,10 @@ theorem exists_field_adjoin_root (k : Subfield ℂ) (L : IntermediateField ℚ �
     rw [Polynomial.mem_rootSet, and_iff_right hp0]
     simp [p, sub_eq_zero]
   let C : IntermediateField ℚ ℂ := IntermediateField.adjoin ℚ (p.rootSet ℂ)
-  haveI hCs : Polynomial.IsSplittingField ℚ C p :=
+  have hCs : Polynomial.IsSplittingField ℚ C p :=
     IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
-  haveI : FiniteDimensional ℚ C := Polynomial.IsSplittingField.finiteDimensional C p
-  haveI : Normal ℚ C := Normal.of_isSplittingField p
+  have : FiniteDimensional ℚ C := Polynomial.IsSplittingField.finiteDimensional C p
+  have : Normal ℚ C := Normal.of_isSplittingField p
   refine ⟨L ⊔ C, inferInstance, @IntermediateField.normal_sup ℚ ℂ _ _ _ L C (by convert ‹Normal ℚ L› <;> exact Subsingleton.elim _ _) (by convert ‹Normal ℚ C› <;> exact Subsingleton.elim _ _), le_sup_left, fun x hx => ?_,
     (le_sup_right : C ≤ L ⊔ C) (IntermediateField.subset_adjoin ℚ _ ((hroots z).2 (pow_orderOf_eq_one z)))⟩
   let S : IntermediateField ℚ ℂ := Subfield.toIntermediateField k fun r => by
@@ -899,8 +899,8 @@ theorem exists_cover (hRF : GlobalTheory.NT.RayField) (hT : LawsJ T) (halg : Alg
       rcases pDel_cases (D := D) (D.ntw.l i) with e | e <;> rw [e]
       · exact dvd_mul_right _ _
       · rw [mul_right_comm _ D.host.pde]; exact dvd_mul_right _ _) hN0 hNl
-  haveI : Normal ℚ L₀ := (i2 hgal).to_normal
-  haveI : ∀ PP : Pl D.host.E, Finite (kP PP) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
+  have : Normal ℚ L₀ := (i2 hgal).to_normal
+  have : ∀ PP : Pl D.host.E, Finite (kP PP) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
   have hord : ∀ {H : Type} [Group H] [Finite H] (f : H →* ℂˣ) (x : H), IsOfFinOrder ((f x : ℂˣ) : ℂ) := fun f x =>
     MonoidHom.isOfFinOrder ((Units.coeHom ℂ).comp f) (isOfFinOrder_of_finite x)
   obtain ⟨L, i3, i4, h5, h6, h7⟩ := exists_field_adjoin_roots (ρ.e i b).fieldRange
@@ -1045,7 +1045,7 @@ theorem ratUniv_of_reading (hRF : GlobalTheory.NT.RayField) (hV : T.V ((j : ℕ)
     funext g
     rw [Finset.sum_apply, Finset.sum_eq_single (Multiplicative.toAdd (detChar (Wc D j)
       ((univOf D.nexp i (admissibleConjugatePairPlaces D.ntw i Q M) M ρ.rc).delQ (half (ρ.ch i) (admissibleConjugatePairPlaces D.ntw i Q M))) g))
-      (fun a' _ ha' => by rw [if_neg (Ne.symm ha'), zero_mul]) (fun h0 => absurd (Finset.mem_univ _) h0), if_pos rfl, one_mul,
+      (fun a' _ ha' => by rw [ite_eq_right (Ne.symm ha'), zero_mul]) (fun h0 => absurd (Finset.mem_univ _) h0), ite_eq_left rfl, one_mul,
       Pi.smul_apply, Pi.smul_apply]
     exact congrArg _ (Base.xiCoef_apply _ _ _ _ _ _ _ _ _)
 

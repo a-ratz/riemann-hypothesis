@@ -106,7 +106,7 @@ theorem half_line (t : ℝ) :
     have := Real.exp_pos (-(Real.pi * |t|))
     linarith
   have he : Real.exp (Real.pi / 2 * |t|) ^ 2 = Real.exp (Real.pi * |t|) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring

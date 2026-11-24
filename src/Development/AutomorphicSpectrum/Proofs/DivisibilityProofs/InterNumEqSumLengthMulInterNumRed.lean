@@ -102,7 +102,7 @@ variable {κ : Type} [Field κ] {X : Scheme.{0}} [Algebra κ Γ(X, ⊤)]
 
 theorem length_stalk_eq_zero_of_notMem {F : X.Modules} {w : X} (h : w ∉ support F) :
     Module.length (X.presheaf.stalk w) (F.presheaf.stalk w :) = 0 := by
-  haveI := notMem_support_iff.1 h
+  have := notMem_support_iff.1 h
   exact Module.length_eq_zero
 
 theorem dim_closure_le_suppDim {F : X.Modules} [IsFiniteQC F] {w : X} (h : w ∈ support F) :
@@ -143,7 +143,7 @@ theorem interNumRed_eq_zero (hp : IsProjOver (strHom κ (X := X))) {ι : Type} [
 theorem interNum_eq_sum_length_mul_interNumRed : ∀ (κ : Type) [Field κ] (X : Scheme.{0}) [Algebra κ Γ(X, ⊤)], IsProjOver (strHom κ (X := X)) → ∀ (ι : Type) [Fintype ι] (P : ι → LB X), (∀ i, (P i).IsLB) → ∀ (F : X.Modules) [GlobalTheory.QCoh.IsFiniteQC F], GlobalTheory.QCoh.suppDim F ≤ (Fintype.card ι : ℕ) → ∀ S : Finset X, (∀ w ∈ GlobalTheory.QCoh.support F, topologicalKrullDim (closure ({w} : Set X)) = (Fintype.card ι : ℕ) → w ∈ S) → interNum κ F P = ∑ w ∈ S, ((Module.length (X.presheaf.stalk w) (F.presheaf.stalk w :)).toNat : ℤ) * interNumRed κ (⟨closure {w}, isClosed_closure⟩ : Closeds _) P := by
   intro κ _ X _ hp ι _ P hP F hF
   have hf := algebraMap_eq_strHom κ X
-  haveI : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hp
+  have : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hp
   obtain ⟨_, A, hA⟩ := isProper_and_exists_isAmpleLB_of_isProjOver hp
   set n := Fintype.card ι with hn
   let term : X.Modules → X → ℤ := fun E w ↦
@@ -166,10 +166,10 @@ theorem interNum_eq_sum_length_mul_interNumRed : ∀ (κ : Type) [Field κ] (X :
     rw [support_eq_empty_iff.2 hE]
     exact Set.notMem_empty w
   · intro C hC h₁ h₃ Q₁ Q₃ hd S hS
-    haveI := h₁
-    haveI := h₃
-    haveI := hC.mono_f
-    haveI := hC.epi_g
+    have := h₁
+    have := h₃
+    have := hC.mono_f
+    have := hC.epi_g
     have hd₁ : suppDim C.X₁ ≤ n := (suppDim_le_of_mono C.f).trans hd
     have hd₃ : suppDim C.X₃ ≤ n := (suppDim_le_of_epi C.g).trans hd
     rw [interNum_shortExact hC hP (finiteCohTwists_of_isProjOver hf _ hp)
@@ -194,10 +194,10 @@ theorem interNum_eq_sum_length_mul_interNumRed : ∀ (κ : Type) [Field κ] (X :
     push_cast
     ring
   · intro Z hZ hsm G hG hd S hS
-    haveI := hG
-    haveI := isIntegral_red hZ
+    have := hG
+    have := isIntegral_red hZ
     have hAV : IsAmpleLB (A.pull (redι Z)) := hA.pull_of_isClosedImmersion _
-    haveI hFq : IsFiniteQC ((Scheme.Modules.pushforward (redι Z)).obj G) :=
+    have hFq : IsFiniteQC ((Scheme.Modules.pushforward (redι Z)).obj G) :=
       ProperFinite.isFiniteQC_pushforward (redι Z) hAV G
     have hsupp : support ((Scheme.Modules.pushforward (redι Z)).obj G) ⊆ (Z : Set X) :=
       (support_pushforward_subset_image_of_isClosedImmersion (redι Z) G).trans
@@ -239,7 +239,7 @@ theorem interNum_eq_sum_length_mul_interNumRed : ∀ (κ : Type) [Field κ] (X :
     rw [length_stalk_pushforward_generic Z G, ENat.toNat_natCast]
     have hC : (⟨closure {η}, isClosed_closure⟩ : Closeds X) = Z := Closeds.ext hcl
     rw [hC]
-    letI : Algebra κ Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) :=
+    let : Algebra κ Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) :=
       algebraΓOfHom (redι Z ≫ strHom κ X)
     have hfZ : ∀ r : κ, (redι Z).appTop (algebraMap κ Γ(X, ⊤) r) =
         algebraMap κ Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) r := fun r ↦ by

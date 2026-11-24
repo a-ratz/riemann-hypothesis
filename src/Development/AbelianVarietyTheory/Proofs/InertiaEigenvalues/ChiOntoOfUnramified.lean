@@ -53,7 +53,7 @@ theorem _root_.GlobalTheory.UnramCyc.chi_onto_of_unramified : ∀ {l : ℕ} [Fac
     K.1 ≤ _root_.Formalism.BasicNotions.Loc.MaximalUnramifiedExtension l → ∀ c : ℤ_[l]ˣ, ∃ g ∈ _root_.Formalism.BasicNotions.Loc.GK K, (P.χQ g : ℚ_[l]) = ((c : ℤ_[l]) : ℚ_[l]) := by
   intro l _ P K hK c
   have hnorm : ‖((c : ℤ_[l]) : ℚ_[l])‖ = 1 := by
-    rw [PadicInt.padic_norm_e_of_padicInt]
+    rw [PadicInt.norm_coe]
     exact PadicInt.norm_units c
   obtain ⟨g, hg, hgc⟩ := _root_.GlobalTheory.Cyc.exists_chi_eq K P.χQ P.χQ_cyc _ hnorm
   have hK0 : _root_.Formalism.BasicNotions.Loc.K0 K = K.1 := by

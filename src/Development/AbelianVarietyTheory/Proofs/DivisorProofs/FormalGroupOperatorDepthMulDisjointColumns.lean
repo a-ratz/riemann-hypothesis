@@ -193,7 +193,7 @@ theorem suppIn_X {T : Set σ} {y : σ} (hy : y ∈ T) : SuppIn T (X y : MvPowerS
   rw [coeff_X] at hα
   split_ifs at hα with h
   · subst h
-    rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hz
+    rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hz
     exact hz ▸ hy
   · exact absurd rfl hα
 
@@ -231,7 +231,7 @@ theorem derivAt0_monomial (γ : σ →₀ ℕ) (c : C) (g : MvPowerSeries σ C) 
     derivAt0 (MvPolynomial.monomial γ c) g = c * mfact γ * coeff γ g := by
   classical
   rw [derivAt0_eq_sum_of_subset _ g (MvPolynomial.support_monomial_subset), Finset.sum_singleton,
-    MvPolynomial.coeff_monomial, if_pos rfl]
+    MvPolynomial.coeff_monomial, ite_eq_left rfl]
 
 def derivAt0Hom (g : MvPowerSeries σ C) : MvPolynomial σ C →+ C where
   toFun P := derivAt0 P g
@@ -298,7 +298,7 @@ theorem derivAt0_mul_split {T : Set σ} (P Q : MvPolynomial σ C) (A B : MvPower
       MvPolynomial.monomial (α₁ + α₂) (P.coeff α₁ * Q.coeff α₂) := by
     conv_lhs => rw [P.as_sum, Q.as_sum]
     rw [Finset.sum_mul_sum]
-    simp_rw [MvPolynomial.monomial_mul]
+    simp_rw [MvPolynomial.monomial_mul_monomial]
   rw [hPQ, derivAt0_sum]
   simp_rw [derivAt0_sum, derivAt0_monomial]
   unfold derivAt0
@@ -372,7 +372,7 @@ theorem monAlong_const (γ : (Σ b, Fin (d b)) →₀ ℕ) :
   · right
     unfold monAlong
     refine constantCoeff_subst_eq_zero (hasSubst_expAlong G u) (expAlong_const G u) ?_
-    rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, if_neg (fun h => hγ h.symm)]
+    rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, ite_eq_right (fun h => hγ h.symm)]
 
 omit [CharZero C] [Fintype κ] in
 theorem monAlong_int (γ : (Σ b, Fin (d b)) →₀ ℕ) : MvIsInt v (monomial γ (1 : C)) := by

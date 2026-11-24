@@ -282,7 +282,7 @@ variable {K : Type} [Field K] [NumberField K]
 theorem count_span_int (v : HeightOneSpectrum (𝓞 K)) {r : 𝓞 K} (hr : r ≠ 0) :
     FractionalIdeal.count K v (FractionalIdeal.spanSingleton (𝓞 K)⁰ (algebraMap (𝓞 K) K r)) =
       -WithZero.log (v.valuation K (algebraMap (𝓞 K) K r)) := by
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K v
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K v
     (by rwa [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]),
     HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg _ hr, WithZero.log_exp,
     neg_neg]
@@ -352,7 +352,7 @@ theorem genD_of_trace : ∀ (F : Type) [Field F] [NumberField F] (y : (Af F)ˣ) 
   refine ⟨𝔪, hm0, fun w => ?_⟩
   have h2 := congrArg (FractionalIdeal.count F w) h𝔪
   rw [FractionalIdeal.count_mul F w hs0 (mul_ne_zero hI hd0), FractionalIdeal.count_mul F w hI hd0,
-    FractionalIdeal.count_coe F w hm0, FractionalIdeal.count_coe F w (FractionalIdeal.coeIdeal_ne_zero.1 hd0),
+    FractionalIdeal.count_coeIdeal F w hm0, FractionalIdeal.count_coeIdeal F w (FractionalIdeal.coeIdeal_ne_zero.1 hd0),
     hc, count_span w hξ] at h2
   have h3 : Valued.v (pLoc F w (algebraMap F (Af F) ξ)) = w.valuation F ξ :=
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w ξ
@@ -392,7 +392,7 @@ theorem genD_eq {y : Af F} {𝔪 𝔫 : Ideal (𝓞 F)} (h : GenD y 𝔪) (h' : 
 
 theorem coefAt_of_genD {y : Af F} {𝔪 : Ideal (𝓞 F)} (h : GenD y 𝔪) (a : Ideal (𝓞 F) → ℂ) : coefAt a y = a 𝔪 := by
   have h' : ∃ 𝔪, GenD y 𝔪 := ⟨𝔪, h⟩
-  rw [coefAt, dif_pos h', genD_eq h'.choose_spec h]
+  rw [coefAt, dite_eq_left h', genD_eq h'.choose_spec h]
 
 theorem ordI_eventually {I : Ideal (𝓞 F)} (hI : I ≠ ⊥) :
     ∀ᶠ w : HeightOneSpectrum (𝓞 F) in Filter.cofinite, ordI w I = 0 := by
@@ -597,7 +597,7 @@ theorem GlobalTheory.HilbertThetaSeries.lift_hasExp : ∀ (F : Type) [Field F] [
   intro F _ _ _ k Ψ φ a hΨ hφ ha
   let c : Ideal (𝓞 F) → ℂ := fun 𝔪 => if h : 𝔪 ≠ ⊥ then a (exists_unit_genD h).choose 1 else 0
   have hc : ∀ 𝔪, 𝔪 ≠ ⊥ → ∃ Y : (Af F)ˣ, GenD (Y : Af F) 𝔪 ∧ c 𝔪 = a Y 1 := fun 𝔪 h =>
-    ⟨_, (exists_unit_genD h).choose_spec, dif_pos h⟩
+    ⟨_, (exists_unit_genD h).choose_spec, dite_eq_left h⟩
   refine ⟨c, fun x y hy yf => ?_, fun 𝔪 h => (hc 𝔪 h).imp fun _ h => h.2⟩
   have hP : 0 < ∏ v, y.val v := Finset.prod_pos fun v _ => hy v
   have hP' : (((∏ v, y.val v) ^ ((k : ℝ) / 2) : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 (Real.rpow_pos_of_pos hP _).ne'
@@ -1496,7 +1496,7 @@ theorem exists_sl_aff (K : Subgroup (GL (Fin 2) (Af F)))
   have ho : IsOpen {s : GL (Fin 2) (Af F) | (aff y 0)⁻¹ * s⁻¹ * g ∈ K} :=
     hK.preimage (f := fun s : GL (Fin 2) (Af F) => (aff y 0)⁻¹ * s⁻¹ * g) ((continuous_const.mul continuous_inv).mul continuous_const)
   obtain ⟨_, hu, σ, hσ, rfl⟩ := mem_closure_iff.1 hcl _ ho (by
-    rw [Set.mem_setOf_eq, _root_.mul_inv_rev, inv_inv, inv_mul_cancel_left, inv_mul_cancel]; exact one_mem K)
+    rw [Set.mem_ofPred_eq, _root_.mul_inv_rev, inv_inv, inv_mul_cancel_left, inv_mul_cancel]; exact one_mem K)
   refine ⟨σ, y, _, hu, hσ, ?_⟩
   rw [mul_assoc, mul_inv_cancel_left]
   exact (mul_inv_cancel_left _ g).symm

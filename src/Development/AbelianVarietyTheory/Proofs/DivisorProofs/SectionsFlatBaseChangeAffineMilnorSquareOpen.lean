@@ -116,11 +116,11 @@ theorem isPullback_of_flat (P C₁ C₂ C₀ E E₁ E₂ E₀ : CommRingCat.{0})
     (g₂ : C₂ ⟶ E₂) (g₀ : C₀ ⟶ E₀) (i₁ : E ⟶ E₁) (i₂ : E ⟶ E₂) (r₁ : E₁ ⟶ E₀) (r₂ : E₂ ⟶ E₀) (hg : g.hom.Flat)
     (h₁ : IsPushout g p₁ i₁ g₁) (h₂ : IsPushout g p₂ i₂ g₂) (h₀ : IsPushout g₂ q₂ r₂ g₀)
     (w₁ : i₁ ≫ r₁ = i₂ ≫ r₂) (w₂ : g₁ ≫ r₁ = q₁ ≫ g₀) : IsPullback i₁ i₂ r₁ r₂ := by
-  letI : Algebra P E := g.hom.toAlgebra
-  letI : Algebra P C₁ := p₁.hom.toAlgebra
-  letI : Algebra P C₂ := p₂.hom.toAlgebra
-  letI : Algebra P C₀ := (p₂ ≫ q₂).hom.toAlgebra
-  haveI : Module.Flat P E := hg
+  let : Algebra P E := g.hom.toAlgebra
+  let : Algebra P C₁ := p₁.hom.toAlgebra
+  let : Algebra P C₂ := p₂.hom.toAlgebra
+  let : Algebra P C₀ := (p₂ ≫ q₂).hom.toAlgebra
+  have : Module.Flat P E := hg
   have hw : ∀ a, q₁.hom (p₁.hom a) = q₂.hom (p₂.hom a) := fun a ↦ by
     simpa using congrArg (fun φ ↦ φ.hom a) hP.w
   have hw₁ : ∀ x, r₁.hom (i₁.hom x) = r₂.hom (i₂.hom x) := fun x ↦ by

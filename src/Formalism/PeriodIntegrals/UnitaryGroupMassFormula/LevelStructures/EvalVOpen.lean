@@ -259,15 +259,15 @@ theorem haMap_secHA (φ : R →ₐ[F] R') (hφ : ∀ x, φ (j x) = x) (h : HA R'
 
 theorem continuous_secM [TopologicalSpace R] [TopologicalSpace R'] (hc : Continuous (Jt (E := E) j)) :
     Continuous (secM (E := E) (n := n) j) := by
-  haveI : ContinuousAdd (R ⊗[F] E) := ModuleTopology.continuousAdd R _
+  have : ContinuousAdd (R ⊗[F] E) := ModuleTopology.continuousAdd R _
   exact (continuous_id.matrix_map hc).add continuous_const
 
 theorem continuous_secHA [TopologicalSpace R] [TopologicalSpace R'] (hc : Continuous (Jt (E := E) j)) :
     Continuous (secHA σ J hj) := by
   have hM : Continuous (secM (E := E) (n := n) j) := continuous_secM hc
   have hG : Continuous (fun h : HA R' σ J => secGL hj (HA.mat R' σ J h)) :=
-    Units.continuous_iff.2 ⟨hM.comp (Units.continuous_val.comp continuous_subtype_val),
-      hM.comp (Units.continuous_coe_inv.comp continuous_subtype_val)⟩
+    Units.continuous_iff.2 ⟨hM.comp (Units.continuous_val.comp continuous_subtypeVal),
+      hM.comp (Units.continuous_coe_inv.comp continuous_subtypeVal)⟩
   exact hG.subtype_mk _
 
 end Grp
@@ -345,17 +345,17 @@ theorem continuous_Jt_single (v : HeightOneSpectrum (𝓞 F)) :
     Continuous (EvalVW.Jt (E := E) (singleL v)) := by
 
   let τ : TopologicalSpace (Fv F v ⊗[F] E) := TopologicalSpace.induced (EvalVW.Jt (E := E) (singleL v)) inferInstance
-  haveI : ContinuousSMul (Af F) (Af F ⊗[F] E) := ModuleTopology.continuousSMul _ _
-  haveI : ContinuousAdd (Af F ⊗[F] E) := ModuleTopology.continuousAdd _ _
+  have : ContinuousSMul (Af F) (Af F ⊗[F] E) := ModuleTopology.continuousSMul _ _
+  have : ContinuousAdd (Af F ⊗[F] E) := ModuleTopology.continuousAdd _ _
   have h1 : @ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) _ _ τ := by
-    letI := τ
+    let := τ
     refine ⟨continuous_induced_rng.2 ?_⟩
     have e : (EvalVW.Jt (E := E) (singleL v)) ∘ (fun p : Fv F v × (Fv F v ⊗[F] E) => p.1 • p.2) =
         fun p => uHom v p.1 • EvalVW.Jt (E := E) (singleL v) p.2 := funext fun p => Jt_smul v p.1 p.2
     rw [e]
     exact ((continuous_uHom v).comp continuous_fst).smul (continuous_induced_dom.comp continuous_snd)
   have h2 : @ContinuousAdd (Fv F v ⊗[F] E) τ _ := by
-    letI := τ
+    let := τ
     refine ⟨continuous_induced_rng.2 ?_⟩
     have e : (EvalVW.Jt (E := E) (singleL v)) ∘ (fun p : (Fv F v ⊗[F] E) × (Fv F v ⊗[F] E) => p.1 + p.2) =
         fun p => EvalVW.Jt (E := E) (singleL v) p.1 + EvalVW.Jt (E := E) (singleL v) p.2 :=

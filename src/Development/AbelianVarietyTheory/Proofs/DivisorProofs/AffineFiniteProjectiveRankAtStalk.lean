@@ -180,7 +180,7 @@ theorem affine_finite_projective_rankAtStalk {X Y : Scheme.{0}} (f : X ⟶ Y) [I
     Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) ∧ Module.Flat Γ(Y, V) Γ(X, f ⁻¹ᵁ V) ∧
       Module.Projective Γ(Y, V) Γ(X, f ⁻¹ᵁ V) ∧
       ∀ p : PrimeSpectrum Γ(Y, V), Module.rankAtStalk Γ(X, f ⁻¹ᵁ V) p = r := by
-  letI := (f.app V).hom.toAlgebra
+  let := (f.app V).hom.toAlgebra
   have hU : IsAffineOpen (f ⁻¹ᵁ V) := hV.preimage f
   have h1 : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := f.finite_app V hV
   have h2 : Module.Flat Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := by
@@ -210,21 +210,21 @@ theorem natCast_card_torsion_ne_zero {K : Type} [Field K] {G : Type} [CommGroup 
     (hn : (n : K) ≠ 0) (hr1 : 1 ≤ r) (hr : r = Nat.card {y : G // y ^ n = 1}) : (r : K) ≠ 0 := by
   intro hr0
   rcases CharP.char_is_prime_or_zero K (ringChar K) with hp | hp
-  · haveI := Fact.mk hp
+  · have := Fact.mk hp
     have hdvd : ringChar K ∣ r := (CharP.cast_eq_zero_iff K (ringChar K) r).1 hr0
     let H : Subgroup G := (powMonoidHom n : G →* G).ker
     have hHc : Nat.card {y : G // y ^ n = 1} = Nat.card H :=
       Nat.card_congr (Equiv.subtypeEquivRight fun y => by simp [H, MonoidHom.mem_ker])
     rw [hr, hHc] at hdvd
     have hpos : Nat.card H ≠ 0 := by rw [← hHc, ← hr]; omega
-    haveI : Finite H := Nat.finite_of_card_ne_zero hpos
+    have : Finite H := Nat.finite_of_card_ne_zero hpos
     obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' (ringChar K) hdvd
     have hx2 : (x : G) ^ n = 1 := x.2
     have hxn : x ^ n = 1 := Subtype.ext (by rw [SubgroupClass.coe_pow, hx2]; rfl)
     have hd : ringChar K ∣ n := hx ▸ orderOf_dvd_of_pow_eq_one hxn
     exact hn ((CharP.cast_eq_zero_iff K (ringChar K) n).2 hd)
   · have : CharP K 0 := hp ▸ ringChar.charP K
-    haveI := CharP.charP_to_charZero K
+    have := CharP.charP_to_charZero K
     exact (Nat.cast_ne_zero.2 (by omega)) hr0
 
 theorem mulA_finite_locallyFree (K : Type) [Field K] [IsAlgClosed K]
@@ -239,19 +239,19 @@ theorem mulA_finite_locallyFree (K : Type) [Field K] [IsAlgClosed K]
           Module.Projective Γ(A.left, V) Γ(A.left, (mulA A n).left ⁻¹ᵁ V) ∧
           ∀ p : PrimeSpectrum Γ(A.left, V),
             Module.rankAtStalk Γ(A.left, (mulA A n).left ⁻¹ᵁ V) p = r := by
-  haveI := hA.comm
-  haveI := hA.smooth
-  haveI := hA.geomConnected
+  have := hA.comm
+  have := hA.smooth
+  have := hA.geomConnected
   obtain ⟨⟨hfin, het⟩, -⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion A (isUnit_natCast_Sp hn)
   rw [← GlobalTheory.MulLawsCompare.mulN_eq_mulA]
-  haveI := hfin
-  haveI := het
-  haveI : ConnectedSpace A.left := GeometricallyConnected.connectedSpace A.hom A.hom.isOpenMap
+  have := hfin
+  have := het
+  have : ConnectedSpace A.left := GeometricallyConnected.connectedSpace A.hom A.hom.isOpenMap
   let z₀ : Spec (CommRingCat.of K) := (⊥ : PrimeSpectrum K)
   let o : A.left := η[A].left z₀
   have hη : η[A] ≫ mulN A n = η[A] := by
     rw [GlobalTheory.MulLawsCompare.mulN_eq_mulA]
-    haveI := GlobalTheory.AbLaw.MulN.isMonHom_mulA A n
+    have := GlobalTheory.AbLaw.MulN.isMonHom_mulA A n
     exact IsMonHom.one_hom (mulA A n)
   have hfo : (mulN A n).left o = o := by
     change (η[A].left ≫ (mulN A n).left) z₀ = _
@@ -262,7 +262,7 @@ theorem mulA_finite_locallyFree (K : Type) [Field K] [IsAlgClosed K]
   have hr1 : 1 ≤ r := by
     have := Scheme.Hom.one_le_finrank_map (mulN A n).left o
     rwa [hfo] at this
-  haveI hsurj : Surjective (mulN A n).left :=
+  have hsurj : Surjective (mulN A n).left :=
     (Scheme.Hom.one_le_finrank_iff_surjective (mulN A n).left).1 fun a => by
       show 1 ≤ (mulN A n).left.finrank a
       rw [hall a]; exact hr1

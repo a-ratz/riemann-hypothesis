@@ -92,12 +92,12 @@ theorem deltaForm_right (x : A) (v : M) (g : A) {u : A} (hu : u ∈ U) :
 
 theorem deltaForm_self (x : A) (v : M) (h : ∀ γ, x⁻¹ * ι γ * x ∈ U → γ = 1) : deltaForm ι U ρ x v x = v := by
   unfold deltaForm
-  rw [finsum_eq_single _ 1 fun γ hγ => if_neg fun hm => hγ (inv_eq_one.1 (h γ⁻¹ (by rwa [map_inv, mul_assoc])))]
+  rw [finsum_eq_single _ 1 fun γ hγ => ite_eq_right fun hm => hγ (inv_eq_one.1 (h γ⁻¹ (by rwa [map_inv, mul_assoc])))]
   simp [U.one_mem]
 
 theorem deltaForm_eq_zero (x : A) (v : M) (g : A) (h : ∀ γ, ∀ u ∈ U, g ≠ ι γ * x * u) : deltaForm ι U ρ x v g = 0 := by
   unfold deltaForm
-  refine finsum_eq_zero_of_forall_eq_zero fun γ => if_neg fun hm => h γ _ hm ?_
+  refine finsum_eq_zero_of_forall_eq_zero fun γ => ite_eq_right fun hm => h γ _ hm ?_
   simp [mul_assoc]
 
 end Delta
@@ -275,7 +275,7 @@ theorem star_emb (τ : D.what₂.Tau) (x : D.host.E) :
 
 theorem exists_isTestLat (rp : ClassReps G) (n : ℕ) (e : Fin n ≃ TestIx G × VVIdx (LaP G)) : ∃ X' M, IsTestLat G rp n e X' M := by
   obtain ⟨i⟩ := SlopeModel.nonempty_idx (LaP G)
-  haveI : Finite (TestIx G) := Finite.of_injective (fun c => e.symm (c, i)) fun _ _ h => congrArg Prod.fst (e.symm.injective h)
+  have : Finite (TestIx G) := Finite.of_injective (fun c => e.symm (c, i)) fun _ _ h => congrArg Prod.fst (e.symm.injective h)
   obtain ⟨X, hX⟩ := (SlopeModel.exists_isMetric (formGram G e) fun φ => SlopeModel.sumGram_posDef _ e _ φ fun τ => by
     have hP := posDef_Xp G (φ.comp (emb D τ))
     have hd : IsUnit ((Xp G).gram.map (emb D τ)).det := by
@@ -299,7 +299,7 @@ theorem IsTestLat.gridTestLattice_largestSlope_bound (hS : SlopeE) {v₀ : Infin
     {X' : InfinitePlace D.what₂.LL → Matrix (Fin n) (Fin n) ℂ} {M : Submodule (𝓞 D.what₂.LL) (Fin n → D.what₂.LL)}
     (h : IsTestLat G rp n e X' M) :
     Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts.TestLatticeCondition n X' M (bound (Fintype.card D.what₂.Tau) (Xp G).rank R) := by
-  haveI : Nonempty (TestIx G) := ⟨⟨fun _ => default, Quotient.mk'' 1⟩⟩
+  have : Nonempty (TestIx G) := ⟨⟨fun _ => default, Quotient.mk'' 1⟩⟩
   rw [h.2]
   exact (hS D.host.E D.what₂.LL v₀ hv _ (fun φ x => D.sp.cm.cmUnram.2.1 φ x) _ (emb D) star_emb _ (LaP G) R hR hLa
     _ (posDef_Xp G) (TestIx G) (fun c => rp.lat c.2) (fun c => isSelfDualE_latOf G _) n e X').2.2.1 h.1

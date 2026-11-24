@@ -96,8 +96,8 @@ theorem _root_.GlobalTheory.Avoid.exists_basis_map_one_tmul_of_surjective {K L V
     rw [h, Submodule.span_image, hspanT, Submodule.map_top, LinearMap.range_eq_top.mpr hG]
   obtain ⟨κ, a, ha, hspan, hli⟩ := exists_linearIndependent' L fun i => G ((1 : L) ⊗ₜ[K] v i)
   let b := Basis.mk hli (hspan.trans hw).ge
-  haveI : Finite κ := Module.Finite.finite_basis b
-  haveI := Fintype.ofFinite κ
+  have : Finite κ := Module.Finite.finite_basis b
+  have := Fintype.ofFinite κ
   have hcard : Fintype.card κ = d := by rw [← hd, Module.finrank_eq_card_basis b]
   let e : Fin d ≃ κ := (Fintype.equivFinOfCardEq hcard).symm
   refine ⟨a ∘ e, b.reindex e.symm, ha.comp e.injective, fun k => ?_⟩
@@ -132,7 +132,7 @@ theorem _root_.GlobalTheory.Avoid.exists_orderEmbedding_minor_ne_zero {K V ι : 
     | add y z _ _ hy hz => simp [hy, hz]
     | smul t y _ hy => simp [hy]
   let b := Basis.ofVectorSpace K V
-  letI : LinearOrder (Basis.ofVectorSpaceIndex K V) := IsWellOrder.linearOrder WellOrderingRel
+  let : LinearOrder (Basis.ofVectorSpaceIndex K V) := IsWellOrder.linearOrder WellOrderingRel
   let B := b.exteriorPower r
   have hcoord : ∀ s, B.coord s = ιMultiDual K r b s := fun s => B.ext fun t => by
     have hBt : B t = ιMulti_family K r b t := by simp [B, Module.Basis.exteriorPower]

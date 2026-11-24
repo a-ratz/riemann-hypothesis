@@ -80,7 +80,7 @@ theorem continuous_smul_tup {F E : Type} [Field F] [NumberField F] [Field E] [Al
 theorem nuInv_of (hU : OmUniq) (hI : OmInv) : NuInv := by
 
   intro F E _ _ _ _ _ σ hCM M J hJ h1 h2 a ha haM X0 hT hdet ψ hψ νX hν g s hs
-  haveI : FiniteDimensional F E := by
+  have : FiniteDimensional F E := by
     first
     | infer_instance
     | exact Module.Finite.of_restrictScalars_finite ℚ F E
@@ -94,7 +94,7 @@ theorem nuInv_of (hU : OmUniq) (hI : OmInv) : NuInv := by
 theorem omUniq_of (hD : DetAdm) : OmUniq := by
 
   intro F E _ _ _ _ _ σ hCM M J hJ h1 h2 a ha haM X0 hT hdet ψ hψ ν1 ν2 hν1 hν2
-  haveI : FiniteDimensional F E := by
+  have : FiniteDimensional F E := by
     first
     | infer_instance
     | exact Module.Finite.of_restrictScalars_finite ℚ F E

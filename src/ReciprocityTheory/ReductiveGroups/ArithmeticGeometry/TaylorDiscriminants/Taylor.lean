@@ -84,7 +84,7 @@ theorem cml_perm {l l' : List V} (p : l.Perm l') :
       simp only [F]
       by_cases hk : (l₀ ++ y :: x :: k).length = n
       · have hk' : (l₀ ++ x :: y :: k).length = n := by simpa using hk
-        rw [dif_pos hk, dif_pos hk']
+        rw [dite_eq_left hk, dite_eq_left hk']
         have hlt : l₀.length + 1 < n := by simp at hk; omega
         rw [← hM _ (Equiv.swap (⟨l₀.length, by omega⟩ : Fin n) ⟨l₀.length + 1, hlt⟩)]
         congr 1
@@ -105,7 +105,7 @@ theorem cml_perm {l l' : List V} (p : l.Perm l') :
     | trans _ _ ih₁ ih₂ => intro l₀; exact (ih₁ l₀).trans (ih₂ l₀)
   intro h h'
   have e := key []
-  simp only [F, List.nil_append, dif_pos h, dif_pos h'] at e
+  simp only [F, List.nil_append, dite_eq_left h, dite_eq_left h'] at e
   exact e
 
 def lD (φ : V → ℂ) (x : V) (l : List V) : ℂ := iteratedFDeriv ℂ l.length φ x (fun i => l.get i)
@@ -148,8 +148,8 @@ theorem mD_cons_sum {φ : V → ℂ} {x : V} (hφ : ContDiffAt ℂ ω φ x) {ι 
     (w : ι → V) (s : Multiset V) :
     mD φ x ((∑ i ∈ t, c i • w i) ::ₘ s) = ∑ i ∈ t, c i * mD φ x (w i ::ₘ s) := by
 
-  simp only [mD_cons hφ, map_sum, map_smul, ContinuousMultilinearMap.sum_apply,
-  ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [mD_cons hφ, map_sum, map_smul, sum_apply,
+  smul_apply, smul_eq_mul]
 
 end Sym
 

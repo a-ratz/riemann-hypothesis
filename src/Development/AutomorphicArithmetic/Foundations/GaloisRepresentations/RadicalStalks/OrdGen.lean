@@ -212,10 +212,10 @@ theorem UpperTheory.Gal.Ord.estep :
       (m : ObjMap o₀ o' (spMap (TrivSqZeroExt.fstHom k k k).toRingHom)), NOo hT o' π →
       ∀ x : HdR o₀.A, (∀ z, x (coh o₀ π.g ((frobDR p k hk o₀.A)^[f] z)) = 0) → IsFilLift m.cart (hom o₀ π.ε x) 0 := by
   intro p _ D R _ b N w f hf π k _ hk hT s₀ s' o₀ o' m hNO x hx
-  haveI := o₀.act.hom (algebraMap (𝓞 D.F) D.O π.ε)
-  haveI := o₀.act.hom (algebraMap (𝓞 D.F) D.O π.g)
-  haveI := o'.act.hom (algebraMap (𝓞 D.F) D.O π.ε)
-  haveI := o'.act.hom (algebraMap (𝓞 D.F) D.O π.g)
+  have := o₀.act.hom (algebraMap (𝓞 D.F) D.O π.ε)
+  have := o₀.act.hom (algebraMap (𝓞 D.F) D.O π.g)
+  have := o'.act.hom (algebraMap (𝓞 D.F) D.O π.ε)
+  have := o'.act.hom (algebraMap (𝓞 D.F) D.O π.g)
   exact core hk hT m.cart (GlobalTheory.HTRealise.isBC_constMor o₀.ab) _ _ _ _ (m.act _).symm (m.act _).symm f hf hNO x hx
 end -- clump:auto
 end -- clump:auto
@@ -397,7 +397,7 @@ theorem UpperTheory.Gal.Ord.ks :
   have hnd := _root_.GlobalTheory.HTPolPair.nondeg p D R b N hN hNp k (spMap β) o β rfl φ hφ
   have hadj0 := GlobalTheory.T.harrisTaylor_crystal_action_adjoint p D R b N hN hNp k (spMap β) o β rfl φ hφ
   obtain ⟨hL1, ⟨h₀, hh₀, -⟩, hL3⟩ := lie p D R b N hN hNp hm k hk β o i w f hw hf hf0 π
-  haveI := hfd
+  have := hfd
   let L : HdR o.A →ₗ[k] k :=
     { toFun := fun h => h y
       map_add' := fun _ _ => rfl
@@ -418,7 +418,7 @@ theorem UpperTheory.Gal.Ord.ks :
     simp only [Module.End.intCast_apply]
     exact (Int.cast_smul_eq_zsmul k D.tr v).symm
   have hdisc : 2 * β b.ρ - (D.tr : k) ≠ 0 := by
-    haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out)).2 hk
+    have : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out)).2 hk
     intro h0
     have hr := congrArg β b.ρ_root
     simp only [map_add (f := _), map_sub, map_pow, map_mul, map_intCast, map_zero] at hr
@@ -519,8 +519,8 @@ private lemma sub_smul_pow (p : ℕ) [Fact p.Prime] {k P : Type*} [Field k] [Cha
 
 private lemma pow_card_subring {k : Type*} [Field k] (R : Subring k) [Finite R] (x : R) : x ^ Nat.card R = x := by
   classical
-  letI := Fintype.ofFinite R
-  letI : Field R := Fintype.fieldOfDomain R
+  let := Fintype.ofFinite R
+  let : Field R := Fintype.fieldOfDomain R
   rw [Nat.card_eq_fintype_card]
   exact FiniteField.pow_card x
 
@@ -729,7 +729,7 @@ theorem UpperTheory.Gal.Ord.alg2 :
       (Φ : P →+ P), Lin p π χ ρ F Φ →
       ∃ x : Module.Dual k P, (∀ y, x (ρ π.ε y) = x y) ∧ (∀ z, x (ρ π.g (Φ^[f] z)) = 0) ∧ ∃ y, (∀ c, ρ c y = χ c • y) ∧ x y ≠ 0 := by
   intro p _ k _ _ _ C _ w f hf hcard π χ P _ _ ρ F Φ L
-  haveI := L.fin
+  have := L.fin
   let ρh : C →+* Module.End k P :=
     { toFun := ρ, map_one' := L.one, map_mul' := L.mul, map_add' := L.add
       map_zero' := by
@@ -744,7 +744,7 @@ theorem UpperTheory.Gal.Ord.alg2 :
     have e : (C ⧸ w) ≃ χ.range :=
       ((Ideal.quotEquivOfEq L.ker.symm).trans (RingHom.quotientKerEquivRange χ)).toEquiv
     have hcard' : Nat.card χ.range = p ^ f := (Nat.card_congr e).symm.trans hcard
-    haveI : Finite χ.range := Nat.finite_of_card_ne_zero (by
+    have : Finite χ.range := Nat.finite_of_card_ne_zero (by
       rw [hcard']; exact pow_ne_zero _ (Fact.out : p.Prime).ne_zero)
     intro c
     have h := pow_card_subring χ.range ⟨χ c, c, rfl⟩
@@ -917,7 +917,7 @@ private lemma exPar (p : ℕ) (hp0 : (p : C) ≠ 0) {w : Ideal C} (hw : w.IsMaxi
   have hP0 : Ideal.span {(p : C)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact hp0
-  obtain ⟨m, B, hwB, hPB⟩ := WfDvdMonoid.max_power_factor' hP0 hwp.not_unit
+  obtain ⟨m, B, hwB, hPB⟩ := WfDvdMonoid.max_power_factor' hP0 hwp.not_isUnit
   obtain ⟨n, rfl⟩ : ∃ n, m = n + 1 := by
     rcases m with _ | n
     · exfalso
@@ -971,7 +971,7 @@ private lemma exPar (p : ℕ) (hp0 : (p : C) ≠ 0) {w : Ideal C} (hw : w.IsMaxi
     have h2 := Ideal.dvd_iff_le.mp h1
     rw [Ideal.one_eq_top, top_le_iff] at h2
     exact hw.ne_top h2
-  obtain ⟨t, ht, ht2⟩ := SetLike.not_le_iff_exists.mp hnle
+  obtain ⟨t, ht, ht2⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
   have hc2 : IsCoprime (w ^ 2) (B ^ f) := IsCoprime.pow hcB
   obtain ⟨i2, hi2, j2, hj2, hij2⟩ := Submodule.mem_sup.mp
     (show (1 : C) ∈ w ^ 2 ⊔ B ^ f by
@@ -1390,14 +1390,14 @@ theorem UpperTheory.Gal.Ord.desc :
       (s : Sp κ ⟶ Sp R) (s₀ : Sp k ⟶ Sp R) (s' : Sp T ⟶ Sp R) (o : Obj b N s) (o₀ : Obj b N s₀) (o' : Obj b N s'),
       ObjMap o₀ o (spMap σ) → ObjMap o' o (spMap τ) → NOo hk o₀ π → NOo hT o' π := by
   intro p _ D R _ b N w f π κ k T _ _ _ hκ hk hT σ τ s s₀ s' o o₀ o' m₀ m' hN
-  letI : Algebra κ k := σ.toAlgebra
-  letI : Algebra κ T := τ.toAlgebra
-  haveI := o.act.hom ((algebraMap (𝓞 D.F) D.O) π.ε)
-  haveI := o.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
-  haveI := o₀.act.hom ((algebraMap (𝓞 D.F) D.O) π.ε)
-  haveI := o₀.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
-  haveI := o'.act.hom ((algebraMap (𝓞 D.F) D.O) π.ε)
-  haveI := o'.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
+  let : Algebra κ k := σ.toAlgebra
+  let : Algebra κ T := τ.toAlgebra
+  have := o.act.hom ((algebraMap (𝓞 D.F) D.O) π.ε)
+  have := o.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
+  have := o₀.act.hom ((algebraMap (𝓞 D.F) D.O) π.ε)
+  have := o₀.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
+  have := o'.act.hom ((algebraMap (𝓞 D.F) D.O) π.ε)
+  have := o'.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
   have hd := _root_.GlobalTheory.HTDim.relDim_and_isLB p D R b N _ s o
   have h1 : NOo hκ o π :=
     no_down p hκ hk m₀.cart D.g o.ab hd.1 (o.act.act ((algebraMap (𝓞 D.F) D.O) π.ε))
@@ -1423,10 +1423,10 @@ namespace UpperTheory.Gal.Ord
 
 private theorem radical_quot (R B : Type) [CommRing R] [CommRing B] [Algebra R B] [Algebra.Smooth R B]
     (m : Ideal R) [m.IsMaximal] : (m.map (algebraMap R B)).IsRadical := by
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : _root_.IsReduced ((R ⧸ m) ⊗[R] B) := _root_.GlobalTheory.isReduced_of_smooth_over_field (R ⧸ m) _
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
+  have : _root_.IsReduced ((R ⧸ m) ⊗[R] B) := _root_.GlobalTheory.isReduced_of_smooth_over_field (R ⧸ m) _
   have e := Algebra.TensorProduct.quotIdealMapEquivQuotTensor B m
-  haveI : _root_.IsReduced (B ⧸ m.map (algebraMap R B)) :=
+  have : _root_.IsReduced (B ⧸ m.map (algebraMap R B)) :=
     isReduced_of_injective e.toRingEquiv.toRingHom e.injective
   exact (Ideal.isRadical_iff_quotient_reduced _).mpr this
 
@@ -1468,11 +1468,11 @@ private theorem radical_stalk (R : Type) [CommRing R] (m : Ideal R) [m.IsMaximal
     apply Spec.map_injective
     rw [hr, Spec.map_comp, hρ, ← hU.fromSpecStalk_eq_fromSpecStalk hzU]
     simp [IsAffineOpen.fromSpecStalk]
-  letI := ρ.hom.toAlgebra
-  haveI : Algebra.Smooth R Γ(X, U) := hρs
+  let := ρ.hom.toAlgebra
+  have : Algebra.Smooth R Γ(X, U) := hρs
   have h1 := radical_quot R Γ(X, U) m
-  letI : Algebra Γ(X, U) (X.presheaf.stalk z) := (X.presheaf.germ U z hzU).hom.toAlgebra
-  haveI : IsLocalization.AtPrime (X.presheaf.stalk z) (hU.primeIdealOf ⟨z, hzU⟩).asIdeal :=
+  let : Algebra Γ(X, U) (X.presheaf.stalk z) := (X.presheaf.germ U z hzU).hom.toAlgebra
+  have : IsLocalization.AtPrime (X.presheaf.stalk z) (hU.primeIdealOf ⟨z, hzU⟩).asIdeal :=
     hU.isLocalization_stalk ⟨z, hzU⟩
   have h2 := radical_loc Γ(X, U) (X.presheaf.stalk z) (hU.primeIdealOf ⟨z, hzU⟩).asIdeal.primeCompl _ h1
   rw [Ideal.map_map] at h2
@@ -1559,7 +1559,7 @@ namespace UpperTheory.Gal.Ord
 
 private theorem asIdeal_spMap {B k : Type} [CommRing B] [Field k] (φ : B →+* k) (u : Sp k) :
     ((spMap φ).base u).asIdeal = RingHom.ker φ := by
-  haveI := u.isPrime
+  have := u.isPrime
   have hu : u.asIdeal = ⊥ := Ideal.eq_bot_of_prime _
   show Ideal.comap φ u.asIdeal = RingHom.ker φ
   rw [hu, RingHom.ker_eq_comap_bot]
@@ -1584,7 +1584,7 @@ private theorem exists_absNorm_eq {p : ℕ} [Fact p.Prime] {F : Type} [Field F] 
     intro h
     rw [h, Ideal.mem_bot] at hp
     exact (Nat.cast_ne_zero.mpr (Fact.out : p.Prime).ne_zero) hp
-  haveI : w.IsMaximal := hw.isMaximal hne
+  have : w.IsMaximal := hw.isMaximal hne
   refine ⟨inferInstance, ?_⟩
   obtain ⟨q, n, hn, hqw, hq, hN⟩ := Ideal.exists_prime_and_absNorm_eq_pow w
   have hqp : q = p := by
@@ -1603,13 +1603,13 @@ end UpperTheory.Gal.Ord
 theorem UpperTheory.Gal.Ord.ordGen :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [CharZero R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → (p : R) ∈ IsLocalRing.maximalIdeal R → D.m = 1 → ∀ (i : Fin D.a) (w : Ideal (𝓞 D.F)), (IsLocalRing.maximalIdeal R).comap (b.t i) = w → ∀ (M : Model b N) (z : M.X), M.s.base z = IsLocalRing.closedPoint R → (∀ z' : M.X, M.s.base z' = IsLocalRing.closedPoint R → z' ⤳ z → z' = z) → ∀ (k : Type) [Field k] [IsAlgClosed k] (y : Sp k ⟶ M.X), (∀ q, y.base q = z) → IsWOrd M.univ w y := by
   intro p _ D R _ _ _ _ b N hN hNp hpR hm i w hw M z hz hmin k _ _ y hy
-  haveI : Smooth M.s := @SmoothOfRelativeDimension.smooth _ _ _ _ M.smooth
+  have : Smooth M.s := @SmoothOfRelativeDimension.smooth _ _ _ _ M.smooth
   set β : R →+* k := (Spec.preimage (y ≫ M.s)).hom with hβdef
   have hyβ : y ≫ M.s = spMap β := (Spec.map_preimage (y ≫ M.s)).symm
   have hβbase : (spMap β).base (IsLocalRing.closedPoint k) = IsLocalRing.closedPoint R := by
     rw [← hyβ]
     exact (congrArg M.s.base (hy _)).trans hz
-  haveI hchar : CharP k p := charP_of_eq_closedPoint hpR β _ hβbase
+  have hchar : CharP k p := charP_of_eq_closedPoint hpR β _ hβbase
   have hk : (p : k) = 0 := CharP.cast_eq_zero k p
   have hkerβ : RingHom.ker β = IsLocalRing.maximalIdeal R := by
     rw [← asIdeal_spMap β (IsLocalRing.closedPoint k), hβbase]

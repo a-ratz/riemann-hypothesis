@@ -105,14 +105,14 @@ def swapL : letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRin
 
 theorem swapL_continuous : letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
     Continuous (swapL F E) ∧ Continuous (swapL F E).symm := by
-  letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
-  letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-  haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)
-  haveI := IsModuleTopology.toContinuousSMul (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)
-  haveI := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E)
-  haveI := IsModuleTopology.toContinuousSMul (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E)
+  let : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
+  let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)
+  have := IsModuleTopology.toContinuousSMul (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)
+  have := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E)
+  have := IsModuleTopology.toContinuousSMul (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E)
   exact ⟨IsModuleTopology.continuous_of_linearMap (swapL F E).toLinearMap,
     IsModuleTopology.continuous_of_linearMap (swapL F E).symm.toLinearMap⟩
 
@@ -190,7 +190,7 @@ theorem continuous_finM {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) :
     letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
     Continuous (finM V hn) := by
   subst hn
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
   refine continuous_matrix fun i j => ?_
   simp only [finM_apply]
   exact (swapL_continuous D.host.F D.host.E).2.comp ((GlobalTheory.Member.continuous_finHom_val D V).matrix_elem i j)
@@ -198,15 +198,15 @@ theorem continuous_finM {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) :
 theorem continuous_finGLHom {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) :
     letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
     Continuous (finGLHom V hn) := by
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
-  haveI := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.2.2.2.1
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  have := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.2.2.2.1
   exact Units.continuous_iff.2 ⟨continuous_finM V hn, (continuous_finM V hn).comp continuous_inv⟩
 
 theorem isOpen_levG {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) {T f : ℕ}
     {bad : Set (HeightOneSpectrum (𝓞 D.host.F))}
     (S : StepLevel D.host.F D.host.E (sigD D) (V.gram.reindex (finCongr hn) (finCongr hn)) T f bad) :
     IsOpen ((levG V hn S : Subgroup (GA D V)) : Set (GA D V)) := by
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
   have hc := (continuous_finGLHom V hn).subtype_mk (GlobalTheory.AdForm.Model.finGL_mem V hn)
   have := S.U_open.preimage hc
   convert this using 1
@@ -218,10 +218,10 @@ theorem isCompact_levG {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) {T f : �
     (S : StepLevel D.host.F D.host.E (sigD D) (V.gram.reindex (finCongr hn) (finCongr hn)) T f bad)
     (hV : ∀ τ, (gramAt D V τ).PosDef) :
     IsCompact ((levG V hn S : Subgroup (GA D V)) : Set (GA D V)) := by
-  haveI := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.2.2.2.1
+  have := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.2.2.2.1
   have hcl := Subgroup.isClosed_of_isOpen _ (isOpen_levG V hn S)
   subst hn
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
   have hC : IsCompact (⋃ p : Fin V.rank × Fin V.rank,
       (fun x : GL (Fin V.rank) (D.host.E ⊗[D.host.F] FiniteAdeleRing (𝓞 D.host.F) D.host.F) =>
         swapL D.host.F D.host.E (x.1 p.1 p.2)) '' (S.U : Set _)) :=
@@ -288,21 +288,21 @@ theorem integral_eq_classSum : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀
   intro D θ hθ V n hn J hJ T f bad S cl yc hbij hSig hPD _ μ 𝓕 hμ h𝓕 h hh
   subst hJ
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.1
-  haveI := hT.2.1
-  haveI := hT.2.2.1
-  haveI := hT.2.2.2.1
-  haveI := hT.2.2.2.2.1
-  haveI := hT.2.2.2.2.2.2
-  haveI : μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
+  have := hT.1
+  have := hT.2.1
+  have := hT.2.2.1
+  have := hT.2.2.2.1
+  have := hT.2.2.2.2.1
+  have := hT.2.2.2.2.2.2
+  have : μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
   have hKo := isOpen_levG V hn S
   have hKc := isCompact_levG V hn S hPD
   have hGK : GinfC V ≤ levG V hn S := by
     intro k hk
     exact ⟨1, (finM_eq_one_of_mem_GinfC V hn hk).symm⟩
-  haveI : CompactSpace (GinfC V) :=
+  have : CompactSpace (GinfC V) :=
     isCompact_iff_compactSpace.mp (hKc.of_isClosed_subset (GlobalTheory.Ker.CongTop.isClosed_GinfC V) hGK)
-  haveI : (GinfC V).Normal := inferInstanceAs ((finHom V).ker.Normal)
+  have : (GinfC V).Normal := inferInstanceAs ((finHom V).ker.Normal)
   have hsplit : ∀ g : GA D V, ∃ a ∈ GfC V, ∃ b ∈ GinfC V, g = a * b := by
     intro g
     have h1 : g ∈ ((⊤ : Subgroup (GL (Fin V.rank) (Lev.EAf D))).comap (Lev.finE V)) := trivial
@@ -333,11 +333,11 @@ theorem integral_eq_classSum : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀
     have := Measure.haarMeasure_self (G := GinfC V) (K₀ := ⊤)
     simpa using this
   obtain ⟨ν, hνH, hν1⟩ := hν
-  haveI : IsProbabilityMeasure ν := ⟨hν1⟩
+  have : IsProbabilityMeasure ν := ⟨hν1⟩
   refine ⟨(μ (levG V hn S)).toReal, ν, ENNReal.toReal_pos hne htop, hνH, hν1, fun Φ hΦc hΦl hΦr => ?_⟩
   obtain ⟨-, he⟩ := GlobalTheory.integral_fundamentalDomain_eq_sum_doubleCoset_avg (GA D V) μ (GQ V) (levG V hn S)
     (GfC V ⊓ levG V hn S) 𝓕 h𝓕 hKo htop
-    (GinfC V) ν (GinfC V).subtype continuous_subtype_val hdec hcomm cl h hu hfin Φ hΦc hΦl
+    (GinfC V) ν (GinfC V).subtype continuous_subtypeVal hdec hcomm cl h hu hfin Φ hΦc hΦl
     (fun k hk x => hΦr k hk.1 hk.2 x)
   refine he.trans ?_
   refine congrArg _ (Finset.sum_congr rfl fun c _ => ?_)

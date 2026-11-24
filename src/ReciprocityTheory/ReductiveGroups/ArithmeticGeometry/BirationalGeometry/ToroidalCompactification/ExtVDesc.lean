@@ -231,10 +231,10 @@ theorem pullCubDescent (hExt : extendGenSt.{0}) (hGF : GlobalFnsDvrSt) : PullCub
   obtain ⟨w₁, p₁, r₁, θ₁⟩ := (isPullCubical_iff m.cm t.cub tK.cub).1 m.lin
   obtain ⟨w₂, p₂, r₂, θ₂⟩ := (isPullCubical_iff m'.cm t'.cub tK.cub).1 m'.lin
   obtain ⟨io, hiom, hio⟩ := extV_genIso t tK m
-  haveI := t.semi.smooth
-  haveI := t.semi.separated
-  haveI := t.semi.quasiCompact
-  haveI := t.semi.geomConnected
+  have := t.semi.smooth
+  have := t.semi.separated
+  have := t.semi.quasiCompact
+  have := t.semi.geomConnected
   let ja : (genFibre V t.G).left ⟶ t.G.left := pullback.fst t.G.hom (specMap V (FractionRing V))
   have h₁ : io.hom.left ≫ m.φ = ja := hio
   have h₂ : io.hom.left ≫ m'.φ = ja ≫ ψ.left := by rw [← hψ, ← Category.assoc, h₁]
@@ -410,7 +410,7 @@ theorem pullCubDescent (hExt : extendGenSt.{0}) (hGF : GlobalFnsDvrSt) : PullCub
       rw [hprod, _root_.mul_one, _root_.mul_one] at h2
       exact h2
     have hprop : IsProper ((Over.pullback (spMap (algebraMap V (FractionRing V)))).obj t.G).hom := by
-      haveI : IsIso io.hom.left := ⟨⟨io.inv.left, by rw [← Over.comp_left, io.hom_inv_id, Over.id_left],
+      have : IsIso io.hom.left := ⟨⟨io.inv.left, by rw [← Over.comp_left, io.hom_inv_id, Over.id_left],
         by rw [← Over.comp_left, io.inv_hom_id, Over.id_left]⟩⟩
       rw [← Over.w io.hom]
       infer_instance

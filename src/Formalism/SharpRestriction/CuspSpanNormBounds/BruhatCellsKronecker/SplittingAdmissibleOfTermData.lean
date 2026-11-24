@@ -74,7 +74,7 @@ theorem GDr_of_tie : PX.GDr D X := by
   have hG : Gval (X.fl t) (X.fl' t) = -(((Tu D u : ℕ) : D.host.E) * ((Tu D u' : ℕ) : D.host.E) *
       (Dl (X.fl t).fl (X.fl' t).fl D.R.rS * star (Dl (X.fl t).fl (X.fl' t).fl D.R.rS))) := by
     simp only [Formalism.MainNotions.S.Lat.Gval, Formalism.MainNotions.S.Gflag, h1, star_zero, mul_zero, zero_sub]
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   have hc : ∀ y : D.host.E, D.host.φ₀ (star y) = starRingEnd ℂ (D.host.φ₀ y) := fun y =>
     NumberField.IsCMField.complexEmbedding_complexConj D.host.E D.host.φ₀ y
   have h0 := hpos D.host.φ₀

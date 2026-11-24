@@ -255,7 +255,7 @@ namespace GlobalTheory.LamTie
 
 theorem toricCharacter_isCMHostValueDatum : ∀ (D : D7) (Z : LamDat D), Z.Ok → ∀ (l : ℕ) (j a : Fin D.R.m) (s : ℕ), 1 ≤ s → (s : ℤ) ≤ (BlochKatoReduction.Gen.NFun D.R : ℤ) + 1 → IsHostDatum D.host (phi D.host) s (Z.kap j a s) (cond0 D.host Z.w0) (Z.lam0 l j a) := by
   intro D Z hZ l j a s hs hN
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   obtain ⟨hcm, hind⟩ := _root_.GlobalTheory.LamTie.CMType.phi_cmType D.R D.host
   obtain ⟨hκ, hinf⟩ := _root_.GlobalTheory.LamTie.InfType.toricLam0_hasInfinityType_conjRatio D Z hZ l j a s hN
   obtain ⟨hu, ht⟩ := _root_.GlobalTheory.LamTie.toricLam0_unitary_trivOnMaxRealSubfield D Z hZ l j a

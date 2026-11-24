@@ -60,7 +60,7 @@ theorem sheets : sheetsStatement.{u} := by
   classical
   let s : Fin (Nat.card (z ⁻¹' {w})) → V n → M :=
     fun i v => if hv : v ∈ W then (H.symm (⟨v, hv⟩, e i)).1 else (e i).1
-  have hs : ∀ i v (hv : v ∈ W), s i v = (H.symm (⟨v, hv⟩, e i)).1 := fun i v hv => dif_pos hv
+  have hs : ∀ i v (hv : v ∈ W), s i v = (H.symm (⟨v, hv⟩, e i)).1 := fun i v hv => dite_eq_left hv
   have hzs : ∀ i, ∀ v ∈ W, z (s i v) = v := by
     intro i v hv
     rw [hs i v hv]
@@ -93,7 +93,7 @@ theorem sheets : sheetsStatement.{u} := by
       funext v
       exact hs i v.1 v.2
     rw [this]
-    exact continuous_subtype_val.comp (H.symm.continuous.comp (continuous_id.prodMk continuous_const))
+    exact continuous_subtypeVal.comp (H.symm.continuous.comp (continuous_id.prodMk continuous_const))
   · intro v hv
     have hfv : (z ⁻¹' {v}).Finite := by
       refine (Set.finite_range fun i => s i v).subset ?_
@@ -101,7 +101,7 @@ theorem sheets : sheetsStatement.{u} := by
       obtain ⟨i, hi⟩ := hsurj v hv y hy
       exact ⟨i, hi⟩
     unfold fiberVals
-    rw [dif_pos hfv]
+    rw [dite_eq_left hfv]
     have hF : hfv.toFinset = Finset.univ.map ⟨fun i => s i v, fun i j h => hinj v hv i j h⟩ := by
       ext y
       simp only [Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_singleton_iff, Finset.mem_map,

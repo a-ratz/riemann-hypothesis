@@ -134,7 +134,7 @@ lemma brSys_tr {ι : Type} (P : ι → SOp d) (i : ι) (φ : (Fin d → ℝ) →
       (fun y' => (P i).a k w y' * φ y') ∘ brT d := by
     funext y
     simp only [brSys, Function.comp_apply]
-    rw [dif_pos (show (k : ℕ) < (P i).ord + 1 from k.isLt)]
+    rw [dite_eq_left (show (k : ℕ) < (P i).ord + 1 from k.isLt)]
     rfl
   rw [e, dw_comp_brT]
   rfl
@@ -143,7 +143,7 @@ lemma brSys_symb {ι : Type} (P : ι → SOp d) (i : ι) (x ξ : ZetaZeros.D.Ell
     (brSys P).symb i x ξ = (P i).symb (brT d x) (brT d ξ) := by
   unfold ZetaZeros.D.EllReg.Sys.symb SOp.symb
   refine Finset.sum_congr rfl fun w _ => ?_
-  simp only [brSys, dif_pos (Nat.lt_succ_self _)]
+  simp only [brSys, dite_eq_left (Nat.lt_succ_self _)]
   rw [mul_comm]
   rfl
 
@@ -428,7 +428,7 @@ theorem frozenDecompositionOfParts : DecomposeOf := by
     simp only [trOp]
     rw [Finset.sum_range_succ, Finset.sum_eq_zero, zero_add, Finset.sum_mul]
     · refine Finset.sum_congr rfl fun w _ => ?_
-      simp only [b2, eq_self_iff_true, if_true]
+      simp only [b2, eq_self_iff_true, ite_true]
       rw [Dec.dw_const_mul hφ, hDw d ξ (List.ofFn w), Dec.prod_neg_eq]
       beta_reduce
       have hsq : ((-1 : ℂ) ^ m) * (-1) ^ m = 1 := by
@@ -438,7 +438,7 @@ theorem frozenDecompositionOfParts : DecomposeOf := by
     · intro n hn
       have hne : n ≠ m := (Finset.mem_range.mp hn).ne
       refine Finset.sum_eq_zero fun w _ => ?_
-      simp only [b2, if_neg hne, zero_mul]
+      simp only [b2, ite_eq_right hne, zero_mul]
       rw [Dec.dw_zero]
       simp
   have hint1 : Integrable (fun y => cut χ u y * trOp m lo (eF ξ) y) :=
@@ -471,7 +471,7 @@ theorem frozenDecompositionOfParts : DecomposeOf := by
       lo m w = fun x => ((ψ0 (r⁻¹ • (x - x0)) : ℝ) : ℂ) * (P.a i m w x - P.a i m w x0) := by
     intro w
     funext x
-    simp only [lo, eq_self_iff_true, if_true]
+    simp only [lo, eq_self_iff_true, ite_true]
   rw [← hR, key, Finset.sum_range_succ]
   simp only [hlom]
   ring
@@ -856,7 +856,7 @@ noncomputable def eL {d : ℕ} (ξ : E d) : E d →L[ℝ] ℂ :=
 
 lemma eF_eq_exp {d : ℕ} (ξ : E d) : eF ξ = fun y => Complex.exp (eL ξ y) := by
   funext y
-  simp only [eF, eL, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [eF, eL, smul_apply, ContinuousLinearMap.comp_apply,
     innerSL_apply_apply, Complex.ofRealCLM_apply, smul_eq_mul, real_inner_comm y ξ]
   ring_nf
 
@@ -866,7 +866,7 @@ lemma hasFDerivAt_eF {d : ℕ} (ξ y : E d) :
   exact (eL ξ).hasFDerivAt.cexp
 
 lemma eL_ev {d : ℕ} (ξ : E d) (j : Fin d) : eL ξ (ev j) = -(2 * Real.pi * Complex.I * ((ξ j : ℝ) : ℂ)) := by
-  simp only [eL, ev, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [eL, ev, smul_apply, ContinuousLinearMap.comp_apply,
     innerSL_apply_apply, Complex.ofRealCLM_apply, smul_eq_mul, EuclideanSpace.inner_single_right]
   simp
 
@@ -880,7 +880,7 @@ theorem iteratedPartialFourierChar : DwExp := by
         fun y => (w.map fun j => -(2 * Real.pi * Complex.I * ((ξ j : ℝ) : ℂ))).prod * eF ξ y := ih
     show fderiv ℝ (dw w (eF ξ)) x (ev j) = _
     rw [hfun, ((hasFDerivAt_eF ξ x).const_mul _).fderiv]
-    simp only [ContinuousLinearMap.smul_apply, smul_eq_mul, eL_ev, List.map_cons, List.prod_cons,
+    simp only [smul_apply, smul_eq_mul, eL_ev, List.map_cons, List.prod_cons,
       eF_eq_exp]
     ring
 
@@ -915,7 +915,7 @@ theorem moments_integrable_of_nrm {d : ℕ} (F : E d → ℂ) (hF : Continuous F
     rw [HasFiniteIntegral]
     refine lt_of_le_of_lt (lintegral_mono fun v => le_of_eq ?_) hs
     have ht0 : (0 : ℝ) ≤ 1 + ‖v‖ ^ 2 := by positivity
-    rw [Real.enorm_eq_ofReal (by positivity), ← ofReal_norm, ← ENNReal.ofReal_pow (by positivity),
+    rw [Real.eNorm_eq_ofReal (by positivity), ← ofReal_norm, ← ENNReal.ofReal_pow (by positivity),
       ← ENNReal.ofReal_pow (by positivity), ← ENNReal.ofReal_mul (by positivity)]
     congr 1
     simp only [A]
@@ -1082,7 +1082,7 @@ private theorem differentiable_of_contDiff_infty {f : E d → ℂ} (hf : ContDif
 private theorem exists_clm_eq_neg_two_pi_I_inner (ζ : E d) :
     ∃ L : E d →L[ℝ] ℂ, ∀ x, L x = -(2 * (Real.pi : ℂ) * Complex.I * ((inner ℝ x ζ : ℝ) : ℂ)) := by
   refine ⟨(-(2 * (Real.pi : ℂ) * Complex.I)) • (Complex.ofRealCLM.comp (innerSL ℝ ζ)), fun x => ?_⟩
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, Complex.ofRealCLM_apply, smul_eq_mul]
+  rw [smul_apply, ContinuousLinearMap.comp_apply, Complex.ofRealCLM_apply, smul_eq_mul]
   rw [innerSL_apply_apply, real_inner_comm]; ring
 
 private theorem eF_eq_exp_comp_of_clm (ζ : E d) (L : E d →L[ℝ] ℂ)
@@ -1100,7 +1100,7 @@ theorem pf_fourier_fderiv (k : E d → ℂ) (hk : ContDiff ℝ ∞ k) (hkc : Has
     intro x; rw [hχ]; exact L.hasFDerivAt.cexp
   have hχfd : ∀ x, fderiv ℝ (eF ζ) x v = eF ζ x * L v := by
     intro x
-    rw [(hχd x).fderiv, ContinuousLinearMap.smul_apply, smul_eq_mul, hχ]
+    rw [(hχd x).fderiv, smul_apply, smul_eq_mul, hχ]
   have hχc : Continuous (eF ζ) := by rw [hχ]; exact Complex.continuous_exp.comp L.continuous
   have hkd : Differentiable ℝ k := differentiable_of_contDiff_infty hk
   have hχdiff : Differentiable ℝ (eF ζ) := fun x => (hχd x).differentiableAt
@@ -1737,13 +1737,13 @@ theorem weightedNormLimit : EpsLimit := by
     have h2 : Tendsto (fun n : ℕ => ENNReal.ofReal (om s M (1 / ((n : ℝ) + 1)) ξ) ^ 2) atTop
         (𝓝 (ENNReal.ofReal (om s 0 0 ξ) ^ 2)) := by
       exact ((ENNReal.continuous_pow 2).tendsto _).comp ((ENNReal.continuous_ofReal.tendsto _).comp h1)
-    have hfin : ‖F ξ‖ₑ ^ 2 ≠ ⊤ := ENNReal.pow_ne_top enorm_ne_top
+    have hfin : ‖F ξ‖ₑ ^ 2 ≠ ⊤ := ENNReal.pow_ne_top eNorm_ne_top
     exact ENNReal.Tendsto.mul_const h2 (Or.inr hfin)
   have hmeas : ∀ n : ℕ, Measurable fun ξ : E d =>
       ENNReal.ofReal (om s M (1 / ((n : ℝ) + 1)) ξ) ^ 2 * ‖F ξ‖ₑ ^ 2 := fun n => by
     have hc := om_continuous (d := d) s M (1 / ((n : ℝ) + 1))
     exact ((ENNReal.measurable_ofReal.comp hc.measurable).pow_const 2).mul
-      (hF.measurable.enorm.pow_const 2)
+      (hF.measurable.eNorm.pow_const 2)
   calc ∫⁻ ξ, ENNReal.ofReal (om s 0 0 ξ) ^ 2 * ‖F ξ‖ₑ ^ 2
       = ∫⁻ ξ, liminf (fun n : ℕ =>
           ENNReal.ofReal (om s M (1 / ((n : ℝ) + 1)) ξ) ^ 2 * ‖F ξ‖ₑ ^ 2) atTop :=

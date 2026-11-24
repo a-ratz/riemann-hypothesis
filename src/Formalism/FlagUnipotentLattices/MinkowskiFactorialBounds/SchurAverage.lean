@@ -281,7 +281,7 @@ noncomputable def s5bL {r : ℕ} (a : Fin r → U) : Matrix (Fin r) (Fin r) ℂ 
     else if i = n then 1 else 0
 
 lemma det_gramSchmidt_coeff_eq_one {r : ℕ} (a : Fin r → U) : (s5bL a).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [s5bL]
   · intro i j hij
     have h : i < j := by simpa using hij
@@ -298,7 +298,7 @@ lemma eq_sum_gramSchmidt_coeff {r : ℕ} (a : Fin r → U) (n : Fin r) :
     · simp [h, h.ne]
     · simp [h]
     · simp [not_lt.2 h.le, h.ne']
-  simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← Finset.sum_filter]
   have hf : Finset.univ.filter (fun i => i < n) = Finset.Iio n := by ext i; simp
   rw [hf]; exact h0

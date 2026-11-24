@@ -52,11 +52,11 @@ theorem UpperTheory.Gal.G3.pTwGal :
     TwSplit → TwGal := by
   intro hS B G _ X m j b hnorm
   classical
-  haveI hN : ((X.K m).subgroupOf (X.K j)).Normal := ⟨fun n hn g => by
+  have hN : ((X.K m).subgroupOf (X.K j)).Normal := ⟨fun n hn g => by
     rw [Subgroup.mem_subgroupOf] at hn ⊢
     push_cast
     exact hnorm g g.2 n hn⟩
-  haveI : Finite (X.K j ⧸ (X.K m).subgroupOf (X.K j)) := Nat.finite_of_card_ne_zero (X.idx m j)
+  have : Finite (X.K j ⧸ (X.K m).subgroupOf (X.K j)) := Nat.finite_of_card_ne_zero (X.idx m j)
   have admr : ∀ c : X.K j ⧸ (X.K m).subgroupOf (X.K j), X.admitted m m ((c.out : X.K j) : G)⁻¹ := fun c =>
     ⟨X.K_le j _ (inv_mem c.out.2), fun u hu => hnorm _ (inv_mem c.out.2) u hu⟩
   have uniq : ∀ k ∈ X.K j, ∃! c : X.K j ⧸ (X.K m).subgroupOf (X.K j),

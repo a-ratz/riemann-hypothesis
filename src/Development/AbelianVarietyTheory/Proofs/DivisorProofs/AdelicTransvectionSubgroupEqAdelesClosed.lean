@@ -237,16 +237,16 @@ variable [TopologicalSpace R] [IsTopologicalRing R] [Module.Finite F E]
 
 theorem continuous_par (c : E →ₗ[F] F) (x : E) (i j : Fin n) :
     Continuous (par R σ c x i j : HA R σ J → Multiplicative R) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   have h1 : Continuous (coord R c) := IsModuleTopology.continuous_of_linearMap _
-  have hm : Continuous (fun k : HA R σ J => k.1.1) := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous (fun k : HA R σ J => k.1.1) := Units.continuous_val.comp continuous_subtypeVal
   exact continuous_ofAdd.comp (h1.comp (((hm.sub continuous_const).matrix_elem i j).mul continuous_const))
 
 theorem continuous_tvHom (hN : N * N = 0) (hJ : Formalism.UG.cT (σ : E →+* E) N * J = J * N) (hδ : σ δ = -δ) :
     Continuous (tvHom R σ hN hJ hδ : Multiplicative R → HA R σ J) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   have h1 : Continuous fun s : Multiplicative R => (s.toAdd ⊗ₜ[F] δ : R ⊗[F] E) := by
     have h2 : Continuous fun a : Multiplicative R => a.toAdd • ((1 : R) ⊗ₜ[F] δ : R ⊗[F] E) :=
       continuous_smul.comp (continuous_toAdd.prodMk continuous_const)
@@ -267,7 +267,7 @@ theorem exists_equiv [T2Space (HA R σ J)] (hN : N * N = 0) (hJ : Formalism.UG.c
   have c2 := continuous_tvHom R σ hN hJ hδ
   refine ⟨⟨⟨⟨⟨fun s => ⟨tvHom R σ hN hJ hδ s, (hmem _).2 ⟨s, rfl⟩⟩,
       fun z => par R σ c (N i j)⁻¹ i j z.1, hl, fun z => ?_⟩,
-      fun s t => Subtype.ext ((tvHom R σ hN hJ hδ).map_mul s t)⟩, c2.subtype_mk _, c1.comp continuous_subtype_val⟩,
+      fun s t => Subtype.ext ((tvHom R σ hN hJ hδ).map_mul s t)⟩, c2.subtype_mk _, c1.comp continuous_subtypeVal⟩,
       tvHom_mem_iff R σ hN hJ hδ hc hij⟩, ?_⟩
   · obtain ⟨z, hz⟩ := z
     obtain ⟨s, rfl⟩ := (hmem _).1 hz
@@ -395,8 +395,8 @@ theorem fixes {V : HSp D} {ξ : Fin V.rank → D.host.E} (h : IsoVec V ξ) {z : 
 
 theorem transvection_group : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam θ → ∀ ξ, IsoVec V ξ → (∃ e : Multiplicative (AF D.host.F) ≃ₜ* ZI V ξ, (∀ a, ((e a : ZI V ξ) : GA D V) ∈ GQ V ↔ Multiplicative.toAdd a ∈ Set.range (algebraMap D.host.F (AF D.host.F)))) ∧ IsClosed (ZI V ξ : Set (GA D V)) ∧ (∀ z ∈ ZI V ξ, ∀ τ, InZe (gramAt D V τ) (fun i => tauE D τ (ξ i)) (archM V (θ τ) z)) ∧ (∀ m : D.what₂.Tau → Mt V.rank, (∀ τ, InZe (gramAt D V τ) (fun i => tauE D τ (ξ i)) (m τ)) → ∃ z ∈ ZI V ξ, z ∈ GinfC V ∧ ∀ τ, archM V (θ τ) z = m τ) ∧ ∀ z ∈ ZI V ξ, (matHom V z).1.mulVec (fun i => incA D (ξ i)) = fun i => incA D (ξ i) := by
   intro D θ V hθ ξ h
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : T2Space (HA (AF D.host.F) D.sp.cm.sig V.gram) :=
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : T2Space (HA (AF D.host.F) D.sp.cm.sig V.gram) :=
     (GlobalTheory.AdelicUnitaryTop.lcsc_adelicUnitary D.host.F D.host.E D.sp.cm.sig V.rank V.gram).2.2
   obtain ⟨i, j, hij⟩ := nilM_ne h
   obtain ⟨h1, h2⟩ := exists_equiv (AF D.host.F) D.sp.cm.sig (nilM_sq h) (nilM_adj V ξ) (sig_sqrt D)

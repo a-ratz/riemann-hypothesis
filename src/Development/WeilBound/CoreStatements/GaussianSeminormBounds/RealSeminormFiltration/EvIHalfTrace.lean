@@ -151,7 +151,7 @@ def dop (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) : 𝓢(V, ℂ) :=
 theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
     dop a L f x = fderiv ℝ f x a + (-(2 * Real.pi * Complex.I) * (L x : ℂ)) * f x := by
   have hT := L.hasTemperateGrowth
-  simp only [dop, SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
+  simp only [dop, add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
     SchwartzMap.lineDerivOp_apply_eq_fderiv]
   simp only [Complex.real_smul, smul_eq_mul]
   ring
@@ -237,7 +237,7 @@ theorem hl_deriv (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
     (WithLp.prodContinuousLinearEquiv 2 ℝ ℝ V).symm.toContinuousLinearMap ∘L ContinuousLinearMap.inr ℝ ℝ V
   have hι : ∀ x, ι x = WithLp.toLp 2 (0, x) := fun x => rfl
   have hanti : AntilipschitzWith ‖WithLp.sndL 2 ℝ ℝ V‖₊ ι :=
-    (WithLp.sndL 2 ℝ ℝ V).lipschitz.to_rightInverse fun x => rfl
+    (WithLp.sndL 2 ℝ ℝ V).lipschitzWith.to_rightInverse fun x => rfl
   let R : 𝓢(WithLp 2 (ℝ × V), ℂ) →L[ℂ] 𝓢(V, ℂ) := SchwartzMap.compCLMOfAntilipschitz ℂ ι.hasTemperateGrowth hanti
   have hR : ∀ g x, R g x = g (WithLp.toLp 2 (0, x)) := fun g x => rfl
   obtain ⟨G', hG', hD⟩ := hl_line_deriv (WithLp.toLp 2 ((1 : ℝ), a)) (L ∘L WithLp.sndL 2 ℝ ℝ V)
@@ -276,8 +276,8 @@ theorem dopL_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) : dopL a L f
   ext x
   have hT : (fun x => ((L x : ℝ) : ℂ)).HasTemperateGrowth := (Complex.ofRealCLM ∘L L).hasTemperateGrowth
   rw [dop_apply]
-  simp only [dopL, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, SchwartzMap.add_apply,
-    SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT, LineDeriv.lineDerivOpCLM_apply,
+  simp only [dopL, add_apply, smul_apply, add_apply,
+    smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT, LineDeriv.lineDerivOpCLM_apply,
     SchwartzMap.lineDerivOp_apply_eq_fderiv, smul_eq_mul]
   ring
 

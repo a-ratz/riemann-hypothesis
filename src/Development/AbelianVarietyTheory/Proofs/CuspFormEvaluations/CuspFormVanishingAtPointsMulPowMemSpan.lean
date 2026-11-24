@@ -416,7 +416,7 @@ theorem inAt_iffG (Xa : ArchInM X) (Fl : FlatM X Xa) (G : Wt X.Ψ r) (x0 : Frame
   have hdp := OntoB.densF_pos hz
   have hka : 0 < kaF X x0 bb z := Real.exp_pos _
   simp only [Pi.mul_apply]
-  rw [if_pos hdom, ENNReal.ofReal_rpow_of_pos hw, ENNReal.ofReal_rpow_of_pos hsp,
+  rw [ite_eq_left hdom, ENNReal.ofReal_rpow_of_pos hw, ENNReal.ofReal_rpow_of_pos hsp,
     ← ENNReal.ofReal_mul (Real.exp_pos _).le,
     ← ENNReal.ofReal_mul (mul_nonneg (Real.exp_pos _).le (Real.rpow_nonneg hw.le _)),
     Real.rpow_def_of_pos hw, Real.rpow_def_of_pos hsp, ← Real.exp_add, ← Real.exp_add,
@@ -480,11 +480,11 @@ theorem Wfree_of_mem {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
       ENNReal.ofReal (∑ k, ‖Xa.w k x‖ ^ 2) ^ (-(1 / 2 : ℝ)) *
       ENNReal.ofReal (∑ k, ‖Fl.s k x‖ ^ 2) ^ (-((n : ℝ) - 1 / 2)) := by
   unfold Wfree
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
 
 theorem Wfree_of_notMem {x : Frame X.Ψ r} (hx : x ∉ X.dom) : Wfree Xa Fl G n x = 0 := by
   unfold Wfree
-  rw [if_neg hx]
+  rw [ite_eq_right hx]
 
 private lemma sum_norm_sq_pos_of_exists_ne_zero {N : ℕ} {a : Fin N → ℂ} (h : ∃ k, a k ≠ 0) : 0 < ∑ k, ‖a k‖ ^ 2 := by
   obtain ⟨k, hk⟩ := h
@@ -990,7 +990,7 @@ theorem chart_change : ∀ (r : ℕ) (X : Data E r) (x1 b : Frame X.Ψ r), IsOrt
       _ = ENNReal.ofReal C • volume.restrict (Metric.ball 0 δ ∩ OmF X x1) := withDensity_const _
       _ ≤ ENNReal.ofReal C • volume.restrict S := by
           refine Measure.le_iff'.2 fun s => ?_
-          simp only [Measure.smul_apply, smul_eq_mul]
+          simp only [smul_apply, smul_eq_mul]
           have hsub : Metric.ball 0 δ ∩ OmF X x1 ⊆ S := fun z hz => (hB z hz.1).2.1
           exact mul_le_mul_right (Measure.le_iff'.1 (Measure.restrict_mono_set _ hsub) s) _
   refine lt_of_le_of_lt (lintegral_mono' hle le_rfl) ?_
@@ -1164,7 +1164,7 @@ theorem Wfree_of_mem (n : ℕ) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
       ENNReal.ofReal (∑ k, ‖Xa.w k x‖ ^ 2) ^ (-(1 / 2 : ℝ)) *
       ENNReal.ofReal (∑ k, ‖Fl.s k x‖ ^ 2) ^ (-((n : ℝ) - 1 / 2)) := by
   unfold Wfree
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
 
 theorem Wfree_eq_pnorm (n : ℕ) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
     Wfree Xa Fl G n x = ENNReal.ofReal (Real.exp (-phla X (G + n • Xa.L) x)) *
@@ -1178,7 +1178,7 @@ theorem Wfree_eq_pnorm (n : ℕ) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
     exact Finset.sum_congr rfl fun k _ => GlobalTheory.Up.pnorm_sq_eq_exp hx Xa.L (Fl.s k)
   have he : Real.exp (-phla X (G + n • Xa.L) x) =
       Real.exp (-phla X G x) * Real.exp (-phla X Xa.L x) ^ n := by
-    rw [GlobalTheory.Up.phla_add_nsmul hx, neg_add, Real.exp_add, ← Real.exp_nat_mul, mul_neg]
+    rw [GlobalTheory.Up.phla_add_nsmul hx, neg_add, Real.exp_add, ← Real.exp_natCast_mul, mul_neg]
   have hc0 : ENNReal.ofReal (Real.exp (-phla X Xa.L x)) ≠ 0 :=
     (ENNReal.ofReal_pos.2 (Real.exp_pos _)).ne'
   have key : ENNReal.ofReal (Real.exp (-phla X Xa.L x)) ^ n *
@@ -1265,7 +1265,7 @@ theorem phiW_le_local {n : ℕ} (hn : 1 ≤ n) (h : Frame X.Ψ r → ℂ) {x : F
     exact Finset.sum_congr rfl fun k _ => GlobalTheory.Up.pnorm_sq_eq_exp hx Xa.L (Fl.s k)
   have he : Real.exp (-phla X (G + n • Xa.L) x) =
       Real.exp (-phla X G x) * Real.exp (-phla X Xa.L x) ^ n := by
-    rw [GlobalTheory.Up.phla_add_nsmul hx, neg_add, Real.exp_add, ← Real.exp_nat_mul, mul_neg]
+    rw [GlobalTheory.Up.phla_add_nsmul hx, neg_add, Real.exp_add, ← Real.exp_natCast_mul, mul_neg]
   have hL := Real.exp_pos (-phla X Xa.L x)
   have hA : 0 ≤ ∑ k, ‖Xa.w k x‖ ^ 2 := by positivity
   have hB : 0 ≤ ∑ k, ‖Fl.s k x‖ ^ 2 := by positivity
@@ -1601,7 +1601,7 @@ theorem leviO_phla_add_nsmul (x0 : Frame X.Ψ r) (F L : Wt X.Ψ r) (k : ℕ) {z 
 theorem pnorm_mul_pow_sq (F L : Wt X.Ψ r) (m : ℕ) (g w : Frame X.Ψ r → ℂ) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
     X.pnorm (F + m • L) (fun x => g x * w x ^ m) x ^ 2 = X.pnorm F g x ^ 2 * (X.pnorm L w x ^ 2) ^ m := by
   rw [OW.pnorm_sq X _ _ hx, OW.pnorm_sq X _ _ hx, OW.pnorm_sq X _ _ hx, OW.phla_add_nsmul X hx, neg_add,
-    Real.exp_add, ← mul_neg, Real.exp_nat_mul, map_mul, map_pow]
+    Real.exp_add, ← mul_neg, Real.exp_natCast_mul, map_mul, map_pow]
   ring
 
 theorem model_division (Xa : ArchInM X) (Fl : FlatM X Xa) (hm : Margins X Xa) (k : ℕ)

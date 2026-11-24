@@ -94,7 +94,7 @@ theorem isLat_comap {Λ' : AddSubgroup W} (h : IsLat Λ') : IsLat (Λ'.comap (g 
   · have hc : Continuous (g : V → W) := (g : V →ₗ[ℂ] W).continuous_of_finiteDimensional
     exact DiscreteTopology.of_continuous_injective
       (f := fun x : Λ'.comap (g : V →ₗ[ℂ] W).toAddMonoidHom => (⟨g x, x.2⟩ : Λ'))
-      ((hc.comp continuous_subtype_val).subtype_mk (fun x => x.2))
+      ((hc.comp continuous_subtypeVal).subtype_mk (fun x => x.2))
       (fun x y hxy => Subtype.ext (g.injective (congrArg Subtype.val hxy)))
   · have hset : ((Λ'.comap (g : V →ₗ[ℂ] W).toAddMonoidHom : AddSubgroup V) : Set V) =
         ((g.symm.restrictScalars ℝ : W ≃ₗ[ℝ] V).toLinearMap : W → V) '' (Λ' : Set W) := by
@@ -145,7 +145,7 @@ theorem form_flat (A : ℝ) (a b : ℕ) (x y : DVar X.Tau a b → ℂ) :
     matH (hSc X.Tau a b A⁻¹) x y = formV A D.what₂.Tau a b (s.flatV a b x) (s.flatV a b y) := by
   have hL : (matH (hSc X.Tau a b A⁻¹)) x y = ∑ k, x k * conj (y k) * ((A⁻¹ : ℝ) : ℂ) := by
     simp only [Formalism.L2.Th1.H.matH, LinearMap.mk₂'ₛₗ_apply, Formalism.L2.AlgTh.hSc, Matrix.diagonal_apply, mul_ite, ite_mul,
-      mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact Finset.sum_congr rfl fun k _ => by ring
   rw [hL]
   simp only [formV, LinearMap.mk₂'ₛₗ_apply]
@@ -165,7 +165,7 @@ theorem isom_flat (A : ℝ) (a b : ℕ) :
 theorem matH_hSc (sc : ℝ) (a b : ℕ) (x y : DVar X.Tau a b → ℂ) :
     matH (hSc X.Tau a b sc) x y = (sc : ℂ) * ∑ k, x k * conj (y k) := by
   simp only [Formalism.L2.Th1.H.matH, LinearMap.mk₂'ₛₗ_apply, Formalism.L2.AlgTh.hSc, Matrix.diagonal_apply, mul_ite, ite_mul,
-    mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.mul_sum]
+    mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.mul_sum]
   exact Finset.sum_congr rfl fun k _ => by ring
 
 theorem herm_hSc (sc : ℝ) (a b : ℕ) : IsHerm (matH (hSc X.Tau a b sc)) := by

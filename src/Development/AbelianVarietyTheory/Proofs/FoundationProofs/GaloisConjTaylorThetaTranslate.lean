@@ -603,12 +603,12 @@ lemma thetaTranslate_canonicalOddTheta_of_half_mem (h : ∀ z, z ∈ Λ ↔ z �
   have : x ∈ Λ := by
     have := Λ.add_mem hx hx
     rwa [add_halves] at this
-  rw [a x this, if_pos hx, one_mul]
+  rw [a x this, ite_eq_left hx, one_mul]
 
 lemma thetaTranslate_natCast_mul {G : ℂ → ℂ} {u z : ℂ} (hz : G (z + u) ≠ 0) (n : ℕ) :
     U1 Λ (n * u) G (n * z) = U1 Λ u G z ^ (n ^ 2) * divQuot G u n z := by
   unfold U1 divQuot
-  rw [mul_pow, ← Complex.exp_nat_mul]
+  rw [mul_pow, ← Complex.exp_natCast_mul]
   have : -(Real.pi : ℂ) * (n * z) * (starRingEnd ℂ) (n * u) / (area Λ : ℂ) -
       (Real.pi : ℂ) * (n * u) * (starRingEnd ℂ) (n * u) / (2 * (area Λ : ℂ)) =
       ((n ^ 2 : ℕ) : ℂ) * (-(Real.pi : ℂ) * z * (starRingEnd ℂ) u / (area Λ : ℂ) -

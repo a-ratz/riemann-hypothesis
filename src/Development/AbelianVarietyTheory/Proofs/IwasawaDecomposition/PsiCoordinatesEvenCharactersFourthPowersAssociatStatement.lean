@@ -217,7 +217,7 @@ theorem gm_top {Z : Scheme.{0}} (q : Z ⟶ Spec (CommRingCat.of R)) (z : Z) {V :
     (hV : ⊤ ≤ V) (g : Γ(Spec (CommRingCat.of R), V)ˣ) : ∃ u : Rˣ, (gm q z V g).val = cst q z (u : R) := by
   refine ⟨Units.map (Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom.toMonoidHom (res hV g), ?_⟩
   rw [← gm_res q z hV trivial g, ← gs_unit q z ⊤ trivial]
-  simp only [cst, Units.coe_map, MonoidHom.coe_coe]
+  simp only [cst, Units.coe_map, MonoidHom.coe_ofClass]
   congr 1
   change _ = ((Scheme.ΓSpecIso (CommRingCat.of R)).hom ≫ (Scheme.ΓSpecIso (CommRingCat.of R)).inv).hom _
   rw [Iso.hom_inv_id]
@@ -307,12 +307,12 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     if q = (D'.toPre.c mu).left then j' PUnit.unit else pk' q
   have hpkD : ∀ q, q ≫ D.toPre.P.A.hom = 𝟙 _ → ⊤ ≤ q ⁻¹ᵁ D.toPre.P.L.U (pkD q) := fun q _ => by
     by_cases hq : q = (D.toPre.c nu).left
-    · subst hq; simp only [pkD, if_pos rfl]; exact hj
-    · simp only [pkD, if_neg hq]; exact (hpk q).ge
+    · subst hq; simp only [pkD, ite_eq_left rfl]; exact hj
+    · simp only [pkD, ite_eq_right hq]; exact (hpk q).ge
   have hpkD' : ∀ q, q ≫ D'.toPre.P.A.hom = 𝟙 _ → ⊤ ≤ q ⁻¹ᵁ D'.toPre.P.L.U (pkD' q) := fun q _ => by
     by_cases hq : q = (D'.toPre.c mu).left
-    · subst hq; simp only [pkD', if_pos rfl]; exact hj'
-    · simp only [pkD', if_neg hq]; exact (hpk' q).ge
+    · subst hq; simp only [pkD', ite_eq_left rfl]; exact hj'
+    · simp only [pkD', ite_eq_right hq]; exact (hpk' q).ge
   obtain ⟨J, hJ, eJ⟩ := exists_good_pts D.toPre.P (FractionRing R) (π ≫ jK R) _ za z pkD hpkD
   obtain ⟨J', hJ', eJ'⟩ := exists_good_pts D'.toPre.P (FractionRing R) (π ≫ jK R) _ za z pkD' hpkD'
   have HH := H J J' hJ hJ'
@@ -328,10 +328,10 @@ theorem GlobalTheory.psi_coord_fourth_associated : ∀ (R : Type) [CommRing R] [
     rw [Category.assoc, Over.w Φ.hom]; exact he'
   have V1 := val_psi_of_coord D.toPre nu h e π z J (by
     rw [show π ≫ D.toPre.xK nu = (π ≫ jK R) ≫ (D.toPre.c nu).left from (Category.assoc _ _ _).symm, eJ _ hc]
-    simp only [pkD, if_pos rfl])
+    simp only [pkD, ite_eq_left rfl])
   have V1' := val_psi_of_coord D'.toPre mu h' e' π z J' (by
     rw [show π ≫ D'.toPre.xK mu = (π ≫ jK R) ≫ (D'.toPre.c mu).left from (Category.assoc _ _ _).symm, eJ' _ hc']
-    simp only [pkD', if_pos rfl])
+    simp only [pkD', ite_eq_left rfl])
   obtain ⟨a, V2⟩ := val_rigK_of_top D.toPre π z J hJ (by rw [eJ _ he]; exact hpkD _ he)
   obtain ⟨a', V2'⟩ := val_rigK_of_top D'.toPre π z J' hJ' (by rw [eJ' _ he']; exact hpkD' _ he')
   have hψ : (ReciprocityTheory.ChartRestriction.G.DVR.cP D'.toPre (DegPre.BF D.toPre (FractionRing R)) mu).left =
@@ -476,8 +476,8 @@ end GlobalTheory.PsiCompare
 open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.PsiCompare in
 theorem GlobalTheory.PsiCompare.famMult_sq_corr : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], ∀ (D D' : DegData R (maximalIdeal R)), ∀ (Φ : D'.toPre.P.A ≅ D.toPre.P.A) (w : LB.Iso (LB.LinComb D'.toPre.P.L (K := Fin 1) (fun _ => 𝟙 D'.toPre.P.A.left) (fun _ => 2)) ((LB.LinComb D.toPre.P.L (K := Fin 1) (fun _ => 𝟙 D.toPre.P.A.left) (fun _ => 2)).pull Φ.hom.left)), IsMonHom Φ.hom → ∀ xe : D'.toPre.X ≃+ D.toPre.X, (∀ x : D'.toPre.X, D'.toPre.c (2 • x) ≫ Φ.hom = D.toPre.c (xe (2 • x))) → ∀ (f : ∀ α : D.toPre.X, D.toPre.SecB 2 α) (f' : ∀ α : D'.toPre.X, D'.toPre.SecB 2 α), (∀ (mu α : D.toPre.X) (T : Over (Sp R)) (κ : T ⟶ TF (R := R) (FractionRing R)) (y : T ⟶ D.toPre.P.A) (z : T.left) (J : (T.left ⟶ D.toPre.P.A.left) → D.toPre.P.L.ι), Geo.Tor.Good D.toPre.P.L z J → sval (f (α + 2 • mu)) y.left z J = sval (f α) (y * ReciprocityTheory.ChartRestriction.G.DVR.cP D.toPre T mu).left z J * (ReciprocityTheory.ChartRestriction.G.DVR.uVal D.toPre (FractionRing R) 2 α (ReciprocityTheory.ChartRestriction.G.DVR.cP D.toPre _ mu) (CartesianMonoidalCategory.lift κ y) z J * val (DegPre.famMult D.toPre (FractionRing R) 2 mu α) κ.left z J).val) → (∀ (mu α : D'.toPre.X) (T : Over (Sp R)) (κ : T ⟶ TF (R := R) (FractionRing R)) (y : T ⟶ D'.toPre.P.A) (z : T.left) (J : (T.left ⟶ D'.toPre.P.A.left) → D'.toPre.P.L.ι), Geo.Tor.Good D'.toPre.P.L z J → sval (f' (α + 2 • mu)) y.left z J = sval (f' α) (y * ReciprocityTheory.ChartRestriction.G.DVR.cP D'.toPre T mu).left z J * (ReciprocityTheory.ChartRestriction.G.DVR.uVal D'.toPre (FractionRing R) 2 α (ReciprocityTheory.ChartRestriction.G.DVR.cP D'.toPre _ mu) (CartesianMonoidalCategory.lift κ y) z J * val (DegPre.famMult D'.toPre (FractionRing R) 2 mu α) κ.left z J).val) → (∀ (β : D'.toPre.X) (Z : Scheme.{0}) (ρ : Z ⟶ D'.toPre.P.A.left) (z : Z) (J : (Z ⟶ D.toPre.P.A.left) → D.toPre.P.L.ι) (J' : (Z ⟶ D'.toPre.P.A.left) → D'.toPre.P.L.ι), Geo.Tor.Good D.toPre.P.L z J → Geo.Tor.Good D'.toPre.P.L z J' → sval (f (xe (2 • β))) (ρ ≫ Φ.hom.left) z J ^ 2 = (∏ κ, ExpTrans.om w z (fun q _ => J q) (fun q _ => J' q) (ρ ≫ D'.toPre.famφB (2 • β) κ) ^ DegPre.famε 2 κ).val * sval (f' (2 • β)) ρ z J' ^ 2) → (∀ (T : Over (Sp R)) (z : T.left) (J : (T.left ⟶ D.toPre.P.A.left) → D.toPre.P.L.ι) (J' : (T.left ⟶ D'.toPre.P.A.left) → D'.toPre.P.L.ι), Geo.Tor.Good D.toPre.P.L z J → Geo.Tor.Good D'.toPre.P.L z J' → ∀ (Ω : (T ⟶ D'.toPre.P.A) → (T.left.presheaf.stalk z)ˣ), Ω = (fun x => ExpTrans.om w z (fun q _ => J q) (fun q _ => J' q) x.left) → ∀ (a b c : T ⟶ D'.toPre.P.A), cubV D.toPre.cub z J (a ≫ Φ.hom) (b ≫ Φ.hom) (c ≫ Φ.hom) ^ 2 = Ω (a * b * c) * (Ω (a * b))⁻¹ * (Ω (a * c))⁻¹ * (Ω (b * c))⁻¹ * Ω a * Ω b * Ω c * (Ω 1)⁻¹ * cubV D'.toPre.cub z J' a b c ^ 2) → ∀ (y : D'.toPre.X) (z : (DegPre.BF D.toPre (FractionRing R)).left) (J : ((DegPre.BF D.toPre (FractionRing R)).left ⟶ D.toPre.P.A.left) → D.toPre.P.L.ι) (J' : ((DegPre.BF D.toPre (FractionRing R)).left ⟶ D'.toPre.P.A.left) → D'.toPre.P.L.ι), Geo.Tor.Good D.toPre.P.L z J → Geo.Tor.Good D'.toPre.P.L z J' → IsDomain ((DegPre.BF D.toPre (FractionRing R)).left.presheaf.stalk z) → sval (f 0) (DegPre.prB D.toPre (FractionRing R)).left z J ≠ 0 → val (DegPre.famMult D'.toPre (FractionRing R) 2 (2 • y) 0) (fst (TF (R := R) (FractionRing R)) D.toPre.P.A).left z J' ^ 2 = (ExpTrans.om w z (fun q _ => J q) (fun q _ => J' q) (ReciprocityTheory.ChartRestriction.G.DVR.cP D'.toPre (DegPre.BF D.toPre (FractionRing R)) (2 • y)).left * (ExpTrans.om w z (fun q _ => J q) (fun q _ => J' q) (1 : (DegPre.BF D.toPre (FractionRing R)) ⟶ D'.toPre.P.A).left)⁻¹) ^ 2 * val (DegPre.famMult D.toPre (FractionRing R) 2 (xe (2 • y)) 0) (fst (TF (R := R) (FractionRing R)) D.toPre.P.A).left z J ^ 2 := by
   intro R _ _ _ D D' Φ w hΦ xe hc f f' hf hf' hcorr hcub y z J J' hJ hJ' hdom h0
-  haveI := hΦ
-  haveI := hdom
+  have := hΦ
+  have := hdom
   set κ : DegPre.BF D.toPre (FractionRing R) ⟶ TF (R := R) (FractionRing R) := fst (TF (R := R) (FractionRing R)) D.toPre.P.A with hκ
   set pB : DegPre.BF D.toPre (FractionRing R) ⟶ D.toPre.P.A := DegPre.prB D.toPre (FractionRing R) with hpB
   set m' : DegPre.BF D.toPre (FractionRing R) ⟶ D'.toPre.P.A := cP D'.toPre (DegPre.BF D.toPre (FractionRing R)) (2 • y) with hm'
@@ -567,7 +567,7 @@ theorem key : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], IsCN R �
   intro R _ _ _ hR D D' Φ w hw hΦ xe hc f f' hf hf' hcorr hcub hne y r r' hr hr'
   have := D.toPre.P.isAb.smooth
   have := D.toPre.P.isAb.geomConnected
-  haveI : IsIntegral (DegPre.BF D.toPre (FractionRing R)).left :=
+  have : IsIntegral (DegPre.BF D.toPre (FractionRing R)).left :=
     (geometricallyIntegral_of_smooth_of_geometricallyConnected_fibres D.toPre.P.A.hom).geometrically_isIntegral
       (TF (R := R) (FractionRing R)).hom _ _ (IsPullback.of_hasPullback _ D.toPre.P.A.hom).flip
   have ne : ∀ J, Geo.Tor.Good D.toPre.P.L (genericPoint (DegPre.BF D.toPre (FractionRing R)).left) J →
@@ -803,7 +803,7 @@ open ReciprocityTheory.ChartRestriction.G.DVR in
 theorem exists_transport_expansion : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], IsCN R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D D' : DegData R (maximalIdeal R)) (A A' : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (U' : Unif (maximalIdeal R) D' A' G), ∀ (wL : LB.Iso (LB.LinComb U'.LG.L (K := Fin 1) (fun _ => 𝟙 G.left) (fun _ => 2)) (LB.LinComb U.LG.L (K := Fin 1) (fun _ => 𝟙 G.left) (fun _ => 2))), wL.IsGen → ∀ (σ : H0 U.LG.L 2), ∃ (σ' : H0 U'.LG.L 2) (f' : ∀ α : D'.toPre.X, D'.toPre.SecB 2 α), (∀ e : ℕ, U'.ExpandsAt e 2 σ' f') ∧ (∀ (Z : Scheme.{0}) (r : Z ⟶ G.left) (z : Z) (J : (Z ⟶ G.left) → U.LG.L.ι) (J' : (Z ⟶ G.left) → U'.LG.L.ι), Good U.LG.L z J → Good U'.LG.L z J' → sval σ r z J = (gv wL r z (fun _ => J r) (fun _ => J' r)).val * sval σ' r z J') := by
   intro R _ _ _ hCN G _ _ _ D D' A A' U U' wL hwL σ
   have hR := TorRef.admissibleBase_of_completeNormalLocalCharZero hCN
-  haveI : IsNoetherianRing R := hR.1
+  have : IsNoetherianRing R := hR.1
   have hL := linComb_isLB U.LG.L U.LG.isLB (K := Fin 1) (fun _ => 𝟙 G.left) (fun _ => 2)
   have hL' := linComb_isLB U'.LG.L U'.LG.isLB (K := Fin 1) (fun _ => 𝟙 G.left) (fun _ => 2)
   let σ' : H0 U'.LG.L 2 := secOfIso σ hwL hL' hL
@@ -1166,10 +1166,10 @@ theorem exists_good_ext {X Z : Scheme.{0}} (L : LB X) (hL : L.IsLB) (z : Z) (c :
     ∃ J, Good L z J ∧ ∀ ψ, ψ z ∈ L.U (c ψ) → J ψ = c ψ := by
   classical
   choose d hd using fun ψ : Z ⟶ X => exists_chart hL (ψ z)
-  refine ⟨fun ψ => if ψ z ∈ L.U (c ψ) then c ψ else d ψ, fun ψ => ?_, fun ψ h => if_pos h⟩
+  refine ⟨fun ψ => if ψ z ∈ L.U (c ψ) then c ψ else d ψ, fun ψ => ?_, fun ψ h => ite_eq_left h⟩
   by_cases h : ψ z ∈ L.U (c ψ)
-  · simpa only [if_pos h] using h
-  · simpa only [if_neg h] using hd ψ
+  · simpa only [ite_eq_left h] using h
+  · simpa only [ite_eq_right h] using hd ψ
 
 theorem pull_inv {P Y B : Scheme.{0}} {a b : P ⟶ Y} {p : Y ⟶ B} (h : a ≫ p = b ≫ p) {W : B.Opens}
     {V : Y.Opens} (hV : V ≤ p ⁻¹ᵁ W) (ha : b ⁻¹ᵁ V ≤ a ⁻¹ᵁ V) (x : Γ(B, W)) :
@@ -1433,7 +1433,7 @@ theorem GlobalTheory.termMatch_at_level : ∀ (R : Type) [CommRing R] [IsDomain 
       ((map_sum _ _ _).symm.trans ((congrArg _ hsum0).trans (map_zero _)))
   let hfun : D'.toPre.X → Γ((thickObj R (maximalIdeal R) e G).left, Vst) := fun β =>
     if hβ : β ∈ S then Hv β hβ else 0
-  have hd : ∀ β (hβ : β ∈ S), hfun β = Hv β hβ := fun β hβ => dif_pos hβ
+  have hd : ∀ β (hβ : β ∈ S), hfun β = Hv β hβ := fun β hβ => dite_eq_left hβ
   have hsum : ∑ β ∈ S, chi (xe β) *
       ((snd (Te D.toPre (maximalIdeal R) e) (thickObj R (maximalIdeal R) e G)).left.app Vst).hom (hfun β) = 0 :=
     (Finset.sum_attach S (fun β => chi (xe β) *
@@ -1576,13 +1576,13 @@ theorem GlobalTheory.torus_coord_squares_correspond : ∀ (R : Type) [CommRing R
   have hM' := DVR.linComb_isLB (Y := D'.toPre.P.A.left) _ hL' (K := Fin 1) (fun _ => 𝟙 D'.toPre.P.A.left)
     (fun _ => 2)
   have hp' : (U'.gt e).pG ≫ Φ.hom = (U.gt e).pG := Over.OverMorphism.ext (hpG e)
-  haveI : Mono Φ.hom.left := ⟨fun a b h => by
+  have : Mono Φ.hom.left := ⟨fun a b h => by
     have k := congrArg (· ≫ Φ.inv.left) h
     simp only [Category.assoc, ← Over.comp_left, Iso.hom_inv_id, Over.id_left, Category.comp_id] at k
     exact k⟩
-  haveI := (U.gt e).q_flat
-  haveI := (U.gt e).q_surj
-  haveI := (U.gt e).q_affine
+  have := (U.gt e).q_flat
+  have := (U.gt e).q_surj
+  have := (U.gt e).q_affine
   obtain ⟨T, hT, vT⟩ := exists_sqGen hL ((U.gt e).t (xe (2 • β))) ((U.gt e).t_gen _)
   obtain ⟨T', hT', vT'⟩ := exists_sqGen hL' ((U'.gt e).t (2 • β)) ((U'.gt e).t_gen _)
   obtain ⟨t₁, ht₁, hv₁⟩ := exists_up ((isGen_iff w).1 hw) hM hM' T' hT'

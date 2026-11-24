@@ -91,8 +91,8 @@ theorem exists_compatible_primitive_prime_pow_roots :
     exact ⟨Units.mk0 z hz0, Units.ext (by simpa using hz)⟩
   choose f hf using hroot
 
-  haveI : NeZero (p : k) := ⟨by exact_mod_cast hp'.ne_zero⟩
-  obtain ⟨z₁, hz₁⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot k p
+  have : NeZero (p : k) := ⟨by exact_mod_cast hp'.ne_zero⟩
+  obtain ⟨z₁, hz₁⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot k p
   have hz₁0 : z₁ ≠ 0 := hz₁.ne_zero hp'.ne_zero
   have hu₁ : IsPrimitiveRoot (Units.mk0 z₁ hz₁0) p := by
     rw [← IsPrimitiveRoot.coe_units_iff]; simpa using hz₁

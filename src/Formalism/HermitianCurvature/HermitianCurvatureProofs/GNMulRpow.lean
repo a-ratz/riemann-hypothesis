@@ -78,7 +78,7 @@ theorem l_enorm_le {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1
   rw [l_of_be (hbe _ (dd_stable hds hg x hx) v hv) hlv]
   have hbe' := be_enorm_le (c := c) hds hT hπ hW hN (x := x) (v := v) hg
   calc ‖((‖l v‖ ^ 2 : ℝ) : ℂ)⁻¹ • (be z c π σ μW μN (σ g x) v) (l v)‖ₑ
-      = ‖((‖l v‖ ^ 2 : ℝ) : ℂ)⁻¹‖ₑ * ‖(be z c π σ μW μN (σ g x) v) (l v)‖ₑ := enorm_smul _ _
+      = ‖((‖l v‖ ^ 2 : ℝ) : ℂ)⁻¹‖ₑ * ‖(be z c π σ μW μN (σ g x) v) (l v)‖ₑ := eNorm_smul _ _
     _ ≤ ‖((‖l v‖ ^ 2 : ℝ) : ℂ)⁻¹‖ₑ * (‖be z c π σ μW μN (σ g x) v‖ₑ * ‖l v‖ₑ) := by
         gcongr
         exact ContinuousLinearMap.le_opENorm _ _

@@ -68,11 +68,11 @@ theorem exists_embed_padicAlgCl (p : ℕ) [Fact p.Prime] (K : IntermediateField 
       (∀ v, (j v : PadicAlgCl p) = ι (algebraMap W (FractionRing W) v)) ∧ IsLocalHom j ∧
       ∀ a, (j (f a) : PadicAlgCl p) = ((a : K) : PadicAlgCl p) := by
   let V₀ := integralClosure ℤ_[p] K
-  letI : Algebra V₀ W := f.toAlgebra
-  haveI : Module.Finite V₀ W := hfin
-  haveI : IsFractionRing V₀ K := integralClosure.isFractionRing_of_finite_extension ℚ_[p] K
+  let : Algebra V₀ W := f.toAlgebra
+  have : Module.Finite V₀ W := hfin
+  have : IsFractionRing V₀ K := integralClosure.isFractionRing_of_finite_extension ℚ_[p] K
   let eK : K ≃ₐ[V₀] FractionRing V₀ := IsLocalization.algEquiv (nonZeroDivisors V₀) K (FractionRing V₀)
-  letI : Algebra K (FractionRing W) := (fK.comp eK.toRingHom).toAlgebra
+  let : Algebra K (FractionRing W) := (fK.comp eK.toRingHom).toAlgebra
   have e : (algebraMap W (FractionRing W)).comp (algebraMap V₀ W) =
       (algebraMap K (FractionRing W)).comp (algebraMap V₀ K) := by
     refine RingHom.ext fun a => ?_
@@ -91,7 +91,7 @@ theorem exists_embed_padicAlgCl (p : ℕ) [Fact p.Prime] (K : IntermediateField 
     · intro hx
       have hint : IsIntegral ℤ_[p] (τ x) := (mem_integralClosure_padicInt_iff K' (τ x)).2 hx
       let ρ : ℤ_[p] →+* W := f.comp (algebraMap ℤ_[p] V₀)
-      letI : Algebra ℤ_[p] W := ρ.toAlgebra
+      let : Algebra ℤ_[p] W := ρ.toAlgebra
       have hτc : ∀ r : ℤ_[p], τ (algebraMap ℤ_[p] (FractionRing W) r) = algebraMap ℤ_[p] K' r := by
         intro r
         have h1 : algebraMap ℤ_[p] (FractionRing W) r =
@@ -134,12 +134,12 @@ namespace GlobalTheory.UTraitPt
 theorem exists_lift_i {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H}
     {l : Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l} (C : UCompact Xo c) (F : Type) [Field F]
     (g : Sp F ⟶ C.Z) (hg : Set.range g ⊆ Set.range C.i) : ∃ g' : Sp F ⟶ Xo.XF c, g' ≫ C.i = g := by
-  letI := C.b.toAlgebra
-  haveI := C.isFractionRing
-  haveI := C.ded
-  haveI := C.iF_open
-  haveI : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
-  haveI : IsPreimmersion (pullback.fst C.z (spMap C.b)) := inferInstance
+  let := C.b.toAlgebra
+  have := C.isFractionRing
+  have := C.ded
+  have := C.iF_open
+  have : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
+  have : IsPreimmersion (pullback.fst C.z (spMap C.b)) := inferInstance
   have hinj : Function.Injective (pullback.fst C.z (spMap C.b)) :=
     (pullback.fst C.z (spMap C.b)).isEmbedding.injective
   let pt : Sp F := ⟨⊥, Ideal.isPrime_bot⟩
@@ -159,7 +159,7 @@ theorem exists_lift_i {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
         rfl
       rw [h1] at this
       rw [this]
-      haveI := ((C.iF ≫ pullback.snd C.z (spMap C.b)) x).isPrime
+      have := ((C.iF ≫ pullback.snd C.z (spMap C.b)) x).isPrime
       show Ideal.comap C.b _ = ⊥
       rw [Ideal.eq_bot_of_prime (((C.iF ≫ pullback.snd C.z (spMap C.b)) x).asIdeal), Ideal.comap_bot_of_injective _ C.inj]
     exact (RingHom.injective_iff_ker_eq_bot φ).2 e2
@@ -185,20 +185,20 @@ namespace GlobalTheory.UTraitPt
 
 theorem exists_uTrait_of_classicalPoint : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (X₁ : USetup C) (Y : RatModel X₁.o₁ X₁.Ω₁) (πY : Y.Z ⟶ X₁.M.Z) (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ Y.Z), Set.range (gPt p ≫ y ≫ πY ≫ X₁.π) ⊆ Set.range C.i → ∃ (T : UTrait Xo c) (ι : FractionRing T.V →+* PadicAlgCl p) (j : T.V →+* OO p) (ξ : Sp T.V ⟶ Y.Z), (∀ x, ‖ι x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap T.V (FractionRing T.V))) ∧ (∀ v, (j v : PadicAlgCl p) = ι (algebraMap T.V (FractionRing T.V) v)) ∧ IsLocalHom j ∧ spMap j ≫ ξ = y ∧ jK T.V ≫ ξ ≫ πY ≫ X₁.π = T.y ≫ C.i := by
   intro E _ _ _ H Dw l Xo c C X₁ Y πY p _ y hy
-  haveI : Algebra.FiniteType ℤ X₁.o₁ := X₁.ar.ft
-  haveI := Y.lft
-  haveI hSpecZ : LocallyOfFiniteType (spMap (algebraMap ℤ X₁.o₁)) := by
+  have : Algebra.FiniteType ℤ X₁.o₁ := X₁.ar.ft
+  have := Y.lft
+  have hSpecZ : LocallyOfFiniteType (spMap (algebraMap ℤ X₁.o₁)) := by
     show LocallyOfFiniteType (Spec.map (CommRingCat.ofHom (algebraMap ℤ X₁.o₁)))
     rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
     exact RingHom.finiteType_algebraMap.mpr inferInstance
   obtain ⟨K, hK, hKall⟩ := padicAlgCl_integral_points.2 Y.Z (Y.s ≫ spMap (algebraMap ℤ X₁.o₁)) p y
-  haveI : FiniteDimensional ℚ_[p] K := hK
+  have : FiniteDimensional ℚ_[p] K := hK
   obtain ⟨j₀, y₀, hj₀, -, hy₀⟩ := hKall K le_rfl
   let V₀ := integralClosure ℤ_[p] K
-  haveI hdvr : IsDiscreteValuationRing V₀ := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_dvr ℤ_[p] ℚ_[p] K
-  haveI : Module.Finite ℤ_[p] V₀ := IsIntegralClosure.finite ℤ_[p] ℚ_[p] K _
-  haveI : IsAdicComplete (maximalIdeal V₀) V₀ := CompleteFiniteExtension.isAdicComplete_of_finite_local ℤ_[p] _
-  haveI : CharZero V₀ := inferInstance
+  have hdvr : IsDiscreteValuationRing V₀ := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_dvr ℤ_[p] ℚ_[p] K
+  have : Module.Finite ℤ_[p] V₀ := IsIntegralClosure.finite ℤ_[p] ℚ_[p] K _
+  have : IsAdicComplete (maximalIdeal V₀) V₀ := CompleteFiniteExtension.isAdicComplete_of_finite_local ℤ_[p] _
+  have : CharZero V₀ := inferInstance
   have hB : GlobalTheory.Mum.Base V₀ := ⟨⟨inferInstance, inferInstance, inferInstance, inferInstance⟩, inferInstance⟩
 
   have hj₀i : Function.Injective ((OO p).subtype.comp j₀) := by
@@ -228,7 +228,7 @@ theorem exists_uTrait_of_classicalPoint : ∀ (E : Type) [Field E] [NumberField 
     simp only [gen₀, Category.assoc]
   obtain ⟨yK, hyK⟩ := exists_lift_i C (FractionRing V₀) gen₀ hgen
   obtain ⟨T, f, fK, -, -, hfin, hfK, hTy⟩ := GlobalTheory.UTraitExt.uTraitExtSt E H Dw l Xo c V₀ hB hdvr yK
-  haveI : IsDiscreteValuationRing T.V := T.cdvr.1
+  have : IsDiscreteValuationRing T.V := T.cdvr.1
   obtain ⟨ι, j, hball, hj, hloc, hjf⟩ := exists_embed_padicAlgCl p K T.V f fK hfin hfK
   refine ⟨T, ι, j, spMap f ≫ y₀, hball, hj, hloc, ?_, ?_⟩
   · have hjf' : j.comp f = j₀ := RingHom.ext fun a => Subtype.ext ((hjf a).trans (hj₀ a).symm)

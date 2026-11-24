@@ -402,7 +402,7 @@ theorem kIdx_half_sum (h : R → AddSubgroup M) (hmem : ∀ e u, u ∈ h e ↔ e
   induction P using Finset.induction_on with
   | empty =>
     rw [Finset.sum_empty, Finset.prod_empty]
-    haveI : Subsingleton ↥(Λ ⊓ h 0) := ⟨fun a b => by
+    have : Subsingleton ↥(Λ ⊓ h 0) := ⟨fun a b => by
       have ha := (hmem _ _).1 (AddSubgroup.mem_inf.1 a.2).2
       have hb := (hmem _ _).1 (AddSubgroup.mem_inf.1 b.2).2
       rw [zero_smul] at ha hb
@@ -470,7 +470,7 @@ namespace GlobalTheory.HalfIndex
 
 theorem relIndex_nsmul_half : ∀ {D : D7} (S T : HSp D) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), Submodule.IsFullLattice D.host.E ΛS → Submodule.IsFullLattice D.host.E ΛT → ∀ (c : AE D) (v : HeightOneSpectrum (𝓞 D.host.F)) (π : AE D →+* Fv D.host.F v), IsSplitIdem D c → GlobalTheory.SplitHecke.Chart c v π → ∀ k : ℕ, 0 < k → (AddSubgroup.map (nsmulAddMonoidHom k) ((latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) ⊓ GlobalTheory.PlaceModel.half S T c)).relIndex ((latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) ⊓ GlobalTheory.PlaceModel.half S T c) = Nat.card (v.adicCompletionIntegers D.host.F ⧸ Ideal.span {(k : v.adicCompletionIntegers D.host.F)}) ^ (S.rank * T.rank) := by
   intro D S T ΛS ΛT hS hT c v π hc hπ k hk
-  haveI : CharZero (Fv D.host.F v) := algebraRat.charZero _
+  have : CharZero (Fv D.host.F v) := algebraRat.charZero _
   obtain ⟨σ, q1, q2⟩ := GlobalTheory.SplitLinear.exists_section (S := S) (T := T) hc.1 hπ
   have inj : Function.Injective σ := fun w w' h => by rw [← q1 w, h, q1]
   have hinf : infPart D c = 0 := GlobalTheory.PlaceModelSum.infPart_split hc
@@ -552,8 +552,8 @@ open GlobalTheory.RowEx
 
 theorem _root_.GlobalTheory.T.relIndex_nsmul_idempotentHalf_at_splitPlace : ∀ {D : D7} (S T : HSp D) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)), Submodule.IsFullLattice D.host.E ΛS → Submodule.IsFullLattice D.host.E ΛT → ∀ (c : AE D) (v : HeightOneSpectrum (𝓞 D.host.F)) (π : AE D →+* Fv D.host.F v), IsSplitIdem D c → GlobalTheory.SplitHecke.Chart c v π → ∀ k : ℕ, 0 < k → (AddSubgroup.map (nsmulAddMonoidHom k) ((latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) ⊓ GlobalTheory.PlaceModel.half S T c)).relIndex ((latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) ⊓ GlobalTheory.PlaceModel.half S T c) = Nat.card (v.adicCompletionIntegers D.host.F ⧸ Ideal.span {(k : v.adicCompletionIntegers D.host.F)}) ^ (S.rank * T.rank) := by
   intro D S T ΛS ΛT hS hT
-  letI := hS
-  letI := hT
+  let := hS
+  let := hT
   exact GlobalTheory.HalfIndex.relIndex_nsmul_half S T ΛS ΛT inferInstance inferInstance
 end -- clump:auto
 end -- clump:auto
@@ -652,7 +652,7 @@ theorem halfCoset_reps_card : ∀ {D : D7} (S T : HSp D) (ΛS : Submodule (𝓞 
     change M.relIndex Y ≠ 0
     rw [hMY]
     exact fun h => (pow_pos hk _).ne' (Nat.eq_zero_of_zero_dvd (h ▸ hdvd))
-  haveI : Finite (↥Y ⧸ M.addSubgroupOf Y) := AddSubgroup.index_ne_zero_iff_finite.1 hne
+  have : Finite (↥Y ⧸ M.addSubgroupOf Y) := AddSubgroup.index_ne_zero_iff_finite.1 hne
   obtain ⟨R, hRc, hRY, hRu⟩ := GlobalTheory.SplitLinear.exists_reps M Y
   refine ⟨R, fun y hy => ?_, fun y hy1 hy2 => ?_, ?_⟩
   · obtain ⟨h1, h2⟩ := AddSubgroup.mem_inf.1 (hRY y hy)
@@ -1000,18 +1000,18 @@ theorem model_coset {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D)
   have hcardC : (R.card : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hcard
   set Ψ : WO S T → ℂ := (halfCoset e Λ k 0).indicator 1 with hΨdef
   have hmem0 : ∀ t, t ∈ halfCoset e Λ k 0 ↔ ∃ u ∈ Λ, IsHalf e u ∧ t = k • u := fun t => by
-    simp only [halfCoset, Set.mem_setOf_eq, zero_add]
+    simp only [halfCoset, Set.mem_ofPred_eq, zero_add]
   have hΨ : Ψ = (R.card : ℂ)⁻¹ • ∑ r ∈ R, (fun t => ψ (symplO S T t r) * halfInd e Λ t) := by
     funext t
     rw [Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
     by_cases ht : t ∈ Λ ∧ IsHalf e t
-    · have h1 : halfInd e Λ t = 1 := if_pos ht
+    · have h1 : halfInd e Λ t = 1 := ite_eq_left ht
       simp only [h1, mul_one]
       by_cases hm : ∃ u ∈ Λ, IsHalf e u ∧ t = k • u
       · rw [(hsum t ht.1 ht.2).1 hm, inv_mul_cancel₀ hcardC, hΨdef, Set.indicator_of_mem ((hmem0 t).2 hm)]
         rfl
       · rw [(hsum t ht.1 ht.2).2 hm, mul_zero, hΨdef, Set.indicator_of_notMem (fun h => hm ((hmem0 t).1 h))]
-    · have h1 : halfInd e Λ t = 0 := if_neg ht
+    · have h1 : halfInd e Λ t = 0 := ite_eq_right ht
       simp only [h1, mul_zero, Finset.sum_const_zero]
       rw [hΨdef, Set.indicator_of_notMem]
       intro h
@@ -1022,7 +1022,7 @@ theorem model_coset {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D)
     funext t
     have hiff : t ∈ halfCoset e Λ k x₀ ↔ t + -x₀ ∈ halfCoset e Λ k 0 := by
       rw [hmem0]
-      simp only [halfCoset, Set.mem_setOf_eq]
+      simp only [halfCoset, Set.mem_ofPred_eq]
       refine exists_congr fun u => and_congr_right fun _ => and_congr_right fun _ => ⟨fun h => ?_, fun h => ?_⟩
       · rw [h]; abel
       · rw [← h]; abel
@@ -1117,7 +1117,7 @@ theorem GlobalTheory.RowEx.fourierVec : ∀ {D : D7} {T : Type} {L : LevCh D T} 
   have hcos : halfCoset d.e (pairLat G p) k x₀ = halfCoset d.e (latO (G.pS p) (G.pT p)
       (S.N.latS p : Set (Fin (G.pS p).rank → D.host.E)) (S.N.latT p : Set (Fin (G.pT p).rank → D.host.E)) fun _ => True) k x₀ := by
     ext x
-    simp only [halfCoset, Set.mem_setOf_eq]
+    simp only [halfCoset, Set.mem_ofPred_eq]
     exact exists_congr fun u => ⟨fun ⟨h1, h2, h3⟩ => ⟨(hag u h2).1 h1, h2, h3⟩, fun ⟨h1, h2, h3⟩ => ⟨(hag u h2).2 h1, h2, h3⟩⟩
   have hkx' := (hag _ (isHalf_nsmul_of k hx₀)).1 hkx
   have hsb : IsSBHalf d.e (latO (G.pS p) (G.pT p) (S.N.latS p : Set (Fin (G.pS p).rank → D.host.E))
@@ -1129,10 +1129,10 @@ theorem GlobalTheory.RowEx.fourierVec : ∀ {D : D7} {T : Type} {L : LevCh D T} 
   obtain ⟨f, hf⟩ : ∃ f, d.IsTheta W (S.N.latS p) (S.N.latT p) (S.Z.vac p) f :=
     VecEx.exists_isThetaAt_of_vac
       (by
-        letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hSd
+        let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hSd
         infer_instance)
       (by
-        letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hTd
+        let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hTd
         infer_instance)
       hSd hTd d.e_is hv hsb
   obtain ⟨⟨Tm, hTm⟩, hall⟩ := id hf
@@ -1488,8 +1488,8 @@ theorem applyAt0_monomial (D : D7) {N N' : ℕ} (α : Mono D N N') (G : VC D N N
       = (α.prod fun _ n => (n.factorial : ℂ)) * Formalism.MainNotions.TaylorLogMetric.taylor D G α := by
   classical
   unfold Formalism.MainNotions.GL3Theta.applyAt0
-  rw [MvPolynomial.support_monomial, if_neg one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
-    if_pos rfl, one_mul]
+  rw [MvPolynomial.support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
+    ite_eq_left rfl, one_mul]
 
 end GlobalTheory.MovedKappaArith
 

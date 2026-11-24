@@ -127,7 +127,7 @@ theorem _root_.GlobalTheory.UPoinc.exists_zhModel_proper_over_uSetup : ∀ (E : 
   have hYp : IsProper Y.s := ((GlobalTheory.isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hO.proj).1
   have hsep : IsSeparated X₁.M.s := X₁.M.sep
   have hqp : IsProper q := by
-    haveI : IsProper (q ≫ X₁.M.s) := by rw [hq.inducedModelMorphism_comp_structureMap]; exact hYp
+    have : IsProper (q ≫ X₁.M.s) := by rw [hq.inducedModelMorphism_comp_structureMap]; exact hYp
     exact IsProper.of_comp q X₁.M.s
   have hpt : Y.pt ≫ q = X₁.M.pt :=
     hq.trans ((congrArg (· ≫ X₁.M.pt) (Spec.map_id _)).trans (Category.id_comp _))
@@ -161,14 +161,14 @@ namespace GlobalTheory.UPoinc.GFib
 theorem latAt_const_on_fibre : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (Y : RatModel o Ω) (G : Over Y.Z) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (Z : Scheme.{0}) (q : Y.Z ⟶ Z) (z : Z), _root_.IsPreconnected (q.base ⁻¹' {z}) → (∃ r₀ : ℕ, ∀ w, q.base w = z → RkAt G w r₀) → ∀ (I T : Type) (f : I → (G ⟶ G)), (∀ e, IsMonHom (f e)) → ∀ (gγ : T → (Over.mk Y.pt ⟶ G)) (ζ : oˣ) (L : ℕ), 0 < L → ζ ^ L = 1 → IsUnit (L : o) → (∀ t, gγ t ^ L = 1) → (∀ t w, q.base w = z → ExtNear (gγ t) w) → ∀ (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (m : I → X →+ X) (c : T → X →+ ZMod L) (w w' : Y.Z), q.base w = z → q.base w' = z → LatAt f gγ ζ L m c w → LatAt f gγ ζ L m c w' := by
   intro o Ω _ _ _ _ Y G _ _ hG Z q z hpre hrk I T f hf gγ ζ L hL hζ hu hγ hext X _ _ _ m c w w' hw hw'
   obtain ⟨r₀, hr⟩ := hrk
-  haveI : IsNoetherianRing o := by
-    haveI := ArithBase.ded (o := o) (Ω := Ω)
+  have : IsNoetherianRing o := by
+    have := ArithBase.ded (o := o) (Ω := Ω)
     infer_instance
-  haveI := Y.lft
-  haveI := Y.qc
-  haveI : IsLocallyNoetherian Y.Z := LocallyOfFiniteType.isLocallyNoetherian Y.s
-  haveI : CompactSpace Y.Z := QuasiCompact.compactSpace_of_compactSpace Y.s
-  haveI : IsNoetherian Y.Z := {}
+  have := Y.lft
+  have := Y.qc
+  have : IsLocallyNoetherian Y.Z := LocallyOfFiniteType.isLocallyNoetherian Y.s
+  have : CompactSpace Y.Z := QuasiCompact.compactSpace_of_compactSpace Y.s
+  have : IsNoetherian Y.Z := {}
   exact GlobalTheory.fibre_const_of_specializes_invariant Y.Z Z q.base q.continuous z hpre
     (fun v => LatAt f gγ ζ L m c v)
     (fun a b ha hb hab => latAt_iff_of_specializes hG hL hζ hu hf hγ m c hab (hr a ha) (hr b hb)
@@ -217,14 +217,14 @@ namespace GlobalTheory.UPoinc.GFibUniq
 
 theorem isPrimitiveRoot_map {o : Type} [CommRing o] [IsDomain o] {ζ : o} {L : ℕ} (hL : 0 < L)
     (hζ : IsPrimitiveRoot ζ L) (hu : IsUnit (L : o)) (κ : Type) [Field κ] (a : o →+* κ) : IsPrimitiveRoot (a ζ) L := by
-  haveI : NeZero (L : κ) := ⟨by simpa using (hu.map a).ne_zero⟩
+  have : NeZero (L : κ) := ⟨by simpa using (hu.map a).ne_zero⟩
   rw [← Polynomial.isRoot_cyclotomic_iff]
   have hr := (hζ.isRoot_cyclotomic hL).map (f := a)
   simpa [Polynomial.map_cyclotomic] using hr
 
 theorem latAt_unique : ∀ (o Ω : Type) [CommRing o] [IsDomain o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (G : Over M.Z) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (I T : Type) (f : I → (G ⟶ G)) (gγ : T → (Over.mk M.pt ⟶ G)) (ζ : oˣ) (L : ℕ), 0 < L → IsPrimitiveRoot (ζ : o) L → IsUnit (L : o) → ∀ (X X' : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] [AddCommGroup X'] [Module.Free ℤ X'] [Module.Finite ℤ X'] (m : I → X →+ X) (c : T → X →+ ZMod L) (m' : I → X' →+ X') (c' : T → X' →+ ZMod L) (w : M.Z), LatAt f gγ ζ L m c w → LatAt f gγ ζ L m' c' w → ∃ e : X ≃+ X', (∀ i x, e (m i x) = m' i (e x)) ∧ ∀ t x, c' t (e x) = c t x := by
   intro o Ω _ _ _ _ M G _ _ hG I T f gγ ζ L hL hζ hu X X' _ _ _ _ _ _ m c m' c' w h h'
-  haveI : IsSeparated G.hom := hG.separated
+  have : IsSeparated G.hom := hG.separated
   exact LatAt.unique hL (fun κ _ a => isPrimitiveRoot_map hL hζ hu κ a) h h'
 
 end GlobalTheory.UPoinc.GFibUniq
@@ -280,7 +280,7 @@ theorem exists_endo_pull {S S' : Scheme.{0}} {G : Over S} [GrpObj G] {G' : Over 
 
 theorem exists_unit_pow_eq {o : Type} [CommRing o] [IsDomain o] {L : ℕ} (hL : 0 < L) {ζ ξ : o}
     (hζ : IsPrimitiveRoot ζ L) (hξ : IsPrimitiveRoot ξ L) : ∃ k : ZMod L, IsUnit k ∧ ζ ^ k.val = ξ := by
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   obtain ⟨i, hi, rfl⟩ := hζ.eq_pow_of_pow_eq_one hξ.pow_eq_one
   refine ⟨i, (ZMod.isUnit_iff_coprime i L).2 ((hζ.pow_iff_coprime hL i).1 hξ), ?_⟩
   rw [ZMod.val_natCast, Nat.mod_eq_of_lt hi]
@@ -354,7 +354,7 @@ theorem exists_ratLift_val {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] 
     [Field K] [Field K'] [CharZero K'] (κ : K →+* K') (s : Sp K' ⟶ M.Z) (R : Subalgebra o Ω)
     (h : ratHull R ≤ M.O (s (closedPoint K'))) (yK : R →+* K) (hy : ∀ x : R, κ (yK x) = M.val s x) :
     ∃ y₁ : ratHull R →+* K, y₁.comp (toRat R) = yK ∧ ∀ x : ratHull R, κ (y₁ x) = M.val s x := by
-  haveI : CharZero K := RingHom.charZero κ
+  have : CharZero K := RingHom.charZero κ
   obtain ⟨y₁, hy₁, -⟩ := existsUnique_ratLift R (K := K) (fun n hn => IsUnit.mk0 _ (Int.cast_ne_zero.2 hn)) yK
   refine ⟨y₁, hy₁, fun x => ?_⟩
   obtain ⟨n, hn, hx⟩ := mem_ratHull.1 x.2
@@ -385,8 +385,8 @@ theorem char_eq_bar_smul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     refine ⟨j.symm w, j.injective ?_⟩
     rw [map_add (f := _), map_nsmul, AddEquiv.apply_symm_apply, hs, hw]
   have hT := GlobalTheory.LabelTransfer.main o Ω S ρ p y₀ u eA s hlab'
-  haveI : Mono (jK u.V) := GlobalTheory.PolDeg.Wit.mono_jK
-  haveI : Mono (genMap u.U) := by unfold genMap; infer_instance
+  have : Mono (jK u.V) := GlobalTheory.PolDeg.Wit.mono_jK
+  have : Mono (genMap u.U) := by unfold genMap; infer_instance
   have hTor := GlobalTheory.Poinc.TorEnd.torMatch_of_endChar u.V hBase u.G u.semi u.D u.A u.U F hF m hm
   have hmain := GlobalTheory.TauFormHom.main u.V hBase inferInstance u.G u.semi u.D u.A u.U u.G u.semi u.D u.A u.U F hF m s hTor
     (by
@@ -438,11 +438,11 @@ theorem latAt_of_uTest_over : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra
   intro o Ω _ _ _ hA S ρ Y hY G _ _ hG R₁ hR₁ B _ hB₁ bB hbB A₀ _ a₁ ψ ha₁ hψ I e he f hef H gγ hγ p _ y hR y₀ hy₀ u l yK₁ hyK₁
     hy₁ φB hφB hφBb ζ hζ hH hext
   subst hH
-  haveI := hA.ded
+  have := hA.ded
   have hL : 0 < S.r * S.N := Nat.mul_pos S.r_pos (by have := S.N_ge; omega)
   have hζ1 : ζ ^ (S.r * S.N) = 1 := Units.ext (by
     rw [Units.val_pow_eq_pow_val, hζ, ← pow_mul, ← pow_two, S.prim.pow_eq_one]; rfl)
-  haveI : CharZero u.V := RingHom.charZero
+  have : CharZero u.V := RingHom.charZero
     ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V (FractionRing u.V)))
   have hB : GlobalTheory.Mum.Base u.V := ⟨⟨inferInstance, inferInstance, inferInstance, u.complete⟩, inferInstance⟩
   have hgen := GlobalTheory.TauFormHom.isGrpPullback_genMap u.U
@@ -539,8 +539,8 @@ theorem latAt_of_uTest_over : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra
 
 theorem latAt_centre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (cf : Coeff l) (C : UCompact Xo cf) (X : USetup C) (wi : UWit X) (Y : RatModel X.o₁ X.Ω₁) (U₀ : Y.Z.Opens) (EE : Y.Lat X.S.J) (FinalForm : ZHOut X.ρ Y U₀ EE) (q : Y.Z ⟶ X.M.Z), X.S.Over₀ Y U₀ → X.S.IsEE Y U₀ EE → IsProper q → Y.pt ≫ q = X.M.pt → ∀ (p : ℕ) [Fact p.Prime] (z : X.M.Z) (f : 𝓞 E → (FinalForm.G ⟶ FinalForm.G)) (gγ : X.S.TT X.M z → (Over.mk Y.pt ⟶ FinalForm.G)), GlobalTheory.UPoinc.GFib.IsEndoExt X wi FinalForm f → GlobalTheory.UPoinc.GFib.IsTorsExt X wi FinalForm q z gγ → ∀ ζ : X.o₁ˣ, IsPrimitiveRoot (ζ : X.o₁) (X.S.r * X.S.N) → ∃ (s : ZMod (X.S.r * X.S.N)) (σ : 𝓞 E → 𝓞 E), IsUnit s ∧ Function.Surjective σ ∧ ∀ (ct : UCTrait X p z) (y : Sp (OO p) ⟶ Y.Z), y ≫ q = ct.y → ∀ (yy : X.S.Gam →+ ModN (X.S.r * X.S.N) ct.T.P.D.toPre.X), UIsLabW X wi ct yy → ∃ c : X.S.TT X.M z → ct.T.P.D.toPre.X →+ ZMod (X.S.r * X.S.N), LatAt f gγ ζ (X.S.r * X.S.N) (fun a => DistribSMul.toAddMonoidHom ct.T.P.D.toPre.X (σ a)) c (y (cPt p)) ∧ ∀ (a : X.S.Gam) (v : ct.T.P.D.toPre.X) (t : X.S.TT X.M z), yy a = QuotientAddGroup.mk v → c t v = s * eStd X.S.g _ (t : X.S.Gam) a := by
   intro E _ _ _ H Dw hpq l Xo cf C X wi Y U₀ EE FinalForm q hO _ _ hpt p _ z f gγ hf hg ζ hζ
-  haveI := X.ar.ded
-  haveI := X.ar.char
+  have := X.ar.ded
+  have := X.ar.char
   have hL : 0 < X.S.r * X.S.N := Nat.mul_pos X.S.r_pos (by have := X.S.N_ge; omega)
   have hζp : IsPrimitiveRoot (X.S.ζ ^ (X.S.r * X.S.N)) (X.S.r * X.S.N) := X.S.prim.pow (pow_pos hL 2) (pow_two _)
   obtain ⟨k, hk, hkζ⟩ := exists_unit_pow_eq hL hζ hζp
@@ -691,7 +691,7 @@ theorem endo_torsion_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hk₂ : k ≫ wi.G.hom = P.hom := gW.1.lift_snd _ _ _
   have gk : IsGrpPullback P wi.G (𝟙 _) k :=
     gW.cancel (gA.congr (Category.id_comp _).symm hk₁.symm) (by rw [hk₂, Category.comp_id])
-  haveI : IsIso k := gk.1.isIso_fst_of_isIso
+  have : IsIso k := gk.1.isIso_fst_of_isIso
 
   have hE : ∀ a : 𝓞 E, ∃ F : FinalForm.G ⟶ FinalForm.G, IsMonHom F ∧ ∀ e₁ : wi.G ⟶ wi.G,
       e₁.left ≫ wi.β = wi.β ≫ (Xo.univ.t.act.act a).left → e₁.left ≫ ψ = ψ ≫ F.left := by
@@ -700,7 +700,7 @@ theorem endo_torsion_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     have he₀l : e₀.left ≫ wi.β = wi.β ≫ (Xo.univ.t.act.act a).left := by
       have := congrArg (fun z => z.left) (pa (𝟙 _))
       simpa [pushPt] using this
-    haveI := he₀
+    have := he₀
     obtain ⟨w', hw', pw⟩ := GlobalTheory.SymBaseChange.exists_endo gk e₀
     have hw'l : w'.left ≫ k = k ≫ e₀.left := by
       have := congrArg (fun z => z.left) (pw (𝟙 _))
@@ -904,7 +904,7 @@ theorem GlobalTheory.UPoinc.GFib.labelled_lattices_equiv : ∀ (E : Type) [Field
     have e₁ : (Fin r → ZMod (X.S.r * X.S.N)) ≃ (Fin r₀ → ZMod (X.S.r * X.S.N)) :=
       (e.symm.toEquiv.trans (by rw [hT])).trans
         e₀.toEquiv
-    haveI : NeZero (X.S.r * X.S.N) := ⟨hL.ne'⟩
+    have : NeZero (X.S.r * X.S.N) := ⟨hL.ne'⟩
     have hcard := Fintype.card_congr e₁
     simp only [Fintype.card_fun, ZMod.card, Fintype.card_fin] at hcard
     have h2 : 2 ≤ X.S.r * X.S.N := by
@@ -913,7 +913,7 @@ theorem GlobalTheory.UPoinc.GFib.labelled_lattices_equiv : ∀ (E : Type) [Field
   have hmove := GlobalTheory.T.characterLatticeAtFibre_const_preconnected X.o₁ X.Ω₁ Y FinalForm.G FinalForm.semi _ q z hz hrk (𝓞 E) _ f (fun a => (hf a).1) gγ ζ
     (X.S.r * X.S.N) hL (Units.ext (by simpa using hζ.pow_eq_one)) X.S.unit (fun t => (hg t).1)
     (fun t w hw => (hg t).2.2 w hw) ct.T.P.D.toPre.X _ c _ _ hx hx' hc1
-  haveI : IsDomain X.o₁ := (inferInstance : GlobalTheory.ZH.ArithBase X.o₁ X.Ω₁).ded.toIsDomain
+  have : IsDomain X.o₁ := (inferInstance : GlobalTheory.ZH.ArithBase X.o₁ X.Ω₁).ded.toIsDomain
   obtain ⟨θ, hθm, hθc⟩ := GlobalTheory.T.characterLatticeAtFibre_unique_up_to_iso X.o₁ X.Ω₁ Y FinalForm.G FinalForm.semi (𝓞 E) _ f gγ ζ (X.S.r * X.S.N) hL hζ
     X.S.unit ct.T.P.D.toPre.X ct'.T.P.D.toPre.X _ c _ c' _ hmove hc1'
   refine ⟨θ, fun a v hv => ?_, fun a v => ?_⟩

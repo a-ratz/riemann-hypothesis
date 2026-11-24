@@ -165,7 +165,7 @@ theorem form_le_of_highest (hτ : IsURepOn (UJset ε) τ) (Λ : Fin n → ℝ) (
         refine ⟨V.smul_mem a hx, ?_⟩
         rw [hsm a x hx, ex, norm_smul]; ring }
   have hMV : M ≤ V := fun x hx => hx.1
-  haveI : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le hMV
+  have : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le hMV
   have hMs : IsKStableOn ε τ M := by
     rintro g hg x ⟨hx, ex⟩
     exact ⟨hVs g hg x hx, by rw [hinv g hg x hx, ex, hτ.2.1 g (GlobalTheory.CayleyChoice.Kset_sub hg)]⟩
@@ -261,7 +261,7 @@ theorem lintegral_le_of_highest {X Ω : Type} [NormedAddCommGroup X] [InnerProdu
   obtain ⟨V₀, ⟨hfd, hst⟩, hwV⟩ := PI.UnitaryGroupMassFormula.LowSmooth.exists_finStable_of_mem_sSup (Kset ε) τ
     (F := {S | IsKTypeOf ε τ Λ S}) (fun S hS => ⟨hS.1, hS.2.1⟩) hwL
   set V : Submodule ℂ H := V₀ ⊓ sSup {S | IsKTypeOf ε τ Λ S} with hVdef
-  haveI : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le (inf_le_left : V ≤ V₀)
+  have : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le (inf_le_left : V ≤ V₀)
   have hVs : IsKStableOn ε τ V := by
     rintro g hg x ⟨hx, hxL⟩
     refine ⟨hst g hg x hx, ?_⟩

@@ -451,7 +451,7 @@ theorem arc_length_four_denominator [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDo
     simpa using h
   have hh : TruncatedSeriesCountingBounds.hB b w S η size = b + η + S := by
     unfold TruncatedSeriesCountingBounds.hB
-    rw [if_pos ⟨c, hT0⟩]
+    rw [ite_eq_left ⟨c, hT0⟩]
   obtain ⟨s₁, hs1, hs1le, hsB, hnot⟩ := exists_s1_bound_choice PD.p b w S η (size c) (size (c - 1))
     (size (c - 2)) hp11 (Formalism.MainNotions.N.Ln17.Sg PD.p b w S η size)
     (by unfold Formalism.MainNotions.N.Ln17.Sg; rw [hh]) hsm h20w h20η
@@ -501,7 +501,7 @@ theorem arc_length_four_denominator [NeZero n] [Fintype (K →ₐ[Qp] LL)] [IsDo
     Pi.single_eq_same, one_mul, Pi.algebraMap_apply] at key3
   have hAC : algebraMap O (PowerSeries O) x = PowerSeries.C x := rfl
   try rw [hAC] at key3
-  haveI : Fact (Nat.Prime PD.p) := ⟨PD.hp⟩
+  have : Fact (Nat.Prime PD.p) := ⟨PD.hp⟩
   obtain ⟨U₁, hU₁⟩ := Br.range u₀ hu₀ c
   obtain ⟨U₂, hU₂⟩ := Br.range u hu c
   refine den_of_rel Br.P hϖ (D := Br.P.p 2 ^ size (c - 2) * PowerSeries.X ^ size c)

@@ -55,8 +55,8 @@ namespace GlobalTheory.KSExist
 
 theorem isKSValue_act : ∀ {R : Type} [CommRing R] {A : Over (Sp R)} [GrpObj A] {A' : Over (Sp (DualNumber R))} [GrpObj A'] {i : A.left ⟶ A'.left} (h : IsGrpPullback A A' (GlobalTheory.DeRham.epsRed R) i) {O : Type} [CommRing O] (a : OAct O A) (a' : OAct O A'), (∀ z, (a.act z).left ≫ i = i ≫ (a'.act z).left) → ∀ (z : O) {f : HdR A} {w : epsR R ⟶ A}, IsKSValue h f w → IsKSValue h (act (dp0 R) (𝟙 _) a z f) (w ≫ a.act z) := by
   intro R _ A _ A' _ i h O _ a a' hi z f w hf
-  haveI := a.hom z
-  haveI := a'.hom z
+  have := a.hom z
+  have := a'.hom z
   obtain ⟨k, ⟨d, hd, e⟩, l⟩ := hf
   rw [act_apply]
   have hm := push_mem_liftFil (epsDP R) h h (a.act z) (a'.act z) (e := (hi z).symm) hd

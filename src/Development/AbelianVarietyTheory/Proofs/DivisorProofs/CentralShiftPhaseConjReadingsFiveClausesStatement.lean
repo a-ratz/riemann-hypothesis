@@ -208,7 +208,7 @@ abbrev sndT (F E : Type) [Field F] [NumberField F] [Field E] [Algebra F E] : AF 
 omit [NumberField E] in
 theorem dense_ratFin : Dense {x : AF F ⊗[F] E | ∃ a : E, sndT F E (x - inclR (F := F) (AF F) a) = 0} := by
   have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  have : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.topologicalAddGroup (AF F) _
+  have : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.isTopologicalAddGroup (AF F) _
   let B : AddSubgroup (AF F ⊗[F] E) := (inclR (F := F) (E := E) (AF F)).toAddMonoidHom.range ⊔ (sndT F E).toAddMonoidHom.ker
   have hB : ∀ x, x ∈ B.topologicalClosure := fun x => by
     induction x using TensorProduct.induction_on with
@@ -361,7 +361,7 @@ structure CompFun (V : HSp D) (u : GA D V → ℂ) : Prop where
   lev : ∃ U : Subgroup (GA D V), IsOpen (U : Set (GA D V)) ∧ ∀ k ∈ U, ∀ g, u (g * k) = u g
 
 theorem CompFun.cont (hu : CompFun V u) : Continuous u := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   obtain ⟨U, hU, e⟩ := hu.lev
   refine continuous_iff_continuousAt.2 fun g => (continuousAt_const (y := u g)).congr ?_
   have : ∀ᶠ x in nhds g, g⁻¹ * x ∈ (U : Set (GA D V)) :=
@@ -371,7 +371,7 @@ theorem CompFun.cont (hu : CompFun V u) : Continuous u := by
 
 theorem CompFun.unip (hu : CompFun V u) {r : ℕ} {C : Matrix (Fin V.rank) (Fin r) D.host.E} (hC : IsIsoFrame V C)
     {n : GA D V} (hn : n ∈ NI V C) (g : GA D V) : u (n * g) = u g := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   let K : Subgroup (GA D V) :=
     { carrier := {n | ∀ g, u (n * g) = u g}
       one_mem' := fun g => by rw [one_mul]
@@ -551,10 +551,10 @@ private theorem wall_apply_mul_eq_levChi_mul_of_mem_levS {i : Fin D.R.m} {σ : D
     exact hx'.lev v k hk g
   | zero => simp
   | add x y _ _ hx hy =>
-    simp only [MultilinearMap.add_apply, Pi.add_apply, hx, hy]
+    simp only [add_apply, Pi.add_apply, hx, hy]
     ring
   | smul a x _ hx =>
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx]
+    simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx]
     ring
 
 theorem hasType_e (he : R.models_HW) (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ) (y : (R.HW i σ).H) (v : (R.MW i σ).Vec) :

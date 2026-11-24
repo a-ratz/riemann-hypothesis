@@ -123,12 +123,12 @@ def barRevU (he : ∀ a, ε' a = ε a.rev) : Formalism.REAL.UJ ε' ≃* Formalis
 
 theorem barRevU_cont (he : ∀ a, ε' a = ε a.rev) : Continuous (barRevU he) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact barRev_cont.comp (Units.continuous_val.comp continuous_subtype_val)
-  · exact barRev_cont.comp (Units.continuous_coe_inv.comp continuous_subtype_val)
+  · exact barRev_cont.comp (Units.continuous_val.comp continuous_subtypeVal)
+  · exact barRev_cont.comp (Units.continuous_coe_inv.comp continuous_subtypeVal)
 
 theorem memLp_barRev (he : ∀ a, ε' a = ε a.rev) {F : Formalism.REAL.UJ ε → ℂ} (hF : MemLp F 2 (Formalism.REAL.muG ε)) :
     MemLp (F ∘ barRevU he) 2 (Formalism.REAL.muG ε') := by
-  haveI : ((Formalism.REAL.muG ε').map (barRevU he)).IsHaarMeasure :=
+  have : ((Formalism.REAL.muG ε').map (barRevU he)).IsHaarMeasure :=
     MulEquiv.isHaarMeasure_map _ (barRevU he) (barRevU_cont he) (barRevU_cont (sg_symm he))
   refine MemLp.comp_of_map ?_ (barRevU_cont he).measurable.aemeasurable
   rw [Measure.isMulLeftInvariant_eq_smul ((Formalism.REAL.muG ε').map (barRevU he)) (Formalism.REAL.muG ε)]
@@ -196,14 +196,14 @@ theorem exists_pull (T : GrpData p q)
     [InnerProductSpace ℂ H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : IsDSPar P σ) :
     ∃ (R : DSRep T) (U : H ≃ₗᵢ[ℂ] R.U.H), HasParam R (blockPar P e) ∧
       ∀ g x, R.U.π g (U x) = U (σ (Matrix.reindex e e ((T.cov g : GL (Ix p q) ℂ) : Mat p q)) x) := by
-  haveI : CompleteSpace H := hσ.1
+  have : CompleteSpace H := hσ.1
   have hU := hσ.2.2.1
   have hirr : Formalism.MainNotions.SchurIrreducible.IrrU (GlobalTheory.Published.CoverSeries.pull h T hU) :=
     ⟨hσ.2.1, fun S hS hst => hσ.2.2.2.1 S hS fun g hg v hv => by
       obtain ⟨x, rfl⟩ := h.cov_surj T hg
       exact hst x v hv⟩
   obtain ⟨M, io, m1, m2, m3⟩ := hM _ hirr
-  haveI := SqInt.isHaarMeasure_map_covU h T
+  have := SqInt.isHaarMeasure_map_covU h T
   have hμ := Measure.isMulLeftInvariant_eq_smul (T.haar.map (SqInt.covU h T)) (Formalism.REAL.muG P.sgn)
   obtain ⟨d, hd, hI⟩ := GlobalTheory.Mem.Vol.exists_isFdeg_smul_of_isDS n P.sgn P.lam H σ hσ _
     (Measure.haarScalarFactor_pos_of_isHaarMeasure (T.haar.map (SqInt.covU h T)) (Formalism.REAL.muG P.sgn))
@@ -278,7 +278,7 @@ theorem exists_numbering {l₁ l₂ : List ℚ} {c : ℚ} {lam : Fin n → ℝ} 
     subst h₁ h₂
     ext x
     simp only [dualPar, GlobalTheory.Chain.signed, Set.mem_range, Sum.exists, Finset.coe_image, Finset.coe_union,
-      List.coe_toFinset, List.mem_map, Set.mem_image, Set.mem_union, f, ofBlocks, Set.mem_setOf_eq]
+      List.coe_toFinset, List.mem_map, Set.mem_image, Set.mem_union, f, ofBlocks, Set.mem_ofPred_eq]
     simp only [List.mem_iff_get]
     constructor
     · rintro (⟨i, rfl⟩ | ⟨i, rfl⟩)
@@ -399,7 +399,7 @@ variable {s : ℂ →+* ℂ} [RingHomInvPair s s] {H H' : Type} [NormedAddCommGr
 theorem finite_comap' (U : H ≃ₛₗᵢ[s] H') (S : Submodule ℂ H') [FiniteDimensional ℂ S] :
     FiniteDimensional ℂ (S.comap (U.toLinearEquiv : H →ₛₗ[s] H')) := by
   obtain ⟨b, hb⟩ : S.FG := Module.Finite.iff_fg.1 inferInstance
-  haveI := FiniteDimensional.span_of_finite ℂ (b.finite_toSet.image (U.symm.toLinearEquiv : H' →ₛₗ[s] H))
+  have := FiniteDimensional.span_of_finite ℂ (b.finite_toSet.image (U.symm.toLinearEquiv : H' →ₛₗ[s] H))
   refine Submodule.finiteDimensional_of_le
     (S₂ := Submodule.span ℂ ((U.symm.toLinearEquiv : H' →ₛₗ[s] H) '' (b : Set H'))) fun x hx => ?_
   rw [← Submodule.map_span, hb]
@@ -411,7 +411,7 @@ theorem kFin_iff (h : IsFormIso ε φ) {T : GrpData p q} {π : T.G →* (H' →L
     IsKFin ε σ x ↔ KFin T π (U x) := by
   constructor
   · rintro ⟨S, hS, hx, hK⟩
-    haveI := finite_comap' U.symm S
+    have := finite_comap' U.symm S
     refine Submodule.finiteDimensional_of_le (S₂ := S.comap (U.symm.toLinearEquiv : H' →ₛₗ[s] H))
       (Submodule.span_le.2 ?_)
     rintro _ ⟨k, rfl⟩
@@ -479,7 +479,7 @@ theorem matches_of_grp (hH : GlobalTheory.Published.HarishChandraModules) (hs : 
       ((T.sq g : ℂˣ) : ℂ) ^ (-m) • U (M.σ τ (φ ((T.cov g : GL (Ix p q) ℂ) : Mat p q)) x)) :
     Matches R M τ φ m U := by
   classical
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hk : ∀ x, IsKFin (M.ε τ) (M.σ τ) x ↔ U x ∈ Set.range R.ι := fun x =>
     (kFin_iff h U (fun g => zpow_ne_zero _ (Units.ne_zero _)) hU x).trans (R.ι_range _).symm
   have hder : ∀ Z ∈ upq p q, ∀ (v : R.HK.V) (x : M.H τ), U x = R.ι v →

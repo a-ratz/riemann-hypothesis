@@ -71,7 +71,7 @@ theorem _root_.GlobalTheory.EtaleCoordJacobian.exists_basis_of_etale [Finite I] 
     (∃ b : Module.Basis I B Ω[B⁄R],
       ∀ i, b i = D R B (algebraMap (MvPolynomial I R) B (MvPolynomial.X i))) ∧
       Algebra.Smooth R B := by
-  haveI : Algebra.Smooth R (MvPolynomial I R) := Algebra.Smooth.mk
+  have : Algebra.Smooth R (MvPolynomial I R) := Algebra.Smooth.mk
   refine ⟨⟨((mvPolynomialBasis R I).baseChange B).map
     (tensorKaehlerEquivOfFormallyEtale R (MvPolynomial I R) B), fun i => ?_⟩,
     Algebra.Smooth.comp R (MvPolynomial I R) B⟩
@@ -102,7 +102,7 @@ theorem _root_.GlobalTheory.EtaleCoordJacobian.etale_of_basis [Finite I] [Algebr
       exact (exact_mapBaseChange_map R (MvPolynomial I R) B).apply_apply_eq_zero v
     rw [hx x, hx y]
   have hH : Subsingleton (Algebra.H1Cotangent (MvPolynomial I R) B) := by
-    haveI : Subsingleton (Algebra.H1Cotangent R B) :=
+    have : Subsingleton (Algebra.H1Cotangent R B) :=
       Algebra.FormallySmooth.subsingleton_h1Cotangent
     refine ⟨fun x y => ?_⟩
     have hx : ∀ z : Algebra.H1Cotangent (MvPolynomial I R) B, z = 0 := fun z => by
@@ -112,8 +112,8 @@ theorem _root_.GlobalTheory.EtaleCoordJacobian.etale_of_basis [Finite I] [Algebr
       obtain ⟨w, rfl⟩ := (Algebra.H1Cotangent.exact_map_δ R (MvPolynomial I R) B z).mp h1
       rw [Subsingleton.elim w 0, map_zero]
     rw [hx x, hx y]
-  haveI : Algebra.FormallyEtale (MvPolynomial I R) B := Algebra.FormallyEtale.mk hΩ hH
-  haveI : Algebra.FinitePresentation (MvPolynomial I R) B :=
+  have : Algebra.FormallyEtale (MvPolynomial I R) B := Algebra.FormallyEtale.mk hΩ hH
+  have : Algebra.FinitePresentation (MvPolynomial I R) B :=
     Algebra.FinitePresentation.of_restrict_scalars_finitePresentation R _ B
   exact Algebra.Etale.mk
 
@@ -124,10 +124,10 @@ private theorem exists_basis_D_and_smooth_of_etale_eval2Hom (R B I : Type) [Comm
     [Finite I] [Algebra R B] (t : I → B)
     (h : (MvPolynomial.eval₂Hom (algebraMap R B) t).Etale) :
     (∃ b : Module.Basis I B Ω[B⁄R], ∀ i, b i = D R B (t i)) ∧ Algebra.Smooth R B := by
-  letI : Algebra (MvPolynomial I R) B := (MvPolynomial.eval₂Hom (algebraMap R B) t).toAlgebra
-  haveI : IsScalarTower R (MvPolynomial I R) B := IsScalarTower.of_algebraMap_eq fun r => by
+  let : Algebra (MvPolynomial I R) B := (MvPolynomial.eval₂Hom (algebraMap R B) t).toAlgebra
+  have : IsScalarTower R (MvPolynomial I R) B := IsScalarTower.of_algebraMap_eq fun r => by
     simp [RingHom.algebraMap_toAlgebra, MvPolynomial.algebraMap_eq]
-  haveI : Algebra.Etale (MvPolynomial I R) B := h
+  have : Algebra.Etale (MvPolynomial I R) B := h
   obtain ⟨⟨b, hb⟩, hs⟩ := _root_.GlobalTheory.EtaleCoordJacobian.exists_basis_of_etale R B I
   exact ⟨⟨b, fun i => by rw [hb]; simp [RingHom.algebraMap_toAlgebra]⟩, hs⟩
 
@@ -140,9 +140,9 @@ private theorem det_derivation_eq_mul_det_repr {R B I : Type} [CommRing R] [Comm
     (Matrix.of fun i j => d i (t' j)).det =
       φ (Matrix.of fun k j => b.repr (D R B (t' j)) k).det *
         (Matrix.of fun i j => d i (t j)).det := by
-  letI : Algebra B C := φ.toAlgebra
-  letI : Algebra R C := (φ.comp (algebraMap R B)).toAlgebra
-  haveI : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra B C := φ.toAlgebra
+  let : Algebra R C := (φ.comp (algebraMap R B)).toAlgebra
+  have : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have key : ∀ i j, d i (t' j) = ∑ k, d i (t k) * φ (b.repr (D R B (t' j)) k) := by
     intro i j
     let δ : Derivation R B C := Derivation.mk'
@@ -186,8 +186,8 @@ open KaehlerDifferential TensorProduct in
 private theorem etale_eval2Hom_of_basis_D (R B I : Type) [CommRing R] [CommRing B]
     [Finite I] [Algebra R B] [Algebra.Smooth R B] (t : I → B) (b : Module.Basis I B Ω[B⁄R])
     (hb : ∀ i, b i = D R B (t i)) : (MvPolynomial.eval₂Hom (algebraMap R B) t).Etale := by
-  letI : Algebra (MvPolynomial I R) B := (MvPolynomial.eval₂Hom (algebraMap R B) t).toAlgebra
-  haveI : IsScalarTower R (MvPolynomial I R) B := IsScalarTower.of_algebraMap_eq fun r => by
+  let : Algebra (MvPolynomial I R) B := (MvPolynomial.eval₂Hom (algebraMap R B) t).toAlgebra
+  have : IsScalarTower R (MvPolynomial I R) B := IsScalarTower.of_algebraMap_eq fun r => by
     simp [RingHom.algebraMap_toAlgebra, MvPolynomial.algebraMap_eq]
   exact _root_.GlobalTheory.EtaleCoordJacobian.etale_of_basis R B I b fun i => by
     rw [hb]; simp [RingHom.algebraMap_toAlgebra]
@@ -196,7 +196,7 @@ private theorem etale_eval2Hom_of_basis_D (R B I : Type) [CommRing R] [CommRing 
 open KaehlerDifferential TensorProduct in
 theorem _root_.GlobalTheory.EtaleCoordJacobian.chain_rule_and_jacobian_criterion : ∀ (R B : Type) [CommRing R] [CommRing B] (c : R →+* B) (I : Type) [Fintype I] [DecidableEq I] (t t' : I → B), (MvPolynomial.eval₂Hom c t).Etale → ∃ a : B, (∀ (C : Type) [CommRing C] (φ : B →+* C) (d : I → B →+ C), (∀ i x y, d i (x * y) = φ x * d i y + φ y * d i x) → (∀ i r, d i (c r) = 0) → (Matrix.of fun i j => d i (t' j)).det = φ a * (Matrix.of fun i j => d i (t j)).det) ∧ (IsUnit a → (MvPolynomial.eval₂Hom c t').Etale) := by
   intro R B _ _ c I _ _ t t' het
-  letI : Algebra R B := c.toAlgebra
+  let : Algebra R B := c.toAlgebra
   obtain ⟨⟨b, hb⟩, hs⟩ := exists_basis_D_and_smooth_of_etale_eval2Hom R B I t het
   refine ⟨(Matrix.of fun k j => b.repr (D R B (t' j)) k).det,
     fun C _ φ d hd hc => det_derivation_eq_mul_det_repr t t' b hb C φ d hd hc, fun ha => ?_⟩

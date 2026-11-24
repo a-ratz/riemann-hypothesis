@@ -746,14 +746,14 @@ theorem exists_open_compact : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   obtain ⟨U0, hU0o, hU0c⟩ := GlobalTheory.GLIntegral.exists_isOpen_isCompact E n
   let p : finU (E := E) (n := n) →* GL (Fin n) (Af E) :=
     (GeneralLinearGroup.map (pFin E)).comp ((UA E n).subtype.comp (finU (E := E) (n := n)).subtype)
-  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtype_val.comp continuous_subtype_val)
+  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   let K : Subgroup (finU (E := E) (n := n)) := U0.comap p
   have hKo : IsOpen (K : Set (finU (E := E) (n := n))) := hU0o.preimage hp
-  haveI := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
+  have := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
   have hfc : IsClosed ((finU (E := E) (n := n) : Subgroup (UA E n)) : Set (UA E n)) := by
-    haveI : T2Space (GL (Fin n) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
+    have : T2Space (GL (Fin n) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
     have hc := GlobalTheory.CuspRep.ContAut.continuous_map_pInf E n
-    exact isClosed_eq (hc.comp continuous_subtype_val) continuous_const
+    exact isClosed_eq (hc.comp continuous_subtypeVal) continuous_const
   have hι : Topology.IsClosedEmbedding (fun x : finU (E := E) (n := n) => ((x : UA E n) : GA E n)) :=
     GlobalTheory.DefU.LocAdm.isClosed_UA.isClosedEmbedding_subtypeVal.comp hfc.isClosedEmbedding_subtypeVal
   refine ⟨K, hKo, IsCompact.of_isClosed_subset (hι.isCompact_preimage (hU0c.image GlobalTheory.DefU.LocAdm.continuous_finGL))
@@ -799,18 +799,18 @@ theorem exists_irred_le_orbSpan {H V : Type} [Group H] [TopologicalSpace H] [IsT
     intro w
     convert hsm w.1 using 1
     ext k
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact ⟨fun h => by rw [← hρO, h], fun h => Subtype.ext (by rw [hρO, h])⟩
   have hfdO : ∀ K : Subgroup H, IsOpen (K : Set H) → FiniteDimensional ℂ (GlobalTheory.PRep.fixed ρO K) := by
     intro K hK
-    haveI := hfd K hK
+    have := hfd K hK
     have hle : (GlobalTheory.PRep.fixed ρO K).map O.toSubmodule.subtype ≤ GlobalTheory.PRep.fixed ρ K := by
       rintro _ ⟨w, hw, rfl⟩ k
       have h1 := hw k
       show ρ k w.1 = ((1 : K →* ℂˣ) k : ℂ) • w.1
       rw [MonoidHom.one_apply, Units.val_one, one_smul] at h1 ⊢
       rw [← hρO, h1]
-    haveI : FiniteDimensional ℂ ((GlobalTheory.PRep.fixed ρO K).map O.toSubmodule.subtype) :=
+    have : FiniteDimensional ℂ ((GlobalTheory.PRep.fixed ρO K).map O.toSubmodule.subtype) :=
       Submodule.finiteDimensional_of_le hle
     exact LinearEquiv.finiteDimensional
       (Submodule.equivMapOfInjective _ O.toSubmodule.injective_subtype _).symm
@@ -873,8 +873,8 @@ theorem mem_iSup_of_form (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
       smul_mem' := fun c g hg u => by
         rw [Submodule.coe_smul, LinearMap.smul_apply]; exact T.smul_mem c (hg u) }
   let X := GlobalTheory.PRep.fixed (rep ρ) K
-  haveI : FiniteDimensional ℂ X := rep_fd ρ K hK
-  haveI : FiniteDimensional ℂ (X ⊓ Y : Submodule ℂ (forms ρ)) := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ X := rep_fd ρ K hK
+  have : FiniteDimensional ℂ (X ⊓ Y : Submodule ℂ (forms ρ)) := Submodule.finiteDimensional_of_le inf_le_left
   let Bf := form B ρ
   have hBh := form_herm B hh ρ
   have hBp := form_nonneg B hp ρ
@@ -1114,7 +1114,7 @@ theorem isAutFormU_coef : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
           change RU E n ((a : UA E n)⁻¹) (RU E n (a : UA E n) _) = _
           rw [GlobalTheory.DefU.RU_RU, inv_mul_cancel, map_one]; rfl }
     have hnb : {k : finU (E := E) (n := n) | ∀ g, F (g * (k : UA E n)) = F g} ∈ 𝓝 (1 : finU (E := E) (n := n)) :=
-      (continuous_subtype_val.tendsto (1 : finU (E := E) (n := n))).eventually hsm
+      (continuous_subtypeVal.tendsto (1 : finU (E := E) (n := n))).eventually hsm
     refine H.isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset hnb fun k hk => ?_)
     change RU E n (k : UA E n) φ = φ
     funext g
@@ -1273,7 +1273,7 @@ theorem phiFun_mem_forms (hU : Unr E) (S : Set (Pl E)) (lam : InfinitePlace E �
   have h := semis E n (Wsp lam) ((wInf lam).comp (infU E n).subtype) (spanW E n lam) (globLev S K')
     (isOpen_globLev E hU n S K' hK) (phiFun lam F) (fun u => isAutFormU_phiFun hU S lam K' hK F hF u)
     (fun x u => phiFun_wInf lam F x u) (fun u => phiFun_mem_fixed S lam K' F hF u) w
-  refine SetLike.le_def.1 ?_ h
+  refine IsConcreteLE.le_iff.1 ?_ h
   refine iSup_mono fun π => iSup_mono' fun hP => ⟨⟨hP.1, fun v => ?_⟩, le_rfl⟩
   obtain ⟨f', h0, hπ, heq⟩ := hP.2
   exact hasWeightAt_of_wInf lam π f' h0 hπ (fun x u => heq x u) v
@@ -1366,8 +1366,8 @@ theorem trOn_forms_eq_finrank_mul : ∀ (E : Type) [Field E] [NumberField E] [Is
       _ = ((e (TensorProduct.map A LinearMap.id (e.symm v)) : forms S lam K') : UA E n → ℂ) := (hev _).symm
       _ = ((e.conj (TensorProduct.map A LinearMap.id) v : forms S lam K') : UA E n → ℂ) :=
           congrArg (fun u : forms S lam K' => (u : UA E n → ℂ)) (LinearEquiv.conj_apply_apply _ _ _).symm
-  have h1 : trOn (forms S lam K') (hop S K' f) = LinearMap.trace ℂ _ ((hop S K' f).restrict hF) := dif_pos hF
-  have h2 : trOn (vecM S lam K') (hopM S lam K' f) = LinearMap.trace ℂ _ A := dif_pos hM
+  have h1 : trOn (forms S lam K') (hop S K' f) = LinearMap.trace ℂ _ ((hop S K' f).restrict hF) := dite_eq_left hF
+  have h2 : trOn (vecM S lam K') (hopM S lam K' f) = LinearMap.trace ℂ _ A := dite_eq_left hM
   rw [h1, h2]
   exact (congrArg (LinearMap.trace ℂ _) he).trans
     ((LinearMap.trace_conj' _ e).trans ((trace_map_id A).trans (mul_comm _ _)))

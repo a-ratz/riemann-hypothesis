@@ -61,7 +61,7 @@ theorem v2con_X_pderiv {R : Type*} [CommRing R] {σ : Type*} (v w : σ) (m : σ 
     (X v : MvPolynomial σ R) * pderiv w (monomial m c) =
       monomial (m - Finsupp.single w 1 + Finsupp.single v 1) (c * (m w : R)) := by
   rw [pderiv_monomial, show (X v : MvPolynomial σ R) = monomial (Finsupp.single v 1) 1 from rfl,
-    monomial_mul, one_mul, add_comm (Finsupp.single v 1)]
+    monomial_mul_monomial, one_mul, add_comm (Finsupp.single v 1)]
 
 theorem v2con_X_pderiv_self {R : Type*} [CommRing R] {σ : Type*} (v : σ) (m : σ →₀ ℕ) (c : R) :
     (X v : MvPolynomial σ R) * pderiv v (monomial m c) = monomial m (c * (m v : R)) := by
@@ -167,7 +167,7 @@ theorem polynomial_locally_finite : PolynomialLocallyFinite := by
   intro R _ ι _ LL n S x
   classical
   refine ⟨restrictSupport R {m : ι × Fin n →₀ ℕ | m.degree ≤ x.totalDegree}, ?_, ?_, ?_⟩
-  · haveI : Finite {m : ι × Fin n →₀ ℕ | m.degree ≤ x.totalDegree} :=
+  · have : Finite {m : ι × Fin n →₀ ℕ | m.degree ≤ x.totalDegree} :=
       (Finsupp.finite_of_degree_le x.totalDegree).to_subtype
     exact Module.Finite.of_basis (basisRestrictSupport R _)
   · rw [mem_restrictSupport_iff]

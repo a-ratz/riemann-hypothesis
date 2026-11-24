@@ -96,15 +96,15 @@ theorem exists_int_basis_of_unr (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU 
     (HeightOneSpectrum.valuation_lt_one_iff_mem (IsDiscreteValuationRing.maximalIdeal K.O) a).symm
   have memK' : ∀ a : K'.O, a ∈ maximalIdeal K'.O ↔ v' (algebraMap K'.O K'.E a) < 1 := fun a =>
     (HeightOneSpectrum.valuation_lt_one_iff_mem (IsDiscreteValuationRing.maximalIdeal K'.O) a).symm
-  haveI : IsLocalHom ψ := ⟨fun a ha => by
+  have : IsLocalHom ψ := ⟨fun a ha => by
     by_contra hna
     have h1 : a ∈ maximalIdeal K.O := (mem_maximalIdeal a).2 hna
     have h2 : ψ a ∈ maximalIdeal K'.O := by
       rw [memK', hψ, hv]; exact (memK a).1 h1
     exact (mem_maximalIdeal _).1 h2 ha⟩
-  letI : Algebra (ResidueField K.O) (ResidueField K'.O) := (ResidueField.map ψ).toAlgebra
-  letI : Fintype (ResidueField K.O) := Fintype.ofFinite _
-  letI : Fintype (ResidueField K'.O) := Fintype.ofFinite _
+  let : Algebra (ResidueField K.O) (ResidueField K'.O) := (ResidueField.map ψ).toAlgebra
+  let : Fintype (ResidueField K.O) := Fintype.ofFinite _
+  let : Fintype (ResidueField K'.O) := Fintype.ofFinite _
   have hfr : Module.finrank (ResidueField K.O) (ResidueField K'.O) = d := by
     have h1 := Module.card_eq_pow_finrank (K := ResidueField K.O) (V := ResidueField K'.O)
     have c1 : Fintype.card (ResidueField K.O) = K.q ^ 2 := by
@@ -135,7 +135,7 @@ theorem exists_int_basis_of_unr (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU 
   have key : ∀ e : Fin d → K.E, ∀ j, (∀ i, v (e i) ≤ v (e j)) → e j ≠ 0 →
       v (e j) ≤ v' (∑ i, φ (e i) * U i) := by
     intro e j hmax hj
-    have hpos : 0 < v (e j) := zero_lt_iff.2 (by simpa using hj)
+    have hpos : 0 < v (e j) := pos_iff_ne_zero.2 (by simpa using hj)
     have hc : ∀ i, ∃ a : K.O, algebraMap K.O K.E a = e i / e j := fun i =>
       IsDiscreteValuationRing.exists_lift_of_le_one (by
         rw [map_div₀]; exact (div_le_one₀ hpos).2 (hmax i))
@@ -152,7 +152,7 @@ theorem exists_int_basis_of_unr (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU 
       rw [← mul_assoc, ← map_mul, mul_div_cancel₀ _ hj]
     rw [h3, map_mul, hv, ← h2]
     exact le_mul_of_one_le_right' h1
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   have hsmul : ∀ (x : K.E) (y : K'.E), x • y = φ x * y := fun x y => by
     rw [Algebra.smul_def, RingHom.algebraMap_toAlgebra]
   have hli : LinearIndependent K.E U := by
@@ -160,7 +160,7 @@ theorem exists_int_basis_of_unr (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU 
     intro g hg i
     by_contra hi
     obtain ⟨j, -, hj⟩ := Finset.exists_max_image Finset.univ (fun i => v (g i)) ⟨i, Finset.mem_univ i⟩
-    have hgi : 0 < v (g i) := zero_lt_iff.2 (by simpa using hi)
+    have hgi : 0 < v (g i) := pos_iff_ne_zero.2 (by simpa using hi)
     have hgj : g j ≠ 0 := by
       intro h0
       have := hj i (Finset.mem_univ i)
@@ -169,9 +169,9 @@ theorem exists_int_basis_of_unr (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU 
     have := key g j (fun i => hj i (Finset.mem_univ i)) hgj
     simp only [← hsmul] at this
     rw [hg, map_zero] at this
-    exact hgj ((map_eq_zero v).1 (le_antisymm this zero_le'))
+    exact hgj ((map_eq_zero v).1 (le_antisymm this zero_le))
   have hd : Module.finrank K.E K'.E = d := hU.2.2.2.2
-  haveI : Nonempty (Fin d) := by
+  have : Nonempty (Fin d) := by
     have : 0 < d := hfr ▸ Module.finrank_pos
     exact ⟨⟨0, this⟩⟩
   have hspan := hli.span_eq_top_of_card_eq_finrank (by rw [Fintype.card_fin, hd])
@@ -187,7 +187,7 @@ theorem exists_int_basis_of_unr (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU 
       intro h0
       have := hj i (Finset.mem_univ i)
       rw [h0, map_zero] at this
-      exact absurd (lt_of_lt_of_le hi this) (not_lt.2 zero_le')
+      exact absurd (lt_of_lt_of_le hi this) (not_lt.2 zero_le)
     have h1 := key e j (fun i => hj i (Finset.mem_univ i)) hej
     simp only [← hsmul] at h1
     rw [he] at h1

@@ -72,7 +72,7 @@ theorem exists_grpObj_of_mono {𝒞 : Type*} [Category 𝒞] [CartesianMonoidalC
     [GrpObj A] (i : H ⟶ A) [Mono i] (e : 𝟙_ 𝒞 ⟶ H) (m : H ⊗ H ⟶ H) (n : H ⟶ H)
     (he : e ≫ i = 1) (hm : m ≫ i = (fst H H ≫ i) * (snd H H ≫ i)) (hn : n ≫ i = i⁻¹) :
     ∃ _ : GrpObj H, IsMonHom i := by
-  letI : MonObj H :=
+  let : MonObj H :=
     { one := e
       mul := m
       one_mul := by
@@ -142,7 +142,7 @@ def constDesc {I : Type} {A : Over S} (x : I → (𝟙_ (Over S) ⟶ A)) : const
 
 lemma constPt_desc {I : Type} {A : Over S} (x : I → (𝟙_ (Over S) ⟶ A)) (c : I) :
     constPt S c ≫ constDesc x = x c :=
-  Over.OverMorphism.ext (Sigma.ι_desc (f := fun _ : I => S) _ _)
+  Over.OverMorphism.ext (Sigma.ι_comp_desc (f := fun _ : I => S) _ _)
 
 lemma locally_const {I : Type} {Z : Over S} (f : Z ⟶ constObj S I) (z : Z.left) :
     ∃ V : Z.left.Opens, z ∈ V ∧ ∃ c : I, openι Z V ≫ f = toUnit _ ≫ constPt S c := by
@@ -158,7 +158,7 @@ lemma locally_const {I : Type} {Z : Over S} (f : Z ⟶ constObj S I) (z : Z.left
     Over.homMk (IsOpenImmersion.lift (Sigma.ι (fun _ : I => S) c) (V.ι ≫ f.left) hr) (by
       change _ ≫ 𝟙 S = V.ι ≫ Z.hom
       have e₁ : Sigma.ι (fun _ : I => S) c ≫ (constObj S I).hom = 𝟙 S :=
-        Sigma.ι_desc (f := fun _ : I => S) (fun _ => 𝟙 S) c
+        Sigma.ι_comp_desc (f := fun _ : I => S) (fun _ => 𝟙 S) c
       rw [← Over.w f, ← e₁]
       exact (Category.assoc _ _ _).symm.trans
         ((congrArg (· ≫ (constObj S I).hom) hl).trans (Category.assoc _ _ _)))

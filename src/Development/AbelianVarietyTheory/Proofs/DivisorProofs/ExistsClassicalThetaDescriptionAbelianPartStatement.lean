@@ -224,7 +224,7 @@ theorem hol_ptB : ∀ (R : Type) [CommRing R] [IsDomain R] [Algebra (FractionRin
     rfl
   have hs : {z | ⊤ ≤ ptB ν d z ⁻¹ᵁ U} = {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ (psiB R D x φ hw ⁻¹ᵁ U)} := by
     ext z
-    simp only [Set.mem_setOf_eq, key z, Scheme.Hom.comp_preimage]
+    simp only [Set.mem_ofPred_eq, key z, Scheme.Hom.comp_preimage]
   obtain ⟨ho, hd⟩ := u.hol (psiB R D x φ hw ⁻¹ᵁ U) ((psiB R D x φ hw).app U |>.hom f)
   rw [hs]
   refine ⟨ho, hd.congr fun z _ => ?_⟩
@@ -341,7 +341,7 @@ theorem top_le_of_red {X : Scheme.{0}} (p : Sp (DualNumber ℂ) ⟶ X) (U : X.Op
     ⊤ ≤ p ⁻¹ᵁ U := by
   intro y _
   have hy : y = redE ℂ (IsLocalRing.closedPoint ℂ) := by
-    haveI := prime_subsingleton
+    have := prime_subsingleton
     exact Subsingleton.elim (α := PrimeSpectrum (DualNumber ℂ)) _ _
   have := h (show IsLocalRing.closedPoint ℂ ∈ (⊤ : (Sp ℂ).Opens) from trivial)
   rw [hy]
@@ -934,8 +934,8 @@ theorem exists_keyPB_det : ∀ κ : Rule, Homog (fun _ => 1) κ → ∀ (R : Typ
     (fun b => (hF b).trans (by ext <;> simp [Chart.dualMapR, TrivSqZeroExt.algebraMap_eq_inl]))
     (hε.trans (by ext <;> simp [Chart.dualMapR]))
   subst hF'
-  haveI := y.P.isAb.comm
-  haveI := x.P.isAb.comm
+  have := y.P.isAb.comm
+  have := x.P.isAb.comm
   obtain ⟨u, hu, huv⟩ := exists_isLieBasis_baseChange R ℂ f y.P.A x.P.A φ hp y.P.isAb.smooth y.P.g v' hv'
   have hb : IsLieBasis (fun i : Fin x.P.g => u (i.cast hg)) := isLieBasis_cast hg hu
   refine ⟨⟨x.P, x.g_pos, x.rig, x.rig_gen, x.th, x.th_ne, fun i => u (i.cast hg), hb⟩,

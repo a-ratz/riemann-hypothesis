@@ -156,9 +156,9 @@ theorem geom_sum_int_le (D M : ℕ) (hD : 0 < D) (hM : 1 ≤ M) (x₀ C : ℝ) :
     · rw [← ENNReal.ofReal_mul' (Real.exp_pos _).le]
       apply ENNReal.ofReal_le_ofReal
       have hr' : r ^ (2 * D) = Real.exp (((2 * D : ℕ) : ℝ) * Real.log r) := by
-        rw [Real.exp_nat_mul, Real.exp_log hr]
+        rw [Real.exp_natCast_mul, Real.exp_log hr]
       have hq' : q ^ n = Real.exp ((n : ℝ) * (-a)) := by
-        rw [hq, Real.exp_nat_mul]
+        rw [hq, Real.exp_natCast_mul]
       have key : Real.exp (2 * D * ((((n₀ + (n : ℤ) : ℤ)) : ℝ) + Real.log r)) *
           Real.exp (-(2 * D * (M + 1) * (((n₀ + (n : ℤ) : ℤ)) : ℝ))) =
           r ^ (2 * D) * Real.exp (-a * n₀) * q ^ n := by
@@ -184,7 +184,7 @@ theorem geom_sum_int_le (D M : ℕ) (hD : 0 < D) (hM : 1 ≤ M) (x₀ C : ℝ) :
 
   have hexp : Real.exp (-a * n₀) ≤ Real.exp (-a * x₀) * r ^ (2 * D * M) := by
     have hr' : r ^ (2 * D * M) = Real.exp (((2 * D * M : ℕ) : ℝ) * Real.log r) := by
-      rw [Real.exp_nat_mul, Real.exp_log hr]
+      rw [Real.exp_natCast_mul, Real.exp_log hr]
     rw [hr', ← Real.exp_add]
     apply Real.exp_le_exp.mpr
     have hc : (((2 * D * M : ℕ) : ℝ)) = a := by rw [ha]; push_cast; ring
@@ -245,7 +245,7 @@ theorem nu : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E
   obtain ⟨_, _, _, _, _, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hcm M J hJ (AF F)
   obtain ⟨_, _, _, _, _, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hcm _ _ (_root_.GlobalTheory.CompanionTheory.SW.BlockForm.blockForms_isHermND F E σ hcm M J hJ).1 (AF F)
   obtain ⟨-, a1, a2, -⟩ := hact 1
-  letI : MeasurableSpace (AF F ⊗[F] E)ˣ := borel _
+  let : MeasurableSpace (AF F ⊗[F] E)ˣ := borel _
   have : BorelSpace (AF F ⊗[F] E)ˣ := ⟨rfl⟩
   have : SecondCountableTopology (AF F ⊗[F] E)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
   have : SecondCountableTopology (AF F ⊗[F] E)ˣ := Units.isEmbedding_embedProduct.secondCountableTopology
@@ -424,7 +424,7 @@ theorem exists_hE_ne_zero (hdet : J.det ≠ 0) {x : Fin M → E} (hx : x ≠ 0) 
     funext j
     have h := hcon (Pi.single j 1)
     simp only [hE_eq_sum, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true] at h
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h
     simpa [Matrix.vecMul, dotProduct] using h
   have h0 := Matrix.eq_zero_of_vecMul_eq_zero hdet hu
   apply hx
@@ -906,7 +906,7 @@ theorem selfDualLattice_projection_mem_of_unit_length (hσ : ∀ a, σ (σ a) = 
     intro i
     refine Fin.cases e2 (fun i => Fin.cases e1 e4 i) i
   have hunit : IsUnit (Matrix.of c)ᵀ := by
-    exact (Matrix.linearIndependent_cols_iff_isUnit (A := (Matrix.of c)ᵀ)).mp hli
+    exact (Matrix.linearIndependent_col_iff_isUnit (A := (Matrix.of c)ᵀ)).mp hli
   let J₁ : Matrix (Fin M₁) (Fin M₁) E := gramE σ J fun i => (b i : Fin (M₁ + 2) → E)
   have hgram : hypJ J₁ = gramE σ J c := by
     ext a b'

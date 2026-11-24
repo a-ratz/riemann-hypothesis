@@ -302,13 +302,13 @@ theorem rel_geomProd (hh : 0 < h) {M : ℕ} (hM : 0 < M) (w : ℂ) (j : ℤ) :
 theorem ee_eq_q {M : ℕ} (hM : 0 < M) (τ : ℍ) : ee τ = 𝕢 (M : ℝ) τ ^ M := by
   have : (M : ℂ) ≠ 0 := by exact_mod_cast hM.ne'
   unfold ee Function.Periodic.qParam
-  rw [← Complex.exp_nat_mul]; congr 1; push_cast; field_simp
+  rw [← Complex.exp_natCast_mul]; congr 1; push_cast; field_simp
 
 theorem ee_pt_eq {M : ℕ} (hM : 0 < M) (a b : ℕ) (τ : ℍ) :
     ee (pt ![(a : ℚ) / M, (b : ℚ) / M] τ) = 𝕢 (M : ℝ) τ ^ a * ee ((b : ℂ) / M) := by
   have : (M : ℂ) ≠ 0 := by exact_mod_cast hM.ne'
   unfold ee Function.Periodic.qParam pt
-  rw [← Complex.exp_nat_mul, ← Complex.exp_add]; congr 1
+  rw [← Complex.exp_natCast_mul, ← Complex.exp_add]; congr 1
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
   push_cast; field_simp
 
@@ -360,7 +360,7 @@ theorem sg_coeff_galois_int : ∀ (c M a b d : ℕ) (σ : ℂ ≃+* ℂ), 0 < M 
   obtain ⟨k, φ, p, p'⟩ := rel_sg hM hσ' h1 h2
   have e : ∀ τ : ℍ, ee (-(((-(k : ℤ) : ℤ) : ℂ) / M) * (τ : ℂ)) = Function.Periodic.qParam (M : ℝ) τ ^ k := fun τ => by
     unfold ee Function.Periodic.qParam
-    rw [← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← Complex.exp_natCast_mul]; congr 1; push_cast; ring
   refine ⟨-(k : ℤ), fun n => coeff n φ, ?_, ?_⟩
   · rw [hasQ_iff]; intro τ
     have := p τ
@@ -396,7 +396,7 @@ theorem exists_equiv_comp {R K L : Type} [Field R] [Field K] [Field L] [IsAlgClo
 
 theorem exists_ext {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (s : Ω ≃ₐ[ℚ] Ω) :
     ∃ σ : ℂ ≃+* ℂ, ∀ x : Ω, σ (ε x) = ε (s x) := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hR : #Ω ≤ ℵ₀ :=
     (Algebra.IsAlgebraic.cardinalMk_le_max ℚ Ω).trans (max_le Cardinal.mk_le_aleph0 le_rfl)
   exact exists_equiv_comp ε (ε.comp (s : Ω →+* Ω)) hR
@@ -415,10 +415,10 @@ theorem mem_range_of_pow_eq_one {Ω : Type} [Field Ω] [IsAlgClosed Ω] [CharZer
 
 theorem eps_eOm {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (x : ℚ) :
     ε (eOm ε x) = ee (x : ℂ) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hw : Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) ^ x.den = 1 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have : (x.den : ℂ) * (2 * Real.pi * Complex.I * (x : ℂ)) = x.num * (2 * Real.pi * Complex.I) := by
       have hd : (x.den : ℂ) ≠ 0 := by exact_mod_cast x.den_ne_zero
       have : (x : ℂ) = (x.num : ℂ) / x.den := by exact_mod_cast (Rat.num_div_den x).symm
@@ -440,7 +440,7 @@ theorem lc_eq {R : Type} [Zero R] {M : ℕ} (hM : 0 < M) (k : ℤ) (A : ℕ → 
   rw [dite_eq_left h]
   have hM' : (M : ℚ) ≠ 0 := by exact_mod_cast hM.ne'
   have := h.choose_spec
-  rw [div_left_inj' hM', add_right_inj] at this
+  rw [div_left_inj₀ hM', add_right_inj] at this
   have : h.choose = n := by exact_mod_cast this.symm
   rw [this]
 
@@ -480,7 +480,7 @@ theorem lc_unique {M : ℕ} (hM : 0 < M) {f : ℍ → ℂ} {k k' : ℤ} {A A' : 
     have e : f τ * ee (-(((k + m : ℤ) : ℂ) / M) * (τ : ℂ)) * Q ^ m = f τ * ee (-((k : ℂ) / M) * (τ : ℂ)) := by
       rw [mul_assoc]; congr 1
       unfold ee
-      rw [hQ, ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [hQ, ← Complex.exp_natCast_mul, ← Complex.exp_add]
       congr 1; push_cast; ring
     rw [e] at h2
     refine (Function.Injective.hasSum_iff (f := fun n => (if m ≤ n then A' (n - m) else 0) * Q ^ n)
@@ -492,7 +492,7 @@ theorem lc_unique {M : ℕ} (hM : 0 < M) {f : ℍ → ℂ} {k k' : ℤ} {A A' : 
     · rw [← hQ] at h2
       have e2 : (fun n => (if m ≤ n then A' (n - m) else 0) * Q ^ n) ∘ (· + m) = fun i => A' i * Q ^ i * Q ^ m := by
         funext n
-        simp only [Function.comp, le_add_iff_nonneg_left, zero_le, if_true, Nat.add_sub_cancel, pow_add]
+        simp only [Function.comp, le_add_iff_nonneg_left, zero_le, ite_true, Nat.add_sub_cancel, pow_add]
         ring
       rw [e2]; exact h2
   have hA := HasQ.coeff_unique hM h hs
@@ -503,13 +503,13 @@ theorem lc_unique {M : ℕ} (hM : 0 < M) {f : ℍ → ℂ} {k k' : ℤ} {A A' : 
   · obtain ⟨n, rfl⟩ := hr
     rw [lc_eq hM]
     by_cases hmn : m ≤ n
-    · rw [if_pos hmn]
+    · rw [ite_eq_left hmn]
       have : ((k : ℚ) + n) / M = (((k + m : ℤ) : ℚ) + ((n - m : ℕ) : ℚ)) / M := by
         push_cast [Nat.cast_sub hmn]; ring
       rw [this, lc_eq hM]
-    · rw [if_neg hmn, lc_zero]
+    · rw [ite_eq_right hmn, lc_zero]
       intro n' hn'
-      rw [div_left_inj' hM'] at hn'
+      rw [div_left_inj₀ hM'] at hn'
       push_cast at hn'
       have : (n : ℚ) = m + n' := by linarith
       have : n = m + n' := by exact_mod_cast this

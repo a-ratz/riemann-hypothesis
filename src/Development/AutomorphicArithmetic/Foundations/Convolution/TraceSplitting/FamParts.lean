@@ -55,7 +55,7 @@ private theorem above_finite {F E : Type} [Field F] [NumberField F] [Field E] [N
       exact v.ne_bot ((Ideal.map_eq_bot_iff_of_injective (FaithfulSMul.algebraMap_injective _ _)).1 h))
   refine h.subset fun w hw => ?_
   have e : w.under (𝓞 F) = v := hw
-  rw [Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, ← e]
+  rw [Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, ← e]
   exact le_rfl
 
 theorem UpperTheory.ConvolutionTheory.T.famParts :
@@ -78,7 +78,7 @@ theorem UpperTheory.ConvolutionTheory.T.famParts :
     obtain ⟨π, hπ⟩ := famSat F n b S hS Λ' t' hb
     have hlt : ∀ i, b.d i < n := by
       intro i
-      haveI : Nontrivial (Fin b.r) := Fin.nontrivial_iff_two_le.2 b.two
+      have : Nontrivial (Fin b.r) := Fin.nontrivial_iff_two_le.2 b.two
       obtain ⟨j, hj⟩ := exists_ne i
       refine lt_of_lt_of_eq ?_ b.sum
       exact Finset.single_lt_sum hj (Finset.mem_univ _) (Finset.mem_univ _) (b.pos j) fun k _ _ => Nat.zero_le _

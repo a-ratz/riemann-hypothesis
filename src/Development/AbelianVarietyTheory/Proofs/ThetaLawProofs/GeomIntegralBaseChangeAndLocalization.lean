@@ -56,23 +56,23 @@ namespace GlobalTheory.KeyFam
 
 theorem GeomInt.baseChange {K R : Type} [Field K] [CommRing R] [Algebra K R] (h : GeomInt K R)
     (K' : Type) [Field K'] [Algebra K K'] : GeomInt K' (K' ⊗[K] R) := by
-  haveI := h.1
+  have := h.1
   refine ⟨inferInstance, fun L _ _ => ?_⟩
-  letI : Algebra K L := ((algebraMap K' L).comp (algebraMap K K')).toAlgebra
-  haveI : IsScalarTower K K' L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI := h.2 L
+  let : Algebra K L := ((algebraMap K' L).comp (algebraMap K K')).toAlgebra
+  have : IsScalarTower K K' L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have := h.2 L
   exact (Algebra.TensorProduct.cancelBaseChange K K' L L R).toMulEquiv.isDomain _
 
 theorem GeomInt.away {K R : Type} [Field K] [CommRing R] [Algebra K R] (h : GeomInt K R)
     {r : R} (hr : r ≠ 0) : GeomInt K (Localization.Away r) := by
-  haveI := h.1
-  haveI : Algebra.Smooth R (Localization.Away r) := Algebra.Smooth.of_isLocalization_Away r
+  have := h.1
+  have : Algebra.Smooth R (Localization.Away r) := Algebra.Smooth.of_isLocalization_Away r
   refine ⟨Algebra.Smooth.comp K R _, fun L _ _ => ?_⟩
-  haveI := h.2 L
-  letI : Algebra (L ⊗[K] R) (L ⊗[K] Localization.Away r) :=
+  have := h.2 L
+  let : Algebra (L ⊗[K] R) (L ⊗[K] Localization.Away r) :=
     (Algebra.TensorProduct.map (AlgHom.id L L)
       (IsScalarTower.toAlgHom K R (Localization.Away r))).toAlgebra
-  haveI : IsScalarTower L (L ⊗[K] R) (L ⊗[K] Localization.Away r) :=
+  have : IsScalarTower L (L ⊗[K] R) (L ⊗[K] Localization.Away r) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       simp [RingHom.algebraMap_toAlgebra]
   have hloc := IsLocalization.tensorProduct_tensorProduct_right K L (Submonoid.powers r)

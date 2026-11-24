@@ -263,7 +263,7 @@ theorem local_step {A B B' : Over (Sp k)} [GrpObj A] [GrpObj B] [GrpObj B'] (π 
       InK π' (Spec.map (CommRingCat.ofHom ψ) ≫ A.left.fromSpecStalk x₀))
     {R : CommRingCat.{0}} [IsLocalRing R] (y : Spec R ⟶ A.left) (hy : InK π y) : InK π' y := by
   let c : Sp (IsLocalRing.ResidueField R) ⟶ Spec R := Spec.map (CommRingCat.ofHom (IsLocalRing.residue R))
-  haveI : IsLocalHom (CommRingCat.ofHom (IsLocalRing.residue R)).hom :=
+  have : IsLocalHom (CommRingCat.ofHom (IsLocalRing.residue R)).hom :=
     inferInstanceAs (IsLocalHom (IsLocalRing.residue R))
   have hc : c (IsLocalRing.closedPoint (IsLocalRing.ResidueField R)) = IsLocalRing.closedPoint R :=
     Spec_closedPoint
@@ -592,7 +592,7 @@ theorem evc_isog {S : Scheme.{0}} {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} 
 theorem evc_adj {S : Scheme.{0}} {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A ⟶ o'.A}
     (h : IsPIsog c o o' ψ) (ψ' : o'.A ⟶ o.A) [IsMonHom ψ'] (h' : ψ' ≫ ψ = (𝟙 o'.A) ^ c) {T : Over S}
     (x : T ⟶ o.A) (y : T ⟶ o'.A) : evc o'.isLB (x ≫ ψ) y = evc o.isLB x (y ≫ ψ') := by
-  haveI := h.2.1
+  have := h.2.1
   obtain ⟨hfl, hsu, hqc⟩ := SiegUniqBase.flat_surjective_qc_pow S o'.A o'.ab c h.pos
   have key := GlobalTheory.BirigUniq.pic_eq_zero_of_fpqc o.A o'.A o'.A o.ab ((𝟙 o'.A) ^ c) hfl hsu hqc
     (evc o'.isLB (fst o.A o'.A ≫ ψ) (snd o.A o'.A) - evc o.isLB (fst o.A o'.A) (snd o.A o'.A ≫ ψ')) (by
@@ -625,10 +625,10 @@ theorem star_ker_le {k : Type} [CommRing k] {s : Sp k ⟶ Sp R} {c : ℕ} {o o�
     {ψ₂ : o.A ⟶ o₂.A} (h₁ : IsPIsog c o o₁ ψ₁) (h₂ : IsPIsog c o o₂ ψ₂) (a : D.O)
     (H : ∀ (T : Over (Sp k)) (x : T ⟶ o.A), x ≫ ψ₂ = 1 → (x ≫ o.act.act a) ≫ ψ₁ = 1)
     (T : Over (Sp k)) (x : T ⟶ o.A) (hx : x ≫ ψ₁ = 1) : (x ≫ o.act.act (D.star a).unop) ≫ ψ₂ = 1 := by
-  haveI := h₁.2.1
-  haveI := h₂.2.1
-  haveI := o.act.hom a
-  haveI := o.act.hom (D.star a).unop
+  have := h₁.2.1
+  have := h₂.2.1
+  have := o.act.hom a
+  have := o.act.hom (D.star a).unop
   obtain ⟨φ₁, hφ₁, e₁, e₁'⟩ := h₁.2.2.2.2.2
   obtain ⟨φ₂, hφ₂, e₂, e₂'⟩ := h₂.2.2.2.2.2
   have hom_ext_spAlg {T B : Over (Sp k)} (a b : T ⟶ B)
@@ -638,7 +638,7 @@ theorem star_ker_le {k : Type} [CommRing k] {s : Sp k ⟶ Sp R} {c : ℕ} {o o�
     intro j
     let C : CommRingCat := T.left.affineOpenCover.X j
     let φ : CommRingCat.of k ⟶ C := Spec.preimage (T.left.affineOpenCover.f j ≫ T.hom)
-    letI : Algebra k C := φ.hom.toAlgebra
+    let : Algebra k C := φ.hom.toAlgebra
     let g : GlobalTheory.PDiv.SpAlg k C ⟶ T := Over.homMk (T.left.affineOpenCover.f j) (by
       show _ = Spec.map (CommRingCat.ofHom (algebraMap k C))
       rw [← Spec.map_preimage (T.left.affineOpenCover.f j ≫ T.hom)]
@@ -650,9 +650,9 @@ theorem star_ker_le {k : Type} [CommRing k] {s : Sp k ⟶ Sp R} {c : ℕ} {o o�
       (n : ℕ) (hn : 0 < n) (F : A ⟶ B) (hF : IsMonHom F)
       (hker : ∀ (S : Type) [CommRing S] [Algebra k S] (z : GlobalTheory.PDiv.SpAlg k S ⟶ A),
         z ^ n = 1 → z ≫ F = 1) : ∃ f : A ⟶ B, IsMonHom f ∧ F = mulN A n ≫ f := by
-    haveI := hA.comm
+    have := hA.comm
     obtain ⟨hfin, hflat, hsurj⟩ := GlobalTheory.T.abelianScheme_mulN_finite_flat_surjective k A hA n hn
-    haveI : IsMonHom (mulN A n) := GlobalTheory.MulEtaleDvr.isMonHom_mulN A n
+    have : IsMonHom (mulN A n) := GlobalTheory.MulEtaleDvr.isMonHom_mulN A n
     have hqc : QuasiCompact (mulN A n).left := inferInstance
     have h : ∀ (T : Over (Sp k)) (x : T ⟶ A), x ≫ mulN A n = 1 → x ≫ F = 1 := by
       intro T x hx
@@ -673,9 +673,9 @@ theorem star_ker_le {k : Type} [CommRing k] {s : Sp k ⟶ Sp R} {c : ℕ} {o o�
   rw [mulN_eq_pow] at eβ
   have hfac : φ₂ ≫ o.act.act a = β ≫ φ₁ := by
     obtain ⟨hfl, hsu, -⟩ := SiegUniqBase.flat_surjective_qc_pow _ o₂.A o₂.ab c h₁.pos
-    haveI := hfl
-    haveI := hsu
-    haveI : Epi ((𝟙 o₂.A) ^ c).left := Flat.epi_of_flat_of_surjective _
+    have := hfl
+    have := hsu
+    have : Epi ((𝟙 o₂.A) ^ c).left := Flat.epi_of_flat_of_surjective _
     have e : (((𝟙 o₂.A) ^ c) ≫ φ₂ ≫ o.act.act a).left = (((𝟙 o₂.A) ^ c) ≫ β ≫ φ₁).left := by
       rw [← Category.assoc _ β, ← eβ, Category.assoc, Category.assoc, e₁, GlobalTheory.BirigidRoot.pow_comp_hom,
         Category.id_comp, ← Category.assoc, MonObj.comp_pow, Category.comp_id]
@@ -765,7 +765,7 @@ theorem kernel_ideal : ∀ (k : Type) [Field k] (A B : Over (Sp k)) [GrpObj B] (
       (∃ z : Sp R' ⟶ Sp k, z ≫ (η[B]).left = (Spec.map (CommRingCat.ofHom ψ) ≫ A.left.fromSpecStalk x₀) ≫ π.left) ↔
         J ≤ RingHom.ker ψ := by
   intro k _ A B _ π _ x₀
-  haveI : IsClosedImmersion (η[B]).left := isClosedImmersion_of_comp_eq_id (Y := Sp k) B.hom _ (Over.w _)
+  have : IsClosedImmersion (η[B]).left := isClosedImmersion_of_comp_eq_id (Y := Sp k) B.hom _ (Over.w _)
   exact exists_ideal_factor_iff (η[B]).left π.left x₀
 
 end GlobalTheory.KerIdeal
@@ -819,7 +819,7 @@ theorem localRing_finite_ideals_of_maximalIdeal_principal_nilpotent :
       by_contra h
       exact Nat.find_min hex (show n < Nat.find hex by omega) h
     rw [hn] at hk
-    obtain ⟨a, haI, ha⟩ := SetLike.not_le_iff_exists.mp hk
+    obtain ⟨a, haI, ha⟩ := IsConcreteLE.not_le_iff_exists.mp hk
     have ha' : a ∈ m ^ n := hIn haI
     rw [hpow, Ideal.mem_span_singleton'] at ha'
     obtain ⟨y, rfl⟩ := ha'
@@ -875,7 +875,7 @@ theorem maximalIdeal_pow_le : ∀ (k : Type) [Field k] [IsAlgClosed k] (A B : Ov
   have key : ∀ P : Ideal (A.left.presheaf.stalk ((η[A]).left.base s)), P.IsPrime → J ≤ P →
       P = IsLocalRing.maximalIdeal _ := by
     intro P hP hJP
-    haveI := hP
+    have := hP
     obtain ⟨z, hz⟩ := (hJ (A.left.presheaf.stalk ((η[A]).left.base s) ⧸ P) (Ideal.Quotient.mk P)).2
       (by rw [Ideal.mk_ker]; exact hJP)
     let q : Sp (A.left.presheaf.stalk ((η[A]).left.base s) ⧸ P) := ⟨⊥, Ideal.isPrime_bot⟩
@@ -1126,11 +1126,11 @@ theorem finite_ideals {k : Type} [Field k] [IsAlgClosed k] {A B₁ : Over (Sp k)
   by_cases htop : JG = ⊤
   · refine (Set.finite_singleton ⊤).subset ?_
     intro I hI
-    simp only [Set.mem_setOf_eq] at hI
+    simp only [Set.mem_ofPred_eq] at hI
     rw [htop, top_le_iff] at hI
     exact hI
-  haveI : Nontrivial (A.left.presheaf.stalk x₀ ⧸ JG) := Ideal.Quotient.nontrivial_iff.2 htop
-  haveI : IsLocalRing (A.left.presheaf.stalk x₀ ⧸ JG) :=
+  have : Nontrivial (A.left.presheaf.stalk x₀ ⧸ JG) := Ideal.Quotient.nontrivial_iff.2 htop
+  have : IsLocalRing (A.left.presheaf.stalk x₀ ⧸ JG) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk JG) Ideal.Quotient.mk_surjective
   have hJGm : JG ≤ IsLocalRing.maximalIdeal _ := IsLocalRing.le_maximalIdeal htop
   obtain ⟨M, hM⟩ := GlobalTheory.KerIdeal.maximalIdeal_pow_le k A A π₀ d hA hA inferInstance hd x₀ hx₀ J₁ hJ₁
@@ -1162,7 +1162,7 @@ theorem finite_ideals {k : Type} [Field k] [IsAlgClosed k] {A B₁ : Over (Sp k)
       _ ≤ JG.map (Ideal.Quotient.mk JG) := Ideal.map_mono (hM.trans le_sup_left)
       _ = ⊥ := by rw [Ideal.map_quotient_self]
   obtain ⟨jk, hres, htan, hinjT⟩ := GlobalTheory.TangentStalk.tangent_eq_stalk_dual k A x₀ hx₀
-  letI : Algebra k (A.left.presheaf.stalk x₀ ⧸ JG) := ((Ideal.Quotient.mk JG).comp jk).toAlgebra
+  let : Algebra k (A.left.presheaf.stalk x₀ ⧸ JG) := ((Ideal.Quotient.mk JG).comp jk).toAlgebra
   have halg : ∀ c : k, algebraMap k (A.left.presheaf.stalk x₀ ⧸ JG) c = Ideal.Quotient.mk JG (jk c) :=
     fun c => rfl
   have hpt : ∀ (ψ : A.left.presheaf.stalk x₀ →+* DualNumber k) (v : epsR k ⟶ A),
@@ -1313,7 +1313,7 @@ theorem exists_local_idempotents {B : Type} [CommRing B] (c : B) [Finite (B ⧸ 
   let Q := B ⧸ Ideal.span {c}
   let π : B →+* Q := Ideal.Quotient.mk _
   have hπ : Function.Surjective π := Ideal.Quotient.mk_surjective
-  letI : Fintype (MaximalSpectrum Q) := Fintype.ofFinite _
+  let : Fintype (MaximalSpectrum Q) := Fintype.ofFinite _
   obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_nilradical (R := Q)
   have hinf : (⨅ I : MaximalSpectrum Q, I.asIdeal ^ (n + 1)) = ⊥ := by
     rw [← IsArtinianRing.nilradical_pow_eq_iInf, pow_succ, hn]; simp
@@ -1332,7 +1332,7 @@ theorem exists_local_idempotents {B : Type} [CommRing B] (c : B) [Finite (B ⧸ 
     refine hz _ fun J => ?_
     have := Ideal.sum_mem (J.asIdeal ^ (n + 1)) (t := Finset.univ) fun I _ => he I J
 
-    rw [Finset.sum_sub_distrib, Finset.sum_ite_eq, if_pos (Finset.mem_univ _), ← map_sum] at this
+    rw [Finset.sum_sub_distrib, Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _), ← map_sum] at this
     simpa using this
   · rw [← Ideal.Quotient.eq_zero_iff_mem]
     refine hz _ fun J => ?_
@@ -1355,7 +1355,7 @@ theorem exists_local_idempotents {B : Type} [CommRing B] (c : B) [Finite (B ⧸ 
       by_cases hJ : J = I
       · rw [← hJ]; exact hcm.symm
       · have := he I J
-        rw [if_neg hJ, sub_zero] at this
+        rw [ite_eq_right hJ, sub_zero] at this
         exact (h (hcm ▸ (Ideal.pow_le_self (Nat.succ_ne_zero n) this : π (e I) ∈ P.map π))).elim
     rw [key P hP hc h, key P' hP' hc' h']
 
@@ -1609,17 +1609,17 @@ theorem GlobalTheory.UPel.HT.ES.KerFin.finite_kernels : ∀ (p : ℕ) [Fact p.Pr
   let Q : 𝓞 D.F := (p : 𝓞 D.F) ^ (n + 1)
   have hQ0 : Q ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hp.ne_zero)
   have hQn : (p : 𝓞 D.F) ^ n ∣ Q := pow_dvd_pow _ (Nat.le_succ n)
-  haveI : Finite (𝓞 D.F ⧸ Ideal.span {Q}) :=
+  have : Finite (𝓞 D.F ⧸ Ideal.span {Q}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by rwa [Ne, Ideal.span_singleton_eq_bot])
   obtain ⟨κ, _, e, hsum, hidem, hloc⟩ := exists_local_idempotents Q
   rw [Ideal.mem_span_singleton] at hsum
   simp only [Ideal.mem_span_singleton] at hidem
   let ac : 𝓞 D.F → (o.A ⟶ o.A) := fun z => o.act.act (algebraMap (𝓞 D.F) D.O z)
-  haveI hac : ∀ z, IsMonHom (ac z) := fun z => o.act.hom _
+  have hac : ∀ z, IsMonHom (ac z) := fun z => o.act.hom _
   have acmul : ∀ z z', ac z ≫ ac z' = ac (z' * z) := fun z z' => by
     simp only [ac]; rw [map_mul, o.act.mul]
   let g : κ → (o.A ⟶ o.A ⊗ o.A) := fun i => lift (ac (u ^ n)) (ac (1 - e i))
-  haveI hg : ∀ i, IsMonHom (g i) := fun i => by simp only [g]; infer_instance
+  have hg : ∀ i, IsMonHom (g i) := fun i => by simp only [g]; infer_instance
   have hfin := fun i => finite_subgroups o.ab (AbelianSchemeGerms.isAbelianScheme_tensor _ _ o.ab o.ab) (ac Q)
     (GlobalTheory.HTTors.isIsogDeg_intAct p D R b N _ _ o Q hQ0) (g i) (fun v₁ v₂ h₁ h₂ k₁ k₂ => by
       rw [comp_lift_eq_one] at k₁ k₂
@@ -1637,8 +1637,8 @@ theorem GlobalTheory.UPel.HT.ES.KerFin.finite_kernels : ∀ (p : ℕ) [Fact p.Pr
       IsPIsog (p ^ n) o o₂ ψ₂ → f (fun T x => x ≫ ψ₁ = 1) = f (fun T x => x ≫ ψ₂ = 1) →
       ∀ (T : Over (Sp k)) (x : T ⟶ o.A), x ≫ ψ₁ = 1 → (x ≫ ac (u' ^ n)) ≫ ψ₂ = 1 := by
     intro o₁ o₂ ψ₁ ψ₂ h₁ h₂ heq T x hx
-    haveI := h₁.2.1
-    haveI := h₂.2.1
+    have := h₁.2.1
+    have := h₂.2.1
     have hi : ∀ i, e i * u' ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := fun i => by
       refine ((congrFun (congrFun (congrFun heq i) T) (x ≫ ac (e i * u' ^ n))).mp ⟨?_, ?_, ?_⟩).2.2
       · rw [Category.assoc, acmul]
@@ -1648,7 +1648,7 @@ theorem GlobalTheory.UPel.HT.ES.KerFin.finite_kernels : ∀ (p : ℕ) [Fact p.Pr
         · rw [mul_left_comm, ← mul_pow, huu, mul_pow]; ring
         · rw [← _root_.mul_assoc]; exact (hQn.trans (hidem i)).mul_right _
       · change (x ≫ o.act.act _) ≫ ψ₁ = 1
-        haveI := o₁.act.hom (algebraMap (𝓞 D.F) D.O (e i * u' ^ n))
+        have := o₁.act.hom (algebraMap (𝓞 D.F) D.O (e i * u' ^ n))
         rw [Category.assoc, h₁.2.2.1, ← Category.assoc, hx, MonObj.one_comp]
     have h0 : ((∑ i, e i) - 1) * u' ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := by
       rw [mem_transp, kill_of_dvd h₁ x hx _ ((hQn.trans hsum).mul_right _), MonObj.one_comp]
@@ -1659,7 +1659,7 @@ theorem GlobalTheory.UPel.HT.ES.KerFin.finite_kernels : ∀ (p : ℕ) [Fact p.Pr
       IsPIsog (p ^ n) o o₂ ψ₂ → f (fun T x => x ≫ ψ₁ = 1) = f (fun T x => x ≫ ψ₂ = 1) →
       ∀ (T : Over (Sp k)) (x : T ⟶ o.A), x ≫ ψ₁ = 1 → x ≫ ψ₂ = 1 := by
     intro o₁ o₂ ψ₁ ψ₂ h₁ h₂ heq T x hx
-    haveI := h₂.2.1
+    have := h₂.2.1
     have a₁ : u' ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := step o₁ o₂ ψ₁ ψ₂ h₁ h₂ heq T x hx
     have a₂ : (-u) ^ n ∈ transp ψ₂ h₂.2.1 h₂.2.2.1 x := by
       have := star_ker_le h₁ h₂ _ (step o₂ o₁ ψ₂ ψ₁ h₂ h₁ heq.symm) T x hx
@@ -1960,7 +1960,7 @@ theorem charP_of_residueField_of_notMem_basicOpen (p : ℕ) [Fact p.Prime] (X : 
 
 theorem finite_isogTarget : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → D.m = 1 → ∀ (c : ℕ) (M : Model b N) (u : M.X), u ∉ (M.X.basicOpen ((p : ℕ) : Γ(M.X, ⊤))) → ∀ (L : Type) [Field L] [IsAlgClosed L] (h : M.X.residueField u →+* L), {ζ : Sp L ⟶ M.X | CorrQF.IsogTarget M c (spMap h ≫ M.X.fromSpecResidueField u) ζ}.Finite := by
   intro p _ D R _ b N hN hNp hm c M u hu L _ _ h
-  haveI : CharP L p := charP_of_residueField_of_notMem_basicOpen p M.X u hu L h
+  have : CharP L p := charP_of_residueField_of_notMem_basicOpen p M.X u hu L h
   set ξ := spMap h ≫ M.X.fromSpecResidueField u with hξ
   obtain ⟨o₀, ⟨m₀⟩⟩ := HTPull.exists_objMap_pull p D R b N M.X (Sp L) M.s ξ M.univ
   have hF := T.finite_kernels_pIsogenies_harrisTaylor_charP p D R b N hN hNp hm c L (ξ ≫ M.s) o₀

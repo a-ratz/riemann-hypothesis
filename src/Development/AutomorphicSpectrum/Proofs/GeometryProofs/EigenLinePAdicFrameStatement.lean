@@ -362,7 +362,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat.CPoint
 theorem exists_emb_through_coeff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (l : Level H) (c : Coeff l) (p : Nat.Primes)
     (κ : c.F →+* ℂ_[p]) (s : E →+* ℂ_[p]), ∃ τ : E →+* ℂ, s = κ.comp (inE c τ) := by
   intro E _ _ _ H l c p κ s
-  haveI : CharZero ℂ_[p] := charZero_of_injective_ringHom κ.injective
+  have : CharZero ℂ_[p] := charZero_of_injective_ringHom κ.injective
   have hinj : Function.Injective (fun τ : E →+* ℂ => κ.comp (inE c τ)) := by
     intro τ τ' h
     ext a
@@ -372,7 +372,7 @@ theorem exists_emb_through_coeff : ∀ (E : Type) [Field E] [NumberField E] [IsC
   have hle : Nat.card (E →+* ℂ_[p]) ≤ Nat.card (E →+* ℂ) := by
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card, NumberField.Embeddings.card E ℂ,
       NumberField.Embeddings.card E ℂ_[p]]
-  haveI : Finite (E →+* ℂ_[p]) := inferInstance
+  have : Finite (E →+* ℂ_[p]) := inferInstance
   obtain ⟨τ, hτ⟩ := (hinj.bijective_of_nat_card_le hle).2 s
   exact ⟨τ, hτ.symm⟩
 
@@ -423,17 +423,17 @@ theorem ocp_integers : ∀ p : Nat.Primes, (NormedField.valuation (K := ℂ_[p])
   have hI : (NormedField.valuation (K := ℂ_[p])).Integers (GlobalTheory.CompanionTheory.Ar.Flat.CPoint.OCp p) :=
     Valuation.valuationSubring.integers _
   refine ⟨hI, ⟨((p : ℕ) : ℂ_[p]), ?_, ?_⟩, fun x => ⟨fun hx => ?_, fun hx => ?_⟩⟩
-  · rw [NormedField.valuation_apply, ← NNReal.coe_lt_coe, coe_nnnorm, NNReal.coe_zero,
+  · rw [NormedField.valuation_apply, ← NNReal.coe_lt_coe, coe_nnNorm, NNReal.coe_zero,
       GlobalTheory.CompanionTheory.Ar.Flat.CPoint.norm_prime_padicComplex]
     exact inv_pos.2 (by exact_mod_cast p.2.pos)
-  · rw [NormedField.valuation_apply, ← NNReal.coe_lt_coe, coe_nnnorm, NNReal.coe_one,
+  · rw [NormedField.valuation_apply, ← NNReal.coe_lt_coe, coe_nnNorm, NNReal.coe_one,
       GlobalTheory.CompanionTheory.Ar.Flat.CPoint.norm_prime_padicComplex]
     exact inv_lt_one_of_one_lt₀ (by exact_mod_cast p.2.one_lt)
   · obtain ⟨y, rfl⟩ := RingHom.mem_range.1 hx
     have h := hI.map_le_one y
-    rwa [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one] at h
+    rwa [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one] at h
   · refine RingHom.mem_range.2 (hI.exists_of_le_one ?_)
-    rwa [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+    rwa [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
 
 end GlobalTheory.CompanionTheory.Ar.Flat.CPoint
 end -- clump:auto
@@ -1643,8 +1643,8 @@ theorem norm_eq_one_of {F : Type} [NormedField F] (x y : F) (hx : ‖x‖ ≤ 1)
 
 theorem value_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (ϖ : O) (p : Nat.Primes) (κ : c.F →+* ℂ_[p]) (φ : FrameFn Xo c) (𝓗 : HodgeLat Z.M.lat Z.ρ H.bar (D.p + D.q)) (σ : E →+* Z.Ω) (v : Fin D.p → Z.V) (w : Fin D.q → Z.V) (u : Fin (D.p + D.q) → Z.V × Module.Dual Z.Ω Z.V) (α κ' : Z.Ω) (M : ℕ) (a : ℤ), τ (H.rt : E) = H.rt0 → Irreducible ϖ → Function.Injective β → (∀ x : c.F, ‖κ x‖ ≤ 1 ↔ x ∈ β.range) → (∀ b : 𝓞 E, σ (b : E) = Z.inc (tauIn c τ b)) → LinearIndependent Z.Ω v → Submodule.span Z.Ω (Set.range v) = HT.eigSp Z.ρ σ → LinearIndependent Z.Ω w → Submodule.span Z.Ω (Set.range w) = eigSp Z.ρ (Z.inc.comp (tauIn c (ComplexEmbedding.conjugate τ))) → IsAdapted 𝓗.ρH σ v w u → 0 < M → (∀ x, OrderAt (detLat (𝓗.quot σ) u) (α / κ') (Z.inc (β ϖ)) M a x) → κ' ≠ 0 → Represents Y U τ Z.M (α • exteriorPower.ιMulti Z.Ω D.p v) (κ' • exteriorPower.ιMulti Z.Ω D.q w) φ → IsLineFn U τ φ → ∃ t : ℝ, HasFinNorm U τ φ p κ t := by
   intro E _ _ _ H D l Xo c O _ _ _ β Y U Z τ ϖ p κ φ 𝓗 σ v w u α κ' M a hτ hϖ hinj hr hσ hv hvs hw hws had hM hord hκ' hrep hφ
-  haveI : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
-  haveI : FiniteDimensional Z.Ω Z.V := HodgeLat.finiteDimensional (𝓗 := 𝓗)
+  have : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
+  have : FiniteDimensional Z.Ω Z.V := HodgeLat.finiteDimensional (𝓗 := 𝓗)
   have hσE : σ = Z.inc.comp (inE c τ) := inc_eq E Z.Ω _ _ hσ
   obtain ⟨f, hf⟩ : ∃ f : (E →+* ℂ_[p]) → (E →+* ℂ), ∀ s, s = κ.comp (inE c (f s)) :=
     ⟨fun s => (GlobalTheory.T.cp_embedding_factors_through_complex E H l c p κ s).choose, fun s => (GlobalTheory.T.cp_embedding_factors_through_complex E H l c p κ s).choose_spec⟩
@@ -1663,7 +1663,7 @@ theorem value_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨z, hz⟩ := GlobalTheory.T.dvr_point_eigen_frame_reduction E H D l Xo c O β Y p κ V K j βK y hr hj hκ hF.1
   obtain ⟨h₁, h₂, ψ, hsp, hle, hval, hval', hVr, hinc⟩ :=
     GlobalTheory.T.dvr_point_component_eigen_reduction E H D l Xo c O β Y U Z p κ V K j βK y z hinj hr hj hκ hF.1 hF.2.1 hz
-  haveI : CharZero K := charZero_of_injective_ringHom βK.injective
+  have : CharZero K := charZero_of_injective_ringHom βK.injective
   obtain ⟨U₁, hU₁, t, ht⟩ := 𝓗.free ⟨_, h₂⟩
   obtain ⟨U₂, hU₂, ℓ, hℓs, hℓ⟩ := 𝓗.vb ⟨_, h₂⟩ trivial
   have hy₁ : centre (y ≫ Y.j) ∈ U₁ := hsp.mem_open U₁.2 hU₁

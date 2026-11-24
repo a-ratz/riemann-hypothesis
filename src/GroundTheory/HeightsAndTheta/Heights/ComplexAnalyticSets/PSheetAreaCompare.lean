@@ -178,7 +178,7 @@ theorem SheetAreaCompare.proof (h₁ : SheetImageArea.Statement) : SheetAreaComp
   set G : ℕ → (Fin d → ℂ) → ℝ≥0∞ := fun k y =>
     ‖h (σ' k y)‖ₑ * ENNReal.ofReal (sheetJac (σ (e k)) y) with hG
   have hGm : ∀ k, Measurable (G k) := fun k =>
-    (hh.comp (hσ'm k)).enorm.mul (ENNReal.measurable_ofReal.comp (measurable_sheetJac _))
+    (hh.comp (hσ'm k)).eNorm.mul (ENNReal.measurable_ofReal.comp (measurable_sheetJac _))
 
   set t : (Fin n → ℂ) → ℝ := fun x => if hx : ∃ s, IsSheetAt J A x s then
     |h x| * sheetJac hx.choose (A *ᵥ x) else 0 with ht
@@ -200,8 +200,8 @@ theorem SheetAreaCompare.proof (h₁ : SheetImageArea.Statement) : SheetAreaComp
       unfold sheetJac
       rw [(SheetSumMeasurable.sheet_eventuallyEq hsh hex.choose_spec).fderiv_eq]
     refine ⟨?_, (hBmem k _).2 ⟨hAU, hsx.symm ▸ hx⟩, hsx⟩
-    simp only [ht, dif_pos hex, hG, hσ'eq k _ hAU, hsx, hJ]
-    rw [ENNReal.ofReal_mul (abs_nonneg _), Real.enorm_eq_ofReal_abs]
+    simp only [ht, dite_eq_left hex, hG, hσ'eq k _ hAU, hsx, hJ]
+    rw [ENNReal.ofReal_mul (abs_nonneg _), Real.eNorm_eq_ofReal_abs]
 
   have hpt : ∀ y, ‖sheetSum J A (fun x s => |h x| * sheetJac s (A *ᵥ x)) y‖ₑ ≤
       ∑' k, (B k).indicator (G k) y := by
@@ -212,7 +212,7 @@ theorem SheetAreaCompare.proof (h₁ : SheetImageArea.Statement) : SheetAreaComp
       rw [finsum_mem_def]
     have hnn : ∀ x, 0 ≤ (fibre J A y).indicator t x := fun x =>
       Set.indicator_nonneg (fun x _ => ht0 x) x
-    rw [hS, Real.enorm_eq_ofReal (finsum_nonneg hnn)]
+    rw [hS, Real.eNorm_eq_ofReal (finsum_nonneg hnn)]
     calc ENNReal.ofReal (∑ᶠ x, (fibre J A y).indicator t x)
         ≤ ∑' x, ENNReal.ofReal ((fibre J A y).indicator t x) := ofReal_finsum_le_tsum _ hnn
       _ ≤ ∑' x, ∑' k, (E k ∩ fibre J A y).indicator (fun x => ENNReal.ofReal (t x)) x := by
@@ -226,7 +226,7 @@ theorem SheetAreaCompare.proof (h₁ : SheetImageArea.Statement) : SheetAreaComp
               le_tsum (fun k => (E k ∩ fibre J A y).indicator (fun x => ENNReal.ofReal (t x)) x) k
             exact (Set.indicator_of_mem (show x ∈ E k ∩ fibre J A y from ⟨hk, hxf⟩)
               (fun x => ENNReal.ofReal (t x))).symm.le.trans hle
-          · have : t x = 0 := by simp only [ht, dif_neg hx]
+          · have : t x = 0 := by simp only [ht, dite_eq_right hx]
             rw [Set.indicator_of_mem hxf, this, ENNReal.ofReal_zero]
             exact zero_le
         · rw [Set.indicator_of_notMem hxf, ENNReal.ofReal_zero]
@@ -259,7 +259,7 @@ theorem SheetAreaCompare.proof (h₁ : SheetImageArea.Statement) : SheetAreaComp
     congr 1
     have h2 := h₁ n d A (U (e k)) (σ (e k)) (hU (e k)) (hσd (e k)) (fun y hy => (hσsec (e k) y hy).1)
       (WithLp.ofLp ⁻¹' B k) hBm' (fun y hy => hy.1) (fun z => ‖h (WithLp.ofLp z)‖ₑ)
-      (hh.comp (EuclideanSpace.equiv (Fin n) ℂ).continuous.measurable).enorm
+      (hh.comp (EuclideanSpace.equiv (Fin n) ℂ).continuous.measurable).eNorm
     have himg : (fun y : EuclideanSpace ℂ (Fin d) => WithLp.toLp 2 (σ (e k) (WithLp.ofLp y))) ''
         (WithLp.ofLp ⁻¹' B k) = WithLp.ofLp ⁻¹' E k := by
       ext z

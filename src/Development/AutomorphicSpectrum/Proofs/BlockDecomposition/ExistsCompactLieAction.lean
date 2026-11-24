@@ -138,7 +138,7 @@ theorem eU_continuous (X : (Mn n)) (hX : Xᴴ = -X) : Continuous (eU X hX) := by
   refine Continuous.subtype_mk ?_ _
   let _ := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
   let _ := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
-  have hc : CompleteSpace (Mn n) := FiniteDimensional.complete ℝ _
+  have hc : CompleteSpace (Mn n) := FiniteDimensional.completeSpace ℝ _
   simp only [Complex.coe_smul]
   exact continuous_iff_continuousAt.2 fun t => (hasDerivAt_exp_smul_const (𝕂 := ℝ) X t).continuousAt
 
@@ -173,7 +173,7 @@ theorem rho_exp (hρ : Continuous ρ) (X : (Mn n)) (hX : Xᴴ = -X) (t : ℝ) :
 
 theorem dA_eq_of {X : (Mn n)} {hX : Xᴴ = -X} {B : H →L[ℂ] H}
     (h : ∀ t : ℝ, ρ (eU X hX t) = NormedSpace.exp (t • B)) : dA ρ X hX = B := by
-  have : CompleteSpace H := FiniteDimensional.complete ℂ H
+  have : CompleteSpace H := FiniteDimensional.completeSpace ℂ H
   have hd := hasDerivAt_exp_smul_const (𝕂 := ℝ) B (0 : ℝ)
   rw [zero_smul, NormedSpace.exp_zero, one_mul] at hd
   unfold dA
@@ -182,7 +182,7 @@ theorem dA_eq_of {X : (Mn n)} {hX : Xᴴ = -X} {B : H →L[ℂ] H}
 
 theorem hasDeriv_dA (hρ : Continuous ρ) (X : (Mn n)) (hX : Xᴴ = -X) :
     HasDerivAt (fun t : ℝ => ρ (eU X hX t)) (dA ρ X hX) 0 := by
-  have : CompleteSpace H := FiniteDimensional.complete ℂ H
+  have : CompleteSpace H := FiniteDimensional.completeSpace ℂ H
   have hd := hasDerivAt_exp_smul_const (𝕂 := ℝ) (dA ρ X hX) (0 : ℝ)
   rw [zero_smul, NormedSpace.exp_zero, one_mul] at hd
   rw [funext (rho_exp hρ X hX)]
@@ -197,7 +197,7 @@ theorem dA_smul (hρ : Continuous ρ) {X : (Mn n)} (hX : Xᴴ = -X) (s : ℝ) (h
 
 theorem dA_add (hρ : Continuous ρ) {X Y : (Mn n)} (hX : Xᴴ = -X) (hY : Yᴴ = -Y) (h : (X + Y)ᴴ = -(X + Y)) :
     dA ρ (X + Y) h = dA ρ X hX + dA ρ Y hY := by
-  have : CompleteSpace H := FiniteDimensional.complete ℂ H
+  have : CompleteSpace H := FiniteDimensional.completeSpace ℂ H
   refine dA_eq_of fun t => ?_
   let u : ℕ → (Un n) := fun k => (eU X hX (((k : ℝ)⁻¹) * t) * eU Y hY (((k : ℝ)⁻¹) * t)) ^ k
   have hu : Tendsto u atTop (𝓝 (eU (X + Y) h t)) := by
@@ -300,7 +300,7 @@ theorem lin_conj {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] (L : (Mn 
       (L (X * Y - Y * X)) 0 := by
   let _ := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
   let _ := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
-  have hc : CompleteSpace (Mn n) := FiniteDimensional.complete ℝ _
+  have hc : CompleteSpace (Mn n) := FiniteDimensional.completeSpace ℝ _
   have h := ring_conj X Y
   have h1 := (LinearMap.toContinuousLinearMap L).hasFDerivAt.comp_hasDerivAt (0 : ℝ) h
   simp only [Complex.coe_smul]
@@ -309,7 +309,7 @@ theorem lin_conj {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] (L : (Mn 
 theorem dA_bracket (hρ : Continuous ρ) {X Y : (Mn n)} (hX : Xᴴ = -X) (hY : Yᴴ = -Y)
     (h : (X * Y - Y * X)ᴴ = -(X * Y - Y * X)) :
     dA ρ (X * Y - Y * X) h = dA ρ X hX * dA ρ Y hY - dA ρ Y hY * dA ρ X hX := by
-  have : CompleteSpace H := FiniteDimensional.complete ℂ H
+  have : CompleteSpace H := FiniteDimensional.completeSpace ℂ H
   have h1 := lin_conj (dB (ρ := ρ) hρ) X Y
   have h2 := ring_conj (dA ρ X hX) (dA ρ Y hY)
   have e : (fun s : ℝ => dB (ρ := ρ) hρ (NormedSpace.exp ((s : ℂ) • X) * Y * NormedSpace.exp ((s : ℂ) • (-X)))) =
@@ -369,7 +369,7 @@ theorem dA_skewAdj (hρ : Continuous ρ) (hiso : ∀ k v, ‖ρ k v‖ = ‖v‖
   rw [hc] at h1
   have h2 := h1.unique (hasDerivAt_const (0 : ℝ) ⟪x, y⟫_ℂ)
   rw [eU_zero, map_one] at h2
-  simp only [ContinuousLinearMap.one_apply] at h2
+  simp only [one_apply_eq_self] at h2
   linear_combination h2
 
 theorem gL_adj (hρ : Continuous ρ) (hiso : ∀ k v, ‖ρ k v‖ = ‖v‖) (Z : (Mn n)) (x y : H) :
@@ -379,8 +379,8 @@ theorem gL_adj (hρ : Continuous ρ) (hiso : ∀ k v, ‖ρ k v‖ = ‖v‖) (Z
     rw [conjTranspose_add, conjTranspose_smul, hP, hQ, Complex.star_def, Complex.conj_I]
     simp
   rw [eH]
-  simp only [map_add (f := _), map_smul, gL_skew hρ hP, gL_skew hρ hQ, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.coe_smul', Pi.smul_apply, inner_add_left, inner_add_right, inner_smul_left, inner_smul_right,
+  simp only [map_add (f := _), map_smul, gL_skew hρ hP, gL_skew hρ hQ, add_apply,
+    FunLike.coe_smul, Pi.smul_apply, inner_add_left, inner_add_right, inner_smul_left, inner_smul_right,
     dA_skewAdj hρ hiso hP x y, dA_skewAdj hρ hiso hQ x y, Complex.conj_I]
   ring
 
@@ -433,7 +433,7 @@ theorem derivative_of_rep : ∀ {n : ℕ} (H : Type) [NormedAddCommGroup H] [Inn
       rw [← map_smul, Matrix.smul_single, smul_eq_mul, mul_one]
     have e : (∑ a, ∑ b, X a b • R (gL hρ (Matrix.single a b 1)) w) = dA ρ X hX w := by
       rw [← gL_skew hρ hX, hs]
-      simp [R, ContinuousLinearMap.sum_apply]
+      simp [R, sum_apply]
     simp only [e]
     exact hasDeriv_apply hρ X hX w
 

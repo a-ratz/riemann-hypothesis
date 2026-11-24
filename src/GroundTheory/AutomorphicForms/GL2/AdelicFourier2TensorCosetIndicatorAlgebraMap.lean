@@ -464,7 +464,7 @@ theorem map_vecMul_maxCompact {k : GL (Fin 2) 𝔸[K]}
     ext x
     exact vecMul_mem_unitBall2_iff hk x
   have hc : (c : ℝ≥0∞) = 1 := by
-    rw [h, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hS
+    rw [h, smul_apply, ENNReal.smul_def, smul_eq_mul] at hS
     have h1 : (c : ℝ≥0∞) * adeleMeasure2 K unitBall2 = 1 * adeleMeasure2 K unitBall2 := by
       rw [one_mul]; exact hS
     exact (ENNReal.mul_left_inj adeleMeasure2_unitBall2_ne_zero adeleMeasure2_unitBall2_ne_top).1 h1
@@ -475,7 +475,7 @@ theorem ideleModule_det_of_mem_maxCompact {k : GL (Fin 2) 𝔸[K]}
     (hk : k ∈ (maxCompact : Subgroup (AdelicGLn.AdelicGL K 2))) :
     IdeleGroup.ideleModule K (Matrix.GeneralLinearGroup.det k) = 1 :=
   eq_one_of_isCompact isCompact_maxCompact ((IdeleGroup.ideleModule K).comp (AdelicGLn.det K 2))
-    (continuous_subtype_val.comp
+    (continuous_subtypeVal.comp
       (IdeleGroup.continuous_ideleModule.comp (AdelicGLn.continuous_det K 2))) hk
 
 theorem measurePreserving_shear (t : 𝔸[K]) :
@@ -676,7 +676,7 @@ def adelicFourier2 (F : (Fin 2 → 𝔸[K]) → ℂ) (y : Fin 2 → 𝔸[K]) : �
 
 theorem continuous_adelicChar_sum_mul (y : Fin 2 → 𝔸[K]) :
     Continuous fun x : Fin 2 → 𝔸[K] ↦ (adelicChar K (∑ i, x i * y i) : ℂ) :=
-  continuous_subtype_val.comp ((continuous_adelicChar (K := K)).comp
+  continuous_subtypeVal.comp ((continuous_adelicChar (K := K)).comp
     (continuous_finsetSum _ fun i _ ↦ (continuous_apply i).mul continuous_const))
 
 theorem integrable_mul_adelicChar2 {F : (Fin 2 → 𝔸[K]) → ℂ} (hF : Integrable F (adeleMeasure2 K))
@@ -747,14 +747,14 @@ theorem finiteFourier_cosetIndicator_algebraMap {I : (FractionalIdeal (𝓞 K)�
   by_cases hη : η ∈ (traceDualIdeal K I : FractionalIdeal (𝓞 K)⁰ K)
   · have hη' : algebraMap K 𝔸ᶠ[K] η ∈ idealFiniteAdeles (traceDualIdeal K I) :=
       (algebraMap_mem_idealFiniteAdeles_iff _ η).mpr hη
-    rw [if_pos hη, Set.indicator_of_mem (SetLike.mem_coe.mpr hη'), Pi.one_apply, mul_one]
+    rw [ite_eq_left hη, Set.indicator_of_mem (SetLike.mem_coe.mpr hη'), Pi.one_apply, mul_one]
     have hb : b * algebraMap K 𝔸ᶠ[K] η = algebraMap K 𝔸ᶠ[K] c * algebraMap K 𝔸ᶠ[K] η +
         (b - algebraMap K 𝔸ᶠ[K] c) * algebraMap K 𝔸ᶠ[K] η := by ring
     rw [hb, AddChar.map_add_eq_mul, (forall_finiteAdelicChar_mul_eq_one_iff I _).mpr hη' _ hc,
       mul_one, finiteAdelicChar_algebraMap_mul, mixedTraceForm_comm K (mixedEmbedding K c)]
   · have hη' : algebraMap K 𝔸ᶠ[K] η ∉ idealFiniteAdeles (traceDualIdeal K I) :=
       fun h ↦ hη ((algebraMap_mem_idealFiniteAdeles_iff _ η).mp h)
-    rw [if_neg hη, Set.indicator_of_notMem (by simpa using hη'), mul_zero, mul_zero]
+    rw [ite_eq_right hη, Set.indicator_of_notMem (by simpa using hη'), mul_zero, mul_zero]
 
 theorem adelicFourier2_tensor_cosetIndicator_algebraMap (φ : 𝓢(Fin 2 → mixedSpace K, ℂ))
     {I : (FractionalIdeal (𝓞 K)⁰ K)ˣ} {b : Fin 2 → 𝔸ᶠ[K]} {c : Fin 2 → K}
@@ -776,7 +776,7 @@ theorem finiteAdeleMeasure_idealFiniteAdeles_sq (I : (FractionalIdeal (𝓞 K)�
     ((finiteAdeleMeasure K (idealFiniteAdeles I)).toReal : ℂ) ^ 2 =
       (((∏ _i : Fin 2, ((FractionalIdeal.absNorm (I : FractionalIdeal (𝓞 K)⁰ K) : ℝ) *
           √|(discr K : ℝ)|))⁻¹ : ℝ) : ℂ) := by
-  rw [finiteAdeleMeasure_idealFiniteAdeles_toReal, Fin.prod_univ_two, Real.coe_sqrt, coe_nnnorm,
+  rw [finiteAdeleMeasure_idealFiniteAdeles_toReal, Fin.prod_univ_two, Real.coe_sqrt, coe_nnNorm,
     Int.norm_eq_abs]
   push_cast
   ring

@@ -279,8 +279,8 @@ theorem covol_of_gram {N : ℕ} (w : Fin N → (ι → κ → ℂ)) (g : κ → 
     obtain ⟨a, ha, huniq⟩ := ZSpan.exist_unique_vadd_mem_fundamentalDomain b v
     refine ⟨⟨a.1, a.2⟩, ha, fun a' ha' => ?_⟩
     exact Subtype.ext (congrArg Subtype.val (huniq ⟨a'.1, a'.2⟩ ha'))
-  · haveI := hcount
-    haveI : (volume : Measure (ι → κ → ℂ)).IsAddHaarMeasure := isAddHaar_vol
+  · have := hcount
+    have : (volume : Measure (ι → κ → ℂ)).IsAddHaarMeasure := isAddHaar_vol
     have h1 : IsAddFundamentalDomain (AddSubgroup.closure (Set.range w)) F volume := by
       first
       | exact IsAddFundamentalDomain.mk' hFm.nullMeasurableSet hF
@@ -342,10 +342,10 @@ theorem rowParseval_holds : RowParseval := by
   congr 1
   · refine Finset.sum_congr rfl fun j _ => ?_
     have hj : (Fin.castSucc j).val < D.R.k := j.isLt
-    simp only [rowV, gC, dif_pos hj, if_pos hj, mul_one]
+    simp only [rowV, gC, dite_eq_left hj, ite_eq_left hj, mul_one]
     rfl
   · have hl : ¬ (Fin.last D.R.k).val < D.R.k := by simp
-    simp only [rowV, gC, dif_neg hl, if_neg hl]
+    simp only [rowV, gC, dite_eq_right hl, ite_eq_right hl]
     rfl
 
 end Formalism.L2.SG.Pf.NcReal.JX.CovB
@@ -435,7 +435,7 @@ theorem rowRank_holds : RowRank := by
   have h3 : Module.Finite ℤ Az :=
     Module.Finite.equiv ((Submodule.restrictScalarsEquiv ℤ (𝓞 D.host.E) _ A).restrictScalars ℤ).symm
   have hlat : Submodule.IsFullLattice ℚ Az := by
-    letI : Submodule.IsLattice ℚ Az := Submodule.IsLattice.of_fg ℚ (Module.Finite.iff_fg.1 h3)
+    let : Submodule.IsLattice ℚ Az := Submodule.IsLattice.of_fg ℚ (Module.Finite.iff_fg.1 h3)
     refine ⟨?_⟩
     rw [eq_top_iff]
     intro x _
@@ -556,9 +556,9 @@ theorem prod_gR {D : D7} (u : D.what₂.Word) : ∏ c : Fin (D.R.k + 1), |gR u c
   have hT := Formalism.L2.SG.RealObj.InfCut.ProductExactness.Tw_pos (D := D) u
   rw [Fin.prod_univ_castSucc]
   have h1 : ∀ i : Fin D.R.k, |gR u (Fin.castSucc i)| = 1 := fun i => by
-    unfold gR; rw [if_pos (by simp)]; simp
+    unfold gR; rw [ite_eq_left (by simp)]; simp
   have h2 : |gR u (Fin.last D.R.k)| = 1 / Formalism.L2.SG.RealObj.Tw u := by
-    unfold gR; rw [if_neg (by simp)]; rw [abs_neg, abs_of_pos (by positivity)]
+    unfold gR; rw [ite_eq_right (by simp)]; rw [abs_neg, abs_of_pos (by positivity)]
   rw [Finset.prod_congr rfl fun i _ => h1 i, Finset.prod_const_one, one_mul, h2]
 
 theorem Qf_rowV {D : D7} (X : HidaSetting D) (u : D.what₂.Word) {x y : (VS D).V}

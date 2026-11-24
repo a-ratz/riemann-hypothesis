@@ -208,7 +208,7 @@ theorem sphSection_torusElt {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer
     · refine sub_mem ?_ (one_mem _)
       show valuation k _ ≤ 1
       rw [map_zpow₀]
-      exact zpow_le_one₀ (zero_lt_iff.2 (by simp)) hlt.le (le_max_right _ _)
+      exact zpow_le_one₀ (pos_iff_ne_zero.2 (by simp)) hlt.le (le_max_right _ _)
     · exact zero_mem _
   have hκ : shear B C h h' ∈ KO k (n ⊕ n) := shear_mem h h' (hint fun i => -e i) (hint e)
   have hv : (io k n (torusElt k n ϖ e, 1) * shear B C h h').1 =

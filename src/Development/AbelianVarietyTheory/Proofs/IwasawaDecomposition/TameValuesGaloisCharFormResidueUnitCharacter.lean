@@ -117,9 +117,9 @@ theorem two_le_normV_and_not_mem : ∀ {E : Type} [Field E] [NumberField E] (P :
   intro E _ _ P
   classical
   have hmax : P.asIdeal.IsMaximal := P.isMaximal
-  letI : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot P.asIdeal P.ne_bot
-  letI : Fintype (𝓞 E ⧸ P.asIdeal) := Fintype.ofFinite _
+  let : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot P.asIdeal P.ne_bot
+  let : Fintype (𝓞 E ⧸ P.asIdeal) := Fintype.ofFinite _
   have hcard : Formalism.ConjugateSelfDual.normV P = Fintype.card (𝓞 E ⧸ P.asIdeal) := by
     rw [Formalism.ConjugateSelfDual.normV, Nat.card_eq_fintype_card]
   have h2 : 2 ≤ Formalism.ConjugateSelfDual.normV P := by
@@ -215,7 +215,7 @@ theorem main : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E
   obtain ⟨ϖ0, hϖ0, hϖ0'⟩ : ∃ ϖ0 : 𝓞 E, ϖ0 ∈ P.asIdeal ∧ ϖ0 ∉ P.asIdeal ^ 2 := by
     have hlt := Ideal.pow_succ_lt_pow (P := P.asIdeal) P.ne_bot 1
     rw [pow_one] at hlt
-    obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx, hx'⟩
   have hϖ0ne : algebraMap E Ω (ϖ0 : E) ≠ 0 := by
     intro h

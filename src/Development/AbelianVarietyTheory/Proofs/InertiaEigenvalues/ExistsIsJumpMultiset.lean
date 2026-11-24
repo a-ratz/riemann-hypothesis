@@ -65,10 +65,10 @@ theorem exists_eigen_line {Qp K LL : Type} [Field Qp] [Field K] [Field LL] [Alge
     [FiniteDimensional Qp K] [Algebra.IsSeparable Qp K] (τ : K →ₐ[Qp] LL) :
     ∃ u : LL ⊗[Qp] K, u ≠ 0 ∧
       ∀ y, (∀ c : K, ((1 : LL) ⊗ₜ[Qp] c) * y = τ c • y) ↔ y ∈ Submodule.span LL {u} := by
-  haveI : Algebra.FormallyUnramified Qp K := Algebra.FormallyUnramified.of_isSeparable Qp K
-  haveI : IsReduced (LL ⊗[Qp] K) := Algebra.FormallyUnramified.isReduced_of_field LL _
-  haveI : IsArtinianRing (LL ⊗[Qp] K) := IsArtinianRing.of_finite LL _
-  haveI : IsSemisimpleRing (LL ⊗[Qp] K) := IsArtinianRing.isSemisimpleRing_of_isReduced _
+  have : Algebra.FormallyUnramified Qp K := Algebra.FormallyUnramified.of_isSeparable Qp K
+  have : IsReduced (LL ⊗[Qp] K) := Algebra.FormallyUnramified.isReduced_of_field LL _
+  have : IsArtinianRing (LL ⊗[Qp] K) := IsArtinianRing.of_finite LL _
+  have : IsSemisimpleRing (LL ⊗[Qp] K) := IsArtinianRing.isSemisimpleRing_of_isReduced _
   let φ : LL ⊗[Qp] K →ₐ[LL] LL := Algebra.TensorProduct.lift (AlgHom.id LL LL) τ fun _ _ => .all _ _
   obtain ⟨e, he, hI⟩ := IsSemisimpleRing.ideal_eq_span_idempotent (RingHom.ker φ)
   have hφe : φ e = 0 := by
@@ -155,7 +155,7 @@ theorem exists_isJumpMultiset (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL
     fun a => filV_anti PD (by omega)
   have hfin := GlobalTheory.finite_jumps_inf_filtration LL _ _ _ h hF
   have h0 : ∀ a, 0 ≤ multV PD ρ τ a := fun a => by
-    haveI : FiniteDimensional LL (FildR PD ρ τ a) :=
+    have : FiniteDimensional LL (FildR PD ρ τ a) :=
       Submodule.finiteDimensional_of_le (S₂ := DdRE PD ρ τ) inf_le_left
     have : finrank LL (FildR PD ρ τ (a + 1)) ≤ finrank LL (FildR PD ρ τ a) :=
       Submodule.finrank_mono (inf_le_inf_left _ (hF a))
@@ -193,7 +193,7 @@ theorem multV_twist [Algebra.IsSeparable Qp K] (hs : ∃ s ∈ PD.Fil (-1), PD.�
     (ρ : Representation LL G LL) (e : ℕ)
     (h : ∀ g x, ρ g x = ((algebraMap Qp LL (PD.χ g : Qp))⁻¹) ^ e • x) (τ : K →ₐ[Qp] LL) (a : ℤ) :
     multV PD ρ τ a = if a = e then 1 else 0 := by
-  haveI := PD.finK
+  have := PD.finK
   have hr := drTwist_range PD ρ e h
   set Ψ := AlgebraTensorModule.map (LinearMap.id : LL →ₗ[LL] LL) (drTwistMap PD e) with hΨ
   have hinj : Function.Injective Ψ :=
@@ -271,12 +271,12 @@ theorem multV_diagRep (hF : IsField BdR) [FiniteDimensional Qp LL] {t : ℕ} (χ
     multV PD (diagRep χ) τ a = ∑ c, multV PD (charRep (χ c)) τ a := by
   induction t with
   | zero =>
-    haveI : Subsingleton ((Fin 0 → LL) ⊗[Qp] BdR) := inferInstance
+    have : Subsingleton ((Fin 0 → LL) ⊗[Qp] BdR) := inferInstance
     simp [multV, Module.finrank_zero_of_subsingleton]
   | succ t ih =>
-    haveI : Module.Finite Qp (Fin t → LL) := inferInstance
-    haveI := finite_ddR_of_isField PD hF (charRep (χ 0))
-    haveI := finite_ddR_of_isField PD hF (diagRep fun c : Fin t => χ c.succ)
+    have : Module.Finite Qp (Fin t → LL) := inferInstance
+    have := finite_ddR_of_isField PD hF (charRep (χ 0))
+    have := finite_ddR_of_isField PD hF (diagRep fun c : Fin t => χ c.succ)
     rw [Fin.sum_univ_succ, ← ih]
     exact multV_add PD (Fin.consLinearEquiv LL fun _ => LL).symm (fun g v => rfl) τ a
 
@@ -291,9 +291,9 @@ theorem jumps_of_split [Algebra.IsSeparable Qp K] [FiniteDimensional Qp LL] (hF 
   let χ : Fin t → G →* LLˣ := fun c => ((cycLL PD LL)⁻¹) ^ (c : ℕ)
   have hχ : ∀ c g, ((χ c g : LLˣ) : LL) = ((algebraMap Qp LL (PD.χ g : Qp))⁻¹) ^ (c : ℕ) := fun c g => by
     simp [χ, cycLL]
-  haveI := finite_ddR_of_isField PD hF ρ
-  haveI := finite_ddR_of_isField PD hF σ
-  haveI := finite_ddR_of_isField PD hF (diagRep χ)
+  have := finite_ddR_of_isField PD hF ρ
+  have := finite_ddR_of_isField PD hF σ
+  have := finite_ddR_of_isField PD hF (diagRep χ)
   obtain ⟨J, hJ⟩ := exists_isJumpMultiset PD ρ τ
     (Submodule.finiteDimensional_of_le (S₂ := DdR PD ρ) inf_le_left)
   refine ⟨J, hJ, Submodule.finiteDimensional_of_le (S₂ := DdR PD σ) inf_le_left, fun a => ?_⟩
@@ -306,13 +306,13 @@ theorem jumps_of_split [Algebra.IsSeparable Qp K] [FiniteDimensional Qp LL] (hF 
   push_cast
   congr 1
   split_ifs with h
-  · rw [Finset.sum_eq_single (⟨a.toNat, by omega⟩ : Fin t), if_pos (by simp only; omega)]
+  · rw [Finset.sum_eq_single (⟨a.toNat, by omega⟩ : Fin t), ite_eq_left (by simp only; omega)]
     · intro c _ hc
-      refine if_neg fun h' => hc (Fin.ext ?_)
+      refine ite_eq_right fun h' => hc (Fin.ext ?_)
       simp only
       omega
     · exact fun h' => absurd (Finset.mem_univ _) h'
-  · refine Finset.sum_eq_zero fun c _ => if_neg fun h' => h ?_
+  · refine Finset.sum_eq_zero fun c _ => ite_eq_right fun h' => h ?_
     have := c.2
     omega
 
@@ -323,13 +323,13 @@ theorem cycZ_eq_chi {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [Field Ω] 
     (Bw : LocBridge l E Ω Gw O) (P : LocPrime l) (g : ↥(GK Bw.Kw)) :
     (((cycZ E Ω l (Br.ι Bw g : ↥Gw) : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l]) = (P.χQ (g : GQ l) : ℚ_[l]) := by
   have hl : l.Prime := Fact.out
-  haveI : CharZero Ω := Bw.j.charZero
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
+  have : CharZero Ω := Bw.j.charZero
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
   set u : ℤ_[l] := ((cycZ E Ω l (Br.ι Bw g : ↥Gw) : ℤ_[l]ˣ) : ℤ_[l]) with hu
   have key : ∀ m : ℕ, ‖(P.χQ (g : GQ l) : ℚ_[l]) - (u : ℚ_[l])‖ ≤ (l : ℝ) ^ (-(m : ℤ)) := by
     intro m
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
     have hζ' := hζ.map_of_injective Bw.j.injective
     obtain ⟨a, ha, hga⟩ := P.χQ_cyc (g : GQ l) m _ hζ'.pow_eq_one
     have hb : ((Br.ι Bw g : ↥Gw) : Ω ≃ₐ[E] Ω) ζ = ζ ^ (u.toZModPow m).val :=

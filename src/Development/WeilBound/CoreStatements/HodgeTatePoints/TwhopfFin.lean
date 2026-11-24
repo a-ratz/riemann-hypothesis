@@ -74,7 +74,7 @@ theorem mem_of_finite {R : Type} [CommRing R] [IsLocalRing R]
     (hW : ∀ x : X.left, X.hom x = IsLocalRing.closedPoint R → x ∈ W)
     (Y : Over (Spec (CommRingCat.of R))) (hY : IsFinite Y.hom) (h : Y ⟶ X) (z : Y.left) :
     h.left z ∈ W := by
-  haveI : IsFinite (h.left ≫ X.hom) := by rw [Over.w h]; exact hY
+  have : IsFinite (h.left ≫ X.hom) := by rw [Over.w h]; exact hY
   exact (GlobalTheory.preimage_eq_top_of_closedFibre_subset (R := CommRingCat.of R) X.hom W hW h.left).ge
     (Set.mem_univ z)
 
@@ -129,10 +129,10 @@ theorem henselian_of_algClosed : ∀ (V : Type) [CommRing V] [IsDomain V] [Valua
 
 theorem padic_alg : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [IsDomain O] [Algebra O C] (hv : v.Integers O) (hp : v (p : C) < 1) (hO : IsAdicComplete (Ideal.span {(p : O)}) O), Nonempty (Algebra ℤ_[p] O) ∧ HenselianLocalRing O ∧ IsIntegrallyClosed O ∧ ValuationRing O ∧ IsAlgClosed (FractionRing O) ∧ IsFractionRing O C := by
   intro p _ C _ _ _ v O _ _ _ hv _ hO
-  haveI := hO
-  haveI hval : ValuationRing O := ValuationRing.of_integers v hv
-  haveI hfr : IsFractionRing O C := hv.isFractionRing
-  haveI hac : IsAlgClosed (FractionRing O) :=
+  have := hO
+  have hval : ValuationRing O := ValuationRing.of_integers v hv
+  have hfr : IsFractionRing O C := hv.isFractionRing
+  have hac : IsAlgClosed (FractionRing O) :=
     IsAlgClosed.of_ringEquiv C _ (FractionRing.algEquiv O C).symm.toRingEquiv
   exact ⟨(GlobalTheory.ChF.padicInt_algebra_of_isAdicComplete_and_matrix_unique p O).1,
     henselian_of_algClosed O, inferInstance, hval, hac, hfr⟩
@@ -147,7 +147,7 @@ theorem prime_eq_bot_or_max : ∀ (C : Type) [Field C] (v : Valuation C NNReal) 
   have hx1 : v (algebraMap O C x) < 1 :=
     lt_of_le_of_ne (hv.map_le_one x) fun h => hx (hv.isUnit_of_one' h)
   have ha : 0 < v (algebraMap O C a) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff v).2 ((map_ne_zero_iff _ hv.hom_inj).2 ha0))
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff v).2 ((map_ne_zero_iff _ hv.hom_inj).2 ha0))
   obtain ⟨n, hn⟩ := NNReal.exists_pow_lt_of_lt_one ha hx1
   have hd : a ∣ x ^ n := hv.dvd_of_le (by rw [map_pow, map_pow]; exact hn.le)
   exact hP.mem_of_pow_mem n (P.mem_of_dvd hd haP)

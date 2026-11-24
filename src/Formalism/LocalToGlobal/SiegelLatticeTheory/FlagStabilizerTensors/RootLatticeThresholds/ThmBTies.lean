@@ -238,13 +238,13 @@ theorem GPoint_eq_gW {r : ℕ} (T T' : ℝ) (p : Point ℂ (r + 1)) : Gpt T T' p
   · subst hs
     obtain ⟨h1, -⟩ := last_block p t (by rw [hp]; simp)
     rw [h1, Complex.normSq_mul] at htop ⊢
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have hn : Complex.normSq t = ‖t‖ ^ (2 * 1) := by rw [Complex.normSq_eq_norm_sq]
     have hpos : 0 < Complex.normSq t := Complex.normSq_pos.2 ht
     have e : Complex.normSq (leadMinor (ptMat p) r (Nat.le_succ r)) = pW L0 := by
       rw [← hn] at htop; exact mul_right_cancel₀ hpos.ne' htop
     rw [e]; ring
-  · rw [if_neg hs, lead_r_zero p L0 t s hp hs, map_zero, mul_zero, sub_zero, htop]
+  · rw [ite_eq_right hs, lead_r_zero p L0 t s hp hs, map_zero, mul_zero, sub_zero, htop]
 
 end Minors
 
@@ -280,7 +280,7 @@ theorem dr_eq (w : Point D.host.E (D.R.rS + 1)) : DrPt (toPts w) = leadMinorK (p
   unfold DrPt
   rw [dite_eq_left hpos]
   by_cases hb : (toPts w).1.blocksFun ⟨(toPts w).1.length - 1, by omega⟩ = 1
-  · rw [if_pos hb]
+  · rw [ite_eq_left hb]
     have hr : D.R.rS = (toPts w).1.sizeUpTo ((toPts w).1.length - 1) := by omega
     by_cases h2 : 2 ≤ (toPts w).1.length
     · rw [dite_eq_left h2]
@@ -293,7 +293,7 @@ theorem dr_eq (w : Point D.host.E (D.R.rS + 1)) : DrPt (toPts w) = leadMinorK (p
       have h1 : (toPts w).1.length - 1 = 0 := by omega
       rw [congrArg (Formalism.HermitianLatticeCounting.ExpansionTerms.leadingPrincipalMinor _) hr, Formalism.HermitianLatticeCounting.Final.ExpansionTerms.e4aValue, h1]
       simp
-  · rw [if_neg hb]
+  · rw [ite_eq_right hb]
     exact (Formalism.HermitianLatticeCounting.Final.ExpansionTerms.e4aVanish D.host.E (D.R.rS + 1) (toPts w).1 (toPts w).2 D.R.rS (Nat.le_succ _)
       (comp_not_end (toPts w).1 hpos hb)).symm
 

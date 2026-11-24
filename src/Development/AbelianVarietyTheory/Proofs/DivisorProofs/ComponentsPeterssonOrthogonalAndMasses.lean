@@ -67,7 +67,7 @@ theorem nullMeasurableSet_classesOver_framesOn : ∀ (D : D7) (H : ReciprocityTh
   intro D H Dw l Xo c r U V dict hC σ hσ Z
   obtain ⟨hU, ⟨Kf, th, hr, hK, _, hd⟩, _, _⟩ := hC.2 σ hσ
   obtain ⟨d1, d2, ⟨x0, _, d3⟩, d4, _, _⟩ := hd
-  haveI : BorelSpace (GA D (V σ)) := ⟨rfl⟩
+  have : BorelSpace (GA D (V σ)) := ⟨rfl⟩
   let S : Set (U σ).Comp := {k | ∃ y, (⟨k, y⟩ : Σ k, Frame ((U σ).X k).Ψ r) ∈ framesOn (U σ) Z}
   have key : ∀ g, dict σ g ∈ framesOn (U σ) Z ↔ (dict σ g).1 ∈ S := by
     intro g
@@ -92,7 +92,7 @@ theorem nullMeasurableSet_classesOver_framesOn : ∀ (D : D7) (H : ReciprocityTh
   have hpre : (Quotient.mk'' ⁻¹' classesOver (V σ) (dict σ) (framesOn (U σ) Z) : Set (GA D (V σ))) =
       {g : GA D (V σ) | (dict σ g).1 ∈ S} := by
     ext g
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     show dict σ (Quotient.mk'' g : AutQ (V σ)).out ∈ framesOn (U σ) Z ↔ _
     rw [key]
     have hrel : QuotientGroup.rightRel (GQ (V σ)) (Quotient.mk'' g : AutQ (V σ)).out g :=
@@ -168,7 +168,7 @@ theorem petAt_sq (x : ℝ) (μ : Measure (AutQ V)) (G : WTZ D.host.E) (f : Rul X
 theorem petE_rdU_ne_top (μ : Measure (AutQ V)) [IsProbabilityMeasure μ] (la : ∀ k, Wt (U.X k).Ψ r)
     {f : Rul Xo c} (hP : rdU U f ∈ holSub U.X la) : petE V dict μ la (rdU U f) ≠ ⊤ := by
   have h : ∀ q : AutQ V, ‖ptN la (rdU U f) (dict q.out)‖ₑ ≤ supE U.X la (rdU U f) := fun q => by
-    rw [Real.enorm_eq_ofReal (ptN_nonneg _ _ _)]
+    rw [Real.eNorm_eq_ofReal (ptN_nonneg _ _ _)]
     by_cases hd : (dict q.out).2 ∈ (U.X (dict q.out).1).dom
     · exact le_iSup (fun p : FPt U.X => ENNReal.ofReal ((U.X p.1).pnorm (la p.1) (rdU U f p.1) p.2))
         ⟨(dict q.out).1, ⟨(dict q.out).2, hd⟩⟩
@@ -266,8 +266,8 @@ end One
 
 theorem orthogonal_mass_idem : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (V : (c.F →+* ℂ) → HSp D) (dict : ∀ σ, GA D (V σ) → Σ k, Frame ((U σ).X k).Ψ r), IsComplexData U V dict → ∀ G : WTZ D.host.E, Orthogonal U V dict G ∧ (∀ Z σ, 0 ≤ mass U V dict Z σ ∧ mass U V dict Z σ ≤ 1) ∧ ∀ (Z : Comp Xo c) (σ : c.F →+* ℂ) (f : cuspW Xo c U G), petW U (xiR D) V dict G σ (idem Z * (f : Rul Xo c)) ≤ petW U (xiR D) V dict G σ (f : Rul Xo c) := by
   intro D H Dw l Xo c r U V dict hc G
-  haveI := CompFin.finite_comp Xo c
-  letI : Fintype (Comp Xo c) := Fintype.ofFinite _
+  have := CompFin.finite_comp Xo c
+  let : Fintype (Comp Xo c) := Fintype.ofFinite _
   have hm : ∀ (σ : c.F →+* ℂ) (Z : Comp Xo c), NullMeasurableSet
       (classesOver (V (goodOf c σ)) (dict (goodOf c σ)) (framesOn (U (goodOf c σ)) Z)) (muQ1 (V (goodOf c σ))) :=
     fun σ Z => GlobalTheory.ClassesMeas.nullMeasurableSet_classesOver_framesOn D H Dw l Xo c r U V dict hc _

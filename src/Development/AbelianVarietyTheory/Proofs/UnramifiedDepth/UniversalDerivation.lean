@@ -138,8 +138,8 @@ lemma ext {x y : SqExt O M} (h1 : x.fst = y.fst) (h2 : x.snd = y.snd) : x = y :=
 @[simp] lemma snd_mul (x y : SqExt O M) : (x * y).snd = x.fst • y.snd + y.fst • x.snd := rfl
 
 lemma isUnit_iff (x : SqExt O M) : IsUnit x ↔ IsUnit x.fst := by
-  letI : Module Oᵐᵒᵖ M := Module.compHom M ((RingHom.id O).fromOpposite mul_comm)
-  haveI : IsCentralScalar O M := ⟨fun _ _ => rfl⟩
+  let : Module Oᵐᵒᵖ M := Module.compHom M ((RingHom.id O).fromOpposite mul_comm)
+  have : IsCentralScalar O M := ⟨fun _ _ => rfl⟩
   exact TrivSqZeroExt.isUnit_iff_isUnit_fst (R := O) (M := M)
 
 def sndHom : SqExt O M →+ M := ⟨⟨snd, rfl⟩, fun _ _ => rfl⟩

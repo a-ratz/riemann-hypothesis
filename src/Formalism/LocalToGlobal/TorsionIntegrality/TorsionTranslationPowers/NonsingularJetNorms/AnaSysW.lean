@@ -289,7 +289,7 @@ theorem nonsing (hU : Unif l L ι W) (t : ℂ) (ht : t ∉ L.lattice) :
     linear_combination he + (ι (L.weierstrassP t) / 4) * h1 + (1 / 4) * h2
   first
   | exact WeierstrassCurve.Affine.nonsingular_of_Δ_ne_zero heq hΔ
-  | (haveI : W.IsElliptic := ⟨isUnit_iff_ne_zero.mpr hΔ⟩
+  | (have : W.IsElliptic := ⟨isUnit_iff_ne_zero.mpr hΔ⟩
      exact (WeierstrassCurve.Affine.equation_iff_nonsingular).mp heq)
   | (haveI : W.IsElliptic := ⟨isUnit_iff_ne_zero.mpr hΔ⟩
      exact (WeierstrassCurve.Affine.equation_iff_nonsingular (W := W)).mp heq)
@@ -297,13 +297,13 @@ theorem nonsing (hU : Unif l L ι W) (t : ℂ) (ht : t ∉ L.lattice) :
 theorem ptW_notMem (hU : Unif l L ι W) (t : ℂ) (ht : t ∉ L.lattice) :
     ptW l L ι W t = .some _ _ (nonsing hU t ht) := by
   unfold ptW
-  exact dif_pos ⟨ht, nonsing hU t ht⟩
+  exact dite_eq_left ⟨ht, nonsing hU t ht⟩
 
 variable (l L ι W)
 
 theorem ptW_mem (t : ℂ) (ht : t ∈ L.lattice) : ptW l L ι W t = 0 := by
   unfold ptW
-  exact dif_neg (fun h => h.1 ht)
+  exact dite_eq_right (fun h => h.1 ht)
 
 variable {l L ι W}
 

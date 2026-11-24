@@ -161,7 +161,7 @@ theorem exists_point [Finite ι]
         ev (emb X la N G) = τ (gF Z G) * σ ^ k := by
   classical
   have := Fintype.ofFinite ι
-  letI : Algebra (Kp X la N) F := (evK X la N ev).toAlgebra
+  let : Algebra (Kp X la N) F := (evK X la N ev).toAlgebra
   let ψ : ↥(Frac0 X la w) →ₐ[Kp X la N] F :=
     { (IsLocalization.Away.lift (sec X la w 0) hu).comp (Frac0 X la w).val.toRingHom with
       commutes' := fun c => lift_algKp X la N w ev hu c }

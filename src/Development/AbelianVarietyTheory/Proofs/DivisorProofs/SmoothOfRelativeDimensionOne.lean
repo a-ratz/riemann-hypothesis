@@ -88,7 +88,7 @@ theorem smooth_of_dedekind_charts (k : Type) [Field k] [IsAlgClosed k] (C : Sche
     obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := x) trivial
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨⟨U, hU⟩, ⟨⟨x, hx⟩⟩⟩, hx⟩
   · rintro ⟨⟨U, hU⟩, hne⟩
-    haveI := h U hU hne
+    have := h U hU hne
     have hft : (f.appLE ⊤ U le_top).hom.FiniteType :=
       HasRingHomProperty.appLE @LocallyOfFiniteType f inferInstance ⟨⊤, isAffineOpen_top _⟩
         ⟨U, hU⟩ le_top
@@ -97,8 +97,8 @@ theorem smooth_of_dedekind_charts (k : Type) [Field k] [IsAlgClosed k] (C : Sche
     have hφ : φ.FiniteType :=
       (RingHom.finiteType_respectsIso.cancel_left_isIso e.inv (f.appLE ⊤ U le_top)).2 hft
     have hs : φ.Smooth := by
-      letI := φ.toAlgebra
-      haveI : Algebra.FiniteType k Γ(C, U) := hφ
+      let := φ.toAlgebra
+      have : Algebra.FiniteType k Γ(C, U) := hφ
       exact GlobalTheory.DedekindSmooth.smooth_of_isDedekindDomain k Γ(C, U)
     exact (RingHom.Smooth.propertyIsLocal.respectsIso.cancel_left_isIso e.inv (f.appLE ⊤ U le_top)).1 hs
 
@@ -138,7 +138,7 @@ theorem exists_smooth_finite {k : Type} [Field k] [IsAlgClosed k] {D : Scheme.{0
       topologicalKrullDim C = 1 ∧ Smooth (f ≫ s) := by
   let f := D.fromSpecResidueField (genericPoint D)
   let c := f.fromNormalization
-  haveI : IsFinite c := NormCurve.isFinite_fromNormalization f s
+  have : IsFinite c := NormCurve.isFinite_fromNormalization f s
   have htr : letI := (NormCurve.constHom (f ≫ s) ⊤).toAlgebra
       Algebra.trdeg k Γ(Spec (D.residueField (genericPoint D)), ⊤) ≤ 1 := by
     obtain ⟨x, hx⟩ := ProperCurve.exists_ne_genericPoint hd
@@ -147,14 +147,14 @@ theorem exists_smooth_finite {k : Type} [Field k] [IsAlgClosed k] {D : Scheme.{0
       change f z ∈ U
       rw [Scheme.fromSpecResidueField_apply]
       exact VB.genericPoint_mem hxU
-    letI := (NormCurve.constHom s U).toAlgebra
-    haveI : Algebra.FiniteType k Γ(D, U) := NormCurve.finiteType_constHom s hU
-    haveI : Nonempty (⊤ : (Spec (D.residueField (genericPoint D))).Opens) :=
+    let := (NormCurve.constHom s U).toAlgebra
+    have : Algebra.FiniteType k Γ(D, U) := NormCurve.finiteType_constHom s hU
+    have : Nonempty (⊤ : (Spec (D.residueField (genericPoint D))).Opens) :=
       ⟨⟨Nonempty.some inferInstance, trivial⟩⟩
-    letI := (NormCurve.isField_sections (⊤ : (Spec (D.residueField (genericPoint D))).Opens)).toField
-    letI := (NormCurve.constHom (f ≫ s) ⊤).toAlgebra
-    letI := (f.appLE U ⊤ e).hom.toAlgebra
-    haveI : IsScalarTower k Γ(D, U) Γ(Spec (D.residueField (genericPoint D)), ⊤) :=
+    let := (NormCurve.isField_sections (⊤ : (Spec (D.residueField (genericPoint D))).Opens)).toField
+    let := (NormCurve.constHom (f ≫ s) ⊤).toAlgebra
+    let := (f.appLE U ⊤ e).hom.toAlgebra
+    have : IsScalarTower k Γ(D, U) Γ(Spec (D.residueField (genericPoint D)), ⊤) :=
       .of_algebraMap_eq' (NormCurve.appLE_comp_constHom s f U ⊤ e).symm
     exact (NormCurve.finite_integralClosure k (NormCurve.surjectiveOnStalks_appLE f hU ⊤ e)).2
       ((ringKrullDim_quotient_le _).trans (ProperCurve.ringKrullDim_eq_one hd hU hxU hx).le)
@@ -185,11 +185,11 @@ theorem CurveTest.pull {K : Type} [Field K] {X Y : Scheme.{0}} {L : LB X} (h : C
 theorem CurveTest.isNef_of_isAlgClosed {K : Type} [Field K] [IsAlgClosed K] {X : Scheme.{0}} [Algebra K Γ(X, ⊤)]
     {L : LB X} (h : CurveTest K L) (hL : L.IsLB) : IsNef K L := by
   refine isNef_iff_isClosedImmersion.2 ⟨hL, fun D i _ _ hd hp => ?_⟩
-  letI := algebraΓAlong K i
+  let := algebraΓAlong K i
   have hi := appTop_algebraMap_along K i
   rw [comp_strHom hi] at hp
   obtain ⟨C, _, f, _, hη, hdC, hs⟩ := exists_smooth_finite (strHom K D) hd
-  letI := algebraΓAlong K f
+  let := algebraΓAlong K f
   have hf := appTop_algebraMap_along K f
   have hpC : IsProper (f ≫ strHom K D) := inferInstance
   rw [comp_strHom hf] at hs hpC
@@ -212,7 +212,7 @@ theorem CurveTest.isNef_of_isAlgClosed {K : Type} [Field K] [IsAlgClosed K] {X :
 theorem CurveTest.isNef (hN : Published.NefProductNonneg) {k : Type} [Field k] {X : Scheme.{0}} [Algebra k Γ(X, ⊤)]
     {L : LB X} (h : CurveTest (AlgebraicClosure k) L) (hL : L.IsLB) : IsNef k L := by
   refine isNef_iff_isClosedImmersion.2 ⟨hL, fun D i _ _ hd hp => ?_⟩
-  letI := algebraΓAlong k i
+  let := algebraΓAlong k i
   have hi := appTop_algebraMap_along k i
   rw [comp_strHom hi] at hp
   have hM := LB.isLB_pull hL i

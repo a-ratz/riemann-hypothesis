@@ -103,7 +103,7 @@ theorem exists_zero_ne_near {k : ℕ} (hk : 2 ≤ k) {J : (Fin k → ℂ) → �
     simp [hc] at ht
 
   obtain ⟨u, -, hu⟩ : ∃ u ∈ (⊤ : Submodule ℂ (Fin k → ℂ)), u ∉ ℂ ∙ v := by
-    refine SetLike.exists_of_lt (lt_top_iff_ne_top.2 fun htop => ?_)
+    refine IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.2 fun htop => ?_)
     have h1 := finrank_span_singleton (K := ℂ) hv0
     rw [htop, finrank_top, Module.finrank_fin_fun] at h1
     omega

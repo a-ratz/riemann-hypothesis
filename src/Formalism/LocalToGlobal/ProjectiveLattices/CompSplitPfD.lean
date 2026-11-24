@@ -103,7 +103,7 @@ theorem cspD_smooth (Xo : Moduli Dw l) (c : Coeff l) :
   first
     | (haveI := Xo.smooth; exact MorphismProperty.pullback_snd _ _ inferInstance)
     | (haveI := Xo.smooth; infer_instance)
-    | (haveI := Xo.smooth; haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim Xo.s; infer_instance)
+    | (have := Xo.smooth; have : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim Xo.s; infer_instance)
 
 theorem cspD_local (Xo : Moduli Dw l) (c : Coeff l) (x : Xo.XF c) :
     ∃ (Y : Type) (_ : TopologicalSpace Y) (g : Y → Xo.XF c), IsOpenEmbedding g ∧ x ∈ Set.range g ∧

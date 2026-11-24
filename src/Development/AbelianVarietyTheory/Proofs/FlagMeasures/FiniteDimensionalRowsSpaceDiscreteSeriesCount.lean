@@ -260,7 +260,7 @@ theorem finiteDimensional_of_bound {V : Type} [AddCommGroup V] [Module ℂ V] (W
   classical
   by_contra hW
   set b := Module.Basis.ofVectorSpace ℂ W with hb
-  haveI : Infinite (Module.Basis.ofVectorSpaceIndex ℂ W) := by
+  have : Infinite (Module.Basis.ofVectorSpaceIndex ℂ W) := by
     by_contra hfin
     rw [not_infinite_iff_finite] at hfin
     exact hW (Module.Finite.of_basis b)
@@ -298,8 +298,8 @@ theorem isContRep_sum (B : RowsAut) {ι : Type} (s : Finset ι) (y : ι → B.I.
 theorem vol_lt_top (hV : GlobalTheory.FlagMeas.AbsoluteVolume) (B : RowsAut) (p q : ℕ) (hs : SigIs B p q)
     (hq : q ^ 2 ≤ B.I.n) (hn : 8 ≤ B.I.n) (hrd : 1 ≤ B.I.rd) :
     0 < B.I.muA B.μf B.fund ∧ B.I.muA B.μf B.fund < ⊤ := by
-  haveI := B.haar
-  haveI := B.sf
+  have := B.haar
+  have := B.sf
   have hpos := (GlobalTheory.CovolRat.covol_eq_inter_fund B.I B.μf B.fund Set.univ B.fund_spec
     MeasurableSet.univ (by simp)).2
   refine ⟨hpos, ?_⟩
@@ -355,7 +355,7 @@ theorem bessel (B : RowsAut) (C : ℝ) (t : B.I.GA → ℝ) (w : B.Hs) (hw : ‖
   set c : Fin D → ℂ := fun i => star (F i x) with hc
   set A : B.Hs →L[ℂ] B.I.L2 B.μf B.fund := ∑ i, c i • T i with hA
   have hAw : A w = ∑ i, c i • T i w := by
-    rw [hA, ContinuousLinearMap.sum_apply]
+    rw [hA, sum_apply]
     rfl
   have hAmem : A ∈ B.I.HomS B.σs B.μf B.fund B.R :=
     Submodule.sum_mem _ (fun i _ => Submodule.smul_mem _ _ (hT i))
@@ -445,7 +445,7 @@ theorem card_le_of_pointwise (B : RowsAut) (hfin : B.I.muA B.μf B.fund < ⊤) {
           calc ∑ i, ‖F i x‖ₑ ^ 2 = ENNReal.ofReal (∑ i, ‖F i x‖ ^ 2) := by
                 rw [ENNReal.ofReal_sum_of_nonneg (fun i _ => by positivity)]
                 refine Finset.sum_congr rfl (fun i _ => ?_)
-                rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+                rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
             _ ≤ ENNReal.ofReal K := ENNReal.ofReal_le_ofReal (hK x)
       _ = ENNReal.ofReal K * B.I.muA B.μf B.fund := by rw [setLIntegral_const]
   have h3 : (D : ENNReal) ≤ ENNReal.ofReal K * B.I.muA B.μf B.fund := h1.trans h2

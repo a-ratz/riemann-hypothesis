@@ -219,7 +219,7 @@ theorem map_toMatrix_mulVec (K : Type) [CommRing K] [TopologicalSpace K] [IsTopo
     μ.map (fun x => t.toMatrix *ᵥ x) = μ := by
   let ν : Measure K := Measure.addHaar
   let P : Measure (ι → K) := Measure.pi fun _ : ι => ν
-  haveI : P.IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : P.IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hμ : μ = Measure.addHaarScalarFactor μ P • P := Measure.isAddLeftInvariant_eq_smul μ P
   have hP : MeasurePreserving (fun x => t.toMatrix *ᵥ x) P P := measurePreserving_pi ν t
   generalize Measure.addHaarScalarFactor μ P = c at hμ
@@ -252,7 +252,7 @@ theorem map_mul_unit (lam : Measure K) [lam.IsAddHaarMeasure] (u : Kˣ) :
   have hm : Measurable (fun y : K => (u : K) * y) :=
     (continuous_const.mul continuous_id).measurable
   ext s hs
-  rw [Measure.map_apply hm hs, Measure.smul_apply, Measure.nnreal_smul_coe_apply, ← map_inv,
+  rw [Measure.map_apply hm hs, smul_apply, Measure.nnreal_smul_coe_apply, ← map_inv,
     distribHaarChar_mul lam u⁻¹ s]
   congr 1
   ext y
@@ -261,8 +261,8 @@ theorem map_mul_unit (lam : Measure K) [lam.IsAddHaarMeasure] (u : Kˣ) :
 theorem pi_smul_const {ι : Type} [Fintype ι] (lam : Measure K) [SigmaFinite lam] (c : ι → ℝ≥0) :
     Measure.pi (fun i => c i • lam) = (∏ i, c i) • Measure.pi (fun _ : ι => lam) := by
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi]
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
+  rw [smul_apply, Measure.pi_pi]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
     ENNReal.ofNNReal_finsetProd]
 
 theorem pi_map_diag {ι : Type} [Fintype ι] (lam : Measure K) [lam.IsAddHaarMeasure] (D : ι → Kˣ) :
@@ -282,7 +282,7 @@ theorem smul_cancel (lam : Measure K) [lam.IsAddHaarMeasure] {a b : ℝ≥0}
   have h0 : lam C ≠ 0 := (Measure.measure_pos_of_mem_nhds lam hn).ne'
   have h1 : lam C ≠ ∞ := hC.measure_lt_top.ne
   have e := congrArg (fun m : Measure K => m C) h
-  simp only [Measure.smul_apply, Measure.nnreal_smul_coe_apply] at e
+  simp only [smul_apply, Measure.nnreal_smul_coe_apply] at e
   exact ENNReal.coe_injective ((ENNReal.mul_left_inj h0 h1).1 e)
 
 theorem map_transvections {ι : Type} [Fintype ι] [DecidableEq ι] (μ : Measure (ι → K))
@@ -395,7 +395,7 @@ theorem map_tuple_eq {K : Type} [CommRing K] [TopologicalSpace K] [IsTopological
   let P : Measure (Fin n → Fin M → K) := Measure.pi fun _ => μ0
   have hmeas : Measurable (fun x : Fin M → K => A *ᵥ x) :=
     (continuous_const.matrix_mulVec continuous_id).measurable
-  haveI hs : SigmaFinite (μ0.map (fun x => A *ᵥ x)) := by
+  have hs : SigmaFinite (μ0.map (fun x => A *ᵥ x)) := by
     rw [h0]; infer_instance
   have hP : P.map (fun X a => A *ᵥ X a) = P := by
     have := Measure.pi_map_pi (μ := fun _ : Fin n => μ0) (f := fun _ x => A *ᵥ x)
@@ -413,21 +413,21 @@ theorem map_actW_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     ∀ h : HA R σ J, μ.map (actW R σ J h) = μ := by
   intro F E _ _ _ _ _ σ hCM M J hJ R _ _ _ _ _ hR n μ hμ h
   obtain ⟨r1, r2, r3, r4, r5, r6, -, -⟩ := hR
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI := r5
-  haveI := r6
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have := r5
+  have := r6
   obtain ⟨t1, t2, t3, t4, tc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
   obtain ⟨a1, a2, -, ai, -⟩ := KAlg.algebra_tensor_invol F E σ hCM R
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := a1
-  haveI := a2
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have := a1
+  have := a2
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hJu : IsUnit (JR (F := F) R J).det := by
     have e : (JR (F := F) R J).det = inclR (F := F) R J.det := by
       rw [RingHom.map_det, RingHom.mapMatrix_apply, JR]

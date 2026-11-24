@@ -147,8 +147,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem tendsto_mix_fin {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι (AE F E)) :
     Tendsto (fun S : Finset (HeightOneSpectrum (𝓞 F)) =>
       mix (algebraMap (AF F) (AE F E) (GlobalTheory.LocalGlobalChar.eps S)) M) atTop (𝓝 M) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
   refine tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun j => ?_
   have h := (GlobalTheory.LocalGlobalChar.tendsto_eps_tens ((M - 1) i j)).add_const ((1 : Matrix ι ι (AE F E)) i j)
   rw [Matrix.sub_apply, sub_add_cancel] at h
@@ -209,7 +209,7 @@ theorem finite_maximal_not_mem {F B E K : Type} [Field F] [CommRing B] [Algebra 
   let Φ : B ⊗[F] E →+* K ⊗[F] E := (Algebra.TensorProduct.map ρ (AlgHom.id F E)).toRingHom
   have hΦ : Function.Surjective Φ :=
     Algebra.TensorProduct.map_surjective ρ (AlgHom.id F E) hρ (fun y => ⟨y, rfl⟩)
-  haveI : IsArtinianRing (K ⊗[F] E) := IsArtinianRing.of_finite K (K ⊗[F] E)
+  have : IsArtinianRing (K ⊗[F] E) := IsArtinianRing.of_finite K (K ⊗[F] E)
   refine ((IsArtinianRing.setOfPred_isMaximal_finite (K ⊗[F] E)).image (Ideal.comap Φ)).subset ?_
   rintro m ⟨hm, hfm⟩
   have h1 : 1 - algebraMap B (B ⊗[F] E) f ∈ m := by
@@ -264,7 +264,7 @@ variable {E : Type} [Field E] [Algebra F E] [FiniteDimensional F E]
 theorem finite_maximal_not_mem_eps (S : Finset (HeightOneSpectrum (𝓞 F))) :
     {m : Ideal (AF F ⊗[F] E) | m.IsMaximal ∧ algebraMap (AF F) (AF F ⊗[F] E) (eps S) ∉ m}.Finite := by
   classical
-  haveI : IsArtinianRing (Ainf F) := inferInstanceAs (IsArtinianRing ((w : InfinitePlace F) → w.Completion))
+  have : IsArtinianRing (Ainf F) := inferInstanceAs (IsArtinianRing ((w : InfinitePlace F) → w.Completion))
   have hinf := finite_maximal_not_mem (E := E) (fstA F) (fun y => ⟨pairA F y 0, rfl⟩) (pairA F 1 0)
     (Prod.ext (mul_one _) (mul_zero _)) (fun x hx => Prod.ext (by
       change (1 : Ainf F) * x.1 = 0
@@ -285,7 +285,7 @@ theorem finite_maximal_not_mem_eps (S : Finset (HeightOneSpectrum (𝓞 F))) :
   refine (hinf.union (S.finite_toSet.biUnion fun v _ => hfin v)).subset ?_
   rintro m ⟨hm, hem⟩
   by_contra hn
-  simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion, not_or, not_and, not_not, not_exists] at hn
+  simp only [Set.mem_union, Set.mem_ofPred_eq, Set.mem_iUnion, not_or, not_and, not_not, not_exists] at hn
   apply hem
 
   rw [eps_eq_sum, map_add (f := _), map_sum]
@@ -298,8 +298,8 @@ open GlobalTheory.DenseAvoid in
 theorem GlobalTheory.DenseAvoid.exists_unit_eval : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (S : Finset (HeightOneSpectrum (𝓞 F))) (ψ : Polynomial (AE F E)), (∀ (Ω : Type) [Field Ω] (φ : AE F E →+* Ω), φ (algebraMap (AF F) (AE F E) (GlobalTheory.LocalGlobalChar.eps S)) = 1 → ψ.map φ ≠ 0) → ∃ t : F, IsUnit (algebraMap (AF F) (AE F E) (GlobalTheory.LocalGlobalChar.eps S) * ψ.eval (algebraMap F (AE F E) t) + (1 - algebraMap (AF F) (AE F E) (GlobalTheory.LocalGlobalChar.eps S))) := by
   intro F E _ _ _ _ _ S ψ hψ
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : Infinite F := Infinite.of_injective (Nat.cast : ℕ → F) Nat.cast_injective
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Infinite F := Infinite.of_injective (Nat.cast : ℕ → F) Nat.cast_injective
   set e := algebraMap (AF F) (AE F E) (GlobalTheory.LocalGlobalChar.eps S) with he_def
   have he : e * e = e := by rw [he_def, ← map_mul, GlobalTheory.LocalGlobalChar.eps_mul_self]
   have hone : ∀ m : Ideal (AE F E), m.IsPrime → e ∉ m → 1 - e ∈ m := fun m hm hem => by
@@ -310,14 +310,14 @@ theorem GlobalTheory.DenseAvoid.exists_unit_eval : ∀ (F E : Type) [Field F] [N
     {t : F | Ideal.Quotient.mk m (ψ.eval (algebraMap F (AE F E) t)) = 0}
   have hbad : bad.Finite := by
     refine hM.biUnion fun m hm => ?_
-    haveI := hm.1
-    letI := Ideal.Quotient.field m
+    have := hm.1
+    let := Ideal.Quotient.field m
     have h1 : Ideal.Quotient.mk m e = 1 := by
       rw [← map_one (Ideal.Quotient.mk m), Ideal.Quotient.eq, ← neg_sub]
       exact m.neg_mem (hone m hm.1.isPrime hm.2)
     have hne := hψ (AE F E ⧸ m) (Ideal.Quotient.mk m) h1
     let j : F →+* AE F E ⧸ m := (Ideal.Quotient.mk m).comp (algebraMap F (AE F E))
-    refine ((Polynomial.finite_setOf_isRoot hne).preimage j.injective.injOn).subset fun t ht => ?_
+    refine ((Polynomial.finite_setOfPred_isRoot hne).preimage j.injective.injOn).subset fun t ht => ?_
     change Ideal.Quotient.mk m (ψ.eval (algebraMap F (AE F E) t)) = 0 at ht
     change Polynomial.IsRoot _ (j t)
     rw [Polynomial.IsRoot.def, Polynomial.eval_map, RingHom.comp_apply, Polynomial.eval₂_hom, ht]
@@ -335,7 +335,7 @@ theorem GlobalTheory.DenseAvoid.exists_unit_eval : ∀ (F E : Type) [Field F] [N
       rwa [add_sub_cancel_right] at this
     have h3 := (hm.isPrime.mem_or_mem h2).resolve_left hem
     apply ht
-    simp only [bad, Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [bad, Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨m, ⟨hm, hem⟩, Ideal.Quotient.eq_zero_iff_mem.2 h3⟩
 end -- clump:auto
 end -- clump:auto
@@ -441,8 +441,8 @@ theorem descend : ∀ {F R : Type} [Field F] [CommRing R] [Algebra F R] [Inverti
 
 theorem dense : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (ε : ℤˣ), (∀ i j, σ (J j i) = ((ε : ℤ) : E) * J i j) → J.det ≠ 0 → ∀ g : UG (cA σ) (dbl (incM F J)), g ∈ closure {h : UG (cA σ) (dbl (incM F J)) | ∃ (p : UG (cA σ) (dbl (incM F J))) (t : GL (Fin n) (AE F E)), (p.1.1 : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) * diagCols (Fin n) = diagCols (Fin n) * t.1 ∧ IsUnit (Matrix.fromCols (1 : Matrix (Fin n) (Fin n) (AE F E)) (-1 : Matrix (Fin n) (Fin n) (AE F E)) * ((h * p).1.1 : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) * Matrix.fromRows (1 : Matrix (Fin n) (Fin n) (AE F E)) (-1 : Matrix (Fin n) (Fin n) (AE F E))).det} := by
   intro F E _ _ _ _ _ σ hσ n J ε hJ hdet g
-  letI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
-  letI : Invertible (2 : AE F E) := (Invertible.map (algebraMap F (AE F E)) (2 : F)).copy 2 (map_ofNat (algebraMap F (AE F E)) 2).symm
+  let : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  let : Invertible (2 : AE F E) := (Invertible.map (algebraMap F (AE F E)) (2 : F)).copy 2 (map_ofNat (algebraMap F (AE F E)) 2).symm
   obtain ⟨q, hq, hlim⟩ := approx F E σ (dbl (incM F J)) g
   refine mem_closure_of_tendsto hlim (Eventually.of_forall fun S => ?_)
   have he : algebraMap (AF F) (AE F E) (GlobalTheory.LocalGlobalChar.eps S) * algebraMap (AF F) (AE F E) (GlobalTheory.LocalGlobalChar.eps S)
@@ -562,7 +562,7 @@ namespace GlobalTheory.SiegelChar
 
 theorem eq_one_of_siegel : (∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (ε : ℤˣ), (∀ i j, σ (J j i) = ((ε : ℤ) : E) * J i j) → J.det ≠ 0 → ∀ c : UG (cA σ) (dbl (incM F J)) →* ℂˣ, Continuous c → (∀ (p : UG (cA σ) (dbl (incM F J))) (t : GL (Fin n) (AE F E)), (p.1.1 : Matrix _ _ (AE F E)) * diagCols (Fin n) = diagCols (Fin n) * t.1 → c p = 1) → c = 1) := by
   intro F E _ _ _ _ _ σ hCM n J ε hJ hdet c hc hP
-  letI i2 : Invertible (2 : AE F E) :=
+  let i2 : Invertible (2 : AE F E) :=
     (Invertible.map (algebraMap (AF F) (AE F E)) (2 : AF F)).copy 2 (map_ofNat _ 2).symm
   have hw1 : (Matrix.fromBlocks 1 0 0 (-1) : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) *
       Matrix.fromBlocks 1 0 0 (-1) = 1 := by

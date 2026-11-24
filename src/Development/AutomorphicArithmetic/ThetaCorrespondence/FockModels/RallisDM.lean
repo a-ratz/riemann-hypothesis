@@ -223,8 +223,8 @@ theorem graph_finDim_mem_of_pointwise_tendsto : ∀ (X : Type) (R : Submodule �
       rw [← h1]; simpa using hpR
     ext1
     exact Prod.ext h1 h2
-  haveI : FiniteDimensional ℂ R0 := Module.Finite.of_injective f hinj
-  have hclosed : IsClosed (R0 : Set ((X → ℂ) × (X → ℂ))) := Submodule.closed_of_finiteDimensional R0
+  have : FiniteDimensional ℂ R0 := Module.Finite.of_injective f hinj
+  have hclosed : IsClosed (R0 : Set ((X → ℂ) × (X → ℂ))) := Submodule.isClosed_of_finiteDimensional R0
   have ht : Filter.Tendsto (fun j => (a j, b j)) Filter.atTop (nhds (a', b')) :=
     (tendsto_pi_nhds.mpr ha).prodMk_nhds (tendsto_pi_nhds.mpr hb)
   have hin : ∀ j, (a j, b j) ∈ R0 := fun j =>
@@ -273,7 +273,7 @@ open Module
 theorem exists_reproducing_kernel : ∀ (K : Type) [Group K] [TopologicalSpace K] [IsTopologicalGroup K] [CompactSpace K] [MeasurableSpace K] [BorelSpace K] (ν : Measure K) [ν.IsHaarMeasure] (Y : Type) (ρ : K →* Module.End ℂ (Y → ℂ)) (f : Y → ℂ), FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => ρ k f)) → (∀ y, Continuous fun k => ρ k f y) → ∃ (e : K → ℂ) (n : ℕ) (a b : Fin n → K → ℂ), Continuous e ∧ (∀ i, Continuous (b i)) ∧ (∀ k₀ k, e (k₀⁻¹ * k) = ∑ i, a i k₀ * b i k) ∧ ∀ y, f y = ∫ k, e k * ρ k f y ∂ν := by
   intro K _ _ _ _ _ _ ν _ Y ρ f hW hcont
   set W := Submodule.span ℂ (Set.range fun k => ρ k f) with hWdef
-  haveI : FiniteDimensional ℂ W := hW
+  have : FiniteDimensional ℂ W := hW
   have hmem : ∀ k, ρ k f ∈ W := fun k => Submodule.subset_span ⟨k, rfl⟩
   let o : K → W := fun k => ⟨ρ k f, hmem k⟩
   have ho : Continuous o := (continuous_pi hcont).subtype_mk _
@@ -739,7 +739,7 @@ theorem swSec_sobBdd : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp 
   have hle := h' f hf _ hm
   have hone : ν 𝓨 = 1 := hν.2.2
   unfold swSec GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero.evZero
-  refine (enorm_integral_le_lintegral_enorm _).trans ?_
+  refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
   refine (lintegral_mono fun w => hsup _).trans ?_
   rw [lintegral_const, Measure.restrict_apply_univ, hone, mul_one, ENNReal.coe_mul, mul_assoc]
   gcongr
@@ -794,9 +794,9 @@ open Filter Topology
 theorem mem_rel_of_isKFinVec : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D) (χ : (AE D)ˣ →* Circle) (om : GA D (dblSp A) × GA D B →* Module.End ℂ (WO (dblSp A) B → ℂ)), IsWeilDatumO ψ (dblSp A) B 1 χ om → ∀ θ : InfFam D, IsInfFam θ → ∀ (ν : Measure (WO A B)) (𝓨 : Set (WO A B)), IsCovolOne (ratL B A) ν 𝓨 → ∀ (μ : Measure (WO (dblSp A) B)) (𝓕 : Set (WO (dblSp A) B)), IsCovolOne (ratL B (dblSp A)) μ 𝓕 → ∀ a : GL (Fin A.rank) (AE D), IsMaj A a → HasIwasawa D.sp.cm.sig (dblSp A).gram (Khat A a) → ∀ (sS : RealMat (dblSp A)) (sB : RealMat B), (∀ τ, IsCartanInv (gramAt D (dblSp A) τ) (sS τ)) → (∀ τ, IsCartanInv (gramAt D B τ) (sB τ)) → (∀ k ∈ Khat A a, ∀ τ, compAt θ τ (Formalism.L2.Theta.mt (dblSp A) k) * sS τ = sS τ * compAt θ τ (Formalism.L2.Theta.mt (dblSp A) k)) → ∀ L : (WO (dblSp A) B → ℂ) → GA D (dblSp A) → ℂ, (∀ f f', IsThetaFunO ψ (dblSp A) B f → IsThetaFunO ψ (dblSp A) B f' → L (f + f') = L f + L f') → (∀ (c : ℂ) f, IsThetaFunO ψ (dblSp A) B f → L (c • f) = c • L f) → (∀ f, IsThetaFunO ψ (dblSp A) B f → ∀ x g, L (om (x, 1) f) g = L f (g * x)) → (SobBdd ψ θ μ 𝓕 fun f x => ‖L f x‖ₑ) → ∀ R : Submodule ℂ ((GA D (dblSp A) → ℂ) × (GA D (dblSp A) → ℂ)), (∀ E, (0, E) ∈ R → E = 0) → (∀ f, IsFockVec ψ θ (dblSp A) B sS sB f → (swSec A B om ν 𝓨 f, L f) ∈ R) → ∀ f, IsThetaFunO ψ (dblSp A) B f → IsKFinVec om (Khat A a) f → (swSec A B om ν 𝓨 f, L f) ∈ R := by
   intro D ψ A B χ om hom θ hθ ν 𝓨 hν μ 𝓕 hμ a ha hIw sS sB hsS hsB hcomm L hLadd hLsmul hLeq hLbdd R hR hFock f hf hfK
 
-  haveI : CompactSpace (Khat A a) := isCompact_iff_compactSpace.mp (isCompact_Khat A a)
-  letI : MeasurableSpace (Khat A a) := borel _
-  haveI : BorelSpace (Khat A a) := ⟨rfl⟩
+  have : CompactSpace (Khat A a) := isCompact_iff_compactSpace.mp (isCompact_Khat A a)
+  let : MeasurableSpace (Khat A a) := borel _
+  have : BorelSpace (Khat A a) := ⟨rfl⟩
   set νK : Measure (Khat A a) := Measure.haar with hνK
   have hint : ∀ F : Khat A a → ℂ, Continuous F → Integrable F νK := fun F hF =>
     integrableOn_univ.mp (hF.continuousOn.integrableOn_compact isCompact_univ)
@@ -830,7 +830,7 @@ theorem mem_rel_of_isKFinVec : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A 
     exact sub_mem (Submodule.mem_sup_left (Submodule.subset_span ⟨k, rfl⟩))
       (Submodule.mem_sup_right (Submodule.subset_span ⟨k, rfl⟩))
   have orbCont : ∀ h, IsThetaFunO ψ (dblSp A) B h → ∀ w, Continuous fun k => orb h k w := fun h hh w =>
-    (hom.om_cont h hh w).comp (continuous_subtype_val.prodMk continuous_const)
+    (hom.om_cont h hh w).comp (continuous_subtypeVal.prodMk continuous_const)
 
   have swAdd : ∀ {u v}, IsThetaFunO ψ (dblSp A) B u → IsThetaFunO ψ (dblSp A) B v →
       swSec A B om ν 𝓨 (u + v) = swSec A B om ν 𝓨 u + swSec A B om ν 𝓨 v := by
@@ -957,7 +957,7 @@ theorem mem_rel_of_isKFinVec : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A 
       rw [sub_eq_add_neg, ← neg_one_smul ℂ v, hMa hu (GlobalTheory.OrientedHeis.theta_smul _ hv),
         hMs _ _ hv, neg_one_smul, ← sub_eq_add_neg]
     obtain ⟨d, C, hC⟩ := hMb U hUo (Set.range fun k : Khat A a => x * (k : GA D (dblSp A)))
-      (isCompact_range (continuous_const.mul continuous_subtype_val))
+      (isCompact_range (continuous_const.mul continuous_subtypeVal))
     have hdiff : ∀ j, M f x - M (P (g j)) x = ∫ k, e k * M (f - g j) (x * k) ∂νK := by
       intro j
       have hPsub : P f - P (g j) = P (f - g j) := by
@@ -972,11 +972,11 @@ theorem mem_rel_of_isKFinVec : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A 
       (measure_ne_top _ _)
     have hbd : ∀ j, edist (M (P (g j)) x) (M f x) ≤ K0 * sobO ψ θ μ 𝓕 d (f - g j) := by
       intro j
-      rw [edist_comm, edist_eq_enorm_sub, hdiff j]
-      refine (enorm_integral_le_lintegral_enorm _).trans ?_
+      rw [edist_comm, eDist_eq_eNorm_sub, hdiff j]
+      refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
       have hpt : ∀ k : Khat A a, ‖e k * M (f - g j) (x * k)‖ₑ ≤ ENNReal.ofReal Ce * (C * sobO ψ θ μ 𝓕 d (f - g j)) := by
         intro k
-        rw [enorm_mul]
+        rw [eNorm_mul]
         refine mul_le_mul' ?_ (hC _ (sub_mem hfU (hgU j)) _ ⟨k, rfl⟩)
         rw [← ofReal_norm]
         exact ENNReal.ofReal_le_ofReal (hCe k (Set.mem_univ _))
@@ -1136,12 +1136,12 @@ theorem siegelWeil_kFin : GlobalTheory.Published.SiegelWeilUnitaryConvergent →
     calc ‖GlobalTheory.ThetaMean.thetaMean om m f x‖ₑ
         ≤ ‖((autMeasure B m).real Set.univ)⁻¹‖ₑ *
             ∫⁻ q, ‖AutomorphicL2Unitary.descend (GQ B) (fun h => thetaKO om x h f) q‖ₑ ∂autMeasure B m := by
-          rw [GlobalTheory.ThetaMean.thetaMean, average_eq, enorm_smul]
+          rw [GlobalTheory.ThetaMean.thetaMean, average_eq, eNorm_smul]
           gcongr
-          exact enorm_integral_le_lintegral_enorm _
+          exact eNorm_integral_le_lintegral_eNorm _
       _ ≤ ‖((autMeasure B m).real Set.univ)⁻¹‖ₑ * (C * sobO ψ θ μ 𝓕 d f) := by
           gcongr; exact hC f hf x hx
-      _ = _ := by rw [ENNReal.coe_mul, mul_assoc, enorm_eq_nnnorm]
+      _ = _ := by rw [ENNReal.coe_mul, mul_assoc, eNorm_eq_nnNorm]
   have key := UpperTheory.Lit.Rallis.T.graphRelation_extends_from_fockVectors_to_kFinite D ψ A B χ om hW θ hθ ν 𝓨 hν μ 𝓕 hμ a ha hI _ (GlobalTheory.Doubling.frameInv θ B b) hsS hsB hcomm
     (GlobalTheory.ThetaMean.thetaMean om m) (fun f f' hf hf' => thetaMean_add m hi f f' hf hf')
     (fun c f _ => thetaMean_smul m c f) (fun f _ x g => thetaMean_om m f x g) hbdd
@@ -1280,7 +1280,7 @@ theorem modGrowth_of_integrable (hW : IsWeilDatumO ψ S T χS χT om) {m : Measu
     exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (NNReal.coe_nonneg _) (hcmp g).1 M) hA
   beta_reduce
   rw [e1, Real.norm_of_nonneg (integral_nonneg fun _ => norm_nonneg _),
-    integral_norm_eq_lintegral_enorm (hI _ hfa.1 x).1]
+    integral_norm_eq_lintegral_eNorm (hI _ hfa.1 x).1]
   refine (ENNReal.toReal_mono (ENNReal.mul_ne_top ENNReal.coe_ne_top
     (GlobalTheory.Size.sobO_ne_top hW.std hθ hμ.1 hμ.2.1 hfa.1 d)) (hC _ hfa x hx)).trans ?_
   rw [ENNReal.toReal_mul, ENNReal.coe_toReal, pow_mul, mul_assoc, mul_assoc, ← mul_pow]

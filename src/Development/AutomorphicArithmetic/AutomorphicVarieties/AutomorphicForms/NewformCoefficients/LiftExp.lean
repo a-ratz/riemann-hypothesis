@@ -131,7 +131,7 @@ theorem UpperTheory.V.Af.Nf.coefAt :
     UpperTheory.V.Af.Nf.CoefAt := by
   intro a q hq u hu
   by_cases hd : q.den = 1
-  · rw [if_pos hd]
+  · rw [ite_eq_left hd]
     have hnum : 0 < q.num := Rat.num_pos.2 hq
     have hn : q.num.toNat ≠ 0 := by omega
     have hqn : q = (q.num.toNat : ℚ) := by
@@ -148,7 +148,7 @@ theorem UpperTheory.V.Af.Nf.coefAt :
       have := WithZero.exp_injective ((h2 w).symm.trans (hv w))
       omega
     rw [UpperTheory.V.Sd.coefAt, dite_eq_left hex, he, Ideal.absNorm_span_natCast, RingOfIntegers.rank, Module.finrank_self, pow_one]
-  · rw [if_neg hd, UpperTheory.V.Sd.coefAt, dite_eq_right]
+  · rw [ite_eq_right hd, UpperTheory.V.Sd.coefAt, dite_eq_right]
     rintro ⟨𝔪, h⟩
     obtain ⟨r, hr⟩ := HeightOneSpectrum.mem_integers_of_valuation_le_one (R := 𝓞 ℚ) ℚ q fun w => by
       rw [((genD_iff q hu _).1 h).2 w, ← WithZero.exp_zero, WithZero.exp_le_exp]
@@ -180,7 +180,7 @@ private theorem reAt_rat (v : InfinitePlace ℚ) (q : ℚ) : reAt v q = (q : ℝ
 
 private theorem sum_f {k M : ℕ} (hM : 1 ≤ M) (f : CuspForm (Gamma1 M) (k : ℤ)) (τ : ℍ) :
     HasSum (fun n : ℕ => coef f (n + 1) * Complex.exp (2 * Real.pi * Complex.I * ((n + 1 : ℕ) * (τ : ℂ)))) (f τ) := by
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   have hp : (1 : ℝ) ∈ (Gamma1 M : Subgroup (GL (Fin 2) ℝ)).strictPeriods := by simp
   have h := hasSum_qExpansion one_pos (SlashInvariantFormClass.periodic_comp_ofComplex f hp)
     f.holo' (ModularFormClass.bdd_at_infty f) τ
@@ -188,7 +188,7 @@ private theorem sum_f {k M : ℕ} (hM : 1 ≤ M) (f : CuspForm (Gamma1 M) (k : �
   rw [← hasSum_nat_add_iff' 1] at h
   simp only [Finset.range_one, Finset.sum_singleton, h0, zero_smul, sub_zero] at h
   refine cast (congrArg (HasSum · (f τ)) (funext fun n => ?_)) h
-  rw [smul_eq_mul, Function.Periodic.qParam, ← Complex.exp_nat_mul, coef]
+  rw [smul_eq_mul, Function.Periodic.qParam, ← Complex.exp_natCast_mul, coef]
   congr 2
   push_cast
   ring
@@ -250,18 +250,18 @@ theorem UpperTheory.V.Af.Nf.liftExp :
     have e : (j n).1 * r = ((n + 1 : ℕ) : ℚ) := div_mul_cancel₀ _ hr.ne'
     simp only [Function.comp]
     rw [hc _ (hq _), e, Fintype.sum_subsingleton _ Rat.infinitePlace, reAt_rat]
-    simp only [Rat.den_natCast, Rat.num_natCast, Int.toNat_natCast, if_true]
+    simp only [Rat.den_natCast, Rat.num_natCast, Int.toNat_natCast, ite_true]
     congr 3
     change ((((((n + 1 : ℕ) : ℚ) / r : ℚ) : ℝ)) : ℂ) * ((ev x : ℂ) + Complex.I * (ev y.val : ℂ)) = _
     push_cast
     ring
-  · rw [hc _ (hq ξ), if_neg, zero_mul]
+  · rw [hc _ (hq ξ), ite_eq_right, zero_mul]
     intro hd
     have h1 : 0 < (ξ.1 * r).num := Rat.num_pos.2 (mul_pos (hq ξ) hr)
     refine hξ ⟨(ξ.1 * r).num.toNat - 1, Subtype.ext ?_⟩
     have h2 : (((ξ.1 * r).num.toNat - 1 + 1 : ℕ) : ℤ) = (ξ.1 * r).num := by omega
     change ((_ : ℕ) : ℚ) / r = _
-    rw [← Int.cast_natCast, h2, Rat.coe_int_num_of_den_eq_one hd, mul_div_cancel_right₀ _ hr.ne']
+    rw [← Int.cast_natCast, h2, Rat.intCast_num_of_den_eq_one hd, mul_div_cancel_right₀ _ hr.ne']
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

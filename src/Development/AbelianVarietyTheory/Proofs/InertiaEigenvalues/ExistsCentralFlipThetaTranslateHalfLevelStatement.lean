@@ -225,20 +225,20 @@ theorem char_flipDet {D : D7} (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E) (
       Valued.v (GlobalTheory.CharLocProd.evalAt R (ι (finPart D x)) - _) ≤ _
     rw [← hev]
     by_cases hR : R ∈ T
-    · simp only [if_pos hR]
+    · simp only [ite_eq_left hR]
       rw [hxT R hR, sub_self, map_zero, GlobalTheory.CharLocProd.val_algebraMap]
-      exact ⟨rfl, zero_le'⟩
-    · simp only [if_neg hR]
+      exact ⟨rfl, zero_le⟩
+    · simp only [ite_eq_right hR]
       rw [hxT' R hR, Units.val_one, map_one, map_one, map_one, sub_self, map_zero]
-      exact ⟨rfl, zero_le'⟩
+      exact ⟨rfl, zero_le⟩
   · intro R hR
     rw [Finset.mem_union, not_or] at hR
     change Valued.v (GlobalTheory.CharLocProd.evalAt R (ι (finPart D x))) = _ ∧ _
     rw [← hev, hxT' R hR.1, map_one]
     exact ⟨rfl, fun h => hR.2 (hfin.mem_toFinset.2 (Ideal.dvd_span_singleton.2 h))⟩
   rw [key, ← Finset.prod_subset Finset.subset_union_left
-    (fun R _ hR => by rw [if_neg hR, map_one, Units.val_one])]
-  exact Finset.prod_congr rfl fun R hR => by rw [if_pos hR]
+    (fun R _ hR => by rw [ite_eq_right hR, map_one, Units.val_one])]
+  exact Finset.prod_congr rfl fun R hR => by rw [ite_eq_left hR]
 
 end GlobalTheory.FlipScalUnit
 
@@ -267,7 +267,7 @@ theorem GlobalTheory.LevelSeries.flipScal_mem_valRing_of_unit : ∀ (D : D7) (ψ
   have hO : ∀ m : ℕ, Nat.Coprime m l → ((m : ℂ))⁻¹ ∈ O := fun m hm => by
     have h1 := hVR ((m : k)⁻¹) (by rw [map_inv₀, GlobalTheory.ScalarUnit.val_natCast la hla hm, inv_one])
     simpa using h1
-  letI : Algebra k ℂ := σ.toAlgebra
+  let : Algebra k ℂ := σ.toAlgebra
   obtain ⟨A, hA⟩ := ReciprocityTheory.Gal.exists_valuationSubring_over (Ω := ℂ) la
   have hA' : ∀ x : 𝓞 k, A.valuation (σ (x : k)) < 1 ↔ x ∈ la.asIdeal := hA
   have hpA : (l : ℂ) ∈ A.nonunits := by
@@ -303,7 +303,7 @@ theorem GlobalTheory.LevelSeries.flipScal_mem_valRing_of_unit : ∀ (D : D7) (ψ
     have e1 : ((mU : D.host.Eˣ) : D.host.E) = algebraMap (𝓞 D.host.E) D.host.E ((pd : ℕ) : 𝓞 D.host.E) := by
       rw [hmU, Units.val_mk0, map_natCast]
     unfold Formalism.L2.Host.ordF
-    rw [e1, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_def, if_neg h0, WithZero.log_exp,
+    rw [e1, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_def, ite_eq_right h0, WithZero.log_exp,
       neg_neg]
   have hx' : (x : AE D) * (eT * incA D ((mU ^ V.rank : D.host.Eˣ) : D.host.E) + (1 - eT)) = 1 := by
     have h := hx
@@ -474,12 +474,12 @@ theorem mem_fieldRange : ∀ (E : Type) [Field E] [NumberField E] (χ : Formalis
       ∏ v ∈ R \ S, χ.val v ^ ordF v a := by
     apply finprod_mem_eq_prod_of_subset (s := {v | v ∉ S})
     · rintro v ⟨hv1, hv2⟩
-      simp only [Finset.coe_sdiff, Set.mem_diff, Finset.mem_coe]
+      simp only [Finset.coe_sdiff, Set.mem_sdiff, Finset.mem_coe]
       refine ⟨?_, hv1⟩
       by_contra h
       exact hv2 (by simp [hR v h])
     · intro v hv
-      simp only [Finset.coe_sdiff, Set.mem_diff, Finset.mem_coe] at hv
+      simp only [Finset.coe_sdiff, Set.mem_sdiff, Finset.mem_coe] at hv
       exact hv.2
   rw [hloc, hfin] at hPR
   choose! y hy using hval
@@ -506,7 +506,7 @@ theorem mem_fieldRange : ∀ (E : Type) [Field E] [NumberField E] (χ : Formalis
   have hApos : 0 < A := Finset.prod_pos fun v _ => zpow_pos (sqN_pos v) _
   have hBpos : 0 < B := Finset.prod_pos fun v _ => zpow_pos (sqN_pos v) _
   have hQAB : Q = A * B := by
-    rw [hQ, ← Finset.prod_inter_mul_prod_diff R S]
+    rw [hQ, ← Finset.prod_inter_mul_prod_sdiff R S]
     congr 1
     have e1 : ∏ v ∈ R ∩ S, sqN v ^ ordF v a = ∏ v ∈ S, sqN v ^ ordF v a :=
       Finset.prod_subset Finset.inter_subset_right fun v hv hv' => by
@@ -689,7 +689,7 @@ theorem exists_approx : ∀ (E : Type) [Field E] [NumberField E] (χ : Formalism
   have hT : ∀ v ∈ T, v.valuation E ((y : E) - ((M₀ : ℕ) : E)) ≤ WithZero.exp (-((m v : ℤ) + n v + 1)) := by
     intro v hv
     have h1 := (v.intValuation_le_pow_iff_mem _ _).2 (hy v (Finset.mem_union_left _ hv))
-    simp only [hv, if_true] at h1
+    simp only [hv, ite_true] at h1
     have e : (y : E) - ((M₀ : ℕ) : E) = ((y - ((M₀ : ℕ) : 𝓞 E) : 𝓞 E) : E) := by push_cast; rfl
     rw [e, hvz]
     convert h1 using 2
@@ -699,7 +699,7 @@ theorem exists_approx : ∀ (E : Type) [Field E] [NumberField E] (χ : Formalism
     intro v hv hvT
     have h1 := (v.intValuation_le_pow_iff_mem _ _).2
       (hy v (Finset.mem_union_right _ (hfin.mem_toFinset.2 hv)))
-    simp only [hvT, if_false] at h1
+    simp only [hvT, ite_false] at h1
     have e : (y : E) - 1 = ((y - 1 : 𝓞 E) : E) := by push_cast; rfl
     rw [e, hvz]
     convert h1 using 2
@@ -731,7 +731,7 @@ theorem exists_approx : ∀ (E : Type) [Field E] [NumberField E] (χ : Formalism
         field_simp
       rw [e, map_div₀, hMv]
       calc _ ≤ WithZero.exp (-((m v : ℤ) + n v + 1)) / WithZero.exp (-(m v : ℤ)) :=
-            div_le_div_of_nonneg_right (hT v hv) zero_le'
+            div_le_div_of_nonneg_right (hT v hv) zero_le
         _ = _ := by rw [div_eq_mul_inv, ← WithZero.exp_neg, ← WithZero.exp_add]; congr 1; ring
   · exact locK_eq_one χ v (hn v) a (by rw [ha, Units.val_mk0]; exact hO v hv hvT)
 

@@ -264,7 +264,7 @@ theorem eventually_mul_pow {W D : X.Opens} (hW : IsAffineOpen W) (h) (u : Γ(X, 
 
 theorem exists_frac {D : X.Opens} (hD : IsAffineOpen D) (h) (t : X.functionField) :
     ∃ a b : Γ(X, D), gen D h b ≠ 0 ∧ t * gen D h b = gen D h a := by
-  haveI : Nonempty D := ⟨⟨_, h⟩⟩
+  have : Nonempty D := ⟨⟨_, h⟩⟩
   have := functionField_isFractionRing_of_isAffineOpen X D hD
   obtain ⟨⟨a, b, hb⟩, hab⟩ := IsLocalization.surj (nonZeroDivisors Γ(X, D)) t
   exact ⟨a, b, fun h0 => nonZeroDivisors.ne_zero hb (gen_injective D h (h0.trans (map_zero _).symm)),

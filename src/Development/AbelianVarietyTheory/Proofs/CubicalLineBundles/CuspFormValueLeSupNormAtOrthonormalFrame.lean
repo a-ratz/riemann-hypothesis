@@ -67,7 +67,7 @@ theorem norm_diag_of_triangular {m : ℕ} (Y : Matrix (Fin m) (Fin m) ℂ) (κ :
   have hM : ((κ : ℂ) • Y).BlockTriangular id := by
     intro a b hab
     simp [hY a b hab]
-  letI : Invertible ((κ : ℂ) • Y) := invertibleOfLeftInverse _ _ h1
+  let : Invertible ((κ : ℂ) • Y) := invertibleOfLeftInverse _ _ h1
   have hinv := Matrix.blockTriangular_inv_of_blockTriangular hM
   rw [Matrix.inv_eq_left_inv h1] at hinv
   have h2 := congrFun (congrFun h1 i) i
@@ -120,7 +120,7 @@ theorem cabs_evR_le_supC : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     have hs : (Real.sqrt (2 * Real.pi * ξ))⁻¹ = Real.exp (-(1 / 2) * Real.log (2 * Real.pi * ξ)) := by
       rw [Real.sqrt_eq_rpow, Real.rpow_def_of_pos hκ, ← Real.exp_neg]
       congr 1; ring
-    simp only [hs, ← Real.exp_nat_mul]
+    simp only [hs, ← Real.exp_natCast_mul]
     rw [← Real.exp_sum, lieFac, ← Finset.sum_mul]
     congr 1
     rw [Fintype.sum_sigma]
@@ -130,7 +130,7 @@ theorem cabs_evR_le_supC : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     congr 1
     exact Finset.prod_congr rfl fun p _ => by rw [hsome p]; rfl
   have hrd : ‖rdU (U σ) F k x.1‖ = cabs (evR Xo c F ((U σ).un k x)) := by
-    have e : rdU (U σ) F k x.1 = toC (evR Xo c F ((U σ).un k x)) := dif_pos x.2
+    have e : rdU (U σ) F k x.1 = toC (evR Xo c F ((U σ).un k x)) := dite_eq_left x.2
     rw [e]; rfl
   have hle := Formalism.L2.Pj.abelian₂.pnorm_le_supN (U σ).X (laU (U σ) a n) (rdU (U σ) F) (supE_cusp_ne_top hσ hF) k x.1 x.2
   rw [PullbackSections.PfSupAtUnit.pnorm_unit _ _ _ (PullbackSections.PfSupAtUnit.dmin_ortho _ hx), hrd] at hle

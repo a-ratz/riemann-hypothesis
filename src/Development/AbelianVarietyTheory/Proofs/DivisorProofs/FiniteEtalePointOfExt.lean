@@ -44,7 +44,7 @@ theorem torsion_descent (B : Over (Sp k₀)) [GrpObj B] (hB : IsAbelianScheme B)
     (u : Over.mk t ⟶ B) (hu : u ^ N = 1) :
     ∃ y₀ : 𝟙_ (Over (Sp k₀)) ⟶ B, y₀ ^ N = 1 ∧ u.left = t ≫ y₀.left := by
   subst ht
-  haveI : IsAbelianScheme B := hB
+  have : IsAbelianScheme B := hB
   obtain ⟨-, hfin, het⟩ := GrpTangent.finiteEtale_mulN_torsion B (isUnit_natCast_gamma hN)
   obtain ⟨x, hx, -⟩ := LatticeTorsion.existsUnique_torsion B N u hu
   obtain ⟨x₀, hx₀, hjx⟩ := finiteEtale_point_of_ext k₀ K _ (torsion B N).hom hfin het x.left (Over.w x)
@@ -96,12 +96,12 @@ theorem endo_descent (B : Over (Sp k₀)) [GrpObj B] (hB : IsAbelianScheme B)
   have key : (Over.pullback (spMap (algebraMap k₀ K))).map f₀ = f := by
     let Ω := AlgebraicClosure K
     let qΩ : Sp Ω ⟶ Sp K := spMap (algebraMap K Ω)
-    letI : Algebra k₀ Ω := ((algebraMap K Ω).comp (algebraMap k₀ K)).toAlgebra
+    let : Algebra k₀ Ω := ((algebraMap K Ω).comp (algebraMap k₀ K)).toAlgebra
     have hιj : qΩ ≫ spMap (algebraMap k₀ K) = spMap (algebraMap k₀ Ω) := by
       simp only [qΩ, spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
       try rfl
-    haveI := hf₀
-    haveI := hΨ
+    have := hf₀
+    have := hΨ
     apply ActDescent.pullback_map_injective qΩ
     have hBK := isAbelianScheme_pullback_obj (spMap (algebraMap k₀ K)) B hB
     have hA := isAbelianScheme_pullback_obj qΩ _ hBK

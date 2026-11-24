@@ -348,7 +348,7 @@ lemma Wz_left (ψ₀ : AddChar k ℂ) (β : Matrix (Fin n) (Fin n) k) (z : ℂ) 
   simp only [mul_assoc, iD_pM_mul]
 
 lemma sumG_den_ne : sumG (fun g : GL (Ix n) k => (Fintype.card k : ℂ) ^ (2 * n * iD g)) ≠ 0 := by
-  haveI : Fintype (GL (Ix n) k) := Fintype.ofFinite _
+  have : Fintype (GL (Ix n) k) := Fintype.ofFinite _
   unfold sumG
   rw [finsum_eq_sum_of_fintype]
   have e : ∑ g : GL (Ix n) k, (Fintype.card k : ℂ) ^ (2 * n * iD g) =
@@ -362,7 +362,7 @@ lemma sumG_den_ne : sumG (fun g : GL (Ix n) k => (Fintype.card k : ℂ) ^ (2 * n
   exact_mod_cast this.ne'
 
 lemma diff_cZ (ψ₀ : AddChar k ℂ) (β : Matrix (Fin n) (Fin n) k) : Differentiable ℂ (cZ ψ₀ β) := by
-  haveI : Fintype (GL (Ix n) k) := Fintype.ofFinite _
+  have : Fintype (GL (Ix n) k) := Fintype.ofFinite _
   have hq : (Fintype.card k : ℂ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
   have hW : ∀ g : GL (Ix n) k, Differentiable ℂ (fun z => Wz ψ₀ β z g) := by
     intro g
@@ -930,7 +930,7 @@ theorem sum_eq (ψ₀ : AddChar k ℂ) (β : Matrix (Fin n) (Fin n) k) (r m : �
       ((Fintype.card k : ℂ) ^ (n * n))⁻¹ ^ 2 *
         sumG (fun g : GL (Ix n) k => (starRingEnd ℂ) (hC ψ₀ β r g) * hC ψ₀ β m g) := by
   classical
-  haveI : Fintype (GL (Ix n) k) := Fintype.ofFinite _
+  have : Fintype (GL (Ix n) k) := Fintype.ofFinite _
   set q : ℂ := (Fintype.card k : ℂ) with hq
   have hq0 : q ^ (n * n) ≠ 0 := pow_ne_zero _ (by
     rw [hq]; exact_mod_cast Fintype.card_ne_zero)
@@ -1023,7 +1023,7 @@ open GlobalTheory.CompanionTheory.Jp.Pos in
 theorem GlobalTheory.CompanionTheory.Jp.Pos.jpPos : GlobalTheory.CompanionTheory.Jp.JpPos := by
   intro k _ _ n r m ψ₀ _ β hr hm
   classical
-  haveI : Fintype (GL (Ix n) k) := Fintype.ofFinite _
+  have : Fintype (GL (Ix n) k) := Fintype.ofFinite _
   rw [show (∃ x : ℝ, 0 < x ∧ _ = (x : ℂ)) ↔ _ from Iff.rfl, sum_eq]
   choose X hX0 hX using fun g : GL (Ix n) k => hC_real ψ₀ β r m g
   have hq : (0 : ℝ) < (Fintype.card k : ℝ) := by exact_mod_cast Fintype.card_pos
@@ -1609,12 +1609,12 @@ theorem PositivityTheory.Rg.Rsw.jacquet_piatetski_first_bound : GoodPlacesOutsid
     have hβ : (P.π a).2 ≠ 0 := left_ne_zero_of_mul_eq_one h2
     have hn : ‖(P.π a).1‖₊ = ‖(P.π a).2‖₊ := by
       apply NNReal.eq
-      rw [coe_nnnorm, coe_nnnorm]
+      rw [coe_nnNorm, coe_nnNorm]
       exact hnorm
     have hq1 : (P.π a).1 / (P.π a).2 ∈ v.adicCompletionIntegers D.host.F :=
-      nnnorm_le_one_iff_mem.1 (le_of_eq (by rw [nnnorm_div, hn, div_self (nnnorm_ne_zero_iff.2 hβ)]))
+      nnnorm_le_one_iff_mem.1 (le_of_eq (by rw [nnNorm_div, hn, div_self (nnNorm_ne_zero_iff.2 hβ)]))
     have hq2 : (P.π a).2 / (P.π a).1 ∈ v.adicCompletionIntegers D.host.F :=
-      nnnorm_le_one_iff_mem.1 (le_of_eq (by rw [nnnorm_div, hn, div_self (nnnorm_ne_zero_iff.2 hβ)]))
+      nnnorm_le_one_iff_mem.1 (le_of_eq (by rw [nnNorm_div, hn, div_self (nnNorm_ne_zero_iff.2 hβ)]))
     let u : (Fv D.host.F v ⊗[D.host.F] D.host.E)ˣ :=
       { val := P.π.symm ((P.π a).1 / (P.π a).2, 1)
         inv := P.π.symm ((P.π a).2 / (P.π a).1, 1)

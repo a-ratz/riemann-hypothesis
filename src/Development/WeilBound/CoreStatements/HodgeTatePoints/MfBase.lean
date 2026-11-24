@@ -64,23 +64,23 @@ theorem xr_normal : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ 
   intro X Ω _ ξ hgen hall
   have hdom : ∀ x : X, IsDomain (X.presheaf.stalk x) := fun x =>
     Function.Injective.isDomain (genMap ξ ⟨x, hall x⟩) (hgen.inj ⟨x, hall x⟩)
-  haveI : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := fun x => by
-    haveI := hdom x
+  have : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := fun x => by
+    have := hdom x
     infer_instance
-  haveI : AlgebraicGeometry.IsReduced X := isReduced_of_isReduced_stalk X
-  haveI : IrreducibleSpace X := by
+  have : AlgebraicGeometry.IsReduced X := isReduced_of_isReduced_stalk X
+  have : IrreducibleSpace X := by
     rw [irreducibleSpace_def]
     have hcl : closure {GlobalTheory.CompanionTheory.Ar.genPt ξ} = (Set.univ : Set X) :=
       Set.eq_univ_of_forall fun q => specializes_iff_mem_closure.mp (hall q)
     rw [Set.top_eq_univ, ← hcl]
     exact isIrreducible_singleton.closure
-  haveI hI : AlgebraicGeometry.IsIntegral X := isIntegral_of_irreducibleSpace_of_isReduced X
+  have hI : AlgebraicGeometry.IsIntegral X := isIntegral_of_irreducibleSpace_of_isReduced X
   refine ⟨hI, ?_⟩
   have key : ∀ p : Cpt ξ, IsIntegrallyClosedIn (regAt ξ p) Ω ↔ IsIntegrallyClosed (X.presheaf.stalk p.1) := by
     intro p
     let ψ : X.functionField →+* Ω :=
       (X.presheaf.stalkSpecializes (hall (genericPoint X)) ≫ Scheme.stalkClosedPointTo ξ).hom
-    letI : Algebra (X.presheaf.stalk p.1) Ω := (genMap ξ p).toAlgebra
+    let : Algebra (X.presheaf.stalk p.1) Ω := (genMap ξ p).toAlgebra
     have hcomm : ∀ r : X.presheaf.stalk p.1, ψ (algebraMap _ X.functionField r) = algebraMap _ Ω r := by
       intro r
       have hc : X.presheaf.stalkSpecializes (genericPoint_specializes p.1) ≫
@@ -109,10 +109,10 @@ theorem xr_normal : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ 
     let e : X.functionField ≃ₐ[X.presheaf.stalk p.1] Ω :=
       AlgEquiv.ofBijective { ψ with commutes' := hcomm } ⟨ψ.injective, hsurj⟩
     rw [isIntegrallyClosed_iff_isIntegrallyClosedIn X.functionField, e.isIntegrallyClosedIn]
-    letI : Algebra (X.presheaf.stalk p.1) (regAt ξ p) := (genMap ξ p).rangeRestrict.toAlgebra
-    haveI : IsScalarTower (X.presheaf.stalk p.1) (regAt ξ p) Ω :=
+    let : Algebra (X.presheaf.stalk p.1) (regAt ξ p) := (genMap ξ p).rangeRestrict.toAlgebra
+    have : IsScalarTower (X.presheaf.stalk p.1) (regAt ξ p) Ω :=
       IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-    haveI : Algebra.IsIntegral (X.presheaf.stalk p.1) (regAt ξ p) :=
+    have : Algebra.IsIntegral (X.presheaf.stalk p.1) (regAt ξ p) :=
       Algebra.isIntegral_of_surjective (genMap ξ p).rangeRestrict_surjective
     rw [Subring.isIntegrallyClosedIn_iff, isIntegrallyClosedIn_iff]
     constructor

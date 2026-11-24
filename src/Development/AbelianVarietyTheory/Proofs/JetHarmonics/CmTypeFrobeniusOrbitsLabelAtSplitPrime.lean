@@ -174,7 +174,7 @@ theorem exists_frob_of_hom {E C : Type} [Field E] [NumberField E] [IsGalois ℚ 
     (f : 𝓞 E →+* C) (hf : ∀ x, V.Ge 0 (f x)) :
     ∃ φ : E ≃ₐ[ℚ] E, ∀ x : 𝓞 E, V.MM (f (φ • x) - f x ^ V.l) := by
   set P := frobKer V f hf with hP
-  haveI : P.IsPrime := frobKer_isPrime V f hf
+  have : P.IsPrime := frobKer_isPrime V f hf
   have hl : ((V.l : ℕ) : 𝓞 E) ∈ P := by
     show 0 < V.v (f _)
     rw [map_natCast, V.v_l]
@@ -183,7 +183,7 @@ theorem exists_frob_of_hom {E C : Type} [Field E] [NumberField E] [IsGalois ℚ 
     intro h
     rw [h, Ideal.mem_bot] at hl
     exact V.l_prime.ne_zero (by exact_mod_cast hl)
-  haveI : Finite (𝓞 E ⧸ P) := Ring.HasFiniteQuotients.finiteQuotient hP0
+  have : Finite (𝓞 E ⧸ P) := Ring.HasFiniteQuotients.finiteQuotient hP0
   have hu : P.under ℤ = Ideal.span {(V.l : ℤ)} := by
     have hmax : (Ideal.span {(V.l : ℤ)}).IsMaximal :=
       ((Ideal.span_singleton_prime (by exact_mod_cast V.l_prime.ne_zero)).2
@@ -283,7 +283,7 @@ theorem inPsi_conj_iff (τ : E →+* ℂ) : InPsi H (ComplexEmbedding.conjugate 
 
 theorem not_MM_neg_sub_pow {C : Type} [Field C] (V : VF C) (d : ℕ) (r : C) (hr : r ^ 2 = -(d : C)) (hi : V.Ge 0 r)
     (h2 : V.l ≠ 2) (hj : jacobiSym (-(d : ℤ)) V.l = 1) : ¬ V.MM (-r - r ^ V.l) := by
-  haveI : Fact V.l.Prime := ⟨V.l_prime⟩
+  have : Fact V.l.Prime := ⟨V.l_prime⟩
   rw [← jacobiSym.legendreSym.to_jacobiSym] at hj
   have hp := legendreSym.eq_pow V.l (-(d : ℤ))
   rw [hj] at hp
@@ -333,11 +333,11 @@ theorem not_MM_neg_sub_pow {C : Type} [Field C] (V : VF C) (d : ℕ) (r : C) (hr
 theorem labelling_split : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (lv : Level H) (c : Coeff lv) (N : NumDatum) (pl : RPl N.R → (E →+* ℂ)), PlaceTie N c pl → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (C : Type) [Field C] [CharZero C] (V : VF C) (ι : T.Fr →+* C), EmbOK T V ι → V.l = resCharOf la → (∀ x ∈ la.asIdeal, V.MM (ι (io ((x : 𝓞 c.F) : c.F)))) → N.cls V.l = PrimeClass.splitK → ∀ j : ℕ, ∃ (d : ℕ) (_ : NeZero d) (pos : RPl N.R → ℕ → RPl N.R) (Z : Finset (RPl N.R)), RF.IsReps (parAt N j d pos) Z ∧ Z.Nonempty ∧ Function.Bijective (fun x : Z × Fin 2 × ZMod d => tauSp N pl pos x.1.1 x.2.1 x.2.2) ∧ ∀ z g, FrobOrd V io ι (tauSp (d := d) N pl pos z g) := by
   intro E _ _ _ H lv c N pl hP la T io C _ _ V ι hE hl _ hcls j
   obtain ⟨φ, hφ⟩ := GlobalTheory.RowAt.exists_frob_all_embeddings E H lv c T io C V ι hE hP.galois hP.comm
-  haveI : Inhabited (RPl N.R) := ⟨(false, 0)⟩
+  have : Inhabited (RPl N.R) := ⟨(false, 0)⟩
   have h2 : V.l ≠ 2 := by
     intro h
     unfold NumDatum.cls primeClass at hcls
-    rw [if_pos (show V.l ∈ N.H.small from h ▸ Nat.mem_primeFactors.2 ⟨Nat.prime_two, N.H.two_dvd_QS, N.H.QS_pos.ne'⟩)] at hcls
+    rw [ite_eq_left (show V.l ∈ N.H.small from h ▸ Nat.mem_primeFactors.2 ⟨Nat.prime_two, N.H.two_dvd_QS, N.H.QS_pos.ne'⟩)] at hcls
     exact absurd hcls (by decide)
   have hj : jacobiSym (-(H.d : ℤ)) V.l = 1 := by
     rw [hP.d_eq]
@@ -375,7 +375,7 @@ theorem labelling_split : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     change pl z ((φ ^ s) (H.rt : E)) = H.rt0
     rw [hfixs]; exact this
   choose pos hpos using hex
-  haveI : NeZero (orderOf φ) := ⟨(orderOf_pos φ).ne'⟩
+  have : NeZero (orderOf φ) := ⟨(orderOf_pos φ).ne'⟩
   have h0 : ∀ z, pos z 0 = z := fun z => hP.inj (by rw [hpos]; ext x; simp)
   have hadd : ∀ z s t, pos (pos z s) t = pos z (s + t) := fun z s t =>
     hP.inj (by rw [hpos, hpos, hpos]; ext x; simp [pow_add])
@@ -416,7 +416,7 @@ theorem labelling_split : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     · obtain ⟨z', hz'⟩ := (hP.psi _).1 ((inPsi_conj_iff H τ).2 hτ)
       obtain ⟨p, hp, -⟩ := hZ z'
       refine ⟨(⟨p.1, hp.1⟩, 1, p.2), ?_⟩
-      simp only [tauSp, hp.2, hz', one_ne_zero, if_false]
+      simp only [tauSp, hp.2, hz', one_ne_zero, ite_false]
       exact star_star τ
   · intro z g s x
     have h1 : pos z (s + 1).val = pos z (s.val + 1) := by

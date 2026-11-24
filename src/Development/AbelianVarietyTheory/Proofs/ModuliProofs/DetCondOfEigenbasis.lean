@@ -67,7 +67,7 @@ theorem exists_embedding {k : Type} [Field k] [IsAlgClosed k] (β : ℂ →+* k)
   have : CharZero k := charZero_of_injective_ringHom β.injective
   have hτ : Function.Injective τ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     exact RingHom.injective_int _
   have hb : Function.Bijective fun φ : E →+* ℂ => β.comp φ :=

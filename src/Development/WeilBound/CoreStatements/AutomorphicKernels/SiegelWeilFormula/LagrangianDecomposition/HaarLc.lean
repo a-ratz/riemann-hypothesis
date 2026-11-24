@@ -117,22 +117,22 @@ namespace PositivityTheory.SiegelWeilFormula.Ald
 
 theorem haarLc : HaarLc := by
   intro F E _ _ _ _ _ σ hcm m J hJ bs g μ hμ f
-  letI mA : MeasurableSpace (Fin m × Fin 2 → AF F) := borel _
-  haveI : BorelSpace (Fin m × Fin 2 → AF F) := ⟨rfl⟩
-  letI mV : MeasurableSpace (Fin m → AE F E) := borel _
-  haveI : BorelSpace (Fin m → AE F E) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  let mA : MeasurableSpace (Fin m × Fin 2 → AF F) := borel _
+  have : BorelSpace (Fin m × Fin 2 → AF F) := ⟨rfl⟩
+  let mV : MeasurableSpace (Fin m → AE F E) := borel _
+  have : BorelSpace (Fin m → AE F E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
   let e := coordCE F E (Module.finBasis F E)
-  haveI : LocallyCompactSpace (AE F E) := e.isOpenEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E) := e.secondCountableTopology
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
-  haveI : LocallyCompactSpace (Matrix (Fin m) (Fin 1) (AE F E)) :=
+  have : LocallyCompactSpace (AE F E) := e.isOpenEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE F E) := e.secondCountableTopology
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : LocallyCompactSpace (Matrix (Fin m) (Fin 1) (AE F E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin m → Fin 1 → AE F E))
-  haveI : SecondCountableTopology (Matrix (Fin m) (Fin 1) (AE F E)) :=
+  have : SecondCountableTopology (Matrix (Fin m) (Fin 1) (AE F E)) :=
     inferInstanceAs (SecondCountableTopology (Fin m → Fin 1 → AE F E))
-  letI : MeasurableSpace (Matrix (Fin m) (Fin 1) (AE F E)) := borel _
-  haveI : BorelSpace (Matrix (Fin m) (Fin 1) (AE F E)) := ⟨rfl⟩
+  let : MeasurableSpace (Matrix (Fin m) (Fin 1) (AE F E)) := borel _
+  have : BorelSpace (Matrix (Fin m) (Fin 1) (AE F E)) := ⟨rfl⟩
   set t : GL (Fin m) (AE F E) := (g : GL (Fin m) (AE F E)) with ht
   have hdt : IsUnit (t : Matrix (Fin m) (Fin m) (AE F E)).det := by
     rw [← Matrix.GeneralLinearGroup.val_det_apply]; exact Units.isUnit _
@@ -152,18 +152,18 @@ theorem haarLc : HaarLc := by
       simp [Matrix.mulVec, dotProduct, Matrix.mul_apply]
     have hu : hΛ.unit = Units.map (Algebra.norm (AF F) : AE F E →* AF F) (Matrix.GeneralLinearGroup.det t) := by
       ext
-      simp only [IsUnit.unit_spec, hdet, Units.coe_map, MonoidHom.coe_coe, map_one, one_pow, mul_one, pow_one]
+      simp only [IsUnit.unit_spec, hdet, Units.coe_map, MonoidHom.coe_ofClass, map_one, one_pow, mul_one, pow_one]
     rw [h1, hχ, chi_AF_det, hu, ht, norm_det_unitary hcm hJ g, map_one]
 
   have hV : ∀ (ν : Measure (Fin m → AE F E)), ν.IsAddHaarMeasure → ν.map φ = ν := by
     intro ν hν
-    haveI : ν.Regular := inferInstance
+    have : ν.Regular := inferInstance
     have key := addEquivAddHaarChar_smul_map ν φ
     rwa [hc, one_smul] at key
 
   let cm : (Fin m × Fin 2 → AF F) ≃ᵐ (Fin m → AE F E) := (colv m bs).toHomeomorph.toMeasurableEquiv
   let pm : (Fin m → AE F E) ≃ᵐ (Fin m → AE F E) := φ.toHomeomorph.toMeasurableEquiv
-  haveI : μ.IsAddHaarMeasure := hμ
+  have : μ.IsAddHaarMeasure := hμ
   have hH : (μ.map cm).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map μ (colv m bs)
   have hmap : (μ.map cm).map pm = μ.map cm := hV _ hH
   have e1 : ∀ x, Lc bs (mat g) x = cm.symm (pm (cm x)) := fun x => by rw [Lc_eq_colv]; rfl

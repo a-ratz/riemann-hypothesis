@@ -130,14 +130,14 @@ theorem haar_units {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
     (j : G → ι → ℂ) (hj : IsOpenEmbedding j) (hr : range j = {c | ∀ w, c w ≠ 0}) (hm : ∀ a b, j (a * b) = j a * j b)
     (x : Measure G) [x.IsHaarMeasure] : ∃ κ : ℝ, 0 < κ ∧ ∀ g : (ι → ℂ) → ℂ,
       ∫ l, g (j l) ∂x = κ * ∫ c, g c * ((∏ w, ‖c w‖ ^ 2 : ℝ) : ℂ)⁻¹ := by
-  haveI := hj.locallyCompactSpace
-  haveI := hj.isEmbedding.secondCountableTopology
+  have := hj.locallyCompactSpace
+  have := hj.isEmbedding.secondCountableTopology
   have he := hj.measurableEmbedding
   let ν : Measure (ι → ℂ) := volume.withDensity fun c => (dens c : ℝ≥0∞)
   let y : Measure G := ν.comap j
   have hy : ∀ A, y A = ν (j '' A) := fun A => he.comap_apply ν A
   have hne : ∀ a w, j a w ≠ 0 := fun a => (hr ▸ mem_range_self a : j a ∈ {c : ι → ℂ | ∀ w, c w ≠ 0})
-  haveI : y.IsMulLeftInvariant := ⟨fun g => by
+  have : y.IsMulLeftInvariant := ⟨fun g => by
     ext A hA
     rw [Measure.map_apply (measurable_const_mul g) hA, hy, hy, ← dens_inv (j g) (hne g) _ (he.measurableSet_image' hA)]
     congr 1
@@ -150,7 +150,7 @@ theorem haar_units {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
       have h1 : j g * j (g⁻¹ * a) = j g * c := by rw [← hm, mul_inv_cancel_left]; exact e
       funext w
       exact mul_left_cancel₀ (hne g w) (congrFun h1 w)⟩
-  haveI : IsFiniteMeasureOnCompacts y := ⟨fun K hK => by
+  have : IsFiniteMeasureOnCompacts y := ⟨fun K hK => by
     have hc := hK.image hj.continuous
     rw [hy, withDensity_apply _ hc.measurableSet]
     have hco : ContinuousOn (fun c : ι → ℂ => (dens c : ℝ)) (j '' K) := by
@@ -158,7 +158,7 @@ theorem haar_units {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
       rintro _ ⟨a, _, rfl⟩
       exact (Finset.prod_pos fun w _ => pow_pos (norm_pos_iff.2 (hne a w)) 2).ne'
     exact (hasFiniteIntegral_iff_ofNNReal).1 (hco.integrableOn_compact hc).2⟩
-  haveI : y.IsOpenPosMeasure := ⟨fun O hO hn h => by
+  have : y.IsOpenPosMeasure := ⟨fun O hO hn h => by
     rw [hy, withDensity_apply_eq_zero measurable_dens.coe_nnreal_ennreal] at h
     have : {c | (dens c : ℝ≥0∞) ≠ 0} ∩ j '' O = j '' O := by
       refine inter_eq_right.2 ?_
@@ -167,7 +167,7 @@ theorem haar_units {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
       exact (inv_pos.2 (Finset.prod_pos fun w _ => pow_pos (norm_pos_iff.2 (hne a w)) 2)).ne' h1
     rw [this] at h
     exact (hj.isOpenMap O hO).measure_ne_zero volume (hn.image j) h⟩
-  haveI : y.IsHaarMeasure := {}
+  have : y.IsHaarMeasure := {}
   refine ⟨Measure.haarScalarFactor x y, by exact_mod_cast Measure.haarScalarFactor_pos_of_isHaarMeasure x y, fun g => ?_⟩
   conv_lhs => rw [Measure.isMulLeftInvariant_eq_smul x y]
   have hν : ν.restrict {c | ∀ w, c w ≠ 0} = volume.withDensity fun c => (dens c : ℝ≥0∞) :=
@@ -276,7 +276,7 @@ theorem pi_lft (h : IsCMExt F E σ) (τ) (c) (w : InfinitePlace F) : piInf (τ w
   · simp
 
 theorem cont_lft (h : IsCMExt F E σ) (τ) : Continuous (lft h τ) := by
-  haveI := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   classical
   refine continuous_finsetSum _ fun w _ => ?_
   have hc : Continuous (inInf (F := F) w) := (continuous_single w).prodMk continuous_const
@@ -309,7 +309,7 @@ theorem pi_conj (h : IsCMExt F E σ) {w : InfinitePlace F} (τ : EmbOver E w) (a
 
 theorem trace_E (h : IsCMExt F E σ) (x : E) : algebraMap F E (Algebra.trace F E x) = x + σ x := by
   classical
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
   let s := AlgEquiv.ofBijective σ (Algebra.IsAlgebraic.algHom_bijective σ)
   have hs : (1 : E ≃ₐ[F] E) ≠ s := fun e => by
     have := h.2.1
@@ -351,7 +351,7 @@ theorem trace_mixed (h : IsCMExt F E σ) (t : AF F) (r : InfinitePlace F → ℝ
     (hr : ∀ w, InfinitePlace.Completion.extensionEmbedding w (t.1 w) = r w) :
     Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (evI F t) = ∑ w, r w := by
   have := h.1
-  haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+  have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 w.2 (IsTotallyReal.isReal w.1)⟩
   rw [Algebra.trace_prod_apply, Subsingleton.elim (evI F t).2 0, map_zero, add_zero, trace_pi_real,
     ← (Equiv.subtypeUnivEquiv fun w : InfinitePlace F => IsTotallyReal.isReal w).sum_comp]
@@ -391,11 +391,11 @@ def un (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w) (c : {c 
     mem_idAt.2 (at_unit_iff.2 fun v => Units.ext (fin_uv h τ _ v))⟩
 
 theorem cont_un (h : IsCMExt F E σ) (τ) : Continuous (un h τ) := by
-  haveI := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   have hu : Continuous (uv h τ) := continuous_const.add ((cont_lft h τ).comp (continuous_id.sub continuous_const))
   have h2 : Continuous fun c : {c : InfinitePlace F → ℂ // ∀ w, c w ≠ 0} => uv h τ fun w => (c.1 w)⁻¹ :=
-    hu.comp (continuous_pi fun w => ((continuous_apply w).comp continuous_subtype_val).inv₀ fun c => c.2 w)
-  have h3 : Continuous fun c => (un h τ c).1 := Units.continuous_iff.2 ⟨hu.comp continuous_subtype_val, h2⟩
+    hu.comp (continuous_pi fun w => ((continuous_apply w).comp continuous_subtypeVal).inv₀ fun c => c.2 w)
+  have h3 : Continuous fun c => (un h τ c).1 := Units.continuous_iff.2 ⟨hu.comp continuous_subtypeVal, h2⟩
   exact h3.subtype_mk _
 
 theorem pi_ne {w : InfinitePlace F} (τ : EmbOver E w) (l : (AE F E)ˣ) : piInf τ (l : AE F E) ≠ 0 := (l.isUnit.map _).ne_zero
@@ -410,10 +410,10 @@ theorem openEmb (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w)
         (fun v => (fin_uv h τ _ v).trans (congrArg Units.val (at_unit_iff.1 (mem_idAt.1 l.2) v)).symm) fun w => pi_uv h τ _ w))
       right_inv := fun c => Subtype.ext (funext fun w => pi_uv h τ _ w)
       continuous_toFun := Continuous.subtype_mk (continuous_pi fun w =>
-        (cont_pi (τ w)).comp (Units.continuous_val.comp continuous_subtype_val)) _
+        (cont_pi (τ w)).comp (Units.continuous_val.comp continuous_subtypeVal)) _
       continuous_invFun := cont_un h τ }
   have ho : IsOpen {c : InfinitePlace F → ℂ | ∀ w, c w ≠ 0} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun w => isOpen_ne_fun (continuous_apply w) continuous_const
   refine ⟨ho.isOpenEmbedding_subtypeVal.comp e.isOpenEmbedding, Set.ext fun c => ⟨?_, fun hc => ⟨un h τ ⟨c, hc⟩, ?_⟩⟩⟩
   · rintro ⟨l, rfl⟩ w; exact pi_ne _ _
@@ -442,9 +442,9 @@ theorem isLift_lft (B : Base F E) (hB : B.IsGood σ) : IsLift σ B (lft hB.cm B.
       idAt l := mem_idAt
       unit c hc := ⟨(un hB.cm B.emb ⟨c, hc⟩).1, mem_idAt.1 (un hB.cm B.emb ⟨c, hc⟩).2, pi_uv _ _ _⟩
       haar x hx := by
-        haveI := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-        letI : MeasurableSpace (Loc.idAt E (evI F)) := borel _
-        haveI : BorelSpace (Loc.idAt E (evI F)) := ⟨rfl⟩
+        have := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+        let : MeasurableSpace (Loc.idAt E (evI F)) := borel _
+        have : BorelSpace (Loc.idAt E (evI F)) := ⟨rfl⟩
         exact haar_units _ (openEmb hB.cm B.emb).1 (openEmb hB.cm B.emb).2
           (fun a b => funext fun w => map_mul (piInf (B.emb w)) _ _) x }
 

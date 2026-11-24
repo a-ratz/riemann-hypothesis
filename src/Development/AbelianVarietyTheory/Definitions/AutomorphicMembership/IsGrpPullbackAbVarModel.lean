@@ -115,8 +115,8 @@ variable {p : ℕ} [Fact p.Prime] {C : Type} [Field C] {v : Valuation C ℝ≥0}
 
 theorem existsUnique_corr_dual : (∀ y : specO O (DualNumber O) ⟶ P.G, ∃! x, Corr P x y) ∧
     ∀ x : specO O (DualNumber O) ⟶ P.Gt, ∃! y, Corr P x y := by
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
+  have := P.isLocalRing
+  have := HodgeTateCompare.isLocalRing_dualNumber (O := O)
   have hp₀ : ¬ IsUnit (p : O) := Fact.out
   have hp : ¬ IsUnit (p : DualNumber O) := fun h => hp₀ (by
     simpa using h.map (TrivSqZeroExt.fstHom O O O))
@@ -145,7 +145,7 @@ theorem existsUnique_corr_dual : (∀ y : specO O (DualNumber O) ⟶ P.G, ∃! x
   exact ⟨existsUnique_left (P := P) hp hc, existsUnique_right (P := P) hp hc⟩
 
 theorem exists_lieCmp : ∃ e : LieG P.Gt ≃ LieG P.G, ∀ x, Corr P x.1 (e x).1 := by
-  haveI := P.isLocalRing
+  have := P.isLocalRing
   have hp₀ : ¬ IsUnit (p : O) := Fact.out
   obtain ⟨hl, hr⟩ := P.existsUnique_corr_dual
   let f : LieG P.G → LieG P.Gt := fun y => ⟨(hl y.1).choose,
@@ -214,7 +214,7 @@ variable {p : ℕ} [Fact p.Prime] {F : IntermediateField ℚ ℂ} {C : Type} [Fi
 theorem exists_eps_of_hom (f : F →+* C) : ∃ ε : Eps p C, ∀ (n : ℕ) (h : zeta (p ^ n) ∈ F),
     (ε.1.lev n : C) = f ⟨zeta (p ^ n), h⟩ := by
   have hp : p.Prime := Fact.out
-  letI : Algebra F C := f.toAlgebra
+  let : Algebra F C := f.toAlgebra
   have key : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] [Algebra K C],
       Nonempty (algebraicClosure K L →ₐ[K] C) := fun _ _ _ _ _ _ => ⟨IsAlgClosed.lift⟩
   obtain ⟨g⟩ := key F ℂ
@@ -232,7 +232,7 @@ theorem exists_eps_of_hom (f : F →+* C) : ∃ ε : Eps p C, ∀ (n : ℕ) (h :
     refine congrArg g (Subtype.ext ?_)
     have h0 : (p : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
     change zeta (p ^ (n + 1)) ^ p = zeta (p ^ n)
-    rw [zeta, zeta, ← Complex.exp_nat_mul]
+    rw [zeta, zeta, ← Complex.exp_natCast_mul]
     congr 1
     push_cast
     field_simp
@@ -313,7 +313,7 @@ theorem isGrpPullback_abToDat :
 
 theorem abAct_abToDat (a : 𝓞 E) : letI := H.starRing
     ((abAct P).act a).left ≫ abToDat A = abToDat A ≫ (A.t.act.act a).left := by
-  letI := H.starRing
+  let := H.starRing
   apply A.m.cart.1.hom_ext
   · have h₁ : abToDat A ≫ A.m.cm.F = abVarι P ≫ Y.m.cm.F := abToDat_φ A
     rw [Category.assoc, Category.assoc, A.m.act, h₁, reassoc_of% h₁, ← Y.m.act, reassoc_of% abAct_ι P a]
@@ -323,8 +323,8 @@ variable [Fact p.Prime]
 
 theorem exists_pow_mem_span : ∃ n : ℕ, ∀ a ∈ maximalIdeal A.R ^ n, A.f a ∈ Ideal.span {(p : ↥(intO ↥C.S))} := by
   have hO := integers_intO C
-  haveI := A.noeth
-  haveI := NormIntegers.isLocalRing hO
+  have := A.noeth
+  have := NormIntegers.isLocalRing hO
   have hle : (maximalIdeal A.R).map A.f ≤ maximalIdeal _ :=
     Ideal.map_le_iff_le_comap.2 fun a ha => (NormIntegers.mem_maximalIdeal_iff hO).2 (A.f_loc a ha)
   have hp : 0 < ‖algebraMap ↥(intO ↥C.S) ↥C.S (p : ↥(intO ↥C.S))‖ := by

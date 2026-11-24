@@ -485,8 +485,8 @@ theorem index_coprime_of_multiples {G : Type*} [AddCommGroup G] [AddGroup.FG G] 
     refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨s, Nat.pos_of_ne_zero ?_, hx⟩
     rintro rfl
     exact hp.one_lt.ne' (by simpa using hs)
-  haveI : Finite (G ⧸ H) := AddCommGroup.finite_of_fg_torsion _ htor
-  haveI := Fact.mk hp
+  have : Finite (G ⧸ H) := AddCommGroup.finite_of_fg_isAddTorsion _ htor
+  have := Fact.mk hp
   rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
   intro hd
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := G ⧸ H) p hd
@@ -545,7 +545,7 @@ theorem exists_multiple_mem (D : D7) (hD : admG1 D) (cc : Ideal (𝓞 D.host.K))
 
 theorem index_coprime : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (N N' r : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)) (b : Fin r → Matrix (Fin N') (Fin N) D.host.E) (p : ℕ), p.Prime → (La D (tor0 D cc δ) L L').FG → LocBasis D p (YYl D L L') b → Nat.Coprime (((LaB D (tor0 D cc δ) b).addSubgroupOf (La D (tor0 D cc δ) L L')).index) p := by
   intro D hD cc δ N N' r L L' b p hp hfg hb
-  haveI : AddGroup.FG (La D (tor0 D cc δ) L L') := (AddGroup.fg_iff_addSubgroup_fg _).2 hfg
+  have : AddGroup.FG (La D (tor0 D cc δ) L L') := (AddGroup.fg_iff_addSubgroup_fg _).2 hfg
   refine index_coprime_of_multiples _ p hp fun z => ?_
   obtain ⟨s, hs, hz⟩ := exists_multiple_mem D hD cc δ L L' b p hb z.1 z.2
   exact ⟨s, hs, AddSubgroup.mem_addSubgroupOf.2 hz⟩
@@ -568,7 +568,7 @@ namespace GlobalTheory.Vacuum
 theorem exists_orthonormal_basis_family (Λ : AddSubgroup ℂ) (ω t : ℂ) (G : ℂ → ℂ) (k : ℤ) (hk : gl3FieldFirst Λ ω (2 * t) = k) (z : ℂ) :
     U1 Λ ω (U1 Λ t G) z = (-1 : ℂ) ^ k * U1 Λ t (U1 Λ ω G) z := by
   have h1 : (-1 : ℂ) ^ k = Complex.exp (-(Real.pi * Complex.I) * k) := by
-    rw [mul_comm, Complex.exp_int_mul, Complex.exp_neg, Complex.exp_pi_mul_I]; norm_num
+    rw [mul_comm, Complex.exp_intCast_mul, Complex.exp_neg, Complex.exp_pi_mul_I]; norm_num
   have h2 : (k : ℂ) * Complex.I = (ω * (starRingEnd ℂ) t - t * (starRingEnd ℂ) ω) / (area Λ : ℂ) := by
     have : (k : ℂ) = ((gl3FieldFirst Λ ω (2 * t) : ℝ) : ℂ) := by rw [hk]; simp
     rw [this, gl3FieldFirst]
@@ -629,7 +629,7 @@ theorem norm_sq_mul_gaussian_latticeTranslate_eq_shifted (Λ : AddSubgroup ℂ) 
     ‖U1 Λ ω G z‖ ^ 2 * Real.exp (-Real.pi * ‖z‖ ^ 2 / area Λ) =
       ‖G (ω + z)‖ ^ 2 * Real.exp (-Real.pi * ‖ω + z‖ ^ 2 / area Λ) := by
   simp only [U1]
-  rw [norm_mul, mul_pow, Complex.norm_exp, ← Real.exp_nat_mul, mul_assoc, ← Real.exp_add, add_comm z ω]
+  rw [norm_mul, mul_pow, Complex.norm_exp, ← Real.exp_natCast_mul, mul_assoc, ← Real.exp_add, add_comm z ω]
   congr 2
   have h1 : -(Real.pi : ℂ) * z * (starRingEnd ℂ) ω / (area Λ : ℂ) -
       (Real.pi : ℂ) * ω * (starRingEnd ℂ) ω / (2 * (area Λ : ℂ)) =
@@ -654,11 +654,11 @@ theorem normSq_pullB (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hC : Crv 
       map_smul' := fun c z => by
         funext k; simp [coordB, Finset.mul_sum, mul_assoc] }
   let e : VC D N N' ≃ₗ[ℝ] (Fin r → ℂ) := LinearEquiv.ofBijective e0 hbij
-  haveI h1 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N → ℂ)).IsAddHaarMeasure :=
+  have h1 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N → ℂ)).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
-  haveI h2 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N' → Fin N → ℂ)).IsAddHaarMeasure :=
+  have h2 : (MeasureTheory.volume : MeasureTheory.Measure (Fin N' → Fin N → ℂ)).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
-  haveI h3 : (MeasureTheory.volume : MeasureTheory.Measure (VC D N N')).IsAddHaarMeasure :=
+  have h3 : (MeasureTheory.volume : MeasureTheory.Measure (VC D N N')).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
   have key := _root_.GlobalTheory.LatticeMean.mean_prod_eq_pow (lamOf D cc δ) hlat
     (fun z => ‖g z‖ ^ 2 * Real.exp (-Real.pi * ‖z‖ ^ 2 / area (lamOf D cc δ)))

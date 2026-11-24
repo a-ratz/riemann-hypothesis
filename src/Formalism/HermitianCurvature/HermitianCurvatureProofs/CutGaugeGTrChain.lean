@@ -62,7 +62,7 @@ variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
   [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq]
 
 theorem tc_hsVec_smul (a : ℂ) (X : Wq →L[ℂ] Wp) : B.hsVec (a • X) = a • B.hsVec X := by
-  simp only [B.hsVec, ContinuousLinearMap.smul_apply]
+  simp only [B.hsVec, smul_apply]
   rw [← WithLp.toLp_smul]
   rfl
 
@@ -72,11 +72,11 @@ theorem tc_hsVec_sum {ι : Type} (s : Finset ι) (X : ι → (Wq →L[ℂ] Wp)) 
   induction s using Finset.induction_on with
   | empty =>
     rw [Finset.sum_empty, Finset.sum_empty]
-    simp only [B.hsVec, ContinuousLinearMap.zero_apply]
+    simp only [B.hsVec, zero_apply]
     exact WithLp.toLp_zero 2
   | insert a s ha ih =>
     rw [Finset.sum_insert ha, Finset.sum_insert ha, ← ih]
-    simp only [B.hsVec, ContinuousLinearMap.add_apply]
+    simp only [B.hsVec, add_apply]
     exact WithLp.toLp_add 2 _ _
 
 theorem tc_gq (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (x : (Fin P.r → ℂ) × ℂ) :
@@ -97,7 +97,7 @@ theorem tc_sqrt_wq (k r : ℕ) (TT : ℝ) (x : MA.E r) :
     rw [← Finset.prod_pow]
     refine Finset.prod_congr rfl fun a _ => ?_
     have hM : MA.Mdim k r a = Formalism.QuantumDeterminants.Mdim k r a := rfl
-    rw [if_pos (by simp), Complex.normSq_eq_norm_sq, hM, ← pow_mul, ← pow_mul, mul_comm]
+    rw [ite_eq_left (by simp), Complex.normSq_eq_norm_sq, hM, ← pow_mul, ← pow_mul, mul_comm]
   rw [h, Real.sqrt_sq (Finset.prod_nonneg fun a _ => by split_ifs <;> positivity)]
 
 theorem tc_rawJ (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (e : M.Ty P → ℂ → (Wq →L[ℂ] Wp))

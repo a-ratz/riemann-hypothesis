@@ -91,7 +91,7 @@ theorem ex_two (m : ℤ) : ex (2 * m) = 1 := by
   rw [ex, ← Complex.exp_int_mul_two_pi_mul_I (-m)]; congr 1; push_cast; ring
 
 theorem ex_pow (t : ℝ) (k : ℕ) : ex t ^ k = ex (k * t) := by
-  simp only [ex, ← Complex.exp_nat_mul]; congr 1; push_cast; ring
+  simp only [ex, ← exp_natCast_mul]; congr 1; push_cast; ring
 
 theorem gauss_phase : ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (H : Sesq V), IsPosHerm H → ∀ (a : V ≃ₗ[ℂ] V), (∀ z w, H (a z) (a w) = H z w) → ∀ (B : V →ₗ[ℂ] V), (∀ x, B x - a (B x) = x) → (∀ x, B (x - a x) = x) → ∀ (Λ Λ' : AddSubgroup V), Λ.FG → Λ' ≤ Λ → (Λ'.addSubgroupOf Λ).FiniteIndex → (∀ y ∈ Λ', a y ∈ Λ) → ∀ α : V → ℂ, IsSemichar H Λ α → (∀ y ∈ Λ', α (a y) = α y) → ∃ (M : Type) (_ : Fintype M) (s : M → V), (∀ m, s m ∈ Λ) ∧ (∀ x ∈ Λ, ∃! p : M × Λ', x = s p.1 - ((p.2 : V) - a p.2)) ∧ GlobalTheory.Phase.Ph (∑ m, α (s m) * cexp (-((π : ℂ) * I) * ((H (B (s m)) (s m)).im : ℂ))) := by
   intro V _ _ H hH a ha B hB1 hB2 Λ Λ' hfg hle hfi haΛ α hα hαa
@@ -318,9 +318,9 @@ theorem ph_real (κ : ℝ) : GlobalTheory.Phase.Ph (κ : ℂ) :=
 
 theorem ph_det_mul_integral : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℂ V] [FiniteDimensional ℂ V] [MeasurableSpace V] [BorelSpace V] (μ : Measure V) [μ.IsAddHaarMeasure] (H : Sesq V), IsPosHerm H → ∀ (a : V ≃ₗ[ℂ] V), (∀ z w, H (a z) (a w) = H z w) → LinearMap.det (1 - (a : V →ₗ[ℂ] V)) ≠ 0 → ∀ (Λ Λ' : AddSubgroup V) [DiscreteTopology Λ], Λ.FG → Λ' ≤ Λ → (Λ'.addSubgroupOf Λ).FiniteIndex → (∀ y ∈ Λ', a y ∈ Λ) → ∀ α : V → ℂ, IsSemichar H Λ α → (∀ y ∈ Λ', α (a y) = α y) → ∀ Fd : Set V, IsAddFundamentalDomain Λ' Fd μ → GlobalTheory.Phase.Ph (LinearMap.det (1 - (a : V →ₗ[ℂ] V)) * ∫ z in Fd, kerSum H Λ α z (a z) * cexp (-(π : ℂ) * H z z) ∂μ) := by
   intro V _ _ _ _ _ μ _ H hH a ha hdet Λ Λ' _ hfg hle hfi haΛ α hα hαa Fd hFd
-  haveI : ProperSpace V := FiniteDimensional.proper ℂ V
-  haveI : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : Countable Λ' := (AddSubgroup.inclusion_injective hle).countable
+  have : ProperSpace V := FiniteDimensional.proper ℂ V
+  have : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable Λ' := (AddSubgroup.inclusion_injective hle).countable
   obtain ⟨κ, -, hg⟩ := _root_.GlobalTheory.UnitaryTheta.integral_gaussian_unitary V μ H hH a ha hdet
   let E := LinearMap.equivOfDetNeZero _ hdet
   have hE : ∀ x, E x = x - a x := fun x => rfl

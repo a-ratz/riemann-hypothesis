@@ -255,7 +255,7 @@ private theorem Dz.all {E : Type} [Field E] [StarRing E] [CharZero E] :
 theorem UpperTheory.hermitian_diagonalisation :
     ∀ {F E : Type} [Field F] [Field E] [Algebra F E] [CharZero E] (σ : E →ₐ[F] E), (∀ x, σ (σ x) = x) → (∀ x, σ x = x → x ∈ (algebraMap F E).range) → ∀ (n : ℕ) (T : Matrix (Fin n) (Fin n) E), (∀ i j, σ (T j i) = T i j) → T.det ≠ 0 → ∃ (g : GL (Fin n) E) (D : Fin n → Fˣ), Matrix.transpose ((g : Matrix (Fin n) (Fin n) E).map σ) * T * (g : Matrix (Fin n) (Fin n) E) = Matrix.diagonal fun i => algebraMap F E (D i : F) := by
   intro F E _ _ _ _ σ hσ hfix n T hT hdet
-  letI : StarRing E :=
+  let : StarRing E :=
     { star := σ
       star_involutive := hσ
       star_mul := fun a b => by

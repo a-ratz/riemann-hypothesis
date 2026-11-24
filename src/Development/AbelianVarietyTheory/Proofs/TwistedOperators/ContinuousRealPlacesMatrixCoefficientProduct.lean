@@ -53,7 +53,7 @@ namespace GlobalTheory.SepPer.CoefCont
 
 theorem continuous_coefR : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (v a : ∀ τ, M.H τ), Continuous (coefR θ M v a) := by
   intro D θ hθ V S M v a
-  haveI : IsTotallyReal D.host.F := D.sp.cm.totReal
+  have : IsTotallyReal D.host.F := D.sp.cm.totReal
   unfold coefR
   refine continuous_finsetProd _ fun τ _ => ?_
 

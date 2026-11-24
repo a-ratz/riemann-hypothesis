@@ -109,7 +109,7 @@ theorem norm_eq_one_of_valuation_eq_one (χ : kˣ →* ℂˣ) (hχ : IsSmoothCha
   have hG : IsCompact (S.units : Set kˣ) := Submonoid.units_isCompact hS
   have : CompactSpace S.units := isCompact_iff_compactSpace.mp hG
   set H : Subgroup S.units := χ.ker.comap S.units.subtype
-  have hH : IsOpen (H : Set S.units) := hχ.preimage continuous_subtype_val
+  have hH : IsOpen (H : Set S.units) := hχ.preimage continuous_subtypeVal
   have : Finite (S.units ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
   have hn : H.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hmem : (⟨u, mem_units_integer hu⟩ : S.units) ^ H.index ∈ H := Subgroup.pow_index_mem H _

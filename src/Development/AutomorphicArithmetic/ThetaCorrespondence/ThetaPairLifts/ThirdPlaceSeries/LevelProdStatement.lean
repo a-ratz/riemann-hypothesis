@@ -168,7 +168,7 @@ theorem isCompact_relax' (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) (J
     IsCompact (_root_.GlobalTheory.LevProd.relaxedLevelSubgroup J j hj α : Set (GA (I.rec7 l Z) ((I.rec7 l Z).sp.X j))) := by
   classical
   have hU := (GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hW.tr.ok hW.tr.pins.some l Z u (W.P.I.tup t) J.Ch₀ J.A hR.is j (by omega) (J.ι j α)).1
-  haveI hNn : (GlobalTheory.FinPl.grpAt ((I.rec7 l Z).sp.X j) (_root_.GlobalTheory.LevProd.quadraticTwistAtPlace J)).Normal := by
+  have hNn : (GlobalTheory.FinPl.grpAt ((I.rec7 l Z).sp.X j) (_root_.GlobalTheory.LevProd.quadraticTwistAtPlace J)).Normal := by
     unfold GlobalTheory.FinPl.grpAt GlobalTheory.FinPl.congGrp
     infer_instance
   obtain ⟨n, ρ, Ψ, hc, hin, huniq⟩ := _root_.GlobalTheory.LevProd.exists_continuous_section_localHomProduct_twAt J j hj
@@ -687,7 +687,7 @@ theorem mem_levQ {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) {u : B.W
     (γ : I.Q a → (Sp B.fields.E (B.R.N i) ≃ₗ[B.fields.E] Sp B.fields.E (B.R.N i)))
     (hγ : ∀ P : I.Q a, locM P.1 x = ratM P.1 (γ P)) (P : I.Q a) :
     ∃ κ ∈ (levQAt I.sel (I.tup a) (I.idx a) (I.Tp a) i c.1 P).H, κ.1 = γ P := by
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   have hd : Disjoint (B.primes X).vGs (I.Q a) :=
     Finset.disjoint_of_subset_right (ColIn.Q_subset_SQ I a) (GlobalTheory.Mem.LevTwist.levOk_twists B X I hI).2.1
   have hp : PtOf (y c * k (chOf c)) ((I.stp u a i).rep c).1.1 :=
@@ -984,7 +984,7 @@ theorem phi_mem_H_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : 
       (((hHo i).inter (hVo i)).preimage (continuous_const.mul continuous_id))
       (by
         rw [Set.mem_preimage, inv_mul_cancel]
-        exact ⟨one_mem _, by rw [Set.mem_setOf_eq, map_one]; exact one_mem _⟩)
+        exact ⟨one_mem _, by rw [Set.mem_ofPred_eq, map_one]; exact one_mem _⟩)
   choose y hy using hy
   set x : (i : Fin J.r) → GL (XIx (Fin (I.rec7 l Z).R.k) (Fin (I.rec7 l Z).R.t) j) (J.G i).k := fun i =>
     (_root_.GlobalTheory.LevProd.localHomProduct J j hj g i)⁻¹ * GlobalTheory.VolBridge.locHom ((J.G i).q.pr.comp (incA (I.rec7 l Z))) (e₀ i) (y i) with hx
@@ -1124,7 +1124,7 @@ theorem cutAt_mem (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) : cutAt
 theorem compAt_cutAt (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) (i j) :
     GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V (cutAt V v g) i j) = GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V g i j) := by
   rw [mt_cutG, Matrix.add_apply, Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul, RingHom.map_add (f := _), RingHom.map_mul,
-    RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ {v}).2 v, if_pos (Finset.mem_singleton_self v), sub_self,
+    RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ {v}).2 v, ite_eq_left (Finset.mem_singleton_self v), sub_self,
     zero_mul, one_mul, add_zero]
 
 theorem grpAt_mono (V : HSp D) {P Q : GlobalTheory.FinPl.Pl D → Prop} (h : ∀ v, P v → Q v) : grpAt V P ≤ grpAt V Q := fun g hg =>
@@ -1379,7 +1379,7 @@ theorem mem_U_of_mem_U_away_from_twisted (hW : _root_.GlobalTheory.Fam.AllFamily
     (hP : ∀ v, P v → ¬ _root_.GlobalTheory.LevProd.quadraticTwistAtPlace J v) (hP' : ∀ v, P v → ¬ _root_.GlobalTheory.LevProd.quadraticTwistAtPlace J' v)
     {g : GA (I.rec7 l Z) ((I.rec7 l Z).sp.X j)} (hg : g ∈ GlobalTheory.FinPl.grpAt _ P) (h : g ∈ J.A.U j β) : g ∈ J'.A.U j β' := by
   have hj' : j ≤ B.R.m := by omega
-  haveI : NeZero (B.R.N j) := ⟨(B.R.N_pos j).ne'⟩
+  have : NeZero (B.R.N j) := ⟨(B.R.N_pos j).ne'⟩
   obtain ⟨hPins⟩ := hW.tr.pins
   have hg1 : gramN (I.rec7 l Z) j hj' = 1 := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hW.tr.ok hPins l Z).2.2.2 j hj').1
   have eU : Formalism.UG.UPts (sigD (I.rec7 l Z)) (gramN (I.rec7 l Z) j hj') (FiniteAdeleRing (𝓞 (I.rec7 l Z).host.F) (I.rec7 l Z).host.F) =

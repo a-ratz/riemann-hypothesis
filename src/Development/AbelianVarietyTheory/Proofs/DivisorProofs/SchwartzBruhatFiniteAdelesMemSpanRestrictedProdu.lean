@@ -109,7 +109,7 @@ theorem exists_box_of_mem_nhds {N : Set (Af F)} (hN : N ∈ 𝓝 0) :
       intro v hv
       apply hWt
       have := hα v
-      simp only [if_pos (Finset.mem_coe.1 hv)] at this
+      simp only [ite_eq_left (Finset.mem_coe.1 hv)] at this
       exact this.2
     exact hI hm
 
@@ -137,7 +137,7 @@ theorem IsBox.isOpen {B : ∀ v : Pl (F := F), AddSubgroup (Fv F v)} (hB : IsBox
       {α : Af F | ∀ v, α.1 v ∈ (v.adicCompletionIntegers F : Set (v.adicCompletion F))} ∩
         ⋂ v ∈ hfin.toFinset, (fun α : Af F => α v) ⁻¹' (B v : Set (Fv F v)) := by
     ext α
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.Finite.mem_toFinset]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.Finite.mem_toFinset]
     constructor
     · intro h
       exact ⟨fun v => hB.2.1 v (h v), fun v _ => h v⟩
@@ -155,8 +155,8 @@ theorem exists_nhds_add_eq {X : Type} [TopologicalSpace X] [AddCommGroup X] [IsT
   obtain ⟨hlc, hcs⟩ := hg
   have hK : IsCompact (tsupport g) := hcs
   have hfin : (g '' tsupport g).Finite := by
-    haveI := isCompact_iff_compactSpace.1 hK
-    have := (hlc.comp_continuous (continuous_subtype_val (p := fun x => x ∈ tsupport g))).range_finite
+    have := isCompact_iff_compactSpace.1 hK
+    have := (hlc.comp_continuous (continuous_subtypeVal (p := fun x => x ∈ tsupport g))).range_finite
     rwa [Set.range_comp, Subtype.range_coe] at this
   have hV : ∀ c : ℂ, ∃ V ∈ 𝓝 (0 : X), c ≠ 0 → ∀ y, g y = c → ∀ z ∈ V, g (y + z) = c := by
     intro c
@@ -221,7 +221,7 @@ theorem locInd_eventually {B : ∀ v : Pl (F := F), AddSubgroup (Fv F v)} (hB : 
   unfold locInd
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq, hv]
+  simp only [Set.mem_ofPred_eq, hv]
   refine forall_congr' fun i => ⟨fun h => ?_, fun h => sub_mem (show x i ∈ intG v from h) (hr i)⟩
   have := add_mem h (show evalV F v (r i) ∈ intG v from hr i)
   rwa [sub_add_cancel] at this
@@ -266,11 +266,11 @@ theorem mem_span_restrictedProd : ∀ (F : Type) [Field F] [NumberField F] (κ :
   have hUo : IsOpen (U : Set (κ → Af F)) := by
     have : (U : Set (κ → Af F)) = ⋂ i, (fun y : κ → Af F => y i) ⁻¹' {α : Af F | ∀ v, evalV F v α ∈ B v} := by
       ext y
-      simp only [SetLike.mem_coe, hmemU, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, hmemU, Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq]
     rw [this]
     exact isOpen_iInter_of_finite fun i => hB.isOpen.preimage (continuous_apply i)
   have hinv : ∀ y, ∀ u ∈ U, g (y + u) = g y := fun y u hu => hVg y u (hBV u hu)
-  haveI := QuotientAddGroup.discreteTopology hUo
+  have := QuotientAddGroup.discreteTopology hUo
   have hK : IsCompact (tsupport g) := hg.2
   have hQ : ((QuotientAddGroup.mk : (κ → Af F) → (κ → Af F) ⧸ U) '' tsupport g).Finite :=
     (show IsCompact ((QuotientAddGroup.mk : (κ → Af F) → (κ → Af F) ⧸ U) '' tsupport g) from

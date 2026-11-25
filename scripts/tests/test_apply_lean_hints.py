@@ -11,7 +11,7 @@ import tempfile
 import unittest
 import unittest.mock
 
-SCRIPT = Path(__file__).with_name("apply-lean-hints.py")
+SCRIPT = Path(__file__).resolve().parents[1] / "apply-lean-hints.py"
 spec = importlib.util.spec_from_file_location("apply_lean_hints", SCRIPT)
 hints = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(hints)

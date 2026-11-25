@@ -6,11 +6,16 @@ name: risky constructs
 # of the text, comments included. scripts/risky-constructs-allowed.txt holds the lines that may
 # stand.
 #
-# Like challenge-files.yml, this runs the base branch's copy of the workflow, and the script and
-# the list of lines that may stand are the base branch's too. The pull request's commits are fetched as
-# git objects and read. Nothing from the pull request is checked out or run, so a pull request
-# cannot switch the check off or allow itself, and it needs no approval to run on a pull request
-# from a fork.
+# Like challenge-files.yml, this is a pull_request_target workflow. GitHub takes the workflow
+# from the default branch, whatever branch a pull request is opened against, and the checkout
+# below takes the script and the list of lines that may stand from there too. The pull request's
+# commits are fetched as git objects and read. Nothing from the pull request is checked out or
+# run, so a pull request cannot switch the check off or allow itself, and it needs no approval to
+# run on a pull request from a fork.
+#
+# A run reads the list as it stood when the run started, and a re-run starts from the same
+# commit. After a line is added to the list, a pull request that was reported stays red until
+# its next push or edit, or until it is closed and opened again.
 #
 # A text search is not a proof. It catches the accident; the axiom check in Comparator is what
 # counts.

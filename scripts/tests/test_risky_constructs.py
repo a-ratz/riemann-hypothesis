@@ -76,8 +76,12 @@ class Reading(unittest.TestCase):
             "admitGoal": "elab \"cheat\" : tactic => do\n  Lean.Elab.admitGoal (← Lean.Elab.Tactic.getMainGoal)\n",
             "apply?": "theorem t : False := by\n  apply?\n",
             "grind?": "theorem t (p : Prop) : p := by\n  grind?\n",
+            "finish?": "theorem t (p : Prop) : p := by\n  grind => finish?\n",
+            "+trace": "theorem t (p : Prop) : p := by\n  grind +trace\n",
+            "trace :=": "theorem t (p : Prop) : p := by\n  grind (trace := true)\n",
             "impossible": "theorem t : 2 + 2 = 5 := by\n  impossible by decide\n",
             "plausible": "theorem t (a b : Nat) : a + b = b + a := by\n  plausible\n",
+            "guard_msgs": "\n#guard_msgs (drop error) in\ntheorem t : False := by rfl\n",
             "axiom": "\naxiom cheat : False\n",
             "elabAxiom": "elab \"cheat\" : command => do\n  Lean.Elab.Command.elabAxiom {} stx\n",
             "axiomDecl": "elab \"cheat\" : command => do\n  let d := Lean.Declaration.axiomDecl value\n",
@@ -99,13 +103,15 @@ class Reading(unittest.TestCase):
             "run_meta": "\nrun_meta pure ()\n",
             "#eval": "\n#eval 1\n",
             "initialize": "\ninitialize pure ()\n",
+            "init": "\n@[init] def f : IO Unit := pure ()\n",
         }
         self.assertEqual(list(cases), [name for name, _ in risky.CONSTRUCTS], "one case for each word of the list, in its order")
         for name, text in cases.items():
             with self.subTest(name):
                 self.assertEqual(scan(text).get(name), [2])
         # A word is reported under its own name only.
-        for name in ("sorry", "stop", "admit", "axiom", "elabAxiom", "axiomDecl", "plausible", "grind?", "impossible", "extern", "opaque", "initialize", "#eval"):
+        for name in ("sorry", "stop", "admit", "axiom", "elabAxiom", "axiomDecl", "plausible", "grind?", "finish?", "+trace", "trace :=",
+                     "guard_msgs", "impossible", "extern", "opaque", "initialize", "init", "#eval"):
             self.assertEqual(list(scan(cases[name])), [name])
 
     def test_a_word_in_a_comment_or_a_string_is_found_too(self):
@@ -144,6 +150,60 @@ class Reading(unittest.TestCase):
                 "external externalProduct\nhint have hint : P\nimpossible_case impossibleCase impossible1\ngrind grind => simp\nalternative Alternative coarse_degree_alternative\n"
                 "config := { decide := true }\n")
         self.assertEqual(scan(text), {})
+
+    def test_the_trace_mode_of_grind_is_found_in_each_spelling(self):
+        for text, name in (("grind +trace", "+trace"), ("lia +trace", "+trace"), ("cutsat +trace", "+trace"), ("grobner +trace", "+trace"),
+                           ("grind +«trace»", "+trace"), ("grind =>\n    finish?", "finish?"), ("  finish? [foo]", "finish?"),
+                           ("did it finish?", "finish?"), ("grind (trace := true)", "trace :="), ("lia (trace:=true)", "trace :="),
+                           ("grind (trace :=\n    true)", "trace :="), ("grind (trace\n  := true)", "trace :="),
+                           ("grind (trace := .true)", "trace :="), ("grind (trace := (true))", "trace :="),
+                           ("grind (trace := Bool.true)", "trace :="), ("grind (trace := !false)", "trace :="),
+                           ("grind («trace» := true)", "trace :="), ("grind (config := { «trace» := true })", "trace :="),
+                           ("def c : Lean.Grind.Config := { trace := true }", "trace :="), ("{ c with trace := on }", "trace :="),
+                           ("grind (config := { trace := true })", "trace :="),
+                           # The price: a field `trace` of a structure, and a `trace := false`.
+                           ("  trace := C.trace", "trace :="), ("unit := hunit, trace := htr }", "trace :="), ("grind (trace := false)", "trace :="),
+                           # Nothing before the guillemets is looked at: `with«trace»` is two words to Lean.
+                           ("{ c with«trace» := true }", "trace :="), ("x.«trace» := 1", "trace :=")):
+            with self.subTest(text=text):
+                self.assertEqual(list(scan(text)), [name])
+        # The trace of a matrix is not the trace mode, and without the mode a goal that stays open is an error.
+        for text in ("(Aᴴ * A).trace := by", "(rx A).trace = A.trace := by", "x + trace A", "(trace (B ∘L C))", "def trace (T : H →L[ℂ] H) : ℂ := 0",
+                     "have htrace := h", "A_trace := 1", "trace' := 1", "trace? := 1", "grind =>\n    finish", "grind +traces",
+                     "grind +trace_x", "grind -trace", "grind + trace", "set_option trace.grind true", "trace = 1"):
+            with self.subTest(text=text):
+                self.assertEqual(scan(text), {})
+
+    def test_a_field_path_a_type_or_a_comment_hides_the_trace_mode(self):
+        # The limits the script names. Lean 4.37 takes each of them, and the theorem rests on `sorryAx`.
+        for text in ("def w : W := { c.trace := true }", "lia (config := { toNoopConfig.toConfig.trace := true })",
+                     "grind (config := { trace : Bool := true })", "grind (trace /- why -/ := true)"):
+            with self.subTest(text=text):
+                self.assertEqual(scan(text), {})
+        # The line that uses a config holds no word. The line that defines it does.
+        self.assertEqual(scan("theorem t (p : Prop) : p := by\n  grind (config := c)\n"), {})
+
+    def test_guard_msgs_is_found_in_each_spelling(self):
+        for text in ("#guard_msgs (drop error) in\ntheorem t : False := by rfl", "#guard_msgs(drop error)in theorem t : False := by rfl",
+                     "#guard_msgs (drop all) in", "/-- error: x -/\n#guard_msgs in", "x#guard_msgs in", "Lean.guard_msgs",
+                     "Lean.guardMsgsCmd", "Lean.Elab.Tactic.GuardMsgs.elabGuardMsgs", "GUARD_MSGS"):
+            with self.subTest(text=text):
+                self.assertEqual(list(scan(text)), ["guard_msgs"])
+        for text in ("#guard_expr 1 =ₐ 1", "#guard true", "#guard_panic in", "guard_hyp h : P", "guard_target = P"):
+            with self.subTest(text=text):
+                self.assertEqual(scan(text), {})
+
+    def test_the_attribute_init_is_found_as_a_name_of_its_own(self):
+        for text in ("@[init] def f : IO Unit := pure ()", "attribute [init] f", "@[init mk] def x : Nat := 0", "@[«init»] def f : IO Unit := pure ()",
+                     "@[inline,\n  init] def f : IO Unit := pure ()", "@[inline,/- why -/init] def f : IO Unit := pure ()", "@[ init ]", "@[inline,init]",
+                     "-- the init attribute", "foldl f (init := 0) l", "fun init => init + 1", "(x, init)"):
+            with self.subTest(text=text):
+                self.assertEqual(list(scan(text)), ["init"])
+        # Other names, as Lean reads them: none of them is the attribute.
+        for text in ("Fin.init q", "l.init", "@[_root_.init]", "@[builtin_init] def f : IO Unit := pure ()", "init_x", "init1", "init'", "init?", "init!",
+                     "hinit", "Xinit", "h2init", "x_init", "reinit", "f!init", "f?init", "x'init", "initial", "initFn", "Finite", "definition", "finite_of_init_eq"):
+            with self.subTest(text=text):
+                self.assertEqual(scan(text), {})
 
     def test_a_decide_with_a_config_and_a_config_in_angle_brackets_are_found(self):
         for text in ("decide (config := c)", "decide -zetaReduce (config := myConfig)", "decide (config := ⟨false, true, true, false⟩)",
@@ -382,6 +442,8 @@ class Comparing(unittest.TestCase):
         self.assertIn("scripts/risky-constructs-allowed.txt", out.getvalue())
         offered = [line[4:] for line in out.getvalue().splitlines() if line.startswith("    ")]
         self.assertEqual(offered, ["src/A.lean: sorry", "src/A.lean: exact sorry: now", "src/With space/Ω.lean: #eval 1"])
+        # It says that a re-run reads the list as it was.
+        self.assertIn("A re-run of this job reads the list as it was.", out.getvalue())
         # What the report offers is what the list understands.
         file = Path(directory.name) / "allowed.txt"
         file.write_text("\n".join(offered) + "\n", encoding="utf-8")
@@ -401,6 +463,7 @@ class Comparing(unittest.TestCase):
         self.assertEqual(text.splitlines()[0], "src/Dir: a symbolic link or a submodule")
         self.assertIn("A link cannot be allowed", text)
         self.assertNotIn("To let a line stand", text)
+        self.assertNotIn("re-run", text)
         self.assertEqual(text.splitlines()[-1], "::error file=src/Dir,line=1::This pull request makes src/Dir a link.")
 
     def test_a_file_name_or_a_line_cannot_write_a_workflow_command(self):
@@ -452,6 +515,7 @@ class Fetching(unittest.TestCase):
         done = self.run_script(head, "clean")
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
         self.assertIn("No risky construct was added.", done.stdout)
+        self.assertNotIn("re-run", done.stdout)
 
     def test_an_added_word_fails_with_file_and_line(self):
         head = self.repo.branch("axiom", {"src/Deep/New.lean": "/-- A doc. -/\naxiom cheat : False\n",

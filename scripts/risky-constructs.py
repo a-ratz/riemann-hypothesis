@@ -19,7 +19,7 @@ challenge-files.yml keeps it unchanged. A symbolic link or a submodule under `sr
 reported too: git has the path of its target there, not the text Lean would read.
 
 A line that is meant to stand goes into `scripts/risky-constructs-allowed.txt`. The workflow
-reads that file from the base branch, so a pull request cannot allow itself.
+reads that file from the default branch, so a pull request cannot allow itself.
 
 This catches the accident. What it does not see:
 - a line that was in the file already and means something else now: a `sorry` in a comment
@@ -28,6 +28,9 @@ This catches the accident. What it does not see:
 - Mathlib's `hint` tactic, which closes a goal with `sorry` when nothing else does: `hint` is
   the name of a hypothesis on thousands of lines of the tree;
 - a `decide` whose config stands on another line;
+- grind's trace mode where a config switches it on through a field path
+  (`c.trace := true`), or with a type or a comment between `trace` and `:=`
+  (`trace : Bool := true`);
 - anything outside `src/`.
 The axiom check and the kernel replay in Comparator are what counts.
 """
@@ -53,13 +56,26 @@ END = r"(?![A-Za-z0-9_])"
 # The words, as (name, pattern). The name is what a report says.
 #
 # sorry          in any case and inside any name: `sorryAx`, `mkSorry`, `warn.sorry`
-# stop, admit    tactics that close a goal with `sorry`, as `apply?`, `grind?`, `impossible` and
-#                `plausible` do
+# stop, admit    tactics that close a goal with `sorry`, as `apply?`, `impossible` and `plausible`
+#                do
+# grind?         grind's trace mode closes a goal it cannot prove with `sorry`. `grind?` switches
+#                it on, `finish?` inside `grind =>` does, and so do `+trace` and
+#                `(trace := true)` behind `grind`, `lia`, `cutsat` and `grobner`. The value can
+#                be written in many ways (`.true`, `!false`), so `trace :=` counts whatever
+#                follows, where `trace` is a name of its own: `M.trace := by` is another name.
+#                A field `trace` of a structure is reported too.
+# guard_msgs     `#guard_msgs (drop error) in` takes the error of a failed proof away: the file
+#                compiles without a message and the theorem rests on `sorryAx`. In any case
+#                and without the underscore too, for `guardMsgsCmd` and `elabGuardMsgs`
 # native         `native_decide`, `+native`, `native := true`; after a letter the lower-case
 #                word is passed over, as in `alternative`
 # decide-config  a `decide` with a config on its line, and `config := ⟨`: both can switch the
 #                compiler on without the word `native`. The one pattern of two words: a line
 #                break between them hides it.
+# init           the attribute, in `@[init]`, `@[init f]` and `attribute [init] f`: it runs code
+#                when the module is imported, as `initialize` does. Only as a name of its own,
+#                which is how Lean reads an attribute: `Fin.init`, `init_x`, `builtin_init` and
+#                `initial` are other names. A variable `init` is reported too.
 # the rest       ways to declare an axiom from code, to change what is compiled, or to change
 #                what the environment holds
 CONSTRUCTS = (
@@ -69,8 +85,12 @@ CONSTRUCTS = (
     ("admitGoal", "admitGoal"),
     ("apply?", r"apply\?"),
     ("grind?", r"grind\?"),
+    ("finish?", r"finish\?"),
+    ("+trace", r"\+«?trace" + END),
+    ("trace :=", r"(?<![A-Za-z0-9_.'!?])«?trace»?\s*:="),
     ("impossible", "impossible" + END),
     ("plausible", "plausible"),
+    ("guard_msgs", r"(?i:guard_?msgs)"),
     ("axiom", "axiom" + END),
     ("elabAxiom", "elabAxiom"),
     ("axiomDecl", "axiomDecl"),
@@ -92,6 +112,7 @@ CONSTRUCTS = (
     ("run_meta", "run_meta"),
     ("#eval", "#eval"),
     ("initialize", "initialize"),
+    ("init", r"(?<![A-Za-z0-9_.'!?])init(?![A-Za-z0-9_'!?])"),
 )
 PATTERNS = tuple((name, re.compile(pattern)) for name, pattern in CONSTRUCTS)
 # Any of them. Nearly every file has none and is looked at once.
@@ -298,11 +319,13 @@ def report(findings, *, resume=None):
         print("reads the whole text, so a word in a comment or inside a longer name is reported too.")
     if offered:
         print("To let a line stand, a maintainer adds it to scripts/risky-constructs-allowed.txt on the")
-        print("base branch:")
+        print("default branch:")
         for line in offered[:OFFERED]:
             print(f"    {line}")
         if len(offered) > OFFERED:
             print(f"    and {len(offered) - OFFERED} more")
+        print("A re-run of this job reads the list as it was. The pull request's next push or edit")
+        print("starts a run that reads the new one.")
     if any(name == LINK for _, name, _ in findings):
         print("A link cannot be allowed: git has the path of its target, not the text Lean would read.")
     if not findings:

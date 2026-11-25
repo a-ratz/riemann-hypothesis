@@ -95,28 +95,38 @@ A text search is not a proof. The axiom check and kernel replay in Comparator ar
 **Pull requests.** `risky-constructs.yml` runs
 [`scripts/risky-constructs.py`](../scripts/risky-constructs.py) on every pull request. It fails a
 pull request that adds, to a Lean file under `src/`, a line with one of the words in the script's
-list: `sorry`, `stop`, `admit`, `apply?`, `grind?`, `impossible`, `plausible`, `axiom`, `native`, a
-`decide` with a config on its line, `implemented_by`, `extern`, `unsafe`, `opaque`, `debug`,
-`addDecl`, `modifyEnv`, `run_cmd`, `#eval`, `initialize`, and their variants. It is a plain search.
+list: `sorry`, `stop`, `admit`, `apply?`, `grind?`, `finish?`, `+trace`, `trace :=`,
+`impossible`, `plausible`, `#guard_msgs`, `axiom`, `native`, a `decide` with a config on its line,
+`implemented_by`, `extern`, `unsafe`, `opaque`, `debug`, `addDecl`, `modifyEnv`, `run_cmd`,
+`#eval`, `initialize`, the attribute `init`, and their variants. It is a plain search.
 The whole text of each added or changed file is read, comments and strings included, and a word
 counts wherever its letters stand, also inside a longer name (`mkSorry`, `hstop`, `unsafeCast`).
-Only for `stop`, `admit`, `impossible`, `axiom` and `extern` the name must not go on behind the
-word (`admits`, `axioms`), and the lower-case `native` is passed over after a letter
-(`alternative`). So a word in a comment fails the check too. A line is reported unless the file had
+Only for `stop`, `admit`, `impossible`, `axiom`, `extern` and `+trace` the name must not go on
+behind the word (`admits`, `axioms`), the lower-case `native` is passed over after a letter
+(`alternative`), and `init` and the `trace` of `trace :=` count only as names of their own
+(`Fin.init`, `initial` and `M.trace` are other names). So a word in a comment fails the check too. A line is reported unless the file had
 the same line, apart from blanks, where the pull request branched off, or the line stands in
-[`scripts/risky-constructs-allowed.txt`](../scripts/risky-constructs-allowed.txt) on the base
-branch. A symbolic link or a submodule under `src/` is reported as well. `src/Challenge.lean` is
-left out. In the rest of the tree at `ecc801f3`, 62,158 files, the words stand only at the end of
-names: `stop` on 18 lines (`hstop`, a field `stop`), `native` on 12 (`incl_native`) and `axiom` on
-3.
+[`scripts/risky-constructs-allowed.txt`](../scripts/risky-constructs-allowed.txt) on `main`. A
+symbolic link or a submodule under `src/` is reported as well. `src/Challenge.lean` is
+left out. In the rest of the tree at `ecc801f3`, 62,158 files, the words stand at the end of
+names and as names of other things: `stop` on 18 lines (`hstop`, a field `stop`), `native` on 12
+(`incl_native`), `axiom` on 3, `init` on 18 (a variable, a field and a theorem `init`) and
+`trace :=` on 3 (a field `trace`).
 Three of the words (`addDecl`, `modifyEnv`, `run_cmd`) are in the original files that the list
 above describes; those files are no longer in the tree.
 Like the scan above it is a text search. It does not see a term that metaprogramming builds
-under another name, a `decide` whose config stands on another line, or a line that was in the
-file already and means something else now, such as a `sorry` in a comment block whose ends a
-pull request removes. Mathlib's `hint` tactic, which closes a goal with `sorry` when nothing else
+under another name, a `decide` whose config stands on another line, grind's trace mode where a
+config switches it on through a field path (`c.trace := true`) or with a type or a comment
+between `trace` and `:=`, or a line that was in the file already and means something else now,
+such as a `sorry` in a comment block whose ends a pull request removes. Mathlib's `hint` tactic, which closes a goal with `sorry` when nothing else
 does, is not in the list: `hint` is the name of a hypothesis on 18,441 lines of the tree. The
 check reads nothing outside `src/`. It does not replace the axiom check.
+
+A failed run stops nothing by itself: no check is required on `main`, and the inbox and batch
+scripts read no check results. GitHub takes the workflow from `main`, whatever branch a pull
+request is opened against, and the run takes the script and the list from the same commit. A
+re-run starts from that commit again. So after a line is added to the list, a pull request that
+was reported stays red until its next push or edit, or until it is closed and opened again.
 
 ## Statements
 

@@ -25,9 +25,9 @@ What this is not: a second check of the proofs. In this version of Lean the axio
 are recorded in its module's artifact when the module is built, and this script reads that
 record. Code of the tree that runs during the build, or when the solution is imported, could
 tamper with the record or print an answer of its own. The check finds a `sorry` or an axiom
-that someone left in; it is no defence against a tree written to deceive it. Nor does it look
-at what a theorem states. Comparator and its kernels replay the proofs and compare the
-statements.
+that someone left in; it is no defence against a tree or a build cache written to deceive it:
+a record that came from the cache is read as it stands. Nor does it look at what a theorem
+states. Comparator and its kernels replay the proofs and compare the statements.
 
 Exit code: 0 when every theorem depends on allowed axioms only; 1 when one does not, does not
 exist or is no theorem; 2 when the check could not be made (comparator.json, the build's state,

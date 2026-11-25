@@ -99,10 +99,21 @@ a theorem shows up as `sorryAx`. Run as a script, it checks the tree it is given
 it finds. Importing the solution module runs the tree's `initialize` blocks, so its function
 `check()` does not run Lake itself: the caller gives it a function that does. A build can then
 run both Lake commands of the check inside its sandbox, under its own limits, and have the verdict
-made outside. It reads the axioms that the build
-recorded in the solution module's artifact and replays nothing, so it finds a `sorry` or an axiom
-that was left in, and it is no defence against a tree written to deceive it. That is Comparator's
-part.
+made outside.
+
+What it reads is the list of axioms that Lean stored for each theorem when the solution module's
+artifact was written. Lean puts that list together from the module's own declarations and from
+the lists stored in the artifacts of the imported modules. Nothing is replayed. So it finds a
+`sorry` or an axiom that was left in, also in a module that came from the cache, and it is no
+defence against a tree or a cache written to deceive it: a forged list in an artifact is repeated
+as it stands, and the cache holds outputs of pull requests ([CACHE.md](CACHE.md)). Catching that
+is Comparator's part.
+
+It checks the five theorems of `comparator.json` against its three axioms, and nothing else.
+`comparator/FormalConjecturesSolution.lean` is in no Lake library, so it cannot be checked this
+way. No workflow runs the script yet. It needs a finished build of the solution module, and when
+it could not check it does not pass: the script ends with 2, and `check()` raises `Unusable`.
+Whoever wires it into a build decides whether that fails the build.
 
 ## Statements
 
